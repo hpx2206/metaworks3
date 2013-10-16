@@ -2,22 +2,25 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalPanel;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.knowledge.CreateDatabase;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
-import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
@@ -29,6 +32,7 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.KeyedParameter;
@@ -36,6 +40,8 @@ import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+
+import com.thoughtworks.xstream.XStream;
 
 public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
@@ -204,11 +210,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.attachProject = attachProject;
 		}
 		
-	IWfNode project;
-		public IWfNode getProject() {
+	WfNode project;
+		public WfNode getProject() {
 			return project;
 		}
-		public void setProject(IWfNode project) {
+		public void setProject(WfNode project) {
 			this.project = project;
 		}
 
@@ -437,88 +443,101 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		this.setCategory(category);
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			IWfNode project = new WfNode();
+			WfNode project = new WfNode();
 			project.setId(this.getAttachProject().getSelected());
-
-			setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
-			setCreateDate(Calendar.getInstance().getTime());
-			setComcode(session.getCompany().getComCode());
-			setComName(session.getCompany().getComName());
-			
-			this.setProject(project);
-			this.setStatus(STATUS_REQUEST);
-			
-			createDatabaseMe();
-
-			WfNode wfNode = new WfNode();
-			
-			if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-				wfNode.setName(this.getAppName());
-				wfNode.setType("app");
-				wfNode.setParentId(session.getCompany().getComCode());	
-				wfNode.setAuthorId(session.getUser().getUserId());		
-				if(TenantContext.getThreadLocalInstance().getTenantId() != null)
-					wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
-				else
-					wfNode.setCompanyId(session.getCompany().getComCode());
+			project.copyFrom(project.databaseMe());
+			if(project.getIsReleased()){
+				setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
+				setCreateDate(Calendar.getInstance().getTime());
+				setComcode(session.getCompany().getComCode());
+				setComName(session.getCompany().getComName());
+				
+				this.setProject(project);
+				this.setStatus(STATUS_REQUEST);
+				
+				createDatabaseMe();
+	
+				WfNode wfNode = new WfNode();
+				
+				if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+					wfNode.setName(this.getAppName());
+					wfNode.setType("app");
+					wfNode.setParentId(session.getCompany().getComCode());	
+					wfNode.setAuthorId(session.getUser().getUserId());		
+					if(TenantContext.getThreadLocalInstance().getTenantId() != null)
+						wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
+					else
+						wfNode.setCompanyId(session.getCompany().getComCode());
+						
+					wfNode.setDescription(this.getSimpleOverview());
+					wfNode.setStartDate(new Date());
+					wfNode.setLogoFile(this.getLogoFile());
+					wfNode.createMe(String.valueOf(this.getAppId()));
 					
-				wfNode.setDescription(this.getSimpleOverview());
-				wfNode.setStartDate(new Date());
-				wfNode.setLogoFile(this.getLogoFile());
-				wfNode.createMe(String.valueOf(this.getAppId()));
+					TopicMapping tm = new TopicMapping();
+					tm.setTopicId(String.valueOf(this.getAppId()));
+					tm.setUserId(session.getUser().getUserId());
+					tm.setUserName(session.getUser().getName());
+					tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+					
+					tm.saveMe();
+					tm.flushDatabaseMe();
+					
+					this.setTopicId(wfNode.getId());
+				}else{
+					wfNode.setId(this.getTopicId());
+					
+					wfNode.copyFrom(wfNode.databaseMe());
+					
+					wfNode.setName(this.getAppName());
+					wfNode.saveMe();
+				}
+	
+				// 앱 등록일 경우 프로세스 발행
+				String defId = "AppRegister.process";
 				
-				TopicMapping tm = new TopicMapping();
-				tm.setTopicId(String.valueOf(this.getAppId()));
-				tm.setUserId(session.getUser().getUserId());
-				tm.setUserName(session.getUser().getName());
-				tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+				ProcessMap goProcess = new ProcessMap();
+				goProcess.session = session;
+				goProcess.processManager = processManager;
+				goProcess.instanceView = instanceView;
+				goProcess.setDefId(defId);
+	
+				// 프로세스 발행
+				Long instId = Long.valueOf(goProcess.initializeProcess());
+	
+				// 프로세스 실행
+				ResultPayload rp = new ResultPayload();
+				rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
+	
+				// 무조건 compleate
+				processManager.executeProcessByWorkitem(instId.toString(), rp);
+				processManager.applyChanges();
 				
-				tm.saveMe();
-				tm.flushDatabaseMe();
-				
-				this.setTopicId(wfNode.getId());
-			}else{
-				wfNode.setId(this.getTopicId());
-				
-				wfNode.copyFrom(wfNode.databaseMe());
-				
-				wfNode.setName(this.getAppName());
-				wfNode.saveMe();
+	//			TopicMapping tm = new TopicMapping();
+	//			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
+	//			tm.setUserId(session.getUser().getUserId());
+	//			tm.setUserName(session.getUser().getName());
+	//			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+	//			
+	//			tm.saveMe();
+				flushDatabaseMe();
 			}
-
-			// 앱 등록일 경우 프로세스 발행
-			String defId = "AppRegister.process";
-			
-			ProcessMap goProcess = new ProcessMap();
-			goProcess.session = session;
-			goProcess.processManager = processManager;
-			goProcess.instanceView = instanceView;
-			goProcess.setDefId(defId);
-
-			// 프로세스 발행
-			Long instId = Long.valueOf(goProcess.initializeProcess());
-
-			// 프로세스 실행
-			ResultPayload rp = new ResultPayload();
-			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
-
-			// 무조건 compleate
-			processManager.executeProcessByWorkitem(instId.toString(), rp);
-			processManager.applyChanges();
-			
-//			TopicMapping tm = new TopicMapping();
-//			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
-//			tm.setUserId(session.getUser().getUserId());
-//			tm.setUserName(session.getUser().getName());
-//			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-//			
-//			tm.saveMe();
-			
+			else{
+				ModalWindow modalWindow = new ModalWindow();
+				modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				modalWindow.setWidth(300);
+				modalWindow.setHeight(150);
+								
+				modalWindow.setTitle("$앱 등록 실패");
+				modalWindow.setPanel(localeManager.getString("해당 프로젝트를 Release 하신 후 앱 등록을 하시기 바랍니다."));
+				modalWindow.getButtons().put("$Confirm", "");		
+				
+				return modalWindow;
+			}
 		}else{
 			syncToDatabaseMe();
+			flushDatabaseMe();
 		}
-		
-		flushDatabaseMe();
 
 		MyVendor myVendor = new MyVendor();
 		myVendor.load(session);
@@ -534,6 +553,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		return new ModalPanel(myVendor);
 	}
 	
+	@ServiceMethod(callByContent=true)
 	public Object[] addApp()throws Exception {
 		
 //		App app = new App();
@@ -607,6 +627,34 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //		
 //		return new Object[] {modalWindow, new Remover(removeWindow, true)};
 		
+		WfNode wfNode = new WfNode();
+		wfNode.setId(this.getProject().getId());
+		wfNode.copyFrom(wfNode.databaseMe());
+		
+		Object warFile = null;
+		Object sqlPath = null;
+		
+		XStream xstream = new XStream();
+		if (wfNode.getExt() != null) {
+			Object xstreamStr = xstream.fromXML(wfNode.getExt());
+			if (xstreamStr != null) {
+				Map<String, Object> list = (Map<String, Object>) xstreamStr;
+
+				warFile = list.get("warFile_Thumbnail");
+				sqlPath = list.get("sqlFile_Path");
+			}
+		}
+		
+		if((TenantContext.getThreadLocalInstance().getTenantId() != null) && (wfNode != null) && (warFile != null)){
+			this.setUrl("Http://" + TenantContext.getThreadLocalInstance().getTenantId() + "." + this.getAppName() + ".com//" + warFile.toString());
+			syncToDatabaseMe();
+			flushDatabaseMe();
+		}
+		
+		//데이터베이스 생성
+		CreateDatabase createDatabase = new CreateDatabase();
+		createDatabase.create("root", "14.63.225.215", "root", TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
+		
 		
 		AppMapping appmapping = new AppMapping();
 		
@@ -615,7 +663,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		appmapping.setAppName(this.getAppName());
 		appmapping.setComCode(session.getCompany().getComCode());
 		appmapping.setIsDeleted(false);
-
+		appmapping.setUrl(this.getUrl());
 		appmapping.createDatabaseMe();
 		appmapping.flushDatabaseMe();
 		
@@ -651,5 +699,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 	}
 	
-
+	@AutowiredFromClient
+	public Locale localeManager;
+	
+	
 }
