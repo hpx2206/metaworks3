@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
@@ -187,6 +188,9 @@ public class SelfServiceControlPanel {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		if( metadataXML == null ){
+			throw new MetaworksException("메타데이타 파일이 없습니다.");
 		}
 
 		metadataXML.setFilePath(project.getPath() + File.separatorChar + Project.METADATA_FILENAME);
