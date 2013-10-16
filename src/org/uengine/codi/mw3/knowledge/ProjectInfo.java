@@ -78,34 +78,6 @@ public class ProjectInfo implements ContextAware {
 		public void setDomainName(String domainName) {
 			this.domainName = domainName;
 		}
-
-	String svn;
-		@Face(displayName="$project.svn")
-		public String getSvn() {
-			return svn;
-		}
-		public void setSvn(String svn) {
-			this.svn = svn;
-		}
-			
-	String war;
-		@Face(displayName="$project.war")
-		public String getWar() {
-			return war;
-		}
-	
-		public void setWar(String war) {
-			this.war = war;
-		}
-	String sql;
-		public String getSql() {
-			return sql;
-		}
-	
-		public void setSql(String sql) {
-			this.sql = sql;
-		}
-
 	String description;
 		@Face(displayName="$project.description")
 		public String getDescription() {
@@ -246,7 +218,7 @@ public class ProjectInfo implements ContextAware {
 	
 	public ProjectInfo(String projectId){
 		this.setProjectId(projectId);
-		this.setLogoFile(new MetaworksFile());
+//		this.setLogoFile(new MetaworksFile());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
@@ -270,7 +242,18 @@ public class ProjectInfo implements ContextAware {
 			this.domainName = this.getProjectName() + ".com";			
 			setType(wfNode.getVisType());
 			if("svn".equals(this.getType())){
-				this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName(); 
+//				this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName();
+				
+				Object logo = null;
+				XStream xstream = new XStream();
+				if(wfNode.getExt() != null){
+					Object xstreamStr =  xstream.fromXML(wfNode.getExt());
+					if(xstreamStr != null){
+						Map<String, Object> list = (Map<String,Object>) xstreamStr;
+						logo = list.get("logoFile");
+					}
+				}
+				this.logoFile = (MetaworksFile) logo;
 				setType("svn");
 				this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
 			}else if("war".equals(this.getType())){
@@ -292,15 +275,14 @@ public class ProjectInfo implements ContextAware {
 						sqlFile = list.get("sqlFile");
 					}
 				}
-						this.war = (String) warUrl;
-						this.sql = (String) sqlUrl;
+//						this.war = (String) warUrl;
+//						this.sql = (String) sqlUrl;
 						this.logoFile = (MetaworksFile) logo;
 						this.warFile = (MetadataFile) warFile;
 						this.sqlFile = (MetadataFile) sqlFile;
 						setType("war");
 			}
 			this.description = wfNode.getDescription();
-//			this.logoFile = (MetaworksFile) logo;
 			
 			/*
 			Serializable serial = null;
@@ -434,8 +416,8 @@ public class ProjectInfo implements ContextAware {
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			//Hudson Build
-//			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
-//			jschServerBehaviour.runCommand(command);
+			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
+			jschServerBehaviour.runCommand(command);
 		}
 		return null;
 	}
@@ -512,7 +494,7 @@ public class ProjectInfo implements ContextAware {
 			projectTitle.setParentId(session.getCompany().getComCode());
 			projectTitle.setFileType(wfNode.getVisType());
 			projectTitle.setTopicDescription(this.getDescription());
-//			projectTitle.setLogoFile(wfNode.getLogoFile());
+			projectTitle.setLogoFile(this.getLogoFile());
 			
 			XStream xstream = new XStream();
 			if(wfNode.getExt() != null){
