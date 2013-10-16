@@ -127,7 +127,15 @@ public class ProjectInfo implements ContextAware {
 		public void setHudson(String hudson) {
 			this.hudson = hudson;
 		}
+	String ip;
+		public String getIp() {
+			return ip;
+		}
 	
+		public void setIp(String ip) {
+			this.ip = ip;
+		}
+
 	/*
 	@Hidden
 	String os;
@@ -210,8 +218,6 @@ public class ProjectInfo implements ContextAware {
 			this.vmDouwnUrl = vmDouwnUrl;
 		}*/
 		
-	
-
 	public ProjectInfo(){
 		this(null);
 	}
@@ -242,8 +248,6 @@ public class ProjectInfo implements ContextAware {
 			this.domainName = this.getProjectName() + ".com";			
 			setType(wfNode.getVisType());
 			if("svn".equals(this.getType())){
-//				this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName();
-				
 				Object logo = null;
 				XStream xstream = new XStream();
 				if(wfNode.getExt() != null){
@@ -341,10 +345,51 @@ public class ProjectInfo implements ContextAware {
 		WfNode wfNode = new WfNode();
 		wfNode.setId(session.getLastSelectedItem());
 		wfNode.copyFrom(wfNode.databaseMe());
+		
+		if(wfNode.getIsDistributed()){
+			wfNode.setIsReleased(true);
+			wfNode.syncToDatabaseMe();
+			wfNode.flushDatabaseMe();
+			
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			modalWindow.setWidth(300);
+			modalWindow.setHeight(150);
+							
+			modalWindow.setTitle("$SaveCompleteTitle");
+			modalWindow.setPanel(localeManager.getString("Release 성공 하였습니다."));
+			modalWindow.getButtons().put("$Confirm", "");		
+			
+			return modalWindow;
+		}else{
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			modalWindow.setWidth(300);
+			modalWindow.setHeight(150);
+							
+			modalWindow.setTitle("$Release 실패");
+			modalWindow.setPanel(localeManager.getString("프로젝트 배포가 되지않아 실패 하였습니다."));
+			modalWindow.getButtons().put("$Confirm", "");		
+	
+			return modalWindow;
+		}
+	}
+	
+	@ServiceMethod
+	public void Confirm() {
+		
+	}
+
+	@Face(displayName = "배포")
+	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
+	public Object distribute() throws Exception{
+		WfNode wfNode = new WfNode();
+		wfNode.setId(session.getLastSelectedItem());
+		wfNode.copyFrom(wfNode.databaseMe());
 		this.projectName = wfNode.getName();
 		Object sqlPath = null;
 		Object warPath = null;
-		String ip = "14.63.225.215";
+		ip = "14.63.225.215";
 
 		XStream xstream = new XStream();
 		if (wfNode.getExt() != null) {
@@ -358,8 +403,8 @@ public class ProjectInfo implements ContextAware {
 		}
 		if ("war".equals(wfNode.getVisType())) {
 			ProcessBuilder pb = new ProcessBuilder(
-					"cmd",
-					"/c",
+					"cmd",	// 리눅스 "/bin/sh"
+					"/c",	// 리눅스 "-c"		
 					"ant -buildfile C:\\test.xml -Dip="
 							+ ip
 							+ " -Dwar="
@@ -392,8 +437,13 @@ public class ProjectInfo implements ContextAware {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 			CreateDatabase createDatabase = new CreateDatabase();
 			createDatabase.create("root", ip, "root", "cloud", sqlPath.toString());
+			
+			wfNode.setIsDistributed(true);
+			wfNode.syncToDatabaseMe();
+			wfNode.flushDatabaseMe();
 			
 			ModalWindow modalWindow = new ModalWindow();
 			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -420,15 +470,6 @@ public class ProjectInfo implements ContextAware {
 			jschServerBehaviour.runCommand(command);
 		}
 		return null;
-	}
-	@ServiceMethod
-	public void Confirm() {
-		
-	}
-
-	@Face(displayName = "허드슨")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void hudson() {
 
 	}
 
