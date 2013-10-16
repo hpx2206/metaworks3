@@ -1,12 +1,20 @@
 <%
 	if(value != null){
 %>
-<li><img class="navi_icon" src="images/waveStyle/nav_newsfeed.png"><a onClick="<%=methods.select.caller()%>" href="#"><%=mw3.localize("$App")%></a></li>			
+
+<div class="depth2">
+	<ul class="fist_menu">
+		<li>
+			<a onClick="<%=methods.select.caller()%>" href="#"><%=mw3.localize("$App")%></a>
+		</li>			
+	</ul>
+</div>
 
 	<%if(value.selected){%>
 		<div class="depth2">
 			<ul class="fist_menu">
-				<span onClick="<%=methods.openApp.caller() %>"> <%=fields.appList.here() %></span>
+				<!-- <span onClick="<%=methods.openApp.caller() %>"> <%=fields.appList.here() %></span> -->
+				<%=fields.appList.here() %>
 			</ul>
 		</div>
 	<%}%>

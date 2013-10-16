@@ -30,14 +30,6 @@ public class Perspective {
 			this.selected = selected;
 		}
 		
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
-		
 	@ServiceMethod(callByContent = true, payload = { "selected" })
 	public Object[] select() throws Exception {
 		setSelected(!isSelected()); // toggle
