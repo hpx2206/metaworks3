@@ -630,7 +630,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProject().getId());
 		wfNode.copyFrom(wfNode.databaseMe());
-		
+		String defaultIp = "14.63.225.215";
 		Object warFile = null;
 		Object sqlPath = null;
 		
@@ -653,8 +653,12 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 		//데이터베이스 생성
 		CreateDatabase createDatabase = new CreateDatabase();
-		createDatabase.create("root", "14.63.225.215", "root", TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
-		
+		if(wfNode.getConnType() != null){
+			createDatabase.create("root", wfNode.getConnType(), "root", TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
+		}
+		else{
+			createDatabase.create("root", defaultIp, "root", TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
+		}
 		
 		AppMapping appmapping = new AppMapping();
 		

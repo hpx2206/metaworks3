@@ -127,13 +127,12 @@ public class ProjectInfo implements ContextAware {
 		public void setHudson(String hudson) {
 			this.hudson = hudson;
 		}
-	String ip;
-		public String getIp() {
-			return ip;
+	String defaultIp;
+		public String getDefaultIp() {
+			return defaultIp;
 		}
-	
-		public void setIp(String ip) {
-			this.ip = ip;
+		public void setDefaultIp(String defaultIp) {
+			this.defaultIp = defaultIp;
 		}
 
 	/*
@@ -389,7 +388,7 @@ public class ProjectInfo implements ContextAware {
 		this.projectName = wfNode.getName();
 		Object sqlPath = null;
 		Object warPath = null;
-		ip = "14.63.225.215";
+		defaultIp = "14.63.225.215";
 
 		XStream xstream = new XStream();
 		if (wfNode.getExt() != null) {
@@ -402,18 +401,36 @@ public class ProjectInfo implements ContextAware {
 			}
 		}
 		if ("war".equals(wfNode.getVisType())) {
-			ProcessBuilder pb = new ProcessBuilder(
-					"cmd",	// 리눅스 "/bin/sh"
-					"/c",	// 리눅스 "-c"		
-					"ant -buildfile C:\\test.xml -Dip="
-							+ ip
-							+ " -Dwar="
-							+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
-							+ " -Dsql="
-							+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
-							+ " -Dpw="
-							+ "root"
-							+ " -lib C:\\Users\\uEngine");
+			ProcessBuilder pb = null;
+			if(wfNode.getConnType() == null){
+				pb = new ProcessBuilder(
+						"cmd",	// 리눅스 "/bin/sh"
+						"/c",	// 리눅스 "-c"		
+						"ant -buildfile C:\\test.xml -Dip="
+								+ defaultIp
+								+ " -Dwar="
+								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
+								+ " -Dsql="
+								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
+								+ " -Dpw="
+								+ "root"
+								+ " -lib C:\\Users\\uEngine");
+			}
+			else{
+				pb = new ProcessBuilder(
+						"cmd",	// 리눅스 "/bin/sh"
+						"/c",	// 리눅스 "-c"		
+						"ant -buildfile C:\\test.xml -Dip="
+								+ wfNode.getConnType()
+								+ " -Dwar="
+								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
+								+ " -Dsql="
+								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
+								+ " -Dpw="
+								+ "root"
+								+ " -lib C:\\Users\\uEngine");
+			}
+			
 			pb.redirectErrorStream(true);
 			Process p = null;
 			try {
@@ -439,8 +456,12 @@ public class ProjectInfo implements ContextAware {
 			}
 			
 			CreateDatabase createDatabase = new CreateDatabase();
-			createDatabase.create("root", ip, "root", "cloud", sqlPath.toString());
-			
+			if(wfNode.getConnType() == null){
+				createDatabase.create("root", defaultIp, "root", wfNode.getName(), sqlPath.toString());
+			}
+			else{
+				createDatabase.create("root", wfNode.getConnType(), "root", wfNode.getName(), sqlPath.toString());
+			}
 			wfNode.setIsDistributed(true);
 			wfNode.syncToDatabaseMe();
 			wfNode.flushDatabaseMe();
