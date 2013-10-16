@@ -18,7 +18,7 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 	if(object.metaworksContext.when == mw3.WHEN_NEW){
 		$("input[type=radio]:radio[value='2']").attr("checked",true);
 		var value = mw3.objects[objectId];
-		value.fileType = "none";
+		value.fileType = "svn";
 //		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
 //		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
 		

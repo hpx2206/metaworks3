@@ -18,16 +18,6 @@ if(value){
                         	<dt><%=fields.projectName.here()%></dt>
                             <dd><span class="mp_sub_tit"><%=mw3.localize("$DomainName")%> : </span><span class="mp_sub_rst"><%=fields.domainName.here()%></span></dd>
                             <dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=fields.description.here()%></span></dd>
-                           
-                           
-                 <%          if(value.type == 'svn'){  %>
-                            <dd><span class="mp_sub_tit"><%=mw3.localize("$Svn")%> : </span><span class="mp_sub_rst"><%=fields.svn.here()%></span></dd>
-                   <%       }else if(value.type == 'war'){  %>
-                             <dd><span class="mp_sub_tit"><%=mw3.localize("$war")%> : </span><span class="mp_sub_rst"><%=fields.war.here()%></span></dd>
-                            <dd><span class="mp_sub_tit"><%=mw3.localize("$Sql")%> : </span><span class="mp_sub_rst"><%=fields.sql.here()%></span></dd>
-                        <%  } %>
-                          
-                          
                          
                         </dl>                    
                     </div>
