@@ -81,7 +81,7 @@ public class ProjectTitle implements ContextAware {
 			this.topicDescription = topicDescription;
 		}
 	MetaworksFile logoFile;
-		@Face(displayName="LogoFile")
+		@Face(displayName="$LogoFile")
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
@@ -90,7 +90,7 @@ public class ProjectTitle implements ContextAware {
 		}
 
 	MetadataFile sqlFile;
-		@Face(displayName="sqlFile")
+		@Face(displayName="$sqlFile")
 		public MetadataFile getSqlFile() {
 			return sqlFile;
 		}
@@ -99,7 +99,7 @@ public class ProjectTitle implements ContextAware {
 		}
 
 	MetadataFile 	warFile;
-		@Face(displayName="WarFile")
+		@Face(displayName="$WarFile")
 		public MetadataFile getWarFile() {
 			return warFile;
 		}
@@ -150,7 +150,7 @@ public class ProjectTitle implements ContextAware {
 
 	String radio;
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
-		@Face(displayName="$ProjectDescription", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","SVN Logo"}, values={"1","2"})
+		@Face(displayName="$ProjectRadio", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","없음"}, values={"1","2"})
 		public String getRadio() {
 			return radio;
 		}
@@ -179,6 +179,7 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
+		if(this.getWarFile().getFilename() != null || this.getSqlFile().getFilename() != null){	
 			String warFileType = this.getWarFile().getFilename();
 			String sqlFileType = this.getSqlFile().getFilename();
 			int warPos = warFileType.lastIndexOf('.');
@@ -195,6 +196,7 @@ public class ProjectTitle implements ContextAware {
 					setSqlFileCheck(true);
 				}
 			}
+		}	
 		if("war".equals(this.getFileType())){
 			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
 					this.getWarFile().getFilename().length() >0)
@@ -349,7 +351,13 @@ public class ProjectTitle implements ContextAware {
 				wfNode.setVisType("war");
 			
 			}else if("svn".equals(this.getFileType())){
-//				wfNode.setLogoFile(this.getLogoFile());
+				XStream xstream = new XStream();
+				HashMap<String , Object>  map = new HashMap<String , Object>();
+				map.put("logoFile", this.getLogoFile());
+				String xstreamStr = xstream.toXML(map);
+				Object obj = xstream.fromXML(xstreamStr);
+				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
+				
 				wfNode.setVisType("svn");
 			}
 			wfNode.createMe();
@@ -427,8 +435,8 @@ public class ProjectTitle implements ContextAware {
 			HashMap<String , Object>  map = new HashMap<String , Object>();
 			map.put("ProjectInfo",wfNode.getDescription());
 			map.put("logoFile", this.getLogoFile());
-			map.put("sqlFile_Url",this.getSqlFile());
-			map.put("warFile_Url",this.getWarFile());
+			map.put("sqlFile",this.getSqlFile());
+			map.put("warFile",this.getWarFile());
 			map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
 			map.put("warFile_Thumbnail", this.getWarFile().getFilename());
 			map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
@@ -446,7 +454,7 @@ public class ProjectTitle implements ContextAware {
 //			wfNode.setEx1(xmlCode);
 //			
 			wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-//			wfNode.setLogoFile(this.getLogoFile());
+			wfNode.setLogoFile(this.getLogoFile());
 			wfNode.setVisType("war");
 		}else{
 			wfNode.setVisType("svn");
