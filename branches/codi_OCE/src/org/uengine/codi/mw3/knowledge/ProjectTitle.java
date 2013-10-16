@@ -179,24 +179,24 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-		if(this.getWarFile().getFilename() != null || this.getSqlFile().getFilename() != null){	
-			String warFileType = this.getWarFile().getFilename();
-			String sqlFileType = this.getSqlFile().getFilename();
-			int warPos = warFileType.lastIndexOf('.');
-			if( warPos >-1){
-				String ext = warFileType.substring(warPos);
-				if(".war".equals(ext)){
-					setWarFileCheck(true);
+			if(this.getWarFile().getFilename() != null || this.getSqlFile().getFilename() != null){	
+				String warFileType = this.getWarFile().getFilename();
+				String sqlFileType = this.getSqlFile().getFilename();
+				int warPos = warFileType.lastIndexOf('.');
+				if( warPos >-1){
+					String ext = warFileType.substring(warPos);
+					if(".war".equals(ext)){
+						setWarFileCheck(true);
+					}
 				}
-			}
-			int sqlPos = sqlFileType.lastIndexOf('.');
-			if( sqlPos >-1){
-				String ext = sqlFileType.substring(sqlPos);
-				if(".sql".equals(ext)){
-					setSqlFileCheck(true);
+				int sqlPos = sqlFileType.lastIndexOf('.');
+				if( sqlPos >-1){
+					String ext = sqlFileType.substring(sqlPos);
+					if(".sql".equals(ext)){
+						setSqlFileCheck(true);
+					}
 				}
-			}
-		}	
+			}	
 		if("war".equals(this.getFileType())){
 			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
 					this.getWarFile().getFilename().length() >0)
@@ -303,6 +303,8 @@ public class ProjectTitle implements ContextAware {
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			wfNode.setName(this.getTopicTitle());
 			wfNode.setType("project");
+			wfNode.setIsDistributed(false);
+			wfNode.setIsReleased(false);
 			wfNode.setParentId(session.getCompany().getComCode());	
 			wfNode.setAuthorId(session.getUser().getUserId());		
 			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
