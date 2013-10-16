@@ -153,7 +153,15 @@ public class AppInformation implements ContextAware, ITool {
 		public void setProjectName(String projectName) {
 			this.projectName = projectName;
 		}
-
+		
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+		
 	@Autowired
 	transient public ProcessManagerRemote processManager;
 
@@ -174,7 +182,7 @@ public class AppInformation implements ContextAware, ITool {
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
 
-		IWfNode project = new WfNode();
+		WfNode project = new WfNode();
 		project.setId(this.getAttachProject().getSelected());
 
 		App listing = new App();
@@ -299,11 +307,11 @@ public class AppInformation implements ContextAware, ITool {
 		this.simpleOverview = app.getSimpleOverview();			
 		this.fullOverview = app.getFullOverview(); 
 		this.logoFile = app.getLogoFile();
+		this.setUrl(app.getUrl());
+		
 	}
 	
-	@Face(displayName="앱 실행")
-	@ServiceMethod()
+	@ServiceMethod(target = ServiceMethodContext.TARGET_NONE)
 	public void appExcute(){
-		System.out.println("fdafdasfsafsa");
 	}
 }

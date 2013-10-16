@@ -30,6 +30,9 @@ public interface IAppMapping extends IDAO{
 	public boolean getIsDeleted();
 	public void setIsDeleted(boolean isDeleted);
 	
+	public String getUrl();
+	public void setUrl(String url);
+	
 	@NonSavable
 	public String getProjectName();
 	public void setProjectName(String projectName);

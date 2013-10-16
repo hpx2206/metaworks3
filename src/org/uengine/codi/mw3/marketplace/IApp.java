@@ -17,7 +17,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.ICompany;
 
@@ -120,8 +120,8 @@ public interface IApp extends IDAO{
 			databaseFields={"projectId"}, 
 			objectFields={"id"}
 	)
-	public IWfNode getProject();
-	public void setProject(IWfNode project);
+	public WfNode getProject();
+	public void setProject(WfNode project);
 	
 	@NonLoadable
 	@NonSavable
