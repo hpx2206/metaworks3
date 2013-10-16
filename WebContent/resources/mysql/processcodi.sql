@@ -881,3 +881,8 @@ alter table bpm_worklist add column folderName varchar(100);
 alter table recentitem add column clickedCount varchar(4);
 
 alter table bpm_knol add column ext varchar(3000);
+
+alter table appmapping add column url varchar(50);
+
+alter table bpm_knol add column isreleased boolean;
+alter table bpm_knol add column isdistributed boolean;
