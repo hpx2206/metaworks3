@@ -47,12 +47,16 @@ public class OcePerspectivePanel extends Perspective{
 			//앱
 			if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
 				appPerspective = new OrganizationPerspectiveApp();
+				appPerspective.setMetaworksContext(new MetaworksContext());
+				appPerspective.getMetaworksContext().setWhere("oce");
 				appPerspective.session = session;
 				appPerspective.select();
 			}
 			if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
 				//프로젝트
 				projectPerspective = new ProjectPerspective();
+				projectPerspective.setMetaworksContext(new MetaworksContext());
+				projectPerspective.getMetaworksContext().setWhere("oce");
 				projectPerspective.session = session;
 				projectPerspective.select();
 			}
@@ -76,6 +80,7 @@ public class OcePerspectivePanel extends Perspective{
 		String title = GlobalContext.getPropertyString("$All");
 		
 		DashboardWindow window = new DashboardWindow();
+		window.session = session;
 		window.setPanel(returnObject);
 		window.setTitle(title);
 
