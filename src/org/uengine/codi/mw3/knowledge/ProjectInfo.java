@@ -541,7 +541,8 @@ public class ProjectInfo implements ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] require() throws Exception{
 		
-		String defId = "projectProcess/oceProjectRequset.process";
+		String defId = "oceProjectRequset.process";
+//		String defId = "projectProcess/oceProjectRequset.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;

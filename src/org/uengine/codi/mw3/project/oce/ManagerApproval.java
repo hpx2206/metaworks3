@@ -54,7 +54,7 @@ public class ManagerApproval implements ITool  {
 	public void beforeComplete() throws Exception {
 		// TODO Auto-generated method stub
 		if( approval != null && approval.equals("approval") ){
-			setResultStr("진행중 입니다.(약 30분의 시간이 걸립니다.)");
+			setResultStr("진행중 입니다.(약 10분의 시간이 걸립니다.)");
 		}else{
 			setResultStr("취소 되었습니다.");
 		}
@@ -62,9 +62,9 @@ public class ManagerApproval implements ITool  {
 	public void afterComplete() throws Exception {
 		
 		
-		String ip = "14.63.225.215";
+//		String ip = "14.63.225.215";
 		
-//		this.vmServerStart();
+//		this.vmServerStart("aaaa");
 	}
 	public void vmServerStart(String vm_name) throws Exception {
 
