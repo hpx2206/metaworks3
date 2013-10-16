@@ -439,8 +439,10 @@ public class ProjectTitle implements ContextAware {
 			map.put("logoFile", this.getLogoFile());
 			map.put("sqlFile",this.getSqlFile());
 			map.put("warFile",this.getWarFile());
-			map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
-			map.put("warFile_Thumbnail", this.getWarFile().getFilename());
+			if(this.getSqlFile() != null || this.getWarFile() != null){
+				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
+				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
+			}
 			map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
 			String xstreamStr = xstream.toXML(map);
 			System.out.println(xstreamStr);
@@ -456,7 +458,7 @@ public class ProjectTitle implements ContextAware {
 //			wfNode.setEx1(xmlCode);
 //			
 			wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-			wfNode.setLogoFile(this.getLogoFile());
+//			wfNode.setLogoFile(this.getLogoFile());
 			wfNode.setVisType("war");
 		}else{
 			wfNode.setVisType("svn");
@@ -464,7 +466,7 @@ public class ProjectTitle implements ContextAware {
 		wfNode.saveMe();
 		
 		ProjectInfo projectInfo = new ProjectInfo(this.getTopicId());
-		projectInfo.setLogoFile(this.getLogoFile());
+//		projectInfo.setLogoFile(this.getLogoFile());
 		projectInfo.load();
 		return new Object[]{new Refresh(projectInfo), new Remover(new ModalWindow())};
 	}

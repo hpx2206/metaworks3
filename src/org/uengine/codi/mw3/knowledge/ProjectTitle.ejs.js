@@ -10,11 +10,17 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 	if(object == null)
 		return true;
 //	
+	$("input[type=radio]:radio[value='2']").attr("checked",true);
+	var value = mw3.objects[objectId];
+	value.fileType = "war";
+	
 	var sqlFileDivId = mw3._getObjectDivId(object.sqlFile.__objectId);
 	$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
 //	
 	var warFileDivId = mw3._getObjectDivId(object.warFile.__objectId);
 	$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
+
+	
 	if(object.metaworksContext.when == mw3.WHEN_NEW){
 		$("input[type=radio]:radio[value='2']").attr("checked",true);
 		var value = mw3.objects[objectId];
@@ -22,11 +28,11 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 //		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
 //		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
 		
-	}else{
+	}else if(object.metaworksContext.when == mw3.WHEN_EDIT){
 		var value = mw3.objects[objectId];
 		value.fileType = "war";
-		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
-		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
+//		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
+//		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
 	}
 	$('input[type=radio]').click(function(){
 		var value = mw3.objects[objectId];
@@ -36,6 +42,7 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 			$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
 			$('#' + warFileDivId ).parentsUntil('tr').parent().show();
 		}else if(check == '2'){
+			value.fileType = "svn";
 			$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
 			$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
 		
