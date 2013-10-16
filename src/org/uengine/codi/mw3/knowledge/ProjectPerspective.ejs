@@ -1,8 +1,13 @@
 <%
 	if(value){
 %>
-
-<li><img class="navi_icon" src="images/waveStyle/nav_newsfeed.png"><a onClick="<%=methods.select.caller()%>" href="#"><%=mw3.localize("$Project")%></a></li>
+<div class="depth2">
+	<ul class="fist_menu">
+		<li>
+			<a onClick="<%=methods.select.caller()%>" href="#"><%=mw3.localize("$Project")%></a>
+		</li>			
+	</ul>
+</div>
 
 <%if(value.selected){%>
 
@@ -11,7 +16,6 @@
 			<%=fields.projectPanel.here() %>
 		</ul>
 	</div>
-<%}else{%>
 <%}%>
 
 <%
