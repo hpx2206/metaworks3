@@ -46,19 +46,23 @@ var org_uengine_codi_mw3_marketplace_IAppMapping = function(objectId, className)
 		
 	});
 	
-	$('#navigator .depth2 a').click(function(){
-		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
-		$(this).parent().addClass('selected_navi');
-	});
-	
 };
 
 org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
-	showStatus : function(status){
-	},
 	startLoading : function(status){
 	},
 	endLoading : function(status){
+	},
+	showStatus : function(message){
+		if(message){
+			var message_split = message.split(' ');
+			
+			//주제를 선택시 선택블록 효과주기
+			if(message_split[0] == 'clickAppList'){
+				$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+				$('#objDiv_'  + this.objectId + ' li').addClass('selected_navi');
+			}
+		}
 	},
 	clickAppList : function(){
 		this.object.empCode = this.session.employee.empCode;
