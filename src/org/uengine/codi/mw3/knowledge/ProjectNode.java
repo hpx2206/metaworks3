@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
