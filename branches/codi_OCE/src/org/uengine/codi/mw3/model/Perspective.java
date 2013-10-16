@@ -7,7 +7,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
 
 public class Perspective {
@@ -30,7 +29,15 @@ public class Perspective {
 		public void setSelected(boolean selected) {
 			this.selected = selected;
 		}
-
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
 	@ServiceMethod(callByContent = true, payload = { "selected" })
 	public Object[] select() throws Exception {
 		setSelected(!isSelected()); // toggle
@@ -183,6 +190,7 @@ public class Perspective {
 		
 		
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.session = session;
 		newInstancePanel.load(session);
 		
 		InstanceList instList = new InstanceList(session);
@@ -196,9 +204,6 @@ public class Perspective {
 		instListPanel.session = session;
 		instListPanel.setNewInstancePanel(newInstancePanel);
 		instListPanel.setInstanceList(instList);
-//		instListPanel.setMetaworksContext(new MetaworksContext());
-//		instListPanel.getMetaworksContext().setHow(perspectiveType);
-//		instListPanel.getMetaworksContext().setWhere(selectedItem);
 
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
