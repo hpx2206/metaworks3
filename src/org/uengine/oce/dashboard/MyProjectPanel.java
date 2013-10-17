@@ -1,7 +1,5 @@
 package org.uengine.oce.dashboard;
 
-import java.io.File;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;

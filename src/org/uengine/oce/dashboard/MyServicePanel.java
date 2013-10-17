@@ -7,10 +7,11 @@ import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.marketplace.Marketplace;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.selfservice.SelfService;
 
-public class MyServicePanel {
+public class MyServicePanel{
 	@AutowiredFromClient
 	public Session session;
 	    @Hidden
@@ -28,6 +29,16 @@ public class MyServicePanel {
 	public MyServicePanel(Session session){
 			
 	}
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goSns() throws Exception {
+
+		if(session != null)
+			session.setLastSelectedItem("goSns");
+		
+		return new MainPanel(new Main(session));
+	}
+	
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
@@ -61,4 +72,6 @@ public class MyServicePanel {
 		
 		return new MainPanel(marketplace);
 	}
+	
+	
 }
