@@ -39,6 +39,8 @@ public class IDE {
 		hintWindow.load(session, getPageNavigator().getPageName());
 		
 		ResourceWindow resourceWindow = new ResourceWindow();		
+		resourceWindow.getResourcePanel().session = session;
+		resourceWindow.getResourcePanel().init();
 		resourceWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		Layout outerLayout = new Layout();
