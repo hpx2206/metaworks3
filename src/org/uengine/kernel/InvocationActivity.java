@@ -104,8 +104,8 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 		 */
 		
 		String resourceClassName = getResourceClass();
-		String className = resourceClassName.substring(0, resourceClassName.lastIndexOf(".")).replaceAll("/", ".");
-		Class resourceClass = Thread.currentThread().getContextClassLoader().loadClass(className);
+		String className = resourceClassName;//resourceClassName.substring(0, resourceClassName.lastIndexOf(".")).replaceAll("/", ".");
+		Class resourceClass = Thread.currentThread().getContextClassLoader().loadClass(resourceClassName);
 		Object object = resourceClass.newInstance();
 		
 		// in 으로 셋팅한 정보
@@ -123,20 +123,27 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 					value = param.getTransformerMapping().getTransformer().letTransform(instance, param.getTransformerMapping().getLinkedArgumentName());
 				}else{
 					srcVariableName = param.getVariable().getName();				
-					
-					String [] wholePartPath = srcVariableName.replace('.','@').split("@");
-					// wholePartPath.length >= 3 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
-					if( wholePartPath.length >= 3 ){
-						String rootObjectName = wholePartPath[0] + "." + wholePartPath[1];
-						Object rootObject = instance.getBeanProperty(rootObjectName);
-						if( rootObject != null ){
-							value = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
-						}
-						for(int j = 3; j < wholePartPath.length ; j++){
-							value = UEngineUtil.getBeanProperty(value, wholePartPath[j]);
-						}
-					}else{
+					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]") ){
 						value = instance.getBeanProperty(srcVariableName); // varA
+					}else{
+						
+						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
+						// wholePartPath.length >= 1 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+						if( wholePartPath.length >= 2 ){
+							String rootObjectName = wholePartPath[1] ;
+							if( wholePartPath.length > 2 ){
+								for(int j = 2 ; j < wholePartPath.length; j++){
+									rootObjectName += "."+ wholePartPath[j];
+								}
+							}
+							// 이걸 바로 호출
+							Object rootObject = instance.getBeanProperty(wholePartPath[0]);
+							if( rootObject != null ){
+								value = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
+							}
+						}else{
+							value = instance.getBeanProperty(srcVariableName); // varA
+						}
 					}
 				}			
 				// targetFieldName 은 className.fieldName 이런식으로 들어오기 때문에 약간의 조작이 필요함.
