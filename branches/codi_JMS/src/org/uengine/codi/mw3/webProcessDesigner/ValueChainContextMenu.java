@@ -40,7 +40,7 @@ public class ValueChainContextMenu extends Menu {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof MajorProcessDefinitionNode){
 			MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)clipboard;
-			
+			node.session = session;
 			return node.selectProcess();			
 		}else{
 			return null;

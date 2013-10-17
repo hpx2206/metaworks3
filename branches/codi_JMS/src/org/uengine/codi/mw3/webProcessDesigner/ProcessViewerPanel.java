@@ -126,6 +126,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
 		Workspace workspace = new Workspace();
+		workspace.session =session;
 		workspace.load(session);
 		this.setWorkspace(workspace);
 		

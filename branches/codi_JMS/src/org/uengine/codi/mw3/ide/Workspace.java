@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.ide;
 
 import java.util.ArrayList;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.metadata.MetadataBundle;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
@@ -11,7 +12,9 @@ import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 
 public class Workspace {
-
+	@AutowiredFromClient
+	public Session session;
+	
 	String id;
 		public String getId() {
 			return id;

@@ -89,6 +89,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId"},target=ServiceMethodContext.TARGET_POPUP)
 	public Object selectProcess() {
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
+		processViewerPanel.session = session;
 		processViewerPanel.findValuechainView();
 		
 		ModalWindow modalWindow = new ModalWindow(processViewerPanel);

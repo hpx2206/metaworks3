@@ -64,7 +64,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			ProcessViewWindow processViewWindow = new ProcessViewWindow();
 			processViewWindow.setAlias(this.getPath());
 			processViewWindow.setDefId(this.getName());
-//			processViewWindow.setPath(this.getPath());
+			processViewWindow.setPath(this.getPath());
 			processViewWindow.session = session;
 			processViewWindow.load();
 			
