@@ -874,7 +874,7 @@ create table favoritefile (
  MODDATE datetime
 );
 
---2013.09.06s - 폴더ID, NAME추가 
+-- 2013.09.06s - 폴더ID, NAME추가 
 alter table bpm_worklist add column folderId varchar(100);
 alter table bpm_worklist add column folderName varchar(100);
 
@@ -897,4 +897,4 @@ create table cloudinfo(
     rootId varchar(20),
     rootPwd varchar(20),
     primary key(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
