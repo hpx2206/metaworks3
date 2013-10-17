@@ -1,33 +1,7 @@
-<%
-if(value){
-%>
-
-<div>
-<%=mw3.localize("$MyServices")%>
-</div>
-
-		<ul class="process_map2" style="border: none;"> 
-		<a href="#">
-			<li onClick="<%=methods.goSelfServicePortal.caller()%>">
-					 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
-					 <%=mw3.localize("$SelfServicePortal")%>
-			</li>
-				</a>
-				<a href="#">
-			<li onClick="<%=methods.goIDE.caller()%>">
-					 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
-					 <%=mw3.localize("$IDE")%>
-			</li>
-				</a>
-				<a href="#">
-			<li onClick="<%=methods.goMarketplace.caller()%>">
-					 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
-					 <%=mw3.localize("$MarketPlace")%>
-			</li>
-				</a>
-		</ul>
-		
-		
-<%
-}
-%>
+<ul>
+	<li><a href="#" onClick="" title="Go SNS"><img src="images/waveStyle/app_social.png" /></a></li>
+	<li><a href="#" onClick="" title="Go Process"><img src="images/waveStyle/app_process.png" /></a></li>
+	<li><a href="#" onClick="<%=methods.goMarketplace.caller()%>" title="Go Market"><img src="images/waveStyle/app_market.png" /></a></li>
+	<li><a href="#" onClick="<%=methods.goSelfServicePortal.caller()%>" title="Go Self Service Portal"><img src="images/waveStyle/app_selfService.png" /></a></li>
+	<li><a href="#" onClick="<%=methods.goIDE.caller()%>" title="Go IDE"><img src="images/waveStyle/app_ide.png" /></a></li>
+</ul>
