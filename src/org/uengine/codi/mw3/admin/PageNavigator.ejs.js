@@ -41,8 +41,6 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 				}, 700);
 		});	
 	
-	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
-	
 	if(this.object.oce){
 		$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_admin01.png) no-repeat right top'});
 	}else{

@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
@@ -217,5 +218,10 @@ public class PageNavigator{
 		processExplorer.load(session); 
 			
 		return new MainPanel(processExplorer);
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goDashBoard() throws Exception {
+		return new MainPanel(new OceMain(session));
 	}
 }

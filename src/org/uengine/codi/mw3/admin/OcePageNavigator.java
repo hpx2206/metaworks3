@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.admin;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
@@ -15,23 +14,13 @@ import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.PinterestMain;
-import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
-import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmarket.Market;
 
 public class OcePageNavigator extends PageNavigator {
-	@AutowiredFromClient
-	public Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
-
+	
 	public OcePageNavigator() {
 		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
 		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
@@ -103,17 +92,23 @@ public class OcePageNavigator extends PageNavigator {
 //		return new MainPanel(new IDE(session));
 	}
 	
+	@Override
+	public MainPanel goDashBoard() throws Exception {
+		return super.goDashBoard();
+	}
+	
+	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
 		
 //		session.getEmployee().setPreferUX(null);
 		session.setLastPerspecteType(null);
-
-/*		String preferUX = session.getEmployee().getPreferUX();
+		
+		/*		String preferUX = session.getEmployee().getPreferUX();
 		if("sns".equals(preferUX)){
 			return goSns();
 		}else{*/
-			return new MainPanel(new OceMain(session));
+		return new MainPanel(new OceMain(session));
 		//}
 	}
 	@ServiceMethod(callByContent=true)
@@ -176,20 +171,21 @@ public class OcePageNavigator extends PageNavigator {
 //		
 //		return new MainPanel(nkia);
 		System.out.println("paasManager" + session.getAccessToken());
-//		return new MainPanel(new RemoteNewPage(session, "IaaS Admin", "http://192.168.212.52/kiat_sso.jsp?access_token=" + session.getAccessToken() + "&user_id=" + session.getUser().getUserId())); //paasManager
-		return new MainPanel(new Main(session)); //paasManager
+		return new MainPanel(new RemoteNewPage(session, "IaaS Admin", "http://192.168.212.52/kiat_sso.jsp?access_token=" + session.getAccessToken() + "&user_id=" + session.getUser().getUserId())); //paasManager
 	}
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
 		
 		
-		SelfService selfService = new SelfService();
-		selfService.setPageNavigator(new OcePageNavigator());
-		selfService.session = session;
-		selfService.load();
+//		SelfService selfService = new SelfService();
+//		selfService.setPageNavigator(new OcePageNavigator());
+//		selfService.session = session;
+//		selfService.load();
+//		
+//		return new MainPanel(selfService);
 		
-		return new MainPanel(selfService);
+		return new MainPanel(new Main(session));
 		
 	}
 	
