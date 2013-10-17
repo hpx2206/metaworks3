@@ -156,9 +156,13 @@ public class InstanceList implements ContextAware{
 		String preferUX = session.getEmployee().getPreferUX();
 		
 		if("sns".equals(preferUX)){
-			instanceContents.setMetaworksContext(new MetaworksContext());
-			instanceContents.getMetaworksContext().setHow("sns");			
-			instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			if("oce".equals(session.getUx())){
+				instanceContents.setMetaworksContext(new MetaworksContext());
+				if("dashboard".equals(this.getMetaworksContext().getHow()))
+					instanceContents.getMetaworksContext().setWhere("dashboard");
+				instanceContents.getMetaworksContext().setHow("sns");			
+				instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			}
 		}
 		setInstances(instanceContents);
 
@@ -211,4 +215,11 @@ public class InstanceList implements ContextAware{
 //		}
 //		return -1;
 //	}
+	
+	@ServiceMethod(target="instances")
+	public void drillDown() throws Exception{
+		
+		System.out.println("SDfsdkf sldkfjs ldkfj sdlkfj seldkfj sdlkfj sldkjfsldkfj sdkl");
+		
+	}
 }

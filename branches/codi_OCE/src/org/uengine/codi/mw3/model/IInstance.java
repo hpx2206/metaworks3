@@ -21,7 +21,8 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
 		"{how: '" + Perspective.TYPE_COMMINGTODO + "', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_commingTodo.ejs'}",
-		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}"
+		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}",
+		"{where: 'dashboard', face: 'dwr/metaworks/org/uengine/oce/dashboard/IInstance_dashboard.ejs'}"
 	}		
 )
 @Table(name="bpm_procinst")
