@@ -15,9 +15,10 @@ var org_uengine_oce_OcePerspectivePanel = function(objectId, className){
 	);
 	
 	
-	$('#navigator .depth2 a').click(function(){
+	$('#navigator .depth1 a').click(function(){
+		$('#navigator .depth1').removeClass('selected');
 		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
-		$(this).parent().addClass('selected_navi');
+		$(this).parent().addClass('selected');
 	});
 	
 };
