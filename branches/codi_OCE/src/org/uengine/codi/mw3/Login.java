@@ -400,7 +400,7 @@ public class Login implements ContextAware {
 		
 		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
 			pageNavigatorPropertyName = "oce.pagenavigator.class";
-			session.getEmployee().setPreferUX("sns");
+			session.setUx("oce");
 		}
 		else{
 			pageNavigatorPropertyName = "codi.pagenavigator.class";
@@ -419,9 +419,9 @@ public class Login implements ContextAware {
 		}
 		
 		pageNavigator.setSession(session);
-		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
-			mainPanel = pageNavigator.goProcess();
-		}else {
+		if("oce".equals(session.getUx())){
+			mainPanel = pageNavigator.goDashBoard();
+		}else{
 			if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
 				mainPanel = pageNavigator.goKnowledge();
 			}else if("pinterest".equals(lastVisitPage)){
