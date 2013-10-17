@@ -17,6 +17,9 @@ public interface ICloudInfo extends IDAO{
 	public String getServerIp();
 	public void setServerIp(String serverIp);
 
+	public String getServerId();
+	public void setServerId(String serverId);
+	
 	public String getServerIpId();
 	public void setServerIpId(String serverIpId);
 

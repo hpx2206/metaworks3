@@ -391,10 +391,10 @@ public class ProjectInfo implements ContextAware {
 		Object warPath = null;
 
 		CloudInfo cloudInfo = wfNode.getCloudInfo();
-		cloudInfo.copyFrom(cloudInfo.databaseMe());
+		cloudInfo.databaseMe();
 		
-		if(cloudInfo.getServerIp() == null){
-			throw new MetaworksException("vm 생성 안됨");
+		if(cloudInfo == null || "".equals(cloudInfo.getServerIp())){
+			throw new MetaworksException("개발환경 요청이 안되어있습니다.");
 		}
 		
 		XStream xstream = new XStream();

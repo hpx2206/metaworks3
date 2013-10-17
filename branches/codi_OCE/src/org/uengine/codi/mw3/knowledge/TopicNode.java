@@ -97,8 +97,6 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 	public static ITopicNode load(Session session) throws Exception {
 		
-		DAOUtil daoUtil = new DAOUtil();
-		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
 		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
