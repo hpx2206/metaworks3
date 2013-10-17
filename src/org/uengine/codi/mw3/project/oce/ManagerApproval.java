@@ -27,7 +27,9 @@ import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.util.Base64;
 import org.uengine.kernel.GlobalContext;
@@ -364,9 +366,17 @@ public class ManagerApproval implements ITool  {
 			if(dao.size() > 0){
 				if (dao.next()) {
 					node.copyFrom(dao);
-//					node.databaseMe().setConnType("334.234.234");
-					node.databaseMe().setUrl(ip);
-					node.databaseMe().setConnType(vm_pass);
+					
+					CloudInfo cloudInfo = new CloudInfo();
+					cloudInfo.setId(node.getId());
+					cloudInfo.setServerIp(ip);
+					cloudInfo.setServerIpId(ip_id);
+					cloudInfo.setServerId(vm_id);
+					cloudInfo.setRootId("root");
+					cloudInfo.setRootPwd(vm_pass);
+					cloudInfo.setServerInfo("KT Cloud");
+					
+					cloudInfo.createDatabaseMe();
 					
 					tx.commit();
 				}

@@ -370,13 +370,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 				categories.add(categoryName, categoryId);
 			}
 		}
-		String tenantId;
-		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-		}else{
-			tenantId = session.getCompany().getComCode();
-		}
-		IProjectNode projectList = ProjectNode.completedProject(tenantId);		
+		
+		IProjectNode projectList = ProjectNode.load(session);		
 		if(projectList.size() > 0) {
 			while(projectList.next()){
 				String projectId = projectList.getId();
@@ -465,11 +460,14 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 					wfNode.setType("app");
 					wfNode.setParentId(session.getCompany().getComCode());	
 					wfNode.setAuthorId(session.getUser().getUserId());		
-					if(TenantContext.getThreadLocalInstance().getTenantId() != null)
-						wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
-					else
-						wfNode.setCompanyId(session.getCompany().getComCode());
-						
+					String tenantId;
+					if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+						tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+					}else{
+						tenantId = session.getCompany().getComCode();
+					}
+					
+					wfNode.setCompanyId(tenantId);
 					wfNode.setDescription(this.getSimpleOverview());
 					wfNode.setStartDate(new Date());
 					wfNode.setLogoFile(this.getLogoFile());
@@ -647,16 +645,18 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 				sqlPath = list.get("sqlFile_Path");
 			}
 		}
-		
-		if((TenantContext.getThreadLocalInstance().getTenantId() != null) && (wfNode != null) && (warFile != null)){
-			this.setUrl("Http://" + TenantContext.getThreadLocalInstance().getTenantId() + "." + this.getAppName() + ".com//" + warFile.toString());
-			syncToDatabaseMe();
-			flushDatabaseMe();
+		String tenantId;
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}else{
+			tenantId = session.getCompany().getComCode();
 		}
+		this.databaseMe().setUrl("Http://" + tenantId + "." + this.getAppName() + ".com//" + warFile.toString());
+		flushDatabaseMe();
 		
 		//데이터베이스 생성
 		CreateDatabase createDatabase = new CreateDatabase();
-		createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
+		createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), tenantId, sqlPath.toString());
 		
 		AppMapping appmapping = new AppMapping();
 		

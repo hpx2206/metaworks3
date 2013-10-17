@@ -29,6 +29,14 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 		public void setServerIp(String serverIp) {
 			this.serverIp = serverIp;
 		}
+		
+	String serverId;
+		public String getServerId() {
+			return serverId;
+		}
+		public void setServerId(String serverId) {
+			this.serverId = serverId;
+		}
 
 	String serverIpId;
 		public String getServerIpId() {

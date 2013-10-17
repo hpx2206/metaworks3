@@ -34,7 +34,7 @@ import org.uengine.oce.dashboard.DashboardPanel;
 import com.thoughtworks.xstream.XStream;
 
 
-@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,radio,warFile,sqlFile"} ,
+@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,projectSecuopt,radio,warFile,sqlFile"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -174,6 +174,16 @@ public class ProjectTitle implements ContextAware {
 		public void setParentId(String parentId) {
 			this.parentId = parentId;
 		}
+		
+	boolean projectSecuopt;				
+		@Face(displayName="$topicSecuopt")
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+		public boolean isProjectSecuopt() {
+			return projectSecuopt;
+		}
+		public void setProjectSecuopt(boolean projectSecuopt) {
+			this.projectSecuopt = projectSecuopt;
+		}
 
 		@Face(displayName="$Create")
 	@Available(when={MetaworksContext.WHEN_NEW})
@@ -267,8 +277,8 @@ public class ProjectTitle implements ContextAware {
 		String passwd = GlobalContext.getPropertyString("vm.manager.password");
 		String command = null;
 
-		JschCommand jschServerBehaviour = new JschCommand();
-		jschServerBehaviour.sessionLogin(host, userId, passwd);
+//		JschCommand jschServerBehaviour = new JschCommand();
+//		jschServerBehaviour.sessionLogin(host, userId, passwd);
 //		
 //		// create SVN
 //		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
@@ -282,11 +292,11 @@ public class ProjectTitle implements ContextAware {
 //		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
 //		jschServerBehaviour.runCommand(command);
 		
-		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
-		jschServerBehaviour.runCommand(command);
-		
-		command = GlobalContext.getPropertyString("vm.hudson.restart") + " " +  projectNode.getName();
-		jschServerBehaviour.runCommand(command);
+//		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
+//		jschServerBehaviour.runCommand(command);
+//		
+//		command = GlobalContext.getPropertyString("vm.hudson.restart") + " " +  projectNode.getName();
+//		jschServerBehaviour.runCommand(command);
 		
 		Object[] returnObj = projectNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 3];
@@ -311,6 +321,7 @@ public class ProjectTitle implements ContextAware {
 			wfNode.setType("project");
 			wfNode.setIsDistributed(false);
 			wfNode.setIsReleased(false);
+			wfNode.setSecuopt(projectSecuopt ? "1" : "0");
 			wfNode.setParentId(session.getCompany().getComCode());	
 			wfNode.setAuthorId(session.getUser().getUserId());		
 			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
