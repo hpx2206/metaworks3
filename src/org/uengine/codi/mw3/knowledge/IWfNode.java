@@ -240,6 +240,14 @@ public interface IWfNode extends IDAO {
 //	public MetaworksFile getLogoFile();
 //	public void setLogoFile(MetaworksFile logoFile);
 	
+	@Hidden
+	@ORMapping(
+		databaseFields = { "id" },
+		objectFields = { "id" },
+		objectIsNullWhenFirstDBFieldIsNull = true,
+		availableWhen= "type=='project'")
+	public CloudInfo getCloudInfo();
+	public void setCloudInfo(CloudInfo cloudInfo) ;
 	
 	/*******************************************
 	 * 

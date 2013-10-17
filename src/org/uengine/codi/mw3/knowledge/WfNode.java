@@ -396,6 +396,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.isDistributed = isDistribued;
 		}
 		
+	@XStreamOmitField
+	public CloudInfo cloudInfo;
+		public CloudInfo getCloudInfo() {
+			return cloudInfo;
+		}
+		public void setCloudInfo(CloudInfo cloudInfo) {
+			this.cloudInfo = cloudInfo;
+		}
+		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
