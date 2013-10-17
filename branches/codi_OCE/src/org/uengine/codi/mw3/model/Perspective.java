@@ -186,7 +186,7 @@ public class Perspective {
 		newInstancePanel.load(session);
 		
 		InstanceList instList = new InstanceList(session);
-		
+		instList.session = session;
 		instList.setMetaworksContext(new MetaworksContext());
 		instList.getMetaworksContext().setHow(perspectiveType);
 		instList.getMetaworksContext().setWhere(selectedItem);

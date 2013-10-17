@@ -21,8 +21,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 		ejsPathMappingByContext=
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
-		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
-		"{where: 'oce', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}"
+		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}"
 	}		
 
 )

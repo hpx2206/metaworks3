@@ -155,15 +155,21 @@ public class InstanceList implements ContextAware{
 		}
 		String preferUX = session.getEmployee().getPreferUX();
 		
-		if("sns".equals(preferUX)){
-			if("oce".equals(session.getUx())){
-				instanceContents.setMetaworksContext(new MetaworksContext());
-				if("dashboard".equals(this.getMetaworksContext().getHow()))
-					instanceContents.getMetaworksContext().setWhere("dashboard");
-				instanceContents.getMetaworksContext().setHow("sns");			
-				instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		if("oce".equals(session.getUx()) ){
+			if(!"goSns".equals(session.getLastSelectedItem())){
+				instanceContents.getMetaworksContext().setWhere("dashboard");
 			}
 		}
+		
+//		if("sns".equals(preferUX)){
+//			if("oce".equals(session.getUx())){
+//				instanceContents.setMetaworksContext(new MetaworksContext());
+//				if("dashboard".equals(this.getMetaworksContext().getHow()))
+//					instanceContents.getMetaworksContext().setWhere("dashboard");
+//				instanceContents.getMetaworksContext().setHow("sns");			
+//				instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			}
+//		}
 		setInstances(instanceContents);
 
 		// setting moreInstanceList
