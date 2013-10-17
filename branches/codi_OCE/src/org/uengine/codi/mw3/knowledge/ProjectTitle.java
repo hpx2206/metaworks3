@@ -265,9 +265,10 @@ public class ProjectTitle implements ContextAware {
 		String host = GlobalContext.getPropertyString("vm.manager.ip");
 		String userId = GlobalContext.getPropertyString("vm.manager.user");
 		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String command = null;
 
-//		JschCommand jschServerBehaviour = new JschCommand();
-//		jschServerBehaviour.sessionLogin(host, userId, passwd);
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
 //		
 //		// create SVN
 //		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
@@ -280,7 +281,12 @@ public class ProjectTitle implements ContextAware {
 //		//SVN 유저 추가
 //		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
 //		jschServerBehaviour.runCommand(command);
-
+		
+		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
+		jschServerBehaviour.runCommand(command);
+		
+		command = GlobalContext.getPropertyString("vm.hudson.restart") + " " +  projectNode.getName();
+		jschServerBehaviour.runCommand(command);
 		
 		Object[] returnObj = projectNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 3];
