@@ -1,8 +1,10 @@
 var org_uengine_oce_OcePerspectivePanel = function(objectId, className){
-	
 	this.objectId = objectId;
 	this.className = className;	
 	this.divId = '#objDiv_' + this.objectId;
+	
+	
+	this.object = mw3.objects[this.objectId];
 	
 	$(this.divId).parent().css({"background":"none","width":"100%","overflow":"hidden"});
 	$(this.divId).parent().hover(
@@ -13,7 +15,6 @@ var org_uengine_oce_OcePerspectivePanel = function(objectId, className){
 				$(this).css({"overflow":"hidden"});
 			}
 	);
-	
 	
 	$('#navigator .depth1 a').click(function(){
 		$('#navigator .depth1').removeClass('selected');
