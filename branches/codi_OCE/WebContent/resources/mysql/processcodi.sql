@@ -886,3 +886,13 @@ alter table appmapping add column url varchar(50);
 
 alter table bpm_knol add column isreleased boolean;
 alter table bpm_knol add column isdistributed boolean;
+
+create table cloudinfo(
+	id varchar(20) not null,
+	serverInfo varchar(20),
+	serverIp varchar(100),
+	serverIpId varchar(100),
+	rootId varchar(20),
+	rootPwd varchar(20),
+	primary key(id)
+);
