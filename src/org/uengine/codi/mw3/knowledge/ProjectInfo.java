@@ -3,7 +3,8 @@ package org.uengine.codi.mw3.knowledge;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 import org.directwebremoting.io.FileTransfer;
@@ -38,7 +39,9 @@ import org.uengine.codi.mw3.project.oce.ProjectCreate;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
-
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
 import com.thoughtworks.xstream.XStream;
 
 public class ProjectInfo implements ContextAware {
@@ -342,37 +345,38 @@ public class ProjectInfo implements ContextAware {
 	@Face(displayName = "release")
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
 	public Object releaseProject() throws Exception{
-		WfNode wfNode = new WfNode();
-		wfNode.setId(session.getLastSelectedItem());
-		wfNode.copyFrom(wfNode.databaseMe());
-		
-		if(wfNode.getIsDistributed()){
-			wfNode.setIsReleased(true);
-			wfNode.syncToDatabaseMe();
-			wfNode.flushDatabaseMe();
-			
-			ModalWindow modalWindow = new ModalWindow();
-			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			modalWindow.setWidth(300);
-			modalWindow.setHeight(150);
-							
-			modalWindow.setTitle("$SaveCompleteTitle");
-			modalWindow.setPanel(localeManager.getString("Release 성공 하였습니다."));
-			modalWindow.getButtons().put("$Confirm", "");		
-			
-			return modalWindow;
-		}else{
-			ModalWindow modalWindow = new ModalWindow();
-			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			modalWindow.setWidth(300);
-			modalWindow.setHeight(150);
-							
-			modalWindow.setTitle("$Release 실패");
-			modalWindow.setPanel(localeManager.getString("프로젝트 배포가 되지않아 실패 하였습니다."));
-			modalWindow.getButtons().put("$Confirm", "");		
-	
-			return modalWindow;
-		}
+//		WfNode wfNode = new WfNode();
+//		wfNode.setId(session.getLastSelectedItem());
+//		wfNode.copyFrom(wfNode.databaseMe());
+//		
+//		if(wfNode.getIsDistributed()){
+//			wfNode.setIsReleased(true);
+//			wfNode.syncToDatabaseMe();
+//			wfNode.flushDatabaseMe();
+//			
+//			ModalWindow modalWindow = new ModalWindow();
+//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			modalWindow.setWidth(300);
+//			modalWindow.setHeight(150);
+//							
+//			modalWindow.setTitle("$SaveCompleteTitle");
+//			modalWindow.setPanel(localeManager.getString("Release 성공 하였습니다."));
+//			modalWindow.getButtons().put("$Confirm", "");		
+//			
+//			return modalWindow;
+//		}else{
+//			ModalWindow modalWindow = new ModalWindow();
+//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			modalWindow.setWidth(300);
+//			modalWindow.setHeight(150);
+//							
+//			modalWindow.setTitle("$Release 실패");
+//			modalWindow.setPanel(localeManager.getString("프로젝트 배포가 되지않아 실패 하였습니다."));
+//			modalWindow.getButtons().put("$Confirm", "");		
+//	
+//			return modalWindow;
+//		}
+		return null;
 	}
 	
 	@ServiceMethod
@@ -410,42 +414,55 @@ public class ProjectInfo implements ContextAware {
 
 		if ("war".equals(wfNode.getVisType())) {
 			
-			ProcessBuilder pb = new ProcessBuilder(
-						"cmd",	// 리눅스 "/bin/sh"
-						"/c",	// 리눅스 "-c"		
-						"ant -buildfile C:\\test.xml -Dip="
-								+ cloudInfo.getServerIp()
-								+ " -Dwar="
-								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
-								+ " -Dsql="
-								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
-								+ " -Dpw="
-								+ cloudInfo.getRootPwd()
-								+ " -lib C:\\Users\\uEngine");
+//			ProcessBuilder pb = new ProcessBuilder(
+//						"cmd",	// 리눅스 "/bin/sh"
+//						"/c",	// 리눅스 "-c"		
+//						"ant -buildfile C:\\test.xml -Dip="
+//								+ cloudInfo.getServerIp()
+//								+ " -Dwar="
+//								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
+//								+ " -Dsql="
+//								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
+//								+ " -Dpw="
+//								+ cloudInfo.getRootPwd()
+//								+ " -lib C:\\Users\\uEngine");
+//			
+//			pb.redirectErrorStream(true);
+//			Process p = null;
+//			try {
+//				p = pb.start();
+//				
+//				InputStreamReader isr = null;
+//				isr = new InputStreamReader(p.getInputStream(), "euc-kr");
+//				int ch = 0;
+//				StringBuffer sb = new StringBuffer();
+//				try {
+//					while ((ch = isr.read()) > -1) {
+//						sb.append((char) ch);
+//						if ((char) ch == '\n') {
+//							System.out.println(sb.toString());
+//							sb = new StringBuffer();
+//						}
+//					}
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 			
-			pb.redirectErrorStream(true);
-			Process p = null;
-			try {
-				p = pb.start();
-				
-				InputStreamReader isr = null;
-				isr = new InputStreamReader(p.getInputStream(), "euc-kr");
-				int ch = 0;
-				StringBuffer sb = new StringBuffer();
-				try {
-					while ((ch = isr.read()) > -1) {
-						sb.append((char) ch);
-						if ((char) ch == '\n') {
-							System.out.println(sb.toString());
-							sb = new StringBuffer();
-						}
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			
+//			*******************************************************			
+//			lfile = "F:/files/test.war"; // 보낼파일
+//			user = "ksj82"; // 사용자계정
+//			passwd = "ksj82"; // 비밀번호
+//			host = "192.168.56.103"; // 접속 IP
+//			rfile = "/home/ksj82"; // 저장경로
+			
+			FileTransmition fileTransmition = new FileTransmition();
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + warPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
 			
 			CreateDatabase createDatabase = new CreateDatabase();
 			createDatabase.create(cloudInfo.rootId, cloudInfo.getServerIp(), cloudInfo.getRootPwd(), wfNode.getName(), sqlPath.toString());
