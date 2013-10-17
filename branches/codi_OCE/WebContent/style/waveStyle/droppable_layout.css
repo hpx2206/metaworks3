@@ -1021,7 +1021,7 @@ img {
     white-space:nowrap;
     text-overflow:ellipsis;
     -o-text-overow: ellipsis;
-    color:#7a8794
+    color:#7a8794;
 }
 .selected_navi2 {
     background-color:#C9E2FC;
