@@ -250,7 +250,5 @@
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
 	
 	
-	<bean id="ProjectServer" class="org.uengine.codi.mw3.knowledge.ProjectServer"/>
-	<bean id="ProjectServers" class="org.uengine.codi.mw3.knowledge.ProjectServers"/>
 	
 </beans>

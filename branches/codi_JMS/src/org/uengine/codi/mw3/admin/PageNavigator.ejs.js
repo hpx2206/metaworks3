@@ -53,7 +53,8 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 			}
 		}else{
 			if(this.object.knowlege){
-				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SK.png) no-repeat right top'});
+//				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SK.png) no-repeat right top'});
+				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_admin01.png) no-repeat right top'});
 			}
 		}
 	}else {
