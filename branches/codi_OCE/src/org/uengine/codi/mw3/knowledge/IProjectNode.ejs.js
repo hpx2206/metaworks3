@@ -18,6 +18,7 @@ org_uengine_codi_mw3_knowledge_IProjectNode.prototype = {
 			var message_split = message.split(' ');
 
 			if(message_split[0] == 'loadTopic'){
+				$('#navigator .depth1').removeClass('selected');
 				$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
 				$('#objDiv_'  + this.objectId + ' li').addClass('selected_navi');
 			}
