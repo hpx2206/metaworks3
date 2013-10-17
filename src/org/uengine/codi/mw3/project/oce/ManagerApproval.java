@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.project.oce;
 
+import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,18 +16,46 @@ import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.Range;
+import org.metaworks.dao.ConnectionFactory;
+import org.metaworks.dao.Database;
+import org.metaworks.dao.JDBCConnectionFactory;
+import org.metaworks.dao.TransactionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.util.Base64;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.ProcessInstance;
+import org.uengine.processmanager.ProcessManagerBean;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ManagerApproval implements ITool  {
 	
 	public ManagerApproval() { 
 	}
-	
+	String projectName; 
+	@Hidden
+		public String getProjectName() {
+			return projectName;
+		}
+		public void setProjectName(String projectName) {
+			this.projectName = projectName;
+		}
+	String instId;
+	@Hidden
+		public String getInstId() {
+			return instId;
+		}
+		public void setInstId(String instId) {
+			this.instId = instId;
+		}
 	String approval;
 		@Face(displayName="요청된 개발기 생성을 승인합니다.")
 		@Range(options={"승인", "거부"}, values={"approval", "reject"})
@@ -45,6 +74,22 @@ public class ManagerApproval implements ITool  {
 		public void setResultStr(String resultStr) {
 			this.resultStr = resultStr;
 		}
+	
+	String resultIp;
+	@Available(when="view")
+	@Face(displayName="생성된 IP 정보")
+		public String getResultIp() {
+			return resultIp;
+		}
+		public void setResultIp(String resultIp) {
+			this.resultIp = resultIp;
+		}
+		
+	@Autowired
+	public ProcessManagerRemote processManager ; 	
+		
+	public static ConnectionFactory connectionFactory;
+	
 	@Override
 	public void onLoad() throws Exception {
 		// TODO Auto-generated method stub
@@ -60,14 +105,27 @@ public class ManagerApproval implements ITool  {
 		}
 	}
 	public void afterComplete() throws Exception {
-		
-		
+		final String instIDDD = this.instId;
+		final String projectName = this.getProjectName();
+		ProcessManagerBean processManagerBean = new ProcessManagerBean();
+		final ProcessInstance instance  = processManagerBean.getProcessInstance(instIDDD);
+		this.processManager = processManagerBean;
 //		String ip = "14.63.225.215";
-		
-//		this.vmServerStart("aaaa");
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					vmServerStart(projectName , instance);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}).start();
 	}
-	public void vmServerStart(String vm_name) throws Exception {
-
+	public void vmServerStart(String vm_name , ProcessInstance instance) throws Exception {
+		
 		String vm_id;
 		String vm_pass;
 		String ip_id;
@@ -105,7 +163,7 @@ public class ManagerApproval implements ITool  {
 				+ "&jobid=" + jobid;	
 		
 		String jobstatus = null;
-		
+		String result = "";
 		while(true){
 			
 			reponse = this.cmdRequest(command);
@@ -113,12 +171,13 @@ public class ManagerApproval implements ITool  {
 			jobstatus = temp[1].substring(1, temp[1].length()-2);
 			
 			if(jobstatus.equals("0")){
-				System.out.println("서버생성중...("+time+")");
+				result = "서버생성중...("+time+")";
+//				instance.setBeanProperty("resultStr", (Serializable)result);
 			}else if(jobstatus.equals("1")){
-				System.out.println("서버생성성완료("+time+")");
+				result = "서버생성성완료("+time+")";
 				break;
 			}else if(jobstatus.equals("2")){
-				System.out.println("서버생성실패("+time+")");
+				result = "서버생성실패("+time+")";
 				break;
 			}
 			
@@ -131,7 +190,8 @@ public class ManagerApproval implements ITool  {
 			
 			time += 10;
 		}
-		
+		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)result);
+		processManager.applyChanges();
 		// VM 생성 결과
 		System.out.println(reponse);
 		
@@ -166,12 +226,13 @@ public class ManagerApproval implements ITool  {
 			jobstatus = temp[1].substring(1, temp[1].length()-2);
 			
 			if(jobstatus.equals("0")){
-				System.out.println("아이피생성중...("+time+")");
+				result = "아이피생성중...("+time+")";
+//				instance.setBeanProperty("resultStr", (Serializable)result);
 			}else if(jobstatus.equals("1")){
-				System.out.println("아이피생성완료("+time+")");
+				result = "아이피생성완료("+time+")";
 				break;
 			}else if(jobstatus.equals("2")){
-				System.out.println("아이피생성실패("+time+")");
+				result = "아이피생성실패("+time+")";
 				break;
 			}
 			
@@ -184,7 +245,8 @@ public class ManagerApproval implements ITool  {
 			
 			time += 10;
 		}
-			
+		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)result);
+		processManager.applyChanges();
 		// 공인ip 생성 결과
 		System.out.println(reponse);
 		
@@ -226,12 +288,13 @@ public class ManagerApproval implements ITool  {
 			jobstatus = temp[1].substring(1, temp[1].length()-2);
 			
 			if(jobstatus.equals("0")){
-				System.out.println("아이피할당중...("+time+")");
+				result = "아이피할당중...("+time+")";
+//				instance.setBeanProperty("resultStr", (Serializable)result);
 			}else if(jobstatus.equals("1")){
-				System.out.println("아이피할당완료("+time+")");
+				result = "아이피할당완료("+time+")";
 				break;
 			}else if(jobstatus.equals("2")){
-				System.out.println("아이피할당실패("+time+")");
+				result = "아이피할당실패("+time+")";
 				break;
 			}
 			
@@ -244,7 +307,7 @@ public class ManagerApproval implements ITool  {
 			
 			time += 10;
 		}
-				
+		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)result);		
 		reponse = this.cmdRequest(command);
 		
 		// ip 할당 결과
@@ -253,10 +316,67 @@ public class ManagerApproval implements ITool  {
 		System.out.println("====================================================");
 		System.out.println("생성결과");
 		System.out.println("접속url : "+ip);
+		instance.setBeanProperty("ManagerApproval.resultIp", (Serializable)ip);
 		System.out.println("id : root 또는  Administrator");
 		System.out.println("pw : "+vm_pass);
 		System.out.println("====================================================");
+		processManager.applyChanges();
 		
+		TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
+		try{
+			tx.setManagedTransaction(false);
+			tx.setAutoCloseConnection(true);
+			
+	//		tx.setRequest(request);
+	//		tx.setResponse(response);
+			
+			String connectionString = GlobalContext.getPropertyString("jdbc.url", null);
+			if(connectionString!=null){
+				String driverClass = GlobalContext.getPropertyString("jdbc.driverClassName", null);
+				String userId = GlobalContext.getPropertyString("jdbc.username", "root");
+				String password = GlobalContext.getPropertyString("jdbc.password", "root");
+				
+				JDBCConnectionFactory cf = new JDBCConnectionFactory();
+				cf.setConnectionString(connectionString);
+				cf.setDriverClass(driverClass);
+				cf.setUserId(userId);
+				cf.setPassword(password);
+				connectionFactory = cf;
+			}
+			if(connectionFactory!=null){
+				tx.setConnectionFactory(connectionFactory);
+			}
+			
+			WfNode node = new WfNode();
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from bpm_knol knol");
+			sb.append(" where knol.type = ?type");	
+			sb.append(" and knol.name = ?name");	
+			
+			IWfNode dao = (IWfNode)Database.sql(IWfNode.class,sb.toString());
+			
+	//		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+			dao.set("type", "project");
+			dao.set("name", vm_name);
+			dao.select();
+			
+			if(dao.size() > 0){
+				if (dao.next()) {
+					node.copyFrom(dao);
+//					node.databaseMe().setConnType("334.234.234");
+					node.databaseMe().setUrl(ip);
+					node.databaseMe().setConnType(vm_pass);
+					
+					tx.commit();
+				}
+			}
+		}catch(Exception e){
+			tx.rollback();
+			throw e;
+		}finally{
+			tx.releaseResources();
+		}
 	}
 	
 	public String signRequest(String request, String key) {

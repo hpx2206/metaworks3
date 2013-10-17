@@ -654,10 +654,10 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		//데이터베이스 생성
 		CreateDatabase createDatabase = new CreateDatabase();
 		if(wfNode.getConnType() != null){
-			createDatabase.create("root", wfNode.getConnType(), "root", TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
+			createDatabase.create("root", wfNode.getConnType(), wfNode.getUrl(), TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
 		}
 		else{
-			createDatabase.create("root", defaultIp, "root", TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
+			createDatabase.create("root", defaultIp, wfNode.getUrl(), TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
 		}
 		
 		AppMapping appmapping = new AppMapping();

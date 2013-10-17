@@ -32,8 +32,8 @@ import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
-import org.uengine.codi.mw3.project.ProjectCreate;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
+import org.uengine.codi.mw3.project.oce.ProjectCreate;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -413,7 +413,7 @@ public class ProjectInfo implements ContextAware {
 								+ " -Dsql="
 								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
 								+ " -Dpw="
-								+ "root"
+								+ wfNode.getUrl()
 								+ " -lib C:\\Users\\uEngine");
 			}
 			else{
@@ -427,7 +427,7 @@ public class ProjectInfo implements ContextAware {
 								+ " -Dsql="
 								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
 								+ " -Dpw="
-								+ "root"
+								+ wfNode.getUrl()
 								+ " -lib C:\\Users\\uEngine");
 			}
 			
@@ -457,10 +457,10 @@ public class ProjectInfo implements ContextAware {
 			
 			CreateDatabase createDatabase = new CreateDatabase();
 			if(wfNode.getConnType() == null){
-				createDatabase.create("root", defaultIp, "root", wfNode.getName(), sqlPath.toString());
+				createDatabase.create("root", defaultIp, wfNode.getUrl(), wfNode.getName(), sqlPath.toString());
 			}
 			else{
-				createDatabase.create("root", wfNode.getConnType(), "root", wfNode.getName(), sqlPath.toString());
+				createDatabase.create("root", wfNode.getConnType(), wfNode.getUrl(), wfNode.getName(), sqlPath.toString());
 			}
 			wfNode.setIsDistributed(true);
 			wfNode.syncToDatabaseMe();
@@ -586,7 +586,8 @@ public class ProjectInfo implements ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] require() throws Exception{
 		
-		String defId = "oceProjectRequset.process";
+//		String defId = "oceProjectRequset.process";
+		String defId = "projectProcess/projectCre1.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;
@@ -597,8 +598,7 @@ public class ProjectInfo implements ContextAware {
 		String instId = processMap.initializeProcess();
 				
 		ProjectCreate projectCreate = new ProjectCreate();
-		projectCreate.setName(this.getProjectName());
-		projectCreate.setProjectId(this.getProjectId());
+		projectCreate.setProjectId(this.getProjectName());
 		
 //		ResultPayload rp = new ResultPayload();
 //		rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));

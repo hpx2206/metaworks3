@@ -2,19 +2,27 @@
 	<table border="1" cellspacing="0">
 		<tr>
 			<th>
-				<%=mw3.localize('$ProjectName')%>
+				OS 선택
 			</th>
 			<td>
-				<%=fields.name.here({when:'view'})%>
+				<%=fields.osSelect.here()%>
 			</td>
 		</tr>
 		<tr>
 			<th>
-				<%=mw3.localize('$ProjectDescription')%>
+				웹서버 선택
 			</th>
 			<td>
-				<%=fields.description.here()%>
-			</td>		
+				<%=fields.wasSelect.here()%>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				디비서버 선택
+			</th>
+			<td>
+				<%=fields.dbSelect.here()%>
+			</td>
 		</tr>
 	</table>
 </div>
