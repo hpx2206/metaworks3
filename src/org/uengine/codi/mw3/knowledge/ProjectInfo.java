@@ -9,6 +9,7 @@ import java.util.Map;
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -388,8 +389,14 @@ public class ProjectInfo implements ContextAware {
 		this.projectName = wfNode.getName();
 		Object sqlPath = null;
 		Object warPath = null;
-		defaultIp = "14.63.225.215";
 
+		CloudInfo cloudInfo = wfNode.getCloudInfo();
+		cloudInfo.copyFrom(cloudInfo.databaseMe());
+		
+		if(cloudInfo.getServerIp() == null){
+			throw new MetaworksException("vm 생성 안됨");
+		}
+		
 		XStream xstream = new XStream();
 		if (wfNode.getExt() != null) {
 			Object xstreamStr = xstream.fromXML(wfNode.getExt());
@@ -400,36 +407,21 @@ public class ProjectInfo implements ContextAware {
 				sqlPath = list.get("sqlFile_Path");
 			}
 		}
+
 		if ("war".equals(wfNode.getVisType())) {
-			ProcessBuilder pb = null;
-			if(wfNode.getConnType() == null){
-				pb = new ProcessBuilder(
+			
+			ProcessBuilder pb = new ProcessBuilder(
 						"cmd",	// 리눅스 "/bin/sh"
 						"/c",	// 리눅스 "-c"		
 						"ant -buildfile C:\\test.xml -Dip="
-								+ defaultIp
+								+ cloudInfo.getServerIp()
 								+ " -Dwar="
 								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
 								+ " -Dsql="
 								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
 								+ " -Dpw="
-								+ wfNode.getUrl()
+								+ cloudInfo.getRootPwd()
 								+ " -lib C:\\Users\\uEngine");
-			}
-			else{
-				pb = new ProcessBuilder(
-						"cmd",	// 리눅스 "/bin/sh"
-						"/c",	// 리눅스 "-c"		
-						"ant -buildfile C:\\test.xml -Dip="
-								+ wfNode.getConnType()
-								+ " -Dwar="
-								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
-								+ " -Dsql="
-								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
-								+ " -Dpw="
-								+ wfNode.getUrl()
-								+ " -lib C:\\Users\\uEngine");
-			}
 			
 			pb.redirectErrorStream(true);
 			Process p = null;
@@ -456,12 +448,8 @@ public class ProjectInfo implements ContextAware {
 			}
 			
 			CreateDatabase createDatabase = new CreateDatabase();
-			if(wfNode.getConnType() == null){
-				createDatabase.create("root", defaultIp, wfNode.getUrl(), wfNode.getName(), sqlPath.toString());
-			}
-			else{
-				createDatabase.create("root", wfNode.getConnType(), wfNode.getUrl(), wfNode.getName(), sqlPath.toString());
-			}
+			createDatabase.create(cloudInfo.rootId, cloudInfo.getServerIp(), cloudInfo.getRootPwd(), wfNode.getName(), sqlPath.toString());
+			
 			wfNode.setIsDistributed(true);
 			wfNode.syncToDatabaseMe();
 			wfNode.flushDatabaseMe();
@@ -477,7 +465,7 @@ public class ProjectInfo implements ContextAware {
 			
 			return modalWindow;
 		}
-		else if("sns".equals(wfNode.getVisType())){
+		else if("svn".equals(wfNode.getVisType())){
 			String host = GlobalContext.getPropertyString("vm.manager.ip");
 			String userId = GlobalContext.getPropertyString("vm.manager.user");
 			String passwd = GlobalContext.getPropertyString("vm.manager.password");
@@ -487,8 +475,8 @@ public class ProjectInfo implements ContextAware {
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			//Hudson Build
-			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
-			jschServerBehaviour.runCommand(command);
+//			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
+//			jschServerBehaviour.runCommand(command);
 		}
 		return null;
 

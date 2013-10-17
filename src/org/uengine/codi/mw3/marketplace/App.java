@@ -19,6 +19,7 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.CreateDatabase;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -630,9 +631,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProject().getId());
 		wfNode.copyFrom(wfNode.databaseMe());
-		String defaultIp = "14.63.225.215";
 		Object warFile = null;
 		Object sqlPath = null;
+
+		CloudInfo cloudInfo = wfNode.getCloudInfo();
+		cloudInfo.copyFrom(cloudInfo.databaseMe());
 		
 		XStream xstream = new XStream();
 		if (wfNode.getExt() != null) {
@@ -653,12 +656,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 		//데이터베이스 생성
 		CreateDatabase createDatabase = new CreateDatabase();
-		if(wfNode.getConnType() != null){
-			createDatabase.create("root", wfNode.getConnType(), wfNode.getUrl(), TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
-		}
-		else{
-			createDatabase.create("root", defaultIp, wfNode.getUrl(), TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
-		}
+		createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), TenantContext.getThreadLocalInstance().getTenantId(), sqlPath.toString());
 		
 		AppMapping appmapping = new AppMapping();
 		
