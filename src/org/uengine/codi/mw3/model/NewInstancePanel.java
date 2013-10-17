@@ -109,8 +109,11 @@ public class NewInstancePanel implements ContextAware {
 		this.setTopicNodeId(session.getLastSelectedItem());
 		
 		newInstantiator = new CommentWorkItem();
-		newInstantiator.setWriter(session.getUser());		
-
+		newInstantiator.session = session;
+		newInstantiator.setWriter(session.getUser());
+		if(this.session == null)
+			this.session = session;
+			
 		/* for helper */
 		if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 			processMapPanel = new ProcessMapPanel();		
@@ -119,10 +122,11 @@ public class NewInstancePanel implements ContextAware {
 		}
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			if("oce".equals(session.getUx())){
-				getMetaworksContext().setHow("sns");
-				newInstantiator.getMetaworksContext().setHow("sns");			
-			}
+			getMetaworksContext().setHow("sns");
+			newInstantiator.getMetaworksContext().setHow("sns");			
+		}
+		if("oce".equals(session.getUx())){
+			newInstantiator.getMetaworksContext().setWhere("oce");
 		}
 		
 		Choice securityLevel = new Choice();

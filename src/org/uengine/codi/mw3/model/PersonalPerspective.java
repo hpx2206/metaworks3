@@ -4,7 +4,6 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class PersonalPerspective extends Perspective {
 
@@ -14,7 +13,8 @@ public class PersonalPerspective extends Perspective {
 
 	@ServiceMethod
 	public Object[] loadAllICanSee() throws Exception{
-		Object[] returnObject = loadInstanceListPanel("allICanSee", null);
+		
+		Object[] returnObject = loadInstanceListPanel("allICanSee", session.getLastSelectedItem());
 		
 		/*
 		if("sns".equals(session.getEmployee().getPreferUX()) ){

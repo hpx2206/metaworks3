@@ -93,7 +93,6 @@ public class Main {
 	
 	public Main(Session session) throws Exception {
 		
-		//
 		String preferUX = session.getEmployee().getPreferUX();
 		String preferMob = session.getEmployee().getPreferMob();
 

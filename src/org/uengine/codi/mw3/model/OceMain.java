@@ -98,8 +98,6 @@ public class OceMain {
 	
 	public OceMain(Session session) throws Exception {
 		
-		session.setUx("oce");
-		
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("process");
 
