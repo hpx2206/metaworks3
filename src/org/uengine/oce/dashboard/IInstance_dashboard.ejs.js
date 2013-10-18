@@ -6,6 +6,12 @@ var org_uengine_oce_dashboard_IInstance_dashboard = function(objectId, className
 	
 	this.object = mw3.objects[this.objectId];
 	
+	$('.tx_box_obj').hover(function(){
+		$(this).css('cursor','pointer');
+	}, function(){			
+		$(this).css('cursor','auto');
+});
+	
 };
 
 org_uengine_oce_dashboard_IInstance_dashboard.prototype = {

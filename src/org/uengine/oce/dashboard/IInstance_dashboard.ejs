@@ -6,7 +6,7 @@ if(value){
 	<h4 class="ico_time"><%=fields.startedDate.here({when: 'timeago'})%></h4>
 	<ul day="20131014">
 		<li class="_ccast_list_item _ccast_item nlst nlst_first  " readcheck="true" serviceid="calendar" catid="1" timekey="5934492115264383284" style="display:inline">
-			<div class="tx_box_obj">
+			<div onClick="<%=methods.goSns.caller()%>" class="tx_box_obj">
 				<div class="tx_tooltip">
 					<div class="tx_bubble">
 						<div class="thumb">
@@ -15,7 +15,7 @@ if(value){
 						<div class="bubble_content">
 							<div class="tx_width">
 								<strong class="ans_type"><%=value.initEp%></strong>
-								<span class="alarm_tx"><a href="" target="_blank" class="_ccast_item_url  N=a:amx*a.content"><%=value.name%></a></span>		
+								<span class="alarm_tx"><%=value.name%></span>		
 								<% if(value.lastCmnt2User.name != null){ %>
 								<dl class="from_obj">
 									<dt><img src="images/waveStyle/re.gif" /></dt>
