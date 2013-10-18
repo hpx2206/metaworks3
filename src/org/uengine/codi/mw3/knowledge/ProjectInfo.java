@@ -395,7 +395,7 @@ public class ProjectInfo implements ContextAware {
 		Object warPath = null;
 
 		CloudInfo cloudInfo = wfNode.getCloudInfo();
-		cloudInfo.databaseMe();
+		cloudInfo.copyFrom(cloudInfo.databaseMe());
 		
 		if(cloudInfo == null || "".equals(cloudInfo.getServerIp())){
 			throw new MetaworksException("개발환경 요청이 안되어있습니다.");
@@ -505,22 +505,18 @@ public class ProjectInfo implements ContextAware {
 
 	}
 
-	@Face(displayName = "서버관리")
-	@ServiceMethod(payload={"projectName"}, target = ServiceMethodContext.TARGET_APPEND)
+	@Face(displayName = "개발기 관리")
+	@ServiceMethod(payload={"projectName" , "projectId"}, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] server() throws Exception {
 		
 		ModalWindow modal = new ModalWindow();
-		
-//		String ip = "14.63.225.192";
-		String ip = "14.63.225.215";
-		
 		KtProjectServers ProjectServers = new KtProjectServers();
-		ProjectServers.loadOceServer(this.getProjectName() , ip);
+		ProjectServers.loadOceServer(this.getProjectId(), this.getProjectName());
 		
 		modal.setPanel(ProjectServers);
 		modal.setWidth(600);
 		modal.setHeight(400);
-		modal.setTitle("서버관리");
+		modal.setTitle("개발기 관리");
 		
 		return new Object[]{modal};
 	}

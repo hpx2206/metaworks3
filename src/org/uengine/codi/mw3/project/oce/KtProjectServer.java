@@ -261,16 +261,16 @@ public class KtProjectServer  implements ITool, ContextAware{
 		this.getMetaworksContext().setWhen(this.getStatus());
 	}
 	
-	@Hidden
-	@Face(displayName="통계")
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object statistics(){
-		IFrame iframe = new IFrame("http://192.168.212.77:10086/admin?status");
-//		iframe.setWidth("1000");
-//		iframe.setHeight("630");
-		
-		return new Popup(980, 600, iframe);
-	}
+//	@Hidden
+//	@Face(displayName="통계")
+//	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+//	public Object statistics(){
+//		IFrame iframe = new IFrame("http://192.168.212.77:10086/admin?status");
+////		iframe.setWidth("1000");
+////		iframe.setHeight("630");
+//		
+//		return new Popup(980, 600, iframe);
+//	}
 	
 	@Override
 	public void onLoad() throws Exception {

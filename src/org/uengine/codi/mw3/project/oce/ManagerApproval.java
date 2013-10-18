@@ -101,7 +101,7 @@ public class ManagerApproval implements ITool  {
 	public void beforeComplete() throws Exception {
 		// TODO Auto-generated method stub
 		if( approval != null && approval.equals("approval") ){
-			setResultStr("진행중 입니다.(약 10분의 시간이 걸립니다.)");
+			setResultStr("생성중 입니다.");
 		}else{
 			setResultStr("취소 되었습니다.");
 		}
@@ -112,15 +112,13 @@ public class ManagerApproval implements ITool  {
 		ProcessManagerBean processManagerBean = new ProcessManagerBean();
 		final ProcessInstance instance  = processManagerBean.getProcessInstance(instIDDD);
 		this.processManager = processManagerBean;
-//		String ip = "14.63.225.215";
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				try {
-					vmServerStart(projectName , instance);
+//					vmServerStart(projectName , instance);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}				
 			}
@@ -145,7 +143,6 @@ public class ManagerApproval implements ITool  {
 		// ubuntu_12.04_64bit_java_cubrid  : 396778cc-16a8-478d-b753-2ffd2a82fff9
 		// ubuntu_12.04_64bit_java_cubrid_jboss  : b90c22c9-8ce8-4930-875a-153a13ea8d5d
 		
-	
 		// VM 생성 명령어
 		String command = "deployVirtualMachine"
 				+ "&serviceofferingid=b6216137-96ed-4d0a-bb95-fac81b3fe00b"
@@ -173,13 +170,12 @@ public class ManagerApproval implements ITool  {
 			jobstatus = temp[1].substring(1, temp[1].length()-2);
 			
 			if(jobstatus.equals("0")){
-				result = "서버생성중...("+time+")";
-//				instance.setBeanProperty("resultStr", (Serializable)result);
+				result = "서버생성중...";
 			}else if(jobstatus.equals("1")){
-				result = "서버생성성완료("+time+")";
+				result = "서버생성성완료";
 				break;
 			}else if(jobstatus.equals("2")){
-				result = "서버생성실패("+time+")";
+				result = "서버생성실패";
 				break;
 			}
 			
@@ -192,10 +188,9 @@ public class ManagerApproval implements ITool  {
 			
 			time += 10;
 		}
-		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)result);
-		processManager.applyChanges();
 		// VM 생성 결과
-		System.out.println(reponse);
+		System.out.println(result);
+//		System.out.println(reponse);
 		
 		
 		temp = reponse.split("<id>");
@@ -221,6 +216,7 @@ public class ManagerApproval implements ITool  {
     			"&jobid=" + jobid;
 		
 		jobstatus = null;
+		String result1 = "";
 		while(true){
 			
 			reponse = this.cmdRequest(command);
@@ -228,13 +224,12 @@ public class ManagerApproval implements ITool  {
 			jobstatus = temp[1].substring(1, temp[1].length()-2);
 			
 			if(jobstatus.equals("0")){
-				result = "아이피생성중...("+time+")";
-//				instance.setBeanProperty("resultStr", (Serializable)result);
+				result1 = "아이피생성중...";
 			}else if(jobstatus.equals("1")){
-				result = "아이피생성완료("+time+")";
+				result1 = "아이피생성완료";
 				break;
 			}else if(jobstatus.equals("2")){
-				result = "아이피생성실패("+time+")";
+				result1 = "아이피생성실패";
 				break;
 			}
 			
@@ -247,10 +242,9 @@ public class ManagerApproval implements ITool  {
 			
 			time += 10;
 		}
-		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)result);
-		processManager.applyChanges();
 		// 공인ip 생성 결과
-		System.out.println(reponse);
+		System.out.println(result1);
+//		System.out.println(reponse);
 		
 		temp = reponse.split("<ipaddress>");
 		temp = temp[2].split("</ipaddress>");
@@ -283,6 +277,7 @@ public class ManagerApproval implements ITool  {
 		
 		
 		jobstatus = null;
+		String result2 = "";
 		while(true){
 			
 			reponse = this.cmdRequest(command);
@@ -290,13 +285,12 @@ public class ManagerApproval implements ITool  {
 			jobstatus = temp[1].substring(1, temp[1].length()-2);
 			
 			if(jobstatus.equals("0")){
-				result = "아이피할당중...("+time+")";
-//				instance.setBeanProperty("resultStr", (Serializable)result);
+				result2 = "아이피할당중...";
 			}else if(jobstatus.equals("1")){
-				result = "아이피할당완료("+time+")";
+				result2 = "아이피할당완료";
 				break;
 			}else if(jobstatus.equals("2")){
-				result = "아이피할당실패("+time+")";
+				result2 = "아이피할당실패";
 				break;
 			}
 			
@@ -309,19 +303,22 @@ public class ManagerApproval implements ITool  {
 			
 			time += 10;
 		}
-		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)result);		
 		reponse = this.cmdRequest(command);
 		
 		// ip 할당 결과
-		System.out.println(reponse);
+		System.out.println(result2);
+//		System.out.println(reponse);
 			
 		System.out.println("====================================================");
 		System.out.println("생성결과");
 		System.out.println("접속url : "+ip);
-		instance.setBeanProperty("ManagerApproval.resultIp", (Serializable)ip);
 		System.out.println("id : root 또는  Administrator");
 		System.out.println("pw : "+vm_pass);
 		System.out.println("====================================================");
+		
+		String resultMessage = result + "<br/>" + result1 + "<br/>" + result2;
+		instance.setBeanProperty("ManagerApproval.resultIp", (Serializable)ip);
+		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)resultMessage);		
 		processManager.applyChanges();
 		
 		TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
@@ -358,7 +355,6 @@ public class ManagerApproval implements ITool  {
 			
 			IWfNode dao = (IWfNode)Database.sql(IWfNode.class,sb.toString());
 			
-	//		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
 			dao.set("type", "project");
 			dao.set("name", vm_name);
 			dao.select();
@@ -387,6 +383,7 @@ public class ManagerApproval implements ITool  {
 		}finally{
 			tx.releaseResources();
 		}
+		
 	}
 	
 	public String signRequest(String request, String key) {
@@ -507,7 +504,7 @@ public class ManagerApproval implements ITool  {
 			int responseCode = client.executeMethod(method);
 			if (responseCode == 200) {	
 				// SUCCESS!
-				System.out.println("Successfully executed command");
+//				System.out.println("Successfully executed command");
 //				System.out.println("Success Result : "
 //						+ method.getResponseBodyAsString());
 				result = method.getResponseBodyAsString();
