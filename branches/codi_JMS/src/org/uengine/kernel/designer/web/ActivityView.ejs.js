@@ -111,10 +111,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			object.showProperties();
         			
         		},
-        		btnclick : function(event) {
+    				btnclick : function(event) {
         			object.id = $(this).attr('id');
         			object.activity = $(this).data('activity');
-        			object.showDefinitionMonitor();
+        			object.showDefinitionMonitorToPanel();
         		}
         	});
         	$(element).droppable({
@@ -195,7 +195,20 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			session.clipboard = null;
         		}
         	});
-			// jms 조회 화면
+        	if( object != null ){
+//            	$(element).on({
+//            		dblclick: function (event) {
+//            			if(event.stopPropagation){
+//            				event.stopPropagation();
+//            			}
+//            			object.id = $(this).attr('id');
+//            			object.activity = $(this).data('activity');
+//            			object.showDefinitionMonitor();
+//            		}
+//            	});
+        	}
+
+        	// jms 조회 화면
 			if( object != null && object.viewType != null && "definitionView" == object.viewType ){
 				$(element).unbind('dblclick').bind('dblclick' , function(event){
 				});
@@ -203,6 +216,8 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 					object.showActivityDocument();
 				});
 			}
+			
+			
 			// 프로세스 비교
 			if( object != null && object.viewType != null && "definitionDiffView" == object.viewType ){
 				var eleId = $(element).attr('id');

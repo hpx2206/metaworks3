@@ -10,16 +10,16 @@ public class TopPanel {
 	public TopPanel(Session session) {
 		setSession(session);
 		setWindowPanel(new WindowPanel());
-		setMainMenu(new MainMenuTop());		
+//		setMainMenu(new MainMenuTop());		
 	}
 	
-	MainMenuTop mainMenu;
-		public MainMenuTop getMainMenu() {
-			return mainMenu;
-		}
-		public void setMainMenu(MainMenuTop mainMenu) {
-			this.mainMenu = mainMenu;
-		}
+//	MainMenuTop mainMenu;
+//		public MainMenuTop getMainMenu() {
+//			return mainMenu;
+//		}
+//		public void setMainMenu(MainMenuTop mainMenu) {
+//			this.mainMenu = mainMenu;
+//		}
 		
 	WindowPanel windowPanel;
 		public WindowPanel getWindowPanel() {

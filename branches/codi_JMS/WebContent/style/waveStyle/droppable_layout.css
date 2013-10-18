@@ -1068,9 +1068,9 @@ img {
 #navigator .depth1 {
     height: 25px;
     line-height: 25px;
-    /*padding-left: 20px;
-     border-top: 1px solid #ccc; 
-    background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat;*/
+    padding-left: 20px;
+   /*  border-top: 1px solid #ccc; */
+    background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat;
     cursor: pointer;
     font-weight:bold;
 }

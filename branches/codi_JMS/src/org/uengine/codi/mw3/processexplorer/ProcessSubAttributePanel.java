@@ -1,16 +1,15 @@
-package org.uengine.codi.mw3.webProcessDesigner;
+package org.uengine.codi.mw3.processexplorer;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 
-import org.directwebremoting.io.FileTransfer;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.kernel.Activity;
+import org.uengine.codi.mw3.webProcessDesigner.Documentation;
+import org.uengine.codi.mw3.webProcessDesigner.DocumentationSub;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 
-public class ProcessAttributePanel {
-	
+public class ProcessSubAttributePanel {
 	String defId;
 	@Hidden
 		public String getDefId() {
@@ -26,13 +25,13 @@ public class ProcessAttributePanel {
 		public void setFileList(ArrayList<MetaworksFile> fileList) {
 			this.fileList = fileList;
 		}
-	Documentation documentation;
-		public Documentation getDocumentation() {
-			return documentation;
-		}
-		public void setDocumentation(Documentation documentation) {
-			this.documentation = documentation;
-		}
+	DocumentationSub documentationSub;
+	public DocumentationSub getDocumentationSub() {
+		return documentationSub;
+	}
+	public void setDocumentationSub(DocumentationSub documentationSub) {
+		this.documentationSub = documentationSub;
+	}
 	ProcessViewPanel processViewPanel;
 		@Hidden
 		public ProcessViewPanel getProcessViewPanel() {
@@ -42,9 +41,9 @@ public class ProcessAttributePanel {
 			this.processViewPanel = processViewPanel;
 		}
 			
-	public ProcessAttributePanel(){
+	public ProcessSubAttributePanel(){
 		processViewPanel = new ProcessViewPanel();
-		setDocumentation(null);
+		setDocumentationSub(null);
 		setDefId(defId);
 	}
 	public void load( ProcessDesignerContainer processDesignerContainer ) throws Exception {
@@ -79,6 +78,4 @@ public class ProcessAttributePanel {
 		}
 		*/
 	}
-	
-
 }

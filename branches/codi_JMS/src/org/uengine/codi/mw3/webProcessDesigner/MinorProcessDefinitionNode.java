@@ -9,6 +9,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ProcessExploreContent;
 
 public class MinorProcessDefinitionNode extends TreeNode implements ContextAware {
 	@AutowiredFromClient
@@ -61,14 +62,14 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 	public Object action() throws Exception {
 		if("explorer".equals(this.getMetaworksContext().getHow())) {
 			
-			ProcessViewWindow processViewWindow = new ProcessViewWindow();
-			processViewWindow.setAlias(this.getPath());
-			processViewWindow.setDefId(this.getName());
-			processViewWindow.setPath(this.getPath());
-			processViewWindow.session = session;
-			processViewWindow.load();
+			ProcessExploreContent processExploreContent = new ProcessExploreContent();
+			processExploreContent.setAlias(this.getPath());
+			processExploreContent.setDefId(this.getName());
+//			processExploreContent.setPath(this.getPath());
+			processExploreContent.session = session;
+			processExploreContent.load();
 			
-			return new Refresh(processViewWindow);
+			return new Refresh(processExploreContent);
 			
 		} else if("viewer".equals(this.getMetaworksContext().getHow())){
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();

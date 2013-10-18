@@ -26,7 +26,16 @@ public class ActivityPanel {
 		public void setDocument(Documentation document) {
 			this.document = document;
 		}
-		
+	
+	DocumentationSub documentationSub;
+	@Face(displayName="추가도큐멘트")
+	public DocumentationSub getDocumentationSub() {
+		return documentationSub;
+	}
+	public void setDocumentationSub(DocumentationSub documentationSub) {
+		this.documentationSub = documentationSub;
+	}
+
 	ParameterContextPanel parameterContextPanel;
 		@Face(displayName="$ParameterSetting")
 		public ParameterContextPanel getParameterContextPanel() {

@@ -16,8 +16,11 @@ import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ViewContentWindow;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Role;
 
@@ -85,16 +88,19 @@ public class ProcessNode extends TreeNode{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-		if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
-			instanceViewThreadPanel.session = session;
-			instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
-			instanceViewThreadPanel.load();
+		ProcessAttributePanel processAttributePanel= new ProcessAttributePanel();
+		ProcessViewPanel processViewPanel = new ProcessViewPanel();
+		processAttributePanel.setDocumentation(null);
+		processAttributePanel.setDefId(this.getId());
+		if( processViewPanel.processViewer != null ){
+			try {
+				processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-		cloudInstanceWindow.setPanel(instanceViewThreadPanel);
-		
-		return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
+		return new Object[]{new ToAppend(new CloudWindow("editor"), editor)  };
 	}		
 	
 	@Override

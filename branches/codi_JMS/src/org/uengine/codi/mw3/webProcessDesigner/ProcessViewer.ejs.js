@@ -30,8 +30,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 		this.divObj.css('height','100%');
 		this.divObj.parent().css('height','100%');
 		var canvasDivObj = $('#canvas_' + objectId);
-		
-		OG.common.Constants.CANVAS_BACKGROUND = "#fff";
+		OG.common.Constants.CANVAS_BACKGROUND = "#000000";
 	    OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
 	    var canvas = new OG.Canvas('canvas_' + objectId);
 		this.icanvas = canvas;	

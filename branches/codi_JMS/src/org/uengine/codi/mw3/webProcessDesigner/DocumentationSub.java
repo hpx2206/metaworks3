@@ -9,13 +9,13 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.WebEditor;
 
-@Face(displayName="절차서 속성 정보", ejsPath="dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/Documentation.ejs",
-	ejsPathMappingByContext = {
+@Face(displayName="지시문 속성 정보", ejsPath="dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/DocumentationSub.ejs",
+ejsPathMappingByContext = {
 		"{when:'edit', face : 'dwr/metaworks/genericfaces/FormFace.ejs'}"
-	}
-	, options={"fieldOrder"}
-	,values={"title,document,reference,url,departManagement,regulation,processMeasure,define,attachfile1,attachfile2,attachfile3,description"})
-public class Documentation implements Serializable , ContextAware{
+		}
+		, options={"fieldOrder"}
+		,values={"initCondition,attention,jobAttention,logicalCondition"})
+public class DocumentationSub implements Serializable , ContextAware{
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -23,9 +23,25 @@ public class Documentation implements Serializable , ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+	String defId;
+		@Hidden
+		public String getDefId() {
+			return defId;
+		}
+		public void setDefId(String defId) {
+			this.defId = defId;
+		}
+	String alias;
+	@Hidden
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
 	
 	String departManagement;
-		@Face(displayName="목적")
+		@Face(displayName="$departManagement")
 		public String getDepartManagement() {
 			return departManagement;
 		}
@@ -42,7 +58,7 @@ public class Documentation implements Serializable , ContextAware{
 			this.description = description;
 		}
 	String processMeasure;
-		@Face(displayName="참조")
+		@Face(displayName="$processMeasure")
 		public String getProcessMeasure() {
 			return processMeasure;
 		}
@@ -50,7 +66,7 @@ public class Documentation implements Serializable , ContextAware{
 			this.processMeasure = processMeasure;
 		}
 	String document;
-		@Face(displayName="번호")	
+		@Face(displayName="$document")	
 		public String getDocument() {
 			return document;
 		}
@@ -59,7 +75,7 @@ public class Documentation implements Serializable , ContextAware{
 		}
 
 	String reference;
-	@Face(displayName="이름")
+	@Face(displayName="$Reference")
 		public String getReference() {
 			return reference;
 		}
@@ -68,7 +84,7 @@ public class Documentation implements Serializable , ContextAware{
 		}
 
 	String regulation;
-		@Face(displayName="적용범위")
+		@Face(displayName="$regulation")
 		public String getRegulation() {
 			return regulation;
 		}
@@ -76,7 +92,7 @@ public class Documentation implements Serializable , ContextAware{
 			this.regulation = regulation;
 		}
 	String title;
-	@Face(displayName="종류")
+	@Face(displayName="$Subject")
 		public String getTitle() {
 			return title;
 		}
@@ -85,40 +101,15 @@ public class Documentation implements Serializable , ContextAware{
 		}
 
 	String url;
-	@Face(displayName="Full Name")
+	@Face(displayName="$URL")
 		public String getUrl() {
 			return url;
 		}
 		public void setUrl(String url) {
 			this.url = url;
 		}
+
 		
-	String subject;
-	@Face(displayName="목적")
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	String rangeApplication;
-	@Face(displayName="적용범위")
-		public String getRangeApplication() {
-			return rangeApplication;
-		}
-		public void setRangeApplication(String rangeApplication) {
-			this.rangeApplication = rangeApplication;
-		}
-
-	String define;
-	@Face(displayName="정의")
-	public String getDefine() {
-		return define;
-	}
-	public void setDefine(String define) {
-		this.define = define;
-	}
 	MetaworksFile attachfile1;
 		@Face(displayName="$attachfile1")
 		public MetaworksFile getAttachfile1() {
@@ -144,48 +135,45 @@ public class Documentation implements Serializable , ContextAware{
 			this.attachfile3 = attachfile3;
 		}
 		
-	String type;
-	@Face(displayName="종류")	
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	
-	String number;
-	@Face(displayName="번호")
-	public String getNumber() {
-		return number;
-	}
-	public void setNumber(String number) {
-		this.number = number;
-	}
-	
-	
-	String name;
-	@Face(displayName="이름")
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	String fullName;
-	@Face(displayName="Full Name")
-	public String getFullName() {
-		return fullName;
-	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+	String initCondition;
+	@Face(displayName="초기조건")
+		public String getInitCondition() {
+			return initCondition;
+		}
+		public void setInitCondition(String initCondition) {
+			this.initCondition = initCondition;
+		}
+		
+	String attention;
+	@Face(displayName="주의사항")
+		public String getAttention() {
+			return attention;
+		}
+		public void setAttention(String attention) {
+			this.attention = attention;
+		}
+		
+	String jobAttention;
+	@Face(displayName="수행직무 및 주의사항")
+		public String getJobAttention() {
+			return jobAttention;
+		}
+		public void setJobAttention(String jobAttention) {
+			this.jobAttention = jobAttention;
+		}
+		
+	String logicalCondition;
+	@Face(displayName="논리요건")
+		public String getLogicalCondition() {
+			return logicalCondition;
+		}
+		public void setLogicalCondition(String logicalCondition) {
+			this.logicalCondition = logicalCondition;
+		}
 	
 		
 		
-		
-	public Documentation(){
+	public DocumentationSub(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 		setDescription(new WebEditor());

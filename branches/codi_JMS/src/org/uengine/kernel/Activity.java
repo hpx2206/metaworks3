@@ -38,6 +38,7 @@ import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.codi.mw3.webProcessDesigner.Documentation;
+import org.uengine.codi.mw3.webProcessDesigner.DocumentationSub;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.graph.Transition;
@@ -388,6 +389,10 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		documentation = new Documentation();
 		documentation.setMetaworksContext(new MetaworksContext());
 		documentation.getMetaworksContext().setWhen("edit");	
+		
+		documentationSub = new DocumentationSub();
+		documentationSub.setMetaworksContext(new MetaworksContext());
+		documentationSub.getMetaworksContext().setWhen("edit");	
 		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");	
@@ -1556,7 +1561,14 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		public void setDocumentation(Documentation documentation) {
 			this.documentation = documentation;
 		}
-	
+	DocumentationSub documentationSub;
+	@Hidden
+		public DocumentationSub getDocumentationSub() {
+			return documentationSub;
+		}
+		public void setDocumentationSub(DocumentationSub documentationSub) {
+			this.documentationSub = documentationSub;
+		}
 	@AutowiredFromClient
 	public ActivityPanel activityPanel;
 	/**
@@ -1567,6 +1579,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	public Object[] apply(){
 		if( activityPanel != null ){
 			Documentation document = activityPanel.getDocument();
+			DocumentationSub documentSub = activityPanel.getDocumentationSub();
 			MetaworksFile file1 = document.getAttachfile1();
 			if (file1 != null && file1.getFileTransfer() != null
 					&& file1.getFileTransfer().getFilename() != null
@@ -1605,6 +1618,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			}
 			
 			this.setDocumentation(activityPanel.getDocument());
+			this.setDocumentationSub(activityPanel.getDocumentationSub());
 		}
 //		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
 		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new Popup() , true)};

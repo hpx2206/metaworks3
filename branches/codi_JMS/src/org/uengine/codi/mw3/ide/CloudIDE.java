@@ -14,6 +14,8 @@ import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ProcessFormPanel;
+import org.uengine.codi.mw3.processexplorer.ViewContentWindow;
 
 public class CloudIDE {
 	
@@ -112,7 +114,7 @@ public class CloudIDE {
 			this.pageNavigator = pageNavigator;
 		}		
 		
-	public void load(Session session){
+	public void load(Session session) throws Exception{
 		// make workspace
 		Workspace workspace = new Workspace();
 		workspace.load(session);
@@ -126,7 +128,10 @@ public class CloudIDE {
 		
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
-		CloudInstanceWindow instanceWindow = new CloudInstanceWindow();
+		ViewContentWindow viewContentPanel = new ViewContentWindow();
+		
+		ProcessFormPanel ProcessFormPanel= new ProcessFormPanel();
+		viewContentPanel.setPanel(ProcessFormPanel);
 		/*
 		ResourceNode resourceNode = new ResourceNode();
 		resourceNode.setProjectId("test0001");
@@ -150,11 +155,11 @@ public class CloudIDE {
 		centerLayout.setId("center");
 		centerLayout.setName("center");
 		centerLayout.setCenter(editorWindow);
-		centerLayout.setEast(instanceWindow);
+		centerLayout.setEast(viewContentPanel);
 		
 		//centerLayout.setCenter(editorWindow);
 		//centerLayout.setSouth(etcWindow);
-		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, east__size:250");
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, east__size:320");
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);

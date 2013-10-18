@@ -176,7 +176,8 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	}
 
 	@XStreamOmitField
-	MetadataFile file;
+	
+	public MetadataFile file;
 	public MetadataFile getFile() {
 		return file;
 	}
@@ -223,7 +224,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	}
 
 	@XStreamOmitField
-	ResourceNode resourceNode;
+	public ResourceNode resourceNode;
 	public ResourceNode getResourceNode() {
 		return resourceNode;
 	}

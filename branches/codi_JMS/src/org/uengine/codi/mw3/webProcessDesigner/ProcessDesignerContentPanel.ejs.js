@@ -63,8 +63,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 		mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js');
 		mw3.importScript('scripts/jquery/jquery.contextMenu.js');
 		mw3.importStyle('style/jquery/jquery.contextMenu.css');
-		mw3.importScript('scripts/jquery/jquery-tooltip.js');
-		mw3.importStyle('style/jquery/jquery-tooltip.css');
+//		mw3.importScript('scripts/jquery/jquery-tooltip.js');
+//		mw3.importStyle('style/jquery/jquery-tooltip.css');
 		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
 		
 		mw3.importScript('scripts/jquery.jqGrid-4.3.1/jquery.jqGrid.js');
@@ -245,7 +245,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 						drawByCanvas : true,
 						element : edgeElement
 	    		};
-	    		var html = mw3.locateObject(transitionView , transitionView.____className);
+	    		var html = mw3.locateObject(transitionView , transitionView.__className);
             	canvasDivObj.append(html);
             	
             	mw3.onLoadFaceHelperScript();

@@ -177,7 +177,7 @@ public class ProjectTitle implements ContextAware {
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
 		// create SVN
-		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
+		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " " + projectNode.getName();
 		jschServerBehaviour.runCommand(command);
 		
 		// setting SVN
