@@ -7,6 +7,8 @@ import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
@@ -170,6 +172,15 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		recentItem.add();
 	}
 	
+	
+	
+	@Override
+	public Object openAppBrowser() throws Exception {
+		OceMain oceMain = new OceMain();
+		oceMain.loadAppSns(session);
+		return new MainPanel(oceMain);
+	}
+
 	@AutowiredFromClient
 	public Session session;
 	

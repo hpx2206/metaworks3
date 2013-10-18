@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
@@ -8,8 +9,8 @@ public class OrganizationPerspectiveApp extends Perspective{
 	
 	public OrganizationPerspectiveApp(){
 		setLabel("App");
+		setMetaworksContext(new MetaworksContext());
 	}
-	
 	
 	IAppMapping appList;
 		public IAppMapping getAppList() {
@@ -19,7 +20,16 @@ public class OrganizationPerspectiveApp extends Perspective{
 		public void setAppList(IAppMapping appList) {
 			this.appList = appList;
 		}
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
 		
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+	
+
 
 	protected void loadChildren() throws Exception {
 		
@@ -30,6 +40,9 @@ public class OrganizationPerspectiveApp extends Perspective{
 		
 		IAppMapping addedApps =appMp.findMyApps();
 		addedApps.getMetaworksContext().setWhen("filter");
+		if("dashboard".equals(this.getMetaworksContext().getHow())){
+			addedApps.getMetaworksContext().setHow("dashboard");
+		}
 		setAppList(addedApps);
 		
 	}

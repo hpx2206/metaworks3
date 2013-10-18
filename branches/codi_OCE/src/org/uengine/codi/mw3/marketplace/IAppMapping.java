@@ -70,4 +70,6 @@ public interface IAppMapping extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public void updateFavoriteApp() throws Exception;
 
+	@ServiceMethod(callByContent=true)
+	public Object openAppBrowser() throws Exception;
 }

@@ -5,9 +5,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.IFrame;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.oce.dashboard.DashboardWindow;
 
@@ -131,10 +133,97 @@ public class OceMain {
 
 	}
 
+	
+	public void loadAppSns(Session session) throws Exception {
+		
+		/*session.setUx("oce");
+		
+		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
+		processTopPanel.setPageType("process");
+
+		
+		Layout westLayout = new Layout();
+		
+		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
+		
+		DashboardWindow dashboardWindow = createDashboardWindow(session);
+		
+		
+		westLayout.setCenter(perspectiveWindow);
+		westLayout.setUseHideBar(true);
+		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
+		outerLayout.setNorth(processTopPanel);
+		
+		outerLayout.setWest(westLayout);
+		outerLayout.setCenter(dashboardWindow);		
+		outerLayout.setName("center");
+		outerLayout.setUseHideBar(false);
+		
+		setLayout(outerLayout);
+		setSession(session);
+		
+		if(!session.getEmployee().isGuest()){
+			setPageNavigator(new OcePageNavigator("process"));
+		}*/
+		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
+		processTopPanel.setPageType("process");
+		
+		Layout westLayout = new Layout();
+		
+//		ContactWindow contactWindow = new ContactWindow(session.getUser());
+		
+		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
+		
+		Window appWindow = new Window(new IFrame("www.naver.com"));
+		
+		
+		InstanceListWindow instanceListWindow = new InstanceListWindow(session);
+		
+		westLayout.setCenter(perspectiveWindow);
+		westLayout.setUseHideBar(true);
+		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+		westLayout.setName("west");
+		
+		//Since there's are too many input boxes there, it is removed.
+//		if(session.getEmployee().isApproved()){
+//			contactWindow.getContactPanel().setSearchBox(null);
+//			contactWindow.getContactPanel().setUser(null);
+//			westLayout.setSouth(contactWindow);
+//		}
+		
+		Layout eastLayout = new Layout();
+		eastLayout.setWest(appWindow);
+		
+		eastLayout.setCenter(instanceListWindow);
+		eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'70%'");
+		eastLayout.setName("east");
+		eastLayout.setUseHideBar(false);
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
+		outerLayout.setNorth(processTopPanel);
+		
+		//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
+		//processTopPanel.setLoginUser(null);
+		
+		outerLayout.setWest(westLayout);
+		outerLayout.setCenter(eastLayout);		
+		outerLayout.setName("center");
+		outerLayout.setUseHideBar(false);
+		
+		setLayout(outerLayout);
+		setSession(session);
+		
+
+	}
+	
 	private DashboardWindow createDashboardWindow(Session session)
 			throws Exception {
 		DashboardWindow dashboardwindow = new DashboardWindow();
-		dashboardwindow.setTitle("Home");
+		//dashboardwindow.setTitle("Home");
 		
 		DashboardPanel dashboardPanel = new DashboardPanel();
 		dashboardPanel.session = session;
