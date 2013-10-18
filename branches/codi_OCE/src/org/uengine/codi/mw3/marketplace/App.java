@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -21,6 +22,7 @@ import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.CreateDatabase;
+import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
@@ -633,7 +635,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		Object sqlPath = null;
 
 		CloudInfo cloudInfo = wfNode.getCloudInfo();
-		cloudInfo.copyFrom(cloudInfo.databaseMe());
+		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId());
+		while(cInfo.next()){
+			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
+			cloudInfo.copyFrom(cInfo);
+		}
 		
 		XStream xstream = new XStream();
 		if (wfNode.getExt() != null) {

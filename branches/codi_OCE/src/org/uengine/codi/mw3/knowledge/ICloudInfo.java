@@ -8,8 +8,11 @@ import org.metaworks.dao.IDAO;
 public interface ICloudInfo extends IDAO{
 
 	@Id
-	public String getId();
-	public void setId(String id);
+	public Long getId();
+	public void setId(Long id);
+	
+	public String getProjectId();
+	public void setProjectId(String projectId);
 	
 	public String getServerInfo();
 	public void setServerInfo(String serverInfo);
@@ -28,4 +31,5 @@ public interface ICloudInfo extends IDAO{
 
 	public String getRootPwd();
 	public void setRootPwd(String rootPwd);
+	
 }

@@ -889,7 +889,8 @@ alter table bpm_knol add column isdistributed boolean;
 
 DROP TABLE IF EXISTS `cloudinfo`;
 create table cloudinfo(
-    id varchar(20) not null,
+    id int(20) not null,
+    projectId varchar(20),
     serverInfo varchar(20),
     serverId varchar(100),
     serverIp varchar(100),

@@ -61,7 +61,7 @@ public class KtProjectServers implements ContextAware{
 		this.setServerGroup(serverGroup);
 	}
 	
-	public void loadOceServer(String projectName, String ip){
+	public void loadOceServer(String projectId, String projectName){
 		ArrayList<KtProjectServer> serverList = new ArrayList<KtProjectServer>();
 		
 		// TODO	
@@ -69,7 +69,7 @@ public class KtProjectServers implements ContextAware{
 		try {
 			server.setType("DB");
 			server.setName(projectName);
-			server.setIp(ip);
+//			server.setIp(ip);
 			server.setStatus(ProjectServer.SERVER_STATUS_RUNNING);
 			server.setMetaworksContext(new MetaworksContext());
 			server.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
@@ -86,7 +86,7 @@ public class KtProjectServers implements ContextAware{
 		try {
 			server1.setType("WAS");
 			server1.setName(projectName);
-			server1.setIp(ip);
+//			server1.setIp(ip);
 			server1.setMetaworksContext(new MetaworksContext());
 			server1.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 			server1.getMetaworksContext().setWhen(ProjectServer.SERVER_STATUS_RUNNING);
