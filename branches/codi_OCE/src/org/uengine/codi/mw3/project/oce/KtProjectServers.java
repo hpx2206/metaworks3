@@ -74,7 +74,7 @@ public class KtProjectServers implements ContextAware{
 			server.setMetaworksContext(new MetaworksContext());
 			server.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 			server.getMetaworksContext().setWhen(ProjectServer.SERVER_STATUS_RUNNING);
-			server.status();
+//			server.status();
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -90,7 +90,7 @@ public class KtProjectServers implements ContextAware{
 			server1.setMetaworksContext(new MetaworksContext());
 			server1.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 			server1.getMetaworksContext().setWhen(ProjectServer.SERVER_STATUS_RUNNING);
-			server1.status();
+//			server1.status();
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

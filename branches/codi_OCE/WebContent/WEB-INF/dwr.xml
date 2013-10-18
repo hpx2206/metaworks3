@@ -33,6 +33,7 @@
 	<convert converter="metaworks" match="org.uengine.codi.mw3.knowledge.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.widget.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.process.*"/>
+	<convert converter="metaworks" match="org.uengine.codi.mw3.project.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.processexplorer.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.menu.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.marketplace.*"/>
