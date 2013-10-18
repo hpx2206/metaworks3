@@ -31,10 +31,11 @@
 	}else{
 
 %>
-	<li onClick="<%=methods.openAppBrowser.caller()%>">
-	<%=value.appName%>
-	</li>
-
+	<div class="depth1" >
+		<a onClick="<%=methods.openAppBrowser.caller()%>">
+			<%=value.appName%>
+		</a>
+	</div>
 <%
 	}
 %>

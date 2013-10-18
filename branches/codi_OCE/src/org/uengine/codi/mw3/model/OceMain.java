@@ -12,6 +12,7 @@ import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.oce.dashboard.DashboardWindow;
+import org.uengine.oce.dashboard.DashboardWindowLayout;
 
 public class OceMain {
 	
@@ -99,7 +100,7 @@ public class OceMain {
 	
 	
 	public OceMain(Session session) throws Exception {
-		
+		session.setUx("oce");
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("process");
 
@@ -108,8 +109,8 @@ public class OceMain {
 		
 		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 		
-		DashboardWindow dashboardWindow = createDashboardWindow(session);
-		
+		DashboardWindowLayout DashboardWindowLayout = new DashboardWindowLayout();
+		DashboardWindowLayout.load(session);
 		
 		westLayout.setCenter(perspectiveWindow);
 		westLayout.setUseHideBar(true);
@@ -120,7 +121,7 @@ public class OceMain {
 		outerLayout.setNorth(processTopPanel);
 		
 		outerLayout.setWest(westLayout);
-		outerLayout.setCenter(dashboardWindow);		
+		outerLayout.setCenter(DashboardWindowLayout);		
 		outerLayout.setName("center");
 		outerLayout.setUseHideBar(false);
 		
@@ -136,38 +137,7 @@ public class OceMain {
 	
 	public void loadAppSns(Session session) throws Exception {
 		
-		/*session.setUx("oce");
-		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("process");
-
-		
-		Layout westLayout = new Layout();
-		
-		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
-		
-		DashboardWindow dashboardWindow = createDashboardWindow(session);
-		
-		
-		westLayout.setCenter(perspectiveWindow);
-		westLayout.setUseHideBar(true);
-		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
-		
-		Layout outerLayout = new Layout();
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
-		outerLayout.setNorth(processTopPanel);
-		
-		outerLayout.setWest(westLayout);
-		outerLayout.setCenter(dashboardWindow);		
-		outerLayout.setName("center");
-		outerLayout.setUseHideBar(false);
-		
-		setLayout(outerLayout);
-		setSession(session);
-		
-		if(!session.getEmployee().isGuest()){
-			setPageNavigator(new OcePageNavigator("process"));
-		}*/
+		session.setUx("oce");
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("process");
 		
@@ -177,7 +147,7 @@ public class OceMain {
 		
 		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 		
-		Window appWindow = new Window(new IFrame("www.naver.com"));
+		Window appWindow = new Window();
 		
 		
 		InstanceListWindow instanceListWindow = new InstanceListWindow(session);
@@ -220,7 +190,7 @@ public class OceMain {
 
 	}
 	
-	private DashboardWindow createDashboardWindow(Session session)
+	static public DashboardWindow createDashboardWindow(Session session)
 			throws Exception {
 		DashboardWindow dashboardwindow = new DashboardWindow();
 		//dashboardwindow.setTitle("Home");
@@ -240,6 +210,34 @@ public class OceMain {
 		return dashboardwindow;
 	}
 
+	static public DashboardWindow createInstanceListOnDashboardWindow(Session session) throws Exception {
+		DashboardWindow instanceListWindow = new DashboardWindow();
+
+		instanceListWindow.setTitle("Instances");
+		
+		InstanceListPanel instanceListPanel;
+		
+		if("asana".equals(session.getEmployee().getPreferUX())){
+		
+			instanceListPanel = new InstanceListPanel(session);
+			instanceListPanel.session = session;
+			instanceListPanel.switchToKnowledge();
+			instanceListWindow.setPanel(instanceListPanel);
+			
+		}else{
+			PersonalPerspective personalPerspective = new PersonalPerspective();
+			personalPerspective.session = session;
+			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
+
+			instanceListPanel.session = session;
+			instanceListPanel.setMetaworksContext(new MetaworksContext());
+			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
+			instanceListWindow.setPanel(instanceListPanel);
+		}
+		
+		return instanceListWindow;
+	}
+	
 	static public Window createInstanceListWindow(Session session) throws Exception {
 		Window instanceListWindow = new Window();
 

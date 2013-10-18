@@ -256,5 +256,5 @@ public class Perspective {
 	}
 
 	@AutowiredFromClient
-	public Session session;
+	public static Session session;
 }

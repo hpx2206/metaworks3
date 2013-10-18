@@ -6,11 +6,9 @@ var isDashboard = (mw3.how == "dashboard");
 
 %>
 	<%if(isDashboard){%>
-		<div class="depth1">
-			<ul class="fist_menu">
-				<%=fields.appList.here() %>
-			</ul>
-		</div>
+		<%=fields.appList.here() %>
+		
+		
 	<%}else{%>	
 		<div class="depth1">
 			<a onClick="<%=methods.select.caller()%>" href="#"><%=mw3.localize("$App")%></a>
