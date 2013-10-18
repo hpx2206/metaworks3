@@ -49,8 +49,6 @@ var org_uengine_codi_mw3_marketplace_IAppMapping = function(objectId, className)
 };
 
 org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
-	showStatus : function(status){
-	},
 	startLoading : function(status){
 	},
 	endLoading : function(status){
