@@ -47,6 +47,7 @@ public class OcePerspectivePanel extends Perspective{
 			//앱
 			if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
 				appPerspective = new OrganizationPerspectiveApp();
+				appPerspective.getMetaworksContext().setHow("dashboard");
 				appPerspective.session = session;
 				appPerspective.select();
 			}
