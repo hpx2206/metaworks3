@@ -33,8 +33,10 @@ public class MyServicePanel{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goSns() throws Exception {
 
-		if(session != null)
+		if(session != null){
 			session.setLastSelectedItem("goSns");
+			session.setUx("sns");
+		}
 		
 		return new MainPanel(new Main(session));
 	}

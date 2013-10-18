@@ -3,24 +3,16 @@ package org.uengine.codi.mw3.marketplace;
 import java.util.Calendar;
 
 import org.metaworks.Refresh;
-import org.metaworks.Remover;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.Window;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.common.MainPanel;
-import org.uengine.codi.mw3.model.InstanceListWindow;
-import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.oce.dashboard.DashboardWindowLayout;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	

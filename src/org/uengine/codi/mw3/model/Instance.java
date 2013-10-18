@@ -1575,9 +1575,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 	}
 	
 	public MainPanel goSns() throws Exception {
-		if(session != null)
+		if(session != null){
 			session.setLastSelectedItem("goSns");
-		
+			session.setUx("sns");
+		}
 		return new MainPanel(new Main(session));
 	}
 }
