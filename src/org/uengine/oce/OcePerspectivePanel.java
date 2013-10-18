@@ -70,7 +70,7 @@ public class OcePerspectivePanel extends Perspective{
 	
 	
 	@ServiceMethod
-	public Object[] loadAllICanSee() throws Exception{
+	static public Object[] loadAllICanSee() throws Exception{
 		
 		Object[] returnObject = loadInstanceListPanel(session , "allICanSee", "oce");
 		

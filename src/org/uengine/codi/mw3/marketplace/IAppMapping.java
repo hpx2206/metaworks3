@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.marketplace;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -70,6 +71,6 @@ public interface IAppMapping extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public void updateFavoriteApp() throws Exception;
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object openAppBrowser() throws Exception;
 }
