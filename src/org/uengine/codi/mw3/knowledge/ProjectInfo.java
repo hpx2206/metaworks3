@@ -395,9 +395,13 @@ public class ProjectInfo implements ContextAware {
 		Object warPath = null;
 
 		CloudInfo cloudInfo = wfNode.getCloudInfo();
-		cloudInfo.copyFrom(cloudInfo.databaseMe());
+		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId());
+		while(cInfo.next()){
+			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
+			cloudInfo.copyFrom(cInfo);
+		}
 		
-		if(cloudInfo == null || "".equals(cloudInfo.getServerIp())){
+		if(cloudInfo == null || cloudInfo.getServerIp() == null || "".equals(cloudInfo.getServerIp())){
 			throw new MetaworksException("개발환경 요청이 안되어있습니다.");
 		}
 		

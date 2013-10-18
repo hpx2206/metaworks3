@@ -243,7 +243,7 @@ public interface IWfNode extends IDAO {
 	@Hidden
 	@ORMapping(
 		databaseFields = { "id" },
-		objectFields = { "id" },
+		objectFields = { "projectId" },
 		objectIsNullWhenFirstDBFieldIsNull = true,
 		availableWhen= "type=='project'")
 	public CloudInfo getCloudInfo();
