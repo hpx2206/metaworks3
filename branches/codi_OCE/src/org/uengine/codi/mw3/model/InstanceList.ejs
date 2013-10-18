@@ -1,11 +1,11 @@
 <%
 if (value!=null){
-
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	
 %>
 
 	<% if(session != null){ %>
-		<div class="<%=session.lastSelectedItem != 'goSns'? "time_line _noti_list" : ""%>">
+		<div class="<%=session.ux != 'sns'? "time_line _noti_list" : ""%>">
 				<%=fields.instances.here()%>
 		</div>
 	<% } %>
