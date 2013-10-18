@@ -94,6 +94,10 @@ public class OcePageNavigator extends PageNavigator {
 	
 	@Override
 	public MainPanel goDashBoard() throws Exception {
+		
+		if(session != null)
+			session.setLastSelectedItem("goDashboard");
+			
 		return super.goDashBoard();
 	}
 	

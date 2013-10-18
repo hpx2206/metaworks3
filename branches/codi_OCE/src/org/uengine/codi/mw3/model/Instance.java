@@ -22,6 +22,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
@@ -1571,5 +1572,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			return instance;
 			
+	}
+	
+	public MainPanel goSns() throws Exception {
+		if(session != null)
+			session.setLastSelectedItem("goSns");
+		
+		return new MainPanel(new Main(session));
 	}
 }

@@ -14,6 +14,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 
 @Face(
@@ -236,6 +237,9 @@ public interface IInstance extends IDAO{
 	public void split() throws Exception;
 	
 	public void fillFollower();
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goSns() throws Exception;
 	
 
 	/*

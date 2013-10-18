@@ -7,6 +7,7 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 
 public class Main {
@@ -191,7 +192,10 @@ public class Main {
 //			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
 			
 			if(!session.getEmployee().isGuest()){
-				setPageNavigator(new PageNavigator("process"));
+				if("oce".equals(session.getUx()))
+					setPageNavigator(new OcePageNavigator());
+				else
+					setPageNavigator(new PageNavigator("process"));
 			}
 			
 			

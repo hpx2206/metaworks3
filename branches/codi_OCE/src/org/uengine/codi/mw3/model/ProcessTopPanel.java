@@ -28,12 +28,12 @@ public class ProcessTopPanel {
 		
 		setLoginUser(loginUser);
 		
-//		if( "sns".equals(session.getEmployee().getPreferUX())){
+		if("oce".equals(session.getUx())){
 			InstanceSearchBox searchBox = new InstanceSearchBox();
 			searchBox.setKeyUpSearch(true);
 			searchBox.setKeyEntetSearch(true);
 			setSearchBox(searchBox);
-//		}
+		}
 	}
 	
 	WindowPanel windowPanel;
