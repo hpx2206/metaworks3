@@ -1,10 +1,12 @@
 package org.uengine.codi.mw3.project.oce;
 
-import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.crypto.Mac;
@@ -22,14 +24,16 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.Range;
 import org.metaworks.dao.ConnectionFactory;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.JDBCConnectionFactory;
+import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.IWfNode;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.util.Base64;
 import org.uengine.kernel.GlobalContext;
@@ -57,6 +61,30 @@ public class ManagerApproval implements ITool  {
 		}
 		public void setInstId(String instId) {
 			this.instId = instId;
+		}
+	String osType;
+	@Hidden
+		public String getOsType() {
+			return osType;
+		}
+		public void setOsType(String osType) {
+			this.osType = osType;
+		}
+	String wasType;
+	@Hidden
+		public String getWasType() {
+			return wasType;
+		}
+		public void setWasType(String wasType) {
+			this.wasType = wasType;
+		}
+	String dbType;
+	@Hidden
+		public String getDbType() {
+			return dbType;
+		}
+		public void setDbType(String dbType) {
+			this.dbType = dbType;
 		}
 	String approval;
 		@Face(displayName="요청된 개발기 생성을 승인합니다.")
@@ -117,7 +145,7 @@ public class ManagerApproval implements ITool  {
 			@Override
 			public void run() {
 				try {
-//					vmServerStart(projectName , instance);
+					vmServerStart(projectName , instance);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}				
@@ -125,7 +153,7 @@ public class ManagerApproval implements ITool  {
 		}).start();
 	}
 	public void vmServerStart(String vm_name , ProcessInstance instance) throws Exception {
-		
+		/*
 		String vm_id;
 		String vm_pass;
 		String ip_id;
@@ -320,7 +348,7 @@ public class ManagerApproval implements ITool  {
 		instance.setBeanProperty("ManagerApproval.resultIp", (Serializable)ip);
 		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)resultMessage);		
 		processManager.applyChanges();
-		
+		*/
 		TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
 		try{
 			tx.setManagedTransaction(false);
@@ -364,16 +392,27 @@ public class ManagerApproval implements ITool  {
 					node.copyFrom(dao);
 					
 					CloudInfo cloudInfo = new CloudInfo();
-					cloudInfo.setId(node.getId());
-					cloudInfo.setServerIp(ip);
-					cloudInfo.setServerIpId(ip_id);
-					cloudInfo.setServerId(vm_id);
+					cloudInfo.setProjectId(node.getId());
+					cloudInfo.setServerName(vm_name);
+//					cloudInfo.setServerIp(ip);
+//					cloudInfo.setServerIpId(ip_id);
+//					cloudInfo.setServerId(vm_id);
 					cloudInfo.setRootId("root");
-					cloudInfo.setRootPwd(vm_pass);
+//					cloudInfo.setRootPwd(vm_pass);
 					cloudInfo.setServerInfo("KT Cloud");
+					cloudInfo.setDbType(this.getDbType());
+					cloudInfo.setOsType(this.getOsType());
+					cloudInfo.setWasType(this.getWasType());
+					cloudInfo.setModdate(new Date());
 					
-					cloudInfo.createDatabaseMe();
-					
+					ICloudInfo iCInfo = cloudInfo.findServerByServerName(node.getId() , vm_name);
+					if( iCInfo.next() ){
+						cloudInfo.setId(iCInfo.getId());
+						cloudInfo.syncToDatabaseMe();
+					}else{
+						cloudInfo.setId(cloudInfo.createNewId());
+						cloudInfo.createDatabaseMe();
+					}
 					tx.commit();
 				}
 			}

@@ -515,7 +515,8 @@ public class ProjectInfo implements ContextAware {
 		
 		ModalWindow modal = new ModalWindow();
 		KtProjectServers ProjectServers = new KtProjectServers();
-		ProjectServers.loadOceServer(this.getProjectId(), this.getProjectName());
+		ProjectServers.setProjectId(this.getProjectId());
+		ProjectServers.loadOceServer();
 		
 		modal.setPanel(ProjectServers);
 		modal.setWidth(600);
@@ -592,7 +593,7 @@ public class ProjectInfo implements ContextAware {
 	public Object[] require() throws Exception{
 		
 //		String defId = "oceProjectRequset.process";
-		String defId = "projectProcess/projectCre1.process";
+		String defId = "projectProcess/projectCre2.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;
@@ -622,6 +623,9 @@ public class ProjectInfo implements ContextAware {
 		instance.databaseMe().setName("개발환경요청" + " : " + this.getProjectName());
 		instance.flushDatabaseMe();
 		
+		if( instanceViewContent == null ){
+			instanceViewContent = new InstanceViewContent();
+		}
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
@@ -637,9 +641,9 @@ public class ProjectInfo implements ContextAware {
 		instanceListPanel.topicFollowersLoad();
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			return new Object[]{new Refresh(instanceListPanel)};
+			return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(instanceListPanel)};
 		}else{
-			return new Object[]{new Remover(new Popup() , true), instanceListPanel, instanceViewContent};
+			return new Object[]{new Remover(new ModalWindow() , true) , new Remover(new Popup() , true), instanceListPanel, instanceViewContent};
 		}
 		
 	}

@@ -887,15 +887,21 @@ alter table appmapping add column url varchar(50);
 alter table bpm_knol add column isreleased boolean;
 alter table bpm_knol add column isdistributed boolean;
 
+
 DROP TABLE IF EXISTS `cloudinfo`;
 create table cloudinfo(
     id int(20) not null,
     projectId varchar(20),
+    serverName varchar(100),
     serverInfo varchar(20),
     serverId varchar(100),
     serverIp varchar(100),
     serverIpId varchar(100),
     rootId varchar(20),
     rootPwd varchar(20),
+    osType varchar(100),
+    wasType varchar(100),
+    dbType varchar(100),
+    moddate DATETIME,
     primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

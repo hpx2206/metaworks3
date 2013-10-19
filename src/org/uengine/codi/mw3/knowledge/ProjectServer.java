@@ -55,7 +55,7 @@ public class ProjectServer implements ITool, ContextAware {
 	public final static String SERVER_STATUS_APPROVAL 		= "Approval";
 	public final static String SERVER_STATUS_CREATING 		= "Creating";
 	public final static String SERVER_STATUS_STOPPED 		= "Stopped";
-	public final static String SERVER_STATUS_STARTED		= "Started";
+	public final static String SERVER_STATUS_STARTED			= "Started";
 	public final static String SERVER_STATUS_STARTING 		= "Starting";
 	public final static String SERVER_STATUS_STOPPING		= "Stopping";
 	public final static String SERVER_STATUS_RUNNING 		= "Running";
