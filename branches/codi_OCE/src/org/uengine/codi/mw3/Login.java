@@ -168,7 +168,7 @@ public class Login implements ContextAware {
 		
 		IEmployee emp = new Employee();
 		emp.setEmpCode(getUserId());
-		emp.setPassword(getPassword());
+		emp.setPassword(getPassword().trim());
 		
 		if(this.isFacebookSSO()){
 			if (getUserId() != null){
