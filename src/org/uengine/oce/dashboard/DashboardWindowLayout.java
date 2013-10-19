@@ -4,7 +4,6 @@ import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.oce.OcePerspectivePanel;
 
 public class DashboardWindowLayout {
 	

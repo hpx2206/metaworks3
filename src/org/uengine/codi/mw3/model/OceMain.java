@@ -10,6 +10,7 @@ import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.oce.dashboard.DashboardWindowLayout;
@@ -229,8 +230,8 @@ public class OceMain {
 			personalPerspective.session = session;
 			
 			if("oce_app".equals(session.getUx())){
-				
-				Object[] returnObject = personalPerspective.loadInstanceListPanel("allICanSee", session.getLastSelectedItem());
+				String title = "App Contents";
+				Object[] returnObject = Perspective.loadInstanceListPanel(session, "app", session.getLastSelectedItem(), title);
 				
 				instanceListPanel = (InstanceListPanel) returnObject[1];
 				instanceListPanel.session = session;
