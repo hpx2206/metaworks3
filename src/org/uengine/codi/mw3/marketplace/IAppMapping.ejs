@@ -6,18 +6,7 @@
 		<li id="mp_menu_list_<%=objectId%>" class="mp_menu_list"><%=value.appName%></li>
 	</ul>
 
-<%
-	}else if(mw3.where == 'mapList'){
 
-%>
-<%
-	}else if(mw3.where == 'oce_home'){
-%>
-	
-	<li onClick="mw3.getFaceHelper(<%=objectId%>).clickAppList();">
-		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
-		<%=value.appName%>
-	</li>
 <%
 	}else if(mw3.where == 'oce_dashboard'){
 	
@@ -27,6 +16,15 @@
 		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
 		<%=value.appName%>
 	</li>
+<%
+	}else if(mw3.where == 'oce_perspective'){
+	
+%>
+	<div class="depth1" >
+		<a onClick="<%=methods.openAppBrowser.caller()%>">
+			<%=value.appName%>
+		</a>
+	</div>
 <%
 	}else{
 

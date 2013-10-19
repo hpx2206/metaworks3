@@ -3,32 +3,9 @@
         return;
         
     var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-    var isTopic = (mw3.how == "topic");
-    var isProject = (mw3.how == "project");
-    var isDashboard = (mw3.how == "dashboard");
-    var isApp = (mw3.how == "app");
-    
-    var height = 0;
-    if(isTopic) {
-        height = 115;
-    }else if(isProject || isApp){
-        height = 300;
-    }else if(isDashboard){
-        height = 38;
-    }else{
-        height = 0;
-    }
+ 
     
 %>
-
-<div class="top" style="overflow:hidden; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
-    <%=isApp?fields.topicFollowers.here():''%>
-    <%=isApp?fields.appInformation.here():''%>
-    
-    <%=isTopic?fields.topicFollowers.here():''%>
-    <%=isProject?fields.topicFollowers.here():''%>
-    <%=isProject?fields.projectInfo.here():''%>
-</div>
 
 	<%=value.newInstancePanel ? fields.newInstancePanel.here() : ""%>
 

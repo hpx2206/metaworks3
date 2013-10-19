@@ -178,6 +178,8 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 /*		OceMain oceMain = new OceMain();
 		oceMain.loadAppSns(session);
 		return new MainPanel(oceMain);*/
+		session.setUx("oce_app");
+		session.setLastPerspecteType("oce_app");
 		
 		DashboardWindowLayout dashboardWindowLayout = new DashboardWindowLayout();
 		DashboardWindow dashboardWindow = new DashboardWindow();
