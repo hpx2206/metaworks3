@@ -19,20 +19,15 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.project.oce.KtProjectServers;
-import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.oce.dashboard.DashboardPanel;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -297,26 +292,28 @@ public class ProjectTitle implements ContextAware {
 		String passwd = GlobalContext.getPropertyString("vm.manager.password");
 		String command = null;
 
-//		JschCommand jschServerBehaviour = new JschCommand();
-//		jschServerBehaviour.sessionLogin(host, userId, passwd);
-//		
-//		// create SVN
-//		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
-//		jschServerBehaviour.runCommand(command);
-//		
-//		// setting SVN
-//		command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
-//		jschServerBehaviour.runCommand(command);
-//		
-//		//SVN 유저 추가
-//		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
-//		jschServerBehaviour.runCommand(command);
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
-//		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
-//		jschServerBehaviour.runCommand(command);
-//		
-//		command = GlobalContext.getPropertyString("vm.hudson.restart") + " " +  projectNode.getName();
-//		jschServerBehaviour.runCommand(command);
+		// create SVN
+		command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		// setting SVN
+		command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		//SVN 유저 추가
+		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		//Create Hudson
+		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
+		jschServerBehaviour.runCommand(command);
+		
+		//Setting Hudson
+		command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getName() + " " + "127.0.0.1" + " " + projectNode.getName();
+		jschServerBehaviour.runCommand(command);
 		
 		Object[] returnObj = projectNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 3];
