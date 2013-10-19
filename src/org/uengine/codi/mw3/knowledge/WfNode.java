@@ -404,6 +404,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setCloudInfo(CloudInfo cloudInfo) {
 			this.cloudInfo = cloudInfo;
 		}
+	
+	@XStreamOmitField
+	public FilepathInfo filepathInfo;
+		public FilepathInfo getFilepathInfo() {
+			return filepathInfo;
+		}
+		public void setFilepathInfo(FilepathInfo filepathInfo) {
+			this.filepathInfo = filepathInfo;
+		}
 		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
