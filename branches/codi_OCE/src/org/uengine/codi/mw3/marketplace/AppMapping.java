@@ -180,12 +180,18 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		return new MainPanel(oceMain);*/
 		session.setUx("oce_app");
 		session.setLastPerspecteType("oce_app");
+		session.setLastSelectedItem(String.valueOf(this.getAppId()));
 		
 		DashboardWindowLayout dashboardWindowLayout = new DashboardWindowLayout();
 		DashboardWindow dashboardWindow = new DashboardWindow();
 		dashboardWindow.session=session;
 		dashboardWindowLayout.setDashboardWindow(dashboardWindow);
-		dashboardWindowLayout.setLeftWindow(new Window(new IFrame()));
+		
+		Window leftWindow = new Window();
+		leftWindow.setTitle(this.getAppName());
+		leftWindow.setPanel(new IFrame());
+		
+		dashboardWindowLayout.setLeftWindow(leftWindow);
 		dashboardWindowLayout.load(session);
 		return new Object[]{new Refresh(dashboardWindowLayout)};
 	}
