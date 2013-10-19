@@ -887,7 +887,6 @@ alter table appmapping add column url varchar(50);
 alter table bpm_knol add column isreleased boolean;
 alter table bpm_knol add column isdistributed boolean;
 
-
 DROP TABLE IF EXISTS `cloudinfo`;
 create table cloudinfo(
     id int(20) not null,
@@ -904,4 +903,15 @@ create table cloudinfo(
     dbType varchar(100),
     moddate DATETIME,
     primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+create table filepathinfo(
+    id varchar(20) not null,
+    reflectVer int,
+    releaseVer int,
+    warPath varchar(100),
+    sqlPath varchar(100),
+    fileType varchar(20),
+	infoId int NOT NULL AUTO_INCREMENT,
+	primary key(infoId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
