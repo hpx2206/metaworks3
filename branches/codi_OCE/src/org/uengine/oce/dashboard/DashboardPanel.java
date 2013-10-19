@@ -10,13 +10,7 @@ import org.uengine.codi.mw3.model.Session;
 public class DashboardPanel {
 	@AutowiredFromClient
 	public Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
-
+		
 	MetaworksContext metaworksContext;		
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -71,7 +65,6 @@ public class DashboardPanel {
 	
 	public DashboardPanel load(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
-		this.setSession(session);
 		//InstanceListPanel
 		instanceListPanel = createInstanceListPanel();
 		

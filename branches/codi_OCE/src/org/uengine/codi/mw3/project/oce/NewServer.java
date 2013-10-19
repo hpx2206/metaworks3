@@ -2,20 +2,23 @@ package org.uengine.codi.mw3.project.oce;
 
 import java.util.Date;
 
-import org.metaworks.EventContext;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
+import org.uengine.codi.mw3.knowledge.ProjectTitle;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
@@ -84,6 +87,54 @@ public class NewServer extends Templete{
 			this.dbType = dbType;
 		}
 	
+	ProjectTitle projectTitle;
+		@Hidden	
+		public ProjectTitle getProjectTitle() {
+			return projectTitle;
+		}
+		public void setProjectTitle(ProjectTitle projectTitle) {
+			this.projectTitle = projectTitle;
+		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
+		
+	@Face(displayName="프로젝트 + 서버 생성")	
+	@Available(when={MetaworksContext.WHEN_NEW})
+	@ServiceMethod(payload={"projectTitle"}, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] finalfinish() throws Exception {
+		projectTitle.session = session;
+		Object[] returnObjects = projectTitle.save();
+		//System.out.println("  "+String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance())));
+		
+		this.setProjectId(projectTitle.getTopicId());
+		try {
+		
+			CloudInfo cloudInfo = new CloudInfo();
+			cloudInfo.setId(cloudInfo.createNewId());
+			cloudInfo.setProjectId(projectId);
+			cloudInfo.setServerName(this.getProjectName());
+			cloudInfo.setOsType(osType);
+			cloudInfo.setWasType(wasType);
+			cloudInfo.setDbType(dbType);
+			cloudInfo.setModdate(new Date());
+			cloudInfo.createDatabaseMe();
+			
+			cloudInfo.flushDatabaseMe();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return returnObjects;
+	}
+	
+	@Available(when={MetaworksContext.WHEN_EDIT})	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] finish() throws Exception {
 		
