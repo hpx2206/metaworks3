@@ -154,7 +154,7 @@
 	<bean id="ProcessGanttChart" class="org.uengine.codi.gantt.ProcessGanttChart"/>
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
 	
-	<bean id="KtProjectServer" class="org.uengine.codi.mw3.project.oce.NewServer/>
+	<bean id="KtProjectServer" class="org.uengine.codi.mw3.project.oce.NewServer"/>
 	
 	
 </beans>
