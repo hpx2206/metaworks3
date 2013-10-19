@@ -18,12 +18,15 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.Download;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.marketplace.category.Category;
+import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -138,7 +141,15 @@ public class ProjectInfo implements ContextAware {
 		public void setDefaultIp(String defaultIp) {
 			this.defaultIp = defaultIp;
 		}
-
+	Boolean check;
+		@Face(displayName="$topicSecuopt")
+		public Boolean getCheck() {
+			return check;
+		}
+		public void setCheck(Boolean check) {
+			this.check = check;
+		}
+		
 	/*
 	@Hidden
 	String os;
@@ -342,13 +353,84 @@ public class ProjectInfo implements ContextAware {
 		return new OpenBrowser(url);
 	}
 
-	@Face(displayName = "release")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public Object releaseProject() throws Exception{
+	@Face(displayName = "$release")
+	@ServiceMethod(target = ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow releaseProject() throws Exception{
+		
+		SelectBox reflectVersion = new SelectBox();
+		FilepathInfo filepathInfo = new FilepathInfo();
+		filepathInfo.setId(session.getLastSelectedItem());
+		
+		reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getId());
+		
+		ModalWindow modalWindow = new ModalWindow();
+		ReleasePanel releasePanel = new ReleasePanel();
+		releasePanel.setReflectVersion(reflectVersion);
+		releasePanel.setCheck(false);
+		releasePanel.setMetaworksContext(new MetaworksContext());
+		releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		
+		modalWindow.setTitle("$release");
+		modalWindow.setPanel(releasePanel);
+		modalWindow.setHeight(400);
+		
+		
+//		SelectBox categories = new SelectBox();
+//		SelectBox attachProject = new SelectBox();
+//		
+//		ICategory category = Category.loadRootCategory();
+//		if (category.size() > 0) {
+//			while (category.next()) {
+//				String categoryId = Integer.toString(category.getCategoryId());
+//				String categoryName = category.getCategoryName();
+//
+//				categories.add(categoryName, categoryId);
+//			}
+//		}
+//		
+//		IProjectNode projectList = ProjectNode.load(session);		
+//		if(projectList.size() > 0) {
+//			while(projectList.next()){
+//				String projectId = projectList.getId();
+//				String projectName = projectList.getName();
+//				
+//				attachProject.add(projectName, projectId);
+//			}
+//		}
+//		
+//		this.setCategories(categories);
+//		this.setAttachProject(attachProject);
+//		this.setLogoFile(new MetaworksFile());
+		
+		
+		return modalWindow;
+		
 //		WfNode wfNode = new WfNode();
 //		wfNode.setId(session.getLastSelectedItem());
 //		wfNode.copyFrom(wfNode.databaseMe());
 //		
+//		if(wfNode.getIsDistributed()){
+//		
+//			if ("war".equals(wfNode.getVisType())) {
+//				
+//			}
+//			else if("svn".equals(wfNode.getVisType())){
+//				
+//			}
+//		}else{
+//			ModalWindow modalWindow = new ModalWindow();
+//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			modalWindow.setWidth(300);
+//			modalWindow.setHeight(150);
+//			modalWindow.setTitle("$Release 실패");
+//			modalWindow.setPanel(localeManager.getString("프로젝트 배포가 되지않아 실패 하였습니다."));
+//			modalWindow.getButtons().put("$Confirm", "");		
+//	
+//			return modalWindow;
+//		}
+		
+		
 //		if(wfNode.getIsDistributed()){
 //			wfNode.setIsReleased(true);
 //			wfNode.syncToDatabaseMe();
@@ -376,7 +458,6 @@ public class ProjectInfo implements ContextAware {
 //	
 //			return modalWindow;
 //		}
-		return null;
 	}
 	
 	@ServiceMethod
@@ -384,126 +465,101 @@ public class ProjectInfo implements ContextAware {
 		
 	}
 
-	@Face(displayName = "배포")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
+	@Face(displayName = "$devreflect")
+	@ServiceMethod(target = ServiceMethodContext.TARGET_POPUP)
 	public Object distribute() throws Exception{
-		WfNode wfNode = new WfNode();
-		wfNode.setId(session.getLastSelectedItem());
-		wfNode.copyFrom(wfNode.databaseMe());
-		this.projectName = wfNode.getName();
-		Object sqlPath = null;
-		Object warPath = null;
-
-		CloudInfo cloudInfo = wfNode.getCloudInfo();
-		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId());
-		while(cInfo.next()){
-			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
-			cloudInfo.copyFrom(cInfo);
-		}
 		
-		if(cloudInfo == null || cloudInfo.getServerIp() == null || "".equals(cloudInfo.getServerIp())){
-			throw new MetaworksException("개발환경 요청이 안되어있습니다.");
-		}
+		ModalWindow modalWindow = new ModalWindow();
+		ReflectPanel reflectPanel = new ReflectPanel();
+		reflectPanel.setSqlFile(new MetadataFile());
+		reflectPanel.setWarFile(new MetadataFile());
+		modalWindow.setTitle("$devreflect");
 		
-		XStream xstream = new XStream();
-		if (wfNode.getExt() != null) {
-			Object xstreamStr = xstream.fromXML(wfNode.getExt());
-			if (xstreamStr != null) {
-				Map<String, Object> list = (Map<String, Object>) xstreamStr;
+		modalWindow.setPanel(reflectPanel);
+		modalWindow.setHeight(400);
+		
+		return modalWindow;
+		
 
-				warPath = list.get("warFile_Path");
-				sqlPath = list.get("sqlFile_Path");
-			}
-		}
-
-		if ("war".equals(wfNode.getVisType())) {
-			
-//			ProcessBuilder pb = new ProcessBuilder(
-//						"cmd",	// 리눅스 "/bin/sh"
-//						"/c",	// 리눅스 "-c"		
-//						"ant -buildfile C:\\test.xml -Dip="
-//								+ cloudInfo.getServerIp()
-//								+ " -Dwar="
-//								+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
-//								+ " -Dsql="
-//								+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
-//								+ " -Dpw="
-//								+ cloudInfo.getRootPwd()
-//								+ " -lib C:\\Users\\uEngine");
+//		CloudInfo cloudInfo = wfNode.getCloudInfo();
+//		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId());
+//		while(cInfo.next()){
+//			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
+//			cloudInfo.copyFrom(cInfo);
+//		}
+//		WfNode wfNode = new WfNode();
+//		wfNode.setId(session.getLastSelectedItem());
+//		wfNode.copyFrom(wfNode.databaseMe());
+//		this.projectName = wfNode.getName();
+//		Object sqlPath = null;
+//		Object warPath = null;
+//
+//		CloudInfo cloudInfo = wfNode.getCloudInfo();
+//		cloudInfo.copyFrom(cloudInfo.databaseMe());
+//		
+//		FilepathInfo filepath = wfNode.getFilepathInfo();
+//		filepath.copyFrom(filepath.databaseMe());
+//		
+//		if(cloudInfo == null || "".equals(cloudInfo.getServerIp())){
+//			throw new MetaworksException("개발환경 요청이 안되어있습니다.");
+//		}
+//		
+//		if ("war".equals(wfNode.getVisType())) {
 //			
-//			pb.redirectErrorStream(true);
-//			Process p = null;
-//			try {
-//				p = pb.start();
-//				
-//				InputStreamReader isr = null;
-//				isr = new InputStreamReader(p.getInputStream(), "euc-kr");
-//				int ch = 0;
-//				StringBuffer sb = new StringBuffer();
-//				try {
-//					while ((ch = isr.read()) > -1) {
-//						sb.append((char) ch);
-//						if ((char) ch == '\n') {
-//							System.out.println(sb.toString());
-//							sb = new StringBuffer();
-//						}
-//					}
-//				} catch (IOException e) {
-//					e.printStackTrace();
+//			
+//			XStream xstream = new XStream();
+//			if (wfNode.getExt() != null) {
+//				Object xstreamStr = xstream.fromXML(wfNode.getExt());
+//				if (xstreamStr != null) {
+//					Map<String, Object> list = (Map<String, Object>) xstreamStr;
+//
+//					warPath = list.get("warFile_Path");
+//					sqlPath = list.get("sqlFile_Path");
 //				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
 //			}
-			
-			
-//			*******************************************************			
-//			lfile = "F:/files/test.war"; // 보낼파일
-//			user = "ksj82"; // 사용자계정
-//			passwd = "ksj82"; // 비밀번호
-//			host = "192.168.56.103"; // 접속 IP
-//			rfile = "/home/ksj82"; // 저장경로
-			
-			FileTransmition fileTransmition = new FileTransmition();
-			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + warPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
-			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-			
-			CreateDatabase createDatabase = new CreateDatabase();
-			createDatabase.create(cloudInfo.rootId, cloudInfo.getServerIp(), cloudInfo.getRootPwd(), wfNode.getName(), sqlPath.toString());
-			
-			wfNode.setIsDistributed(true);
-			wfNode.syncToDatabaseMe();
-			wfNode.flushDatabaseMe();
-			
-			ModalWindow modalWindow = new ModalWindow();
-			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			modalWindow.setWidth(300);
-			modalWindow.setHeight(150);
-							
-			modalWindow.setTitle("$SaveCompleteTitle");
-			modalWindow.setPanel(localeManager.getString("반영되었습니다."));
-			modalWindow.getButtons().put("$Confirm", "");		
-			
-			return modalWindow;
-		}
-		else if("svn".equals(wfNode.getVisType())){
-			String host = GlobalContext.getPropertyString("vm.manager.ip");
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-			String command;
-			
-			JschCommand jschServerBehaviour = new JschCommand();
-			jschServerBehaviour.sessionLogin(host, userId, passwd);
-			
-			//Hudson Build
-//			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
-//			jschServerBehaviour.runCommand(command);
-		}
-		return null;
+//			
+//			//파일 전송
+//			FileTransmition fileTransmition = new FileTransmition();
+//			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + warPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
+//			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+//			fileTransmition.send("C:/startUp.sh", cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+//			
+//			//서버쪽 디비에 데이터베이스 생성
+//			CreateDatabase createDatabase = new CreateDatabase();
+//			createDatabase.create(cloudInfo.rootId, cloudInfo.getServerIp(), cloudInfo.getRootPwd(), wfNode.getName(), sqlPath.toString());
+//			
+//			wfNode.setIsDistributed(true);
+//			wfNode.syncToDatabaseMe();
+//			wfNode.flushDatabaseMe();
+//			
+//			ModalWindow modalWindow = new ModalWindow();
+//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			modalWindow.setWidth(300);
+//			modalWindow.setHeight(150);
+//			modalWindow.setTitle("$SaveCompleteTitle");
+//			modalWindow.setPanel(localeManager.getString("반영되었습니다."));
+//			modalWindow.getButtons().put("$Confirm", "");		
+//			
+//			return modalWindow;
+//		}
+//		else if("svn".equals(wfNode.getVisType())){
+//			String host = GlobalContext.getPropertyString("vm.manager.ip");
+//			String userId = GlobalContext.getPropertyString("vm.manager.user");
+//			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+//			String command;
+//			
+//			JschCommand jschServerBehaviour = new JschCommand();
+//			jschServerBehaviour.sessionLogin(host, userId, passwd);
+//			
+//			//Hudson Build
+////			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
+////			jschServerBehaviour.runCommand(command);
+//		}
+//		return null;
 
 	}
 
-	@Face(displayName = "권한관리")
+	@Face(displayName = "$commitmanage")
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
 	public void committer() {
 
@@ -526,69 +582,69 @@ public class ProjectInfo implements ContextAware {
 		return new Object[]{modal};
 	}
 
-	@Face(displayName = "참여")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public Object[] participation() throws Exception {
-		TopicMapping tm = new TopicMapping();
-		tm.setTopicId(session.getLastSelectedItem());
-		tm.setUserId(session.getUser().getUserId());
-
-		if (!tm.findByUser().next()) {
-			tm.setUserName(session.getUser().getName());
-			tm.saveMe();
-			tm.flushDatabaseMe();
-		}
-
-		TopicFollowers topicFollowers = new TopicFollowers();
-		topicFollowers.session = session;
-		topicFollowers.load();
-
-		return new Object[] { new Refresh(topicFollowers) };
-		}
-		
-		@Face(displayName="정보변경")
-		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
-		public ModalWindow manageProject() throws Exception{
-			
-			ProjectTitle projectTitle = new ProjectTitle();
-			projectTitle.setMetaworksContext(new MetaworksContext());
-			projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			projectTitle.session = session;
-			WfNode wfNode = new WfNode();
-			wfNode.setId(session.getLastSelectedItem());
-			wfNode.copyFrom(wfNode.databaseMe());
-			projectTitle.setTopicId(this.getProjectId());
-			projectTitle.setTopicTitle(this.getProjectName());
-			projectTitle.setParentId(session.getCompany().getComCode());
-			projectTitle.setFileType(wfNode.getVisType());
-			projectTitle.setTopicDescription(this.getDescription());
-			projectTitle.setLogoFile(this.getLogoFile());
-			
-			XStream xstream = new XStream();
-			if(wfNode.getExt() != null){
-				Object xstreamStr =  xstream.fromXML(wfNode.getExt());
-		//		Object[] fileList = (Object[])GlobalContext.deserialize(wfNode.getEx1(), Object.class);
-				Object sqlFile = null;
-				Object warFile = null;
-				Object logoFile = null;
-				if(xstreamStr != null){
-					Map<String, Object> list = (Map<String,Object>) xstreamStr;
-				
-					warFile = list.get("warFile");
-					sqlFile = list.get("sqlFile");
-					logoFile = list.get("logoFile");
-			}
-				System.out.println(warFile);
-				System.out.println(sqlFile);
-				
-			projectTitle.setLogoFile((MetaworksFile) logoFile);	
-			projectTitle.setWarFile((MetadataFile) warFile);
-			projectTitle.setSqlFile((MetadataFile) sqlFile);
-		}
-		return new ModalWindow(projectTitle, 500, 400, "정보변경");
-	}
+//	@Face(displayName = "참여")
+//	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
+//	public Object[] participation() throws Exception {
+//		TopicMapping tm = new TopicMapping();
+//		tm.setTopicId(session.getLastSelectedItem());
+//		tm.setUserId(session.getUser().getUserId());
+//
+//		if (!tm.findByUser().next()) {
+//			tm.setUserName(session.getUser().getName());
+//			tm.saveMe();
+//			tm.flushDatabaseMe();
+//		}
+//
+//		TopicFollowers topicFollowers = new TopicFollowers();
+//		topicFollowers.session = session;
+//		topicFollowers.load();
+//
+//		return new Object[] { new Refresh(topicFollowers) };
+//		}
+//		
+//		@Face(displayName="정보변경")
+//		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
+//		public ModalWindow manageProject() throws Exception{
+//			
+//			ProjectTitle projectTitle = new ProjectTitle();
+//			projectTitle.setMetaworksContext(new MetaworksContext());
+//			projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+//			projectTitle.session = session;
+//			WfNode wfNode = new WfNode();
+//			wfNode.setId(session.getLastSelectedItem());
+//			wfNode.copyFrom(wfNode.databaseMe());
+//			projectTitle.setTopicId(this.getProjectId());
+//			projectTitle.setTopicTitle(this.getProjectName());
+//			projectTitle.setParentId(session.getCompany().getComCode());
+//			projectTitle.setFileType(wfNode.getVisType());
+//			projectTitle.setTopicDescription(this.getDescription());
+//			projectTitle.setLogoFile(this.getLogoFile());
+//			
+//			XStream xstream = new XStream();
+//			if(wfNode.getExt() != null){
+//				Object xstreamStr =  xstream.fromXML(wfNode.getExt());
+//		//		Object[] fileList = (Object[])GlobalContext.deserialize(wfNode.getEx1(), Object.class);
+//				Object sqlFile = null;
+//				Object warFile = null;
+//				Object logoFile = null;
+//				if(xstreamStr != null){
+//					Map<String, Object> list = (Map<String,Object>) xstreamStr;
+//				
+//					warFile = list.get("warFile");
+//					sqlFile = list.get("sqlFile");
+//					logoFile = list.get("logoFile");
+//			}
+//				System.out.println(warFile);
+//				System.out.println(sqlFile);
+//				
+//			projectTitle.setLogoFile((MetaworksFile) logoFile);	
+//			projectTitle.setWarFile((MetadataFile) warFile);
+//			projectTitle.setSqlFile((MetadataFile) sqlFile);
+//		}
+//		return new ModalWindow(projectTitle, 500, 400, "정보변경");
+//	}
 	
-	@Face(displayName="개발환경요청")
+	@Face(displayName="$devserverrequest")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] require() throws Exception{
 		
