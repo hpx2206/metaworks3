@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +53,6 @@ import org.metaworks.dwr.TransactionalDwrServlet;
 import org.metaworks.inputter.SelectInput;
 
 import com.thoughtworks.xstream.XStream;
-
 
 public class WebObjectType{
 	
