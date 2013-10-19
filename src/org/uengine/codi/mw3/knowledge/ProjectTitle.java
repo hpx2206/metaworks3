@@ -19,6 +19,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -27,6 +28,8 @@ import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
+import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardPanel;
@@ -185,9 +188,26 @@ public class ProjectTitle implements ContextAware {
 			this.projectSecuopt = projectSecuopt;
 		}
 
-		@Face(displayName="$Create")
+
+	@Face(displayName="$Next")
 	@Available(when={MetaworksContext.WHEN_NEW})
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
+	public Object createProjectStep1() throws Exception {
+			NewServer newServer = new NewServer();
+			this.getLogoFile().setFileTransfer(null);
+			this.getWarFile().setFileTransfer(null);
+			this.getSqlFile().setFileTransfer(null);
+		newServer.setProjectTitle(this);
+		newServer.setMetaworksContext(new MetaworksContext());
+		newServer.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		return newServer;
+	}
+		
+			
+		
+		//@Face(displayName="$Create")
+	@Available(when={MetaworksContext.WHEN_NEW})
+	//@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
 			if(this.getWarFile().getFilename() != null || this.getSqlFile().getFilename() != null){	
 				String warFileType = this.getWarFile().getFilename();

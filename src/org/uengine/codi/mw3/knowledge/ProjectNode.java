@@ -57,7 +57,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		window.setPanel(returnObject[1]);
 		window.setTitle(title);
 		
-		return new Object[]{session , window };
+		return new Object[]{window };
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
