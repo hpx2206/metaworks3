@@ -1046,7 +1046,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						if(theDiv[0] && metadata)
 					    for(var methodName in metadata.serviceMethodContextMap){
 					   		var methodContext = metadata.serviceMethodContextMap[methodName];
-					   		
+
 						    if(this.isHiddenMethodContext(methodContext) && !methodContext.bindingHidden)
 							   continue;
 
@@ -1054,8 +1054,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   			var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
 							if(methodContext.needToConfirm)
 							    command = "if (confirm(\'Are you sure to "+mw3.localize(methodContext.displayName)+" this?\'))" + command;
+
+
 							   
-						    if(methodContext.eventBinding && methodContext.eventBinding.length > 0){
+							if(methodContext.eventBinding && methodContext.eventBinding.length > 0){
 						    	for(var i=0; i<methodContext.eventBinding.length; i++){
 						    		var eventBinding = methodContext.eventBinding[i];
 						    		
@@ -1435,7 +1437,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				if(!this.loadedScripts[scriptUrl]){
 				   mw3.loadedScripts[scriptUrl] = scriptUrl;
-					 
+				
 				   //TODO: asynchronous processing performance issues later on
 				   $.ajax({
 					   async:false,
@@ -3815,11 +3817,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   								bindingDivId = '#' + mw3._getObjectDivId(bindingFieldId);
 	   							}
 	   							
-	   							//console.log(bindingDivId);
-	   							
 	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
-	   								//console.log('bind');
-	   								//console.log(this);
 	   								eval(event.data.command);
 	   							});
 	   						}
@@ -4375,29 +4373,14 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 				if(placeholder)
 					mw3.removeObject(placeholder);
 				
-				var zIndex = 10;
-				if( serviceMethodContext.target=="popupOverPopup" ){
-					var modalWindow = $('.ui-dialog');
-					if(modalWindow.length > 0){
-						zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
-						zIndex = String(Number(zIndex)+1);
-					}else{
-						zIndex = 101;
-					}		
-				}
-				
-				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='z-index:"+zIndex+";position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
-				
-				mw3.locateObject(result, null, '#' + mw3.popupDivId);
-				
+				if(serviceMethodContext.target == 'popup')
+					mw3.showPopop(objId, serviceMethodContext, result);
+				else
+					mw3.showStick(objId, serviceMethodContext, result);
+								
 				$('#' + mw3._getObjectDivId(result.__objectId)).one('destroy', function(){
 					mw3.recentOpenerObjectId.pop();
 				});
-
-				// stick mode is auto close
-				if(serviceMethodContext.target == 'stick')
-					closeOutsideContainer(mw3.popupDivId);	
-				
 			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
 				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
 
