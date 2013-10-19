@@ -404,17 +404,18 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		session.setLastPerspecteType("topic");
 		session.setLastSelectedItem(this.getAppName());
 		
-		InstanceList instList = new InstanceList(session);
+		/*InstanceList instList = new InstanceList(session);
 		instList.load();
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.setInstanceList(instList);
 		
 		ContentWindow topicStreamWindow = new ContentWindow();
-		topicStreamWindow.setPanel(instanceListPanel);
+		topicStreamWindow.setPanel(instanceListPanel);*/
 		
 		
-		return new Object[]{instanceListPanel, centerPenal};
+		//return new Object[]{instanceListPanel, centerPenal};
+		return new Object[]{centerPenal};
 	}
 	
 	public Object edit() throws Exception {
@@ -657,12 +658,13 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		}else{
 			tenantId = session.getCompany().getComCode();
 		}
-		this.databaseMe().setUrl("Http://" + tenantId + "." + this.getAppName() + ".com//" + warFile.toString());
+		this.databaseMe().setUrl("Http://" + tenantId + "." + this.getAppName() + ".com//" );
+//		this.databaseMe().setUrl("Http://" + tenantId + "." + this.getAppName() + ".com//" + warFile.toString());
 		flushDatabaseMe();
 		
 		//데이터베이스 생성
-		CreateDatabase createDatabase = new CreateDatabase();
-		createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), tenantId, sqlPath.toString());
+//		CreateDatabase createDatabase = new CreateDatabase();
+//		createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), tenantId, sqlPath.toString());
 		
 		AppMapping appmapping = new AppMapping();
 		
@@ -676,7 +678,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		appmapping.flushDatabaseMe();
 		
 		PageNavigator pageNavigator = new PageNavigator();
-		
+		pageNavigator.session = session;
 		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
 		
 	}
