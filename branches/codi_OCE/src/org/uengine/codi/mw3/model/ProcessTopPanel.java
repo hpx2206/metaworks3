@@ -81,7 +81,6 @@ public class ProcessTopPanel {
 		}
 
 	Session session;
-		@AutowiredToClient
 		public Session getSession() {
 			return session;
 		}

@@ -20,10 +20,6 @@ public class Knowledge {
 	public Knowledge(Session session) throws Exception {
 		this();
 		
-		setSession(session);
-		
-		
-		
 		
 		// knowlege node
 		
@@ -115,15 +111,7 @@ public class Knowledge {
 			this.layout = layout;
 		}
 		
-	
 	Session session;
-	@AutowiredToClient
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 		
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {

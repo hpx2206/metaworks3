@@ -30,13 +30,6 @@ public class OceMain {
 		}
 		
 	Session session;
-		@AutowiredToClient
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 
 	OcePageNavigator pageNavigator;
 		public OcePageNavigator getPageNavigator() {
@@ -102,29 +95,25 @@ public class OceMain {
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("process");
 
-		
-		Layout westLayout = new Layout();
-		
 		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 		
-		DashboardWindowLayout DashboardWindowLayout = new DashboardWindowLayout();
-		DashboardWindowLayout.load(session);
+		DashboardWindowLayout dashboardWindowLayout = new DashboardWindowLayout();
+		dashboardWindowLayout.load(session);
 		
-		westLayout.setCenter(perspectiveWindow);
-		westLayout.setUseHideBar(true);
-		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+		Layout mainLayout = new Layout();
+		mainLayout.setWest(perspectiveWindow);
+		mainLayout.setCenter(dashboardWindowLayout);
+		mainLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, west__size: 160");
 		
 		Layout outerLayout = new Layout();
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
-		outerLayout.setNorth(processTopPanel);
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:1, north__size: 52");
 		
-		outerLayout.setWest(westLayout);
-		outerLayout.setCenter(DashboardWindowLayout);		
+		outerLayout.setNorth(processTopPanel);
+		outerLayout.setCenter(mainLayout);		
 		outerLayout.setName("center");
 		outerLayout.setUseHideBar(false);
 		
 		setLayout(outerLayout);
-		setSession(session);
 		
 		if(!session.getEmployee().isGuest()){
 			setPageNavigator(new OcePageNavigator("process"));
@@ -183,7 +172,6 @@ public class OceMain {
 		outerLayout.setUseHideBar(false);
 		
 		setLayout(outerLayout);
-		setSession(session);
 		
 
 	}

@@ -10,12 +10,6 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class InstanceViewItem {
 
 	Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
@@ -72,7 +66,6 @@ public class InstanceViewItem {
 		login.setUserId(userId);
 		login.setPassword(password);
 		Session session = login.loginService();
-		setSession(session);
 		Instance theInstanceDAO = new Instance();
 		theInstanceDAO.setInstId(new Long(getInstanceId()));
 		

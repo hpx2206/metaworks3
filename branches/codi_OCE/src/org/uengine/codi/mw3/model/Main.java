@@ -25,13 +25,6 @@ public class Main {
 		}
 		
 	Session session;
-		@AutowiredToClient
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
@@ -187,7 +180,6 @@ public class Main {
 			outerLayout.setUseHideBar(false);
 			
 			setLayout(outerLayout);
-			setSession(session);
 			
 //			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
 			

@@ -418,7 +418,8 @@ public class Login implements ContextAware {
 			throw new Exception("pageNavigator가 잘못 지정되었습니다. uengine.properties의 pagenavigatorClassName을 수정해주세요.");
 		}
 		
-		pageNavigator.setSession(session);
+		pageNavigator.session = session;
+		
 		if("oce".equals(session.getUx())){
 			mainPanel = pageNavigator.goDashBoard();
 		}else{

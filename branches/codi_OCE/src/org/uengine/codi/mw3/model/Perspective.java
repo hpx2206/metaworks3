@@ -223,7 +223,7 @@ public class Perspective {
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
 			
-		final Object[] returnObject;
+		//final Object[] returnObject;
 		
 //		if("sns".equals(session.getEmployee().getPreferUX())){
 //			WfPanel wfPanel = new WfPanel();

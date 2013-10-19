@@ -25,8 +25,6 @@ public class RemoteNewPage {
 	public RemoteNewPage(Session session, String title, String pageUrl, boolean adminMode) throws Exception {
 		this();
 		
-		setSession(session);
-		
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		
 		Layout outerLayout = new Layout();
@@ -56,15 +54,7 @@ public class RemoteNewPage {
 			this.layout = layout;
 		}
 		
-	
 	Session session;
-	@AutowiredToClient
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 		
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
