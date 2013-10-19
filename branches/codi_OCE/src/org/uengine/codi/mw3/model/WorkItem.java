@@ -993,6 +993,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					newInstancePanel.load(session);
 					
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
+				}else if("oce".equals(session.getUx())){
+					newInstancePanel = new NewInstancePanel();
+					newInstancePanel.getMetaworksContext().setHow("sns");
+					newInstancePanel.load(session);
+					
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
 				}else
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail)};								
 			// 덧글

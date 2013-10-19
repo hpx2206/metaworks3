@@ -40,8 +40,8 @@ public class OrganizationPerspectiveApp extends Perspective{
 		
 		IAppMapping addedApps =appMp.findMyApps();
 		addedApps.getMetaworksContext().setWhen("filter");
-		if("dashboard".equals(this.getMetaworksContext().getHow())){
-			addedApps.getMetaworksContext().setHow("dashboard");
+		if(this.getMetaworksContext() != null){
+			addedApps.setMetaworksContext(this.getMetaworksContext());
 		}
 		setAppList(addedApps);
 		

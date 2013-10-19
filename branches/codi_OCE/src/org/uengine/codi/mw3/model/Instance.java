@@ -781,6 +781,24 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setInstanceViewThreadPanel(panel);
 			
 			return this;
+		}else if("oce".equals(session.getUx())){
+			getMetaworksContext().setHow("sns");
+			
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("sns");
+			
+			
+			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+				panel.session = session;
+				panel.load(this.getInstId().toString());
+				
+				this.fillFollower();
+					
+			}
+
+			setInstanceViewThreadPanel(panel);
+			
+			return this;
 		}else{
 			getMetaworksContext().setHow("");
 			getMetaworksContext().setWhere("");

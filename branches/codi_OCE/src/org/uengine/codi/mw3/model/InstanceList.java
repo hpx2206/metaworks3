@@ -5,6 +5,7 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -80,7 +81,7 @@ public class InstanceList implements ContextAware{
 			this.navigation = navigation;
 		}
 
-	@AutowiredFromClient
+	@AutowiredToClient
 	public Session session;
 	
 

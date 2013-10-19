@@ -1,11 +1,15 @@
 <%
 if (value!=null){
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	var list_class = "";
 	
+	if(session.ux == 'oce' && mw3.how !='allICanSee'){
+		list_class = "time_line _noti_list";
+	}
 %>
 
 	<% if(session != null){ %>
-		<div class="<%=session.ux != 'sns'? "time_line _noti_list" : ""%>">
+		<div class="<%=list_class%>">
 				<%=fields.instances.here()%>
 		</div>
 	<% } %>
