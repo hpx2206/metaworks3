@@ -676,7 +676,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		appmapping.flushDatabaseMe();
 		
 		PageNavigator pageNavigator = new PageNavigator();
-		pageNavigator.setSession(session);
 		
 		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
 		

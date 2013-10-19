@@ -26,12 +26,6 @@ public class PageNavigator{
 
 	@AutowiredFromClient
 	public Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 
 	public PageNavigator() {
 		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));

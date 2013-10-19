@@ -14,13 +14,6 @@ import org.uengine.codi.mw3.selfservice.SelfService;
 public class MyServicePanel{
 	@AutowiredFromClient
 	public Session session;
-	    @Hidden
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 		
 	public MyServicePanel(){
 		

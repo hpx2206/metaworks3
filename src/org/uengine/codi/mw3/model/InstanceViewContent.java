@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
