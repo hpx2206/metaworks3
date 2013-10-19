@@ -444,7 +444,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			WfNode project = new WfNode();
 			project.setId(this.getAttachProject().getSelected());
 			project.copyFrom(project.databaseMe());
-			if(project.getIsReleased()){
+//			if(project.getIsReleased()){
 				setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
 				setCreateDate(Calendar.getInstance().getTime());
 				setComcode(session.getCompany().getComCode());
@@ -522,19 +522,19 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	//			
 	//			tm.saveMe();
 				flushDatabaseMe();
-			}
-			else{
-				ModalWindow modalWindow = new ModalWindow();
-				modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-				modalWindow.setWidth(300);
-				modalWindow.setHeight(150);
-								
-				modalWindow.setTitle("$앱 등록 실패");
-				modalWindow.setPanel(localeManager.getString("해당 프로젝트를 Release 하신 후 앱 등록을 하시기 바랍니다."));
-				modalWindow.getButtons().put("$Confirm", "");		
-				
-				return modalWindow;
-			}
+//			}
+//			else{
+//				ModalWindow modalWindow = new ModalWindow();
+//				modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//				modalWindow.setWidth(300);
+//				modalWindow.setHeight(150);
+//								
+//				modalWindow.setTitle("$앱 등록 실패");
+//				modalWindow.setPanel(localeManager.getString("해당 프로젝트를 Release 하신 후 앱 등록을 하시기 바랍니다."));
+//				modalWindow.getButtons().put("$Confirm", "");		
+//				
+//				return modalWindow;
+//			}
 		}else{
 			syncToDatabaseMe();
 			flushDatabaseMe();
