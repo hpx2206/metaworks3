@@ -26,6 +26,7 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
