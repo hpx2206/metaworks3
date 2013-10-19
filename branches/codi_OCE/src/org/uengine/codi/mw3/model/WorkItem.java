@@ -1003,6 +1003,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail)};								
 			// 덧글
 			}else{
+				if("oce".equals(session.getUx())){
+					this.getMetaworksContext().setHow("sns");
+				}
 				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				
