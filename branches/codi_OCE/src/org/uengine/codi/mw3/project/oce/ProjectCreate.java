@@ -18,7 +18,7 @@ public class ProjectCreate implements ITool {
 		}
 		
 	String osSelect;
-	@Face(displayName="운영체제 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"리눅스(LINUX)","유닉스(UNIX)","Window NT"}, values={"1", "2", "3"})
+	@Face(displayName="운영체제 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"리눅스(LINUX)","유닉스(UNIX)","Window NT"}, values={"LINUX", "UNIX", "Window"})
 		public String getOsSelect() {
 			return osSelect;
 		}
@@ -27,7 +27,7 @@ public class ProjectCreate implements ITool {
 		}
 
 	String wasSelect;
-	@Face(displayName="서버엔진 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"서버엔진 사용안함","Jboss 6.0","Tomcat 7.0"}, values={"1", "2", "3"})
+	@Face(displayName="서버엔진 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"서버엔진 사용안함","Jboss 6.0","Tomcat 7.0"}, values={"사용안함", "Jboss", "Tomcat"})
 		public String getWasSelect() {
 			return wasSelect;
 		}
@@ -36,7 +36,7 @@ public class ProjectCreate implements ITool {
 		}
 
 	String dbSelect;
-	@Face(displayName="데이터베이스 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"데이터베이스 사용안함","Cubrid","Mysql","Oracle"}, values={"1", "2", "3","4"})
+	@Face(displayName="데이터베이스 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"데이터베이스 사용안함","Cubrid","Mysql","Oracle"}, values={"사용안함", "Cubrid", "Mysql","Oracle"})
 		public String getDbSelect() {
 			return dbSelect;
 		}

@@ -1,7 +1,14 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.metaworks.annotation.Id;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
 
 public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 
@@ -20,6 +27,14 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 		}
 		public void setProjectId(String projectId) {
 			this.projectId = projectId;
+		}
+		
+	String serverName;
+		public String getServerName() {
+			return serverName;
+		}
+		public void setServerName(String serverName) {
+			this.serverName = serverName;
 		}
 
 	String serverInfo;
@@ -70,6 +85,36 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 			this.rootPwd = rootPwd;
 		}
 		
+	String osType;
+		public String getOsType() {
+			return osType;
+		}
+		public void setOsType(String osType) {
+			this.osType = osType;
+		}
+	String wasType;
+		public String getWasType() {
+			return wasType;
+		}
+		public void setWasType(String wasType) {
+			this.wasType = wasType;
+		}
+	String dbType;
+		public String getDbType() {
+			return dbType;
+		}
+		public void setDbType(String dbType) {
+			this.dbType = dbType;
+		}
+	
+	
+	Date moddate;
+		public Date getModdate() {
+			return moddate;
+		}
+		public void setModdate(Date moddate) {
+			this.moddate = moddate;
+		}
 	public ICloudInfo findServerByProjectId(String projectId) throws Exception{
 		StringBuffer selectbf = new StringBuffer();
 		selectbf.append("select * from cloudinfo ");
@@ -77,6 +122,21 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 		
 		ICloudInfo dao = (ICloudInfo) sql(ICloudInfo.class,	selectbf.toString());
 		dao.setProjectId(projectId);
+		dao.select();
+		
+		return dao;
+	}
+	
+	public ICloudInfo findServerByServerName(String projectId, String serverName) throws Exception{
+		
+		StringBuffer selectbf = new StringBuffer();
+		selectbf.append("select * from cloudinfo ");
+		selectbf.append(" where projectId = ?projectId");
+		selectbf.append(" and serverName = ?serverName");
+		
+		ICloudInfo dao = (ICloudInfo) sql(ICloudInfo.class,	selectbf.toString());
+		dao.setProjectId(projectId);
+		dao.setServerName(serverName);
 		dao.select();
 		
 		return dao;
@@ -95,5 +155,19 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 		dao.select();
 		
 		return dao;
+	}
+	
+	public Long createNewId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("cloudinfo", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		return number.longValue();
 	}
 }
