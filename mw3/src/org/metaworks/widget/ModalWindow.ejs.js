@@ -100,7 +100,7 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 					.parent().css({
 					'border' : '1px solid #ccc',
 					'box-shadow' : '2px 2px 5px #888'
-				});
+				}).addClass('mw3_window').attr('objectId', objectId);;
 				
 				//$(this.divId).dialog(options).css('height', '100%');
 			} else {
@@ -121,6 +121,10 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 		mw3.removeObject(this.objectId);
 	};
 
+	this.setTitle = function(title){
+		$('#ui-dialog-title-objDiv_' + this.objectId).html(title);
+	};
+	
 	/*
 	this.prototype.startLoading = function() {
 		$('#loader_' + this.objectId).show();
