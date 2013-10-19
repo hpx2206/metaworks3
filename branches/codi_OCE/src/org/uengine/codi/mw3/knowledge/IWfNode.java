@@ -249,6 +249,15 @@ public interface IWfNode extends IDAO {
 	public CloudInfo getCloudInfo();
 	public void setCloudInfo(CloudInfo cloudInfo) ;
 	
+	@Hidden
+	@ORMapping(
+			databaseFields = { "id" },
+			objectFields = { "id" },
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen= "type=='project'")
+	public FilepathInfo getFilepathInfo();
+	public void setFilepathInfo(FilepathInfo filepathInfo);
+	
 	/*******************************************
 	 * 
 	 * Service Method
