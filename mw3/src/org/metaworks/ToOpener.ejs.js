@@ -8,8 +8,6 @@ var org_metaworks_ToOpener = function(objectId, className){
 	if(object){
 		var openerId = mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1];
 		
-		mw3.recentOpenerObjectId.pop();
-		
 		var faceHelper = mw3.getFaceHelper(openerId);
 		
 		if(faceHelper && faceHelper.toOpener){

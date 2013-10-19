@@ -23,7 +23,6 @@ public class ServiceMethodContext{
 	public final static String MOUSEBINDING_ONOVER 		= "over";
 	public final static String MOUSEBINDING_ONOUT 		= "out";
 	
-	
 	public boolean clientSide;
 		public boolean isClientSide() {
 			return clientSide;
