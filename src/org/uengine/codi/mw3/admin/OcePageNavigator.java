@@ -15,6 +15,7 @@ import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
+import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmarket.Market;
@@ -181,16 +182,13 @@ public class OcePageNavigator extends PageNavigator {
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
 		
+		SelfService selfService = new SelfService();
+		selfService.setPageNavigator(new OcePageNavigator());
+		selfService.session = session;
+		selfService.load();
 		
-//		SelfService selfService = new SelfService();
-//		selfService.setPageNavigator(new OcePageNavigator());
-//		selfService.session = session;
-//		selfService.load();
-//		
-//		return new MainPanel(selfService);
-		
-		return new MainPanel(new Main(session));
-		
+		return new MainPanel(selfService);
+
 	}
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)

@@ -2,6 +2,15 @@
 	if(value){
 			if( value.session && "sns" == value.session.employee.preferUX ){
 %>
+
+			<% if(value.session.ux == 'oce'){ %>
+			
+				<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/waveStyle/garuda_logo.png"/>
+			 	</div>
+		 	
+		 	<% } %>
+			
 			<div style="float:left; margin-top:5px;"><%=fields.loginUser.here({when: 'self_small'})%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
@@ -22,6 +31,9 @@
 <%
 			}else{
 %>
+		 	<div style="float:left;padding-top:10px; margin-right:5px;">
+		 		<img src="images/waveStyle/garuda_logo.png"/>
+		 	</div>
 		 	<div style="float:left; margin-top:5px;">
 		 		<%=fields.loginUser.here({when: 'self_small'})%>
 		 	</div>

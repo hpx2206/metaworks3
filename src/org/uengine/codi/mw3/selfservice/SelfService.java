@@ -3,9 +3,9 @@ package org.uengine.codi.mw3.selfservice;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
+import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
 
@@ -58,7 +58,12 @@ public class SelfService {
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setCenter(centerLayout);
-		outerLayout.setNorth(new TopPanel(session));
+		
+		if("oce".equals(session.getUx())){
+			outerLayout.setNorth(new ProcessTopPanel(session));
+		}else{
+			outerLayout.setNorth(new TopPanel(session));
+		}
 
 		this.setLayout(outerLayout);
 		

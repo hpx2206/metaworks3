@@ -22,7 +22,9 @@ import org.uengine.processmanager.ProcessManagerRemote;
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
 		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
-		"{where: 'oce_app', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}"
+		"{where: 'oce_app', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}",
+		"{where: 'oce_project', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}"
+		
 	}		
 
 )
@@ -94,6 +96,9 @@ public class InstanceListPanel implements ContextAware{
 			
 			if("app".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("app");
+			
+			if("oce_project".equals(session.getUx()))
+				this.getMetaworksContext().setWhere("oce_project");
 			
 			
 			instanceList = new InstanceList(session);

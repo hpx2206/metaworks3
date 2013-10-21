@@ -117,7 +117,7 @@ public class NewInstancePanel implements ContextAware {
 	
 		Choice securityLevel = new Choice();
 
-		if(session.getUx()!= "oce_app" && session.getUx() != "oce"){
+		if(session.getUx()!= "oce_app" && session.getUx() != "oce" && session.getUx() != "oce_project"){
 			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 				
 				processMapPanel = new ProcessMapPanel();		
@@ -138,7 +138,7 @@ public class NewInstancePanel implements ContextAware {
 		}
 		if("oce".equals(session.getUx())){
 			newInstantiator.getMetaworksContext().setWhere("oce");
-		}else if("oce_app".equals(session.getUx())){
+		}else if("oce_app".equals(session.getUx()) || "oce_project".equals(session.getUx())){
 			newInstantiator.getMetaworksContext().setHow("sns");
 			newInstantiator.getMetaworksContext().setWhere("oce");
 		}

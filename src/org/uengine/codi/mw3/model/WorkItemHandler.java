@@ -263,13 +263,22 @@ public class WorkItemHandler implements ContextAware{
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
-		return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
-//		if("sns".equals(session.getEmployee().getPreferUX())){
-//			return new Remover(new ModalWindow());
-//		}else{
-//			return this;
-//		}
-		
+		if("oce".equals(session.getUx())){
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("instanceList");
+			panel.getMetaworksContext().setWhere("sns");
+			panel.session = session;
+			panel.load(this.getRootInstId().toString());
+			
+			return new Object[]{panel, new Remover(new ModalWindow() , true )};
+		}else {
+			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
+//			if("sns".equals(session.getEmployee().getPreferUX())){
+//				return new Remover(new ModalWindow());
+//			}else{
+//				return this;
+//			}
+		}
 	}
 
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
@@ -311,8 +320,19 @@ public class WorkItemHandler implements ContextAware{
 		
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
-		
-		return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
+			
+			
+		if("oce".equals(session.getUx())){
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("instanceList");
+			panel.getMetaworksContext().setWhere("sns");
+			panel.session = session;
+			panel.load(this.getRootInstId().toString());
+			
+			return new Object[]{panel, new Remover(new ModalWindow() , true )};
+		}else{
+			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
+		}
 	}
 
 	@AutowiredFromClient
@@ -395,7 +415,7 @@ public class WorkItemHandler implements ContextAware{
 				new Object[]{new InstanceListener(inst)});			
 		
 		//refreshes the instanceview so that the next workitem can be show up
-		if("sns".equals(session.getEmployee().getPreferUX())){			
+		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 			panel.getMetaworksContext().setHow("instanceList");
 			panel.getMetaworksContext().setWhere("sns");
@@ -494,7 +514,7 @@ public class WorkItemHandler implements ContextAware{
 	}
 	
 	@ServiceMethod(callByContent=true, when="compete")
-	public InstanceViewContent accept() throws Exception{
+	public Object[]  accept() throws Exception{
 		instance = processManager.getProcessInstance(instanceId.toString());
 		
 		humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
@@ -513,7 +533,20 @@ public class WorkItemHandler implements ContextAware{
 		
 		instanceViewContent.load(instance);
 		
-		return instanceViewContent;
+		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("instanceList");
+			panel.getMetaworksContext().setWhere("sns");
+			panel.session = session;
+			panel.load(this.getRootInstId().toString());
+			
+			return new Object[]{panel, new Remover(new ModalWindow() , true )};
+		
+		}else {
+			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
+			
+		}
+		
 	}
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT , target=ServiceMethodContext.TARGET_APPEND)
 	public ReplyOverlayCommentWorkItem comment() throws Exception{
