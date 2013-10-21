@@ -918,3 +918,4 @@ create table cloudinfo(
     primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+alter table appmapping modify url varchar(200);
