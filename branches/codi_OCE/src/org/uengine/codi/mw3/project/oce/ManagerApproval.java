@@ -68,29 +68,28 @@ public class ManagerApproval implements ITool  {
 		public void setInstId(String instId) {
 			this.instId = instId;
 		}
-	String osType;
-	@Hidden
-		public String getOsType() {
-			return osType;
+	String serviceTemplete;
+		public String getServiceTemplete() {
+			return serviceTemplete;
 		}
-		public void setOsType(String osType) {
-			this.osType = osType;
+		public void setServiceTemplete(String serviceTemplete) {
+			this.serviceTemplete = serviceTemplete;
 		}
-	String wasType;
-	@Hidden
-		public String getWasType() {
-			return wasType;
+		
+	String osTemplete;
+		public String getOsTemplete() {
+			return osTemplete;
 		}
-		public void setWasType(String wasType) {
-			this.wasType = wasType;
+		public void setOsTemplete(String osTemplete) {
+			this.osTemplete = osTemplete;
 		}
-	String dbType;
-	@Hidden
-		public String getDbType() {
-			return dbType;
+
+	String hwTemplete;
+		public String getHwTemplete() {
+			return hwTemplete;
 		}
-		public void setDbType(String dbType) {
-			this.dbType = dbType;
+		public void setHwTemplete(String hwTemplete) {
+			this.hwTemplete = hwTemplete;
 		}
 	String approval;
 		@Face(displayName="요청된 개발기 생성을 승인합니다.")
@@ -209,9 +208,9 @@ public class ManagerApproval implements ITool  {
 					
 					cloudInfo.setProjectId(node.getId());
 					cloudInfo.setServerInfo("KT Cloud");
-					cloudInfo.setDbType(this.getDbType());
-					cloudInfo.setOsType(this.getOsType());
-					cloudInfo.setWasType(this.getWasType());
+					cloudInfo.setOsTemplete(this.getOsTemplete());
+					cloudInfo.setHwTemplete(this.getHwTemplete());
+					cloudInfo.setServiceTemplete(this.getServiceTemplete());
 					cloudInfo.setServerGroup(KtProjectServers.SERVER_DEV);
 					cloudInfo.setModdate(new Date());
 					

@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.project.oce;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
@@ -14,6 +15,7 @@ public class KtProbProjectServers extends KtProjectServers{
 		
 	KtProbProjectServer[] serverLists;
 	@Face(options={"hideLabel"}, values={"true"})
+	@Available(when=KtProjectServers.SERVER_PROB)
 	public KtProbProjectServer[] getServerLists() {
 		return serverLists;
 	}
@@ -22,16 +24,15 @@ public class KtProbProjectServers extends KtProjectServers{
 	}
 		
 	public KtProbProjectServers(){
-		this(null, null);
+		this(null, SERVER_PROB);
 	}
 	
 	public KtProbProjectServers(String projectId, String serverGroup){
 		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		this.getMetaworksContext().setWhen(SERVER_PROB);
 		
 		this.setProjectId(projectId);
 		this.setServerLists(new KtProbProjectServer[0]);
-		this.setServerList(null);
 		this.setServerGroup(serverGroup);
 	}
 	
@@ -54,9 +55,9 @@ public class KtProbProjectServers extends KtProjectServers{
 			server.setProjectId(cInfo.getProjectId());
 			server.setName(cInfo.getServerName());
 			server.setIp(cInfo.getServerIp());
-			server.setOsType(cInfo.getOsType());
-			server.setWasType(cInfo.getWasType());
-			server.setDbType(cInfo.getDbType());
+			server.setOsTemplete(cInfo.getOsTemplete());
+			server.setHwTemplete(cInfo.getHwTemplete());
+			server.setServiceTemplete(cInfo.getServiceTemplete());
 			server.setServerGroup(this.getServerGroup());
 			if( cInfo.getServerIp() == null || "".equals(cInfo.getServerIp() )){
 				server.setStatus("승인 대기중");
@@ -71,7 +72,7 @@ public class KtProbProjectServers extends KtProjectServers{
 			serverList.add(server);
 		}
 		
-		
+		this.setServerList(null);
 		this.setServerLists(serverList.toArray(new KtProbProjectServer[serverList.size()]));
 	}
 	

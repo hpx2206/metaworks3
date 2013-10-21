@@ -195,6 +195,7 @@ public class ProjectTitle implements ContextAware {
 			this.getSqlFile().setFileTransfer(null);
 		newServer.setProjectTitle(this);
 		newServer.setMetaworksContext(new MetaworksContext());
+		newServer.getMetaworksContext().setHow("projectCreate");
 		newServer.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		return newServer;
 	}

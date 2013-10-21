@@ -1,9 +1,15 @@
 package org.uengine.codi.mw3.marketplace.model;
 
+import java.util.Date;
+
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Range;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.marketplace.App;
+import org.uengine.codi.mw3.project.oce.KtProjectCreateRequest;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
 
 @Face(
 	ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -76,5 +82,46 @@ public class ManagerApproval implements ITool  {
 
 	public void afterComplete() throws Exception {
 		// TODO Auto-generated method stub
+		
+		App app = new App();
+		
+		app.setAppId(this.getAppId());
+		app.copyFrom(app.databaseMe());
+		
+		System.out.println("projectId = " + app.getProject().getId());
+		System.out.println("projectId = " + app.getAppName());
+		final String appName = app.getAppName();
+		final String projectId = app.getProject().getId();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					KtProjectCreateRequest ktProjectCreateRequest = new KtProjectCreateRequest();
+					CloudInfo cloudInfo = ktProjectCreateRequest.createRequset(appName , null);
+					insertCloudInfo(projectId , cloudInfo);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}				
+			}
+		}).start();
+	}
+	
+	public void insertCloudInfo(String projectId, CloudInfo cloudInfo) throws Exception{
+		
+		cloudInfo.setProjectId(projectId);
+		cloudInfo.setServerInfo("KT Cloud");
+		cloudInfo.setServerGroup(KtProjectServers.SERVER_PROB);
+		cloudInfo.setModdate(new Date());
+		
+		ICloudInfo iCInfo = cloudInfo.findServerByServerName(projectId , cloudInfo.getServerName() , KtProjectServers.SERVER_PROB);
+		if( iCInfo.next() ){
+			cloudInfo.setId(iCInfo.getId());
+			cloudInfo.syncToDatabaseMe();
+		}else{
+			cloudInfo.setId(cloudInfo.createNewId());
+			cloudInfo.createDatabaseMe();
+		}
+		
 	}
 }

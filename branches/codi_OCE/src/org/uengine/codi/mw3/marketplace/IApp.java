@@ -157,8 +157,14 @@ public interface IApp extends IDAO{
 	@Hidden
 	@ServiceMethod(callByContent=true)
 	public Object[] addApp()throws Exception;
-
+	
+	@Face(displayName="$Next")
 	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+	@ServiceMethod(callByContent=true)
+	public Object step1() throws Exception;
+
+//	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public Object save() throws Exception;
 	

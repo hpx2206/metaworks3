@@ -37,14 +37,14 @@ public interface ICloudInfo extends IDAO{
 	public String getRootPwd();
 	public void setRootPwd(String rootPwd);
 	
-	public String getOsType();
-	public void setOsType(String osType);
+	public String getOsTemplete();
+	public void setOsTemplete(String osTemplete);
+
+	public String getHwTemplete();
+	public void setHwTemplete(String hwTemplete);
 	
-	public String getWasType();
-	public void setWasType(String wasType);
-	
-	public String getDbType() ;
-	public void setDbType(String dbType);
+	public String getServiceTemplete();
+	public void setServiceTemplete(String serviceTemplete);
 	
 	public Date getModdate();
 	public void setModdate(Date moddate);

@@ -85,26 +85,29 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 			this.rootPwd = rootPwd;
 		}
 		
-	String osType;
-		public String getOsType() {
-			return osType;
+	String osTemplete;
+		public String getOsTemplete() {
+			return osTemplete;
 		}
-		public void setOsType(String osType) {
-			this.osType = osType;
+		public void setOsTemplete(String osTemplete) {
+			this.osTemplete = osTemplete;
 		}
-	String wasType;
-		public String getWasType() {
-			return wasType;
+
+
+	String hwTemplete;
+		public String getHwTemplete() {
+			return hwTemplete;
 		}
-		public void setWasType(String wasType) {
-			this.wasType = wasType;
+		public void setHwTemplete(String hwTemplete) {
+			this.hwTemplete = hwTemplete;
 		}
-	String dbType;
-		public String getDbType() {
-			return dbType;
+
+	String serviceTemplete;
+		public String getServiceTemplete() {
+			return serviceTemplete;
 		}
-		public void setDbType(String dbType) {
-			this.dbType = dbType;
+		public void setServiceTemplete(String serviceTemplete) {
+			this.serviceTemplete = serviceTemplete;
 		}
 	
 	

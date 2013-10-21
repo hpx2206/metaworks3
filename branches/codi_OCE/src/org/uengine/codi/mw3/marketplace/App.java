@@ -41,6 +41,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.AppServerManage;
 import org.uengine.codi.mw3.project.oce.KtProbProjectServers;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
+import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -434,6 +435,16 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		return new ModalPanel(AppServerManage);
 	}
 
+	public Object step1() throws Exception {
+		NewServer newServer = new NewServer();
+		this.getLogoFile().setFileTransfer(null);
+		newServer.setApp(this);
+		newServer.setServerGroup(KtProjectServers.SERVER_PROB);
+		newServer.setMetaworksContext(new MetaworksContext());
+		newServer.getMetaworksContext().setHow("appCreate");
+		newServer.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		return new ModalPanel(newServer);
+	}
 	public Object save() throws Exception {
 
 		ICategory category = new Category();

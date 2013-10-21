@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -17,16 +16,8 @@ import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
-import org.metaworks.dao.Database;
-import org.metaworks.dao.JDBCConnectionFactory;
-import org.metaworks.dao.TransactionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
-import org.uengine.codi.mw3.knowledge.ICloudInfo;
-import org.uengine.codi.mw3.knowledge.IWfNode;
-import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.util.Base64;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -239,10 +230,11 @@ public class KtProjectCreateRequest {
 		System.out.println("====================================================");
 		
 		String resultMessage = result + "<br/>" + result1 + "<br/>" + result2;
-		instance.setBeanProperty("ManagerApproval.resultIp", (Serializable)ip);
-		instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)resultMessage);		
-		processManager.applyChanges();
-		
+		if( processManager != null && instance != null){
+			instance.setBeanProperty("ManagerApproval.resultIp", (Serializable)ip);
+			instance.setBeanProperty("ManagerApproval.resultStr", (Serializable)resultMessage);		
+			processManager.applyChanges();
+		}
 		
 		CloudInfo cloudInfo = new CloudInfo();
 		cloudInfo.setServerName(vm_name);
