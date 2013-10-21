@@ -12,18 +12,20 @@ import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(displayName="개발기",
 ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-ejsPathForArray="dwr/metaworks/genericfaces/GridFace.ejs",
+ejsPathForArray="dwr/metaworks/org/uengine/codi/mw3/project/oce/KtProjectServer.ejs",
 ejsPathMappingByContext = {
 		"{how: 'inList', face: 'dwr/metaworks/genericfaces/GridFace_Row.ejs'}",
 	},
-options={"hideAddBtn" , "hideEditBtn", "hideRemoveBtn", "showExtraBtn" , "popupWidth", "gridButtons"},
-values={ "true", "true", "true", "true" , "500", "serverAdd,removeServer,refresh"})
+options={"hideAddBtn" , "hideEditBtn", "showExtraBtn","removeBtnName" ,"callbackRemoveBtn", "popupWidth", "gridButtons"},
+values={ "true", "true", "true" ,"$project.server.remove","removeServer"  , "500", "serverAdd,refresh"})
 public class KtProjectServer  implements ITool, ContextAware{
 
 	transient MetaworksContext metaworksContext;
@@ -119,18 +121,39 @@ public class KtProjectServer  implements ITool, ContextAware{
 			this.status = status;
 		}
 		
+	boolean checked;
+	@Hidden
+		public boolean isChecked() {
+			return checked;
+		}
+		public void setChecked(boolean checked) {
+			this.checked = checked;
+		}
+		
+	String serverGroup;
+		@Hidden
+		public String getServerGroup() {
+			return serverGroup;
+		}
+		public void setServerGroup(String serverGroup) {
+			this.serverGroup = serverGroup;
+		}
 	@Face(displayName="$project.server.add")
 	@Hidden
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object serverAdd() throws Exception{
 		String projectId = null;
+		String serverGroup = null;
 		if( ktProjectServers != null ){
 			projectId = ktProjectServers.getProjectId();
+			serverGroup = ktProjectServers.getServerGroup();
 		}
 		ModalWindow popup = new ModalWindow();
 		NewServer newServer = new NewServer();
 		newServer.setProjectId(projectId);
+		newServer.setServerGroup(serverGroup);
 		
+		popup.setTitle("$project.server.add");
 		popup.setPanel(newServer);
 		popup.setWidth(500);
 		popup.setHeight(400);
@@ -141,10 +164,28 @@ public class KtProjectServer  implements ITool, ContextAware{
 	@Face(displayName="$project.server.remove")
 	@Hidden
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)	
-	public KtProjectServer removeServer(){
+	public KtProjectServer removeServer() throws Exception{
 		if( ktProjectServers != null ){
-			String projectId = ktProjectServers.getProjectId();
-			System.out.println("3333333333  ==  " + projectId);
+			for(int i=0; i < ktProjectServers.getServerList().length;  i++){
+				KtProjectServer server = ktProjectServers.getServerList()[i];
+				if( server.isChecked() ){
+					// 삭제 요청한 노드
+					// TODO 프로세스에 cancel 을 날려야함
+					CloudInfo cloudInfo = new CloudInfo();
+					ICloudInfo iCloudInfo = cloudInfo.findServerByServerName(server.getProjectId() , server.getName() , server.getServerGroup() );
+					if( iCloudInfo.next() ){
+						cloudInfo.copyFrom(iCloudInfo);
+						if( cloudInfo.getServerIp() != null && !"".equals(cloudInfo.getServerIp())){
+							KtProjectDeleteRequest ktProjectDeleteRequest = new KtProjectDeleteRequest();
+							ktProjectDeleteRequest.setCloudInfo(cloudInfo);
+							ktProjectDeleteRequest.deleteRequest();
+						}else{
+							cloudInfo.deleteDatabaseMe();
+						}
+					}
+				}
+			}
+			
 		}
 		return this;
 	}

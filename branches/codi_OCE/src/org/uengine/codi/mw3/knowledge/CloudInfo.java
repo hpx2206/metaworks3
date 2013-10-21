@@ -115,43 +115,61 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 		public void setModdate(Date moddate) {
 			this.moddate = moddate;
 		}
-	public ICloudInfo findServerByProjectId(String projectId) throws Exception{
+		
+	String serverGroup;
+		public String getServerGroup() {
+			return serverGroup;
+		}
+		public void setServerGroup(String serverGroup) {
+			this.serverGroup = serverGroup;
+		}
+		
+	public CloudInfo(){
+		setServerGroup("dev");	// default
+	}
+	public ICloudInfo findServerByProjectId(String projectId , String serverGroup) throws Exception{
 		StringBuffer selectbf = new StringBuffer();
 		selectbf.append("select * from cloudinfo ");
 		selectbf.append(" where projectId = ?projectId ");
+		selectbf.append(" and serverGroup = ?serverGroup");
 		
 		ICloudInfo dao = (ICloudInfo) sql(ICloudInfo.class,	selectbf.toString());
 		dao.setProjectId(projectId);
+		dao.setServerGroup(serverGroup);
 		dao.select();
 		
 		return dao;
 	}
 	
-	public ICloudInfo findServerByServerName(String projectId, String serverName) throws Exception{
+	public ICloudInfo findServerByServerName(String projectId, String serverName, String serverGroup) throws Exception{
 		
 		StringBuffer selectbf = new StringBuffer();
 		selectbf.append("select * from cloudinfo ");
 		selectbf.append(" where projectId = ?projectId");
 		selectbf.append(" and serverName = ?serverName");
+		selectbf.append(" and serverGroup = ?serverGroup");
 		
 		ICloudInfo dao = (ICloudInfo) sql(ICloudInfo.class,	selectbf.toString());
 		dao.setProjectId(projectId);
 		dao.setServerName(serverName);
+		dao.setServerGroup(serverGroup);
 		dao.select();
 		
 		return dao;
 	}
 	
-	public ICloudInfo findServerByServertId(String projectId, String serverId) throws Exception{
+	public ICloudInfo findServerByServertId(String projectId, String serverId, String serverGroup) throws Exception{
 		
 		StringBuffer selectbf = new StringBuffer();
 		selectbf.append("select * from cloudinfo ");
 		selectbf.append(" where projectId = ?projectId");
 		selectbf.append(" and serverId = ?serverId");
+		selectbf.append(" and serverGroup = ?serverGroup");
 		
 		ICloudInfo dao = (ICloudInfo) sql(ICloudInfo.class,	selectbf.toString());
 		dao.setProjectId(projectId);
 		dao.setServerId(serverId);
+		dao.setServerGroup(serverGroup);
 		dao.select();
 		
 		return dao;

@@ -108,15 +108,13 @@
 	                	<tr>
 		                    <td class="appFirstTd"><span class="thumb"> <%=fields.logoFile.here({when:'image'})%> </span> </td>
 		                    <td class="appTitleTd">
-		                    	<div class="titleLine"> <strong><%=value.appName%></strong></div>
-		                    	<div class="simpleOverview"><%=value.simpleOverview%></div>
+		                    	<div class="titleLine"><%=mw3.localize("$App.Name") %> : <strong><%=value.appName%></strong></div>
+		                    	<div class="simpleOverview"><%=mw3.localize("$App.Overview.Simple") %> : <%=value.simpleOverview%></div>
 		                    	<!--div class="fullOverview"><%=value.fullOverview%></div--> 
-		                        <div class="PricingDetail_app" style="float:left"> Pricing Detail : </div>
-								<div style="float:left;margin:7px 5px"><%=value.pricing%> </div>
 								<div class="clear"></div>
 		                        <div class="vendor"> service by <%=value.company.comName%></div>
 		                    </td>
-		                    <td class="appStatusTd"><b>Listing Status</b><br><%=value.status%> </td>
+		                    <td class="appStatusTd"></td>
 		                    <td class="appBtnTd">
 <%
 			if(mw3.when == 'marketplaceHome' || mw3.when == 'searchForSearchBox' || mw3.when == 'searchForCategory'){
@@ -136,7 +134,7 @@
 <%
 				}
 %>								
-								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.edit.caller()%>"> Edit </a></div>						
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>						
 <%
 				}							
 %>
