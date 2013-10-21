@@ -1,7 +1,6 @@
 
 package org.uengine.codi.mw3.knowledge;
 import java.io.FileInputStream;
-import java.util.Map;
 
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
@@ -34,8 +33,6 @@ import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.ProjectCreate;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
-
-import com.thoughtworks.xstream.XStream;
 
 public class ProjectInfo implements ContextAware {
 
@@ -229,36 +226,19 @@ public class ProjectInfo implements ContextAware {
 			String linkedId = String.valueOf(wfNode.getLinkedInstId());*/
 			
 //			Object logo = null;
-			this.projectName = wfNode.getName();
-			this.domainName = this.getProjectName() + ".com";			
-			setType(wfNode.getVisType());
-			if("svn".equals(this.getType())){
-				Object logo = null;
-				XStream xstream = new XStream();
-				if(wfNode.getExt() != null){
-					Object xstreamStr =  xstream.fromXML(wfNode.getExt());
-					if(xstreamStr != null){
-						Map<String, Object> list = (Map<String,Object>) xstreamStr;
-						logo = list.get("logoFile");
-					}
-				}
-				this.logoFile = (MetaworksFile) logo;
-				setType("svn");
-				this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
-			}else if("war".equals(this.getType())){
-				Object logo = null;
-				XStream xstream = new XStream();
-				if(wfNode.getExt() != null){
-					Object xstreamStr =  xstream.fromXML(wfNode.getExt());
-					if(xstreamStr != null){
-						Map<String, Object> list = (Map<String,Object>) xstreamStr;
-						logo = list.get("logoFile");
-					}
-				}
-				this.logoFile = (MetaworksFile) logo;
-				setType("war");
-			}
-			this.description = wfNode.getDescription();
+		
+		MetaworksFile logoFile = new MetaworksFile();
+		logoFile.setUploadedPath(wfNode.getUrl());
+		logoFile.setFilename(wfNode.getThumbnail());
+		setLogoFile(logoFile);
+		
+		this.projectName = wfNode.getName();
+		this.domainName = this.getProjectName() + ".com";			
+		setType(wfNode.getVisType());
+		if("svn".equals(this.getType())){
+			this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
+		}
+		this.description = wfNode.getDescription();
 			
 			/*
 			Serializable serial = null;
