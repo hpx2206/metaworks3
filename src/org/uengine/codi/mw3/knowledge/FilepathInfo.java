@@ -5,12 +5,12 @@ import org.metaworks.dao.Database;
 
 public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathInfo{
 	
-	String id;
-		public String getId() {
-			return id;
+	String projectId;
+		public String getProjectId() {
+			return projectId;
 		}
-		public void setId(String id) {
-			this.id = id;
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
 		}
 
 	int reflectVer;
@@ -51,18 +51,18 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		public void setFileType(String fileType) {
 			this.fileType = fileType;
 		}
-	int infoId;
-		public int getInfoId() {
-			return infoId;
+	int id;
+		public int getId() {
+			return id;
 		}
-		public void setInfoId(int infoId) {
-			this.infoId = infoId;
+		public void setId(int id) {
+			this.id = id;
 		}
 		
 		
 	public int findReflectVersion(String id) throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from (select * from filepathinfo where id = ?id) a order by reflectVer desc limit 1;");
+		sql.append("select * from (select * from filepathinfo where projectId = ?id) a order by reflectVer desc limit 1;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
 		findListing.set("id", id);
@@ -76,7 +76,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 	
 	public int findReleaseVersion(String id) throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from (select * from filepathinfo where id = ?id) a order by releaseVer desc limit 1;");
+		sql.append("select * from (select * from filepathinfo where projectId = ?id) a order by releaseVer desc limit 1;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
 		findListing.set("id", id);
@@ -91,17 +91,18 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 	public SelectBox findReleaseVersions(String id) throws Exception{
 		SelectBox sb = new SelectBox();
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from (select * from filepathinfo where id = ?id and reflectVer != 0) a order by reflectVer desc;");
+		sql.append("select * from (select * from filepathinfo where projectId = ?id and reflectVer != 0) a order by reflectVer desc;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
 		findListing.set("id", id);
 		findListing.select();
 		
 		while(findListing.next()){
-			sb.add(String.valueOf(findListing.getReflectVer()), String.valueOf(findListing.getInfoId()));
-			System.out.println(String.valueOf(findListing.getInfoId()));
+			sb.add(String.valueOf(findListing.getReflectVer()), String.valueOf(findListing.getId()));
+			System.out.println(String.valueOf(findListing.getId()));
 		}
 		
 		return sb;
 	}
+	
 }
