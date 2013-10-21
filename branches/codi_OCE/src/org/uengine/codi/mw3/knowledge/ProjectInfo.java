@@ -1,5 +1,6 @@
 
 package org.uengine.codi.mw3.knowledge;
+import java.io.File;
 import java.io.FileInputStream;
 
 import org.directwebremoting.io.FileTransfer;
@@ -226,7 +227,6 @@ public class ProjectInfo implements ContextAware {
 			String linkedId = String.valueOf(wfNode.getLinkedInstId());*/
 			
 //			Object logo = null;
-		
 		MetaworksFile logoFile = new MetaworksFile();
 		logoFile.setUploadedPath(wfNode.getUrl());
 		logoFile.setFilename(wfNode.getThumbnail());
@@ -292,209 +292,87 @@ public class ProjectInfo implements ContextAware {
 	}
 
 	@Face(displayName = "$release")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow releaseProject() throws Exception{
-		
-		SelectBox reflectVersion = new SelectBox();
-		FilepathInfo filepathInfo = new FilepathInfo();
-		filepathInfo.setId(session.getLastSelectedItem());
-		
-		reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getId());
-		
 		ModalWindow modalWindow = new ModalWindow();
+		SelectBox reflectVersion = new SelectBox();
 		ReleasePanel releasePanel = new ReleasePanel();
-		releasePanel.setReflectVersion(reflectVersion);
-		releasePanel.setCheck(false);
-		releasePanel.setMetaworksContext(new MetaworksContext());
-		releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		FilepathInfo filepathInfo = new FilepathInfo();
+		filepathInfo.setProjectId(this.getProjectId());
 		
+		if("war".equals(this.getType())){
+			MetadataFile sqlFile = new MetadataFile();
+			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+			sqlFile.setBaseDir(codebase + File.separatorChar);
+			sqlFile.setTypeDir("sql");
+			MetadataFile warFile = new MetadataFile();
+			warFile.setBaseDir(codebase + File.separatorChar);
+			warFile.setTypeDir("war");
+			
+			releasePanel.setSqlFile(sqlFile);
+			releasePanel.setWarFile(warFile);
+			reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getProjectId());
+			releasePanel.setProjectId(this.getProjectId());
+			releasePanel.setReflectVersion(reflectVersion);
+			releasePanel.setCheck(false);
+			releasePanel.setMetaworksContext(new MetaworksContext());
+			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		}
+		else if("svn".equals(this.getType())){
+			releasePanel.setProjectId(this.getProjectId());
+		}
 		
 		modalWindow.setTitle("$release");
 		modalWindow.setPanel(releasePanel);
-		modalWindow.setHeight(400);
-		
-		
-//		SelectBox categories = new SelectBox();
-//		SelectBox attachProject = new SelectBox();
-//		
-//		ICategory category = Category.loadRootCategory();
-//		if (category.size() > 0) {
-//			while (category.next()) {
-//				String categoryId = Integer.toString(category.getCategoryId());
-//				String categoryName = category.getCategoryName();
-//
-//				categories.add(categoryName, categoryId);
-//			}
-//		}
-//		
-//		IProjectNode projectList = ProjectNode.load(session);		
-//		if(projectList.size() > 0) {
-//			while(projectList.next()){
-//				String projectId = projectList.getId();
-//				String projectName = projectList.getName();
-//				
-//				attachProject.add(projectName, projectId);
-//			}
-//		}
-//		
-//		this.setCategories(categories);
-//		this.setAttachProject(attachProject);
-//		this.setLogoFile(new MetaworksFile());
-		
+		modalWindow.setHeight(300);
 		
 		return modalWindow;
-		
-//		WfNode wfNode = new WfNode();
-//		wfNode.setId(session.getLastSelectedItem());
-//		wfNode.copyFrom(wfNode.databaseMe());
-//		
-//		if(wfNode.getIsDistributed()){
-//		
-//			if ("war".equals(wfNode.getVisType())) {
-//				
-//			}
-//			else if("svn".equals(wfNode.getVisType())){
-//				
-//			}
-//		}else{
-//			ModalWindow modalWindow = new ModalWindow();
-//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			modalWindow.setWidth(300);
-//			modalWindow.setHeight(150);
-//			modalWindow.setTitle("$Release 실패");
-//			modalWindow.setPanel(localeManager.getString("프로젝트 배포가 되지않아 실패 하였습니다."));
-//			modalWindow.getButtons().put("$Confirm", "");		
-//	
-//			return modalWindow;
-//		}
-		
-		
-//		if(wfNode.getIsDistributed()){
-//			wfNode.setIsReleased(true);
-//			wfNode.syncToDatabaseMe();
-//			wfNode.flushDatabaseMe();
-//			
-//			ModalWindow modalWindow = new ModalWindow();
-//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			modalWindow.setWidth(300);
-//			modalWindow.setHeight(150);
-//							
-//			modalWindow.setTitle("$SaveCompleteTitle");
-//			modalWindow.setPanel(localeManager.getString("Release 성공 하였습니다."));
-//			modalWindow.getButtons().put("$Confirm", "");		
-//			
-//			return modalWindow;
-//		}else{
-//			ModalWindow modalWindow = new ModalWindow();
-//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			modalWindow.setWidth(300);
-//			modalWindow.setHeight(150);
-//							
-//			modalWindow.setTitle("$Release 실패");
-//			modalWindow.setPanel(localeManager.getString("프로젝트 배포가 되지않아 실패 하였습니다."));
-//			modalWindow.getButtons().put("$Confirm", "");		
-//	
-//			return modalWindow;
-//		}
-	}
-	
-	@ServiceMethod
-	public void Confirm() {
 		
 	}
 
 	@Face(displayName = "$devreflect")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
 	public Object distribute() throws Exception{
-		
 		ModalWindow modalWindow = new ModalWindow();
 		ReflectPanel reflectPanel = new ReflectPanel();
-		reflectPanel.setSqlFile(new MetadataFile());
-		reflectPanel.setWarFile(new MetadataFile());
+		SelectBox serverSelect = new SelectBox();
+		CloudInfo cloudInfo = new CloudInfo();
+		
+		ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
+		while(findListing.next()){
+			serverSelect.add(findListing.getServerName() + " : " + findListing.getServerIp(), String.valueOf(findListing.getId()));
+		}
+		
+		if("war".equals(this.getType())){
+			
+			MetadataFile sqlFile = new MetadataFile();
+			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+			sqlFile.setBaseDir(codebase + File.separatorChar);
+			sqlFile.setTypeDir("sql");	
+			MetadataFile warFile = new MetadataFile();
+			warFile.setBaseDir(codebase + File.separatorChar);
+			warFile.setTypeDir("war");
+			
+			reflectPanel.setSqlFile(sqlFile);
+			reflectPanel.setWarFile(warFile);
+			reflectPanel.setProjectId(this.getProjectId());
+			reflectPanel.setServerSelect(serverSelect);
+			reflectPanel.setMetaworksContext(new MetaworksContext());
+			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		}
+		else if("svn".equals(this.getType())){
+			reflectPanel.setServerSelect(serverSelect);
+			reflectPanel.setProjectId(this.getProjectId());
+			reflectPanel.setMetaworksContext(new MetaworksContext());
+			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		}
+		
 		modalWindow.setTitle("$devreflect");
 		
 		modalWindow.setPanel(reflectPanel);
-		modalWindow.setHeight(400);
+		modalWindow.setHeight(200);
 		
 		return modalWindow;
-		
-
-//		CloudInfo cloudInfo = wfNode.getCloudInfo();
-//		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId());
-//		while(cInfo.next()){
-//			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
-//			cloudInfo.copyFrom(cInfo);
-//		}
-//		WfNode wfNode = new WfNode();
-//		wfNode.setId(session.getLastSelectedItem());
-//		wfNode.copyFrom(wfNode.databaseMe());
-//		this.projectName = wfNode.getName();
-//		Object sqlPath = null;
-//		Object warPath = null;
-//
-//		CloudInfo cloudInfo = wfNode.getCloudInfo();
-//		cloudInfo.copyFrom(cloudInfo.databaseMe());
-//		
-//		FilepathInfo filepath = wfNode.getFilepathInfo();
-//		filepath.copyFrom(filepath.databaseMe());
-//		
-//		if(cloudInfo == null || "".equals(cloudInfo.getServerIp())){
-//			throw new MetaworksException("개발환경 요청이 안되어있습니다.");
-//		}
-//		
-//		if ("war".equals(wfNode.getVisType())) {
-//			
-//			
-//			XStream xstream = new XStream();
-//			if (wfNode.getExt() != null) {
-//				Object xstreamStr = xstream.fromXML(wfNode.getExt());
-//				if (xstreamStr != null) {
-//					Map<String, Object> list = (Map<String, Object>) xstreamStr;
-//
-//					warPath = list.get("warFile_Path");
-//					sqlPath = list.get("sqlFile_Path");
-//				}
-//			}
-//			
-//			//파일 전송
-//			FileTransmition fileTransmition = new FileTransmition();
-//			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + warPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
-//			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath, cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-//			fileTransmition.send("C:/startUp.sh", cloudInfo.rootId, cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-//			
-//			//서버쪽 디비에 데이터베이스 생성
-//			CreateDatabase createDatabase = new CreateDatabase();
-//			createDatabase.create(cloudInfo.rootId, cloudInfo.getServerIp(), cloudInfo.getRootPwd(), wfNode.getName(), sqlPath.toString());
-//			
-//			wfNode.setIsDistributed(true);
-//			wfNode.syncToDatabaseMe();
-//			wfNode.flushDatabaseMe();
-//			
-//			ModalWindow modalWindow = new ModalWindow();
-//			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			modalWindow.setWidth(300);
-//			modalWindow.setHeight(150);
-//			modalWindow.setTitle("$SaveCompleteTitle");
-//			modalWindow.setPanel(localeManager.getString("반영되었습니다."));
-//			modalWindow.getButtons().put("$Confirm", "");		
-//			
-//			return modalWindow;
-//		}
-//		else if("svn".equals(wfNode.getVisType())){
-//			String host = GlobalContext.getPropertyString("vm.manager.ip");
-//			String userId = GlobalContext.getPropertyString("vm.manager.user");
-//			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-//			String command;
-//			
-//			JschCommand jschServerBehaviour = new JschCommand();
-//			jschServerBehaviour.sessionLogin(host, userId, passwd);
-//			
-//			//Hudson Build
-////			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
-////			jschServerBehaviour.runCommand(command);
-//		}
-//		return null;
-
 	}
 
 	@Face(displayName = "$commitmanage")
@@ -628,7 +506,7 @@ public class ProjectInfo implements ContextAware {
 		
 		
 		if("oce".equals(session.getUx()) || "oce_project".equals(session.getUx())){
-				
+			
 			session.setUx("oce_project");
 			
 			Perspective perspective = new Perspective();
