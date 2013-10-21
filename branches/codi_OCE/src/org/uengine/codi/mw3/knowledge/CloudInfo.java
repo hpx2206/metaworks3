@@ -119,6 +119,14 @@ public class CloudInfo extends Database<ICloudInfo> implements ICloudInfo{
 			this.moddate = moddate;
 		}
 		
+	String status;
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
 	String serverGroup;
 		public String getServerGroup() {
 			return serverGroup;

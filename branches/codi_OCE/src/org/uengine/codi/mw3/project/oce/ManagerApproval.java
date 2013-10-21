@@ -31,6 +31,7 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.util.Base64;
 import org.uengine.kernel.GlobalContext;
@@ -69,6 +70,7 @@ public class ManagerApproval implements ITool  {
 			this.instId = instId;
 		}
 	String serviceTemplete;
+	@Hidden
 		public String getServiceTemplete() {
 			return serviceTemplete;
 		}
@@ -77,6 +79,7 @@ public class ManagerApproval implements ITool  {
 		}
 		
 	String osTemplete;
+	@Hidden
 		public String getOsTemplete() {
 			return osTemplete;
 		}
@@ -85,6 +88,7 @@ public class ManagerApproval implements ITool  {
 		}
 
 	String hwTemplete;
+	@Hidden
 		public String getHwTemplete() {
 			return hwTemplete;
 		}
@@ -212,6 +216,7 @@ public class ManagerApproval implements ITool  {
 					cloudInfo.setHwTemplete(this.getHwTemplete());
 					cloudInfo.setServiceTemplete(this.getServiceTemplete());
 					cloudInfo.setServerGroup(KtProjectServers.SERVER_DEV);
+					cloudInfo.setStatus(ProjectServer.SERVER_STATUS_RUNNING);
 					cloudInfo.setModdate(new Date());
 					
 					ICloudInfo iCInfo = cloudInfo.findServerByServerName(node.getId() , cloudInfo.getServerName() , KtProjectServers.SERVER_DEV);

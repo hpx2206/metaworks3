@@ -15,8 +15,12 @@ import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.metaworks.dao.ConnectionFactory;
+import org.metaworks.dao.JDBCConnectionFactory;
+import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.util.Base64;
+import org.uengine.kernel.GlobalContext;
 
 public class KtProjectDeleteRequest {
 	
@@ -27,7 +31,9 @@ public class KtProjectDeleteRequest {
 		public void setCloudInfo(CloudInfo cloudInfo) {
 			this.cloudInfo = cloudInfo;
 		}
-
+		
+	public static ConnectionFactory connectionFactory;
+	
 	public KtProjectDeleteRequest(){
 		
 	}
@@ -39,6 +45,7 @@ public class KtProjectDeleteRequest {
 			final String ip_id= cloudInfo.getServerIpId();
 			
 			final CloudInfo cloudInfoFinal = cloudInfo;
+			
 			new Thread(new Runnable() {
 				
 				@Override
@@ -57,7 +64,36 @@ public class KtProjectDeleteRequest {
 						command = "destroyVirtualMachine&id="+vm_id;	
 						cmdExec(command);	
 						
-						cloudInfoFinal.deleteDatabaseMe();
+						TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
+						try{
+							tx.setManagedTransaction(false);
+							tx.setAutoCloseConnection(true);
+							
+							String connectionString = GlobalContext.getPropertyString("jdbc.url", null);
+							if(connectionString!=null){
+								String driverClass = GlobalContext.getPropertyString("jdbc.driverClassName", null);
+								String userId = GlobalContext.getPropertyString("jdbc.username", "root");
+								String password = GlobalContext.getPropertyString("jdbc.password", "root");
+								
+								JDBCConnectionFactory cf = new JDBCConnectionFactory();
+								cf.setConnectionString(connectionString);
+								cf.setDriverClass(driverClass);
+								cf.setUserId(userId);
+								cf.setPassword(password);
+								connectionFactory = cf;
+							}
+							if(connectionFactory!=null){
+								tx.setConnectionFactory(connectionFactory);
+							}
+							
+							cloudInfoFinal.deleteDatabaseMe();
+							tx.commit();
+						}catch(Exception e){
+							tx.rollback();
+							throw e;
+						}finally{
+							tx.releaseResources();
+						}
 						
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -1,9 +1,13 @@
 package org.uengine.codi.mw3.project.oce;
 
+import java.util.Date;
+
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
@@ -107,7 +111,19 @@ public class ProjectCreate implements ITool {
 
 	@Override
 	public void afterComplete() throws Exception {
+		CloudInfo cloudInfo = new CloudInfo();
+		cloudInfo.setId(cloudInfo.createNewId());
+		cloudInfo.setProjectId(projectId);
+		cloudInfo.setServerName(this.getProjectName());
+		cloudInfo.setOsTemplete(this.getOsTemplete());
+		cloudInfo.setHwTemplete(this.getHwTemplete());
+		cloudInfo.setServiceTemplete(this.getServiceTemplete());
+		cloudInfo.setModdate(new Date());
+		cloudInfo.setServerGroup(KtProjectServers.SERVER_DEV);
+		cloudInfo.setStatus(ProjectServer.SERVER_STATUS_STARTING);
+		cloudInfo.createDatabaseMe();
 		
+		cloudInfo.flushDatabaseMe();
 	}
 
 }
