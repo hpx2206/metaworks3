@@ -189,7 +189,10 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		Window leftWindow = new Window();
 		leftWindow.setTitle(this.getAppName());
-		leftWindow.setPanel(new IFrame("http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp"));
+		App app = new App();
+		app.setAppId(this.getAppId());
+		app.copyFrom(app.databaseMe());
+		leftWindow.setPanel(new IFrame(app.url));
 		
 		dashboardWindowLayout.setLeftWindow(leftWindow);
 		dashboardWindowLayout.load(session);
