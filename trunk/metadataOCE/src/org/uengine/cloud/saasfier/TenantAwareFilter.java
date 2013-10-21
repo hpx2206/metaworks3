@@ -41,14 +41,20 @@ public class TenantAwareFilter implements Filter{
 			//
 			String serverName = httpServletRequest.getServerName();
 			if(serverName!=null){
+				
+				
+				String tenantId = null;
 				int tenantIdPos = serverName.indexOf(".");
-				if(tenantIdPos > 0){
-					String tenantId = serverName.substring(0, tenantIdPos);				
-					new TenantContext(tenantId); //create unique tenant context for the requested thread.
-				}else{
-					new TenantContext(null);
+				
+				if(tenantIdPos > 0 && tenantIdPos != serverName.lastIndexOf(".")){
+					tenantId = serverName.substring(0, serverName.indexOf("."));
+					
+					if("www".equals(tenantId))
+						tenantId = null;
 				}
-			}			
+				
+				new TenantContext(tenantId); //create unique tenant context for the requested thread.
+			}		
 		}else{
 			new TenantContext(null);
 		}
