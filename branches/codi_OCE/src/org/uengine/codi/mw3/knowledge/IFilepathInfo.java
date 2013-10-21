@@ -8,8 +8,8 @@ import org.metaworks.dao.IDAO;
 @Table(name="filepathinfo")
 public interface IFilepathInfo  extends IDAO{
 	
-	public String getId();
-	public void setId(String id);
+	public String getProjectId();
+	public void setProjectId(String projectId);
 
 	public int getReflectVer();
 	public void setReflectVer(int reflectVer);
@@ -28,6 +28,6 @@ public interface IFilepathInfo  extends IDAO{
 
 	@Id
 	@NonSavable
-	public int getInfoId();
-	public void setInfoId(int infoId);
+	public int getId();
+	public void setId(int infoId);
 }
