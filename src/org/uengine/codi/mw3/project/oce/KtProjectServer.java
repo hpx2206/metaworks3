@@ -215,6 +215,7 @@ public class KtProjectServer  implements ITool, ContextAware{
 						cloudInfo.copyFrom(iCloudInfo);
 						if( cloudInfo.getServerIp() != null && !"".equals(cloudInfo.getServerIp())){
 							KtProjectDeleteRequest ktProjectDeleteRequest = new KtProjectDeleteRequest();
+							cloudInfo.databaseMe().setStatus(ProjectServer.SERVER_STATUS_STOPPING);
 							ktProjectDeleteRequest.setCloudInfo(cloudInfo);
 							ktProjectDeleteRequest.deleteRequest();
 						}else{

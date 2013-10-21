@@ -8,6 +8,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
+import org.uengine.codi.mw3.knowledge.ProjectServer;
 
 @Face(displayName="운영기",
 ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -64,6 +65,7 @@ public class KtProbProjectServer  extends KtProjectServer{
 						cloudInfo.copyFrom(iCloudInfo);
 						if( cloudInfo.getServerIp() != null && !"".equals(cloudInfo.getServerIp())){
 							KtProjectDeleteRequest ktProjectDeleteRequest = new KtProjectDeleteRequest();
+							cloudInfo.databaseMe().setStatus(ProjectServer.SERVER_STATUS_STOPPING);
 							ktProjectDeleteRequest.setCloudInfo(cloudInfo);
 							ktProjectDeleteRequest.deleteRequest();
 						}else{

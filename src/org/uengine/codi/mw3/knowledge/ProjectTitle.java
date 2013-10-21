@@ -26,6 +26,7 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
@@ -33,7 +34,7 @@ import org.uengine.kernel.GlobalContext;
 import com.thoughtworks.xstream.XStream;
 
 
-@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,projectSecuopt,radio,warFile,sqlFile"} ,
+@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,projectSecuopt,radio"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -88,24 +89,6 @@ public class ProjectTitle implements ContextAware {
 			this.logoFile = logoFile;
 		}
 
-	MetadataFile sqlFile;
-		@Face(displayName="$sqlFile")
-		public MetadataFile getSqlFile() {
-			return sqlFile;
-		}
-		public void setSqlFile(MetadataFile sqlFile) {
-			this.sqlFile = sqlFile;
-		}
-
-	MetadataFile 	warFile;
-		@Face(displayName="$WarFile")
-		public MetadataFile getWarFile() {
-			return warFile;
-		}
-		public void setWarFile(MetadataFile warFile) {
-			this.warFile = warFile;
-		}
-
 	String fileType;
 		public String getFileType() {
 			return fileType;
@@ -130,26 +113,10 @@ public class ProjectTitle implements ContextAware {
 		public void setCode(String code) {
 			this.code = code;
 		}
-	
-	Boolean sqlFileCheck;
-		public Boolean getSqlFileCheck() {
-			return sqlFileCheck;
-		}
-		public void setSqlFileCheck(Boolean sqlFileCheck) {
-			this.sqlFileCheck = sqlFileCheck;
-		}
-	
-	Boolean warFileCheck;
-		public Boolean getWarFileCheck() {
-			return warFileCheck;
-		}
-		public void setWarFileCheck(Boolean warFileCheck) {
-			this.warFileCheck = warFileCheck;
-		}
 
 	String radio;
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
-		@Face(displayName="$ProjectRadio", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","없음"}, values={"1","2"})
+		@Face(displayName="$project.fileType.select", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","SVN"}, values={"1","2"})
 		public String getRadio() {
 			return radio;
 		}
@@ -175,7 +142,7 @@ public class ProjectTitle implements ContextAware {
 		}
 		
 	boolean projectSecuopt;				
-		@Face(displayName="$topicSecuopt")
+		@Face(displayName="$projectSecuopt")
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public boolean isProjectSecuopt() {
 			return projectSecuopt;
@@ -189,11 +156,10 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
 	public Object createProjectStep1() throws Exception {
-			NewServer newServer = new NewServer();
-			this.getLogoFile().setFileTransfer(null);
-			this.getWarFile().setFileTransfer(null);
-			this.getSqlFile().setFileTransfer(null);
+		NewServer newServer = new NewServer();
+		this.getLogoFile().setFileTransfer(null);
 		newServer.setProjectTitle(this);
+		newServer.setServerGroup(KtProjectServers.SERVER_DEV);
 		newServer.setMetaworksContext(new MetaworksContext());
 		newServer.getMetaworksContext().setHow("projectCreate");
 		newServer.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
@@ -206,73 +172,11 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	//@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-			if(this.getWarFile().getFilename() != null || this.getSqlFile().getFilename() != null){	
-				String warFileType = this.getWarFile().getFilename();
-				String sqlFileType = this.getSqlFile().getFilename();
-				int warPos = warFileType.lastIndexOf('.');
-				if( warPos >-1){
-					String ext = warFileType.substring(warPos);
-					if(".war".equals(ext)){
-						setWarFileCheck(true);
-					}
-				}
-				int sqlPos = sqlFileType.lastIndexOf('.');
-				if( sqlPos >-1){
-					String ext = sqlFileType.substring(sqlPos);
-					if(".sql".equals(ext)){
-						setSqlFileCheck(true);
-					}
-				}
-			}	
-		if("war".equals(this.getFileType())){
-			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
-					this.getWarFile().getFilename().length() >0)
-					
-					if(getWarFileCheck() != null){
-						if(getWarFileCheck() == true){
-//							this.getWarFile().upload();
-							String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-							MetadataFile resourceFile = new MetadataFile();
-							resourceFile.setBaseDir(codebase + File.separatorChar + this.getTopicTitle());
-							resourceFile.setFilename(this.getWarFile().getFilename());
-							resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
-							resourceFile.setMimeType(this.getWarFile().getMimeType());
-							setWarFile(resourceFile);
-							
-						}
-					}
-//				if(getWarFileCheck() != null){
-//					if(getWarFileCheck() == true){
-//						this.getWarFile().upload();
-//					}
-//				}
-			if(this.getSqlFile().getFileTransfer() != null && this.getSqlFile().getFilename() != null && 
-					this.getSqlFile().getFilename().length() >0)
-
-				if(getSqlFileCheck() != null){
-					if(getSqlFileCheck() == true){
-//						this.getSqlFile().upload();
-						String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-						MetadataFile resourceFile = new MetadataFile();
-						resourceFile.setBaseDir(codebase + File.separatorChar + this.getTopicTitle());
-						resourceFile.setFilename(this.getSqlFile().getFilename());
-						resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
-						resourceFile.setMimeType(this.getSqlFile().getMimeType());
-						setSqlFile(resourceFile);
-					}
-				}
-			if(this.getLogoFile().getFileTransfer() != null &&
-					   this.getLogoFile().getFilename() != null && 
-					   this.getLogoFile().getFilename().length() > 0)			
-						this.getLogoFile().upload();
-			
-		}else if("svn".equals(this.getFileType())){
-			if(this.getLogoFile().getFileTransfer() != null &&
-					   this.getLogoFile().getFilename() != null && 
-					   this.getLogoFile().getFilename().length() > 0)			
-						this.getLogoFile().upload();
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
 		}
-			
 		
 		this.saveMe();
 		
@@ -362,34 +266,13 @@ public class ProjectTitle implements ContextAware {
 				HashMap<String , Object>  map = new HashMap<String , Object>();
 				map.put("ProjectInfo",wfNode.getDescription());
 				map.put("logoFile", this.getLogoFile());
-				map.put("sqlFile",this.getSqlFile());
-				map.put("warFile",this.getWarFile());
 				
-//				String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-//				this.getWarFile().setUploadedPath(codebase + File.separatorChar + wfNode.getName());
-//				this.getSqlFile().setUploadedPath(codebase + File.separatorChar + wfNode.getName());
-				
-				
-//				codebase + File.separatorChar + wfNode.getName())
 				map.put("logoFile_Url",this.getLogoFile().getUploadedPath());
-				map.put("warFile_Path", this.getWarFile().getUploadedPath());
-				map.put("sqlFile_Path", this.getSqlFile().getUploadedPath());
-				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
-				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
 				map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
 				String xstreamStr = xstream.toXML(map);
-				System.out.println(xstreamStr);
 				
 				
 				Object obj = xstream.fromXML(xstreamStr);
-				if( obj instanceof HashMap){
-					System.out.println("HashMap ------   ");
-				}
-//				xstream.setMode(XStream.NO_REFERENCES);
-//				xstream.alias("warFile",this.getClass());
-////				code = this.getWarFile().toString();
-//				wfNode.setEx1(xmlCode);
-//				
 				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
 //				wfNode.setLogoFile(this.getLogoFile());
 				wfNode.setVisType("war");
@@ -479,12 +362,6 @@ public class ProjectTitle implements ContextAware {
 			HashMap<String , Object>  map = new HashMap<String , Object>();
 			map.put("ProjectInfo",wfNode.getDescription());
 			map.put("logoFile", this.getLogoFile());
-			map.put("sqlFile",this.getSqlFile());
-			map.put("warFile",this.getWarFile());
-			if(this.getSqlFile() != null || this.getWarFile() != null){
-				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
-				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
-			}
 			map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
 			String xstreamStr = xstream.toXML(map);
 			System.out.println(xstreamStr);

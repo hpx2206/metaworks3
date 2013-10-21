@@ -93,9 +93,11 @@ public class KtProjectServers implements ContextAware{
 			server.setHwTemplete(cInfo.getHwTemplete());
 			server.setServiceTemplete(cInfo.getServiceTemplete());
 			server.setServerGroup(this.getServerGroup());
-			if( cInfo.getServerIp() == null || "".equals(cInfo.getServerIp() )){
-				server.setStatus("승인 대기중");
-			}else{
+			if( cInfo.getStatus() != null && ProjectServer.SERVER_STATUS_STARTING.equals(cInfo.getStatus())){
+				server.setStatus("승인 대기중..");
+			}else if( cInfo.getStatus() != null && ProjectServer.SERVER_STATUS_STOPPING.equals(cInfo.getStatus())){
+				server.setStatus("삭제 요청중..");
+			}else if( cInfo.getStatus() != null && ProjectServer.SERVER_STATUS_RUNNING.equals(cInfo.getStatus())){
 				server.setStatus(ProjectServer.SERVER_STATUS_RUNNING);
 			}
 			

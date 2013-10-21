@@ -27,16 +27,6 @@ public class MyProjectPanel {
 		projectTitle.setLogoFile(new MetaworksFile());
 		
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		// TODO 프로젝트 명으로..
-		MetadataFile warFile = new MetadataFile();
-		MetadataFile sqlFile = new MetadataFile();
-		warFile.setBaseDir(codebase);
-		warFile.setTypeDir("war");
-		sqlFile.setBaseDir(codebase);
-		sqlFile.setTypeDir("war");
-		
-		projectTitle.setWarFile(warFile);
-		projectTitle.setSqlFile(sqlFile);
 		return new ModalWindow(projectTitle , 500, 480, "$CreateProject");
 	}
 	

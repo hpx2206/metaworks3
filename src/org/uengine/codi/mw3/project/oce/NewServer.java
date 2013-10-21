@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
+import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.ProjectTitle;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.model.Instance;
@@ -179,7 +180,9 @@ public class NewServer extends Templete{
 		cloudInfo.setOsTemplete(this.getOsTemplete());
 		cloudInfo.setHwTemplete(this.getHwTemplete());
 		cloudInfo.setServiceTemplete(this.getServiceTemplete());
+		cloudInfo.setStatus(ProjectServer.SERVER_STATUS_STARTING);
 		cloudInfo.setModdate(new Date());
+		
 		cloudInfo.setServerGroup(serverGroup);
 		cloudInfo.createDatabaseMe();
 		
@@ -246,18 +249,6 @@ public class NewServer extends Templete{
 			instance.databaseMe().setName("개발환경요청" + " : " + this.getProjectName());
 			instance.flushDatabaseMe();
 			
-			CloudInfo cloudInfo = new CloudInfo();
-			cloudInfo.setId(cloudInfo.createNewId());
-			cloudInfo.setProjectId(projectId);
-			cloudInfo.setServerName(this.getProjectName());
-			cloudInfo.setOsTemplete(this.getOsTemplete());
-			cloudInfo.setHwTemplete(this.getHwTemplete());
-			cloudInfo.setServiceTemplete(this.getServiceTemplete());
-			cloudInfo.setModdate(new Date());
-			cloudInfo.setServerGroup(serverGroup);
-			cloudInfo.createDatabaseMe();
-			
-			cloudInfo.flushDatabaseMe();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

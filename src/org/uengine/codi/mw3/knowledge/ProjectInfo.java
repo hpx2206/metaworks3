@@ -92,28 +92,10 @@ public class ProjectInfo implements ContextAware {
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}	
-	MetadataFile sqlFile;
-		@Face(displayName="sqlFile")
-		public MetadataFile getSqlFile() {
-			return sqlFile;
-		}
-		public void setSqlFile(MetadataFile sqlFile) {
-			this.sqlFile = sqlFile;
-		}
-
-	MetadataFile 	warFile;
-		@Face(displayName="WarFile")
-		public MetadataFile getWarFile() {
-			return warFile;
-		}
-		public void setWarFile(MetadataFile warFile) {
-			this.warFile = warFile;
-		}	
 	String type;
 		public String getType() {
 			return type;
 		}
-		
 		public void setType(String type) {
 			this.type = type;
 		}
@@ -228,7 +210,6 @@ public class ProjectInfo implements ContextAware {
 	
 	public ProjectInfo(String projectId){
 		this.setProjectId(projectId);
-//		this.setLogoFile(new MetaworksFile());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
@@ -266,29 +247,16 @@ public class ProjectInfo implements ContextAware {
 				this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
 			}else if("war".equals(this.getType())){
 				Object logo = null;
-				Object warUrl = null;
-				Object sqlUrl = null;
-				Object warFile = null;
-				Object sqlFile = null;
 				XStream xstream = new XStream();
 				if(wfNode.getExt() != null){
 					Object xstreamStr =  xstream.fromXML(wfNode.getExt());
 					if(xstreamStr != null){
 						Map<String, Object> list = (Map<String,Object>) xstreamStr;
-					
-						warUrl = list.get("warFile_Thumbnail");
-						sqlUrl = list.get("sqlFile_Thumbnail");
 						logo = list.get("logoFile");
-						warFile = list.get("warFile");
-						sqlFile = list.get("sqlFile");
 					}
 				}
-//						this.war = (String) warUrl;
-//						this.sql = (String) sqlUrl;
-						this.logoFile = (MetaworksFile) logo;
-						this.warFile = (MetadataFile) warFile;
-						this.sqlFile = (MetadataFile) sqlFile;
-						setType("war");
+				this.logoFile = (MetaworksFile) logo;
+				setType("war");
 			}
 			this.description = wfNode.getDescription();
 			

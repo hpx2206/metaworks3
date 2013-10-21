@@ -919,3 +919,5 @@ create table cloudinfo(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table appmapping modify url varchar(200);
+
+alter table cloudinfo add column status varchar(20);

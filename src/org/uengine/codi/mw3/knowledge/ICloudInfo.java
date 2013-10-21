@@ -49,6 +49,9 @@ public interface ICloudInfo extends IDAO{
 	public Date getModdate();
 	public void setModdate(Date moddate);
 	
+	public String getStatus();
+	public void setStatus(String status);
+	
 	public String getServerGroup();
 	public void setServerGroup(String serverGroup);
 	
