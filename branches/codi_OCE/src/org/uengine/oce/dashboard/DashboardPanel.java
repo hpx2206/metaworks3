@@ -66,7 +66,7 @@ public class DashboardPanel {
 	public DashboardPanel load(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
 		//InstanceListPanel
-		instanceListPanel = createInstanceListPanel();
+		instanceListPanel = createInstanceListPanel(session);
 		
 		//MyApp
 		myAppPanel = new MyAppPanel();
@@ -86,7 +86,7 @@ public class DashboardPanel {
 		return this;
 	}
 
-	public InstanceListPanel createInstanceListPanel() throws Exception{
+	public InstanceListPanel createInstanceListPanel(Session session) throws Exception{
 		InstanceListPanel instanceListPanel;
 		
 	
