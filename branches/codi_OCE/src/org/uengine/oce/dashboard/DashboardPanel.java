@@ -1,15 +1,12 @@
 package org.uengine.oce.dashboard;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.PersonalPerspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class DashboardPanel {
-	@AutowiredFromClient
-	public Session session;
 		
 	MetaworksContext metaworksContext;		
 		public MetaworksContext getMetaworksContext() {
@@ -87,18 +84,19 @@ public class DashboardPanel {
 	}
 
 	public InstanceListPanel createInstanceListPanel(Session session) throws Exception{
-		InstanceListPanel instanceListPanel;
-		
 	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 //		instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
-		instanceListPanel = (InstanceListPanel) personalPerspective.loadDashboard()[1];
-
+		
+		InstanceListPanel instanceListPanel = new InstanceListPanel();
 		instanceListPanel.session = session;
+		
+		instanceListPanel = (InstanceListPanel) personalPerspective.loadDashboard()[1];
 		instanceListPanel.setMetaworksContext(new MetaworksContext());
 		instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
 		instanceListPanel.getMetaworksContext().setHow("dashboard");
+
 		return instanceListPanel;
 		
 	}

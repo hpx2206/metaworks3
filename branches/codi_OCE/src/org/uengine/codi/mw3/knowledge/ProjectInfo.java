@@ -1,16 +1,11 @@
 
 package org.uengine.codi.mw3.knowledge;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -25,26 +20,21 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.marketplace.category.Category;
-import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.NewInstancePanel;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.ProjectCreate;
-import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
+
 import com.thoughtworks.xstream.XStream;
 
 public class ProjectInfo implements ContextAware {
@@ -648,7 +638,12 @@ public class ProjectInfo implements ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] require() throws Exception{
 		
-//		String defId = "oceProjectRequset.process";
+		session.setLastPerspecteType(ProjectNode.TYPE_PROJECT);
+		session.setLastSelectedItem(this.getProjectId());
+		session.setUx("oce_project");
+		
+		instanceViewContent.session = session;
+		
 		String defId = "projectProcess/projectCre2.process";
 		
 		ProcessMap processMap = new ProcessMap();
@@ -682,6 +677,18 @@ public class ProjectInfo implements ContextAware {
 		}
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
+		
+		
+		if("oce".equals(session.getUx()) || "oce_project".equals(session.getUx())){
+				
+			session.setUx("oce_project");
+			
+			Perspective perspective = new Perspective();
+			perspective.session = session;
+			
+			Object[] returnObject =  perspective.loadInstanceListPanel(ProjectNode.TYPE_PROJECT, getProjectId());
+			return new Object[]{new Refresh(returnObject[1])};
+		}
 		
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.session = session;

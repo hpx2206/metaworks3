@@ -21,7 +21,6 @@ public class DashboardWindow extends Window{
 		this.session = session;
 				
 		DashboardPanel dashboardPanel = new DashboardPanel();
-		dashboardPanel.session = session;
 		dashboardPanel.load(session);
 	}
 		

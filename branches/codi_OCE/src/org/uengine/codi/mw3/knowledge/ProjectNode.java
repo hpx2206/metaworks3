@@ -37,6 +37,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 
 		session.setLastPerspecteType(TYPE_PROJECT);
 		session.setLastSelectedItem(this.getId());
+		session.setUx("oce_project");
 		
 		Perspective perspective = new Perspective();
 		perspective.session = session;

@@ -53,7 +53,7 @@ public class TestProject implements ContextAware {
 		}
 		
 	@ServiceMethod(callByContent=true)
-	public void load(){
+	public void load() throws Exception{
 		this.setAdmin(new Admin());
 		
 		this.setUserId("test");
@@ -65,7 +65,7 @@ public class TestProject implements ContextAware {
 	
 	@Face(displayName="Start Editing")
 	@ServiceMethod(callByContent=true, except="content")
-	public void run(){
+	public void run() throws Exception{
 		Login login = new Login();
 		login.setUserId("CJW@kiat.or.kr");
 //		login.setUserId(this.getUserId());
