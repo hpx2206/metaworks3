@@ -4,7 +4,6 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -157,7 +156,7 @@ public class InstanceList implements ContextAware{
 		String preferUX = session.getEmployee().getPreferUX();
 		
 		if("oce".equals(session.getUx()) ){
-			if(!"goSns".equals(session.getLastSelectedItem())){
+			if("dashboard".equals(session.getLastPerspecteType())){
 				instanceContents.getMetaworksContext().setWhere("dashboard");
 			}
 		}
