@@ -15,7 +15,6 @@ public class ReleasePanel {
 	
 	SelectBox reflectVersion;
 		@Face(displayName = "$ReflectVersion")
-		@Available(when=MetaworksContext.WHEN_NEW)
 		public SelectBox getReflectVersion() {
 			return reflectVersion;
 		}
@@ -25,7 +24,6 @@ public class ReleasePanel {
 	
 	Boolean check;
 		@Face(displayName="$newFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
 		public Boolean getCheck() {
 			return check;
 		}
@@ -35,7 +33,6 @@ public class ReleasePanel {
 		
 	MetadataFile warFile;
 		@Face(displayName="$WarFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
 		public MetadataFile getWarFile() {
 			return warFile;
 		}
@@ -45,7 +42,6 @@ public class ReleasePanel {
 		
 	MetadataFile sqlFile;
 		@Face(displayName="$SqlFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
 		public MetadataFile getSqlFile() {
 			return sqlFile;
 		}
@@ -62,7 +58,6 @@ public class ReleasePanel {
 		}
 		
 	@Face(displayName = "$release")
-	@Available(when=MetaworksContext.WHEN_NEW)
 	@ServiceMethod(callByContent = true)
 	public Object release() throws Exception{
 		
