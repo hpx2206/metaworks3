@@ -19,6 +19,7 @@ import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectTitle;
+import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
@@ -63,30 +64,68 @@ public class NewServer extends Templete{
 			this.projectName = projectName;
 		}
 
-	String osType;
-	@Face(displayName="$project.server.ostype", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"리눅스(LINUX)","유닉스(UNIX)","Window NT"}, values={"LINUX", "UNIX", "Window"})
-		public String getOsType() {
-			return osType;
-		}
-		public void setOsType(String osType) {
-			this.osType = osType;
-		}
-	String wasType;
-	@Face(displayName="$project.server.wastype", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"서버엔진 사용안함","Jboss 6.0","Tomcat 7.0"}, values={"사용안함", "Jboss", "Tomcat"})
-		public String getWasType() {
-			return wasType;
-		}
-		public void setWasType(String wasType) {
-			this.wasType = wasType;
-		}
-	String dbType;
-	@Face(displayName="$project.server.dbtype", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"데이터베이스 사용안함","Cubrid","Mysql","Oracle"}, values={"사용안함", "Cubrid", "Mysql","Oracle"})
-		public String getDbType() {
-			return dbType;
-		}
-		public void setDbType(String dbType) {
-			this.dbType = dbType;
-		}
+		String serviceTemplete;
+		@Face(displayName="$project.server.serviceTemplete", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"KT_KOR-Central A"}, values={"KT_KOR-Central A"})
+			public String getServiceTemplete() {
+				return serviceTemplete;
+			}
+			public void setServiceTemplete(String serviceTemplete) {
+				this.serviceTemplete = serviceTemplete;
+			}
+			
+		String osTemplete;
+		@Face(displayName="$project.server.osTemplete", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", 
+				options={"Centos 6.3 64bit_jboss",
+							"Centos 6.3 64bit_cubrid",
+							"Centos 6.3 64bit_jboss_cubird",
+							"Ubuntu 12.04 64bit_jboss",
+							"Ubuntu 12.04 64bit_cubrid",
+							"Ubuntu 12.04 64bit_jboss_cubird",
+							"WIN 2008 R2 64bit [Korean]_jboss",
+							"WIN 2008 R2 64bit [Korean]-cubrid",
+							"WIN 2008 R2 64bit [Korean]_jboss_cubird"}, 
+				values={"Centos 6.3 64bit_jboss",
+							"Centos 6.3 64bit_cubrid",
+							"Centos 6.3 64bit_jboss_cubird",
+							"Ubuntu 12.04 64bit_jboss",
+							"Ubuntu 12.04 64bit_cubrid",
+							"Ubuntu 12.04 64bit_jboss_cubird",
+							"WIN 2008 R2 64bit [Korean]_jboss",
+							"WIN 2008 R2 64bit [Korean]-cubrid",
+							"WIN 2008 R2 64bit [Korean]_jboss_cubird"})
+			public String getOsTemplete() {
+				return osTemplete;
+			}
+			public void setOsTemplete(String osTemplete) {
+				this.osTemplete = osTemplete;
+			}
+
+		String hwTemplete;
+		@Face(displayName="$project.server.hwTemplete", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", 
+				options={"1 vCore	1 GB	100GB",
+							"1 vCore	2 GB	100GB",
+							"2 vCore	2 GB	100GB",
+							"2 vCore	4 GB	100GB",
+							"4 vCore	4 GB	100GB",
+							"4 vCore	8 GB	100GB",
+							"8 vCore	8 GB	100GB",
+							"8 vCore	16 GB	100GB",
+							"12 vCore	16 GB	100GB"}, 
+				values={"1 vCore	1 GB	100GB",
+							"1 vCore	2 GB	100GB",
+							"2 vCore	2 GB	100GB",
+							"2 vCore	4 GB	100GB",
+							"4 vCore	4 GB	100GB",
+							"4 vCore	8 GB	100GB",
+							"8 vCore	8 GB	100GB",
+							"8 vCore	16 GB	100GB",
+							"12 vCore	16 GB	100GB"})
+			public String getHwTemplete() {
+				return hwTemplete;
+			}
+			public void setHwTemplete(String hwTemplete) {
+				this.hwTemplete = hwTemplete;
+			}
 	
 	ProjectTitle projectTitle;
 		@Hidden	
@@ -96,7 +135,16 @@ public class NewServer extends Templete{
 		public void setProjectTitle(ProjectTitle projectTitle) {
 			this.projectTitle = projectTitle;
 		}
-	
+		
+	App app;
+		@Hidden	
+		public App getApp() {
+			return app;
+		}
+		public void setApp(App app) {
+			this.app = app;
+		}
+
 	String serverGroup;
 		@Hidden
 		public String getServerGroup() {
@@ -116,8 +164,32 @@ public class NewServer extends Templete{
 		
 		
 	@Face(displayName="$Create")	
-	@Available(when={MetaworksContext.WHEN_NEW})
-	@ServiceMethod(payload={"projectTitle"}, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Available(how={"appCreate"} , when={MetaworksContext.WHEN_NEW})
+	@ServiceMethod(callByContent=true)
+	public Object[] appfinish() throws Exception {
+		
+		app.processManager = processManager;
+		app.session = session;
+		app.instanceView = instanceViewContent;
+		
+		CloudInfo cloudInfo = new CloudInfo();
+		cloudInfo.setId(cloudInfo.createNewId());
+		cloudInfo.setProjectId(app.getAttachProject().getSelected());
+		cloudInfo.setServerName(app.getAppName());
+		cloudInfo.setOsTemplete(this.getOsTemplete());
+		cloudInfo.setHwTemplete(this.getHwTemplete());
+		cloudInfo.setServiceTemplete(this.getServiceTemplete());
+		cloudInfo.setModdate(new Date());
+		cloudInfo.setServerGroup(serverGroup);
+		cloudInfo.createDatabaseMe();
+		
+		cloudInfo.flushDatabaseMe();
+		
+		return new Object[]{app.save()};
+	}
+	@Face(displayName="$Create")	
+	@Available(how={"projectCreate"} , when={MetaworksContext.WHEN_NEW})
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] finalfinish() throws Exception {
 		projectTitle.session = session;
 		Object[] returnObjects = projectTitle.save();
@@ -153,9 +225,9 @@ public class NewServer extends Templete{
 			ProjectCreate projectCreate = new ProjectCreate();
 			projectCreate.setProjectId(this.getProjectId());
 			projectCreate.setProjectName(this.getProjectName());
-			projectCreate.setOsSelect(osType);
-			projectCreate.setWasSelect(wasType);
-			projectCreate.setDbSelect(dbType);
+			projectCreate.setOsTemplete(this.getOsTemplete());
+			projectCreate.setHwTemplete(this.getHwTemplete());
+			projectCreate.setServiceTemplete(this.getServiceTemplete());
 			
 			ResultPayload rp = new ResultPayload();
 			rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
@@ -178,9 +250,9 @@ public class NewServer extends Templete{
 			cloudInfo.setId(cloudInfo.createNewId());
 			cloudInfo.setProjectId(projectId);
 			cloudInfo.setServerName(this.getProjectName());
-			cloudInfo.setOsType(osType);
-			cloudInfo.setWasType(wasType);
-			cloudInfo.setDbType(dbType);
+			cloudInfo.setOsTemplete(this.getOsTemplete());
+			cloudInfo.setHwTemplete(this.getHwTemplete());
+			cloudInfo.setServiceTemplete(this.getServiceTemplete());
 			cloudInfo.setModdate(new Date());
 			cloudInfo.setServerGroup(serverGroup);
 			cloudInfo.createDatabaseMe();

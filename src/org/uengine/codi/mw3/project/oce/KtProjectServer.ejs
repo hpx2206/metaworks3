@@ -43,8 +43,7 @@
         
         var platMode = objectMetadata.getOptionValue('platMode', false);
         var showCheckBox = !objectMetadata.getOptionValue('hideCheckBox', false);
-        
-        if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
+        if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW || mw3.when == 'dev' || mw3.when == 'prob'){
             var editObject = {
                 __className : objectTypeName,
                 metaworksContext : {when : mw3.WHEN_EDIT}

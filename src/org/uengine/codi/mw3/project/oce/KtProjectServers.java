@@ -6,6 +6,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -17,8 +18,8 @@ import org.uengine.codi.mw3.knowledge.ProjectServer;
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"hideViewBox", "methodVAlign"}, values={"true", "top"})
 public class KtProjectServers implements ContextAware{
 	
-	public static String SERVER_DEV = "dev";
-	public static String SERVER_PROB = "prob";
+	public static final String SERVER_DEV = "dev";
+	public static final String SERVER_PROB = "prob";
 
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -49,6 +50,7 @@ public class KtProjectServers implements ContextAware{
 		
 	KtProjectServer[] serverList;
 	@Face(options={"hideLabel"}, values={"true"})
+	@Available(when=KtProjectServers.SERVER_DEV)
 		public KtProjectServer[] getServerList() {
 			return serverList;
 		}
@@ -57,12 +59,12 @@ public class KtProjectServers implements ContextAware{
 		}
 		
 	public KtProjectServers(){
-		this(null, null);
+		this(null, SERVER_DEV);
 	}
 	
 	public KtProjectServers(String projectId, String serverGroup){
 		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		this.getMetaworksContext().setWhen(SERVER_DEV);
 		
 		this.setProjectId(projectId);
 		this.setServerList(new KtProjectServer[0]);
@@ -87,9 +89,9 @@ public class KtProjectServers implements ContextAware{
 			server.setProjectId(cInfo.getProjectId());
 			server.setName(cInfo.getServerName());
 			server.setIp(cInfo.getServerIp());
-			server.setOsType(cInfo.getOsType());
-			server.setWasType(cInfo.getWasType());
-			server.setDbType(cInfo.getDbType());
+			server.setOsTemplete(cInfo.getOsTemplete());
+			server.setHwTemplete(cInfo.getHwTemplete());
+			server.setServiceTemplete(cInfo.getServiceTemplete());
 			server.setServerGroup(this.getServerGroup());
 			if( cInfo.getServerIp() == null || "".equals(cInfo.getServerIp() )){
 				server.setStatus("승인 대기중");

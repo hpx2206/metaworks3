@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.processmanager.ProcessManagerRemote;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ProjectCreate implements ITool {
 	
 	String projectId;
@@ -25,32 +26,70 @@ public class ProjectCreate implements ITool {
 		public void setProjectName(String projectName) {
 			this.projectName = projectName;
 		}	
-	String osSelect;
-	@Face(displayName="운영체제 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"리눅스(LINUX)","유닉스(UNIX)","Window NT"}, values={"LINUX", "UNIX", "Window"})
-		public String getOsSelect() {
-			return osSelect;
+	String serviceTemplete;
+	@Face(displayName="$project.server.serviceTemplete", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"KT_KOR-Central A"}, values={"KT_KOR-Central A"})
+		public String getServiceTemplete() {
+			return serviceTemplete;
 		}
-		public void setOsSelect(String osSelect) {
-			this.osSelect = osSelect;
+		public void setServiceTemplete(String serviceTemplete) {
+			this.serviceTemplete = serviceTemplete;
+		}
+		
+	String osTemplete;
+	@Face(displayName="$project.server.osTemplete", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", 
+			options={"Centos 6.3 64bit_jboss",
+						"Centos 6.3 64bit_cubrid",
+						"Centos 6.3 64bit_jboss_cubird",
+						"Ubuntu 12.04 64bit_jboss",
+						"Ubuntu 12.04 64bit_cubrid",
+						"Ubuntu 12.04 64bit_jboss_cubird",
+						"WIN 2008 R2 64bit [Korean]_jboss",
+						"WIN 2008 R2 64bit [Korean]-cubrid",
+						"WIN 2008 R2 64bit [Korean]_jboss_cubird"}, 
+			values={"Centos 6.3 64bit_jboss",
+						"Centos 6.3 64bit_cubrid",
+						"Centos 6.3 64bit_jboss_cubird",
+						"Ubuntu 12.04 64bit_jboss",
+						"Ubuntu 12.04 64bit_cubrid",
+						"Ubuntu 12.04 64bit_jboss_cubird",
+						"WIN 2008 R2 64bit [Korean]_jboss",
+						"WIN 2008 R2 64bit [Korean]-cubrid",
+						"WIN 2008 R2 64bit [Korean]_jboss_cubird"})
+		public String getOsTemplete() {
+			return osTemplete;
+		}
+		public void setOsTemplete(String osTemplete) {
+			this.osTemplete = osTemplete;
 		}
 
-	String wasSelect;
-	@Face(displayName="서버엔진 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"서버엔진 사용안함","Jboss 6.0","Tomcat 7.0"}, values={"사용안함", "Jboss", "Tomcat"})
-		public String getWasSelect() {
-			return wasSelect;
+	String hwTemplete;
+	@Face(displayName="$project.server.hwTemplete", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", 
+			options={"1 vCore	1 GB	100GB",
+						"1 vCore	2 GB	100GB",
+						"2 vCore	2 GB	100GB",
+						"2 vCore	4 GB	100GB",
+						"4 vCore	4 GB	100GB",
+						"4 vCore	8 GB	100GB",
+						"8 vCore	8 GB	100GB",
+						"8 vCore	16 GB	100GB",
+						"12 vCore	16 GB	100GB"}, 
+			values={"1 vCore	1 GB	100GB",
+						"1 vCore	2 GB	100GB",
+						"2 vCore	2 GB	100GB",
+						"2 vCore	4 GB	100GB",
+						"4 vCore	4 GB	100GB",
+						"4 vCore	8 GB	100GB",
+						"8 vCore	8 GB	100GB",
+						"8 vCore	16 GB	100GB",
+						"12 vCore	16 GB	100GB"})
+		public String getHwTemplete() {
+			return hwTemplete;
 		}
-		public void setWasSelect(String wasSelect) {
-			this.wasSelect = wasSelect;
+		public void setHwTemplete(String hwTemplete) {
+			this.hwTemplete = hwTemplete;
 		}
 
-	String dbSelect;
-	@Face(displayName="데이터베이스 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"데이터베이스 사용안함","Cubrid","Mysql","Oracle"}, values={"사용안함", "Cubrid", "Mysql","Oracle"})
-		public String getDbSelect() {
-			return dbSelect;
-		}
-		public void setDbSelect(String dbSelect) {
-			this.dbSelect = dbSelect;
-		}
+	
 
 	@Autowired
 	public ProcessManagerRemote processManager ; 	

@@ -264,11 +264,18 @@ org_uengine_codi_mw3_project_oce_KtProjectServer.prototype = {
 		}
 		
 		var ktProjectServers = mw3.getAutowiredObject('org.uengine.codi.mw3.project.oce.KtProjectServers');
+		var ktProbProjectServers = mw3.getAutowiredObject('org.uengine.codi.mw3.project.oce.ktProbProjectServers');
 		var serverList = [];
 		if( ktProjectServers ){
 			if( ktProjectServers.serverList && ktProjectServers.serverList.length){
 				for(var k=0; k < ktProjectServers.serverList.length; k++){
 					serverList[k] = ktProjectServers.serverList[k].__objectId;
+				}
+			} 
+		}else if(ktProbProjectServers){
+			if( ktProjectServers.serverLists && ktProjectServers.serverLists.length){
+				for(var k=0; k < ktProjectServers.serverLists.length; k++){
+					serverList[k] = ktProjectServers.serverLists[k].__objectId;
 				}
 			} 
 		}
@@ -278,7 +285,11 @@ org_uengine_codi_mw3_project_oce_KtProjectServer.prototype = {
 			var checkedObjectId = $(checked[i]).attr('objectId');
 			for(var p=0; p < serverList.length; p++){
 				if( serverList[p] == checkedObjectId ){
-					ktProjectServers.serverList[p].checked = true;
+					if( ktProjectServers ){
+						ktProjectServers.serverList[p].checked = true;
+					}else if(ktProbProjectServers){
+						ktProjectServers.serverLists[p].checked = true;
+					}
 				}
 			}
 			for(var j=0; j<this.object.length; j++){
