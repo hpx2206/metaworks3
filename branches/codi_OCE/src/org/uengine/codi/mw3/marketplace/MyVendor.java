@@ -64,6 +64,7 @@ public class MyVendor {
 	public Object createApp() throws Exception {
 		
 		App app = new App();
+		app.session = session;
 		app.load();
 		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		

@@ -1,9 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +17,6 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
@@ -31,10 +28,8 @@ import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
-import com.thoughtworks.xstream.XStream;
 
-
-@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,projectSecuopt,radio"} ,
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,projectSecuopt,fileType"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -51,7 +46,9 @@ public class ProjectTitle implements ContextAware {
 	@AutowiredFromClient
 	public PageNavigator pageNavigator; 
 			
-			
+	public ProjectTitle(){
+		setFileType("war");
+	}
 	String topicId;
 		@Hidden
 		public String getTopicId() {
@@ -89,14 +86,6 @@ public class ProjectTitle implements ContextAware {
 			this.logoFile = logoFile;
 		}
 
-	String fileType;
-		public String getFileType() {
-			return fileType;
-		}
-		public void setFileType(String fileType) {
-			this.fileType = fileType;
-		}
-
 	String type;
 		@Hidden
 		public String getType() {
@@ -114,14 +103,14 @@ public class ProjectTitle implements ContextAware {
 			this.code = code;
 		}
 
-	String radio;
+	String fileType;
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
-		@Face(displayName="$project.fileType.select", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","SVN"}, values={"1","2"})
-		public String getRadio() {
-			return radio;
+		@Face(displayName="$project.fileType.select", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","SVN"}, values={"war","svn"})
+		public String getFileType() {
+			return fileType;
 		}
-		public void setRadio(String radio) {
-			this.radio = radio;
+		public void setFileType(String fileType) {
+			this.fileType = fileType;
 		}
 
 	String embeddedHtml;
@@ -157,7 +146,13 @@ public class ProjectTitle implements ContextAware {
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
 	public Object createProjectStep1() throws Exception {
 		NewServer newServer = new NewServer();
-		this.getLogoFile().setFileTransfer(null);
+		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 		newServer.setProjectTitle(this);
 		newServer.setServerGroup(KtProjectServers.SERVER_DEV);
 		newServer.setMetaworksContext(new MetaworksContext());
@@ -172,13 +167,6 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	//@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-		if(this.getLogoFile().getFileTransfer() != null &&
-				this.getLogoFile().getFilename() != null && 
-				this.getLogoFile().getFilename().length() > 0){			
-			this.getLogoFile().upload();
-		}
-		
-		this.saveMe();
 		
 		session.setLastPerspecteType("topic");
 		session.setLastSelectedItem(this.getTopicId());
@@ -260,33 +248,7 @@ public class ProjectTitle implements ContextAware {
 				
 			wfNode.setDescription(this.getTopicDescription());
 			wfNode.setStartDate(new Date());
-			
-			if("war".equals(this.getFileType())){
-				XStream xstream = new XStream();
-				HashMap<String , Object>  map = new HashMap<String , Object>();
-				map.put("ProjectInfo",wfNode.getDescription());
-				map.put("logoFile", this.getLogoFile());
-				
-				map.put("logoFile_Url",this.getLogoFile().getUploadedPath());
-				map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
-				String xstreamStr = xstream.toXML(map);
-				
-				
-				Object obj = xstream.fromXML(xstreamStr);
-				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-//				wfNode.setLogoFile(this.getLogoFile());
-				wfNode.setVisType("war");
-			
-			}else if("svn".equals(this.getFileType())){
-				XStream xstream = new XStream();
-				HashMap<String , Object>  map = new HashMap<String , Object>();
-				map.put("logoFile", this.getLogoFile());
-				String xstreamStr = xstream.toXML(map);
-				Object obj = xstream.fromXML(xstreamStr);
-				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-				
-				wfNode.setVisType("svn");
-			}
+			wfNode.setVisType(this.getFileType());
 			wfNode.createMe();
 			
 			TopicMapping tm = new TopicMapping();
@@ -338,56 +300,6 @@ public class ProjectTitle implements ContextAware {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	}
-	
-	@Available(when={MetaworksContext.WHEN_EDIT})
-	@Face(displayName="$Save")
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] modify() throws Exception{
-		WfNode wfNode = new WfNode();
-		wfNode.setId(this.getTopicId());
-		wfNode.setParentId(this.getParentId());
-		wfNode.setName(this.getTopicTitle());
-		wfNode.setType("project");
-		wfNode.setDescription(this.getTopicDescription());
-		wfNode.setAuthorId(session.getUser().getUserId());
-		wfNode.setCompanyId(session.getCompany().getComCode());
-//		wfNode.setLogoFile(this.getLogoFile());
-		
-//		MetadataFile file = new MetadataFile();
-//		file.setBaseDir()
-		
-		if("war".equals(this.getFileType())){
-			XStream xstream = new XStream();
-			HashMap<String , Object>  map = new HashMap<String , Object>();
-			map.put("ProjectInfo",wfNode.getDescription());
-			map.put("logoFile", this.getLogoFile());
-			map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
-			String xstreamStr = xstream.toXML(map);
-			System.out.println(xstreamStr);
-			
-			
-			Object obj = xstream.fromXML(xstreamStr);
-			if( obj instanceof HashMap){
-				System.out.println("HashMap ------   ");
-			}
-//			xstream.setMode(XStream.NO_REFERENCES);
-//			xstream.alias("warFile",this.getClass());
-////			code = this.getWarFile().toString();
-//			wfNode.setEx1(xmlCode);
-//			
-			wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-//			wfNode.setLogoFile(this.getLogoFile());
-			wfNode.setVisType("war");
-		}else{
-			wfNode.setVisType("svn");
-		}
-		wfNode.saveMe();
-		
-		ProjectInfo projectInfo = new ProjectInfo(this.getTopicId());
-//		projectInfo.setLogoFile(this.getLogoFile());
-		projectInfo.load();
-		return new Object[]{new Refresh(projectInfo), new Remover(new ModalWindow())};
 	}
 	
 	@AutowiredFromClient

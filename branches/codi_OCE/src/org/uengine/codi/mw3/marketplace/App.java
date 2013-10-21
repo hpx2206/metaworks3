@@ -437,7 +437,12 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 
 	public Object step1() throws Exception {
 		NewServer newServer = new NewServer();
-		this.getLogoFile().setFileTransfer(null);
+		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				   this.getLogoFile().getFilename() != null && 
+				   this.getLogoFile().getFilename().length() > 0)			
+					this.getLogoFile().upload();
+		
 		newServer.setApp(this);
 		newServer.setServerGroup(KtProjectServers.SERVER_PROB);
 		newServer.setMetaworksContext(new MetaworksContext());
@@ -449,11 +454,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
-
-		if(this.getLogoFile().getFileTransfer() != null &&
-		   this.getLogoFile().getFilename() != null && 
-		   this.getLogoFile().getFilename().length() > 0)			
-			this.getLogoFile().upload();
 
 		this.setCategory(category);
 		

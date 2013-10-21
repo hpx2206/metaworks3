@@ -195,13 +195,13 @@ public class NewServer extends Templete{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] finalfinish() throws Exception {
 		projectTitle.session = session;
-		Object[] returnObjects = projectTitle.save();
+		projectTitle.saveMe();
+		
 		this.setProjectId(projectTitle.getTopicId());
 		this.setProjectName(projectTitle.getTopicTitle());
-		
 		createServerRequset();
 		
-		return returnObjects;
+		return projectTitle.save();
 	}
 	
 	@Available(when={MetaworksContext.WHEN_EDIT})	
