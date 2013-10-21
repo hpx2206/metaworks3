@@ -3,7 +3,7 @@ if (value!=null){
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var list_class = "";
 	
-	if(session != null && session.ux == 'oce' && mw3.how !='allICanSee' && mw3.how != 'app' && mw3.how != 'project'){
+	if(mw3.where  == 'dashboard'){
 		list_class = "time_line _noti_list";
 	}
 	
