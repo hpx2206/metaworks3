@@ -660,17 +660,15 @@ public class ProjectInfo implements ContextAware {
 		String instId = processMap.initializeProcess();
 				
 		ProjectCreate projectCreate = new ProjectCreate();
-		projectCreate.setProjectId(this.getProjectName());
+		projectCreate.setProjectId(this.getProjectId());
+		projectCreate.setProjectName(this.getProjectName());
 		
-//		ResultPayload rp = new ResultPayload();
-//		rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
 		
 		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
 		roleMappingPanel.putRoleMappings(processManager, instId);
 		
 		processManager.executeProcess(instId);
 		processManager.getProcessInstance(instId).setBeanProperty("ProjectCreate", projectCreate);
-//		processManager.executeProcessByWorkitem(instId.toString(), rp);
 		processManager.applyChanges();
 		
 		Instance instance = new Instance();

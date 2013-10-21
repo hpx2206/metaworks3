@@ -54,6 +54,7 @@ public class NewServer extends Templete{
 		}
 		
 	String projectName;
+	@Available(when={MetaworksContext.WHEN_EDIT})	
 	@Face(displayName="$project.server.name")	
 		public String getProjectName() {
 			return projectName;
@@ -95,6 +96,15 @@ public class NewServer extends Templete{
 		public void setProjectTitle(ProjectTitle projectTitle) {
 			this.projectTitle = projectTitle;
 		}
+	
+	String serverGroup;
+		@Hidden
+		public String getServerGroup() {
+			return serverGroup;
+		}
+		public void setServerGroup(String serverGroup) {
+			this.serverGroup = serverGroup;
+		}
 		
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -105,39 +115,30 @@ public class NewServer extends Templete{
 		}
 		
 		
-	@Face(displayName="프로젝트 + 서버 생성")	
+	@Face(displayName="$Create")	
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(payload={"projectTitle"}, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] finalfinish() throws Exception {
 		projectTitle.session = session;
 		Object[] returnObjects = projectTitle.save();
-		//System.out.println("  "+String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance())));
-		
 		this.setProjectId(projectTitle.getTopicId());
-		try {
+		this.setProjectName(projectTitle.getTopicTitle());
 		
-			CloudInfo cloudInfo = new CloudInfo();
-			cloudInfo.setId(cloudInfo.createNewId());
-			cloudInfo.setProjectId(projectId);
-			cloudInfo.setServerName(this.getProjectName());
-			cloudInfo.setOsType(osType);
-			cloudInfo.setWasType(wasType);
-			cloudInfo.setDbType(dbType);
-			cloudInfo.setModdate(new Date());
-			cloudInfo.createDatabaseMe();
-			
-			cloudInfo.flushDatabaseMe();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		createServerRequset();
 		
 		return returnObjects;
 	}
 	
 	@Available(when={MetaworksContext.WHEN_EDIT})	
+	@Face(displayName="$Create")	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] finish() throws Exception {
-		
+		createServerRequset();
+		ktProjectServers.loadOceServer();
+		return new Object[]{new Remover(new ModalWindow()),  new Refresh(ktProjectServers) };
+	}
+	
+	public void createServerRequset() throws Exception{
 		try {
 			String defId = "projectProcess/projectCre2.process";
 			
@@ -151,6 +152,7 @@ public class NewServer extends Templete{
 					
 			ProjectCreate projectCreate = new ProjectCreate();
 			projectCreate.setProjectId(this.getProjectId());
+			projectCreate.setProjectName(this.getProjectName());
 			projectCreate.setOsSelect(osType);
 			projectCreate.setWasSelect(wasType);
 			projectCreate.setDbSelect(dbType);
@@ -180,18 +182,16 @@ public class NewServer extends Templete{
 			cloudInfo.setWasType(wasType);
 			cloudInfo.setDbType(dbType);
 			cloudInfo.setModdate(new Date());
+			cloudInfo.setServerGroup(serverGroup);
 			cloudInfo.createDatabaseMe();
 			
 			cloudInfo.flushDatabaseMe();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		ktProjectServers.loadOceServer();
-		
-		return new Object[]{new Remover(new ModalWindow()),  new Refresh(ktProjectServers) };
 	}
 
+	@Face(displayName="$Close")	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Remover cancel(){
 		return new Remover(new ModalWindow());

@@ -17,6 +17,14 @@ public class ProjectCreate implements ITool {
 			this.projectId = projectId;
 		}
 		
+	String projectName; 
+	@Hidden
+		public String getProjectName() {
+			return projectName;
+		}
+		public void setProjectName(String projectName) {
+			this.projectName = projectName;
+		}	
 	String osSelect;
 	@Face(displayName="운영체제 선택", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"리눅스(LINUX)","유닉스(UNIX)","Window NT"}, values={"LINUX", "UNIX", "Window"})
 		public String getOsSelect() {

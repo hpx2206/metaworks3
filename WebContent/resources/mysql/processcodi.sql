@@ -915,3 +915,5 @@ create table filepathinfo(
 	infoId int NOT NULL AUTO_INCREMENT,
 	primary key(infoId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table cloudinfo add column serverGroup varchar(50);

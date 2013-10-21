@@ -38,6 +38,9 @@ import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.oce.AppServerManage;
+import org.uengine.codi.mw3.project.oce.KtProbProjectServers;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -420,13 +423,15 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
 	public Object edit() throws Exception {
 		
-		this.load();
-		this.getMetaworksContext().setHow(null);
-		this.getMetaworksContext().setWhen("edit");
+		AppServerManage AppServerManage = new AppServerManage();
+		AppServerManage.session = session;
 		
-		this.getCategories().setSelected(String.valueOf(this.getCategory().getCategoryId()));
+		KtProbProjectServers projectServers = new KtProbProjectServers(this.getProject().getId() , KtProjectServers.SERVER_PROB); // 운영
+		projectServers.loadOceServer();
 		
-		return new ModalPanel(this);
+		AppServerManage.setProjectServers(projectServers);
+		
+		return new ModalPanel(AppServerManage);
 	}
 
 	public Object save() throws Exception {
@@ -636,7 +641,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		Object sqlPath = null;
 
 		CloudInfo cloudInfo = wfNode.getCloudInfo();
-		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId());
+		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId() , KtProjectServers.SERVER_PROB);
 		while(cInfo.next()){
 			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
 			cloudInfo.copyFrom(cInfo);
