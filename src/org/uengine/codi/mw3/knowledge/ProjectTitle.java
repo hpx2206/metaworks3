@@ -346,7 +346,9 @@ public class ProjectTitle implements ContextAware {
 			wfNode.setIsReleased(false);
 			wfNode.setSecuopt(projectSecuopt ? "1" : "0");
 			wfNode.setParentId(session.getCompany().getComCode());	
-			wfNode.setAuthorId(session.getUser().getUserId());		
+			wfNode.setAuthorId(session.getUser().getUserId());
+			wfNode.setUrl(this.getLogoFile().getUploadedPath());
+			wfNode.setThumbnail(this.getLogoFile().getFilename());
 			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
 				wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
 			else
