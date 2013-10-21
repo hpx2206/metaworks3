@@ -86,6 +86,10 @@ public class Main {
 	
 	
 	public Main(Session session) throws Exception {
+		this(session, null);
+	}
+		
+	public Main(Session session, String instId) throws Exception {
 		
 		String preferUX = session.getEmployee().getPreferUX();
 		String preferMob = session.getEmployee().getPreferMob();
@@ -143,7 +147,20 @@ public class Main {
 			
 			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 			
-			ContentWindow contentWindow = createNewInstancePanel(session);
+			ContentWindow contentWindow = new ContentWindow(); 
+			
+			if(instId == null)
+				contentWindow = createNewInstancePanel(session);
+			else{
+				InstanceViewContent instanceViewContent = new InstanceViewContent();
+				
+				Instance instance = new Instance();
+				instance.session = session;
+				instance.instanceViewContent = instanceViewContent;
+						
+				instance.setInstId(new Long(instId));
+				contentWindow.setPanel(instance.detail());
+			}
 			
 			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
 			

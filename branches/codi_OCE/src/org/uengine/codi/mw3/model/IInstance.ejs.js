@@ -17,6 +17,12 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 
 
 	this.objDiv.bind('click', {objectId: this.objectId},function(){
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+				
+		if(session && session.ux == 'oce' && session.lastPerspecteType == 'inbox'){
+			var object = mw3.getObject(objectId);
+			object.goSns();
+		}
 		mw3.getFaceHelper(objectId).unBlinking();
 
 		if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
@@ -45,7 +51,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		var objectId = event.data.objectId;
 
 		var object = mw3.getObject(objectId);
-
+		
 		object.detail(true, function(){
 			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 
@@ -124,7 +130,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 
 		},
 		unBlinking : function(){
-
+			
 			$('#' + this.divId + ' .innerNewInst').hide();
 
 			/*if (this.timeout) {
