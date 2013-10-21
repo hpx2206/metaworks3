@@ -674,14 +674,21 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		}else{
 			tenantId = session.getCompany().getComCode();
 		}
-		this.databaseMe().setUrl("Http://" + tenantId + "." + this.getAppName() + ".com//" );
-//		this.databaseMe().setUrl("Http://" + tenantId + "." + this.getAppName() + ".com//" + warFile.toString());
+		if(warFile != null){
+			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + warFile.toString() + "/" + tenantId);
+			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");	
+		}else{
+			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + tenantId);
+			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");
+		}
+		syncToDatabaseMe();
 		flushDatabaseMe();
 		
 		//데이터베이스 생성
-//		CreateDatabase createDatabase = new CreateDatabase();
-//		createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), tenantId, sqlPath.toString());
-		
+		if(TenantContext.getThreadLocalInstance().getTenantId()!=null && sqlPath.toString()!= null){
+			CreateDatabase createDatabase = new CreateDatabase();
+			createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), tenantId, sqlPath.toString());
+		}
 		AppMapping appmapping = new AppMapping();
 		
 		appmapping.session = session;
