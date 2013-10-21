@@ -11,7 +11,6 @@
 		 	
 		 	<% } %>
 			
-			<div style="float:left; margin-top:5px;"><%=fields.loginUser.here({when: 'self_small'})%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 			<div style="float:left;"><%=fields.windowPanel.here()%>	</div>
@@ -19,10 +18,13 @@
 			<%=fields.tray.here()%>
 			
 		    <div class="info">
+		    <div style="float:left;"><%=fields.loginUser.here({when: 'self_small'})%></div>
+		  	<!--
 		    <%=fields.searchBox.here()%>
+		  	-->
+        	<%=fields.session.here({when:'view'})%>
 			    <div style="display:none">
 			        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
-			        	<%=fields.session.here({when:'view'})%>
 			        <%}else{%>
 			        	session here.
 			        <%}%>	
@@ -34,9 +36,6 @@
 		 	<div style="float:left;padding-top:10px; margin-right:5px;">
 		 		<img src="images/waveStyle/garuda_logo.png"/>
 		 	</div>
-		 	<div style="float:left; margin-top:5px;">
-		 		<%=fields.loginUser.here({when: 'self_small'})%>
-		 	</div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
@@ -44,7 +43,12 @@
 		 	<%=fields.tray.here()%>
 		 	
 		 	<div class="info">
+			 	<div style="float:left;">
+			 		<%=fields.loginUser.here({when: 'self_small'})%>
+			 	</div>
+			 	<!--
 		    	<%=fields.searchBox.here()%>
+		    	-->
 		    	<%=fields.session.here({when:'view'})%>
 			</div>	
 			

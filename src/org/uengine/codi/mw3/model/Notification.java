@@ -10,6 +10,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.UEngineException;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
@@ -209,29 +210,41 @@ public class Notification extends Database<INotification> implements INotificati
 	
 	public Object[] see() throws Exception{
 		
-		Instance instance = new Instance();
-		instance.setInstId(getInstId());
+		if("oce".equals(session.getUx())){
+			if(session != null){
+				session.setLastSelectedItem("goSns");
+				session.setUx("sns");
+			}
+			
+			return new Object[]{new MainPanel(new Main(session, String.valueOf(this.getInstId())))};
+		}else{
+			Instance instance = new Instance();
+			instance.setInstId(getInstId());
+			instance.session = session;
+			
+			instanceViewContent.session = session;
+			instanceViewContent.load(instance);
+			
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			instanceViewThreadPanel.session = session;
+			instanceViewThreadPanel.processManager = instanceViewContent.instanceView.processManager;
+			instanceViewThreadPanel.load(getInstId().toString());
+			instanceViewThreadPanel.getThread().getMetaworksContext().setHow("instance");
+			instanceViewThreadPanel.getNewItem().getMetaworksContext().setHow("instance");
+			
+			instanceViewContent.instanceView.setInstanceViewThreadPanel(instanceViewThreadPanel);
+			
+			setConfirm(true);
+			//flushDatabaseMe();
+			
+			NotificationBadge notiBadge = new NotificationBadge();
+			notiBadge.session = session;
+			notiBadge.refresh();
+			
+
+			return new Object[]{instanceViewContent, new Refresh(notiBadge), this};
+		}
 		
-		instanceViewContent.session = session;
-		instanceViewContent.load(instance);
-		
-		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-		instanceViewThreadPanel.session = session;
-		instanceViewThreadPanel.processManager = instanceViewContent.instanceView.processManager;
-		instanceViewThreadPanel.load(getInstId().toString());
-		instanceViewThreadPanel.getThread().getMetaworksContext().setHow("instance");
-		instanceViewThreadPanel.getNewItem().getMetaworksContext().setHow("instance");
-		
-		instanceViewContent.instanceView.setInstanceViewThreadPanel(instanceViewThreadPanel);
-		
-		setConfirm(true);
-		//flushDatabaseMe();
-		
-		NotificationBadge notiBadge = new NotificationBadge();
-		notiBadge.session = session;
-		notiBadge.refresh();
-		
-		return new Object[]{instanceViewContent, new Refresh(notiBadge), this};
 	}
 	
 	@AutowiredFromClient

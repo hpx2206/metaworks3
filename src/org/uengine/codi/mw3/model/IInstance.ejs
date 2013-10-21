@@ -1,7 +1,7 @@
 <%
 if(value){
 	
-	var instanceTitle = value.name;
+	var instanceTitle = value.name ? " " : value.name;
 	var lastCmnt = value.lastCmnt;
 	var lastCmnt2 = value.lastCmnt2;
 	var topicName = value.topicName;
@@ -153,7 +153,6 @@ if(value){
 			    <% }else if(value.lastCmnt != null){%>
 			    
 				    <% if(value.currentUser && value.currentUser.userId){%>
-				    <!-- && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)-->
 				    
 			   		<% if(!isDashboard){%>
 					    <li>
