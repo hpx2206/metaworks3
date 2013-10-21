@@ -3,35 +3,33 @@
 if(value){
 
 %>
-<div style="border-bottom:1px solid #aaaaaa;">
 
 	<div> 
-            <!--ui object -->
-            <ul class="mp_sub_lst_type">
-                <li>
-                    <div class="mp_sub_pic">
-                    	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 200px; height: 200px'}})%>
-                    </div>
+        <!--ui object -->
+        <ul>
+            <li>
+                <div class="mp_sub_pic">
+                	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 200px; height: 200px'}})%>
+                </div>
 
-                    <div class="mp_sub_rightBox">
-                    	<dl class="mp_sub_dsc1">
-                        	<dt><%=fields.projectName.here()%></dt>
-                            <dd><span class="mp_sub_tit"><%=mw3.localize("$project.domain")%> : </span><span class="mp_sub_rst"><%=value.domainName%></span></dd>
-                            <dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.description%></span></dd>
-                                                
-                        </dl>                    
-                    </div>
-                    
-                    <div class="positionRight">
-						<%=methods.require.here()%>
-						<%=methods.server.here()%>
-						<%=methods.distribute.here()%>
-						<%=methods.releaseProject.here()%>
-					</div>
-                </li>
-            </ul>
-        </div>	
-</div>
+                <div class="mp_sub_rightBox">
+                	<dl class="mp_sub_dsc1">
+                    	<dt style="font-size:16px;"><%=fields.projectName.here()%></dt>
+                        <dd><span class="mp_sub_tit"><%=mw3.localize("$project.domain")%> : </span><span class="mp_sub_rst"><%=value.domainName%></span></dd>
+                        <dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.description%></span></dd>
+                                            
+                    </dl>                    
+                </div>
+                
+                <div>
+					<%=methods.require.here()%>
+					<%=methods.server.here()%>
+					<%=methods.distribute.here()%>
+					<%=methods.releaseProject.here()%>
+				</div>
+            </li>
+        </ul>
+    </div>	
 
 <%
 }
