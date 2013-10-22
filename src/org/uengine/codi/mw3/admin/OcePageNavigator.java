@@ -9,7 +9,6 @@ import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
-import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.OceMain;
@@ -96,9 +95,10 @@ public class OcePageNavigator extends PageNavigator {
 	@Override
 	public MainPanel goDashBoard() throws Exception {
 		
-		if(session != null)
-			session.setLastSelectedItem("goDashboard");
-			
+		if(session != null){
+			session.setLastSelectedItem(OceMain.ACTION_DASHBOARD);
+			session.setUx(OceMain.STATUS_OCE);
+		}
 		return super.goDashBoard();
 	}
 	

@@ -668,7 +668,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ");
 
-		}else if("allICanSee".equals(navigation.getPerspectiveType()) || "dashboard".equals(navigation.getPerspectiveType()) ) {
+		}else if("allICanSee".equals(navigation.getPerspectiveType()) || "calendar".equals(navigation.getPerspectiveType()) || "dashboard".equals(navigation.getPerspectiveType()) ) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
@@ -693,6 +693,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 				.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
 				.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
 				.append("			)	 ");
+				
+				if("calendar".equals(navigation.getPerspectiveType()))
+					instanceSql.append("			and DATE_FORMAT(inst.duedate, '%Y%m%d') = " + navigation.getPerspectiveValue());
+				
 			}else{
 				instanceSql
 				.append(" and	exists ( ")
@@ -781,7 +785,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setInstanceViewThreadPanel(panel);
 			
 			return this;
-		}else if("oce".equals(session.getUx()) && session.getLastPerspecteType() != "inbox"){
+		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
 			getMetaworksContext().setHow("sns");
 			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();

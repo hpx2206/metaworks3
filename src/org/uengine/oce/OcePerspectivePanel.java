@@ -65,6 +65,11 @@ public class OcePerspectivePanel extends Perspective{
 	
 	@ServiceMethod
 	public MainPanel loadOce() throws Exception{
+		
+		if(session != null){
+			session.setLastSelectedItem(OceMain.ACTION_DASHBOARD);
+			session.setUx(OceMain.STATUS_OCE);
+		}
 
 		return new MainPanel(new OceMain(session));
 	}

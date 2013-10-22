@@ -2,7 +2,9 @@ package org.uengine.oce.dashboard;
 
 import org.metaworks.MetaworksContext;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.PersonalPerspective;
 import org.uengine.codi.mw3.model.Session;
 
@@ -55,6 +57,15 @@ public class DashboardPanel {
 		public void setMyServicePanel(MyServicePanel myServicePanel) {
 			this.myServicePanel = myServicePanel;
 		}
+	
+	ScheduleCalendar calendar;
+		public ScheduleCalendar getCalendar() {
+			return calendar;
+		}
+		public void setCalendar(ScheduleCalendar calendar) {
+			this.calendar = calendar;
+		}
+
 		
 	public	DashboardPanel(){
 		
@@ -79,6 +90,10 @@ public class DashboardPanel {
 		//MyService
 		setMyServicePanel(new MyServicePanel(session));
 		
+		calendar= new ScheduleCalendar();
+		calendar.session = session;
+		calendar.getMetaworksContext().setWhere(OceMain.WHERE_DASHBOARD);
+		calendar.load();
 
 		return this;
 	}

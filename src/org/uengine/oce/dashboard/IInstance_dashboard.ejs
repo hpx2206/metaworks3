@@ -16,12 +16,12 @@ if(value){
 							<div class="tx_width">
 								<strong class="ans_type"><%=value.initEp%></strong>
 								<span class="alarm_tx"><%=value.name%></span>		
-								<% if(value.lastCmnt2User.name != null){ %>
+								<% if(value.lastCmntUser.name != null){ %>
 								<dl class="from_obj">
 									<dt><img src="images/waveStyle/re.gif" /></dt>
-									<dt><%=value.lastCmnt2User.name%></dt>
+									<dt><%=value.lastCmntUser.name%></dt>
 									<dd>
-										<span class="alarm_time"><%=value.lastCmnt2%></span>			
+										<span class="alarm_time"><%=value.lastCmnt%></span>			
 									</dd>
 								</dl>
 								<% } %>

@@ -15,6 +15,8 @@ public class OceMain {
 	
 	public static final String WHERE_HOME = "oce_home";
 	public static final String WHERE_DASHBOARD = "oce_dashboard";
+	public final static String ACTION_DASHBOARD = "goDashboard";
+	public final static String STATUS_OCE ="oce";
 
 	public OceMain(){
 		

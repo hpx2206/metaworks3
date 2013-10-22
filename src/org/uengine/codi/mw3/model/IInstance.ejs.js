@@ -18,8 +18,8 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 
 	this.objDiv.bind('click', {objectId: this.objectId},function(){
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-				
-		if(session && session.ux == 'oce' && session.lastPerspecteType == 'inbox'){
+		
+		if(session && session.ux == 'oce' && (session.lastPerspecteType == 'inbox' || session.lastPerspecteType == 'dashboard')){
 			var object = mw3.getObject(objectId);
 			object.goSns();
 		}

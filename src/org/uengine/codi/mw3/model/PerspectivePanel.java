@@ -192,4 +192,14 @@ public class PerspectivePanel  implements ContextAware {
 			}
 		}//session
 	}
+	
+	@ServiceMethod
+	public MainPanel goDashboard() throws Exception {
+		
+		if(session != null){
+			session.setLastSelectedItem(OceMain.ACTION_DASHBOARD);
+			session.setUx(OceMain.STATUS_OCE);
+		}
+		return new MainPanel(new OceMain(session));
+	}
 }
