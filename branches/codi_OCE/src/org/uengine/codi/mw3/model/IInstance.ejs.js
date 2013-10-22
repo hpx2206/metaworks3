@@ -17,7 +17,6 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 
 
 	this.objDiv.bind('click', {objectId: this.objectId},function(){
-		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 		mw3.getFaceHelper(objectId).unBlinking();
 
 		if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
