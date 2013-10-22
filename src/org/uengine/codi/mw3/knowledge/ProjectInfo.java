@@ -503,7 +503,6 @@ public class ProjectInfo implements ContextAware {
 		
 		session.setLastPerspecteType(ProjectNode.TYPE_PROJECT);
 		session.setLastSelectedItem(this.getProjectId());
-		session.setUx("oce_project");
 		
 		instanceViewContent.session = session;
 		
@@ -567,7 +566,7 @@ public class ProjectInfo implements ContextAware {
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(instanceListPanel)};
 		}else{
-			return new Object[]{new Remover(new ModalWindow() , true) , new Remover(new Popup() , true), instanceListPanel, instanceViewContent};
+			return new Object[]{new Remover(new ModalWindow() , true) , new Remover(new Popup() , true), new Refresh(instanceListPanel), new Refresh(instanceViewContent)};
 		}
 		
 	}
