@@ -9,5 +9,12 @@ var CleanObjectFace = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv.css({'height': '100%'});
-}
+	
+	var objectMetadata = mw3.getMetadata(className);
+	
+	if(objectMetadata && objectMetadata.faceOptions && objectMetadata.faceOptions['disableHeight']){
+	}else{
+		this.objectDiv.css({'height': '100%'});
+	}
+	
+};
