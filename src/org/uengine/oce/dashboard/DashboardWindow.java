@@ -23,6 +23,10 @@ public class DashboardWindow extends Window{
 		DashboardPanel dashboardPanel = new DashboardPanel();
 		dashboardPanel.load(session);
 	}
+	
+	public DashboardWindow(Object panel, String title){
+		super(panel, title);
+	}	
 		
 	@AutowiredFromClient
 	public Session session;

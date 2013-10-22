@@ -3,8 +3,6 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.kernel.GlobalContext;
 
@@ -207,13 +205,4 @@ public class PerspectivePanel  implements ContextAware {
 		}//session
 	}
 	
-	@ServiceMethod
-	public MainPanel goDashboard() throws Exception {
-		
-		if(session != null){
-			session.setLastSelectedItem(OceMain.ACTION_DASHBOARD);
-			session.setUx(OceMain.STATUS_OCE);
-		}
-		return new MainPanel(new OceMain(session));
-	}
 }
