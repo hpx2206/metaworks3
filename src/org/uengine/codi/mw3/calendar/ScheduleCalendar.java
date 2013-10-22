@@ -245,13 +245,13 @@ public class ScheduleCalendar implements ContextAware {
 					
 					if("oce".equals(session.getUx())){
 						((HashMap)arrListData.get(arrListData.size()-1)).put("callType", "more" );
-						((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  " cnt.");
+						((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  "건");
 					}
 				}else{
 					prevCnt++;
 					
 					((HashMap)arrListData.get(arrListData.size()-1)).put("callType", "more" );
-					((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  " cnt.");
+					((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  "건");
 				}
 			}
 		} catch (Exception e) {
