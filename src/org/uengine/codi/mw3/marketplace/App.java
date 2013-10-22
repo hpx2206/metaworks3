@@ -276,6 +276,14 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		public void setRunningVersion(int runningVersion) {
 			this.runningVersion = runningVersion;
 		}
+	
+	String subDomain;
+		public String getSubDomain() {
+			return subDomain;
+		}
+		public void setSubDomain(String subDomain) {
+			this.subDomain = subDomain;
+		}
 		
 		
 	@AutowiredFromClient
@@ -387,7 +395,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public void load() throws Exception {
 		SelectBox categories = new SelectBox();
 		SelectBox attachProject = new SelectBox();
-		SelectBox releaseVersion = new SelectBox();
 		
 		ICategory category = Category.loadRootCategory();
 		if (category.size() > 0) {
@@ -517,6 +524,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 				setComcode(session.getCompany().getComCode());
 				setComName(session.getCompany().getComName());
 				
+				this.setSubDomain(this.getSubDomain());
 				this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
 				this.setProject(project);
 				this.setStatus(STATUS_REQUEST);
@@ -726,11 +734,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			tenantId = session.getCompany().getComCode();
 		}
 		if(warFile != null){
-			//this.databaseMe().setUrl("Http://" + ".oce.com:7070/" + warFile.toString());
-			//this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");	
+			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + warFile.toString() + "/" + tenantId);
+//			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");	
 		}else{
-			//this.databaseMe().setUrl("Http://" + ".oce.com:7070/");
-			//this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");
+			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + tenantId);
+//			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");
 		}
 		syncToDatabaseMe();
 		flushDatabaseMe();
