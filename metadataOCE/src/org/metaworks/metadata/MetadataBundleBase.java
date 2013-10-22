@@ -41,11 +41,11 @@ public class MetadataBundleBase {
 
 	public void loadProperty() throws Exception{
 		String projectId = getProjectId();
-		String metadataUrl = GlobalContext.getPropertyString("metadataUrl", "http://localhost:8080/uengine-web/");
+		String metadataUrl = GlobalContext.getPropertyString("metadataUrl", codiServerUrl);
 		this.loadProperty(projectId , metadataUrl);
 	}
 	public void loadProperty(String projectId) throws Exception{
-		String metadataUrl = GlobalContext.getPropertyString("metadataUrl", "http://localhost:8080/uengine-web/");
+		String metadataUrl = GlobalContext.getPropertyString("metadataUrl", codiServerUrl);
 		this.loadProperty(projectId , metadataUrl);
 	}
 		
@@ -117,7 +117,7 @@ public class MetadataBundleBase {
 	private File getPropertyRemote(String projectId, String tenantId, File metadataFile){
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
-		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
+		GetMethod getMethod = new GetMethod(GlobalContext.getPropertyString("metadataUrl", codiServerUrl) + requestUrl);
 		getMethod.setQueryString(new NameValuePair[] { 
 				new NameValuePair("projectId", projectId) ,
 				new NameValuePair("tenantId", tenantId) ,
@@ -189,7 +189,7 @@ public class MetadataBundleBase {
 	private void makeFileFromRemote( String projectId, String tenantId, String requsetPath, String fileFullPath) throws Exception{
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
-		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
+		GetMethod getMethod = new GetMethod(GlobalContext.getPropertyString("metadataUrl", codiServerUrl) + requestUrl);
 		getMethod.setQueryString(new NameValuePair[] { 
 				new NameValuePair("projectId", projectId) ,
 				new NameValuePair("tenantId", tenantId) ,
