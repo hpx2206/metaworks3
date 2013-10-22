@@ -66,6 +66,8 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			
 			//return new Object[]{new DashboardWindow(returnObject[1], title)};
 			
+			session.setUx("sns");
+			
 			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
