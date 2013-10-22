@@ -2526,7 +2526,7 @@ select.select[class] {
 .oce_more a span{font-size:11px; color:#a7a7a7 !important;}
 .oce_more a span img {width:12px; height:12px; position:relative; top:2px;}
 
-.oce_more.create{float:none; margin:20px auto; width:450px; display:block}
+.oce_more.create{float:none; margin:20px auto; width:350px; display:block; text-align:center}
 .oce_more.create a {display:block; padding:15px; background:#fbf88a; -webkit-border-radius: 15px;    -moz-border-radius: 15px;    border-radius: 15px;}
 .oce_more.create a span{font-size:14px; color:#dd6828 !important; font-weight:bold;}
 .oce_more.create a span img {width:14px; height:14px; position:relative; top:2px;}
