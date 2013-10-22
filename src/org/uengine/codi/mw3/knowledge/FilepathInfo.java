@@ -1,7 +1,13 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.metaworks.component.SelectBox;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
 
 public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathInfo{
 	
@@ -89,10 +95,10 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 			return 0;
 	}
 	
-	public SelectBox findReleaseVersions(String id) throws Exception{
+	public SelectBox findReflectVersions(String id) throws Exception{
 		SelectBox sb = new SelectBox();
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from (select * from filepathinfo where projectId = ?id and releaseVer = 0) a order by reflectVer desc;");
+		sql.append("select * from (select * from filepathinfo where projectId = ?id and releaseVer = 0) a order by reflectVer;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
 		findListing.set("id", id);
@@ -103,6 +109,36 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		}
 		
 		return sb;
+	}
+	
+	public SelectBox findReleaseVersions(String id) throws Exception{
+		SelectBox sb = new SelectBox();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * from (select * from filepathinfo where projectId = ?id and releaseVer != 0) a order by releaseVer;");
+		
+		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
+		findListing.set("id", id);
+		findListing.select();
+		
+		while(findListing.next()){
+			sb.add(String.valueOf(findListing.getReleaseVer()), String.valueOf(findListing.getId()));
+		}
+		
+		return sb;
+	}
+	
+	public int createNewId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("filepathinfo", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		return number.intValue();
 	}
 	
 }
