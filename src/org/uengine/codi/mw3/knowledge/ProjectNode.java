@@ -28,6 +28,14 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	public final static String TYPE_PROJECT = "project";
 	
+	String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+
 	public ProjectNode(){
 		this.setType(TYPE_PROJECT);
 	}
