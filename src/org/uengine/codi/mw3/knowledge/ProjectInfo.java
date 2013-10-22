@@ -316,12 +316,17 @@ public class ProjectInfo implements ContextAware {
 			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setCheck(false);
 			releasePanel.setMetaworksContext(new MetaworksContext());
-			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		else if("svn".equals(this.getType())){
 			releasePanel.setProjectId(this.getProjectId());
-		}
+			reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getProjectId());
+			releasePanel.setReflectVersion(reflectVersion);
+			releasePanel.setMetaworksContext(new MetaworksContext());
+			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
+		}
+
 		modalWindow.setTitle("$release");
 		modalWindow.setPanel(releasePanel);
 		modalWindow.setHeight(300);
@@ -358,13 +363,13 @@ public class ProjectInfo implements ContextAware {
 			reflectPanel.setProjectId(this.getProjectId());
 			reflectPanel.setServerSelect(serverSelect);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
-			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		else if("svn".equals(this.getType())){
 			reflectPanel.setServerSelect(serverSelect);
 			reflectPanel.setProjectId(this.getProjectId());
 			reflectPanel.setMetaworksContext(new MetaworksContext());
-			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		}
 		
 		modalWindow.setTitle("$devreflect");

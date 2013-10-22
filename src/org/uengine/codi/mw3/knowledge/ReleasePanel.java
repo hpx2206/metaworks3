@@ -18,7 +18,7 @@ public class ReleasePanel {
 	
 	SelectBox reflectVersion;
 		@Face(displayName = "$ReflectVersion")
-		@Available(when=MetaworksContext.WHEN_NEW)
+		@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
 		public SelectBox getReflectVersion() {
 			return reflectVersion;
 		}
@@ -28,7 +28,7 @@ public class ReleasePanel {
 	
 	Boolean check;
 		@Face(displayName="$newFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
+		@Available(when=MetaworksContext.WHEN_EDIT)
 		public Boolean getCheck() {
 			return check;
 		}
@@ -38,7 +38,7 @@ public class ReleasePanel {
 		
 	MetadataFile warFile;
 		@Face(displayName="$WarFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
+		@Available(when=MetaworksContext.WHEN_EDIT)
 		public MetadataFile getWarFile() {
 			return warFile;
 		}
@@ -48,7 +48,7 @@ public class ReleasePanel {
 		
 	MetadataFile sqlFile;
 		@Face(displayName="$SqlFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
+		@Available(when=MetaworksContext.WHEN_EDIT)
 		public MetadataFile getSqlFile() {
 			return sqlFile;
 		}
@@ -83,34 +83,65 @@ public class ReleasePanel {
 		wfNode.copyFrom(wfNode.databaseMe());
 		
 		if("war".equals(wfNode.getVisType())){
+			if (this.getWarFile().getFileTransfer() != null
+					&& this.getWarFile().getFilename() != null
+					&& this.getWarFile().getFilename().length() > 0)
+
+				if (this.getWarFile() != null) {
+					MetadataFile resourceFile = new MetadataFile();
+					resourceFile.setFilename(this.getWarFile().getFilename());
+					resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
+					resourceFile.setMimeType(this.getWarFile().getMimeType());
+					setWarFile(resourceFile);
+
+				}
+			if (this.getSqlFile().getFileTransfer() != null
+					&& this.getSqlFile().getFilename() != null
+					&& this.getSqlFile().getFilename().length() > 0)
+
+				if (this.getSqlFile() != null) {
+					MetadataFile resourceFile = new MetadataFile();
+					resourceFile.setFilename(this.getSqlFile().getFilename());
+					resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
+					resourceFile.setMimeType(this.getSqlFile().getMimeType());
+					setSqlFile(resourceFile);
+				}
+			
 			filepathinfo.setId(Integer.parseInt(this.getReflectVersion().toString()));
 			filepathinfo.copyFrom(filepathinfo.databaseMe());
+			
+			
 			if(!this.getCheck()){	//체크 박스 미 체크시
 				if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
 					filepathinfo.setReleaseVer(1);
 				}else{
 					filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
 				}
+				
+				filepathinfo.setId(0);
+				filepathinfo.setReflectVer(0);
+				
 				filepathinfo.createDatabaseMe();
+				
 			}
 			else{	//체크 박스 체크시
-				System.out.println("check");
+				if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
+					filepathinfo.setReleaseVer(1);
+				}else{
+					filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
+				}
+				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
+				filepathinfo.setWarPath(this.getWarFile().getFilename());
+				filepathinfo.setId(0);
+				filepathinfo.setReflectVer(0);
+
+				filepathinfo.createDatabaseMe();
 			}
 		}
 		else if("svn".equals(wfNode.getVisType())){
 			ModalWindow modalWindow = new ModalWindow();
-			String host = GlobalContext.getPropertyString("vm.manager.ip");
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-			String command, tmp;
-			JschCommand jschServerBehaviour = new JschCommand();
-			jschServerBehaviour.sessionLogin(host, userId, passwd);
-			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + "projectOk";
-			tmp = jschServerBehaviour.runCommand(command);
-			
-			filepathinfo.setFileType(wfNode.getVisType());
-			filepathinfo.setReflectVer(Integer.parseInt(tmp));
-			filepathinfo.setProjectId(this.getProjectId());
+			filepathinfo.setId(Integer.parseInt(this.getReflectVersion().toString()));
+			filepathinfo.copyFrom(filepathinfo.databaseMe());
 			
 			if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
 				filepathinfo.setReleaseVer(1);
@@ -119,8 +150,11 @@ public class ReleasePanel {
 				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
 			}
 			
+			filepathinfo.setId(0);
+			
 			filepathinfo.createDatabaseMe();
 			filepathinfo.flushDatabaseMe();
+			
 			
 			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			modalWindow.setWidth(300);

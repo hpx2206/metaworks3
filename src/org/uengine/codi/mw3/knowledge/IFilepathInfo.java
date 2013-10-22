@@ -1,7 +1,8 @@
 package org.uengine.codi.mw3.knowledge;
 
+import javax.persistence.GeneratedValue;
+
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
@@ -27,7 +28,7 @@ public interface IFilepathInfo  extends IDAO{
 	public void setFileType(String fileType);
 
 	@Id
-	@NonSavable
+	@GeneratedValue(generator="BPM_SEQ")
 	public int getId();
-	public void setId(int infoId);
+	public void setId(int id);
 }

@@ -44,6 +44,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		public void setSqlPath(String sqlPath) {
 			this.sqlPath = sqlPath;
 		}
+		
 	String fileType;
 		public String getFileType() {
 			return fileType;
@@ -51,6 +52,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		public void setFileType(String fileType) {
 			this.fileType = fileType;
 		}
+		
 	int id;
 		public int getId() {
 			return id;
@@ -58,7 +60,6 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		public void setId(int id) {
 			this.id = id;
 		}
-		
 		
 	public int findReflectVersion(String id) throws Exception{
 		StringBuffer sql = new StringBuffer();
@@ -91,7 +92,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 	public SelectBox findReleaseVersions(String id) throws Exception{
 		SelectBox sb = new SelectBox();
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from (select * from filepathinfo where projectId = ?id and reflectVer != 0) a order by reflectVer desc;");
+		sql.append("select * from (select * from filepathinfo where projectId = ?id and releaseVer = 0) a order by reflectVer desc;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
 		findListing.set("id", id);
@@ -99,7 +100,6 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		
 		while(findListing.next()){
 			sb.add(String.valueOf(findListing.getReflectVer()), String.valueOf(findListing.getId()));
-			System.out.println(String.valueOf(findListing.getId()));
 		}
 		
 		return sb;
