@@ -126,13 +126,13 @@
 <%
 				}else if(value.status == 'Approved'){
 %>
-								<div class="btnbadge" style="float:none"><a onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>								
+								<div class="btnbadge" style="float:none"><a onClick="<%=methods.readyPublished.caller()%>"> <%=mw3.localize("$ReadyForPublish")%> </a></div>								
 <%
 				}						
 			}else if(mw3.when == 'myVendor'){
 				if(value.status == 'Approved'){
 %>
-								<div class="btnbadge" style="float:none"><a onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
+								<div class="btnbadge" style="float:none"><a onClick="<%=methods.readyPublished.caller()%>"> <%=mw3.localize("$ReadyForPublish")%> </a></div>
 <%
 				}else if(value.status == 'Published'){
 %>								
@@ -140,10 +140,10 @@
 <%
 				}else if(value.status == 'Request'){					
 %>
-								<div class="btnbadge" style="float:none"> 관리자 승인 요청중 </div>						
+								<div class="btnbadge" style="float:none"> <%=mw3.localize("$ReadyForManagerRequset")%> </div>						
 <%
 				}		
-				<div class="btnbadge" style="float:none"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$edit")%> </a></div>						
+				<div class="btnbadge" style="float:none"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$Edit")%> </a></div>						
 			}					
 %>
 							</td>
