@@ -580,7 +580,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] showDetail() throws Exception {
-		return new Object[]{new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
+		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
 	}
 	
 	@Override
