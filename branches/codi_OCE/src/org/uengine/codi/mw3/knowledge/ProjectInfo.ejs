@@ -29,19 +29,23 @@ if(value){
 						%>
                     </dl>                    
                 </div>
-                
-                <div>
-					 <%
-							if(value.type == "svn"){
-					%>
-						<%=methods.manageCommitter.here()%>
-					<% } %>
-					<%=methods.server.here()%>
-					<%=methods.distribute.here()%>
-					<%=methods.releaseProject.here()%>
-					<%=methods.hudson.here()%>
-					<div class="clear"></div>
+                <div class="clear"></div>
+                <div id="searchbox" style="border-bottom:1px solid #9EBFC4;">
+	                <div class="positionRight" style="padding:5px 0">
+						<%=methods.require.here()%>
+						 <%
+								if(value.type == "svn"){
+						%>
+							<%=methods.manageCommitter.here()%>
+						<% } %>
+						<%=methods.server.here()%>
+						<%=methods.distribute.here()%>
+						<%=methods.releaseProject.here()%>
+						<%=methods.hudson.here()%>
+						<div class="clear"></div>
+					</div>
 				</div>
+				<div class="clear"></div>
             </li>
         </ul>
     </div>	
