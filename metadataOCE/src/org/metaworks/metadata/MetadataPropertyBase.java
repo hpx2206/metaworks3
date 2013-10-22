@@ -2,23 +2,13 @@ package org.metaworks.metadata;
 
 import java.util.ArrayList;
 
-import org.metaworks.ContextAware;
-import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Children;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Id;
-import org.metaworks.annotation.Name;
-import org.metaworks.annotation.ServiceMethod;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("MetadataProperty")
-public class MetadataPropertyBase implements ContextAware, Cloneable {
+public class MetadataPropertyBase implements Cloneable {
 
 	public final static String FILE_PROP = "file";
 	public final static String FORM_PROP = "form";
@@ -26,17 +16,11 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 	public final static String STRING_PROP = "string";
 	public final static String PROCESS_PROP = "process";
 
-	@AutowiredFromClient
-	public MetadataXMLBase metadataXML;
-
 	public MetadataPropertyBase() {
-		setMetaworksContext(new MetaworksContext());
 	}
 
 	@XStreamOmitField
 	ArrayList<MetadataPropertyBase> child;
-	@Children
-	@Hidden
 	public ArrayList<MetadataPropertyBase> getChild() {
 		return child;
 	}
@@ -55,7 +39,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 
 	@XStreamOmitField
 	String projectId;
-	@Hidden
 	public String getProjectId() {
 		return projectId;
 	}
@@ -65,7 +48,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 
 	@XStreamAsAttribute
 	boolean isKeyEditable;
-	@Hidden
 	public boolean isKeyEditable() {
 		return isKeyEditable;
 	}
@@ -75,7 +57,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 
 	@XStreamAsAttribute
 	boolean isRemote;
-	@Hidden
 	public boolean isRemote() {
 		return isRemote;
 	}
@@ -84,8 +65,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 	}
 
 	String id;
-	@Id
-	@Hidden
 	public String getId() {
 		return id;
 	}
@@ -94,7 +73,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 	}
 
 	String name;
-	@Name
 	public String getName() {
 		return name;
 	}
@@ -119,17 +97,7 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 	}
 
 	@XStreamOmitField
-	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
-
-	@XStreamOmitField
 	int index;
-	@Hidden
 	public int getIndex() {
 		return index;
 	}
@@ -139,7 +107,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 
 	@XStreamOmitField
 	boolean change;
-	@Hidden
 	public boolean isChange() {
 		return change;
 	}
@@ -149,7 +116,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 
 	@XStreamOmitField
 	boolean checkFile;
-	@Hidden
 	public boolean isCheckFile() {
 		return checkFile;
 	}
@@ -159,7 +125,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 
 	@XStreamOmitField
 	boolean checkResource;
-	@Hidden
 	public boolean isCheckResource() {
 		return checkResource;
 	}
@@ -167,9 +132,6 @@ public class MetadataPropertyBase implements ContextAware, Cloneable {
 		this.checkResource = checkResource;
 	}
 
-
-	@Hidden
-	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_NONE)
 	public String toXmlXStream() {
 		XStream stream = new XStream();
 		stream.autodetectAnnotations(true);
