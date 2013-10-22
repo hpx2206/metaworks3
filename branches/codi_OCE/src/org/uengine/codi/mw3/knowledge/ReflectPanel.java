@@ -158,7 +158,7 @@ public class ReflectPanel {
 			String tmp;
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
-			command = GlobalContext.getPropertyString("vm.hudson.vm.hudson.setting") + " " + wfNode.getName() + " " + cloudInfo.getServerIp();
+			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getName() + " " + cloudInfo.getServerIp();
 			jschServerBehaviour.runCommand(command);
 			
 			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
