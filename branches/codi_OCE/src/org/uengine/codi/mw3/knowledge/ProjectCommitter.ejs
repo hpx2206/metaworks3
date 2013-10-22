@@ -1,0 +1,25 @@
+<% if(value){ %>
+<div class="time_line_Committer">
+	<div class="depth1 selected">
+		<ul class="fist_menu">
+			<li><span><%=fields.contact.here()%></a></span></li>
+		</ul>
+	 </div>
+	</div>
+	<div style="position:absolute; margin-top:100px; margin-left:170px;">
+		 <%=methods.addCommitter.here()%><p>
+		 <%=methods.removeCommitter.here()%>
+	 </div>
+	<div class="time_line_Committer2">
+		<div class="depth1 selected">
+		<ul class="fist_menu">
+			<%=fields.svnUserList.here()%>
+		</ul>
+	 </div>
+	
+	 </div>
+		 <%=methods.modify.here()%>
+		 <%=methods.cancel.here()%>
+<%	
+	}
+%>

@@ -1,6 +1,12 @@
 <%
 	if(value){
 %>	
+
+	<% if(mw3.how == 'comitter') { %>
+		<%=fields.checked.here({when: 'edit'})%>
+		<%=value.friendId%>
+		<hr/>
+	<% } else {%>
 		<%=fields.friend.here()%>
 		<% if(value.metaworksContext.how == 'follower'){ %>
 		<div style="clear:left;"></div>
@@ -16,6 +22,6 @@
 <%
 		}
 %>
-<%
+<% }
 	}
 %>
