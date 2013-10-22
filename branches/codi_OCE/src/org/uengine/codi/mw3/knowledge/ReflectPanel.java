@@ -127,6 +127,7 @@ public class ReflectPanel {
 			filepathinfo.setReflectVer(reflectVer);
 			filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
 			filepathinfo.setFileType(wfNode.getVisType());
+			filepathinfo.setId(filepathinfo.createNewId());
 
 			filepathinfo.createDatabaseMe();
 			filepathinfo.flushDatabaseMe();
@@ -169,7 +170,7 @@ public class ReflectPanel {
 			
 			filepathinfo.setReflectVer(Integer.parseInt(tmp));
 			filepathinfo.setFileType(wfNode.getVisType());
-			
+			filepathinfo.setId(filepathinfo.createNewId());
 			
 			filepathinfo.createDatabaseMe();
 			filepathinfo.flushDatabaseMe();

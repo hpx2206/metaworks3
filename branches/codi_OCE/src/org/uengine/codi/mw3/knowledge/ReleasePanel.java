@@ -118,7 +118,7 @@ public class ReleasePanel {
 					filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
 				}
 				
-				filepathinfo.setId(0);
+				filepathinfo.setId(filepathinfo.createNewId());
 				filepathinfo.setReflectVer(0);
 				
 				filepathinfo.createDatabaseMe();
@@ -132,7 +132,7 @@ public class ReleasePanel {
 				}
 				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
 				filepathinfo.setWarPath(this.getWarFile().getFilename());
-				filepathinfo.setId(0);
+				filepathinfo.setId(filepathinfo.createNewId());
 				filepathinfo.setReflectVer(0);
 
 				filepathinfo.createDatabaseMe();
@@ -150,7 +150,7 @@ public class ReleasePanel {
 				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
 			}
 			
-			filepathinfo.setId(0);
+			filepathinfo.setId(filepathinfo.createNewId());
 			
 			filepathinfo.createDatabaseMe();
 			filepathinfo.flushDatabaseMe();
