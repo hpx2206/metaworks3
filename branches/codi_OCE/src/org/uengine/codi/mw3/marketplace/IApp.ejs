@@ -133,7 +133,6 @@
 				if(value.status == 'Approved'){
 %>
 								<div class="btnbadge" style="float:none"><a onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
-								<div class="btnbadge" style="float:none"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$edit")%> </a></div>						
 <%
 				}else if(value.status == 'Published'){
 %>								
@@ -144,6 +143,7 @@
 								<div class="btnbadge" style="float:none"> 관리자 승인 요청중 </div>						
 <%
 				}		
+				<div class="btnbadge" style="float:none"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$edit")%> </a></div>						
 			}					
 %>
 							</td>
