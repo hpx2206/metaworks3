@@ -167,7 +167,18 @@ public class ReflectPanel {
 			long tryTime = 0;
 			
 			String tmp;
-			jschServerBehaviour.sessionLogin(host, userId, passwd);
+			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+			
+			FileTransmition fileTransmition = new FileTransmition();
+			
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			command = "sh /root/jbossKill.sh";
+			jschServerBehaviour.runCommand(command);
+			
+			if(jschServerBehaviour.getJschSession() != null)
+				jschServerBehaviour.getJschSession().disconnect();
+			
+			jschServerBehaviour.sessionLogin(host, userId, passwd);		
 			
 			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " + cloudInfo.getRootPwd();
 			jschServerBehaviour.runCommand(command);
@@ -210,16 +221,24 @@ public class ReflectPanel {
 			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getProjectAlias();
 			tmp = jschServerBehaviour.runCommand(command);
 			
+			if(jschServerBehaviour.getJschSession() != null)
+				jschServerBehaviour.getJschSession().disconnect();
 			
-			FileTransmition fileTransmition = new FileTransmition();
-			
-			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-			command = "sh /root/jbossKill.sh";
-			jschServerBehaviour.runCommand(command);
+			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
 			
 			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossStart.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
 			command = "sh /root/jbossStart.sh";
-			jschServerBehaviour.runCommand(command);
+			
+			if( jschServerBehaviour.getJschSession() == null )
+				throw new Exception("not connected");
+			
+			ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+			
+			((ChannelExec)channel).setCommand(command);
+			channel.setInputStream(null);
+			channel.connect();
+			
+			channel.disconnect();
 			
 			filepathinfo.setReflectVer(Integer.parseInt(tmp));
 			filepathinfo.setFileType(wfNode.getVisType());
