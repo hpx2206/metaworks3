@@ -14,13 +14,13 @@ import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardPanel;
-import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -60,11 +60,13 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		recentItem.add();
 		
 		if("oce".equals(session.getUx())){
-			session.setUx("oce_project");
+			//session.setUx("oce_project");
+		
+			//Object[] returnObject =  perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
 			
-			Object[] returnObject =  perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
+			//return new Object[]{new DashboardWindow(returnObject[1], title)};
 			
-			return new Object[]{new DashboardWindow(returnObject[1], title)};
+			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
 			return new Object[]{returnObject[1] };

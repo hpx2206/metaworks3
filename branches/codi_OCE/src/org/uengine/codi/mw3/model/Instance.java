@@ -1601,6 +1601,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			session.setLastSelectedItem("goSns");
 			session.setUx("sns");
 		}
+		
 		return new MainPanel(new Main(session, String.valueOf(this.getInstId())));
 	}
 }

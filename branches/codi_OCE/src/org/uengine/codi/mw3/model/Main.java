@@ -88,8 +88,12 @@ public class Main {
 	public Main(Session session) throws Exception {
 		this(session, null);
 	}
-		
+	
 	public Main(Session session, String instId) throws Exception {
+		this(session, instId, null);
+	}
+			
+	public Main(Session session, String instId, String topicId) throws Exception {
 		
 		String preferUX = session.getEmployee().getPreferUX();
 		String preferMob = session.getEmployee().getPreferMob();
@@ -149,7 +153,11 @@ public class Main {
 			
 			ContentWindow contentWindow = new ContentWindow(); 
 			
-			if(instId == null)
+			if(topicId != null){
+				session.setLastPerspecteType("topic");
+				session.setLastSelectedItem(topicId);
+					
+			}if(instId == null)
 				contentWindow = createNewInstancePanel(session);
 			else{
 				InstanceViewContent instanceViewContent = new InstanceViewContent();
