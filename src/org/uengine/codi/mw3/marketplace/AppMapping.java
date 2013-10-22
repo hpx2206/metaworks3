@@ -124,7 +124,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName, item.* ")
 		   .append(" from appmapping, bpm_knol,  ")
-		   .append(" 	(select app.appId, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
+		   .append(" 	(select app.appId, app.logoFileName, app.logoContent, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
 		   .append(" where appmapping.appId = item.appId ")
 		   .append("	and item.projectId = bpm_knol.id ")
 		   .append("	and appmapping.comcode=?comCode ")
