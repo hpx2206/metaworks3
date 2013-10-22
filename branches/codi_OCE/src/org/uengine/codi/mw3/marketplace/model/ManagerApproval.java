@@ -277,7 +277,5 @@ public class ManagerApproval implements ITool  {
 		}finally{
 			tx.releaseResources();
 		}
-		
-		
 	}
 }
