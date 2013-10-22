@@ -2270,7 +2270,7 @@ html, body {
  -webkit-border-radius:3px;
  -moz-border-radius:3px;}
 
-
+.project_img img {width:150px; height:150px;}
 /* selfPortal*/
 .sp_center{
 	background-color:#FFF;
