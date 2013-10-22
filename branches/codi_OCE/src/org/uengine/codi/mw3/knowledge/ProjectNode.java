@@ -45,13 +45,10 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 
 		session.setLastPerspecteType(TYPE_PROJECT);
 		session.setLastSelectedItem(this.getId());
-		session.setUx("oce_project");
 		
 		Perspective perspective = new Perspective();
 		perspective.session = session;
-		Object[] returnObject =  perspective.loadInstanceListPanel(TYPE_PROJECT, getId());
 		String title = "프로젝트: " + getName();
-//		Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
 		
 		// recentItem 에 create
 		RecentItem recentItem = new RecentItem();
@@ -62,11 +59,22 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		recentItem.add();
 		
-		DashboardWindow window = new DashboardWindow();
-		window.setPanel(returnObject[1]);
-		window.setTitle(title);
+		if("oce".equals(session.getUx())){
+			session.setUx("oce_project");
+			
+			Object[] returnObject =  perspective.loadInstanceListPanel(TYPE_PROJECT, getId());
+			
+			DashboardWindow window = new DashboardWindow();
+			window.setPanel(returnObject[1]);
+			window.setTitle(title);
+			
+			return new Object[]{window };
+		}else {
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
+			return new Object[]{returnObject[1] };
+		}
 		
-		return new Object[]{window };
+		
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
