@@ -75,6 +75,14 @@ public class ProjectCommitter {
 			this.contact = contact;
 		}
 
+	String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+
 	String projectId;
 		public String getProjectId() {
 			return projectId;
@@ -106,7 +114,7 @@ public class ProjectCommitter {
 		  JschCommand jschServerBehaviour = new JschCommand();
 		  jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
-		command = GlobalContext.getPropertyString("vm.svn.userInfo") + " repos";
+		command = GlobalContext.getPropertyString("vm.svn.userInfo") + " " + this.getProjectAlias();
 	
 		String tmp = jschServerBehaviour.runCommand(command);
 		String svnUser = null;

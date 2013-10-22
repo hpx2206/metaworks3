@@ -152,6 +152,7 @@ public class ManagerApproval implements ITool  {
 			}else{
 				cloudInfo.setId(cloudInfo.createNewId());
 				cloudInfo.createDatabaseMe();
+				cloudInfo.flushDatabaseMe();
 			}
 			
 			String host = GlobalContext.getPropertyString("vm.manager.ip");
@@ -174,13 +175,16 @@ public class ManagerApproval implements ITool  {
 				long timeoutTime = 200000;
 				long sleepTime = 5000;
 				long tryTime = 0;
-				
+				HudsonJobApi hudsonJobApi = new HudsonJobApi();
+
 				jschServerBehaviour.sessionLogin(host, userId, passwd);
 				
-				command = GlobalContext.getPropertyString("vm.svn.svnRevision") + " " + wfNode.getProjectAlias() + " " + filepathInfo.getReflectVer();
-				jschServerBehaviour.runCommand(command);
+				command = GlobalContext.getPropertyString("vm.svn.svnRevision") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " 
+						+ cloudInfo.getRootPwd() + " " + filepathInfo.getReflectVer();
 				
-				HudsonJobApi hudsonJobApi = new HudsonJobApi();
+				
+				
+				jschServerBehaviour.runCommand(command);
 
 				while(nextBuilderNumber == null){
 					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
@@ -217,6 +221,25 @@ public class ManagerApproval implements ITool  {
 				
 				if(jschServerBehaviour.getJschSession() != null)
 					jschServerBehaviour.getJschSession().disconnect();
+				
+				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+				
+				FileTransmition fileTransmition = new FileTransmition();
+				
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossStart.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+				command = "sh /root/jbossStart.sh";
+				
+				if( jschServerBehaviour.getJschSession() == null )
+					throw new Exception("not connected");
+				
+				ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+				
+				((ChannelExec)channel).setCommand(command);
+				channel.setInputStream(null);
+				channel.connect();
+				
+				channel.disconnect();
+				
 			}
 			else if("war".equals(wfNode.getVisType())){
 				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());

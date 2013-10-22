@@ -127,6 +127,14 @@ public class ProjectInfo implements ContextAware {
 			this.svn = svn;
 		}
 	
+	String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+	
 	/*
 	@Hidden
 	String os;
@@ -209,6 +217,7 @@ public class ProjectInfo implements ContextAware {
 			this.vmDouwnUrl = vmDouwnUrl;
 		}*/
 		
+
 	public ProjectInfo(){
 		this(null);
 	}
@@ -240,7 +249,8 @@ public class ProjectInfo implements ContextAware {
 		setLogoFile(logoFile);
 		
 		this.projectName = wfNode.getName();
-		this.domainName = wfNode.getProjectAlias() + ".oce.com";			
+		this.domainName = wfNode.getProjectAlias() + ".oce.com";
+		this.setProjectAlias(wfNode.getProjectAlias());
 		setType(wfNode.getVisType());
 		if("svn".equals(this.getType())){
 			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + wfNode.getProjectAlias());
@@ -479,6 +489,7 @@ public class ProjectInfo implements ContextAware {
 		ModalWindow modalWindow = new ModalWindow();
 		
 		ProjectCommitter projectCommitter = new ProjectCommitter();
+		projectCommitter.setProjectAlias(this.getProjectAlias());
 		projectCommitter.setProjectId(this.getProjectId());
 		projectCommitter.setUserId(session.getUser().getUserId());
 		WfNode wfNode = new WfNode();

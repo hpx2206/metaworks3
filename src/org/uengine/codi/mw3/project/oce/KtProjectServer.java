@@ -336,6 +336,34 @@ public class KtProjectServer  implements ITool, ContextAware{
 		return this;
 	}
 	
+	@Face(displayName = "$Release")
+	@ServiceMethod(callByContent = true)
+	public void release() throws Exception{
+		if( ktProjectServers != null ){
+			for(int i=0; i < ktProjectServers.getServerList().length;  i++){
+				KtProjectServer server = ktProjectServers.getServerList()[i];
+				if( server.isChecked() ){
+					// 삭제 요청한 노드
+					// TODO 프로세스에 cancel 을 날려야함
+					CloudInfo cloudInfo = new CloudInfo();
+					ICloudInfo iCloudInfo = cloudInfo.findServerByServerName(server.getProjectId() , server.getName() , server.getServerGroup() );
+					if( iCloudInfo.next() ){
+						cloudInfo.copyFrom(iCloudInfo);
+						if( cloudInfo.getServerIp() != null && !"".equals(cloudInfo.getServerIp())){
+							KtProjectDeleteRequest ktProjectDeleteRequest = new KtProjectDeleteRequest();
+							cloudInfo.databaseMe().setStatus(ProjectServer.SERVER_STATUS_STOPPING);
+							ktProjectDeleteRequest.setCloudInfo(cloudInfo);
+							ktProjectDeleteRequest.deleteRequest();
+						}else{
+							cloudInfo.deleteDatabaseMe();
+						}
+					}
+				}
+			}
+			
+		}
+	}
+	
 	public void status() throws Exception {
 		
 	}
