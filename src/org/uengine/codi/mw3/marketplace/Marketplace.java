@@ -77,9 +77,9 @@ public class Marketplace {
 		east.load();
 		*/
 		
-		session.getEmployee().setPreferUX("sns");
-		session.setLastPerspecteType("topic");
-		session.setLastSelectedItem("Marketplace");
+//		session.getEmployee().setPreferUX("sns");
+//		session.setLastPerspecteType("topic");
+//		session.setLastSelectedItem("Marketplace");
 		
 		InstanceList instList = new InstanceList(session);
 		instList.load();

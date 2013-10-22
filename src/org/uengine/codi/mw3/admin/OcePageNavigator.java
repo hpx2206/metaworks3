@@ -9,8 +9,8 @@ import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
-import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
@@ -84,6 +84,9 @@ public class OcePageNavigator extends PageNavigator {
 
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
+		
+		session.setUx("oce");
+		
 		CloudIDE cloudIDE = new CloudIDE();
 		cloudIDE.setPageNavigator(new OcePageNavigator());
 		cloudIDE.load(session);
@@ -123,7 +126,14 @@ public class OcePageNavigator extends PageNavigator {
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goSns() throws Exception {
-		return new MainPanel(new MainSNS(session));
+		
+		if(session != null){
+			session.setLastSelectedItem("goSns");
+			session.setUx("sns");
+		}
+		return new MainPanel(new Main(session));
+//		return new MainPanel(new MainSNS(session));
+		
 	}
 
 	@ServiceMethod(callByContent=true)
@@ -147,6 +157,8 @@ public class OcePageNavigator extends PageNavigator {
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goMarketplace() throws Exception {
+		
+		session.setUx("oce");
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
@@ -181,6 +193,8 @@ public class OcePageNavigator extends PageNavigator {
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
+		
+		session.setUx("oce");
 		
 		SelfService selfService = new SelfService();
 		selfService.setPageNavigator(new OcePageNavigator());
