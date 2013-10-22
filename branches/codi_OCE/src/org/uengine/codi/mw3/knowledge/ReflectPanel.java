@@ -158,20 +158,21 @@ public class ReflectPanel {
 			String tmp;
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getName() + " " + cloudInfo.getServerIp();
+			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp();
 			jschServerBehaviour.runCommand(command);
 			
-			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
+			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
 			jschServerBehaviour.runCommand(command);
 			
-			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getName();
+			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getProjectAlias();
 			tmp = jschServerBehaviour.runCommand(command);
 			
 			filepathinfo.setReflectVer(Integer.parseInt(tmp));
-			filepathinfo.setProjectId(wfNode.getId());
 			filepathinfo.setFileType(wfNode.getVisType());
 			
+			
 			filepathinfo.createDatabaseMe();
+			filepathinfo.flushDatabaseMe();
 		}
 
 		return new Remover(new ModalWindow());

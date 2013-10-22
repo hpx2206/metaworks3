@@ -29,7 +29,7 @@ import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,projectSecuopt,fileType"} ,
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,projectAlias,topicDescription,logoFile,projectSecuopt,fileType"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -139,8 +139,16 @@ public class ProjectTitle implements ContextAware {
 		public void setProjectSecuopt(boolean projectSecuopt) {
 			this.projectSecuopt = projectSecuopt;
 		}
-
-
+	
+	String projectAlias;
+		@Face(displayName="$Alias")
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+		
 	@Face(displayName="$Next")
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
@@ -174,6 +182,7 @@ public class ProjectTitle implements ContextAware {
 		ProjectNode projectNode = new ProjectNode();
 		projectNode.setId(this.getTopicId());
 		projectNode.setName(this.getTopicTitle());
+		projectNode.setProjectAlias(this.getProjectAlias());
 		projectNode.session = session;
 		
 		this.makeHtml();
@@ -191,19 +200,19 @@ public class ProjectTitle implements ContextAware {
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			// create SVN
-			command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
+			command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
 			jschServerBehaviour.runCommand(command);
 			
 			// setting SVN
-			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
+			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
 			jschServerBehaviour.runCommand(command);
 			
 			//SVN 유저 추가
-			command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+			command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
 			jschServerBehaviour.runCommand(command);
 			
 			//Create Hudson
-			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
+			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
 			jschServerBehaviour.runCommand(command);
 			
 		}
@@ -229,6 +238,7 @@ public class ProjectTitle implements ContextAware {
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			wfNode.setName(this.getTopicTitle());
+			wfNode.setProjectAlias(this.getProjectAlias());
 			wfNode.setType("project");
 			wfNode.setIsDistributed(false);
 			wfNode.setIsReleased(false);

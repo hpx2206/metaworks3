@@ -413,6 +413,16 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setFilepathInfo(FilepathInfo filepathInfo) {
 			this.filepathInfo = filepathInfo;
 		}
+	
+	@XStreamOmitField
+	public String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+		
 		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());

@@ -258,6 +258,9 @@ public interface IWfNode extends IDAO {
 	public FilepathInfo getFilepathInfo();
 	public void setFilepathInfo(FilepathInfo filepathInfo);
 	
+	public String getProjectAlias();
+	public void setProjectAlias(String projectAlias);
+	
 	/*******************************************
 	 * 
 	 * Service Method
