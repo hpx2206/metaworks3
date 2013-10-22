@@ -396,7 +396,8 @@ img {
     background: #fff;
     margin:0 7px 0 3px;
     height: 100%;
-    overflow:auto; 
+    overflow:auto;
+    position: relative; 
 }
 
 .topcontentcontainer {
