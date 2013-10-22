@@ -10,6 +10,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
@@ -430,5 +431,15 @@ public class InstanceListPanel implements ContextAware{
 	public void appInfoLoad() throws Exception {
 		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
 		appInformation.load();
+	}
+	
+	@ServiceMethod
+	public MainPanel goSns() throws Exception {
+		if(session != null){
+			session.setLastPerspecteType("allICanSee");
+			session.setUx("sns");
+		}
+		
+		return new MainPanel(new Main(session));
 	}
 }
