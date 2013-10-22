@@ -17,7 +17,15 @@ if(value){
                     	<dt style="font-size:16px;"><%=fields.projectName.here()%></dt>
                         <dd><span class="mp_sub_tit"><%=mw3.localize("$project.domain")%> : </span><span class="mp_sub_rst"><%=value.domainName%></span></dd>
                         <dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.description%></span></dd>
-                                          
+                                   
+                        <%
+							if(value.type == "svn"){
+						%>
+								<dd><span class="mp_sub_tit"><%=mw3.localize("$project.svn")%> : </span><span class="mp_sub_rst"><%=value.svn%></span></dd>       
+						       
+						<%
+						}
+						%>
                     </dl>                    
                 </div>
                 
@@ -33,5 +41,4 @@ if(value){
 
 <%
 }
-
 %>
