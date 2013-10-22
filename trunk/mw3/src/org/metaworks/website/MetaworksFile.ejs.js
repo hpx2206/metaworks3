@@ -27,8 +27,9 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 				var width = 0;
 				var height = 0;
 				var parentwidth = $("#image_" + this.objectId).parent().width();
-	
-				imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
+				
+//				imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
+				imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>');
 				
 				if(object.__descriptor){
 					width = object.__descriptor.getOptionValue('width');

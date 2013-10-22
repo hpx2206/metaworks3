@@ -41,28 +41,52 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 				this.name = layout.attr('layoutName');		
 		}
 		
+		$(this.divId + ' .show_east_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
+			var faceHelper = mw3.getFaceHelper(event.data.objectId);
+			
+			if(faceHelper){
+				faceHelper.layout.open('east');	
+				faceHelper.resize();
+				
+				$(event.data.divId + ' .show_east_btn:first').hide();
+				
+			}
+		});
 		
-		$(this.divId + ' .hide_west_btn').bind('click', {objectId : objectId}, function(event){
+		$(this.divId + ' .hide_east_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
+			var faceHelper = mw3.getFaceHelper(event.data.objectId);
+			
+			if(faceHelper){
+				faceHelper.layout.close('east');	
+				faceHelper.resize();
+				
+				$(event.data.divId + ' .show_east_btn:first').show();
+				
+			}
+		});
+		
+		$(this.divId + ' .hide_west_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
 			var faceHelper = mw3.getFaceHelper(event.data.objectId);
 			
 			if(faceHelper){
 				faceHelper.layout.close('west');	
 				faceHelper.resize();
 				
-				$('.show_west_btn').show();
+				$(event.data.divId + ' .show_west_btn:first').show();
 				
 			}
 					
 		});
 
-		$(this.divId + ' .show_west_btn').bind('click', {objectId : objectId}, function(event){
+		
+		$(this.divId + ' .show_west_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
 			var faceHelper = mw3.getFaceHelper(event.data.objectId);
 			
 			if(faceHelper){
 				faceHelper.layout.open('west');	
 				faceHelper.resize();
 				
-				$('.show_west_btn').hide();
+				$(event.data.divId + ' .show_west_btn:first').hide();
 				
 			}
 					
