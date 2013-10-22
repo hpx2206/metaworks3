@@ -7,36 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.metaworks.ContextAware;
-import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksException;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("metadata")
-public class MetadataXMLBase implements ContextAware {
+public class MetadataXMLBase {
 	
 	public MetadataXMLBase() {
 	}
 	
 	@XStreamOmitField
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
-	
-	@XStreamOmitField
 	String filePath;
-		@Id
 		public String getFilePath() {
 			return filePath;
 		}
@@ -45,7 +27,6 @@ public class MetadataXMLBase implements ContextAware {
 		}
 		
 	String company;
-		@Hidden
 		public String getCompany() {
 			return company;
 		}	
@@ -54,7 +35,6 @@ public class MetadataXMLBase implements ContextAware {
 		}
 		
 	String type;
-		@Hidden
 		public String getType() {
 			return type;
 		}
@@ -63,7 +43,6 @@ public class MetadataXMLBase implements ContextAware {
 		}
 		
 	String typeName;
-		@Hidden
 		public String getTypeName() {
 			return typeName;
 		}
@@ -109,12 +88,11 @@ public class MetadataXMLBase implements ContextAware {
 			metadata = (MetadataXMLBase)xstream.fromXML( stream );
 		}catch(Exception e){
 //			e.printStackTrace();
-			System.err.println(new MetaworksException("메타데이터 파일이 없거나 온전하지 않습니다."));
+			System.err.println(new Exception("메타데이터 파일이 없거나 온전하지 않습니다."));
 		}
 		return metadata;
 	}
 		
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public String toXmlXStream(){
 		try {
 			Thread.sleep(5000);
