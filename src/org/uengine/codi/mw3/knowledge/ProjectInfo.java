@@ -394,7 +394,7 @@ public class ProjectInfo implements ContextAware {
 
 	}
 
-	@Face(displayName = "개발기 관리")
+	@Face(displayName = "$devmanage")
 	@ServiceMethod(payload={"projectName" , "projectId"}, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] server() throws Exception {
 		

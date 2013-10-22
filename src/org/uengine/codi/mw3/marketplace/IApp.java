@@ -33,7 +33,7 @@ import org.uengine.codi.mw3.model.ICompany;
 		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
-      values={"categories,attachProject,releaseVersion,appName,simpleOverview,fullOverview,logoFile"})
+      values={"categories,attachProject,releaseVersion,appName,subDomain,simpleOverview,fullOverview,logoFile"})
 public interface IApp extends IDAO{
 	
 	@Id
@@ -144,6 +144,10 @@ public interface IApp extends IDAO{
 	public int getRunningVersion();
 	public void setRunningVersion(int runningVersion);	
 	
+	
+	@Face(displayName = "$SubDomainName")
+	public String getSubDomain();
+	public void setSubDomain(String subDomain);
 	
 	
 	
