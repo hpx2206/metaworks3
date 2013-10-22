@@ -32,7 +32,11 @@ if(value){
                 
                 <div>
 					<%=methods.require.here()%>
-					<%=methods.manageCommitter.here()%>
+					 <%
+							if(value.type == "svn"){
+					%>
+						<%=methods.manageCommitter.here()%>
+					<% } %>
 					<%=methods.server.here()%>
 					<%=methods.distribute.here()%>
 					<%=methods.releaseProject.here()%>
