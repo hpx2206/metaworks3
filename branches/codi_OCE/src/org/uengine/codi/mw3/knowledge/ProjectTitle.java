@@ -141,7 +141,7 @@ public class ProjectTitle implements ContextAware {
 		}
 	
 	String projectAlias;
-		@Face(displayName="$Alias")
+		@Face(displayName="$ProjectAlias")
 		public String getProjectAlias() {
 			return projectAlias;
 		}

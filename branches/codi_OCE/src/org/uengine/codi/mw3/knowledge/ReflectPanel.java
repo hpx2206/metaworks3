@@ -169,7 +169,7 @@ public class ReflectPanel {
 			String tmp;
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp();
+			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " + cloudInfo.getRootPwd();
 			jschServerBehaviour.runCommand(command);
 			
 			HudsonJobApi hudsonJobApi = new HudsonJobApi();
@@ -209,6 +209,17 @@ public class ReflectPanel {
 			
 			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getProjectAlias();
 			tmp = jschServerBehaviour.runCommand(command);
+			
+			
+			FileTransmition fileTransmition = new FileTransmition();
+			
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			command = "sh /root/jbossKill.sh";
+			jschServerBehaviour.runCommand(command);
+			
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossStart.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			command = "sh /root/jbossStart.sh";
+			jschServerBehaviour.runCommand(command);
 			
 			filepathinfo.setReflectVer(Integer.parseInt(tmp));
 			filepathinfo.setFileType(wfNode.getVisType());
