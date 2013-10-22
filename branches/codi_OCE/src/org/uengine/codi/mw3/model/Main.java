@@ -154,7 +154,7 @@ public class Main {
 			ContentWindow contentWindow = new ContentWindow(); 
 			
 			if(topicId != null){
-				session.setLastPerspecteType("topic");
+				session.setLastPerspecteType("project");
 				session.setLastSelectedItem(topicId);
 					
 			}if(instId == null)
