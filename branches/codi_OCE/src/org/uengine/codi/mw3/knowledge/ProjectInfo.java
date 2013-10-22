@@ -240,11 +240,11 @@ public class ProjectInfo implements ContextAware {
 		setLogoFile(logoFile);
 		
 		this.projectName = wfNode.getName();
-		this.domainName = this.getProjectName() + ".com";			
+		this.domainName = wfNode.getProjectAlias() + ".oce.com";			
 		setType(wfNode.getVisType());
 		if("svn".equals(this.getType())){
-			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName());
-			this.setSvn(GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName());
+			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + wfNode.getProjectAlias());
+			this.setSvn(GlobalContext.getPropertyString("vm.manager.url") + "/" + wfNode.getProjectAlias());
 		}
 		this.description = wfNode.getDescription();
 			
