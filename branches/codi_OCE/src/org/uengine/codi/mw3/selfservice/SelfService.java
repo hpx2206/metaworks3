@@ -58,6 +58,7 @@ public class SelfService {
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setCenter(centerLayout);
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
 		
 		if("oce".equals(session.getUx())){
 			outerLayout.setNorth(new ProcessTopPanel(session));
