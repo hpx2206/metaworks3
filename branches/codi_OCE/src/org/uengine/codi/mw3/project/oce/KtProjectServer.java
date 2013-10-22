@@ -339,7 +339,7 @@ public class KtProjectServer  implements ITool, ContextAware{
 		return this;
 	}
 	
-	@Face(displayName = "$Release")
+	@Face(displayName = "$devrelease")
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow release() throws Exception{
 		SelectBox reflectVersion = new SelectBox();
@@ -352,7 +352,7 @@ public class KtProjectServer  implements ITool, ContextAware{
 		releasePanel.setMetaworksContext(new MetaworksContext());
 		releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		modalWindow.setTitle("$release");
+		modalWindow.setTitle("$devrelease");
 		modalWindow.setPanel(releasePanel);
 		modalWindow.setHeight(200);
 		modalWindow.setWidth(300);
