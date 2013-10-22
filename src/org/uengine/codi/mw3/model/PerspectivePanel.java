@@ -184,6 +184,20 @@ public class PerspectivePanel  implements ContextAware {
 					commingTodoPerspective.session = session;
 					commingTodoPerspective.select();
 				}
+				//앱
+				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
+					appPerspective = new OrganizationPerspectiveApp();
+					appPerspective.getMetaworksContext().setHow("dashboard");
+					appPerspective.getMetaworksContext().setWhere("oce_perspective");
+					appPerspective.session = session;
+					appPerspective.select();
+				}
+				//프로젝트
+				if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+					projectPerspective = new ProjectPerspective();
+					projectPerspective.session = session;
+					projectPerspective.select();
+				}
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
