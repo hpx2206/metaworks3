@@ -160,14 +160,13 @@ public class Main {
 			}if(instId == null)
 				contentWindow = createNewInstancePanel(session);
 			else{
-				InstanceViewContent instanceViewContent = new InstanceViewContent();
-				
 				Instance instance = new Instance();
+				instance.instanceViewContent = new InstanceViewContent();
 				instance.session = session;
-				instance.instanceViewContent = instanceViewContent;
 						
 				instance.setInstId(new Long(instId));
-				contentWindow.setPanel(instance.detail());
+
+				contentWindow = (InstanceViewContent)instance.detail();
 			}
 			
 			InstanceListWindow instanceListWindow = new InstanceListWindow(session);

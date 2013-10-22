@@ -2,17 +2,18 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.Window;
+import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.oce.dashboard.DashboardWindow;
-import org.uengine.oce.dashboard.DashboardWindowLayout;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
@@ -182,21 +183,31 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		session.setLastPerspecteType("oce_app");
 		session.setLastSelectedItem(String.valueOf(this.getAppId()));
 		
-		DashboardWindowLayout dashboardWindowLayout = new DashboardWindowLayout();
-		DashboardWindow dashboardWindow = new DashboardWindow();
-		dashboardWindow.session=session;
-		dashboardWindowLayout.setDashboardWindow(dashboardWindow);
+		DashboardWindow appDashboard = new DashboardWindow();
+		appDashboard.session = session;
+		appDashboard.setTitle(this.getAppName());
 		
-		Window leftWindow = new Window();
-		leftWindow.setTitle(this.getAppName());
 		App app = new App();
 		app.setAppId(this.getAppId());
 		app.copyFrom(app.databaseMe());
-		leftWindow.setPanel(new IFrame(app.url));
 		
-		dashboardWindowLayout.setLeftWindow(leftWindow);
-		dashboardWindowLayout.load(session);
-		return new Object[]{new Refresh(dashboardWindowLayout)};
+		InstanceListPanel instanceListPanel = new InstanceListPanel();
+		
+		Object[] returnObject = Perspective.loadInstanceListPanel(session, "app", session.getLastSelectedItem(), appDashboard.getTitle());
+		
+		instanceListPanel = (InstanceListPanel) returnObject[1];
+		instanceListPanel.session = session;
+		instanceListPanel.setMetaworksContext(new MetaworksContext());
+		instanceListPanel.getMetaworksContext().setWhere("oce_app");
+		
+		Layout appPanel = new Layout();
+		appPanel.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__spacing_open:1, east__size:'400'");
+		appPanel.setCenter(new IFrame(app.url));
+		appPanel.setEast(returnObject[1]);
+		
+		appDashboard.setPanel(appPanel);
+		
+		return new Object[]{new Refresh(appDashboard)};
 	}
 
 	@AutowiredFromClient
