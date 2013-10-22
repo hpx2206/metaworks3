@@ -2455,6 +2455,8 @@ select.select[class] {
 .oce_service li { float:left; margin-right:15px;}
 .oce_service li img{width:50px; height:50px;}
 .oce_calendaPanel {clear:both;background:#ecf0f1; border-radius:6px; margin-top:20px; height:334px; margin-right:20px;-webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px; border:1px solid #e9e9e9}
+.oce_calendaPanel .fc-header td {padding:0px;}
+.oce_calendaPanel .fc-header-left{ padding-left:10px;}
 .time_line{padding:15px 25px 10px 20px; background:#f5f5f5; border-radius:6px; margin:20px; margin-bottom:10px;margin-top:0px;-webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px; border:1px solid #e9e9e9}
 
 
@@ -2467,7 +2469,7 @@ select.select[class] {
 .time_line .daily_obj h4{margin-top:0px;height:33px;background:url(../../images/waveStyle/ico_time.png) no-repeat;padding-left:40px;margin-bottom:0px; font-size:14px;color:#333;font-family:dotum;line-height:33px}
 .time_line .daily_obj h4 + .tx_box_obj{margin-top:0}
 .time_line .process_map2 li {margin-top:0px !important;}
-.tx_box_obj{padding-left:39px;margin-top:9px}
+.tx_box_obj{padding-left:39px;margin-top:3px; padding-bottom:12px;}
 .nlst_checked dt,.nlst_checked strong,.nlst_checked a,.nlst_checked em{color:#999 !important}
 .tx_tooltip{position:relative;min-height:72px;border-right:1px solid #ebebeb;border-left:1px solid #ebebeb;background:#fff}
 .tx_tooltip .tx_bubble{float:none;padding:15px 22px 7px 17px;*zoom:1}
