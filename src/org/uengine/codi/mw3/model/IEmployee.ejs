@@ -309,8 +309,8 @@ if(value){
 	} else if(mw3.where == 'user_menu_option') {
 	
 	%>
-		<%=methods.showDetail.here() %>
-		<%=methods.logout.here() %>
+		<div><a onClick="<%=methods.showDetail.caller() %>" ><%=mw3.localize('$ShowDetail')%></a></div>
+		<div><a onClick="<%=methods.logout.caller() %>" ><%=mw3.localize('$Logout')%></a></div>
 	<%
 	} else {
 	%>
