@@ -9,12 +9,18 @@ import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.FileTransmition;
+import org.uengine.codi.mw3.knowledge.FilepathInfo;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.project.oce.KtProjectCreateRequest;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
+import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
+
+import com.jcraft.jsch.ChannelExec;
 
 @Face(
 	ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -70,7 +76,7 @@ public class ManagerApproval implements ITool  {
 
 	@Override
 	public void beforeComplete() throws Exception {
-//		
+		
 //		App app = new App();
 //		
 //		app.setAppId(this.getAppId());
@@ -88,6 +94,9 @@ public class ManagerApproval implements ITool  {
 		
 		final String appName = app.getAppName();
 		final String projectId = app.getProject().getId();
+		final int runningVersion = app.getRunningVersion();
+		final String projectType = app.getProject().getVisType();
+		
 		new Thread(new Runnable() {
 			
 			@Override
@@ -95,7 +104,7 @@ public class ManagerApproval implements ITool  {
 				try {
 					KtProjectCreateRequest ktProjectCreateRequest = new KtProjectCreateRequest();
 					CloudInfo cloudInfo = ktProjectCreateRequest.createRequset(appName , null);
-					insertCloudInfo(projectId , cloudInfo);
+					insertCloudInfo(projectId , cloudInfo, runningVersion, projectType);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}				
@@ -103,7 +112,7 @@ public class ManagerApproval implements ITool  {
 		}).start();
 	}
 	
-	public void insertCloudInfo(String projectId, CloudInfo cloudInfo) throws Exception{
+	public void insertCloudInfo(String projectId, CloudInfo cloudInfo, int runningVersion, String projectType) throws Exception{
 		TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
 		try{
 			tx.setManagedTransaction(false);
@@ -141,6 +150,54 @@ public class ManagerApproval implements ITool  {
 			}else{
 				cloudInfo.setId(cloudInfo.createNewId());
 				cloudInfo.createDatabaseMe();
+			}
+			
+			String host = GlobalContext.getPropertyString("vm.manager.ip");
+			String userId = GlobalContext.getPropertyString("vm.manager.user");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+			String command;
+			JschCommand jschServerBehaviour = new JschCommand();
+			WfNode wfNode = new WfNode();
+			wfNode.setId(projectId);
+			wfNode.copyFrom(wfNode.databaseMe());
+			FilepathInfo filepathInfo = new FilepathInfo();
+			filepathInfo.setId(runningVersion);
+			filepathInfo.copyFrom(filepathInfo.databaseMe());
+			
+			if("svn".equals(projectType)){
+				jschServerBehaviour.sessionLogin(host, userId, passwd);
+				
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp();
+				jschServerBehaviour.runCommand(command);
+				
+				command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
+				jschServerBehaviour.runCommand(command);
+				
+			}
+			else if("war".equals(projectType)){
+				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+				FileTransmition fileTransmition = new FileTransmition();
+				
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+				command = "sh /root/jbossKill.sh";
+				jschServerBehaviour.runCommand(command);
+				
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/war/" + filepathInfo.getWarPath(), cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/sql/" + filepathInfo.getSqlPath(), cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/startUp.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+				
+				command = "sh /root/startUp.sh" + " " + wfNode.getName() + " " + filepathInfo.getSqlPath();
+				
+				if( jschServerBehaviour.getJschSession() == null )
+					throw new Exception("not connected");
+				
+				ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+				
+				((ChannelExec)channel).setCommand(command);
+				channel.setInputStream(null);
+				channel.connect();
+				
+				channel.disconnect();
 			}
 			
 			tx.commit();
