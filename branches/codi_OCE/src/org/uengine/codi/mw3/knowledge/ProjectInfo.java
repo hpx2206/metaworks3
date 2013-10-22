@@ -383,18 +383,20 @@ public class ProjectInfo implements ContextAware {
 			reflectPanel.setServerSelect(serverSelect);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			modalWindow.setHeight(300);
 		}
 		else if("svn".equals(this.getType())){
 			reflectPanel.setServerSelect(serverSelect);
 			reflectPanel.setProjectId(this.getProjectId());
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			modalWindow.setHeight(200);
 		}
 		
 		modalWindow.setTitle("$devreflect");
 		
 		modalWindow.setPanel(reflectPanel);
-		modalWindow.setHeight(200);
+		
 		
 		return modalWindow;
 	}
