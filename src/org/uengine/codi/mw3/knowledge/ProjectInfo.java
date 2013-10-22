@@ -319,7 +319,7 @@ public class ProjectInfo implements ContextAware {
 			
 			releasePanel.setSqlFile(sqlFile);
 			releasePanel.setWarFile(warFile);
-			reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getProjectId());
+			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
 			releasePanel.setProjectId(this.getProjectId());
 			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setCheck(false);
@@ -328,7 +328,7 @@ public class ProjectInfo implements ContextAware {
 		}
 		else if("svn".equals(this.getType())){
 			releasePanel.setProjectId(this.getProjectId());
-			reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getProjectId());
+			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
 			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setMetaworksContext(new MetaworksContext());
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
