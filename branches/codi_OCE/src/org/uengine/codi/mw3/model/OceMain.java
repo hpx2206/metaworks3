@@ -22,6 +22,14 @@ public class OceMain {
 		
 	}
 	
+	int appId;
+	public int getAppId() {
+		return appId;
+	}
+	public void setAppId(int appId) {
+		this.appId = appId;
+	}
+
 	Layout layout;
 		public Layout getLayout() {
 			return layout;
@@ -92,7 +100,14 @@ public class OceMain {
 	
 	
 	public OceMain(Session session) throws Exception {
+		this(session, 0);
+	}
+	
+	public OceMain(Session session, int appId) throws Exception {
 		session.setUx("oce");
+		
+		this.setAppId(appId);
+		
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("process");
 
