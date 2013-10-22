@@ -47,7 +47,7 @@ public class ProjectTitle implements ContextAware {
 	public PageNavigator pageNavigator; 
 			
 	public ProjectTitle(){
-		setFileType("war");
+		setFileType("svn");
 	}
 	String topicId;
 		@Hidden
@@ -105,7 +105,7 @@ public class ProjectTitle implements ContextAware {
 
 	String fileType;
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
-		@Face(displayName="$project.fileType.select", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","SVN"}, values={"war","svn"})
+		@Face(displayName="$project.fileType.select", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"$SVN","$WAR"}, values={"svn","war"})
 		public String getFileType() {
 			return fileType;
 		}
@@ -141,7 +141,7 @@ public class ProjectTitle implements ContextAware {
 		}
 	
 	String projectAlias;
-		@Face(displayName="$ProjectAlias")
+		@Face(displayName="$Alias")
 		public String getProjectAlias() {
 			return projectAlias;
 		}

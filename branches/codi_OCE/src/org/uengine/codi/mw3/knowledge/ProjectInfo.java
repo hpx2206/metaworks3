@@ -309,7 +309,7 @@ public class ProjectInfo implements ContextAware {
 		return new OpenBrowser(url);
 	}
 
-	@Face(displayName = "$release")
+	@Face(displayName = "$devrelease")
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow releaseProject() throws Exception{
 		ModalWindow modalWindow = new ModalWindow();
@@ -345,7 +345,7 @@ public class ProjectInfo implements ContextAware {
 		
 		}
 
-		modalWindow.setTitle("$release");
+		modalWindow.setTitle("$devrelease");
 		modalWindow.setPanel(releasePanel);
 		modalWindow.setHeight(300);
 		
@@ -398,9 +398,9 @@ public class ProjectInfo implements ContextAware {
 		return modalWindow;
 	}
 
-	@Face(displayName = "$commitmanage")
+	@Face(displayName = "$hudson")
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void committer() {
+	public void hudson() {
 
 	}
 
