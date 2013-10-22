@@ -1598,7 +1598,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public MainPanel goSns() throws Exception {
 		if(session != null){
-			session.setLastSelectedItem("goSns");
+			session.setLastPerspecteType("allICanSee");
 			session.setUx("sns");
 		}
 		
