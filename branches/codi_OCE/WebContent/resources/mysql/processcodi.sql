@@ -887,18 +887,6 @@ alter table appmapping add column url varchar(50);
 alter table bpm_knol add column isreleased boolean;
 alter table bpm_knol add column isdistributed boolean;
 
-DROP TABLE IF EXISTS `filepathinfo`;
-create table filepathinfo(
-    id int NOT NULL AUTO_INCREMENT,
-	id varchar(20) not null,
-    reflectVer int,
-    releaseVer int,
-    warPath varchar(100),
-    sqlPath varchar(100),
-    fileType varchar(20),
-	primary key(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- 2013-10-21 기존 테이블 지우고 새로 만들어 주세요 (  나중에 문구 삭제 )
 DROP TABLE IF EXISTS `cloudinfo`;
 create table cloudinfo(
@@ -922,3 +910,18 @@ create table cloudinfo(
 alter table appmapping modify url varchar(200);
 
 alter table cloudinfo add column status varchar(20);
+
+-- 2013-10-22 기존 테이블 지우고 새로 만들어 주세요 (  나중에 문구 삭제 )
+DROP TABLE IF EXISTS `filepathinfo`;
+
+create table filepathinfo(
+    id int NOT NULL,
+	projectId varchar(20) not null,
+    reflectVer int,
+    releaseVer int,
+    warPath varchar(100),
+    sqlPath varchar(100),
+    fileType varchar(20),
+	primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
