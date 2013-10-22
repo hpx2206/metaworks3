@@ -202,7 +202,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		Layout appPanel = new Layout();
 		appPanel.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__spacing_open:1, east__size:'400'");
-		appPanel.setCenter(new IFrame(app.url));
+		appPanel.setCenter(new IFrame(app.url.replace("$tenantId", session.getEmployee().getGlobalCom())));
 		appPanel.setEast(returnObject[1]);
 		
 		appDashboard.setPanel(appPanel);
