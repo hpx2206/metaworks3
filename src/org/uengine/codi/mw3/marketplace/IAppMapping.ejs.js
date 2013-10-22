@@ -63,6 +63,14 @@ org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
 				$('#navigator .depth1').removeClass('selected');
 				$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
 				$('#objDiv_'  + this.objectId + ' li').addClass('selected_navi');
+			}else if(message_split[0] == 'openAppBrowser'){
+				var layout = this.objectDiv.closest('.mw3_layout');
+				
+				var layoutId = layout.attr('objectId');
+				
+				mw3.getFaceHelper(layoutId).minimize();
+
+				
 			}
 		}
 	},
