@@ -583,10 +583,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		IEmployee employee = findMe();
 		employee.setMetaworksContext(getMetaworksContext());
 		employee.getMetaworksContext().setHow("detail");
-		employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		employee.getMetaworksContext().setWhere("inDetailWindow");
 		
-		return new ModalWindow(new EmployeeInfo(employee), 700, 462, employee.getEmpName());
+		return new ModalWindow(new EmployeeInfo(employee), 700, 560, "$EditProfile");
 	}
 	
 	@Override

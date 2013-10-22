@@ -780,8 +780,10 @@ public class User extends Database<IUser> implements IUser {
 		employee.getMetaworksContext().setWhere("user_menu_option");
 		
 		Popup menu = new Popup();
+		menu.setHeight(70);
+		menu.setWidth(100);
 		menu.setPanel(employee);
 		
-		return employee;
+		return menu;
 	}
 }
