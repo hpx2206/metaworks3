@@ -22,7 +22,9 @@ public class InstanceListWindow extends Window {
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.setPreloaded(true);
 
+		this.setPanel((Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem())[1]));
 		
+		/*
 		if(instanceListPanel.isPreloaded()){
 			PersonalPerspective personalPerspective = new PersonalPerspective();
 			personalPerspective.session = session;
@@ -30,6 +32,7 @@ public class InstanceListWindow extends Window {
 		}else{
 			this.setPanel(instanceListPanel);	
 		}
+		*/
 	}
 		
 	@AutowiredFromClient
