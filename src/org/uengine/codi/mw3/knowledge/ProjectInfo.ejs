@@ -4,12 +4,12 @@ if(value){
 
 %>
 
-	<div> 
+	<div id="searchbox" style="border-bottom:1px solid #9EBFC4"> 
         <!--ui object -->
         <ul>
             <li>
                 <div class="mp_sub_pic">
-                	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 200px; height: 200px'}})%>
+                	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 150px; height: 150px; border:1px solid #ccc; background:url(images/waveStyle/bg_thmb.gif) center no-repeat;'}})%>
                 </div>
 
 
@@ -36,6 +36,7 @@ if(value){
 					<%=methods.server.here()%>
 					<%=methods.distribute.here()%>
 					<%=methods.releaseProject.here()%>
+					<div class="clear"></div>
 				</div>
             </li>
         </ul>

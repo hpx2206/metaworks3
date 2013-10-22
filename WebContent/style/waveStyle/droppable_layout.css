@@ -2256,14 +2256,15 @@ html, body {
 
 /*sub*/
 .mp_sub_cate{line-height:30px; border-bottom:1px solid #ccc}
-.mp_sub_pic{float:left;  padding: 0 40px 40px 40px; }
+.mp_sub_pic{float:left;  padding: 10px; }
 .mp_sub_buybtn{float:right;  padding: 0 40px 40px 40px;}
-.mp_sub_rightBox{margin-left:130px; margin-top:10px;}
+.mp_sub_rightBox{margin-left:130px; margin-top:0px;}
 .mp_sub_cate span {font-size:14px; font-weight:bold; margin-left:15px;}
-.mp_sub_dsc1 dd{margin:10px; 0}
+.mp_sub_dsc1{padding-top:10px;}
+.mp_sub_dsc1 dd{margin:10px 0;}
 .mp_sub_rst img{margin-top:3px;}
 .mp_sub_tit{}
-.mp_sub_dsc1 dt{ font-size:14px;margin:20px 0 20px 20px; font-weight:bold; color:#06C}
+.mp_sub_dsc1 dt{ font-size:14px;font-weight:bold; color:#06C}
 .mp_sub_tit{ width:100px; font-weight:bold}
 .mp_sub_dsc2{margin:20px 20px; padding:10px; line-height:20px; border:1px solid #CCC; background:#FAFAFA;
  -webkit-border-radius:3px;
