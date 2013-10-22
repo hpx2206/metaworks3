@@ -473,6 +473,29 @@ public class ProjectInfo implements ContextAware {
 //		return new ModalWindow(projectTitle, 500, 400, "정보변경");
 //	}
 	
+	@Face(displayName="$devcommitterManagement") 
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object manageCommitter() throws Exception{
+		ModalWindow modalWindow = new ModalWindow();
+		
+		ProjectCommitter projectCommitter = new ProjectCommitter();
+		projectCommitter.session = session;
+		
+		WfNode wfNode = new WfNode();
+		wfNode.setId(this.getProjectId());
+		wfNode.copyFrom(wfNode.databaseMe());
+		projectCommitter.setProjectName(this.getProjectName());
+//		projectCommitter.setAccount(session.getUser().getName());
+		projectCommitter.setManagerAccount(wfNode.getAuthorId()); 
+		projectCommitter.load();
+		modalWindow.setPanel(projectCommitter);
+		modalWindow.setWidth(450);
+		modalWindow.setHeight(500);
+		
+		return modalWindow;
+		
+	}
+	
 	@Face(displayName="$devserverrequest")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] require() throws Exception{
