@@ -33,7 +33,7 @@ import org.uengine.codi.mw3.model.ICompany;
 		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
-      values={"categories,attachProject,appName,simpleOverview,fullOverview,logoFile"})
+      values={"categories,attachProject,releaseVersion,appName,simpleOverview,fullOverview,logoFile"})
 public interface IApp extends IDAO{
 	
 	@Id
@@ -123,6 +123,12 @@ public interface IApp extends IDAO{
 	public WfNode getProject();
 	public void setProject(WfNode project);
 	
+	@Face(displayName = "$ReleaseVersion")
+	@NonLoadable
+	@NonSavable
+	public SelectBox getReleaseVersion();
+	public void setReleaseVersion(SelectBox releaseVersion);
+	
 	@NonLoadable
 	@NonSavable
 	public IAppMapping getAppMapping();
@@ -135,7 +141,8 @@ public interface IApp extends IDAO{
 	public void setCompanyUsed(boolean companyUsed);
 	
 	
-	
+	public int getRunningVersion();
+	public void setRunningVersion(int runningVersion);	
 	
 	
 	
