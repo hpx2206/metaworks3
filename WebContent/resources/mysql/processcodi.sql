@@ -929,3 +929,6 @@ create table filepathinfo(
 alter table bpm_knol add column projectalias varchar(1000);
 
 alter table app add column runningVersion int;
+
+alter table app add column subDomain varchar(50);
+
