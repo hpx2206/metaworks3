@@ -214,44 +214,39 @@ public class NewServer extends Templete{
 	}
 	
 	public void createServerRequset() throws Exception{
-		try {
-			String defId = "projectProcess/projectCre2.process";
-			
-			ProcessMap processMap = new ProcessMap();
-			processMap.processManager = processManager;
-			processMap.session = session;
-			processMap.instanceView = instanceViewContent;
-			processMap.setDefId(defId);
-			
-			String instId = processMap.initializeProcess();
-					
-			ProjectCreate projectCreate = new ProjectCreate();
-			projectCreate.setProjectId(this.getProjectId());
-			projectCreate.setProjectName(this.getProjectName());
-			projectCreate.setOsTemplete(this.getOsTemplete());
-			projectCreate.setHwTemplete(this.getHwTemplete());
-			projectCreate.setServiceTemplete(this.getServiceTemplete());
-			
-			ResultPayload rp = new ResultPayload();
-			rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
-			
-			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
-			roleMappingPanel.putRoleMappings(processManager, instId);
-			
-			processManager.executeProcess(instId);
+		String defId = "projectProcess/projectCre2.process";
+		
+		ProcessMap processMap = new ProcessMap();
+		processMap.processManager = processManager;
+		processMap.session = session;
+		processMap.instanceView = instanceViewContent;
+		processMap.setDefId(defId);
+		
+		String instId = processMap.initializeProcess();
+				
+		ProjectCreate projectCreate = new ProjectCreate();
+		projectCreate.setProjectId(this.getProjectId());
+		projectCreate.setProjectName(this.getProjectName());
+		projectCreate.setOsTemplete(this.getOsTemplete());
+		projectCreate.setHwTemplete(this.getHwTemplete());
+		projectCreate.setServiceTemplete(this.getServiceTemplete());
+		
+		ResultPayload rp = new ResultPayload();
+		rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
+		
+		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+		roleMappingPanel.putRoleMappings(processManager, instId);
+		
+		processManager.executeProcess(instId);
 //			processManager.getProcessInstance(instId).setBeanProperty("ProjectCreate", projectCreate);
-			processManager.executeProcessByWorkitem(instId.toString(), rp);
-			processManager.applyChanges();
-			
-			Instance instance = new Instance();
-			instance.setInstId(new Long(instId));
-			instance.databaseMe().setTopicId(this.getProjectId());
-			instance.databaseMe().setName("개발환경요청" + " : " + this.getProjectName());
-			instance.flushDatabaseMe();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		processManager.executeProcessByWorkitem(instId.toString(), rp);
+		processManager.applyChanges();
+		
+		Instance instance = new Instance();
+		instance.setInstId(new Long(instId));
+		instance.databaseMe().setTopicId(this.getProjectId());
+		instance.databaseMe().setName("개발환경요청" + " : " + this.getProjectName());
+		instance.flushDatabaseMe();
 	}
 
 	@Face(displayName="$Cancel")	
