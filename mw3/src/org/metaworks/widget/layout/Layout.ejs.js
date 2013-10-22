@@ -190,6 +190,12 @@ org_metaworks_widget_layout_Layout.prototype.hide = function(target){
 			mw3.getFaceHelper($(this).attr('objectId')).showSmallWindow();			
 		});
 
+		if(target == 'west')
+			$(this.divId + ' .show_west_btn:first').show();
+
+		if(target == 'east')
+			$(this.divId + ' .show_east_btn:first').show();
+
 /*		if(hideWindow.length > 0){
 			
 			mw3.getFaceHelper(hideWindow.attr('objectId')).showSmallWindow();
