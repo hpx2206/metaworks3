@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.metaworks.metadata.MetadataBundle;
+import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
@@ -85,6 +86,7 @@ public class Workspace {
 							file.getParentFile().mkdirs();
 							file.createNewFile();
 							MetadataXML metadataXML = new MetadataXML();
+							metadataXML.setProperties(new ArrayList<MetadataProperty>());
 							writer = new FileWriter(file);
 							writer.write(metadataXML.toXmlXStream());
 						}
