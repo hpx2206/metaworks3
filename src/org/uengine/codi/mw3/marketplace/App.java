@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -19,6 +20,7 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.CreateDatabase;
+import org.uengine.codi.mw3.knowledge.FilepathInfo;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -259,6 +261,23 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.companyUsed = companyUsed;
 		}
 		
+	SelectBox releaseVersion;
+		public SelectBox getReleaseVersion() {
+			return releaseVersion;
+		}
+		public void setReleaseVersion(SelectBox releaseVersion) {
+			this.releaseVersion = releaseVersion;
+		}
+		
+	int runningVersion;
+		public int getRunningVersion() {
+			return runningVersion;
+		}
+		public void setRunningVersion(int runningVersion) {
+			this.runningVersion = runningVersion;
+		}
+		
+		
 	@AutowiredFromClient
 	transient public Session session;
 	
@@ -368,10 +387,12 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public void load() throws Exception {
 		SelectBox categories = new SelectBox();
 		SelectBox attachProject = new SelectBox();
+		SelectBox releaseVersion = new SelectBox();
 		
 		ICategory category = Category.loadRootCategory();
 		if (category.size() > 0) {
 			while (category.next()) {
+				
 				String categoryId = Integer.toString(category.getCategoryId());
 				String categoryName = category.getCategoryName();
 
@@ -379,20 +400,25 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			}
 		}
 		
-		IProjectNode projectList = ProjectNode.load(session);		
+		IProjectNode projectList = ProjectNode.load(session);	
+		FilepathInfo filepathInfo = new FilepathInfo();
+		int j = 0;
 		if(projectList.size() > 0) {
 			while(projectList.next()){
 				String projectId = projectList.getId();
 				String projectName = projectList.getName();
-				
+				if( j == 0 ){
+					filepathInfo.setProjectId(projectList.getId());
+				}
 				attachProject.add(projectName, projectId);
+				j++;
 			}
 		}
 		
 		this.setCategories(categories);
 		this.setAttachProject(attachProject);
+		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 		this.setLogoFile(new MetaworksFile());
-		
 	}
 	
 	public Object[] detail() throws Exception {
@@ -415,7 +441,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		
 		session.getEmployee().setPreferUX("sns");
 		session.setLastPerspecteType("topic");
@@ -474,6 +499,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		newServer.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		return new ModalPanel(newServer);
 	}
+	
 	public Object save() throws Exception {
 
 		ICategory category = new Category();
@@ -491,6 +517,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 				setComcode(session.getCompany().getComCode());
 				setComName(session.getCompany().getComName());
 				
+				this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
 				this.setProject(project);
 				this.setStatus(STATUS_REQUEST);
 				
@@ -729,6 +756,15 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
 		return new Object[]{pageNavigator.goDashBoard()};
 		
+	}
+	
+	@Hidden
+	@ServiceMethod(callByContent = true, eventBinding = "change", bindingFor = "attachProject", bindingHidden = true, target = ServiceMethodContext.TARGET_SELF)
+	public void changeProject() throws Exception{
+		FilepathInfo filepathInfo = new FilepathInfo();
+		filepathInfo.setProjectId(this.getAttachProject().getSelected());
+		
+		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 	}
 
 	@Override
