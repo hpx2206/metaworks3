@@ -8,6 +8,8 @@ import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.ITool;
+import org.uengine.codi.hudson.HudsonJobApi;
+import org.uengine.codi.hudson.HudsonJobDDTO;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.FileTransmition;
 import org.uengine.codi.mw3.knowledge.FilepathInfo;
@@ -164,17 +166,59 @@ public class ManagerApproval implements ITool  {
 			filepathInfo.setId(runningVersion);
 			filepathInfo.copyFrom(filepathInfo.databaseMe());
 			
-			if("svn".equals(projectType)){
+			if("svn".equals(wfNode.getVisType())){
+				String nextBuilderNumber = null;
+				String builderResult = null;
+				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+				
+				long timeoutTime = 200000;
+				long sleepTime = 5000;
+				long tryTime = 0;
+				
 				jschServerBehaviour.sessionLogin(host, userId, passwd);
 				
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp();
+				command = GlobalContext.getPropertyString("vm.svn.svnRevision") + " " + wfNode.getProjectAlias() + " " + filepathInfo.getReflectVer();
 				jschServerBehaviour.runCommand(command);
+				
+				HudsonJobApi hudsonJobApi = new HudsonJobApi();
+
+				while(nextBuilderNumber == null){
+					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
+					
+					nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
+					try {
+						tryTime += sleepTime;
+						Thread.sleep(sleepTime);
+					} catch (Exception e) {
+					}
+					
+					if(tryTime > timeoutTime)
+						break;
+				}
 				
 				command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
 				jschServerBehaviour.runCommand(command);
 				
+				while(builderResult == null){
+					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
+					
+					if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
+						builderResult = "SUCCESS";
+					else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
+						builderResult = "UNSUCCESS";
+					else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
+						builderResult = "FAILED";
+					
+					try {
+						Thread.sleep(5000);
+					} catch (Exception e) {
+					}
+				}
+				
+				if(jschServerBehaviour.getJschSession() != null)
+					jschServerBehaviour.getJschSession().disconnect();
 			}
-			else if("war".equals(projectType)){
+			else if("war".equals(wfNode.getVisType())){
 				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
 				FileTransmition fileTransmition = new FileTransmition();
 				
@@ -198,6 +242,9 @@ public class ManagerApproval implements ITool  {
 				channel.connect();
 				
 				channel.disconnect();
+				
+				if(jschServerBehaviour.getJschSession() != null)
+					jschServerBehaviour.getJschSession().disconnect();
 			}
 			
 			tx.commit();
