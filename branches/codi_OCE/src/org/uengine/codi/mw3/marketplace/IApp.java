@@ -159,6 +159,10 @@ public interface IApp extends IDAO{
 	
 	@Hidden
 	@ServiceMethod(callByContent=true)
+	public Object serverManage() throws Exception;
+	
+	@Hidden
+	@ServiceMethod(callByContent=true)
 	public Object[] addApp()throws Exception;
 	
 	@Face(displayName="$Next")
@@ -171,6 +175,7 @@ public interface IApp extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public Object save() throws Exception;
 	
+	@Face(displayName="$Cancel")
 	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 	@ServiceMethod
 	public Object cancel() throws Exception;

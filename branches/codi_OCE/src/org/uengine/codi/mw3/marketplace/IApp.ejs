@@ -132,12 +132,18 @@
 				if(value.status == 'Approved'){
 %>
 								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$edit")%> </a></div>						
 <%
-				}
+				}else if(value.status == 'Published'){
 %>								
-								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>						
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.serverManage.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>						
 <%
-				}							
+				}else if(value.status == 'Request'){					
+%>
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"> 관리자 승인 요청중 </div>						
+<%
+				}		
+			}					
 %>
 							</td>
 	                	</tr>

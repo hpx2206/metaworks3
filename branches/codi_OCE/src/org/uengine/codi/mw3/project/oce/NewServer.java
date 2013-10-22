@@ -254,7 +254,7 @@ public class NewServer extends Templete{
 		}
 	}
 
-	@Face(displayName="$Close")	
+	@Face(displayName="$Cancel")	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Remover cancel(){
 		return new Remover(new ModalWindow());
