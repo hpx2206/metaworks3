@@ -10,12 +10,15 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.FilepathInfo;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
+import org.uengine.codi.mw3.knowledge.ReleasePanel;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(displayName="개발기",
@@ -338,30 +341,52 @@ public class KtProjectServer  implements ITool, ContextAware{
 	
 	@Face(displayName = "$Release")
 	@ServiceMethod(callByContent = true)
-	public void release() throws Exception{
-		if( ktProjectServers != null ){
-			for(int i=0; i < ktProjectServers.getServerList().length;  i++){
-				KtProjectServer server = ktProjectServers.getServerList()[i];
-				if( server.isChecked() ){
-					// 삭제 요청한 노드
-					// TODO 프로세스에 cancel 을 날려야함
-					CloudInfo cloudInfo = new CloudInfo();
-					ICloudInfo iCloudInfo = cloudInfo.findServerByServerName(server.getProjectId() , server.getName() , server.getServerGroup() );
-					if( iCloudInfo.next() ){
-						cloudInfo.copyFrom(iCloudInfo);
-						if( cloudInfo.getServerIp() != null && !"".equals(cloudInfo.getServerIp())){
-							KtProjectDeleteRequest ktProjectDeleteRequest = new KtProjectDeleteRequest();
-							cloudInfo.databaseMe().setStatus(ProjectServer.SERVER_STATUS_STOPPING);
-							ktProjectDeleteRequest.setCloudInfo(cloudInfo);
-							ktProjectDeleteRequest.deleteRequest();
-						}else{
-							cloudInfo.deleteDatabaseMe();
-						}
-					}
-				}
-			}
-			
-		}
+	public ModalWindow release() throws Exception{
+		SelectBox reflectVersion = new SelectBox();
+		ReleasePanel releasePanel = new ReleasePanel();
+		FilepathInfo filepathInfo = new FilepathInfo();
+		ModalWindow modalWindow = new ModalWindow();
+		
+		reflectVersion = filepathInfo.findReleaseVersions(filepathInfo.getProjectId());
+		releasePanel.setReflectVersion(reflectVersion);
+		releasePanel.setMetaworksContext(new MetaworksContext());
+		releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		modalWindow.setTitle("$release");
+		modalWindow.setPanel(releasePanel);
+		modalWindow.setHeight(300);
+		
+		return modalWindow;
+		
+		
+		
+		
+		
+		
+//		if( ktProjectServers != null ){
+//			for(int i=0; i < ktProjectServers.getServerList().length;  i++){
+//				KtProjectServer server = ktProjectServers.getServerList()[i];
+//				if( server.isChecked() ){
+//					// 삭제 요청한 노드
+//					// TODO 프로세스에 cancel 을 날려야함
+//					CloudInfo cloudInfo = new CloudInfo();
+//					ICloudInfo iCloudInfo = cloudInfo.findServerByServerName(server.getProjectId() , server.getName() , server.getServerGroup() );
+//					if( iCloudInfo.next() ){
+//						cloudInfo.copyFrom(iCloudInfo);
+//						if( cloudInfo.getServerIp() != null && !"".equals(cloudInfo.getServerIp())){
+//							KtProjectDeleteRequest ktProjectDeleteRequest = new KtProjectDeleteRequest();
+//							cloudInfo.databaseMe().setStatus(ProjectServer.SERVER_STATUS_STOPPING);
+//							ktProjectDeleteRequest.setCloudInfo(cloudInfo);
+//							ktProjectDeleteRequest.deleteRequest();
+//						}else{
+//							cloudInfo.deleteDatabaseMe();
+//						}
+//					}
+//				}
+//			}
+//			
+//		}
+		
 	}
 	
 	public void status() throws Exception {
