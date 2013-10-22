@@ -8,10 +8,13 @@
 <map name="Map" id="Map">
 
 	<% if(value.oce) { %>
-		<area shape="rect" coords="88,32,132,73" href="#" onclick="<%=methods.goDashBoard.caller()%>" title="go Dashboard" />
-		<area shape="rect" coords="137,73,180,120" href="#" onclick="<%=methods.goSelfServicePortal.caller()%>" title="go Self-Service Portal" />
-		<area shape="rect" coords="185,124,230,170" href="#" onclick="<%=methods.goIDE.caller()%>" title="go IDE" />
-		<area shape="rect" coords="235,172,279,218" href="#" onclick="<%=methods.goMarketplace.caller()%>" title="go Marketplace" />
+		
+		<area shape="circle" coords="101,39,17" href="#" onclick="<%=methods.goDashBoard.caller()%>" title="go Dashboard"/>
+	    <area shape="circle" coords="140,78,18" href="#"  onclick="" title="go SNS"/>
+	    <area shape="circle" coords="178,116,21" href="#"  onclick="<%=methods.goSelfServicePortal.caller()%>" title="go Self-Service Portal"/>
+	    <area shape="circle" coords="219,156,20" href="#"  onclick="<%=methods.goIDE.caller()%>" title="go IDE"/>
+	    <area shape="circle" coords="256,195,21" href="#"  onclick="<%=methods.goMarketplace.caller()%>" title="go Marketplace"/>
+    
 	<% }else { %>
 		<% if(value.sns) { %>
 			<% if(value.ide){ %>
