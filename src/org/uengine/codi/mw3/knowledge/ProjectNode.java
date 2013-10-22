@@ -60,15 +60,15 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		recentItem.add();
 		
 		if("oce".equals(session.getUx())){
-			session.setUx("oce_project");
-		
-			Object[] returnObject =  perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
-			
-			return new Object[]{new DashboardWindow(returnObject[1])};
-			
-//			session.setUx("sns");
+//			session.setUx("oce_project");
+//		
+//			Object[] returnObject =  perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
 //			
-//			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
+//			return new Object[]{new DashboardWindow(returnObject[1])};
+			
+			session.setUx("sns");
+			
+			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
 			return new Object[]{returnObject[1] };
