@@ -81,21 +81,6 @@ public class Contact extends Database<IContact> implements IContact{
 		return contacts;
 	}
 	
-	public IContact loadFriendsForCommitter(String id) throws Exception {
-		
-		// TODO: svn에 등록된 사용자 제외하고 조회
-		IContact contact = sql("select * from contact where userId =?userId and friendId !=?friendId");
-		
-		contact.set("userId",this.getUserId());
-		contact.set("friendId", id);
-		
-		contact.select();
-		
-		
-		
-		return contact;
-	}
-	
 	public void addContact() throws Exception{
 		if(!this.getUserId().equals(getFriend().getUserId())){
 			IContact contact = sql("select * from contact where userid = ?userId and friendId = ?friendId");
@@ -179,13 +164,6 @@ public class Contact extends Database<IContact> implements IContact{
 	}
 	
 	public void check(){
-		System.out.println("check");
-		Object st = new StringTokenizer(this.getFriendId(),"@");
-		String friendName = ((StringTokenizer) st).nextToken();
-//		SvnUser svnUser = new SvnUser(friendName);
-		SvnUser SvnUser = new SvnUser(friendName);
-//		projectCommitter = new ProjectCommitter();
-		//projectCommitter.getName().add(SvnUser);
 		this.setChecked(!this.isChecked());
 	}
 	

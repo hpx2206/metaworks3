@@ -479,8 +479,8 @@ public class ProjectInfo implements ContextAware {
 		ModalWindow modalWindow = new ModalWindow();
 		
 		ProjectCommitter projectCommitter = new ProjectCommitter();
-		projectCommitter.session = session;
-		
+		projectCommitter.setProjectId(this.getProjectId());
+		projectCommitter.setUserId(session.getUser().getUserId());
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
 		wfNode.copyFrom(wfNode.databaseMe());

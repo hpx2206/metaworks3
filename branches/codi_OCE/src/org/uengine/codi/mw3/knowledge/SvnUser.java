@@ -53,17 +53,7 @@ public class SvnUser implements ContextAware {
 	@Available(how="svnUser")
 	@ServiceMethod(callByContent=true, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK, target=ServiceMethodContext.TARGET_SELF)
 	public void check(){
-		System.out.println("Check COmmitter");
-		this.setIsChecked(true);
-		
-		
+		this.setIsChecked(!this.getIsChecked());
 	}	
 	
-	public boolean equals(Object obj){
-		try{
-			return getCommittor().equals(((SvnUser)obj).getCommittor());
-		}catch(Exception e){
-			return false;
-		}
-	}
 }

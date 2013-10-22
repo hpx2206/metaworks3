@@ -2,20 +2,17 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Contact;
 import org.uengine.codi.mw3.model.IContact;
-import org.uengine.codi.mw3.model.IDept;
-import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.codi.vm.JschCommand;
@@ -68,14 +65,6 @@ public class ProjectCommitter {
 			this.userId = userId;
 		}
 
-	String topicId;
-		public String getTopicId() {
-			return topicId;
-		}
-	
-		public void setTopicId(String topicId) {
-			this.topicId = topicId;
-		}
 
 	IContact contact;
 		public IContact getContact() {
@@ -86,7 +75,13 @@ public class ProjectCommitter {
 			this.contact = contact;
 		}
 
-
+	String projectId;
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 
 	ArrayList<SvnUser> svnUserList;
 		public ArrayList<SvnUser> getSvnUserList() {
@@ -103,7 +98,6 @@ public class ProjectCommitter {
 	
 	public void load() throws Exception{
 		
-		// TODO: (svn  연동)load svn user
 		  String host = GlobalContext.getPropertyString("vm.manager.ip");
 		  String userId = GlobalContext.getPropertyString("vm.manager.user");
 		  String passwd = GlobalContext.getPropertyString("vm.manager.password");
@@ -116,15 +110,6 @@ public class ProjectCommitter {
 	
 		String tmp = jschServerBehaviour.runCommand(command);
 		String svnUser = null;
-		Contact contact = new Contact();
-		contact.setUserId(session.getUser().getUserId());
-//		String code = tmp;
-//		int codeLength = code.indexOf("# harry = harryssecret# sally = sallyssecret");
-//		if(codeLength>=0){
-//			tmp = code.substring(codeLength+44);
-//			
-//		}
-//		System.out.println(tmp);
 		
 		int count = 0;
 		char[] c = tmp.toCharArray();
@@ -134,23 +119,20 @@ public class ProjectCommitter {
 			}
 		}
 		
-		System.out.println(",의 갯수 " + count);
-		
+		svnUserList.clear();
 		if(count > 0){
 			StringTokenizer st = new StringTokenizer(tmp,",");
 			while(st.hasMoreTokens()){
 				svnUser = st.nextToken();
-				System.out.println(svnUser);
 				SvnUser SvnUser = new SvnUser(svnUser);
 				SvnUser.getMetaworksContext().setHow("svnUser");
 				SvnUser.setIsJoined(true);
 				svnUserList.add(SvnUser);
 			}
 		}
-		System.out.println(svnUserList.size());
-		IContact friends = contact.loadFriendsForCommitter(tmp);
-		
-//		IContact friends = contact.loadContacts(true);
+		Contact contact = new Contact();
+		contact.setUserId(this.getUserId());
+		IContact friends = contact.loadContacts(true);
 		friends.getMetaworksContext().setHow("comitter");
 		
 		setContact(friends);
@@ -158,110 +140,104 @@ public class ProjectCommitter {
 	
 		
 	@Face(displayName=">>>")
-	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
-	public Object addCommitter() throws Exception{
-		
-		Object svn = null;
-		contact.beforeFirst();
-		int size = svnUserList.size();
-		System.out.println(""+getContact().size());
-		while(contact.next()){
-			if(contact.isChecked()){
-				for(int i=0; i<size; i++){
-					// TODO: add svn user 
-//					String tempId = contact.getFriendId();
-//					StringTokenizer st = new StringTokenizer(tempId,",");
-//					String friendId = st.nextToken();
-				
-					if(svnUserList.get(i).getCommittor().equals(contact.getFriendId())){
-						break;
-					}
-					if(i == size-1){
-					String host = GlobalContext.getPropertyString("vm.manager.ip");
-					  String userId = GlobalContext.getPropertyString("vm.manager.user");
-					  String passwd = GlobalContext.getPropertyString("vm.manager.password");
-					  String command = null;
-					  this.setAccount(contact.getFriendId());
-						  
-				    JschCommand jschServerBehaviour = new JschCommand();
-				    jschServerBehaviour.sessionLogin(host, userId, passwd);
-					String password = "1111";
-					setPassword(password);
-		//		 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " + this.getProjectName() + " @" + this.getAccount() + "@ " + getPassword() + " ";
-				 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " + "repos" + " " + this.getAccount() + " " + getPassword() + " ";
-				 	jschServerBehaviour.runCommand(command);
-					
-					SvnUser su = new SvnUser(getAccount());
-					su.setIsJoined(true);
-					su.setIsChecked(true);
-					
-					TopicFollowers tf = new TopicFollowers();
-					TopicMapping tm = new TopicMapping();
-					tm.setTopicId(this.getTopicId());
-					tm.setUserId(this.getUserId());
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
+	public void addCommitter() throws Exception{
+		String host = GlobalContext.getPropertyString("vm.manager.ip");
+		String userId = GlobalContext.getPropertyString("vm.manager.user");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String command = null;
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
 
-					if(!tm.findByUser().next()){
-						tm.setUserName(this.getAccount());
-						tm.saveMe();
-						tm.flushDatabaseMe();
-					}
-					tf.session = session;
-					tf.load();
-					
-					 svnUserList.add(su);
+		if(!contact.getUserId().equals(this.getManagerAccount())){
+			throw new Exception("관리자가 아닙니다");
+		}else{
+			Object svn = null;
+			contact.beforeFirst();
+			int size = svnUserList.size();
+			if(size == 0){
+				//관리자 삭제시 추가
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectName() + " " + this.getManagerAccount() + " " + getManagerAccount() + " ";
+			 	jschServerBehaviour.runCommand(command);
+			}
+				
+			while(contact.next()){
+				if(contact.isChecked()){
+					for(int i=0; i<size; i++){
+						if(svnUserList.get(i).getCommittor().equals(contact.getFriendId())){
+							break;
+						}
+						if(i == size-1){
+						  this.setAccount(contact.getFriendId());
+							  
+					 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectName() + " " + this.getAccount() + " " + this.getAccount() + " ";
+					 	jschServerBehaviour.runCommand(command);
+						
+						SvnUser su = new SvnUser(getAccount());
+						su.setIsJoined(true);
+						su.setIsChecked(true);
+						
+						TopicFollowers tf = new TopicFollowers();
+						TopicMapping tm = new TopicMapping();
+						tm.setTopicId(this.getProjectId());
+						tm.setUserId(this.getAccount());
+						
+						String tempName = this.getAccount();
+						StringTokenizer st = new StringTokenizer(tempName,"@");
+						String userName = st.nextToken();
+						if(!tm.findByUser().next()){
+							tm.setUserName(userName);
+							tm.saveMe();
+							tm.flushDatabaseMe();
+						}
+						tf.session = session;
+						tf.load();
+						 svnUserList.add(su);
+						}
 					}
 				}
 			}
-		}
-//		this.load();
-		return this;
+		}	
+		this.load();
 	
 	}
 	@Face(displayName="<<<")
-	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
-	public Object removeCommitter() throws Exception{
-		
-		CopyOnWriteArrayList newUserList = new CopyOnWriteArrayList();
-		newUserList.addAll(svnUserList);
-		int size = newUserList.size();
-		int i = 0;
-		SvnUser su = null;
-		Iterator<SvnUser> iterator = newUserList.iterator();
-		while(iterator.hasNext()){
-			i++;
-			su = iterator.next();
-			if(su.getIsChecked()){
-			  String host = GlobalContext.getPropertyString("vm.manager.ip");
-			  String userId = GlobalContext.getPropertyString("vm.manager.user");
-			  String passwd = GlobalContext.getPropertyString("vm.manager.password");
-			  String command = null;
-				
-			  JschCommand jschServerBehaviour = new JschCommand();
-			  jschServerBehaviour.sessionLogin(host, userId, passwd);
-	//		  command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " + this.getProjectName() + " " + this.getAccount() + " " + this.getPassword();
-			  command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " + "repos" + " " + su.getCommittor() + " " + "1111";
-			  String list = jschServerBehaviour.runCommand(command);
-			  newUserList.remove(i-1);
-			}
-		}
-		
-		this.load();
-		return new Refresh(this);
-	}
-	@Face(displayName="수정")
-	@ServiceMethod(callByContent=true)
-	public void modify() throws Exception{
-		if(this.getAccount().equals(this.getManagerAccount())){
-			
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
+	public void removeCommitter() throws Exception{
+		if(!contact.getUserId().equals(this.getManagerAccount())){
+			throw new Exception("관리자가 아닙니다");
 		}else{
-			new Exception("관리자가 아닙니다");
+			CopyOnWriteArrayList newUserList = new CopyOnWriteArrayList();
+			newUserList.addAll(svnUserList);
+			int size = newUserList.size();
+			int i = 0;
+			SvnUser su = null;
+			Iterator<SvnUser> iterator = newUserList.iterator();
+			while(iterator.hasNext()){
+				i++;
+				su = iterator.next();
+				if(su.getIsChecked()){
+				  String host = GlobalContext.getPropertyString("vm.manager.ip");
+				  String userId = GlobalContext.getPropertyString("vm.manager.user");
+				  String passwd = GlobalContext.getPropertyString("vm.manager.password");
+				  String command = null;
+					
+				  JschCommand jschServerBehaviour = new JschCommand();
+				  jschServerBehaviour.sessionLogin(host, userId, passwd);
+		//		  command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " + this.getProjectName() + " " + this.getAccount() + " " + this.getPassword();
+				  command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " +  this.getProjectName() + " " + su.getCommittor() + " " + this.getAccount();
+				  jschServerBehaviour.runCommand(command);
+				  newUserList.remove(su.getCommittor());
+				}
+			}
+			svnUserList.addAll(newUserList);
 		}
-//		return new 
+		this.load();
 	}
-	@Face(displayName="취소")
+	@Face(displayName="$Close")
 	@ServiceMethod(callByContent = true)
 	public Object cancel() throws Exception{
-		return new Remover(this);
+		return new Remover(new ModalWindow());
 	}
 	
 	
