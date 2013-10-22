@@ -23,6 +23,9 @@ import com.thoughtworks.xstream.XStream;
 
 public class MetadataBundleBase {
 	
+	static String codiServerUrl = "http://uenginecloud.org:7070/uengine-web/";
+//	static String codiServerUrl = "http://localhost:8080/uengine-web/";
+	
 	public static Properties projectBundle;
 		public Properties getProjectBundle() {
 			return projectBundle;
@@ -47,6 +50,7 @@ public class MetadataBundleBase {
 	}
 		
 	public void loadProperty(String projectId , String metadataUrl) throws Exception{
+		GlobalContext.getProperties();
 		GlobalContext.setProperty("metadataKey", projectId);
 		GlobalContext.setProperty("metadataUrl", metadataUrl);
 		String sourceCodeBase = GlobalContext.getCodeBaseRoot();
@@ -111,8 +115,6 @@ public class MetadataBundleBase {
 		}
 	}
 	private File getPropertyRemote(String projectId, String tenantId, File metadataFile){
-//		String codiServerUrl = GlobalContext.getPropertyString("metadataUrl", "http://uenginecloud.org:8080/uengine-web/");
-		String codiServerUrl = "http://27.1.126.73:8080/uengine-web/";
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
@@ -185,7 +187,6 @@ public class MetadataBundleBase {
 	}
 	
 	private void makeFileFromRemote( String projectId, String tenantId, String requsetPath, String fileFullPath) throws Exception{
-		String codiServerUrl = GlobalContext.getPropertyString("metadataUrl", "http://uenginecloud.org:6060/uengine-web/");
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);

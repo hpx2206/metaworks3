@@ -18,6 +18,9 @@ public class GlobalContext {
 	}
 	
 	public static void setProperty(String key, String value){
+		if(properties==null){
+			properties = new Properties();
+		}
 		properties.put(key, value);
 	}
 	
