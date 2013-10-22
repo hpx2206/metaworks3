@@ -32,6 +32,7 @@ import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.ProjectCreate;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -399,9 +400,13 @@ public class ProjectInfo implements ContextAware {
 	}
 
 	@Face(displayName = "$hudson")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void hudson() {
-
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
+	public Object hudson() {
+		IFrame iframe = new IFrame();
+		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url") + "job/" + this.getProjectAlias());
+		iframe.setHeight(1000);
+		iframe.setWidth(1000);
+		return new ModalWindow(iframe, 0, 0, "$hudson");
 	}
 
 	@Face(displayName = "$devmanage")
