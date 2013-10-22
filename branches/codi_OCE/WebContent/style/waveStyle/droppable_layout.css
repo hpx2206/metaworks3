@@ -684,7 +684,7 @@ cursor:pointer;
 }
 .btnbadge{
 	display: inline-block;
-padding: 6px 27px;
+padding: 5px 20px;
 margin-bottom: 0;
 font-weight: bold;
 text-align: center;
@@ -716,6 +716,7 @@ font-weight: normal!important;
 border-radius: 2px;
 
 filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+margin-top:8px;
 }
 
 .user .pic {
@@ -2283,7 +2284,7 @@ html, body {
 .mp_lst_type2 dd.photo {
 	display:inline;
 	float:left;
-	margin:0px 35px 0 20px;
+	margin:10px 35px 30px 20px;	
 	color:#fff;
 	text-align:center
 }
