@@ -2279,7 +2279,6 @@ html, body {
 	margin-left:120px;
 }
 .mp_lst_type2 dt.tit a strong {
-	font-weight:normal;
 }
 .mp_lst_type2 dd.photo {
 	display:inline;
@@ -2302,7 +2301,7 @@ html, body {
 	font-weight:bold
 }
 .mp_lst_type2 dd.make_by {
-	float:right;
+	margin-top:15px;
 	margin-right:15px;
 	color:#999
 }
