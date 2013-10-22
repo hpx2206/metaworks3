@@ -129,7 +129,10 @@ public interface IApp extends IDAO{
 	public void setAppMapping(IAppMapping appMapping);
 	
 	
-	
+	@NonLoadable
+	@NonSavable
+	public boolean isCompanyUsed() ;
+	public void setCompanyUsed(boolean companyUsed);
 	
 	
 	

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -14,12 +13,10 @@ import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalPanel;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.CreateDatabase;
 import org.uengine.codi.mw3.knowledge.ICloudInfo;
@@ -29,11 +26,8 @@ import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
-import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.InstanceList;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.ProcessMap;
@@ -256,7 +250,15 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		public void setInstallCnt(int installCnt) {
 			this.installCnt = installCnt;
 		}
-
+		
+	boolean companyUsed;
+		public boolean isCompanyUsed() {
+			return companyUsed;
+		}
+		public void setCompanyUsed(boolean companyUsed) {
+			this.companyUsed = companyUsed;
+		}
+		
 	@AutowiredFromClient
 	transient public Session session;
 	
@@ -396,7 +398,18 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public Object[] detail() throws Exception {
 		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
 		try {
-			centerPenal.setAppDetail(new AppDetail(databaseMe()));
+			this.copyFrom(this.databaseMe());
+			
+			AppMapping mapping = new AppMapping();
+			mapping.setAppId(this.appId);
+			mapping.setComCode(session.getEmployee().getGlobalCom());
+			IAppMapping iAppMapping = mapping.findMe();
+			if( iAppMapping != null ){
+				// 이미 취득한 앱
+				this.setCompanyUsed(true);
+			}
+			
+			centerPenal.setAppDetail(new AppDetail(this));
 			centerPenal.getMetaworksContext().setHow("detail");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -702,7 +715,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.session = session;
-		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
+//		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
+		return new Object[]{pageNavigator.goDashBoard()};
 		
 	}
 
