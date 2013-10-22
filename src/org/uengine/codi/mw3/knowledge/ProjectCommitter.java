@@ -147,7 +147,7 @@ public class ProjectCommitter {
 	}
 	
 		
-	@Face(displayName=">>>")
+	@Face(displayName="▶")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
 	public void addCommitter() throws Exception{
 		String host = GlobalContext.getPropertyString("vm.manager.ip");
@@ -209,7 +209,7 @@ public class ProjectCommitter {
 		this.load();
 	
 	}
-	@Face(displayName="<<<")
+	@Face(displayName="◀")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
 	public void removeCommitter() throws Exception{
 		if(!contact.getUserId().equals(this.getManagerAccount())){
