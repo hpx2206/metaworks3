@@ -216,6 +216,8 @@ public class PageNavigator{
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goDashBoard() throws Exception {
+		if(session != null)
+			session.setLastSelectedItem("goDashboard");
 		return new MainPanel(new OceMain(session));
 	}
 }

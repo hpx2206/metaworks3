@@ -437,6 +437,17 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
 	public Object edit() throws Exception {
 		
+		this.load();
+		this.getMetaworksContext().setHow(null);
+		this.getMetaworksContext().setWhen("edit");
+		
+		this.getCategories().setSelected(String.valueOf(this.getCategory().getCategoryId()));
+		
+		return new ModalPanel(this);
+	}
+
+	public Object serverManage() throws Exception {
+		
 		AppServerManage AppServerManage = new AppServerManage();
 		AppServerManage.session = session;
 		

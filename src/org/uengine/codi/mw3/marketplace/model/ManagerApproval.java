@@ -70,11 +70,11 @@ public class ManagerApproval implements ITool  {
 
 	@Override
 	public void beforeComplete() throws Exception {
-		
-		App app = new App();
-		
-		app.setAppId(this.getAppId());
-		app.databaseMe().setStatus(App.STATUS_PUBLISHED);
+//		
+//		App app = new App();
+//		
+//		app.setAppId(this.getAppId());
+//		app.databaseMe().setStatus(App.STATUS_PUBLISHED);
 	}
 
 	public void afterComplete() throws Exception {
@@ -83,6 +83,7 @@ public class ManagerApproval implements ITool  {
 		App app = new App();
 		
 		app.setAppId(this.getAppId());
+		app.databaseMe().setStatus(App.STATUS_APPROVED);
 		app.copyFrom(app.databaseMe());
 		
 		final String appName = app.getAppName();
