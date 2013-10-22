@@ -46,6 +46,7 @@ var org_uengine_codi_mw3_marketplace_IAppMapping = function(objectId, className)
 		
 	});
 	
+	this.objectDiv.trigger('loaded_app', [ this.object.appId, this.objectDivId ]);
 };
 
 org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {

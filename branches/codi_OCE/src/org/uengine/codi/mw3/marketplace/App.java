@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.CloudInfo;
 import org.uengine.codi.mw3.knowledge.CreateDatabase;
 import org.uengine.codi.mw3.knowledge.FilepathInfo;
@@ -32,6 +33,7 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.AppServerManage;
@@ -726,11 +728,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			tenantId = session.getCompany().getComCode();
 		}
 		if(warFile != null){
-			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + warFile.toString() + "/" + tenantId);
-			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");	
+			//this.databaseMe().setUrl("Http://" + ".oce.com:7070/" + warFile.toString());
+			//this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");	
 		}else{
-			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + tenantId);
-			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");
+			//this.databaseMe().setUrl("Http://" + ".oce.com:7070/");
+			//this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");
 		}
 		syncToDatabaseMe();
 		flushDatabaseMe();
@@ -751,10 +753,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		appmapping.createDatabaseMe();
 		appmapping.flushDatabaseMe();
 		
-		PageNavigator pageNavigator = new PageNavigator();
-		pageNavigator.session = session;
-//		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
-		return new Object[]{pageNavigator.goDashBoard()};
+		return new Object[]{new MainPanel(new OceMain(session, this.getAppId()))};
 		
 	}
 	
