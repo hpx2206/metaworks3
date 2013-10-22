@@ -119,7 +119,14 @@ public class ProjectInfo implements ContextAware {
 		public void setCheck(Boolean check) {
 			this.check = check;
 		}
-		
+	String svn;
+		public String getSvn() {
+			return svn;
+		}
+		public void setSvn(String svn) {
+			this.svn = svn;
+		}
+	
 	/*
 	@Hidden
 	String os;
@@ -236,7 +243,8 @@ public class ProjectInfo implements ContextAware {
 		this.domainName = this.getProjectName() + ".com";			
 		setType(wfNode.getVisType());
 		if("svn".equals(this.getType())){
-			this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
+			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName());
+			this.setSvn(GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName());
 		}
 		this.description = wfNode.getDescription();
 			
