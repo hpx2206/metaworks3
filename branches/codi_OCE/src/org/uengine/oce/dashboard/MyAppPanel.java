@@ -44,7 +44,8 @@ public class MyAppPanel {
 		myapps.setComCode(session.getCompany().getComCode());
 		myapps.setIsDeleted(false);
 		myapps.session = session;
-		IAppMapping getAppsList = myapps.findMyApps(MYAPPS_LIMINTCOUNT);
+		//전체 리스트 나오게
+		IAppMapping getAppsList = myapps.findMyApps(0);
 		
 		while(getAppsList.next()){
 			
@@ -54,6 +55,7 @@ public class MyAppPanel {
 			app.setAppName(getAppsList.getAppName());
 			app.setComCode(getAppsList.getComCode());
 			app.setIsDeleted(getAppsList.getIsDeleted());
+			app.setLogoFile(getAppsList.getLogoFile());
 			
 			app.setMetaworksContext(new MetaworksContext());
 			app.getMetaworksContext().setWhere(OceMain.WHERE_DASHBOARD);

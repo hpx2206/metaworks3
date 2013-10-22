@@ -133,11 +133,9 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		}
 		
 	MetaworksFile logoFile;
-		@Override
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
-		@Override
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}

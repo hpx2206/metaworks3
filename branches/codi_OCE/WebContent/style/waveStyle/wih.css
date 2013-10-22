@@ -175,6 +175,9 @@ legend {display:none;}
 .process_map2 .purple {background:url(../../images/processMap/newPrcessBgPurple.png) no-repeat;}
 .process_map2 .folder {background:url(../../images/processMap/folder2_64.png) no-repeat;}
 
+.dashboard_map{overflow:hidden;padding:0 0 40px 20px; }
+.dashboard_map li{display:inline;float:left; margin:18px 18px 0 0;padding:0px;font-size:12px;text-align:center;list-style:none; position:relative;}
+.dashboard_map li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
 
 
 .process_map2 li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1; height:50px;}

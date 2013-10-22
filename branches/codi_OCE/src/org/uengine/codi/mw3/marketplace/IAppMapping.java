@@ -6,6 +6,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
+import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
@@ -38,7 +39,11 @@ public interface IAppMapping extends IDAO{
 	public void setProjectName(String projectName);
 	
 	@NonSavable
-	@NonLoadable	
+	@NonLoadable
+	@ORMapping(
+		databaseFields={"logoContent", "logoFileName"}, 
+		objectFields={"uploadedPath", "filename"}
+	)
 	public MetaworksFile getLogoFile();
 	public void setLogoFile(MetaworksFile logoFile);
 	
