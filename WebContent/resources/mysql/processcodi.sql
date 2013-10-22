@@ -925,3 +925,5 @@ create table filepathinfo(
 	primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+alter table bpm_knol add column projectalias varchar(1000);
