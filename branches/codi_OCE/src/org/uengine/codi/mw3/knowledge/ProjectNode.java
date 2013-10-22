@@ -48,7 +48,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		Perspective perspective = new Perspective();
 		perspective.session = session;
-		String title = "프로젝트: " + getName();
 		
 		// recentItem 에 create
 		RecentItem recentItem = new RecentItem();
@@ -70,7 +69,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			
 			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
 			return new Object[]{returnObject[1] };
 		}
 		

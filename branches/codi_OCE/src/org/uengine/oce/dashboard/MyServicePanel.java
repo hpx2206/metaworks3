@@ -1,7 +1,6 @@
 package org.uengine.oce.dashboard;
 
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
