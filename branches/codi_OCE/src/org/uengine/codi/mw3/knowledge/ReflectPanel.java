@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
@@ -15,12 +16,14 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
+import com.jcraft.jsch.ChannelExec;
+
 @Face(ejsPath = "", options = { "fieldOrder" }, values = { "serverSelect,warFile,sqlFile" })
 public class ReflectPanel {
 
 	MetadataFile warFile;
 		@Face(displayName = "$WarFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
+		@Available(when=MetaworksContext.WHEN_EDIT)
 		public MetadataFile getWarFile() {
 			return warFile;
 		}
@@ -30,7 +33,7 @@ public class ReflectPanel {
 
 	MetadataFile sqlFile;
 		@Face(displayName = "$SqlFile")
-		@Available(when=MetaworksContext.WHEN_NEW)
+		@Available(when=MetaworksContext.WHEN_EDIT)
 		public MetadataFile getSqlFile() {
 			return sqlFile;
 		}
@@ -90,7 +93,6 @@ public class ReflectPanel {
 					&& this.getWarFile().getFilename().length() > 0)
 
 				if (this.getWarFile() != null) {
-					String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 					MetadataFile resourceFile = new MetadataFile();
 					resourceFile.setFilename(this.getWarFile().getFilename());
 					resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
@@ -103,7 +105,6 @@ public class ReflectPanel {
 					&& this.getSqlFile().getFilename().length() > 0)
 
 				if (this.getSqlFile() != null) {
-					String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 					MetadataFile resourceFile = new MetadataFile();
 					resourceFile.setFilename(this.getSqlFile().getFilename());
 					resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
@@ -112,6 +113,7 @@ public class ReflectPanel {
 				}
 			
 			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+	
 			reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
 			if (reflectVer == 0) {
 				reflectVer = 1;
@@ -129,21 +131,47 @@ public class ReflectPanel {
 			filepathinfo.createDatabaseMe();
 			filepathinfo.flushDatabaseMe();
 			
-//			FileTransmition fileTransmition = new FileTransmition();
-//			fileTransmition.send("D:/codi/codebase/" + filepathinfo.getWarPath(), cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
-//			fileTransmition.send("D:/codi/codebase/" + filepathinfo.getSqlPath(), cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-//			fileTransmition.send("C:/startUp.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			FileTransmition fileTransmition = new FileTransmition();
 			
-//			command = "sh /root/startUp.sh" + " " + wfNode.getName() + " " + filepathinfo.getSqlPath();
-//			jschServerBehaviour.runCommand(command);
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			command = "sh /root/jbossKill.sh";
+			jschServerBehaviour.runCommand(command);
+			
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/war/" + filepathinfo.getWarPath(), cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/ssw/jboss-eap-6.0/standalone/deployments");
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/sql/" + filepathinfo.getSqlPath(), cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/startUp.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+			
+			command = "sh /root/startUp.sh" + " " + wfNode.getName() + " " + filepathinfo.getSqlPath();
+			
+			if( jschServerBehaviour.getJschSession() == null )
+				throw new Exception("not connected");
+			
+			ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+			
+			((ChannelExec)channel).setCommand(command);
+			channel.setInputStream(null);
+			channel.connect();
+			
+			channel.disconnect();
 			
 		} else if ("svn".equals(wfNode.getVisType())) {
-			
+			String tmp;
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
+			
+			command = GlobalContext.getPropertyString("vm.hudson.vm.hudson.setting") + " " + wfNode.getName() + " " + cloudInfo.getServerIp();
+			jschServerBehaviour.runCommand(command);
 			
 			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
 			jschServerBehaviour.runCommand(command);
 			
+			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getName();
+			tmp = jschServerBehaviour.runCommand(command);
+			
+			filepathinfo.setReflectVer(Integer.parseInt(tmp));
+			filepathinfo.setProjectId(wfNode.getId());
+			filepathinfo.setFileType(wfNode.getVisType());
+			
+			filepathinfo.createDatabaseMe();
 		}
 
 		return new Remover(new ModalWindow());

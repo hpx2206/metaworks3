@@ -206,10 +206,6 @@ public class ProjectTitle implements ContextAware {
 			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getName();
 			jschServerBehaviour.runCommand(command);
 			
-			//Setting Hudson
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" +  projectNode.getName() +  "\"" + "14.63.214.154";
-			jschServerBehaviour.runCommand(command);
-		
 		}
 		
 		
