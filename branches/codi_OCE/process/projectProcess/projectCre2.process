@@ -431,13 +431,13 @@
         </org.uengine.kernel.ParameterContext>
       </parameters>
       <role>
-        <name>paasmanager</name>
+        <name>paasManager</name>
         <dispatchingOption>0</dispatchingOption>
         <isHumanWorker>false</isHumanWorker>
         <askWhenInit>true</askWhenInit>
         <defaultEndpoint></defaultEndpoint>
         <displayName>
-          <text>paasmanager</text>
+          <text>paasManager</text>
           <localedTexts/>
         </displayName>
         <dontPersistResolutionResult>false</dontPersistResolutionResult>
@@ -449,7 +449,7 @@
           <y>221</y>
           <width>300</width>
           <height>100</height>
-          <label>paasmanager</label>
+          <label>paasManager</label>
           <drawByObject>false</drawByObject>
           <classType>Role</classType>
           <activityClass>org.uengine.kernel.Role</activityClass>

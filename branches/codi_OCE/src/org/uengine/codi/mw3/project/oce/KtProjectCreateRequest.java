@@ -55,11 +55,12 @@ public class KtProjectCreateRequest {
 		// Ubuntu : 6f7c2ce4-107e-44d7-abd3-4718c796e1f7
 		// ubuntu_12.04_64bit_java_cubrid  : 396778cc-16a8-478d-b753-2ffd2a82fff9
 		// ubuntu_12.04_64bit_java_cubrid_jboss  : b90c22c9-8ce8-4930-875a-153a13ea8d5d
+		// ubuntu_12.04_64bit_java_mysql_jboss  :  bb4fe753-b23a-4296-8a1f-f85122f96a64
 		
 		// VM 생성 명령어
 		String command = "deployVirtualMachine"
 				+ "&serviceofferingid=b6216137-96ed-4d0a-bb95-fac81b3fe00b"
-				+ "&templateid=b90c22c9-8ce8-4930-875a-153a13ea8d5d"
+				+ "&templateid=bb4fe753-b23a-4296-8a1f-f85122f96a64"
 				+ "&diskofferingid=87c0a6f6-c684-4fbe-a393-d8412bcf788d"
 				+ "&zoneid=eceb5d65-6571-4696-875f-5a17949f3317"
 				+ "&displayname=" + vm_name;
