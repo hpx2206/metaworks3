@@ -42,8 +42,9 @@
                     <div class="mp_sub_pic">
                     	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 100px; height: 100px'}})%>
                     </div>
+                    <% if(!value.companyUsed){ %>
                     <div class="mp_sub_buybtn"><img  alt="" src="images/marketPlace/buyBtn.jpg" onClick="<%=methods.addApp.caller()%>"></div>
-
+                    <% }%>
                     <div class="mp_sub_rightBox">
                     	<dl class="mp_sub_dsc1">
                         	<dt><%=value.appName%></dt>
