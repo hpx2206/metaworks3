@@ -31,6 +31,20 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		}
 	}
 	
+	
+	var window = mw3.getAutowiredObject('org.uengine.oce.dashboard.DashboardWindow');
+	if(window){
+		$("#post_" + this.objectId).bind('blur', function(){
+			var layout = $(this).closest('.mw3_layout');
+			
+			if(layout.length && layout.attr('objectId')){
+				mw3.getFaceHelper(51).layout.close('east');
+			}
+		});
+	}
+	
+	
+	
 	//$("#post_" + this.objectId).keydown()
 	
 	$("#post_" + this.objectId).bind("keyup", function(event){
