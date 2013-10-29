@@ -14,12 +14,17 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
+import org.metaworks.component.TreeNode;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.Download;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.ide.Project;
+import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -33,6 +38,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.ProjectCreate;
 import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -436,19 +442,39 @@ public class ProjectInfo implements ContextAware {
 	
 	@Face(displayName = "$metadata")
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public Object[] metadata() throws Exception {
+	public ModalWindow metadata() throws Exception {
+		ModalWindow modalWindow = new ModalWindow();
+		String mainPath = MetadataBundle.getProjectBasePath(projectId, session.getEmployee().getGlobalCom());
+		CodiFileUtil.mkdirs(mainPath);
+
+		// OCE 모드에서 codi제거
+		Project main = new Project();
+		main.setId(projectId);
+		main.setPath(mainPath);
+		main.load();
+
+		// 아래에서 this 는 위에 project 값
+
+		ResourceNode node = new ResourceNode();
+		node.setProjectId(main.getId());
+		node.setId(main.getId() + File.separatorChar + Project.METADATA_FILENAME);
+		node.setName(Project.METADATA_FILENAME);
+		node.setPath(main.getPath() + File.separatorChar + Project.METADATA_FILENAME);
+		node.setParentId(main.getId());
+		node.setType(TreeNode.TYPE_FILE_METADATA);
+		node.setMetaworksContext(getMetaworksContext());
+		node.setFolder(false);
+
+		MetadataEditor editor = new MetadataEditor(node);
+		editor.loadPage();
+
 		
-		ModalWindow modal = new ModalWindow();
-		KtProjectServers ProjectServers = new KtProjectServers();
-		ProjectServers.setProjectId(this.getProjectId());
-		ProjectServers.loadOceServer();
+		modalWindow.setPanel(editor);
+		modalWindow.setWidth(1000);
+		modalWindow.setHeight(1000);
+		modalWindow.setTitle("$metadata");
 		
-		modal.setPanel(ProjectServers);
-		modal.setWidth(850);
-		modal.setHeight(300);
-		modal.setTitle("$devmanage");
-		
-		return new Object[]{modal};
+		return modalWindow;
 	}
 //	@Face(displayName = "참여")
 //	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
@@ -512,6 +538,7 @@ public class ProjectInfo implements ContextAware {
 //		return new ModalWindow(projectTitle, 500, 400, "정보변경");
 //	}
 	
+	@Hidden
 	@Face(displayName="$devcommitterManagement") 
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object manageCommitter() throws Exception{
@@ -610,7 +637,7 @@ public class ProjectInfo implements ContextAware {
 		}
 		
 	}
-	
+		
 	@Autowired
 	public ProcessManagerRemote processManager;
 	

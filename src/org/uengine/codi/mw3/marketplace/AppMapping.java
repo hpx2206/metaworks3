@@ -5,13 +5,17 @@ import java.util.Calendar;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.oce.dashboard.DashboardWindow;
 
@@ -138,6 +142,22 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		return findApp;
 	}
 	
+	public IAppMapping findMyApp() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName, item.* ")
+		   .append(" from appmapping, bpm_knol,  ")
+		   .append(" 	(select app.appId, app.logoFileName, app.logoContent, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
+		   .append(" where appmapping.appId = ?appId ")
+		   .append("	and appmapping.appId = item.appId ")
+		   .append("	and item.projectId = bpm_knol.id ");
+		
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, sql.toString());
+		findApp.setAppId(this.getAppId());
+		findApp.select();
+		
+		return findApp;
+	}
+	
 	public void findProject(String appId) throws Exception {
 		String projectName = null;
 		
@@ -210,6 +230,16 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		return new Object[]{new Refresh(appDashboard)};
 	}
 
+	public MainPanel goSelfService() throws Exception{
+		
+		SelfService selfService = new SelfService();
+		selfService.session = session;
+		selfService.setPageNavigator(new OcePageNavigator());
+		selfService.load(this.getAppId());
+		
+		return new MainPanel(selfService);
+	}
+	
 	@AutowiredFromClient
 	public Session session;
 	

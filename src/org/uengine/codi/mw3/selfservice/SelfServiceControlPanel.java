@@ -171,6 +171,28 @@ public class SelfServiceControlPanel {
 		this.setWorkspace(workspace);
 	}
 	
+	public void load(Session session, int appId) throws Exception {
+
+		AppMapping appMp = new AppMapping();
+		appMp.session = session;
+		appMp.setAppId(appId);
+		
+		IAppMapping appList = appMp.findMyApp();
+		
+		appList.getMetaworksContext().setWhen("filter");
+		appList.getMetaworksContext().setWhere("ssp");
+		
+		this.setAppMapping(appList);
+		
+		Workspace workspace = new Workspace();
+
+		while(appList.next()) {			
+			workspace.addProject(session.getCompany().getComCode(), appList.getProjectName(), appList.getAppName());
+		}
+		
+		this.setWorkspace(workspace);
+	}
+	
 
 	@ServiceMethod(callByContent=true)
 	public void selectedApp() throws Exception {
