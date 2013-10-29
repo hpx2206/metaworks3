@@ -189,12 +189,19 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			documentation.getDescription().setMetaworksContext(new MetaworksContext());
 			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			documentation.getRegulation().setMetaworksContext(new MetaworksContext());
+			documentation.getRegulation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			documentation.getDefine().setMetaworksContext(new MetaworksContext());
+			documentation.getDefine().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
 			DocumentationSub documentationSub = (DocumentationSub)this.getActivity().getDocumentationSub();
 			documentationSub.setMetaworksContext(new MetaworksContext());
 			documentationSub.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			documentationSub.getDescription().setMetaworksContext(new MetaworksContext());
 			documentationSub.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			documentationSub.getAttention().setMetaworksContext(new MetaworksContext());
+			documentationSub.getAttention().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
 			
 			processAttributePanel.setDefId(null);
 			processAttributePanel.setFileList(null);

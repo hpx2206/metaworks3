@@ -14,7 +14,7 @@ import org.uengine.codi.mw3.admin.WebEditor;
 		"{when:'edit', face : 'dwr/metaworks/genericfaces/FormFace.ejs'}"
 	}
 	, options={"fieldOrder"}
-	,values={"title,document,reference,url,departManagement,regulation,processMeasure,define,attachfile1,attachfile2,attachfile3,description"})
+	,values={"departManagement,regulation,define,description"})
 public class Documentation implements Serializable , ContextAware{
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -34,7 +34,7 @@ public class Documentation implements Serializable , ContextAware{
 		}
 
 	WebEditor description;
-	@Face(displayName="$description")
+	@Face(displayName="정의")
 		public WebEditor getDescription() {
 			return description;
 		}
@@ -67,14 +67,16 @@ public class Documentation implements Serializable , ContextAware{
 			this.reference = reference;
 		}
 
-	String regulation;
+	WebEditor regulation;
 		@Face(displayName="적용범위")
-		public String getRegulation() {
+		public WebEditor getRegulation() {
 			return regulation;
 		}
-		public void setRegulation(String regulation) {
+		public void setRegulation(WebEditor regulation) {
 			this.regulation = regulation;
 		}
+
+		
 	String title;
 	@Face(displayName="종류")
 		public String getTitle() {
@@ -111,14 +113,17 @@ public class Documentation implements Serializable , ContextAware{
 			this.rangeApplication = rangeApplication;
 		}
 
-	String define;
-	@Face(displayName="정의")
-	public String getDefine() {
-		return define;
-	}
-	public void setDefine(String define) {
-		this.define = define;
-	}
+	WebEditor define;
+	@Face(displayName="참조")
+		public WebEditor getDefine() {
+			return define;
+		}
+		public void setDefine(WebEditor define) {
+			this.define = define;
+		}
+
+	
+	
 	MetaworksFile attachfile1;
 		@Face(displayName="$attachfile1")
 		public MetaworksFile getAttachfile1() {
@@ -189,6 +194,8 @@ public class Documentation implements Serializable , ContextAware{
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 		setDescription(new WebEditor());
+		setDefine(new WebEditor());
+		setRegulation(new WebEditor());
 		setAttachfile1(new MetaworksFile());
 		setAttachfile2(new MetaworksFile());
 		setAttachfile3(new MetaworksFile());

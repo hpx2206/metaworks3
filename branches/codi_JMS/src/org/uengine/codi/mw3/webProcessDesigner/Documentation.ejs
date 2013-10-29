@@ -1,27 +1,21 @@
 <% if(value){ %>
-		<div style="height:20px; background-color:#EEEEEE; border-bottom:2px solid #cccccc; margin-bottom:2px;"><font size=2 color=#330066 style="font-family: '맑은 고딕', 'Malgun gothic'; color:#330066;"><b> - 절차서 속성 정보</font></b></div>
+		<div style="height:20px; background-color:#EEEEEE; border-bottom:2px solid #cccccc; margin-bottom:2px;"><font size=2 color=#330066 style="font-family: 'Vedana'; color:#330066;"><b> - 절차서 속성 정보</font></b></div>
 	<div style="padding-left:10px;">
-	<font size=2 color=blue><b>종류 : </b></font><%=value.title%><Br>
-	<font size=2 color=blue><b>번호 : </b></font><%=value.document%><Br>
-	<font size=2 color=blue><b>이름 : </b></font><%=value.reference%><Br>
-	<font size=2 color=blue><b>Full Name : </b></font><%=value.url%><Br>
-	<p>
 	<div>
-	<font size=2 color=blue><b>목적<p></b></font>
+	<font size=2 color=blue style="font-family:'Verdana';"><b>목적<p></b></font>
 	<%=value.departManagement%>
 	
-	<p>
 	<P>
-	<font size=2 color=blue><b>적용범위<p></b></font>
-	<%=value.regulation%>
+	<font size=2 color=blue style="font-family:'Verdana';"><b>적용범위<p></b></font>
+	<%=fields.regulation.here()%>
 	
 	<p>
 	
-	<font size=2 color=blue><b>참조</b></font>
-	<%=value.processMeasure%>
+	<font size=2 color=blue style="font-family:'Verdana';"><b>참조</b></font>
+	<%=fields.define.here()%>
 	<p>
-	<font size=2 color=blue><b>정의</b></font>
-	<%=value.define%>
+	<font size=2 color=blue style="font-family:'Verdana';"><b>정의</b></font>
+	<%=fields.description.here()%>
 	</div></div>
 <%}%>
 

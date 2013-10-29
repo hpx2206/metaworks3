@@ -14,7 +14,7 @@ ejsPathMappingByContext = {
 		"{when:'edit', face : 'dwr/metaworks/genericfaces/FormFace.ejs'}"
 		}
 		, options={"fieldOrder"}
-		,values={"initCondition,attention,jobAttention,logicalCondition"})
+		,values={"description,attention"})
 public class DocumentationSub implements Serializable , ContextAware{
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -50,7 +50,7 @@ public class DocumentationSub implements Serializable , ContextAware{
 		}
 
 	WebEditor description;
-	@Face(displayName="$description")
+	@Face(displayName="초기조건")
 		public WebEditor getDescription() {
 			return description;
 		}
@@ -144,16 +144,15 @@ public class DocumentationSub implements Serializable , ContextAware{
 			this.initCondition = initCondition;
 		}
 		
-	String attention;
+	WebEditor attention;
 	@Face(displayName="주의사항")
-		public String getAttention() {
+		public WebEditor getAttention() {
 			return attention;
 		}
-		public void setAttention(String attention) {
+		public void setAttention(WebEditor attention) {
 			this.attention = attention;
 		}
-		
-	String jobAttention;
+		String jobAttention;
 	@Face(displayName="수행직무 및 주의사항")
 		public String getJobAttention() {
 			return jobAttention;
@@ -177,6 +176,7 @@ public class DocumentationSub implements Serializable , ContextAware{
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 		setDescription(new WebEditor());
+		setAttention(new WebEditor());
 		setAttachfile1(new MetaworksFile());
 		setAttachfile2(new MetaworksFile());
 		setAttachfile3(new MetaworksFile());

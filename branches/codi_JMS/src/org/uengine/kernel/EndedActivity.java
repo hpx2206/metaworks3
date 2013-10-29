@@ -1,12 +1,6 @@
 package org.uengine.kernel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import org.uengine.util.ActivityForLoop;
-
-public class StartActivity extends DefaultActivity {
+public class EndedActivity  extends DefaultActivity {
 	@Override
 	protected void executeActivity(ProcessInstance instance) throws Exception {
 //		String ss = instance.getProcessDefinition().getInitiatorHumanActivityReference(instance.getProcessTransactionContext()).getActivity().getTracingTag();
