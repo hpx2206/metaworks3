@@ -28,7 +28,7 @@
 			</span>
         </a>
 	</dd>
-    <dd class="make_by">made by <%=value.company.comName%>.</dd>
+    <dd class="make_by">product by <%=value.company.comName%>.</dd>
 </dl>
 
 <%
@@ -114,7 +114,7 @@
 		                    	<div class="simpleOverview"><%=mw3.localize("$App.Overview.Simple") %> : <%=value.simpleOverview%></div>
 		                    	<!--div class="fullOverview"><%=value.fullOverview%></div--> 
 								<div class="clear"></div>
-		                        <div class="vendor"> service by <%=value.company.comName%></div>
+		                        <div class="vendor"> product by <%=value.company.comName%></div>
 		                    </td>
 		                    <td class="appStatusTd"></td>
 		                    <td class="appBtnTd">
@@ -136,14 +136,15 @@
 <%
 				}else if(value.status == 'Published'){
 %>								
-								<div class="btnbadge" style="float:none"><a onClick="<%=methods.serverManage.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>						
+								<div class="btnbadge" style="float:none"><a onClick="<%=methods.readyApproved.caller()%>"> <%=mw3.localize("$ReadyForApproved")%> </a></div>					
 <%
 				}else if(value.status == 'Request'){					
 %>
 								<div class="btnbadge" style="float:none"> <%=mw3.localize("$ReadyForManagerRequset")%> </div>						
 <%
 				}		
-%>
+%>	
+				<div class="btnbadge" style="float:none"><a onClick="<%=methods.serverManage.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>	
 				<div class="btnbadge" style="float:none"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$Edit")%> </a></div>						
 
 <%

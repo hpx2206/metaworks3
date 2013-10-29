@@ -161,6 +161,10 @@ public interface IApp extends IDAO{
 	public Object readyPublished() throws Exception;
 	
 	@Hidden
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object readyApproved() throws Exception;
+
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public Object detail() throws Exception;
 	

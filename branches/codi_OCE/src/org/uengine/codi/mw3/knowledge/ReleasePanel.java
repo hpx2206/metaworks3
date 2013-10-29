@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.Date;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -10,6 +12,7 @@ import org.metaworks.component.SelectBox;
 import org.metaworks.metadata.MetadataFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
@@ -72,6 +75,15 @@ public class ReleasePanel {
 			this.projectId = projectId;
 		}
 		
+	String comment;
+		@Face(displayName = "$Comment", options={"rows", "cols"}, values = {"5", "130"})
+		public String getComment() {
+			return comment;
+		}
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+		
 	@Face(displayName = "$release")
 	@ServiceMethod(callByContent = true)
 	public Object release() throws Exception{
@@ -112,31 +124,26 @@ public class ReleasePanel {
 			
 			
 			if(!this.getCheck()){	//체크 박스 미 체크시
-				if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
-					filepathinfo.setReleaseVer(1);
-				}else{
-					filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
-				}
-				
-				filepathinfo.setId(filepathinfo.createNewId());
-				filepathinfo.setReflectVer(0);
-				
-				filepathinfo.createDatabaseMe();
-				
+
 			}
 			else{	//체크 박스 체크시
-				if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
-					filepathinfo.setReleaseVer(1);
-				}else{
-					filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
-				}
 				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
 				filepathinfo.setWarPath(this.getWarFile().getFilename());
-				filepathinfo.setId(filepathinfo.createNewId());
-				filepathinfo.setReflectVer(0);
-
-				filepathinfo.createDatabaseMe();
 			}
+			
+			if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
+				filepathinfo.setReleaseVer(1);
+			}else{
+				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
+			}
+			
+			filepathinfo.setId(filepathinfo.createNewId());
+			filepathinfo.setComment(this.getComment());
+			filepathinfo.setDistributor(session.getEmployee().getEmpName());
+			filepathinfo.setModdate(new Date());
+			filepathinfo.setReflectVer(0);
+			
+			filepathinfo.createDatabaseMe();
 		}
 		else if("svn".equals(wfNode.getVisType())){
 			ModalWindow modalWindow = new ModalWindow();
@@ -150,6 +157,9 @@ public class ReleasePanel {
 				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
 			}
 			
+			filepathinfo.setComment(this.getComment());
+			filepathinfo.setDistributor(session.getEmployee().getEmpName());
+			filepathinfo.setModdate(new Date());
 			filepathinfo.setId(filepathinfo.createNewId());
 			
 			filepathinfo.createDatabaseMe();
@@ -171,4 +181,7 @@ public class ReleasePanel {
 	
 	@AutowiredFromClient
 	public Locale localeManager;
+	
+	@AutowiredFromClient
+	public Session session;
 }
