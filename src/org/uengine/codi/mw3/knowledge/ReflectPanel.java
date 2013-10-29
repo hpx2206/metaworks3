@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Date;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
@@ -17,10 +18,11 @@ import org.uengine.codi.hudson.HudsonJobDDTO;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.ui.taglibs.input.RichTextArea;
 
 import com.jcraft.jsch.ChannelExec;
 
-@Face(ejsPath = "", options = { "fieldOrder" }, values = { "serverSelect,warFile,sqlFile" })
+@Face(ejsPath = "", options = { "fieldOrder" }, values = { "serverSelect,reflectVersion,check,warFile,sqlFile,comment" })
 public class ReflectPanel {
 
 	MetadataFile warFile;
@@ -67,6 +69,35 @@ public class ReflectPanel {
 		public void setProjectId(String projectId) {
 			this.projectId = projectId;
 		}
+
+	String comment;
+		@Face(displayName = "$Comment", options={"rows", "cols"}, values = {"5", "130"})
+		public String getComment() {
+			return comment;
+		}
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+		
+	Boolean check;
+		@Face(displayName="$previousVersion")
+		@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
+		public Boolean getCheck() {
+			return check;
+		}
+		public void setCheck(Boolean check) {
+			this.check = check;
+		}
+		
+	SelectBox reflectVersion;
+		@Face(displayName = "$ReflectVersion")
+		@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
+		public SelectBox getReflectVersion() {
+			return reflectVersion;
+		}
+		public void setReflectVersion(SelectBox reflectVersion) {
+			this.reflectVersion = reflectVersion;
+		}
 		
 		
 	@Face(displayName = "$devreflect")
@@ -90,51 +121,58 @@ public class ReflectPanel {
 		
 		
 		if ("war".equals(wfNode.getVisType())) {
-			if (this.getWarFile().getFileTransfer() != null
-					&& this.getWarFile().getFilename() != null
-					&& this.getWarFile().getFilename().length() > 0)
-
-				if (this.getWarFile() != null) {
-					MetadataFile resourceFile = new MetadataFile();
-					resourceFile.setFilename(this.getWarFile().getFilename());
-					resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
-					resourceFile.setMimeType(this.getWarFile().getMimeType());
-					setWarFile(resourceFile);
-
-				}
-			if (this.getSqlFile().getFileTransfer() != null
-					&& this.getSqlFile().getFilename() != null
-					&& this.getSqlFile().getFilename().length() > 0)
-
-				if (this.getSqlFile() != null) {
-					MetadataFile resourceFile = new MetadataFile();
-					resourceFile.setFilename(this.getSqlFile().getFilename());
-					resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
-					resourceFile.setMimeType(this.getSqlFile().getMimeType());
-					setSqlFile(resourceFile);
-				}
-			
-			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
-	
-			reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
-			if (reflectVer == 0) {
-				reflectVer = 1;
-			} else {
-				reflectVer++;
-			}
-
-
-			filepathinfo.setSqlPath(this.getSqlFile().getFilename());
-			filepathinfo.setWarPath(this.getWarFile().getFilename());
-			filepathinfo.setReflectVer(reflectVer);
-			filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
-			filepathinfo.setFileType(wfNode.getVisType());
-			filepathinfo.setId(filepathinfo.createNewId());
-
-			filepathinfo.createDatabaseMe();
-			filepathinfo.flushDatabaseMe();
-			
 			FileTransmition fileTransmition = new FileTransmition();
+//			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+			
+			if(!check){
+				if (this.getWarFile().getFileTransfer() != null
+						&& this.getWarFile().getFilename() != null
+						&& this.getWarFile().getFilename().length() > 0)
+	
+					if (this.getWarFile() != null) {
+						MetadataFile resourceFile = new MetadataFile();
+						resourceFile.setFilename(this.getWarFile().getFilename());
+						resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
+						resourceFile.setMimeType(this.getWarFile().getMimeType());
+						setWarFile(resourceFile);
+	
+					}
+				if (this.getSqlFile().getFileTransfer() != null
+						&& this.getSqlFile().getFilename() != null
+						&& this.getSqlFile().getFilename().length() > 0)
+	
+					if (this.getSqlFile() != null) {
+						MetadataFile resourceFile = new MetadataFile();
+						resourceFile.setFilename(this.getSqlFile().getFilename());
+						resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
+						resourceFile.setMimeType(this.getSqlFile().getMimeType());
+						setSqlFile(resourceFile);
+					}
+				
+				reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
+				if (reflectVer == 0) {
+					reflectVer = 1;
+				} else {
+					reflectVer++;
+				}
+	
+				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
+				filepathinfo.setWarPath(this.getWarFile().getFilename());
+				filepathinfo.setReflectVer(reflectVer);
+				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
+				filepathinfo.setFileType(wfNode.getVisType());
+				filepathinfo.setId(filepathinfo.createNewId());
+				filepathinfo.setComment(this.getComment());
+				filepathinfo.setModdate(new Date());
+				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+				
+				filepathinfo.createDatabaseMe();
+				filepathinfo.flushDatabaseMe();
+			}
+			else{
+				filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
+				filepathinfo.copyFrom(filepathinfo.databaseMe());
+			}
 			
 			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
 			command = "sh /root/jbossKill.sh";
@@ -243,6 +281,9 @@ public class ReflectPanel {
 			filepathinfo.setReflectVer(Integer.parseInt(tmp));
 			filepathinfo.setFileType(wfNode.getVisType());
 			filepathinfo.setId(filepathinfo.createNewId());
+			filepathinfo.setComment(this.getComment());
+			filepathinfo.setModdate(new Date());
+			filepathinfo.setDistributor(session.getEmployee().getEmpName());
 			
 			if(jschServerBehaviour.getJschSession() != null)
 				jschServerBehaviour.getJschSession().disconnect();

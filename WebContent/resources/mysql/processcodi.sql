@@ -932,3 +932,8 @@ alter table app add column runningVersion int;
 
 alter table app add column subDomain varchar(50);
 
+alter table filepathinfo add column comment varchar(1000);
+
+alter table filepathinfo add column moddate DATETIME;
+
+alter table filepathinfo add column distributor varchar(20);

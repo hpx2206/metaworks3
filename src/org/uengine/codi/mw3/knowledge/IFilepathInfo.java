@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.Date;
+
 import javax.persistence.GeneratedValue;
 
 import org.metaworks.annotation.Id;
@@ -31,4 +33,13 @@ public interface IFilepathInfo  extends IDAO{
 	@GeneratedValue(generator="BPM_SEQ")
 	public int getId();
 	public void setId(int id);
+	
+	public Date getModdate();
+	public void setModdate(Date moddate);
+
+	public String getComment();
+	public void setComment(String comment);
+
+	public String getDistributor();
+	public void setDistributor(String distributor);
 }

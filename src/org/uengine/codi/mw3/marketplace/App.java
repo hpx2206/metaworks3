@@ -392,6 +392,18 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 	}
 	
+	public Object readyApproved() throws Exception {
+		
+		this.setAppId(getAppId());
+		
+		this.setStatus(STATUS_APPROVED);
+		syncToDatabaseMe();
+		flushDatabaseMe();
+		
+		return this;
+		
+	}
+	
 	public void load() throws Exception {
 		SelectBox categories = new SelectBox();
 		SelectBox attachProject = new SelectBox();

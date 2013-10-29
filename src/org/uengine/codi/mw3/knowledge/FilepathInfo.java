@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +68,31 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 			this.id = id;
 		}
 		
+	Date moddate;
+		public Date getModdate() {
+			return moddate;
+		}
+		public void setModdate(Date moddate) {
+			this.moddate = moddate;
+		}
+	
+	String comment;
+		public String getComment() {
+			return comment;
+		}
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+
+	String distributor;
+		public String getDistributor() {
+			return distributor;
+		}
+		public void setDistributor(String distributor) {
+			this.distributor = distributor;
+		}
+	
+		
 	public int findReflectVersion(String id) throws Exception{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from (select * from filepathinfo where projectId = ?id) a order by reflectVer desc limit 1;");
@@ -105,7 +131,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		findListing.select();
 		
 		while(findListing.next()){
-			sb.add(String.valueOf(findListing.getReflectVer()), String.valueOf(findListing.getId()));
+			sb.add(String.valueOf(findListing.getReflectVer()) + "  " + findListing.getComment() + " " + findListing.getDistributor(), String.valueOf(findListing.getId()));
 		}
 		
 		return sb;
