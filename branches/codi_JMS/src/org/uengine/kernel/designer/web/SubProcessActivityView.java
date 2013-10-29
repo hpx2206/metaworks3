@@ -8,8 +8,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessFormPanel;
-import org.uengine.codi.mw3.processexplorer.ProcessSubAttributePanel;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewerPanel;
 import org.uengine.kernel.SubProcessActivity;
 
@@ -17,11 +15,6 @@ public class SubProcessActivityView extends ActivityView{
 	
 	@AutowiredFromClient
 	public Session session;
-	@AutowiredFromClient
-	public ProcessAttributePanel processAttributePanel;
-
-	@AutowiredFromClient
-	public ProcessSubAttributePanel processSubAttributePanel;
 	
 	@Override
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
@@ -68,8 +61,10 @@ public class SubProcessActivityView extends ActivityView{
 		return modalWindow;  
 	 }
 	
-	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] showDefinitionMonitorToPanel() throws Exception{
+	@Override
+	public Object[] showActivityDocument() throws Exception{
+		Object[] returnObject = super.showActivityDocument();
+		
 		SubProcessActivity activity = (SubProcessActivity)this.getActivity();
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 		processViewerPanel.setViewType("definitionView");
@@ -89,9 +84,10 @@ public class SubProcessActivityView extends ActivityView{
 		processFormPanel.getMetaworksContext().setHow("subprocess");
 		processFormPanel.setActivityPanel(processViewerPanel);
 		
+		Object[] newObject = new Object[returnObject.length + 1];
+		System.arraycopy(returnObject, 0, newObject, 0, returnObject.length);
+		newObject[returnObject.length] = processFormPanel;
 		
-		
-		
-		return new Object[] {new Refresh(processFormPanel)};
+		return newObject;
 	}
 }

@@ -111,10 +111,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			object.showProperties();
         			
         		},
-    				btnclick : function(event) {
+    			btnclick : function(event) {
         			object.id = $(this).attr('id');
         			object.activity = $(this).data('activity');
-        			object.showDefinitionMonitorToPanel();
+        			object.showDefinitionMonitor();
         		}
         	});
         	$(element).droppable({

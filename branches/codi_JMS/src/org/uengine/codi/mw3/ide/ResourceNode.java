@@ -294,10 +294,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 					instanceViewThreadPanel.load();
 				}
 			}
-			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+//			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+//			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			
-			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
+//			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor)};
 		}
 	}
 
