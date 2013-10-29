@@ -11,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.common.MainPanel;
 
 @Table(name="APPMAPPING")
 @Face(ejsPathMappingByContext={"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"})
@@ -77,4 +78,8 @@ public interface IAppMapping extends IDAO{
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object openAppBrowser() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goSelfService() throws Exception;
+	
 }
