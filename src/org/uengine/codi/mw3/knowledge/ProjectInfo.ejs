@@ -22,9 +22,12 @@ if(value){
                         <%
 							if(value.type == "svn"){
 						%>
-								<dd><span class="mp_sub_tit" style="float:left; width:auto"><%=mw3.localize("$project.svn")%> : </span><span class="mp_sub_rst"><textarea style="border:none; background: #C9E2FC;overflow: hidden;position: relative;top: -5px;width: 60%;"><%=value.svn%></textarea></span></dd>
+								<dd><span class="mp_sub_tit" style="float:left; width:auto"><%=mw3.localize("$project.svn")%></span>
+								<span style="float:left; position:relative; top:0px; cursor:pointer;"><img src="images/processMap/wheel.png" onClick ="<%=methods.manageCommitter.caller()%>" /></span>
+								<span style="float:left"> : </span>
+								<span class="mp_sub_rst"><textarea style="border:none; background: #C9E2FC;overflow: hidden;position: relative;top: -5px;width: 60%;"><%=value.svn%></textarea></span></dd>
 						       					
-						    <div class="editicon" onclick="<%=methods.manageCommitter.caller()%>"></div>
+						    <div> <%=methods.manageCommitter.here()%></div>
 						<%
 						}
 						%>
@@ -37,7 +40,13 @@ if(value){
 						<%=methods.server.here()%>
 						<%=methods.distribute.here()%>
 						<%=methods.releaseProject.here()%>
-						<%=methods.hudson.here()%>
+						<%
+							if(value.type == "svn"){
+						%>
+								<%=methods.hudson.here()%>
+						<%
+						}
+						%>
 						<div class="clear"></div>
 					</div>
 				</div>
