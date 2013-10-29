@@ -470,8 +470,8 @@ public class ProjectInfo implements ContextAware {
 
 		
 		modalWindow.setPanel(editor);
-		modalWindow.setWidth(1000);
-		modalWindow.setHeight(1000);
+		modalWindow.setWidth(800);
+		modalWindow.setHeight(700);
 		modalWindow.setTitle("$metadata");
 		
 		return modalWindow;
