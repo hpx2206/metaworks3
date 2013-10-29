@@ -360,7 +360,10 @@ public class ProjectInfo implements ContextAware {
 		ModalWindow modalWindow = new ModalWindow();
 		ReflectPanel reflectPanel = new ReflectPanel();
 		SelectBox serverSelect = new SelectBox();
+		SelectBox reflectVersion = new SelectBox();
 		CloudInfo cloudInfo = new CloudInfo();
+		FilepathInfo filepathInfo = new FilepathInfo();
+		filepathInfo.setProjectId(this.getProjectId());
 		
 		ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
 		while(findListing.next()){
@@ -376,27 +379,30 @@ public class ProjectInfo implements ContextAware {
 			MetadataFile warFile = new MetadataFile();
 			warFile.setBaseDir(codebase + File.separatorChar);
 			warFile.setTypeDir("war");
-			
+			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
+			reflectPanel.setReflectVersion(reflectVersion);
 			reflectPanel.setSqlFile(sqlFile);
 			reflectPanel.setWarFile(warFile);
 			reflectPanel.setProjectId(this.getProjectId());
 			reflectPanel.setServerSelect(serverSelect);
+			reflectPanel.setCheck(false);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			modalWindow.setHeight(300);
+			modalWindow.setHeight(350);
 		}
 		else if("svn".equals(this.getType())){
 			reflectPanel.setServerSelect(serverSelect);
+			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
+			reflectPanel.setReflectVersion(reflectVersion);
 			reflectPanel.setProjectId(this.getProjectId());
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			modalWindow.setHeight(200);
+			modalWindow.setHeight(300);
 		}
 		
 		modalWindow.setTitle("$devreflect");
 		
 		modalWindow.setPanel(reflectPanel);
-		
 		
 		return modalWindow;
 	}
@@ -421,13 +427,29 @@ public class ProjectInfo implements ContextAware {
 		ProjectServers.loadOceServer();
 		
 		modal.setPanel(ProjectServers);
-		modal.setWidth(600);
-		modal.setHeight(400);
-		modal.setTitle("개발기 관리");
+		modal.setWidth(850);
+		modal.setHeight(300);
+		modal.setTitle("$devmanage");
 		
 		return new Object[]{modal};
 	}
-
+	
+	@Face(displayName = "$metadata")
+	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
+	public Object[] metadata() throws Exception {
+		
+		ModalWindow modal = new ModalWindow();
+		KtProjectServers ProjectServers = new KtProjectServers();
+		ProjectServers.setProjectId(this.getProjectId());
+		ProjectServers.loadOceServer();
+		
+		modal.setPanel(ProjectServers);
+		modal.setWidth(850);
+		modal.setHeight(300);
+		modal.setTitle("$devmanage");
+		
+		return new Object[]{modal};
+	}
 //	@Face(displayName = "참여")
 //	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
 //	public Object[] participation() throws Exception {
