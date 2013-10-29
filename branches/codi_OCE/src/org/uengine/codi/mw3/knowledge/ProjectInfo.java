@@ -556,7 +556,7 @@ public class ProjectInfo implements ContextAware {
 		projectCommitter.setManagerAccount(wfNode.getAuthorId()); 
 		projectCommitter.load();
 		modalWindow.setPanel(projectCommitter);
-		modalWindow.setWidth(530);
+		modalWindow.setWidth(560);
 		modalWindow.setHeight(500);
 		modalWindow.setTitle("개발권한관리");
 		
