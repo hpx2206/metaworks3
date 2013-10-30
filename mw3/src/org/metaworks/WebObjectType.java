@@ -383,6 +383,15 @@ public class WebObjectType{
 
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), Icon.class)!=null)
 				fd.setAttribute("icon", new Boolean(true));
+
+			/*
+			 * 2013-10-22 jinwon
+			 * set field descriptor type
+			 */
+			org.metaworks.annotation.Field field = (org.metaworks.annotation.Field) getAnnotationDeeply(tryingClasses, fd.getName(), org.metaworks.annotation.Field.class); 
+			if(field!=null && field.descriptor() != null && !"".equals(field.descriptor()))
+				fd.setAttribute("descriptor." + field.descriptor(), new Boolean(true));				
+			
 			
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), NonLoadable.class)!=null)
 				fd.setLoadable(false);
