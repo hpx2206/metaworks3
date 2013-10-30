@@ -773,7 +773,10 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 				if(!(targetActivity instanceof MessageListener)) continue;
 				
 				MessageListener activityAsMessageListener = (MessageListener)targetActivity;
-				if(message.equals(activityAsMessageListener.getMessage())){
+//				if( message == null ){
+//					ack = true;
+//				}
+				if(message == null || message != null && message.equals(activityAsMessageListener.getMessage())){
 					try{
 						if(activityAsMessageListener.onMessage(instance, payload))
 							ack = true;

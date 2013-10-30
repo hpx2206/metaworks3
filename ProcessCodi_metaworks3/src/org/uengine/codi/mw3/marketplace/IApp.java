@@ -17,7 +17,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.ICompany;
 
@@ -33,7 +33,7 @@ import org.uengine.codi.mw3.model.ICompany;
 		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
-      values={"categories,attachProject,appName,simpleOverview,fullOverview,logoFile"})
+      values={"categories,attachProject,releaseVersion,appName,subDomain,simpleOverview,fullOverview,logoFile"})
 public interface IApp extends IDAO{
 	
 	@Id
@@ -41,19 +41,19 @@ public interface IApp extends IDAO{
 	public void setAppId(int appId);
 
 	@Name
-	@Face(displayName = "앱이름", options={"size"}, values={"130"})
+	@Face(displayName="$App.Name", options={"size"}, values={"130"})
 	public String getAppName();
 	public void setAppName(String appName);
 	
-	@Face(displayName = "심플 설명", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"5", "130"})
+	@Face(displayName = "$App.Overview.Simple", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"5", "130"})
 	public String getSimpleOverview();
 	public void setSimpleOverview(String simpleOverview);
 
-	@Face(displayName = "데테일 설명", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"7", "130"})
+	@Face(displayName = "$App.Overview.Full", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"7", "130"})
 	public String getFullOverview();
 	public void setFullOverview(String fullOverview);
 
-	@Face(displayName = "가격")
+	@Face(displayName = "$App.Pricing")
 	public String getPricing();
 	public void setPricing(String pricing);
 
@@ -89,7 +89,7 @@ public interface IApp extends IDAO{
 	public String getUrl();
 	public void setUrl(String url);
 	
-	@Face(displayName="로고파일")
+	@Face(displayName="$App.LogoFileAttach")
 	@ORMapping(
 		databaseFields={"logoContent", "logoFileName"}, 
 		objectFields={"uploadedPath", "filename"}
@@ -104,13 +104,13 @@ public interface IApp extends IDAO{
 	public ICategory getCategory();
 	public void setCategory(ICategory category);
 	
-	@Face(displayName = "카테고리")
+	@Face(displayName = "$App.Category")
 	@NonLoadable
 	@NonSavable
 	public SelectBox getCategories();
 	public void setCategories(SelectBox categories);
 
-	@Face(displayName = "프로젝트")
+	@Face(displayName = "$App.Project")
 	@NonLoadable
 	@NonSavable
 	public SelectBox getAttachProject();
@@ -120,8 +120,14 @@ public interface IApp extends IDAO{
 			databaseFields={"projectId"}, 
 			objectFields={"id"}
 	)
-	public IWfNode getProject();
-	public void setProject(IWfNode project);
+	public WfNode getProject();
+	public void setProject(WfNode project);
+	
+	@Face(displayName = "$ReleaseVersion")
+	@NonLoadable
+	@NonSavable
+	public SelectBox getReleaseVersion();
+	public void setReleaseVersion(SelectBox releaseVersion);
 	
 	@NonLoadable
 	@NonSavable
@@ -129,11 +135,19 @@ public interface IApp extends IDAO{
 	public void setAppMapping(IAppMapping appMapping);
 	
 	
+	@NonLoadable
+	@NonSavable
+	public boolean isCompanyUsed() ;
+	public void setCompanyUsed(boolean companyUsed);
 	
 	
+	public int getRunningVersion();
+	public void setRunningVersion(int runningVersion);	
 	
 	
-	
+	@Face(displayName = "$SubDomainName")
+	public String getSubDomain();
+	public void setSubDomain(String subDomain);
 	
 	
 	
@@ -147,6 +161,10 @@ public interface IApp extends IDAO{
 	public Object readyPublished() throws Exception;
 	
 	@Hidden
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object readyApproved() throws Exception;
+
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public Object detail() throws Exception;
 	
@@ -156,12 +174,23 @@ public interface IApp extends IDAO{
 	
 	@Hidden
 	@ServiceMethod(callByContent=true)
+	public Object serverManage() throws Exception;
+	
+	@Hidden
+	@ServiceMethod(callByContent=true)
 	public Object[] addApp()throws Exception;
-
+	
+	@Face(displayName="$Next")
 	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+	@ServiceMethod(callByContent=true)
+	public Object step1() throws Exception;
+
+//	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public Object save() throws Exception;
 	
+	@Face(displayName="$Cancel")
 	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 	@ServiceMethod
 	public Object cancel() throws Exception;

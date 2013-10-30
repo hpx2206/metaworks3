@@ -72,6 +72,15 @@ public class MetadataXML implements ContextAware {
 		public void setTypeName(String typeName) {
 			this.typeName = typeName;
 		}
+	@XStreamOmitField
+	String projectId;
+		@Hidden
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 		
 	ArrayList<MetadataProperty> properties;
 		public ArrayList<MetadataProperty> getProperties() {
@@ -152,6 +161,7 @@ public class MetadataXML implements ContextAware {
 
 		ResourceNode resourceNode = new ResourceNode(); 
 		resourceNode.setId(this.getFilePath());
+		resourceNode.setProjectId(this.getProjectId());
 
 		MetadataProperty newMetadataProperty = new MetadataProperty();
 		newMetadataProperty.metaworksContext = new MetaworksContext();
@@ -160,6 +170,7 @@ public class MetadataXML implements ContextAware {
 		newMetadataProperty.setType(MetadataProperty.STRING_PROP);
 		newMetadataProperty = (MetadataProperty) newMetadataProperty.selectType();
 		newMetadataProperty.setResourceNode(resourceNode);
+		newMetadataProperty.setProjectId(this.getProjectId());
 		
 		MetadataPropertyInfo metadataPropertyInfo = new MetadataPropertyInfo();
 		metadataPropertyInfo.setNewMetadataProperty(newMetadataProperty);
@@ -171,38 +182,45 @@ public class MetadataXML implements ContextAware {
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode) throws Exception{
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
 		if( metadata == null ){
+			// 메타데이터 파일 생성
 			metadata = new MetadataXML();
+			metadata.setProperties(new ArrayList<MetadataProperty>());
 		}
 		metadata.setFilePath(resourceNode.getPath());
+		metadata.setProjectId(resourceNode.getProjectId());
 		
-		
-		for(MetadataProperty metadataProperty : metadata.getProperties()){
-			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
-//				MetadataFile file = new MetadataFile();
-//				file.setUploadedPath(metadataProperty.getValue());
-//				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
-//				metadataProperty.setFile(file);
-				String projectSourcePath = CodiClassLoader.mySourceCodeBase(resourceNode.getProjectId());
-				MetadataFile file = new MetadataFile();
-				file.setBaseDir(projectSourcePath);
-				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-				file.setUploadedPath(metadataProperty.getValue());
-				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+		if( metadata.getProperties() != null ){
+			for(MetadataProperty metadataProperty : metadata.getProperties()){
+				if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+	//				MetadataFile file = new MetadataFile();
+	//				file.setUploadedPath(metadataProperty.getValue());
+	//				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+	//				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+	//				metadataProperty.setFile(file);
+					String projectSourcePath = CodiClassLoader.mySourceCodeBase(resourceNode.getProjectId());
+					MetadataFile file = new MetadataFile();
+					file.setBaseDir(projectSourcePath);
+					file.setUseClassLoader(true);
+					file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+					file.setUploadedPath(metadataProperty.getValue());
+					file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+					
+					
+					MetadataFile previewFile = new MetadataFile();
+					previewFile.setBaseDir(projectSourcePath);
+					previewFile.setUseClassLoader(true);
+					previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+					previewFile.setUploadedPath(metadataProperty.getValue());
+					previewFile.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+					
+					metadataProperty.setFile(file);
+					metadataProperty.setFilePreview(previewFile);
+				}
+				metadataProperty.setProjectId(resourceNode.getProjectId());
+				metadataProperty.selectType();
 				
-				
-				MetadataFile previewFile = new MetadataFile();
-				previewFile.setBaseDir(projectSourcePath);
-				previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-				previewFile.setUploadedPath(metadataProperty.getValue());
-				previewFile.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
-				
-				metadataProperty.setFile(file);
-				metadataProperty.setFilePreview(previewFile);
 			}
-			metadataProperty.selectType();
 		}
-			
 		metadata.init();
 		
 		return metadata;

@@ -13,7 +13,8 @@ import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
-import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -37,14 +38,6 @@ public class ProcessProperty extends MetadataProperty{
 		public void setValue(String value) {
 			this.value = value;
 		}
-	InstanceMonitor processInstanceMonitor;
-	@Hidden
-	public InstanceMonitor getProcessInstanceMonitor() {
-		return processInstanceMonitor;
-	}
-	public void setProcessInstanceMonitor(InstanceMonitor processInstanceMonitor) {
-		this.processInstanceMonitor = processInstanceMonitor;
-	}
 
 	@Available(when = MetaworksContext.WHEN_VIEW)
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
@@ -52,7 +45,7 @@ public class ProcessProperty extends MetadataProperty{
 		
 		Project project = workspace.findProject(this.getProjectId());
 
-		ResourceNode node = new ResourceNode();
+		ProcessNode node = new ProcessNode();
 		node.setId(this.getProjectId() + File.separatorChar + this.getValue());
 		node.setName(this.getValue());
 		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
@@ -106,12 +99,12 @@ public class ProcessProperty extends MetadataProperty{
 				metadataEditor.save();
 			}
 		}else {
-			
-			InstanceMonitor processInstanceMonitor = new InstanceMonitor();
-			processInstanceMonitor.loadProcess(this.getValue());
-			this.setProcessInstanceMonitor(processInstanceMonitor);
-			setFilePreview(processInstanceMonitor);
-			
+			ProcessViewPanel processViewPanel = new ProcessViewPanel();
+			processViewPanel.setDefId(this.getValue());
+			processViewPanel.setAlias(this.getValue());
+			processViewPanel.setViewType("definitionView");
+			processViewPanel.load();
+			setFilePreview(processViewPanel);
 		}
 	}
 }

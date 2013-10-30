@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
@@ -70,7 +69,8 @@ public class InstanceViewContent extends ContentWindow {
 	
 	public void load(IInstance instance) throws Exception{
 		//this.setInstanceName(instance.getName());
-		
+		if(instanceView == null)
+			instanceView = new InstanceView();
 		instanceView.session = session;
 		instanceView.setMetaworksContext(getMetaworksContext());
 		instanceView.load(instance);

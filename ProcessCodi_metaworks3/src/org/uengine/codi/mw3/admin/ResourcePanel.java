@@ -13,9 +13,11 @@ import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.model.Session;
 
 public class ResourcePanel {
+	@AutowiredFromClient
+	public Session session;
 	
 	public ResourcePanel() throws Exception {
-		init();
+//		init();
 	}
 	
 	public void init() throws Exception {
@@ -24,7 +26,10 @@ public class ResourcePanel {
 		resourceFile.setMetaworksContext(new MetaworksContext());	
 		resourceFile.getMetaworksContext().setWhere("design");
 		resourceFile.getMetaworksContext().setWhen("design");
-
+		resourceFile.session = session;
+				
+				
+		
 		resourceFile.setObjType("folder");
 		resourceFile.setFolder(true);
 		resourceFile.setAlias("");
@@ -38,6 +43,7 @@ public class ResourcePanel {
 		libraryFile.getMetaworksContext().setWhere("design");
 		libraryFile.getMetaworksContext().setWhen("design");
 
+		libraryFile.session = session;
 		libraryFile.setObjType("folder");
 		libraryFile.setFolder(true);
 		libraryFile.setAlias("__lib");
@@ -51,6 +57,7 @@ public class ResourcePanel {
 		webResourceFile.getMetaworksContext().setWhere("design");
 		webResourceFile.getMetaworksContext().setWhen("design");
 
+		webResourceFile.session = session;
 		webResourceFile.setObjType("folder");
 		webResourceFile.setFolder(true);
 		webResourceFile.setAlias("__web");

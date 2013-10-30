@@ -10,13 +10,18 @@
 			}else{ 
 %>
 		<div>
+		<!--
 			<span class="ssesionLine"><%=fields.employee.here() %></span>
-			<span class="ssesionLine"> | </span>
-			
+		-->	
 			<%if(value.metaworksContext.where == 'marketplace'){%>
+			<!--
+				<span class="ssesionLine"> | </span>
 				<span class="ssesionLine"><a href="#" onClick="<%=methods.myVendor.caller()%>">앱 관리</a></span>
+			-->
 			<%}else{%>
+			<!--
 				<span class="ssesionLine"><a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a></span>
+			-->
 			<%}%>
 <%
 			if(value.employee && value.employee.isAdmin){%>
@@ -28,8 +33,11 @@
 <%
 			}
 %>
+		<!-- logout은 유저를 클릭했을 때 나타나도록 화면에서 숨깁니다. -->
+		<!--
 			<span class="ssesionLine"> | </span>
 			<span class="ssesionLine"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
+		-->
 		</div>
 <%
 			}

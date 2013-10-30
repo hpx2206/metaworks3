@@ -19,9 +19,10 @@ public class CommingTodoPerspective extends Perspective{
 	@Override
 	protected void loadChildren() throws Exception {
 		
-		session.setLastPerspecteType(Perspective.TYPE_COMMINGTODO);
+		Navigation navigation = new Navigation(session);
+		navigation.setPerspectiveType(Perspective.TYPE_COMMINGTODO);
 			
-		IInstance instanceContents = Instance.load(new Navigation(session), 0, Integer.parseInt(GlobalContext.getPropertyString("commingtodo.list.count", "2")));
+		IInstance instanceContents = Instance.load(navigation, 0, Integer.parseInt(GlobalContext.getPropertyString("commingtodo.list.count", "2")));
 		instanceContents.getMetaworksContext().setHow(Perspective.TYPE_COMMINGTODO);
 		this.setInstance(instanceContents);	
 	}

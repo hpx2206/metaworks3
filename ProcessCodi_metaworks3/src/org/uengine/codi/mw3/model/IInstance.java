@@ -14,6 +14,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 
 @Face(
@@ -21,13 +22,14 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
 		"{how: '" + Perspective.TYPE_COMMINGTODO + "', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_commingTodo.ejs'}",
-		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}"
+		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}",
+		"{where: 'dashboard', face: 'dwr/metaworks/org/uengine/oce/dashboard/IInstance_dashboard.ejs'}"
 	}		
 )
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
 
-	@ServiceMethod
+	@ServiceMethod(callByContent=true)
 	public Object detail() throws Exception;
 
 	@ServiceMethod(target="popup")
@@ -235,6 +237,9 @@ public interface IInstance extends IDAO{
 	public void split() throws Exception;
 	
 	public void fillFollower();
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goSns() throws Exception;
 	
 
 	/*

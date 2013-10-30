@@ -989,14 +989,23 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				Object detail = instance.detail();
 				
 				if("sns".equals(mood)){
-					NewInstancePanel panel = new NewInstancePanel();
-					panel.load(session);
+					newInstancePanel = new NewInstancePanel();
+					newInstancePanel.load(session);
 					
-					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail), new Refresh(panel)};
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
+				}else if("oce".equals(session.getUx())){
+					newInstancePanel = new NewInstancePanel();
+					newInstancePanel.getMetaworksContext().setHow("sns");
+					newInstancePanel.load(session);
+					
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
 				}else
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail)};								
 			// 덧글
 			}else{
+				if("oce".equals(session.getUx())){
+					this.getMetaworksContext().setHow("sns");
+				}
 				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				

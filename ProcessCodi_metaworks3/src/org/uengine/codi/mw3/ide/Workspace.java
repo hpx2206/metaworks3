@@ -1,8 +1,13 @@
 package org.uengine.codi.mw3.ide;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.metaworks.metadata.MetadataBundle;
+import org.metaworks.metadata.MetadataProperty;
+import org.metaworks.metadata.MetadataXML;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -52,22 +57,52 @@ public class Workspace {
 		String mainPath = MetadataBundle.getProjectBasePath(projectId, tenantId);
 		CodiFileUtil.mkdirs(mainPath);
 		
-		Project main = new Project();
-		main.setId(projectId);
-		main.setPath(mainPath);
-		main.load();
-		projects.add(main);		
+		if(!"1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+			// OCE 모드에서 codi제거
+			Project main = new Project();
+			main.setId(projectId);
+			main.setPath(mainPath);
+			main.load();
+			projects.add(main);		
+		}
 		
 		if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
 			// 테넌트의 프로젝트 불러오기
 			try {
-				IProjectNode projectList = ProjectNode.completedProject(tenantId);
+				IProjectNode projectList = ProjectNode.load(session);
 				while(projectList.next()){
 					ProjectNode node = new ProjectNode();
 					node.copyFrom(projectList);
 					String path = MetadataBundle.getProjectBasePath(node.getName());
 					
 					CodiFileUtil.mkdirs(path);
+					// 메타데이터 파일이 존재하지 않을 경우 파일 생성
+					FileWriter writer = null;
+					try {
+						String metadataFileName = "uengine.metadata";
+						String metadataFilePath = path + File.separatorChar + metadataFileName;
+						File file = new File(metadataFilePath);
+						if(!file.exists()){
+							file.getParentFile().mkdirs();
+							file.createNewFile();
+							MetadataXML metadataXML = new MetadataXML();
+							metadataXML.setProperties(new ArrayList<MetadataProperty>());
+							writer = new FileWriter(file);
+							writer.write(metadataXML.toXmlXStream());
+						}
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} finally{
+						if(writer != null)
+							try {
+								writer.close();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					}
 					
 					Project project = new Project();
 					project.setId(node.getName());

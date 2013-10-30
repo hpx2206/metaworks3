@@ -46,17 +46,26 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 
 		var object = mw3.getObject(objectId);
 
-		object.detail(true, function(){
-			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		
+		if(session && session.ux == 'oce' && session.lastPerspecteType == 'inbox'){
+			
+			var object = mw3.getObject(objectId);
+			object.goSns();
+		}else{
+			object.detail(true, function(){
+				var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+				
+				if(session && session.ux == 'phone'){
+					$('.mw3_popup').each(function(){
+						var objectId = $(this).attr('objectId');
 
-			if(session && session.ux == 'phone'){
-				$('.mw3_popup').each(function(){
-					var objectId = $(this).attr('objectId');
-
-					mw3.getFaceHelper(objectId).destoryPopup();
-				});
-			}
-		});
+						mw3.getFaceHelper(objectId).destoryPopup();
+					});
+				}
+			});
+		}
+		
 	});
 	
 	var faceHelper = this;
@@ -124,7 +133,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 
 		},
 		unBlinking : function(){
-
+			
 			$('#' + this.divId + ' .innerNewInst').hide();
 
 			/*if (this.timeout) {

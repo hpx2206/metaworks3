@@ -1,43 +1,61 @@
-<div style="border-bottom:1px solid #aaaaaa;">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="projectInfoTable">
-		<colgroup>
-	    	<col width="95" height:23px; align="right"/>
-	    	<col />
-	    </colgroup>
-		<tr height="22">
-			<th align="right"><b><%=mw3.localize("$ProjectName")%> :</b></th>
-			<td><%= fields.projectName.here() %></td>
-		</tr>
-		<tr height="50">
-			<th align="right"><b><%=mw3.localize("$ProjectDescription")%> :</b></th>
-			<td><%= fields.description.here() %></td>
-		</tr>
-		<tr height="22">
-			<th align="right"><b><%=mw3.localize("$TemplateName")%> :</b></th>
-			<td><%= fields.templateName.here() %></td>
-		</tr>
-		<tr height="22">
-			<th align="right"><b><%=mw3.localize("$Ip")%> :</b></th>
-			<td><%= fields.ip.here() %></td>
-		</tr>
-		<tr height="22">
-			<th align="right"><b><%=mw3.localize("$Svn")%> :</b></th>
-			<td><%= fields.svn.here() %></td>
-		</tr>
-		<tr height="22">
-			<th align="right"><b><%=mw3.localize("$Hudson")%> :</b></th>
-			<td><%= fields.hudson.here() %></td>
-		</tr>
-		<tr height="22">
-			<th></th>
-			<td align="right">
-				<div class="positionRight">
-					<%=methods.eclipseDownload.here()%>
-					<%=methods.devSendbox.here()%>
-					  <a id="wBtn" href="#" onClick="window.open('https://www.virtualbox.org/wiki/Downloads')"><span><%=mw3.localize("$VMDown")%></span></a>
-					<%=methods.insert.here()%>
+
+<%
+if(value){
+
+%>
+
+	<div id="searchbox" style="border-bottom:1px solid #9EBFC4"> 
+        <!--ui object -->
+        <ul>
+            <li>
+                <div class="mp_sub_pic project_img">
+                	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 150px; height: 150px; line-height: 150px;border:1px solid #ccc; background:url(images/waveStyle/bg_thmb.gif) center no-repeat;'}})%>
+                </div>
+
+
+                <div class="mp_sub_rightBox">
+                	<dl class="mp_sub_dsc1">
+                    	<dt style="font-size:16px;"><%=fields.projectName.here()%></dt>
+                    	<dd><span class="mp_sub_tit"><%=mw3.localize("$Alias")%> : </span><span class="mp_sub_rst"><%=value.projectAlias%></span></dd>
+                        <dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.description%></span></dd>
+                                   
+                        <%
+							if(value.type == "svn"){
+						%>
+								<dd><span class="mp_sub_tit" style="float:left; width:auto"><%=mw3.localize("$project.svn")%></span>
+								<span style="float:left; position:relative; top:0px; cursor:pointer;"><img src="images/processMap/wheel.png" onClick ="<%=methods.manageCommitter.caller()%>" /></span>
+								<span style="float:left"> : </span>
+								<span class="mp_sub_rst"><textarea style="border:none; background: #C9E2FC;overflow: hidden;position: relative;top: -5px;width: 60%;"><%=value.svn%></textarea></span></dd>
+						       					
+						    <div> <%=methods.manageCommitter.here()%></div>
+						<%
+						}
+						%>
+                    </dl>                    
+                </div>
+                <div class="clear"></div>
+                <div id="searchbox" style="border-bottom:1px solid #9EBFC4;">
+	                <div class="positionRight" style="padding:5px 0">
+						<%=methods.metadata.here()%>
+						<%=methods.server.here()%>
+						<%=methods.distribute.here()%>
+						<%=methods.releaseProject.here()%>
+						<%
+							if(value.type == "svn"){
+						%>
+								<%=methods.hudson.here()%>
+						<%
+						}
+						%>
+						<div class="clear"></div>
+					</div>
 				</div>
-			</td>
-		</tr>
-	</table>	
-</div>
+				<div class="clear"></div>
+            </li>
+        </ul>
+    </div>	
+
+
+<%
+}
+%>

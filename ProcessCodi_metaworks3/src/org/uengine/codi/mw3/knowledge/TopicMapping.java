@@ -4,22 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.metaworks.annotation.NonLoadable;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.vm.JschCommand;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -83,11 +82,9 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		Number number = kg.getKeyNumber();
 		
 		setTopicMappingId(number.longValue());
-		
 		WfNode node = new WfNode();
 		node.setId(this.getTopicId());
 		node.copyFrom(node.databaseMe());
-		
 //		if(node.getType().equals("project")){
 //			String host = GlobalContext.getPropertyString("vm.manager.ip");
 //			String userId = GlobalContext.getPropertyString("vm.manager.user");

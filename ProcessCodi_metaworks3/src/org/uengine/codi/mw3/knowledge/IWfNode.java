@@ -19,6 +19,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IInstance;
@@ -104,6 +105,14 @@ public interface IWfNode extends IDAO {
 	@Hidden
 	public String getParentId();
 	public void setParentId(String parentId);
+	
+	@Hidden
+	public boolean getIsReleased();
+	public void setIsReleased(boolean flag);
+	
+	@Hidden
+	public boolean getIsDistributed();
+	public void setIsDistributed(boolean flag);
 	
 	@Hidden
 	public int getNo();
@@ -196,6 +205,10 @@ public interface IWfNode extends IDAO {
 	public void setPenalty(int penalty);
 	
 	@Hidden
+	public String getExt();
+	public void setExt(String ext);
+		
+	@Hidden
 	public Date getStartDate();
 	public void setStartDate(Date startDate);
 	
@@ -219,6 +232,34 @@ public interface IWfNode extends IDAO {
 	public String getDescription();
 	public void setDescription(String description);
 	
+//	@Face(displayName="로고파일")
+//	@ORMapping(
+//		databaseFields={"URL", "THUMBNAIL"}, 
+//		objectFields={"uploadedPath", "filename"}
+//	)	
+//	public MetaworksFile getLogoFile();
+//	public void setLogoFile(MetaworksFile logoFile);
+	
+	@Hidden
+	@ORMapping(
+		databaseFields = { "id" },
+		objectFields = { "projectId" },
+		objectIsNullWhenFirstDBFieldIsNull = true,
+		availableWhen= "type=='project'")
+	public CloudInfo getCloudInfo();
+	public void setCloudInfo(CloudInfo cloudInfo) ;
+	
+	@Hidden
+	@ORMapping(
+			databaseFields = { "id" },
+			objectFields = { "id" },
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen= "type=='project'")
+	public FilepathInfo getFilepathInfo();
+	public void setFilepathInfo(FilepathInfo filepathInfo);
+	
+	public String getProjectAlias();
+	public void setProjectAlias(String projectAlias);
 	
 	/*******************************************
 	 * 

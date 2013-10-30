@@ -46,7 +46,17 @@ public class MetadataFile extends AbstractMetaworksFile {
 		if(this.getFileTransfer() == null || this.getFileTransfer().getFilename()==null || this.getFileTransfer().getFilename().length() <= 0) 
 			throw new Exception("No file attached");
 		
-		String prefix = overrideUploadPathPrefix();
+		String prefix = "";
+		String uploadPrefix = overrideUploadPathPrefix();
+		if( uploadPrefix != null ){
+			String[] tempStr = uploadPrefix.split(",");
+			if( tempStr.length >0 ){
+				prefix = tempStr[tempStr.length - 1];
+			}else{
+				prefix = uploadPrefix;
+			}
+		}
+		
 		String filePath = this.getTypeDir() + File.separatorChar +  this.getFileTransfer().getFilename();
 		String uploadPath = prefix + File.separatorChar + filePath;
 		new File(uploadPath).getParentFile().mkdirs();

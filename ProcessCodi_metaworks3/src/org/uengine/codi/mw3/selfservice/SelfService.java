@@ -5,6 +5,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
+import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
 
@@ -42,12 +43,12 @@ public class SelfService {
 		}
 		public void setPageNavigator(PageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
-		}		
+		}
 
+		
 		
 	@ServiceMethod
 	public void load() throws Exception {
-		
 		SelfServiceWindow windowPanel = new SelfServiceWindow(session);
 		
 		Layout centerLayout = new Layout();
@@ -57,11 +58,37 @@ public class SelfService {
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setCenter(centerLayout);
-		outerLayout.setNorth(new TopPanel(session));
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
+		
+		if("oce".equals(session.getUx())){
+			outerLayout.setNorth(new ProcessTopPanel(session));
+		}else{
+			outerLayout.setNorth(new TopPanel(session));
+		}
 
 		this.setLayout(outerLayout);
+	}
 		
-		pageNavigator = new PageNavigator();
+	@ServiceMethod
+	public void load(int appId) throws Exception {
+		SelfServiceWindow windowPanel = new SelfServiceWindow(session, appId);
+		
+		Layout centerLayout = new Layout();
+		centerLayout.setId("center");
+		centerLayout.setName("center");
+		centerLayout.setCenter(windowPanel);
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setCenter(centerLayout);
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
+		
+		if("oce".equals(session.getUx())){
+			outerLayout.setNorth(new ProcessTopPanel(session));
+		}else{
+			outerLayout.setNorth(new TopPanel(session));
+		}
+
+		this.setLayout(outerLayout);
 		
 	}
 
