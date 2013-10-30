@@ -4,8 +4,8 @@ import java.util.Calendar;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.oce.OcePerspectivePanel;
 import org.uengine.oce.dashboard.DashboardWindow;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
@@ -238,6 +239,14 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		selfService.load(this.getAppId());
 		
 		return new MainPanel(selfService);
+	}
+	
+	public Object[] deleteApp() throws Exception{
+		this.setAppId(this.getAppId());
+		
+		this.deleteDatabaseMe();
+		
+		return new Object[]{new Remover(this), new Refresh(new OcePerspectivePanel(session))};
 	}
 	
 	@AutowiredFromClient
