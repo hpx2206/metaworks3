@@ -1,22 +1,7 @@
 package org.uengine.codi.mw3.project.oce;
 
-import java.io.Serializable;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.StringTokenizer;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -33,11 +18,12 @@ import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.util.Base64;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
+import org.uengine.codi.mw3.project.oce.KtProjectCreateRequest ;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ManagerApproval implements ITool  {
@@ -106,6 +92,7 @@ public class ManagerApproval implements ITool  {
 		}
 	String resultStr;
 		@NonEditable
+		@Hidden
 		@Face(displayName="진행여부.")
 		public String getResultStr() {
 			return resultStr;
@@ -114,8 +101,9 @@ public class ManagerApproval implements ITool  {
 			this.resultStr = resultStr;
 		}
 	
+//	@Available(when="view")
 	String resultIp;
-	@Available(when="view")
+	@Hidden
 	@Face(displayName="생성된 IP 정보")
 		public String getResultIp() {
 			return resultIp;
@@ -144,25 +132,27 @@ public class ManagerApproval implements ITool  {
 		}
 	}
 	public void afterComplete() throws Exception {
-		final String instIDDD = this.instId;
-		final String projectName = this.getProjectName();
-		ProcessManagerBean processManagerBean = new ProcessManagerBean();
-		final ProcessInstance instance  = processManagerBean.getProcessInstance(instIDDD);
-		this.processManager = processManagerBean;
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					KtProjectCreateRequest ktProjectCreateRequest = new KtProjectCreateRequest();
-					ktProjectCreateRequest.setProcessManager(processManager);
-					CloudInfo cloudInfo = ktProjectCreateRequest.createRequset(projectName , instance);
-					insertCloudInfo(cloudInfo);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}				
-			}
-		}).start();
+		if( approval != null && approval.equals("approval") ){
+			final String instIDDD = this.instId;
+			final String projectName = this.getProjectName();
+			ProcessManagerBean processManagerBean = new ProcessManagerBean();
+			final ProcessInstance instance  = processManagerBean.getProcessInstance(instIDDD);
+			this.processManager = processManagerBean;
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						KtProjectCreateRequest ktProjectCreateRequest = new KtProjectCreateRequest();
+						ktProjectCreateRequest.setProcessManager(processManager);
+//						CloudInfo cloudInfo = ktProjectCreateRequest.createRequset(projectName , instance);
+//						insertCloudInfo(cloudInfo);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}				
+				}
+			}).start();
+		}
 	}
 	
 	public void insertCloudInfo(CloudInfo cloudInfo) throws Exception{
