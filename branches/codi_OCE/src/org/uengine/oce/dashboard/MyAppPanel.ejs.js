@@ -7,14 +7,12 @@ var org_uengine_oce_dashboard_MyAppPanel = function(objectId, className){
 	$(".process_map2 li").hover(
 		
 		function(){
-		console.log("11111");
-		
 			$(this).find(".editicon").css("display","block");
-			
+			$(this).find(".editicon2").css("display","block");
 		},
 		function(){
-		console.log("22222");
 			$(this).find(".editicon").css("display","none");
+			$(this).find(".editicon2").css("display","none");
 		}			
 	);
 };
