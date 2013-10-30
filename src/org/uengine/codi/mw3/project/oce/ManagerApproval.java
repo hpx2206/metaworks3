@@ -145,8 +145,8 @@ public class ManagerApproval implements ITool  {
 					try {
 						KtProjectCreateRequest ktProjectCreateRequest = new KtProjectCreateRequest();
 						ktProjectCreateRequest.setProcessManager(processManager);
-//						CloudInfo cloudInfo = ktProjectCreateRequest.createRequset(projectName , instance);
-//						insertCloudInfo(cloudInfo);
+						CloudInfo cloudInfo = ktProjectCreateRequest.createRequset(projectName , instance);
+						insertCloudInfo(cloudInfo);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}				
