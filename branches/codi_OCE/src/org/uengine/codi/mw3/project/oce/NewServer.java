@@ -214,7 +214,7 @@ public class NewServer extends Templete{
 	}
 	
 	public void createServerRequset() throws Exception{
-		String defId = "projectProcess/projectCre2.process";
+		String defId = "projectProcess/projectCre3.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;

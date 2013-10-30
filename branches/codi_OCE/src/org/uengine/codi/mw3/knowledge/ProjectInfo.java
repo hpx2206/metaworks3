@@ -573,7 +573,7 @@ public class ProjectInfo implements ContextAware {
 		
 		instanceViewContent.session = session;
 		
-		String defId = "projectProcess/projectCre2.process";
+		String defId = "projectProcess/projectCre3.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;

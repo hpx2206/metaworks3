@@ -21,6 +21,10 @@ public class InstanceListWindow extends Window {
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.setPreloaded(true);
+		
+		if( session.getLastPerspecteType() == null ){
+			session.setLastPerspecteType("allICanSee");
+		}
 
 		this.setPanel((Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem())[1]));
 		
