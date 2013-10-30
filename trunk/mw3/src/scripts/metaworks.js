@@ -653,6 +653,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						webObjectType['typeSelector'] = fd;
 					}
 					
+					for(var attributeName in fd.attributes){
+						if(attributeName.indexOf('descriptor.') == 0)
+							webObjectType[attributeName.substring(attributeName.indexOf('.')+1) + 'FieldDescriptor'] = fd;
+					}
+					
+					
 					fd['getOptionValue'] = function(option, defaultValue){
 						if(this.options!=null && this.values!=null)
 						
