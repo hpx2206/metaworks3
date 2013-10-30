@@ -4,25 +4,33 @@ import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
-import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.ToOpener;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.CloudInstanceWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
-import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Role;
 
 
-public class ProcessNode extends TreeNode{
+@Face(
+		ejsPath = "dwr/metaworks/org/uengine/codi/mw3/ide/libraries/ProcessNode.ejs",
+		ejsPathMappingByContext = {
+				"{how:	'tree', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/libraries/ProcessNode.ejs'}",
+				"{how:	'resourcePicker', face: 'dwr/metaworks/org/metaworks/metadata/ResourceNodePicker.ejs'}"
+		})
+public class ProcessNode extends ResourceNode{
 	
 	String parentName;
 		public String getParentName() {
@@ -67,34 +75,50 @@ public class ProcessNode extends TreeNode{
 			this.metaworksContext = metaworksContext;
 		}
 		
-	@AutowiredFromClient
-	public Session session;
+	@Override
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] showContextMenu() {
+		session.setClipboard(this);
+		return new Object[]{new ResourceContextMenu(this, session) , new Refresh(session)};
+	}
 		
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
-		ResourceNode resourceNode = new ResourceNode();
-		resourceNode.setId(this.getId());
-		resourceNode.setName(this.getName());
-		resourceNode.setType(this.getType());
-		resourceNode.setPath(this.getPath());
-		
-		Editor editor = new ProcessEditor(resourceNode);
-		try {
-			editor.load();
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
+			metadataProperty.setResourceNode(this);
+
+			//픽업되는 순간  xml에 저장하고 load 해서 미리보기 
+			this.getMetaworksContext().setHow("resourcePicker");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
+			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
+		}else{
+			ProcessNode processNode = new ProcessNode();
+			processNode.setId(this.getId());
+			processNode.setName(this.getName());
+			processNode.setType(this.getType());
+			processNode.setPath(this.getPath());
+			processNode.setProjectId(this.getProjectId());
+			
+			Editor editor = new ProcessEditor(processNode);
+			try {
+				editor.load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
+				instanceViewThreadPanel.session = session;
+				instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
+				instanceViewThreadPanel.load();
+			}
+			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+			
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
-		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-		if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
-			instanceViewThreadPanel.session = session;
-			instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
-			instanceViewThreadPanel.load();
-		}
-		CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-		cloudInstanceWindow.setPanel(instanceViewThreadPanel);
-		
-		return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 	}		
 	
 	@Override

@@ -109,6 +109,7 @@ public class ProcessDesignerContainer {
 		
 		rolePanel = new RolePanel();
 		processVariablePanel = new ProcessVariablePanel();
+		
 	}
 	
 	public void load(ProcessDefinition def) throws Exception{

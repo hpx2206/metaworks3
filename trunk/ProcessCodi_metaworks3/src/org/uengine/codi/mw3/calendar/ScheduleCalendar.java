@@ -11,10 +11,14 @@ import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
@@ -22,13 +26,21 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
+
+
+@Face(
+	ejsPathMappingByContext={
+		"{where: 'oce_dashboard', face: 'dwr/metaworks/org/uengine/oce/ScheduleCalendar_dashboard.ejs'}",
+	}
+)
 public class ScheduleCalendar implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
@@ -167,13 +179,15 @@ public class ScheduleCalendar implements ContextAware {
 						" where inst.duedate is not null " +
 						" and inst.isdeleted != 1  "+
 						" and inst.instId = follower.instId "+
-						" and follower.endpoint in ( ?initep )";
+						" and follower.endpoint in ( ?initep )" + 
+						" order by inst.duedate";
 						//" and inst.defverId = 'Unstructured.process'";
 		
 		Instance instance = new Instance();
 		IInstance iInstance = instance.sql(sql);
 		iInstance.setInitEp(userId);
-		iInstance.select();
+		iInstance.select();		
+		
 		DataConvert(arrListData, iInstance, userId);
 		
 		setShowUserId(userId);
@@ -181,6 +195,10 @@ public class ScheduleCalendar implements ContextAware {
 	}
 
 	public void DataConvert(ArrayList arrListData, IInstance iInstance, String empCode) {
+		
+		String prevDate = null;
+		int prevCnt = 1;
+		
 		Map column = new HashMap();
 		try {	
 			while(iInstance.next()){
@@ -191,7 +209,6 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("id", iInstance.getInstId().toString());
 				column.put("callType", "instance" );
 				column.put("title", title );
-//				column.put("start", iInstance.getDueDate(); // set startDate equals endDate
 				column.put("start", iInstance.getDueDate());
 				
 				if(iInstance.getExt1() != null && "false".equals(iInstance.getExt1())){
@@ -216,7 +233,26 @@ public class ScheduleCalendar implements ContextAware {
 				if("Completed".equals(iInstance.get("status"))){
 					column.put("color", "#808080");
 				}
-				arrListData.add(column);
+				
+				SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+				String dueDate = df.format(iInstance.getDueDate());
+				
+				if(!"oce".equals(session.getUx()) || prevDate == null || !prevDate.equals(dueDate)){
+					arrListData.add(column);
+					
+					prevDate = dueDate;
+					prevCnt = 1;
+					
+					if("oce".equals(session.getUx())){
+						((HashMap)arrListData.get(arrListData.size()-1)).put("callType", "more" );
+						((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  "건");
+					}
+				}else{
+					prevCnt++;
+					
+					((HashMap)arrListData.get(arrListData.size()-1)).put("callType", "more" );
+					((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  "건");
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -279,9 +315,9 @@ public class ScheduleCalendar implements ContextAware {
 		}
 	}	
 	
-	@ServiceMethod(payload={"schdId", "callType"})
+	@ServiceMethod(payload={"schdId", "callType"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] linkScheduleEvent() throws Exception{
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
+		
 		String instId = null;
 		if( "workitem".equals(callType) ){
 			WorkItem schedule = new WorkItem();
@@ -290,41 +326,58 @@ public class ScheduleCalendar implements ContextAware {
 		}else{
 			instId = getSchdId() + "";
 		}
+	
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
 		
-		IInstance scview = instance.databaseMe();
-		
-		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-		panel.getMetaworksContext().setHow("instanceList");
-		panel.getMetaworksContext().setWhere("sns");
-		panel.session = session;
-		panel.load(instId);
-		scview.setInstanceViewThreadPanel(panel);
-		
-		InstanceList list = new InstanceList(session);
-		list.setInstances(scview);
-		
-		return new Object[]{list};
-		
-		} else {
-			String instId = null;
-			if( "workitem".equals(callType) ){
-				WorkItem schedule = new WorkItem();
-				schedule.setTaskId(new Long(getSchdId()));
-				instId = schedule.databaseMe().getInstId().toString();
-			}else{
-				instId = getSchdId() + "";
+		if("more".equals(this.getCallType())){
+			IInstance scview = instance.databaseMe();
+			
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			String dueDate = df.format(scview.getDueDate());
+			
+			session.setLastPerspecteType("calendar");
+			session.setLastSelectedItem(dueDate);
+			
+			InstanceList instList = new InstanceList(session);
+			instList.session = session;
+			instList.load();
+			
+			Popup popup = new Popup();
+			popup.setName("Todo List");
+			popup.setPanel(instList);
+			
+			return new Object[]{ popup };
+		}else{
+			if("sns".equals(session.getEmployee().getPreferUX()) ){
+				IInstance scview = instance.databaseMe();
+				
+				InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+				panel.getMetaworksContext().setHow("instanceList");
+				panel.getMetaworksContext().setWhere("sns");
+				panel.session = session;
+				panel.load(instId);
+				scview.setInstanceViewThreadPanel(panel);
+				
+				InstanceList list = new InstanceList(session);
+				list.setInstances(scview);
+				
+				return new Object[]{new Refresh(list)};
+				
+			} else if("oce".equals(session.getUx())){
+				session.setLastSelectedItem("goSns");
+				session.setUx("sns");
+				return new Object[]{new MainPanel(new Main(session, String.valueOf(instId)))};
+			} else {
+
+				instanceViewContent.session = session;
+				instanceViewContent.load(instance);
+				
+				return new Object[]{new Refresh(instanceViewContent)};
+				
 			}
-			Instance instance = new Instance();
-			instance.setInstId(new Long(instId));
-			
-			instanceViewContent.session = session;
-			instanceViewContent.load(instance);
-			
-			return new Object[]{instanceViewContent};
-			
 		}
+		
 	}
 	
 	@Autowired

@@ -22,12 +22,12 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.search.solr.SolrSearch;
 
 import com.efsol.util.StringUtils;
 
@@ -56,7 +56,129 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 	public Instance(){
 		
-	}	
+	}
+	public IInstance loadOnDashboard(Navigation navigation, int page, int count)
+			throws Exception {
+		
+		Map<String, String> criteria = new HashMap<String, String>();
+		
+		if( page < 0 ){
+			page = 0;
+		}
+		// paging 
+		String tempStr = "";
+		tempStr = "" + (page * count);
+		criteria.put("startIndex", tempStr);
+
+		tempStr = "" + (page + 1) * count;
+		criteria.put("lastIndex", tempStr);
+		
+		StringBuffer worklistSql = new StringBuffer();
+		StringBuffer instanceSql = new StringBuffer();
+
+		// TODO makes all criteria
+
+		createSqlPhase1(navigation, 
+				criteria, worklistSql, instanceSql);
+		
+		StringBuffer stmt = new StringBuffer();		
+
+		String searchKeyword = navigation.getKeyword();
+		if(searchKeyword != null && !searchKeyword.isEmpty() && !Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
+			//stmt.append("(");
+			
+			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
+			
+			if(	"inbox".equals(navigation.getPerspectiveType())) {				
+				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
+				
+			}else{
+				appendedInstanceSql.append(" AND (exists (select 1 from bpm_worklist wl where inst.INSTID = wl.instid and title like ?keyword) or inst.name like ?keyword)  ");
+			}
+			
+			criteria.put("keyword", "%" + searchKeyword + "%");			
+
+//			SolrSearch solrSearch = new SolrSearch();
+//			solrSearch.setKeyword(searchKeyword);
+//			String instanceStr = solrSearch.searchInstance();
+//			//if( instanceStr != null ){
+//				appendedInstanceSql.append("   AND inst.INSTID in (" + instanceStr + ") ");
+////				criteria.put("instanceStr", "(" + instanceStr + ")" );
+//			//}
+			
+			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
+
+
+			//stmt.append(") union (");
+
+
+			//StringBuffer appendedWorkListSql = new StringBuffer(worklistSql);
+			
+			
+			//criteria.put("worklistTitle", "%" + searchKeyword + "%");			
+			
+			//createSQLPhase2(session, criteria, stmt, appendedWorkListSql, instanceSql);
+			
+			//stmt.append(")");
+
+		}else{
+
+			createSQLPhase2(navigation, criteria, stmt, worklistSql, instanceSql);
+		}
+		
+		// TODO add direct append to sql
+//		criteria.put(Instance.TASK_DIRECT_APPEND_SQL_KEY, taskSql.toString());
+//		criteria.put(Instance.INSTANCE_DIRECT_APPEND_SQL_KEY,
+//				instanceSql.toString());
+		
+		
+		
+		
+		StringBuffer bottomList = new StringBuffer();
+		bottomList.append("select bottomlist.* from (");	
+		bottomList
+			.append(stmt)
+			.append(") bottomlist");
+		
+//		if(oracle)
+//			stmt.append("where rindex between ?startIndex and ?lastIndex ");
+		
+
+/*		if ("ORACLE".equals(typeOfDBMS))
+			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+		else if ("MYSQL".equals(typeOfDBMS))*/
+		//if( count != 0 && page != 0 )
+		
+		bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
+		
+		//TODO delete printing
+		System.out.println("worklist sql:" + bottomList.toString());
+		
+		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
+		
+		criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
+		criteria.put("endpoint", navigation.getEmployee().getEmpCode());
+		criteria.put("partcode", navigation.getEmployee().getPartCode());
+		
+		// TODO add criteria
+		Set<String> keys = criteria.keySet();
+		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
+				continue;
+			} else {
+				System.out.println(key + " : " + criteria.get(key) );
+				instanceContents.set(key, criteria.get(key));
+			}
+		}
+
+		instanceContents.select();
+		
+//		instanceContents.getCurrentUser().getMetaworksContext().setHow("small");
+		
+		return instanceContents;
+	}
+	
 	static public IInstance load(Navigation navigation, int page, int count)
 			throws Exception {
 		
@@ -546,7 +668,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ");
 
-		}else if("allICanSee".equals(navigation.getPerspectiveType())) {
+		}else if("allICanSee".equals(navigation.getPerspectiveType()) || "calendar".equals(navigation.getPerspectiveType()) || "dashboard".equals(navigation.getPerspectiveType()) ) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
@@ -571,6 +693,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 				.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
 				.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
 				.append("			)	 ");
+				
+				if("calendar".equals(navigation.getPerspectiveType()))
+					instanceSql.append("			and DATE_FORMAT(inst.duedate, '%Y%m%d') = " + navigation.getPerspectiveValue());
+				
 			}else{
 				instanceSql
 				.append(" and	exists ( ")
@@ -587,7 +713,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
 //			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
-		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType())) {
+		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "app".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
@@ -656,6 +782,24 @@ public class Instance extends Database<IInstance> implements IInstance{
 //				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
 			}
 			
+			setInstanceViewThreadPanel(panel);
+			
+			return this;
+		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
+			getMetaworksContext().setHow("sns");
+			
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("sns");
+			
+			
+			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+				panel.session = session;
+				panel.load(this.getInstId().toString());
+				
+				this.fillFollower();
+					
+			}
+
 			setInstanceViewThreadPanel(panel);
 			
 			return this;
@@ -1450,5 +1594,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			return instance;
 			
+	}
+	
+	public MainPanel goSns() throws Exception {
+		if(session != null){
+			session.setLastPerspecteType("allICanSee");
+			session.setUx("sns");
+		}
+		
+		return new MainPanel(new Main(session, String.valueOf(this.getInstId())));
 	}
 }

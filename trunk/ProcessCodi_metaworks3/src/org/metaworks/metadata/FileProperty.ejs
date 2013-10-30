@@ -3,8 +3,6 @@
 
 if(mw3.where == 'ssp'){
 	if(mw3.when == 'show_detail' ) {
-	console.log('1***');
-	console.log(value.file.mimeType);
 	%>
 		<span class="form_tit"><br /><br /><%=value.description%></span>
 		<div class="sp_form_block">
@@ -17,8 +15,6 @@ if(mw3.where == 'ssp'){
 		</div>
 	<%
 	}else if(mw3.when == 'edit') {
-	console.log('2***');
-	console.log(value.file.mimeType);
 	%>
 		<span class="form_tit"><br /><br /><%=value.description%></span>
 		<div class="sp_form_block">
@@ -44,7 +40,12 @@ if(mw3.where == 'ssp'){
 }else if(mw3.where == 'ide'){
 %>
     <label class="fb_box_desc" id="">이름</label>
-    <div class=""><%= fields.name.here()%>
+    <div class="">
+        <% if(value.metaworksContext.when == 'edit') { %>            
+                      <%= fields.name.here({when:'view'})%>
+        <% }else{ %>
+                      <%= fields.name.here()%>
+        <% } %>
     </div>
     <label class="fb_box_desc" id="">화면출력정보</label>
     <div class=""><%= fields.description.here()%>
@@ -91,9 +92,6 @@ if(mw3.where == 'ssp'){
                 </div>
                 <% 
                     if(value.file != null && value.file.mimeType != null && value.file.mimeType=='image'){ 
-                    
-                    	console.log('3***');
-	console.log(value.file.mimeType);
                     %>
                         <div style="float:left;margin: 0px 5px 0px 0px;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view'})%></div>
                 <% } %>

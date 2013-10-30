@@ -73,7 +73,7 @@ public class Navigator {
 		this.setId("navigator");
 		this.setType(this.getId());
 		this.setName("$Navigator");
-		this.rolePerspective = new RolePerspective();
+//		this.rolePerspective = new RolePerspective();
 		this.searchBox = new SearchBox();
 	}
 	

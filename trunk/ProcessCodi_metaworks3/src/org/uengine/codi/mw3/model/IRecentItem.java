@@ -23,6 +23,9 @@ public interface IRecentItem extends IDAO{
 	public String getItemId();
 	public void setItemId(String itemId);
 	
+	public int getClickedCount();
+	public void setClickedCount(int clickedCount);
+	
 	@ServiceMethod
 	public void add() throws Exception;
 	

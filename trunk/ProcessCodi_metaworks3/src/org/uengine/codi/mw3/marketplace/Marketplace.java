@@ -9,6 +9,7 @@ import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
 public class Marketplace {
@@ -37,7 +38,9 @@ public class Marketplace {
 	public void load() throws Exception {
 		
 		//top
-		MarketplaceTopPanel top = new MarketplaceTopPanel(session);
+//		MarketplaceTopPanel top = new MarketplaceTopPanel(session);
+		ProcessTopPanel top = new ProcessTopPanel(session);
+
 
 		//center
 		MarketplaceWindow marketplaceWindow = new MarketplaceWindow();
@@ -74,9 +77,9 @@ public class Marketplace {
 		east.load();
 		*/
 		
-		session.getEmployee().setPreferUX("sns");
-		session.setLastPerspecteType("topic");
-		session.setLastSelectedItem("Marketplace");
+//		session.getEmployee().setPreferUX("sns");
+//		session.setLastPerspecteType("topic");
+//		session.setLastSelectedItem("Marketplace");
 		
 		InstanceList instList = new InstanceList(session);
 		instList.load();
@@ -84,13 +87,13 @@ public class Marketplace {
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.setInstanceList(instList);
 		
-		ContentWindow topicStreamWindow = new ContentWindow();
-		topicStreamWindow.setPanel(instanceListPanel);
+//		ContentWindow topicStreamWindow = new ContentWindow();
+//		topicStreamWindow.setPanel(instanceListPanel);
 		
 		Layout marketPlaceLayout =  new Layout();
 		marketPlaceLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__size:250");
 		marketPlaceLayout.setCenter(marketplaceWindow);
-		marketPlaceLayout.setEast(topicStreamWindow);
+//		marketPlaceLayout.setEast(topicStreamWindow);
 		
 		Layout mainLayout = new Layout();
 		mainLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
@@ -98,8 +101,6 @@ public class Marketplace {
 		mainLayout.setCenter(marketPlaceLayout);
 		
 		this.setLayout(mainLayout);
-		
-		pageNavigator = new PageNavigator();
 		
 	}
 	

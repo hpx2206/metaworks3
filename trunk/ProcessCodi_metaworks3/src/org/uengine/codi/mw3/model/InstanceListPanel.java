@@ -10,15 +10,22 @@ import org.metaworks.annotation.Test;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.codi.mw3.marketplace.AppInformation;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 @Face(
 		ejsPathMappingByContext=
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
 		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
+		"{where: 'oce_app', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}",
+		"{where: 'oce_project', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}"
+		
 	}		
 
 )
@@ -75,7 +82,7 @@ public class InstanceListPanel implements ContextAware{
 			}
 			
 			if("sns".equals(session.getEmployee().getPreferUX())){
-				this.getMetaworksContext().setWhere("sns");
+				this.getMetaworksContext().setWhere("oce");
 			}
 			if("topic".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("topic");
@@ -87,6 +94,13 @@ public class InstanceListPanel implements ContextAware{
 			
 			if("explorer".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("explorer");		
+			
+			if("app".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("app");
+			
+			if("oce_project".equals(session.getUx()))
+				this.getMetaworksContext().setWhere("oce_project");
+			
 			
 			instanceList = new InstanceList(session);
 			
@@ -153,13 +167,14 @@ public class InstanceListPanel implements ContextAware{
 			this.newInstancePanel = newInstancePanel;
 		}
 	
-/*	WorkItem newInstantiator;
+	WorkItem newInstantiator;
 		public WorkItem getNewInstantiator() {
 			return newInstantiator;
 		}
 		public void setNewInstantiator(WorkItem newInstantiator) {
 			this.newInstantiator = newInstantiator;
-		}	*/
+		}
+
 	DocumentFollowers documentFollowers;
 		public DocumentFollowers getDocumentFollowers() {
 			return documentFollowers;
@@ -217,6 +232,22 @@ public class InstanceListPanel implements ContextAware{
 		//this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 		
 		return personalPerspective.loadAllICanSee();
+	}
+	
+	@ServiceMethod
+	public Object[] loadOnDashboard() throws Exception {
+	
+		session.getEmployee().setPreferUX("sns");
+		
+		Object[] returnObject = Perspective.loadInstanceListPanel(session , "allICanSee", "oce");
+		
+		String title = GlobalContext.getPropertyString("$All");
+		
+		DashboardWindow window = new DashboardWindow();
+		window.setPanel(returnObject);
+		window.setTitle(title);
+
+		return new Object[]{window , session};
 	}
 	
 	@ServiceMethod
@@ -358,10 +389,7 @@ public class InstanceListPanel implements ContextAware{
 		return window;
 	}
 	
-
-	/*
 	ProjectInfo projectInfo;
-		@Hidden
 		public ProjectInfo getProjectInfo() {
 			return projectInfo;
 		}
@@ -369,15 +397,12 @@ public class InstanceListPanel implements ContextAware{
 			this.projectInfo = projectInfo;
 		}
 	
-	
 	public void projectInfoLoad() throws Exception {
-		
-		//projectInfo.session = session;
-		//projectInfo.processManager = processManager;
+		projectInfo = new ProjectInfo(session.getLastSelectedItem());
 		projectInfo.load();
 	}
-	*/
 	
+	@Face(displayName = "등록")
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object loadProjectInfo() throws Exception {
 		
@@ -395,5 +420,26 @@ public class InstanceListPanel implements ContextAware{
 		return modalWindow;
 	}
 	
+	AppInformation appInformation;
+		public AppInformation getAppInformation() {
+			return appInformation;
+		}
+		public void setAppInformation(AppInformation appInformation) {
+			this.appInformation = appInformation;
+		}
 	
+	public void appInfoLoad() throws Exception {
+		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
+		appInformation.load();
+	}
+	
+	@ServiceMethod
+	public MainPanel goSns() throws Exception {
+		if(session != null){
+			session.setLastPerspecteType("allICanSee");
+			session.setUx("sns");
+		}
+		
+		return new MainPanel(new Main(session));
+	}
 }

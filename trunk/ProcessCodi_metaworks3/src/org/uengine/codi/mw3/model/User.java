@@ -7,6 +7,7 @@ import javax.sql.RowSet;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
@@ -767,5 +768,22 @@ public class User extends Database<IUser> implements IUser {
 		Employee employee = new Employee();
 		employee.setEmpCode(this.getUserId());
 		employee.databaseMe().setApproved(true);
+	}
+	
+	public Object showMenu() throws Exception {
+		
+		Employee employee = new Employee();
+		
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		
+		employee.setMetaworksContext(new MetaworksContext());
+		employee.getMetaworksContext().setWhere("user_menu_option");
+		
+		Popup menu = new Popup();
+		menu.setHeight(98);
+		menu.setWidth(200);
+		menu.setPanel(employee);
+		
+		return menu;
 	}
 }

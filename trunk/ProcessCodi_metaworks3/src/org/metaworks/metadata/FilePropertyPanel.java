@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs"  , options={"disableHeight"}, values={"true"})
 public class FilePropertyPanel {
 	
 	ArrayList<FileProperty> fileProperties;

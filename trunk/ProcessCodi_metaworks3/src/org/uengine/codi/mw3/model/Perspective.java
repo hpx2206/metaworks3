@@ -7,7 +7,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
 
 public class Perspective {
@@ -15,26 +14,22 @@ public class Perspective {
 	public final static String TYPE_COMMINGTODO = "commingTodo";
 	
 	String label;
-
-	@Id
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
+		@Id
+		public String getLabel() {
+			return label;
+		}
+		public void setLabel(String label) {
+			this.label = label;
+		}
 
 	boolean selected;
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-
+		public boolean isSelected() {
+			return selected;
+		}
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
+		
 	@ServiceMethod(callByContent = true, payload = { "selected" })
 	public Object[] select() throws Exception {
 		setSelected(!isSelected()); // toggle
@@ -56,7 +51,7 @@ public class Perspective {
 		// TODO Override and unload children when perspective deselected
 	}
 
-	protected Object[] loadInstanceListPanel(String perspectiveType,
+	public Object[] loadInstanceListPanel(String perspectiveType,
 			String selectedItem) throws Exception {
 		return loadInstanceListPanel(session, perspectiveType, selectedItem);
 	}
@@ -184,12 +179,28 @@ public class Perspective {
 			
 		
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
+		
+		
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.session = session;
+		newInstancePanel.load(session);
+		
 		InstanceList instList = new InstanceList(session);
+		instList.session = session;
+		instList.setMetaworksContext(new MetaworksContext());
+		instList.getMetaworksContext().setHow(perspectiveType);
+		if(selectedItem == null){
+			instList.getMetaworksContext().setWhere(session.getLastPerspecteType());
+		}else {
+			instList.getMetaworksContext().setWhere(selectedItem);
+		}
 		instList.load();
-
+		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
-		instListPanel.setInstanceList(instList);
 		instListPanel.session = session;
+		instListPanel.setNewInstancePanel(newInstancePanel);
+		instListPanel.setInstanceList(instList);
+
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){
@@ -197,8 +208,15 @@ public class Perspective {
 		}else if( title == null ){
 			title = "$perspective." + perspectiveType;
 		}
-		if("topic".equals(perspectiveType)){
+		if("topic".equals(perspectiveType) || "project".equals(perspectiveType) || "app".equals(perspectiveType)){
 			instListPanel.topicFollowersLoad();
+			
+		}
+		if("project".equals(perspectiveType)){
+			instListPanel.projectInfoLoad();
+		}
+		if("app".equals(perspectiveType)){
+			instListPanel.appInfoLoad();
 		}
 		instListPanel.setTitle(title);
 		session.setWindowTitle(title);
@@ -209,25 +227,28 @@ public class Perspective {
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
 			
-		final Object[] returnObject;
+		//final Object[] returnObject;
 		
-		if("sns".equals(session.getEmployee().getPreferUX())){
-			WfPanel wfPanel = new WfPanel();
-			
-			if("topic".equals(perspectiveType)){
-				wfPanel.session = session;
-				wfPanel.load(selectedItem);
-			}else{			
-				wfPanel.session = session;
-				wfPanel.load(session.getCompany().getComCode());
-			}
-			
-			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
-		}else
-			returnObject = new Object[]{new Refresh(searchBox)};
+//		if("sns".equals(session.getEmployee().getPreferUX())){
+//			WfPanel wfPanel = new WfPanel();
+//			
+//			if("topic".equals(perspectiveType)){
+//				wfPanel.session = session;
+//				wfPanel.load(selectedItem);
+//			}else{			
+//				wfPanel.session = session;
+//				wfPanel.load(session.getCompany().getComCode());
+//			}
+//			
+//			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
+//		}else
+//			returnObject = new Object[]{new Refresh(searchBox)};
+//		
+//		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
-		
+		if("oce".equals(selectedItem)){
+			return new Object[] {instListPanel};
+		}
 		return new Object[] {session, instListPanel};
 	}
 
@@ -239,5 +260,5 @@ public class Perspective {
 	}
 
 	@AutowiredFromClient
-	public Session session;
+	public static Session session;
 }

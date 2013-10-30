@@ -17,6 +17,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.example.ide.SourceCode;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
@@ -55,7 +56,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	@Autowired
 	ProcessManagerRemote connectionFactory;
 
-	
+//	@XStreamOmitField
+	MetaworksFile logoFile;
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}
+
 	@XStreamAsAttribute
 	String id;
 		public String getId() {
@@ -85,7 +94,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 
 	@XStreamAsAttribute
 	String visType;
-
 		public String getVisType() {
 			return visType;
 		}
@@ -201,6 +209,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.url = url;
 		}
 		
+	String ext;
+		public String getExt() {
+			return ext;
+		}
+		public void setExt(String ext) {
+			this.ext = ext;
+		}
+
 	String thumbnail;
 		public String getThumbnail() {
 			return thumbnail;
@@ -360,6 +376,53 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setDescription(String description) {
 			this.description = description;
 		}
+	
+	@XStreamOmitField
+	boolean isReleased;
+		public boolean getIsReleased() {
+			return isReleased;
+		}
+		public void setIsReleased(boolean isReleased) {
+			this.isReleased = isReleased;
+		}
+	
+	
+	@XStreamOmitField
+	boolean isDistributed;
+		public boolean getIsDistributed() {
+			return isDistributed;
+		}
+		public void setIsDistributed(boolean isDistribued) {
+			this.isDistributed = isDistribued;
+		}
+		
+	@XStreamOmitField
+	public CloudInfo cloudInfo;
+		public CloudInfo getCloudInfo() {
+			return cloudInfo;
+		}
+		public void setCloudInfo(CloudInfo cloudInfo) {
+			this.cloudInfo = cloudInfo;
+		}
+	
+	@XStreamOmitField
+	public FilepathInfo filepathInfo;
+		public FilepathInfo getFilepathInfo() {
+			return filepathInfo;
+		}
+		public void setFilepathInfo(FilepathInfo filepathInfo) {
+			this.filepathInfo = filepathInfo;
+		}
+	
+	@XStreamOmitField
+	public String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+		
 		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
@@ -599,6 +662,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		setId(nodeId);
 
+		createDatabaseMe();
+		flushDatabaseMe();
+	}
+	
+	public void createMe(String id) throws Exception {
+		setId(id);
 		createDatabaseMe();
 		flushDatabaseMe();
 	}

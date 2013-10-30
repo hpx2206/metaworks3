@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
@@ -151,6 +152,7 @@ public class SelfServiceControlPanel {
 	public void load(Session session) throws Exception {
 
 		AppMapping appMp = new AppMapping();
+		appMp.session = session;
 		appMp.setComCode(session.getCompany().getComCode());
 		appMp.setIsDeleted(false);
 		
@@ -162,6 +164,28 @@ public class SelfServiceControlPanel {
 		
 		Workspace workspace = new Workspace();
 		
+		while(appList.next()) {			
+			workspace.addProject(session.getCompany().getComCode(), appList.getProjectName(), appList.getAppName());
+		}
+		
+		this.setWorkspace(workspace);
+	}
+	
+	public void load(Session session, int appId) throws Exception {
+
+		AppMapping appMp = new AppMapping();
+		appMp.session = session;
+		appMp.setAppId(appId);
+		
+		IAppMapping appList = appMp.findMyApp();
+		
+		appList.getMetaworksContext().setWhen("filter");
+		appList.getMetaworksContext().setWhere("ssp");
+		
+		this.setAppMapping(appList);
+		
+		Workspace workspace = new Workspace();
+
 		while(appList.next()) {			
 			workspace.addProject(session.getCompany().getComCode(), appList.getProjectName(), appList.getAppName());
 		}
@@ -187,10 +211,10 @@ public class SelfServiceControlPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if( metadataXML == null ){
+			throw new MetaworksException("메타데이타 파일이 없습니다.");
+		}
 
-		if(metadataXML == null)
-			metadataXML = new MetadataXML();
-		
 		metadataXML.setFilePath(project.getPath() + File.separatorChar + Project.METADATA_FILENAME);
 		
 		this.metadataProperties = new ArrayList<MetadataProperty>();	
@@ -228,9 +252,6 @@ public class SelfServiceControlPanel {
 		metadataXML.setMetaworksContext(new MetaworksContext());
 		metadataXML.getMetaworksContext().setHow("selfservice");
 	
-		this.setMetadataXml(metadataXML);		
-		
-		
 		//add panel		
 		FilePropertyPanel filePanel = new FilePropertyPanel(fileProperties);
 		this.setFilePropertyPanel(filePanel);

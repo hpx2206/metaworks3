@@ -40,5 +40,19 @@ public class SelfServiceWindow {
 		
 		this.setSelfServiceControlPanel(selfServiceControlPanel);
 	}
+	
+	public SelfServiceWindow(Session session, int appId) throws Exception{
+		
+		SelfServiceControlPanel selfServiceControlPanel = new SelfServiceControlPanel();
+		selfServiceControlPanel.load(session, appId);
+		
+		MetadataProperty metadataProperty = new MetadataProperty();
+		metadataProperty.setId("metaDetailView");
+		metadataProperty.getMetaworksContext().setWhere("ssp");
+		
+		selfServiceControlPanel.setMetadataProperty(metadataProperty);
+		
+		this.setSelfServiceControlPanel(selfServiceControlPanel);
+	}
 
 }

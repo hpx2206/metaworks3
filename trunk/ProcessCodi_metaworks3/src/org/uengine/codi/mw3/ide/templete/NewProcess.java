@@ -18,6 +18,7 @@ import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
@@ -49,10 +50,13 @@ public class NewProcess extends Templete {
 		if(clipboard instanceof ResourceNode){
 			ResourceNode targetNode = (ResourceNode)clipboard;
 			
-			ResourceNode node = new ResourceNode();
+			ProcessNode node = new ProcessNode();
 			node.setName(this.getName() + ".process");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
+			node.setType(TreeNode.TYPE_FILE_PROCESS);
+			node.setParentId(targetNode.getId());
+			node.setProjectId(targetNode.getParentId());
 			
 			WorkItem workitem = new WorkItem();
 			workitem.session = session;
