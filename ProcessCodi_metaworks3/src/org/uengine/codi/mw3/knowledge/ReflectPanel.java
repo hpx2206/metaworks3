@@ -196,100 +196,105 @@ public class ReflectPanel {
 			channel.disconnect();
 			
 		} else if ("svn".equals(wfNode.getVisType())) {
-			String nextBuilderNumber = null;
-			String builderResult = null;
-			String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
-			
-			long timeoutTime = 200000;
-			long sleepTime = 5000;
-			long tryTime = 0;
-			
-			String tmp;
-			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
-			
-			FileTransmition fileTransmition = new FileTransmition();
-			
-			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-			command = "sh /root/jbossKill.sh";
-			jschServerBehaviour.runCommand(command);
-			
-			if(jschServerBehaviour.getJschSession() != null)
-				jschServerBehaviour.getJschSession().disconnect();
-			
-			jschServerBehaviour.sessionLogin(host, userId, passwd);		
-			
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " + cloudInfo.getRootPwd();
-			jschServerBehaviour.runCommand(command);
-			
-			HudsonJobApi hudsonJobApi = new HudsonJobApi();
-
-			while(nextBuilderNumber == null){
-				HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
+			if(!check){
+				String nextBuilderNumber = null;
+				String builderResult = null;
+				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
 				
-				nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
-				try {
-					tryTime += sleepTime;
-					Thread.sleep(sleepTime);
-				} catch (Exception e) {
+				long timeoutTime = 200000;
+				long sleepTime = 5000;
+				long tryTime = 0;
+				
+				String tmp;
+				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+				
+				FileTransmition fileTransmition = new FileTransmition();
+				
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+				command = "sh /root/jbossKill.sh";
+				jschServerBehaviour.runCommand(command);
+				
+				if(jschServerBehaviour.getJschSession() != null)
+					jschServerBehaviour.getJschSession().disconnect();
+				
+				jschServerBehaviour.sessionLogin(host, userId, passwd);		
+				
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " + cloudInfo.getRootPwd();
+				jschServerBehaviour.runCommand(command);
+				
+				HudsonJobApi hudsonJobApi = new HudsonJobApi();
+	
+				while(nextBuilderNumber == null){
+					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
+					
+					nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
+					try {
+						tryTime += sleepTime;
+						Thread.sleep(sleepTime);
+					} catch (Exception e) {
+					}
+					
+					if(tryTime > timeoutTime)
+						break;
 				}
 				
-				if(tryTime > timeoutTime)
-					break;
-			}
-			
-			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
-			jschServerBehaviour.runCommand(command);
-			
-			while(builderResult == null){
-				HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
+				command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
+				jschServerBehaviour.runCommand(command);
 				
-				if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
-					builderResult = "SUCCESS";
-				else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
-					builderResult = "UNSUCCESS";
-				else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
-					builderResult = "FAILED";
-				
-				try {
-					Thread.sleep(5000);
-				} catch (Exception e) {
+				while(builderResult == null){
+					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
+					
+					if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
+						builderResult = "SUCCESS";
+					else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
+						builderResult = "UNSUCCESS";
+					else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
+						builderResult = "FAILED";
+					
+					try {
+						Thread.sleep(5000);
+					} catch (Exception e) {
+					}
 				}
+				
+				command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getProjectAlias();
+				tmp = jschServerBehaviour.runCommand(command);
+				
+				if(jschServerBehaviour.getJschSession() != null)
+					jschServerBehaviour.getJschSession().disconnect();
+				
+				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+				
+				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossStart.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
+				command = "sh /root/jbossStart.sh";
+				
+				if( jschServerBehaviour.getJschSession() == null )
+					throw new Exception("not connected");
+				
+				ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+				
+				((ChannelExec)channel).setCommand(command);
+				channel.setInputStream(null);
+				channel.connect();
+				
+				channel.disconnect();
+				
+				filepathinfo.setReflectVer(Integer.parseInt(tmp));
+				filepathinfo.setFileType(wfNode.getVisType());
+				filepathinfo.setId(filepathinfo.createNewId());
+				filepathinfo.setComment(this.getComment());
+				filepathinfo.setModdate(new Date());
+				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+				
+				if(jschServerBehaviour.getJschSession() != null)
+					jschServerBehaviour.getJschSession().disconnect();
+				
+				filepathinfo.createDatabaseMe();
+				filepathinfo.flushDatabaseMe();
 			}
-			
-			command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getProjectAlias();
-			tmp = jschServerBehaviour.runCommand(command);
-			
-			if(jschServerBehaviour.getJschSession() != null)
-				jschServerBehaviour.getJschSession().disconnect();
-			
-			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
-			
-			fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossStart.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
-			command = "sh /root/jbossStart.sh";
-			
-			if( jschServerBehaviour.getJschSession() == null )
-				throw new Exception("not connected");
-			
-			ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
-			
-			((ChannelExec)channel).setCommand(command);
-			channel.setInputStream(null);
-			channel.connect();
-			
-			channel.disconnect();
-			
-			filepathinfo.setReflectVer(Integer.parseInt(tmp));
-			filepathinfo.setFileType(wfNode.getVisType());
-			filepathinfo.setId(filepathinfo.createNewId());
-			filepathinfo.setComment(this.getComment());
-			filepathinfo.setModdate(new Date());
-			filepathinfo.setDistributor(session.getEmployee().getEmpName());
-			
-			if(jschServerBehaviour.getJschSession() != null)
-				jschServerBehaviour.getJschSession().disconnect();
-			
-			filepathinfo.createDatabaseMe();
-			filepathinfo.flushDatabaseMe();
+			else{
+				
+			}
 		}
 
 		return new Remover(new ModalWindow());

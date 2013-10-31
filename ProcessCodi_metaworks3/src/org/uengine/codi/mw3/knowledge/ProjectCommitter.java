@@ -165,7 +165,7 @@ public class ProjectCommitter {
 			int size = svnUserList.size();
 			if(size == 0){
 				//관리자 삭제시 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectName() + " " + this.getManagerAccount() + " " + getManagerAccount() + " ";
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + this.getManagerAccount() + " " + getManagerAccount() + " ";
 			 	jschServerBehaviour.runCommand(command);
 			}
 				
@@ -178,7 +178,7 @@ public class ProjectCommitter {
 						if(i == size-1){
 						  this.setAccount(contact.getFriendId());
 							  
-					 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectName() + " " + this.getAccount() + " " + this.getAccount() + " ";
+					 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + this.getAccount() + " " + this.getAccount() + " ";
 					 	jschServerBehaviour.runCommand(command);
 						
 						SvnUser su = new SvnUser(getAccount());

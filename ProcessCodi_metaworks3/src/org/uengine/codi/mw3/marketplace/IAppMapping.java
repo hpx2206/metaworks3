@@ -82,4 +82,7 @@ public interface IAppMapping extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goSelfService() throws Exception;
 	
+	@ServiceMethod(callByContent=true)
+	public Object[] deleteApp() throws Exception;
+	
 }

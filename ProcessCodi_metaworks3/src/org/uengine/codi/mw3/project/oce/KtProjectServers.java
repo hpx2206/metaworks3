@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.project.oce;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;

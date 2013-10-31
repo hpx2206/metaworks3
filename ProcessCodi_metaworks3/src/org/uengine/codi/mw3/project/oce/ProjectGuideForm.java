@@ -41,10 +41,10 @@ public class ProjectGuideForm implements ITool {
 	}
 	@Override
 	public void onLoad() throws Exception {
-//		System.out.println("ProjectGuideForm , projectId = " + projectId);
-//		System.out.println("ProjectGuideForm , projectName = " + projectName);
+		System.out.println("ProjectGuideForm , projectId = " + projectId);
+		System.out.println("ProjectGuideForm , projectName = " + projectName);
 		CloudInfo cloudInfo = new CloudInfo();
-		ICloudInfo iCInfo = cloudInfo.findServerByServerName(projectId , cloudInfo.getServerName() , KtProjectServers.SERVER_DEV);
+		ICloudInfo iCInfo = cloudInfo.findServerByServerName(projectId , projectName , KtProjectServers.SERVER_DEV);
 		if( iCInfo.next() ){
 			setResultStr("생성완료 되었습니다. <br/> '완료' 버튼을 클릭하여 프로세스를 완료시켜주세요");
 		}else{
