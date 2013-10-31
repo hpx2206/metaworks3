@@ -1,0 +1,21 @@
+ <%
+ if(value){
+%>          
+            <div>
+                <a onClick="<%=methods.drillDown.caller() %>" class="idept" style="float:left;"></a>
+                <a ondblClick="<%=methods.showProperties.caller() %>">
+                    <span><%=value.descr%></span>
+                </a>
+            </div>
+            <div style="clear:both"></div>
+        <%
+                    if(value.selected) {
+        %>
+            <ul>
+                <li style="padding-left:15px;"> 
+                    <%=fields.employeeList.here()%>
+                </li>
+            </ul>
+<%          }
+    }
+%>

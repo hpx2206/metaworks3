@@ -1,0 +1,22 @@
+<%
+	if(value){
+%>
+	<li>
+<%
+		if(value.secuopt=='1'){
+%>	
+ 		<img class="navi_icon" src="images/waveStyle/nav_topic_sec.png" />
+<%
+		}else{
+%>
+		<img class="navi_icon" src="images/waveStyle/nav_topic.png" />
+<%
+		}
+%>
+ 		<a onClick="<%=methods.loadTopic.caller()%>" href="#" title="<%=value.name%>">
+ 			<%=value.name%>
+ 		</a>
+ 	</li>	
+<%	
+	}
+%>

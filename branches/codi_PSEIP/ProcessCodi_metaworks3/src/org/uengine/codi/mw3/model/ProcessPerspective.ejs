@@ -1,0 +1,15 @@
+<%
+	if(value != null && typeof value != 'undefined'){
+%>
+<div class="depth1" onClick="<%=methods.select.caller() %>"><%=mw3.localize("$Process")%></div>
+<%if(value.selected){%>
+	<div class="depth2">
+		<ul class="fist_menu">
+			<%=fields.processMapList.here() %>
+`		</ul>
+	</div>
+<%}else{%>
+<%}%>
+<%
+	}
+%>
