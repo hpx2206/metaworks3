@@ -67,8 +67,8 @@ public class ProjectInfoForm implements ITool {
 	
 	@Override
 	public void onLoad() throws Exception {
-//		System.out.println("ProjectInfoForm , projectId = " + projectId);
-//		System.out.println("ProjectInfoForm , projectName = " + projectName);
+		System.out.println("ProjectInfoForm , projectId = " + projectId);
+		System.out.println("ProjectInfoForm , projectName = " + projectName);
 		CloudInfo cloudInfo = new CloudInfo();
 		ICloudInfo iCInfo = cloudInfo.findServerByServerName(projectId , projectName , KtProjectServers.SERVER_DEV);
 		if( iCInfo.next() ){
