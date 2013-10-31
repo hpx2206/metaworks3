@@ -1,0 +1,22 @@
+<div style="border-bottom:1px solid #aaaaaa;">
+
+	<div> 
+            <!--ui object -->
+            <ul class="mp_sub_lst_type">
+                <li>
+                    <div class="mp_sub_pic">
+                    	<a onClick="<%=methods.appExcute.caller()%>" href="#" style="display: inline-block"><%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 200px; height: 200px'}})%>
+                    </div>
+
+                    <div class="mp_sub_rightBox">
+                    	<dl class="mp_sub_dsc1">
+                        	<dt><a onClick="<%=methods.appExcute.caller()%>" href="#" style="display: inline-block"><%=fields.appName.here()%></a></dt>
+                        	<dd><span class="mp_sub_tit"><%=mw3.localize("$App.Overview.Simple")%> : </span><span class="mp_sub_rst"><%=fields.simpleOverview.here()%></span></dd>
+                            <dd><span class="mp_sub_tit"><%=mw3.localize("$App.Overview.Full")%> : </span><span class="mp_sub_rst"><%=fields.fullOverview.here()%></span></dd>
+                            <dd><span class="mp_sub_tit"><%=mw3.localize("$URL")%> : </span><span class="mp_sub_rst"><%=fields.url.here()%></span></dd>
+                        </dl>                    
+                    </div>
+                </li>
+            </ul>
+        </div>	
+</div>

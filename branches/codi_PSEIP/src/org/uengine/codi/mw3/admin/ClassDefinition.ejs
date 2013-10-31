@@ -1,0 +1,79 @@
+<%
+	if(mw3.when == 'edit' || mw3.when == 'step1'){
+%>
+	
+<div class="form_table">
+		<table border="1" cellspacing="0" summary="">
+		<tbody>
+<%
+	if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
+%>
+		<tr>
+			<th scope="row">Package Name</th>
+			<td>
+				<div class="item">
+					<%=fields.packageName.here()%>
+				</div>
+			</td>
+		</tr>
+<%
+	}
+	
+	if(!mw3.isHidden(fields.className.fieldDescriptor)){
+%>	
+		<tr>
+			<th scope="row"><%=mw3.localize(fields.className.fieldDescriptor.displayName)%></th>
+			<td>
+				<div class="item">
+					<%=fields.className.here()%>
+				</div>
+			</td>
+		</tr>
+		
+<%
+	}
+
+	if(!mw3.isHidden(fields.author.fieldDescriptor)){
+%>
+		<tr>
+			<th scope="row"><%=mw3.localize(fields.author.fieldDescriptor.displayName)%></th>
+			<td>
+				<div class="item">
+					<%=fields.author.here()%>
+				</div>
+			</td>
+		</tr>
+	
+<%
+	}
+%>
+		</tbody>
+	</table>
+	<div id="btnline" style="padding-top:8px;">
+		<ul>			
+<%
+	if(mw3.when == 'edit'){
+%>	
+			<li><a id="wBtn" href="#" onClick="<%=methods.next1.caller()%>"><span>next</span></a></li>
+<%
+	}if(mw3.when == 'step1'){
+%>	
+			<li><a id="wBtn" href="#" onClick="<%=methods.next2.caller()%>"><span>next</span></a></li>	
+<%
+	}
+%>		
+		</ul>
+	</div>
+</div>
+
+<%
+	}
+%>
+
+<table>
+	<tr><td>
+			<div id="sourceCodes_<%=objectId%>" style="height:90%">
+				<%=fields.sourceCodes.here()%>
+			</div>
+	</td></tr>
+</table>
