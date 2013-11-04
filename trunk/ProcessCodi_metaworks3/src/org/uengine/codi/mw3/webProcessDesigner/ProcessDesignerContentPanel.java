@@ -32,6 +32,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		processNameView = new ProcessNameView();
 		processNameView.setMetaworksContext(new MetaworksContext());
 		processNameView.getMetaworksContext().setHow("nameChange");
+		
+		rolePanel = new RolePanel();
+		processVariablePanel = new ProcessVariablePanel();
 	}
 	
 	String alias;
@@ -50,6 +53,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+		
 	ProcessDesignerContainer processDesignerContainer;
 		public ProcessDesignerContainer getProcessDesignerContainer() {
 			return processDesignerContainer;
@@ -58,7 +62,22 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-
+		
+	RolePanel	rolePanel;
+		public RolePanel getRolePanel() {
+			return rolePanel;
+		}
+		public void setRolePanel(RolePanel rolePanel) {
+			this.rolePanel = rolePanel;
+		}
+		
+	ProcessVariablePanel processVariablePanel;
+		public ProcessVariablePanel getProcessVariablePanel() {
+			return processVariablePanel;
+		}
+		public void setProcessVariablePanel(ProcessVariablePanel processVariablePanel) {
+			this.processVariablePanel = processVariablePanel;
+		}
 	String processName;
 		@Hidden
 		public String getProcessName() {
@@ -122,8 +141,12 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.load(def);
 		
+		rolePanel = processDesignerContainer.getRolePanel();
+		processVariablePanel = processDesignerContainer.getProcessVariablePanel();
+		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
+		
 		
 		return def.getProcessDesignerInstanceId();
 	}

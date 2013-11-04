@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.contexts.ComplexType;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
 
 public class ParameterContextPanel  implements ContextAware{
+	
+	@AutowiredFromClient(select="typeof parentEditorId!='undefined' && parentEditorId==autowiredObject.editorId")
+	transient public ProcessVariablePanel wholeProcessVariablePanel;
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -19,68 +24,90 @@ public class ParameterContextPanel  implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	ArrayList<ProcessVariable> wholeVariableList;
-		public ArrayList<ProcessVariable> getWholeVariableList() {
-			return wholeVariableList;
+	String editorId;
+	@Id
+		public String getEditorId() {
+			return editorId;
 		}
-		public void setWholeVariableList(ArrayList<ProcessVariable> wholeVariableList) {
-			this.wholeVariableList = wholeVariableList;
+		public void setEditorId(String editorId) {
+			this.editorId = editorId;
 		}
-		
-	ArrayList<ProcessVariable> activityVariableList;
-		public ArrayList<ProcessVariable> getActivityVariableList() {
-			return activityVariableList;
+	String parentEditorId;
+		public String getParentEditorId() {
+			return parentEditorId;
 		}
-		public void setActivityVariableList(
-				ArrayList<ProcessVariable> activityVariableList) {
-			this.activityVariableList = activityVariableList;
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}	
+	ParameterContext[] parameterContext;
+		public ParameterContext[] getParameterContext() {
+			return parameterContext;
 		}
-		
+		public void setParameterContext(ParameterContext[] parameterContext) {
+			this.parameterContext = parameterContext;
+		}
+	int selectedIndex; 
+		public int getSelectedIndex() {
+			return selectedIndex;
+		}
+		public void setSelectedIndex(int selectedIndex) {
+			this.selectedIndex = selectedIndex;
+		}
 	public ParameterContextPanel(){
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen("edit");
 	}
 	
 	public void load() throws Exception{
-		if( wholeVariableList == null ){
-			wholeVariableList = new ArrayList<ProcessVariable>();
-		}
-		if( activityVariableList == null ){
-			activityVariableList = new ArrayList<ProcessVariable>();
+		if( parameterContext == null ){
+			parameterContext = new ParameterContext[0];
 		}
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object[] addWholeVariable() throws Exception{
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object addActivityVariable() throws Exception{
 		
-		ProcessVariable newVariable = new ProcessVariable();
-		newVariable.setMetaworksContext(new MetaworksContext());
-		newVariable.getMetaworksContext().setHow("setting");
-		newVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		newVariable.changeType();
+		ParameterContext parameterContext = new ParameterContext();
+		parameterContext.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		parameterContext.getMetaworksContext().setHow("add");
+		parameterContext.setParentEditorId(this.getParentEditorId());
 		
-		ModalWindow popup = new ModalWindow();
-		popup.setWidth(500);
-		popup.setHeight(500);
-		popup.setTitle("변수추가");
-		popup.setPanel(newVariable);
+		SelectBox valBox = new SelectBox();
 		
-		return new Object[]{popup};
+		if( wholeProcessVariablePanel != null ){
+			ArrayList<ProcessVariable> variableList = wholeProcessVariablePanel.getVariableList();
+			for(int i=0; i < variableList.size() ; i++){
+				ProcessVariable processVariable = variableList.get(i);
+				valBox.add(processVariable.getDisplayName().getText(), processVariable.getName());
+			}
+		}
+		parameterContext.setType(valBox);
+		// TODO role 추가
+		// TODO instance 정보 추가
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setWidth(400);
+		modalWindow.setHeight(400);
+		modalWindow.setTitle("");
+		modalWindow.setPanel(parameterContext);
+		
+		return modalWindow;
 	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] removeWholeVariable() throws Exception{
-		return null;
+	@ServiceMethod(callByContent=true)
+	public void removeActivityVariable() throws Exception{
+		if( selectedIndex >= 0){
+			ParameterContext[] parameterContexts = this.getParameterContext();
+			parameterContexts[selectedIndex] = null;
+			
+			// array null remove
+			ArrayList<ParameterContext> removed = new ArrayList<ParameterContext>();
+			for (ParameterContext val : parameterContexts){
+				if (val != null){
+					removed.add(val);
+				}
+			}
+			this.setParameterContext(removed.toArray(new ParameterContext[0]));
+		}
 	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] addActivityVariable() throws Exception{
-		return null;
-	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] removeActivityVariable() throws Exception{
-		return null;
-	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] save() throws Exception{
-		return null;
-	}
+	
 }

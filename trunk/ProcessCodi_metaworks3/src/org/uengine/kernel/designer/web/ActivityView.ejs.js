@@ -146,6 +146,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    		var variable = {
     									__className : 'org.uengine.kernel.ProcessVariable',
     									name : dragObjMetadata.displayName ,
+    									typeInputter : complexType.__className,
     									defaultValue : complexType
     							};
     	    		    		
@@ -168,10 +169,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    		}
     	    		    		
     	    		    		// 전체 변수 리스트에 추가
-    	    		    		var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel');
+    	    		    		var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel@'+object.editorId);
     	    		    		if( processVariablePanel ){
-    	    		    			processVariablePanel.addedProcessVariable = variable;
-    	    		    			processVariablePanel.addVariable();
+    	    		    			processVariablePanel.editedProcessVariable = variable;
+    	    		    			processVariablePanel.addWholeVariable();
     	            			}
     	    		    		
     	    		    		var eleClassName = $(this).attr("_classname");

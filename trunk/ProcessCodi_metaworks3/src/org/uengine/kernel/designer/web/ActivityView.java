@@ -93,14 +93,6 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
 			this.propertiesWindow = propertiesWindow;
 		}
-	transient ArrayList<ProcessVariable> wholeVariableList;
-	@Hidden
-		public ArrayList<ProcessVariable> getWholeVariableList() {
-			return wholeVariableList;
-		}
-		public void setWholeVariableList(ArrayList<ProcessVariable> wholeVariableList) {
-			this.wholeVariableList = wholeVariableList;
-		}
 		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
@@ -109,7 +101,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		ActivityWindow activityWindow = new ActivityWindow();
 		Activity activity = (Activity)propertiesWindow.getPanel();
 		
-		ArrayList<ProcessVariable> activityVariableList = null;
+		ParameterContext[] contexts = null;
 		if( activity != null ){
 			Class paramClass = activity.getClass();
 			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
@@ -120,15 +112,11 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			
 			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
 			if( isReceiveActivity ){
-				ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
-				if( contexts != null && contexts.length > 0){
-					activityVariableList = new ArrayList<ProcessVariable>();
+				contexts = ((ReceiveActivity)activity).getParameters();
+				if( contexts != null ){
 					for(int i=0; i < contexts.length; i++){
-						ProcessVariable processVariable = contexts[i].getVariable();
-						processVariable.setMetaworksContext(new MetaworksContext());
-						processVariable.getMetaworksContext().setHow("list");
-						processVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-						activityVariableList.add(processVariable);
+						contexts[i].setMetaworksContext(new MetaworksContext());
+						contexts[i].getMetaworksContext().setHow("list");
 					}
 				}
 			}
@@ -147,8 +135,9 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		}
 		// 변수설정
 		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
-		parameterContextPanel.setWholeVariableList(wholeVariableList);
-		parameterContextPanel.setActivityVariableList(activityVariableList);
+		parameterContextPanel.setParameterContext(contexts);
+		parameterContextPanel.setEditorId(activity.getName() + "_" + activity.getTracingTag());
+		parameterContextPanel.setParentEditorId(this.getEditorId());
 		parameterContextPanel.load();
 		
 		activityWindow.getActivityPanel().setActivity(activity);

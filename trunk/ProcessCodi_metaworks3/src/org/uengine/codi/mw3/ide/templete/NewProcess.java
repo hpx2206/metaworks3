@@ -75,6 +75,7 @@ public class NewProcess extends Templete {
 			ProcessEditor editor = new ProcessEditor(node);
 			editor.setProcessDesignerInstanceId(instance.getInstId()+"");
 			editor.getProcessDesigner().getProcessNameView().setAlias(this.getName());
+			editor.getProcessDesigner().getProcessVariablePanel().setEditorId(node.getPath());
 			editor.save();
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow()) , new Refresh(cloudInstanceWindow, true)};
