@@ -108,7 +108,7 @@ public class ParameterContext implements Serializable , ContextAware{
 			this.transformerMapping = transformerMapping;
 		}	
 		
-	String parentEditorId;
+	transient String parentEditorId;
 		public String getParentEditorId() {
 			return parentEditorId;
 		}

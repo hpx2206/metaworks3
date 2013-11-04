@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -12,6 +14,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.common.MetaworksUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
@@ -21,7 +24,6 @@ import org.uengine.codi.mw3.processexplorer.ProcessNameView;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
-import org.uengine.kernel.ProcessVariable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
@@ -95,7 +97,14 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		public void setBasePath(String basePath) {
 			this.basePath = basePath;
 		}
-		
+	boolean useClassLoader;
+	@Hidden
+		public boolean isUseClassLoader() {
+			return useClassLoader;
+		}
+		public void setUseClassLoader(boolean useClassLoader) {
+			this.useClassLoader = useClassLoader;
+		}	
 	ProcessNameView processNameView;
 		public ProcessNameView getProcessNameView() {
 			return processNameView;
@@ -152,7 +161,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	}
 	
 	public void loadOld() throws Exception{
-		
 		String processName = getAlias();
 		setProcessName(processName);
 		/// read source file
@@ -161,41 +169,62 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
-//		try {
-			is = new FileInputStream(sourceCodeFile);
-			UEngineUtil.copyStream(is, bao);
-			
-			this.load(bao.toString("UTF-8"));
-			
-			
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		is = new FileInputStream(sourceCodeFile);
+		UEngineUtil.copyStream(is, bao);
+		this.load(bao.toString("UTF-8"));
 	}
 	public void load() throws Exception{
 		
-		String processName = getAlias().substring(0, getAlias().indexOf("."));
-		setProcessName(processName);
-		/// read source file
-		File sourceCodeFile = new File(getBasePath() + getAlias());
-		//File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
-		
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		FileInputStream is;
-//		try {
-			is = new FileInputStream(sourceCodeFile);
-			UEngineUtil.copyStream(is, bao);
+		InputStream is = null;
+		ByteArrayOutputStream bao = null;
+		try {
+			bao = new ByteArrayOutputStream();
 			
-			this.load(bao.toString("UTF-8"));
+			if(this.isUseClassLoader()){
+				try {				
+					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getAlias());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				File file = new File(this.getAlias());
+				if(file.exists()){					
+					try {
+						is = new FileInputStream(file);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}			
+				}
+			}
+				
+			MetaworksUtil.copyStream(is, bao);
+			this.load(bao.toString(GlobalContext.ENCODING));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(is != null){
+				try {
+					is.close();
+					is = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+				
+			if(bao != null){
+				try {
+					bao.close();
+					bao = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			
-			
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		}
 	}
 	
 	public static String escape(String src) {
