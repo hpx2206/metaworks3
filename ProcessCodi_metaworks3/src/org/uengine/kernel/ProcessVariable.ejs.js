@@ -7,4 +7,10 @@ var org_uengine_kernel_ProcessVariable = function(objectId, className){
 		mw3.call(objectId, 'changeType');
 	});
     
+    var object = mw3.objects[objectId];
+    if(object.metaworksContext && object.metaworksContext.how=='menu'){
+    	$(".dragPossible_"+objectId).draggable({
+	        helper  : 'clone',
+	    });
+    }
 };

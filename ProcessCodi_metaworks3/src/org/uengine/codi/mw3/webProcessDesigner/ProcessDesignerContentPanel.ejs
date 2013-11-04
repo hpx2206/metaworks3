@@ -130,6 +130,20 @@ if( mw3.how == 'valuechain'){
 	            <!-- InvocationActivity -->
 	            <img src="images/opengraph/group.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.InvocationActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group" _width="50" _height="50" title="InvocationActivity"/>	            
 	         </dl>
+	         
+	        <dt class="leftMenuTab_ide leftMenuTab_variable_<%=objectId%>">변수정의</dt>
+			<dl class="leftMenuTabInner_ide leftMenuTabInner_variable_<%=objectId%>">
+			     <div class="depth2">
+			     <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.processVariablePanel.here() %></li>
+                </ul>
+                </div>
+	         </dl>
+	         
+	        <dt class="leftMenuTab_ide leftMenuTab_role_<%=objectId%>">참여자정의</dt>
+			<dl class="leftMenuTabInner_ide leftMenuTabInner_role_<%=objectId%>">
+			     <%= fields.rolePanel.here() %>
+	         </dl>
 		</dd>
 	</div>
 	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">

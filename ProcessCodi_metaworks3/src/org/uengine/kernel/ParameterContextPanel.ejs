@@ -1,26 +1,30 @@
 <% if(value){ %>
-    
-    <div style="width:100%">
-        === 전체변수 ===
-        <table>
-            <tr>
-                <th><span>변수 이름</span></th>
-                <th><span>변수 설명</span></th>
-            </tr>
-        </table>
-        <%= fields.wholeVariableList.here()%>
-        <div style="margin-top:5px;">
-            <a id="wBtn" href="#" onClick="<%=methods.addWholeVariable.caller()%>"><span style="color:#000; margin-right:0px">변수추가</span></a>
+        <div>
+            <a id="wBtn" style="cursor: pointer" onClick="<%=methods.addActivityVariable.caller()%>"><span><%=mw3.localize("$add")%></span></a>
+            <a id="wBtn" style="cursor: pointer" onClick="mw3.getFaceHelper(<%=objectId%>).removeItem();"><span><%=mw3.localize("$Remove")%></span></a>
+            <div class="clear"></div>
+                <div>
+                    <span>Variable</span>
+                    <span style="width:100">Argument</span>
+                    <span>VariableType</span>
+                </div>
+                <%
+                    if( value.parameterContext && value.parameterContext.length > 0){
+                        for(var i=0; i < value.parameterContext.length; i++){
+                            var context = value.parameterContext[i];
+                %>
+                            <div onclick="mw3.getFaceHelper(<%=objectId%>).clickedItem('<%= i %>');">
+                                    <%=mw3.locateObject(context, context.__className) %>
+                            </div>
+                <%
+                            mw3.addBeanProperty(objectId, '[' + i + ']');
+                        }
+                        mw3.onLoadFaceHelperScript();
+                    }else{
+                %>
+                            <div class="clear"></div>
+                            <span>변수가 없습니다</span>
+                            <div class="clear"></div>
+               <% }%>
         </div>
-        <div style="clear:both"></div>
-        === 프로세스 변수 ===
-        <table>
-            <tr>
-                <th><span>변수 이름</span></th>
-                <th><span>변수 설명</span></th>
-            </tr>
-        </table>
-        <%= fields.activityVariableList.here()%>
-        <div style="clear:both"></div>
-    </div>
 <% }%>

@@ -292,8 +292,8 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
         isConnectedMultipleSubProcesses = false;
 
         if(isConnectedMultipleSubProcesses && STATUS_RUNNING.equals(getStatus(instance))){
-      return;
-    }
+	      return;
+	    }
 
     Vector subprocessInstances = new Vector();
     Vector subprocessInstanceIds = new Vector();

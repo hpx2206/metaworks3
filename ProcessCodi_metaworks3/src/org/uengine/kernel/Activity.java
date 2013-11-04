@@ -1605,6 +1605,14 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			}
 			
 			this.setDocumentation(activityPanel.getDocument());
+			
+			// TODO 변수를 설정가능한 엑티비티에서만 설정할수 있어야함
+			if( this instanceof ReceiveActivity){
+				ParameterContextPanel parameterContextPanel = activityPanel.getParameterContextPanel();
+				if( parameterContextPanel != null ){
+					((ReceiveActivity)this).setParameters(parameterContextPanel.getParameterContext());
+				}
+			}
 		}
 //		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
 		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new Popup() , true)};
