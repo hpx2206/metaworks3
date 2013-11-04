@@ -108,6 +108,9 @@ public class ProcessDesignerContainer {
 		roleList = new ArrayList<Role>();
 		
 		rolePanel = new RolePanel();
+		rolePanel.getMetaworksContext().setHow("menu");
+		rolePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 		processVariablePanel = new ProcessVariablePanel();
 		processVariablePanel.getMetaworksContext().setHow("menu");
 		processVariablePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -164,9 +167,13 @@ public class ProcessDesignerContainer {
 					role.getRoleView().setViewType(viewType);
 					role.getRoleView().setEditorId(getEditorId());
 					role.getRoleView().setRole(role);
+					
 					roleList.add(role);
-					rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 				}
+				role.setMetaworksContext(new MetaworksContext());
+				role.getMetaworksContext().setHow("menu");
+				role.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 			}
 		}
 		

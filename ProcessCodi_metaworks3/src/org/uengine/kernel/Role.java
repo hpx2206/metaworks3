@@ -31,7 +31,10 @@ import org.uengine.util.UEngineUtil;
 /**
  * @author Jinyoung Jang
  */
-@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,displayName"})
+@Face(ejsPath = "genericfaces/ActivityFace.ejs",
+ejsPathMappingByContext = {
+		"{how: 'menu', face: 'dwr/metaworks/org/uengine/kernel/Role.ejs'}"
+		}, options={"fieldOrder"},values={"name,displayName"})
 public class Role implements java.io.Serializable, Cloneable, ContextAware {
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
@@ -430,9 +433,18 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	transient String currentEditorId;
+	@Hidden
+		public String getCurrentEditorId() {
+			return currentEditorId;
+		}
+		public void setCurrentEditorId(String currentEditorId) {
+			this.currentEditorId = currentEditorId;
+		}
 
-	@AutowiredFromClient
-	public RolePanel rolePanel;
+	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.editorId")
+	transient public RolePanel rolePanel;
 	/**
 	 * 나중에 apply 버튼은 ActivityWindow 로 빼야한다... 지금은 텝에 버튼이 보이질 않아서 임시로 달아놓음
 	 * @return

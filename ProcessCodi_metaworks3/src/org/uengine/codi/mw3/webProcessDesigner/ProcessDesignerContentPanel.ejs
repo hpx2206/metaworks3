@@ -142,7 +142,11 @@ if( mw3.how == 'valuechain'){
 	         
 	        <dt class="leftMenuTab_ide leftMenuTab_role_<%=objectId%>">참여자정의</dt>
 			<dl class="leftMenuTabInner_ide leftMenuTabInner_role_<%=objectId%>">
-			     <%= fields.rolePanel.here() %>
+			     <div class="depth2">
+			     <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.rolePanel.here() %></li>
+                </ul>
+                </div>
 	         </dl>
 		</dd>
 	</div>

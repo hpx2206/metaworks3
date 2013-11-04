@@ -289,7 +289,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 			processVariablePanel.showWholeVariable();
 		});
 		$('.leftMenuTab_role_'+objectId).dblclick(function(){
-//			alert('참여자정의');
+			var rolePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.RolePanel@'+object.alias);
+			rolePanel.showWholeRole();
 		});
 	},
 	findActivityData : function(tracingTag){

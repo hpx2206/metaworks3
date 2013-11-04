@@ -15,7 +15,9 @@ import java.util.Vector;
 
 import org.metaworks.FieldDescriptor;
 import org.metaworks.Type;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.inputter.ArrayObjectInput;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.contexts.TextContext;
 import org.uengine.util.UEngineUtil;
 
@@ -73,6 +75,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     
     //add ryu start
     ProcessDefinition definitionObject;
+    @Hidden
    	public ProcessDefinition getDefinitionObject() {
    		return definitionObject;
    	}
@@ -92,6 +95,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
 */
   ProcessVariable dynamicDefinitionIdPV;
+  @Hidden
   	public ProcessVariable getDynamicDefinitionIdPV() {
 		return dynamicDefinitionIdPV;
 	}
@@ -109,6 +113,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
         
   ParameterContext[] variableBindings;
+  @Hidden
     public ParameterContext[] getVariableBindings() {
       return variableBindings;
     }
@@ -117,6 +122,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
     
   RoleParameterContext[] roleBindings;
+  @Hidden
     public RoleParameterContext[] getRoleBindings() {
       return roleBindings;
     }
@@ -149,6 +155,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
 
   Role forEachRole;
+  @Hidden
     public Role getForEachRole() {
       return forEachRole;
     }
@@ -157,6 +164,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
     
   ProcessVariable forEachVariable;
+  @Hidden
     public ProcessVariable getForEachVariable() {
       return forEachVariable;
     }
@@ -1112,11 +1120,21 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
     setSubprocessIds(instance, currSubProcessLabels, SUBPROCESS_INST_LABELS);
   }
 
-@Override
-public void drawInit() throws Exception {
-	// TODO Auto-generated method stub
-}
-
+	@Override
+	public void drawInit() throws Exception {
+		// TODO Auto-generated method stub
+		System.out.println(this.getDefinitionId());
+		if( this.getDefinitionId() != null ){
+			ProcessDesignerContentPanel subDesignerContentPanel = new ProcessDesignerContentPanel();
+			subDesignerContentPanel.setAlias(this.getDefinitionId());
+			subDesignerContentPanel.setUseClassLoader(true);
+			subDesignerContentPanel.load();
+			
+			// 전체 변수
+			subDesignerContentPanel.getProcessVariablePanel();
+			
+		}
+	}
 
 }
 
