@@ -802,7 +802,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instance.setInstId(this.getInstId());
 				instance.setTopicId(session.getLastSelectedItem());
 				instance.setInitEp(session.getUser().getName());
-				instance.setStatus("Running");
 				if(this.getType().equals("file")){
 					instance.databaseMe().setName(this.getExtFile());
 				}else{
