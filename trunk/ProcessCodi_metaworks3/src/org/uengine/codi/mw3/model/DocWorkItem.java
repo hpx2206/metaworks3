@@ -1,18 +1,13 @@
 package org.uengine.codi.mw3.model;
 
-import org.directwebremoting.io.FileTransfer;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
-import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.knowledge.KnowledgeTool;
-import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.persistence.dao.UniqueKeyGenerator;
-import org.uengine.processmanager.ProcessManagerBean;
-import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
 public class DocWorkItem extends WorkItem {
@@ -54,6 +49,7 @@ public class DocWorkItem extends WorkItem {
 		fileWorkItem.setWriter(session.getUser());
 		fileWorkItem.setFile(this.getFile());
 		fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+		fileWorkItem.setMajorVer(1);
 		fileWorkItem.add();
 		
 		DocumentTool tool = new DocumentTool();
@@ -74,5 +70,48 @@ public class DocWorkItem extends WorkItem {
 		
 		return genericWI.add();
 	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] addDocument() throws Exception{
+		Object[] returnObjects = null;
+		String sql = " select * from bpm_worklist where instId=?instId";
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class , sql);
+		workitem.set("instId", this.getInstId());
+		workitem.select();
+		
+		WorkItem item = new WorkItem();
+		while(workitem.next()){
+			item.copyFrom(workitem);
+			System.out.println(item.getMajorVer());
+			System.out.println(item.getGrpTaskId());
+		}
+		
+		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+		instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
+		
+		if("document".equals(this.getType())){
+			FileWorkItem fileWorkItem = new FileWorkItem();
+			fileWorkItem.setInstId(this.getInstId());
+			fileWorkItem.session = session;
+			fileWorkItem.processManager = this.processManager;
+			fileWorkItem.instanceViewContent = this.instanceViewContent;
+			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			fileWorkItem.setWriter(session.getUser());
+			fileWorkItem.setFile(this.getFile());
+			fileWorkItem.setGrpTaskId(item.getGrpTaskId());
+			fileWorkItem.setMajorVer(item.getMajorVer()+1);
+			fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+//			fileWorkItem.add();	
+//			returnObjects = new Object[]{new ToAppend(fileWorkItem, this), new Refresh(fileWorkItem,false,true),new Refresh(this)};
+			returnObjects = fileWorkItem.add();
+		}
+		
+		
+		
+		return returnObjects;
+		
+		
+	}
+	
 	
 }
