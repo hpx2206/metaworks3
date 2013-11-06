@@ -874,6 +874,70 @@ create table favoritefile (
  MODDATE datetime
 );
 
---2013.09.06s - 폴더ID, NAME추가 
+-- 2013.09.06s - 폴더ID, NAME추가 
 alter table bpm_worklist add column folderId varchar(100);
 alter table bpm_worklist add column folderName varchar(100);
+
+alter table recentitem add column clickedCount varchar(4);
+
+alter table bpm_knol add column ext varchar(3000);
+
+alter table appmapping add column url varchar(50);
+
+alter table bpm_knol add column isreleased boolean;
+alter table bpm_knol add column isdistributed boolean;
+
+-- 2013-10-21 기존 테이블 지우고 새로 만들어 주세요 (  나중에 문구 삭제 )
+DROP TABLE IF EXISTS `cloudinfo`;
+create table cloudinfo(
+    id int(20) not null,
+    projectId varchar(20),
+    serverName varchar(100),
+    serverInfo varchar(20),
+    serverId varchar(100),
+    serverIp varchar(100),
+    serverIpId varchar(100),
+    rootId varchar(20),
+    rootPwd varchar(20),
+    osTemplete varchar(100),
+    hwTemplete varchar(100),
+    serviceTemplete varchar(100),
+    serverGroup varchar(50),
+    moddate DATETIME,
+    primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table appmapping modify url varchar(200);
+
+alter table cloudinfo add column status varchar(20);
+
+-- 2013-10-22 기존 테이블 지우고 새로 만들어 주세요 (  나중에 문구 삭제 )
+DROP TABLE IF EXISTS `filepathinfo`;
+
+create table filepathinfo(
+    id int NOT NULL,
+	projectId varchar(20) not null,
+    reflectVer int,
+    releaseVer int,
+    warPath varchar(100),
+    sqlPath varchar(100),
+    fileType varchar(20),
+	primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+alter table bpm_knol add column projectalias varchar(1000);
+
+alter table app add column runningVersion int;
+
+alter table app add column subDomain varchar(50);
+
+alter table filepathinfo add column comment varchar(1000);
+
+alter table filepathinfo add column moddate DATETIME;
+
+alter table filepathinfo add column distributor varchar(20);
+
+alter table bpm_procinst add column isdocument int(11) default 0;
+
+alter table bpm_worklist change content content mediumtext;

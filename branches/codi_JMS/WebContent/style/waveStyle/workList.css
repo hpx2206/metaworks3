@@ -94,7 +94,7 @@
 .fixed_img_row li:after{display:block;clear:both;content:""}
 .fixed_img_row a{text-decoration:none;cursor:pointer}
 .fixed_img_row a strong{display:inline-block;margin:0 0 4px 0;color:#333}
-.fixed_img_row .thumb {display:block;width:130px;  border:1px solid #E5E5E5; margin:10px; vertical-align: middle}
+.fixed_img_row .thumb {display:block;width:130px; min-height:90px;  border:1px solid #E5E5E5; margin:10px; vertical-align: middle}
 .fixed_img_row .thumb img{display:block;border:0; width:140px;}
 .fixed_img_row p{margin:0;color:#767676;line-height:1.4}
 .fixed_img_row a:hover strong,
@@ -104,7 +104,7 @@
 
 
 .viewMore{line-height:30px;}
-.appFirstTd,.appVenderTd,.appBtnTd, .appStatusTd{ width:150px;  text-align:center;}
+.appFirstTd,.appVenderTd,.appBtnTd, .appStatusTd{ width:150px;  text-align:center; padding-right:15px;}
 .appTitleTd{vertical-align:top; padding:15px;}
 .titleLine{margin-bottom:10px;font-weight:bold;font-size: 14px;}
 .simpleOverview{margin-bottom:10px; line-height: 110%; color:#87876A}
@@ -114,7 +114,7 @@
 .fullOverview{line-height: 20px;}
 
 .detailView_app_outer{padding:0 15px;}
-.detailView_app {border-bottom: 2px solid #222222; margin-bottom:20px;}
+.detailView_app {border-bottom: 2px solid #222222; margin-bottom:0px;}
 .detailView_app .topTitle_app{ float:left; font-size: 18px; font-weight:bold; padding-left:15px; line-height: 30px; height:30px;}
 .detailView_app .byCompany_app{ float:right; padding-right:15px;  line-height: 30px; height:30px;}
 .PricingDetail_app {margin:7px 0; font-weight:bold}
