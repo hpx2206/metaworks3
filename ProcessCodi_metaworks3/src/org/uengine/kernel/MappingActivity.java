@@ -16,6 +16,14 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigne {
 		setName("mapping");
 	}
 	
+	transient String parentEditorId;
+		public String getParentEditorId() {
+			return parentEditorId;
+		}
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}
+	
 	MappingContext mappingContext;
 		public MappingContext getMappingContext() {
 			return mappingContext;
@@ -28,9 +36,12 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigne {
 		MappingTree leftTree = new MappingTree();
 		leftTree.setId("left");
 		leftTree.setAlign("left");
+		leftTree.setParentEditorId(this.getParentEditorId());
 		MappingTree rightTree = new MappingTree();
 		rightTree.setId("right");
 		rightTree.setAlign("right");
+		rightTree.setParentEditorId(this.getParentEditorId());
+		
 		
 		if( mappingContext == null ){
 			mappingContext = new MappingContext();
@@ -62,7 +73,7 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigne {
 					value = param.getTransformerMapping().getTransformer().letTransform(instance, param.getTransformerMapping().getLinkedArgumentName());
 				}else{
 					srcVariableName = param.getVariable().getName();		
-					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]") ){
+					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]")  || srcVariableName.startsWith("[roles]") ){
 						value = instance.getBeanProperty(srcVariableName); // varA
 					}else{
 						String [] wholePartPath = srcVariableName.replace('.','@').split("@");

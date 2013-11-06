@@ -107,6 +107,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
 			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
 			if( isDesigner ){
+				((IDrawDesigne)activity).setParentEditorId(this.getEditorId());
 				((IDrawDesigne)activity).drawInit();
 			}
 			

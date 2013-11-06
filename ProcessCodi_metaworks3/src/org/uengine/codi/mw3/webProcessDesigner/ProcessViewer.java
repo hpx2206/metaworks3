@@ -49,6 +49,13 @@ public class ProcessViewer {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
+	String projectId;
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 	String processDesignerInstanceId;
 		public String getProcessDesignerInstanceId() {
 			return processDesignerInstanceId;

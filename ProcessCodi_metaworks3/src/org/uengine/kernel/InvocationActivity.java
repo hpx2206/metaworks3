@@ -50,6 +50,13 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 			this.resourceClass = resourceClass;
 		}
 		
+	transient String parentEditorId;
+		public String getParentEditorId() {
+			return parentEditorId;
+		}
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}	
 	@Override
 	public void drawInit() throws Exception {
 //		System.out.println("resourceClass ======== " + resourceClass);
@@ -77,6 +84,9 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 			outCanvas.setLeftTreeId(invocationContextOut.getClassResourceTree().getId());
 			
 			outCanvas.setRightTreeId(invocationContextOut.getMappingTree().getId());
+			
+			invocationContextIn.getMappingTree().setParentEditorId(this.getParentEditorId());
+			invocationContextOut.getMappingTree().setParentEditorId(this.getParentEditorId());
 		}
 		
 	}

@@ -159,9 +159,12 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			return new Object[] { new Refresh(processViewWindow) };
 		}
 		if( alias != null && !this.isFolder() && this.getType().equals(TreeNode.TYPE_FILE_PROCESS)){
+			String thisId = this.getId();
+			String thisPath = thisId.substring(this.getProjectId().length());
 			processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(defId);
-			processViewerPanel.setAlias(this.getAlias());
+			processViewerPanel.setAlias(thisPath);
+			processViewerPanel.setProjectId(this.getParentId());
 			processViewerPanel.setViewType("definitionEditor");
 			processViewerPanel.loadDefinitionView();
 			return new Object[] { new Refresh(processViewerPanel.processViewPanel) };

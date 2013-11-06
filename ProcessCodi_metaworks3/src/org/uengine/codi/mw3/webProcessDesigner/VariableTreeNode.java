@@ -25,7 +25,7 @@ public class VariableTreeNode extends TreeNode {
 		}
 	
 	
-	public void load(ArrayList<ProcessVariable> prcsValiableList){
+	public void load(ArrayList<ProcessVariable> prcsValiableList) throws ClassNotFoundException{
 		this.setName("variable");
 		this.setLoaded(true);
 		this.setExpanded(true);
@@ -34,9 +34,8 @@ public class VariableTreeNode extends TreeNode {
 			ProcessVariable processVariable = prcsValiableList.get(i);
 			String nameAttr = processVariable.getName();
 			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
-//			String typeIdAttr = prcsValiable.getTypeId();
-			Object typeAttr = processVariable.getDefaultValue();
-			if( typeAttr == null ) continue;
+			Class type = Class.forName(processVariable.getTypeInputter());
+			if( type == null ) continue;
 			
 			VariableTreeNode node = new VariableTreeNode();
 			node.setId(nameAttr);
@@ -49,8 +48,9 @@ public class VariableTreeNode extends TreeNode {
 			node.setFolder(true);
 			node.setAlign(this.getAlign());
 			
-			if( typeAttr instanceof ComplexType){
+			if( type == ComplexType.class){
 				try {
+					Object typeAttr = processVariable.getDefaultValue();
 					ComplexType complexType = (ComplexType)typeAttr;
 					String typeIdAttr = complexType.getTypeId();
 					if( typeIdAttr != null && !"".equals(typeIdAttr) ){
