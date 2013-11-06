@@ -97,6 +97,10 @@ public interface IInstance extends IDAO{
 	public boolean getIsAdhoc();
 	public void setIsAdhoc(boolean isAdhoc);
 
+	public boolean getIsDocument();
+	public void setIsDocument(boolean isDocument);
+
+	
 	public boolean getIsSubProcess();
 	public void setIsSubProcess(boolean isSubProcess);
 	

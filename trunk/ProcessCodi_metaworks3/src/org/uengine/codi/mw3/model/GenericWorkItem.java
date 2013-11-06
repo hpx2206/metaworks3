@@ -6,7 +6,7 @@ public class GenericWorkItem extends WorkItem{
 	
 	
 	public GenericWorkItem(){
-		setType("generic");
+		setType(WORKITEM_TYPE_GENERIC);
 	}
 
 	@Hidden(on=false)

@@ -64,7 +64,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		h.height(21).height(h[0].scrollHeight - 4);//where 60 is minimum height of textarea
 	});
 	
-	if(value.type=="file"){
+	if(value.type=="file" || value.type == "document"){
 		setTimeout(function(){
 			var fileUplodaerObjectId = mw3.getChildObjectId(objectId, "file");
 			var fileUploaderFaceHelper = mw3.getFaceHelper(fileUplodaerObjectId);

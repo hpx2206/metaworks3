@@ -693,6 +693,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 	
+	public IWorkItem newDocument() throws Exception{
+		DocWorkItem wi = new DocWorkItem();
+		formatWorkItem(wi);
+		
+		return wi;
+	}
 	
 	public IWorkItem newSourceCode() throws Exception {
 		SourceCodeWorkItem wi = new SourceCodeWorkItem();
@@ -800,25 +806,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				// 기본 정보 설정  
 				Instance instance = new Instance();
 				instance.setInstId(this.getInstId());
-				instance.setTopicId(session.getLastSelectedItem());
-				instance.setInitEp(session.getUser().getName());
-				if(this.getType().equals("file")){
-					instance.databaseMe().setName(this.getExtFile());
-				}else{
-					instance.databaseMe().setName(this.getTitle());
-				}
-				Instance.loadDocument(instance.getTopicId());
-				instanceRef = instance.databaseMe();				
+				
+				instanceRef = instance.databaseMe();	
 				
 				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
 				instanceRef.setInitiator(session.getUser());						// 시작자는 실행한 사람
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				//instanceRef.setStartedDate(this.getStartDate());
-				if( newInstancePanel != null ){
-					instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
-				}
+				instanceRef.setName(this.getTitle());
+				instanceRef.setIsDocument(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType()));
 				
 				afterInstantiation(instanceRef);				
 			}else{
@@ -829,7 +826,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				if(this.getDueDate()!= null)
 					instanceRef.setDueDate(this.getDueDate());
-				
 						
 				// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
 				instance.fillFollower();
@@ -1331,23 +1327,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return overlayCommentWorkItem; 
 	}
-	public static IWorkItem findDocumentBytaskId(Long taskId) throws Exception{
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select *");
-		sql.append("  from bpm_worklist");
-		sql.append(" where taskId=?taskId");
-		sql.append("   and isdeleted!=?isDeleted");
-		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
-	
-		workitem.set("taskId", taskId);
-		workitem.set("isDeleted",1);
-		workitem.select();
-		
-		return workitem;
-	}
 	
 	public Object moreView() throws Exception {
 		StringBuffer sql = new StringBuffer();
@@ -1380,6 +1359,23 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	}
 
+	public IWorkItem load(String id) throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append(" select * from bpm_worklist where instId=?id");
+		sb.append(" order by taskid");
+		
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
+		
+		workitem.set("id",id);
+		workitem.select();
+		
+		if(workitem.next())
+			return workitem;
+		else
+			return null;
+	
+	}
+	
 	
 	@AutowiredFromClient
 	public Session session;
@@ -1390,4 +1386,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 
+	
+	
+	
 }

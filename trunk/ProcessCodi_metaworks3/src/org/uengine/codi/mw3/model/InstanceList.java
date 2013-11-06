@@ -184,9 +184,9 @@ public class InstanceList implements ContextAware{
 		return loadDocument(this.getNavigation());
 	}
 	public InstanceList loadDocument(Navigation navigation) throws Exception{
-		IInstance instance = Instance.loadDocument(getFolderId());
+		IInstance instance = Instance.loadDocument();
 		
-
+		instance.getMetaworksContext().setHow("document");
 		setInstances(instance);
 //		setWorkItem(workitem);
 		setMoreInstanceList(new InstanceList());

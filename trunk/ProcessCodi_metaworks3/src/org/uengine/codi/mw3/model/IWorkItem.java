@@ -41,9 +41,11 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_STATUS_SUSPENDED= "SUSPENDED";
 		//When user delegate a workitem, the workitem's status whould be changed to this status and another workitem.	
 		public final static String WORKITEM_STATUS_DELEGATED= "DELEGATED"; 
-	
+		public final static String WORKITEM_TYPE_GENERIC = "generic";
+		
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
 		public final static String WORKITEM_TYPE_FILE		 = "file";
+		public final static String WORKITEM_TYPE_DOCUMENT = "document";
 		
 		public final static String WORKITEM_TYPE_REMOTECONF	 = "remoteConf";
 		public final static String WORKITEM_TYPE_DOCUMENTLIST = "documentList";		
@@ -118,12 +120,13 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@Range(
-				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
-				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schedule" , "postings", "ovryCmnt"}
+				options={"WorkItem","document", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
+				values ={"wih", "document",	 "comment",	"img",		"mov",		"src", 			"file", "schedule" , "postings", "ovryCmnt"}
 		)
 		@TypeSelector(
 				values = 		{ 
 						"wih",			
+						"document",
 						"comment",
 						"img",		
 						"mov", 				
@@ -139,6 +142,7 @@ public interface IWorkItem extends IDAO{
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
+						DocWorkItem.class,
 						CommentWorkItem.class,					
 						ImageWorkItem.class,
 						MovieWorkItem.class,
@@ -173,16 +177,17 @@ public interface IWorkItem extends IDAO{
 			databaseFields = {"content", "extfile", "tool"}, 
 			objectFields = {"uploadedPath", "filename", "mimeType"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen = "type=='file'"		
+			availableWhen = {"type=='file'","type=='document'"}	
 		)
 		public MetaworksFile getFile();
 		public void setFile(MetaworksFile file);
+		
 		
 		@ORMapping(
 			databaseFields = {"taskId", "ext1", "ext2"}, 
 			objectFields = {"taskId", "convertStatus", "pageCount"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen = "type=='file'"		
+			availableWhen = {"type=='file'","type=='document'","type=='generic'"}		
 		)
 		public Preview getPreview();
 		public void setPreview(Preview file);
@@ -361,11 +366,13 @@ public interface IWorkItem extends IDAO{
 		public IWorkItem newFile() throws Exception;
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+		public IWorkItem newDocument() throws Exception;
+		
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newMemo() throws Exception;
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newRemoteConference() throws Exception;
-		
 		
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="$Comment")
@@ -374,5 +381,6 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_SELF)
 		public Object moreView() throws Exception;
 	
+		public IWorkItem load(String id) throws Exception;
 }
 
