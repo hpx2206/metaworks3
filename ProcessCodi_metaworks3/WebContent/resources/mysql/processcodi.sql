@@ -937,3 +937,5 @@ alter table filepathinfo add column comment varchar(1000);
 alter table filepathinfo add column moddate DATETIME;
 
 alter table filepathinfo add column distributor varchar(20);
+
+alter table bpm_worklist change content content mediumtext;

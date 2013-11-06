@@ -386,6 +386,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
 		}
 		stmt.append("  		  WHERE worklist.status != 'RESERVED'");
+		
 		if("organization.group"	.equals(navigation.getPerspectiveType())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
 			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
@@ -673,6 +674,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
 			criteria.put("instStatus", "Stopped");
+			instanceSql.append("and inst.isDocument =?isDocument ");
+			criteria.put("isDocument", "0");
+			
 			// secureopt
 			if(navigation.getEmployee().isApproved() && !navigation.getEmployee().isGuest()){
 				instanceSql
@@ -1019,6 +1023,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		public void setIsAdhoc(boolean isAdhoc) {
 			this.isAdhoc = isAdhoc;
+		}
+
+	boolean isDocument;
+		public boolean getIsDocument() {
+			return isDocument;
+		}
+		public void setIsDocument(boolean isDocument) {
+			this.isDocument = isDocument;
 		}
 
 	boolean isSubProcess;
@@ -1577,20 +1589,26 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	}
-	public static IInstance loadDocument(String folderId) throws Exception {
+	public static IInstance loadDocument() throws Exception {
 		// TODO Auto-generated method stub
 			
 			StringBuffer sql = new StringBuffer();
 			
 
-			sql.append("select *,knol.name as topicname");
-			sql.append(" from bpm_procinst proc, bpm_knol knol where proc.topicId=?topicId");
-			sql.append(" and knol.id=?topicId");
+			sql.append("select *");
+			sql.append(" from bpm_procinst proc");
+			sql.append(" where proc.isDocument=?isDocument");
 			sql.append(" order by proc.InstId desc");
 			IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
 			
-			instance.set("topicId", folderId);
+			instance.set("isDocument", 1);
 			instance.select();
+			
+			while(instance.next()){
+				Instance inst = new Instance();
+				inst.copyFrom(instance);
+				inst.getMetaworksContext().setHow("document");
+			}
 
 			return instance;
 			

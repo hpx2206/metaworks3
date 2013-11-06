@@ -88,8 +88,10 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		if(session.getEmployee() != null && "sns".equals(session.getEmployee().getPreferUX()))
 			how = "sns";
-		else if("oce".equals(session.getUx()))
+		else if("oce".equals(session.getUx()))	
 			how = "sns";
+		else if("document".equals(session.getLastPerspecteType()))
+			how = "document";
 		else
 			how = "normal";
 		
@@ -117,6 +119,16 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		setThread(thread);
 		
+		if("document".equals(session.getLastPerspecteType())){
+			DocWorkItem fileItem = new DocWorkItem();
+			fileItem.setInstId(new Long(getInstanceId()));
+			fileItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			fileItem.getMetaworksContext().setHow(how);
+			fileItem.setWriter(session.getUser());
+			
+			setNewItem(fileItem);
+		}else{
+		
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
@@ -124,7 +136,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		newItem.setWriter(session.getUser());
 
 		setNewItem(newItem);
-		
+		}
 	}
 	
 	@ServiceMethod(callByContent = true)

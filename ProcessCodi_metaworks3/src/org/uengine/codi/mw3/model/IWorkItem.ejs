@@ -73,7 +73,8 @@
 		
 	mw3.setWhen('view');
 	
-	if(isMine == true){
+	if(mw3.how != 'minimised'){
+		if(isMine == true){
 %>
 	<div style="position:relative;">
 		<div class="view_box3" style="margin-right:14px; width:80%;  float:right;position:relative">
@@ -82,7 +83,8 @@
 			<span class="tr"></span>
 		</div>
 	
-<% } else if(isMine == false){%>
+<%
+		} else if(isMine == false){%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tbody>
 		<tr>
@@ -105,9 +107,12 @@
 				<span class="tl"></span>
 				<span class="tr"></span>
 			</div>
+<%
+		}
+	}
 	
-
-<% } %>
+	if(mw3.how != 'minimised'){
+%>
 		<div class="cont" style="padding:5px 10px; margin:0px;">	
 			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tbody>
@@ -171,53 +176,54 @@
 							</div>
 						</td>
 					</tr>
-					<%if(value.type=='file'){%>
+					
 					<tr>
+<%
+	}else{
+%>
+				<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>	
+<%
+	}
+%>
+						<%if(value.type=='file'){%>
 						<td>
+							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' , htmlAttr:{style: 'float: left'}})%>
 						<%if(value.workItemVersionChooser!=null){%>
-							<%=fields.workItemVersionChooser.here()%>
+							<%=fields.workItemVersionChooser.here({htmlAttr:{style: 'float: right'}})%>
 						<%}%>
+						<div class="clear"></div>
+						
 						<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
 			                <%=fields.preview.here()%>
 						<%}%>
-							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
 						</td>
-					</tr>
-					<%}%>
-					<%if(value.type=='memo'){%>
-					<tr>
+						<%}%>
+						<%if(value.type=='memo'){%>
 						<td>
 							<%=fields.memo.here({when : 'view'})%>						
 						</td>
-					</tr>
-					<%}%>
-					<%if(value.type=='remoteConf'){%>
-						<%if(value.status != 'Completed'){%>
-							<tr>
-								<td><a href="#" onClick="<%=methods.join.caller()%>"><%=mw3.localize('$GoJoin')%></a></td>
-								<td><a href="#" onClick="<%=methods.end.caller()%>"><%=mw3.localize('$EndMeeting')%></a></td>
-							</tr>
-						<%}else{%>
-							<tr>
-							<%if(value.ext4 != null){%>
-								<td><iframe src="<%=value.ext4%>" frameborder="0" scrolling="no" width="100%" height="300px"/></td>
-							<%}else{%>
-								<td><a href="#" onClick="<%=methods.palyBack.caller()%>"><%=mw3.localize('$PlayBack')%></a></td>
-							<%}%>
-							</tr>
 						<%}%>
-					<%}%>
-					<%if(value.type == 'src' && (value.extFile==null || value.contentLoaded)){%>
-					<tr>
+						<%if(value.type=='remoteConf'){%>
+							<%if(value.status != 'Completed'){%>
+									<td><a href="#" onClick="<%=methods.join.caller()%>"><%=mw3.localize('$GoJoin')%></a></td>
+									<td><a href="#" onClick="<%=methods.end.caller()%>"><%=mw3.localize('$EndMeeting')%></a></td>
+							<%}else{%>
+								<%if(value.ext4 != null){%>
+									<td><iframe src="<%=value.ext4%>" frameborder="0" scrolling="no" width="100%" height="300px"/></td>
+								<%}else{%>
+									<td><a href="#" onClick="<%=methods.palyBack.caller()%>"><%=mw3.localize('$PlayBack')%></a></td>
+								<%}%>
+							<%}%>
+						<%}%>	
+																<%if(value.type == 'src' && (value.extFile==null || value.contentLoaded)){%>
 						<td>	
 							<div style="position:relative; height:350px;">					
 								<%=fields.sourceCode.here()%>						
 							</div>
 						</td>
-					</tr>
 					<%}else if(value.workItemHandler != null && value.workItemHandler.instanceId != null ){
 					%>
-					<tr class="workItemHandler">
 						<td>	
 <%
 						if(value.dispatchOption == 1){
@@ -229,20 +235,21 @@
 							
 								<%=fields.workItemHandler.here()%>						
 						</td>
-					</tr>
 					
 					<%}else if(value.type == 'generic' ){
-					
-					
 					%>
-					<tr>
 						<td>	
 								<%=fields.genericWorkItemHandler.here()%>						
 						</td>
-					</tr>
 					
 					<%}%>
+
+
+					</tr>
 			</table>
+<%
+	if(mw3.how != 'minimised'){
+%>			
 		</div>		
 		<div class="guide">
 			<span class="lb"></span>
@@ -252,10 +259,17 @@
 	<div class="clear"></div>
 	
 	
-	<% if(isMine == true){%>
+<%
+	}
+	
+	
+	if(mw3.how != 'minimised'){
+		if(isMine == true){
+%>
 		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>
 	</div>		
-	<% }else if(isMine == false){
+<%
+		}else if(isMine == false){
 			if(value.dispatchOption != 1 && value.status != 'DELEGATED'){
 %>								
 				<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" >						
@@ -264,7 +278,10 @@
 %>
 		</div>	
 		</div></td></tr></tbody></table>
-	<% } %>
+<%
+		}
+	}
+%>
 	<div class="clear"></div>
 	
 	<div style="height:10px"></div>
