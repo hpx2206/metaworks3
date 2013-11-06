@@ -907,18 +907,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
-			
-//			this.setFolderId(session.getLastSelectedItem());
-//			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
-//					? session.getWindowTitle().substring(4) : "" );
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
-			
-			// TODO if instanceRefer.instanceID 가 있으면
-			// workiem에 넣어주기...
-			// 
 			
 			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
 			if(this instanceof CommentWorkItem){
@@ -1361,12 +1353,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	public IWorkItem load(String id) throws Exception{
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where instId=?id");
-		sb.append(" order by taskid");
+		sb.append(" select * from bpm_worklist where majorver in (select max(majorver) from bpm_worklist where instId=?instId)");
+		sb.append(" and instId=?instId");
 		
 		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
 		
-		workitem.set("id",id);
+		workitem.set("instId",id);
 		workitem.select();
 		
 		if(workitem.next())
