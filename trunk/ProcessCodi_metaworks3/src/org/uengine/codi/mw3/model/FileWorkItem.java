@@ -87,7 +87,7 @@ public class FileWorkItem extends WorkItem{
 
 //		// 추가모드 일때
 		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))		
-			this.setGrpTaskId(this.getTaskId());
+//			this.setGrpTaskId(this.getTaskId());
 //
 //			// default 버전
 //			this.setMajorVer(1);
