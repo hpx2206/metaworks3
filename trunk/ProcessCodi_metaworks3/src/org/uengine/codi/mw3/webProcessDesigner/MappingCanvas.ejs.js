@@ -32,10 +32,15 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
         }
 
         var envelope = this.geom.getBoundary();
-
-        return [
-            new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.OUT)
-        ];
+        if(object.inout){
+        	return [
+        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT)
+        	        ];
+        }else{
+        	return [
+        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.OUT)
+        	        ];
+        }
     };
     OG.shape.From.prototype.clone = function () {
         return new OG.shape.From(this.label);
@@ -57,10 +62,16 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
         }
 
         var envelope = this.geom.getBoundary();
-
-        return [
-            new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN)
-        ];
+        // direction == true 이면 양방향 통신을 한다는 가정
+        if(object.inout){
+        	return [
+        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT)
+        	        ];
+        }else{
+        	return [
+        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN)
+        	        ];
+        }
     };
     OG.shape.To.prototype.clone = function () {
         return new OG.shape.To(this.label);
@@ -290,6 +301,13 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 			}
 		},
 		getValue : function(){
+			// startsWith 정의
+			if(!String.prototype.startsWith){
+			    String.prototype.startsWith = function (str) {
+			        return !this.indexOf(str);
+			    };
+			}
+			
 			if( this.callCount == 1 ){
 				var returnObject = this.object;
 				returnObject.mappingElements = [];
@@ -305,8 +323,21 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 						if (console && console.log) console.log('toId = ' +toId );
 						// argument : 받은 변수정보 => toId
 						// variable : 준 변수 정보 => formId
-						var fromText = fromId.substring(5);
-						var toText = toId.substring(3);
+						var fromText;
+						var toText;
+						var direction;
+						if(returnObject.inout && fromId.startsWith('TO_')){
+							// 새로 추가된 양방향 통신이 가능하도록.. (subprocessActivity)
+							fromText = fromId.substring(3);
+							toText = toId.substring(5);
+							direction = 'out';
+						}else{
+							// 기존 mappingActivity, invocationActivity
+							fromText = fromId.substring(5);
+							toText = toId.substring(3);
+							direction = 'in';
+						}
+						
 						if (console && console.log) console.log('fromText = ' +fromText );
 						if (console && console.log) console.log('toText = ' +toText );
 						fromText = fromText.replace(/-/gi, ".");
@@ -320,8 +351,8 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 								text : toText
 						};
 						var mappingElement = {
-							__className : 'org.uengine.kernel.MappingElement',
-							direction : 'in'	,
+							__className : 'org.uengine.kernel.ParameterContext',
+							direction : direction,
 							argument : argumentText,
 							variable : processValiable
 						};

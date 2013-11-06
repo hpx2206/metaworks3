@@ -121,8 +121,11 @@ public class WorkItemHandler implements ContextAware{
 							processVariableValue = new Boolean(false);
 						}else if(variableType==Number.class){
 							processVariableValue = new Integer(0);
+						}else if(variableType==String.class){
+							if( processVariableValue == null ){
+								processVariableValue = new String();
+							}
 						}else
-						
 							processVariableValue = (Serializable) variableType.newInstance();
 					}
 					

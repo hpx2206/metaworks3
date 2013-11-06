@@ -12,12 +12,15 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.EventActivity;
@@ -99,6 +102,13 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
+	String projectId;
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 		
 	@AutowiredFromClient
 	public ProcessViewWindow processViewWindow; 
@@ -140,6 +150,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
 		processViewPanel.setAlias(alias);
+		processViewPanel.setProjectId(projectId);
 		processViewPanel.setViewType(this.getViewType());
 		processViewPanel.load();
 	}
@@ -149,6 +160,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
 		processViewPanel.setAlias(alias);
+		processViewPanel.setProjectId(projectId);
 		processViewPanel.setViewType(this.getViewType());
 		processViewPanel.load();
 	}
@@ -242,16 +254,30 @@ public class ProcessViewerPanel implements ContextAware {
 				return null;
 			}
 		}else{
-			ResourceNode resourceNode = new ResourceNode();
-			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-			resourceNode.setAlias(alias);
-			resourceNode.setPath(codebase + File.separatorChar + alias);
-			resourceNode.setType(ResourceNode.TYPE_FILE_PROCESS);
-			resourceNode.setId(defId);
-			resourceNode.setName(defId);
-			Editor editor = new ProcessEditor(resourceNode);
+			
+			ProcessNode processNode = new ProcessNode();
+			processNode.setAlias(alias);
+			processNode.setType(ResourceNode.TYPE_FILE_PROCESS);
+			processNode.setId(alias);
+			processNode.setName(defId);
+			
+			// TODO Path 를 정확히 주어야 새로 열린 에디터에서 수정 및 저장이 된다.
+			if( projectId == null ){
+				projectId = MetadataBundle.getProjectId();
+			}
+			if( workspace == null ){
+				workspace = new Workspace();
+				workspace.load(session);
+			}
+			Project project = workspace.findProject(projectId);
+			String path = project.getPath() + File.separatorChar + alias;
+			processNode.setProjectId(projectId);
+			processNode.setPath(path);
+			
+			ProcessEditor editor = new ProcessEditor(processNode);
 			try {
-				editor.load();
+				editor.getProcessDesigner().load();
+//				editor.load();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

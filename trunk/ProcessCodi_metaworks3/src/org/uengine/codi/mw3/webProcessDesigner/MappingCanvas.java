@@ -29,7 +29,13 @@ public class MappingCanvas implements Serializable {
 		public void setRightTreeId(String rightTreeId) {
 			this.rightTreeId = rightTreeId;
 		}
-		
+	boolean inout;
+		public boolean isInout() {
+			return inout;
+		}
+		public void setInout(boolean inout) {
+			this.inout = inout;
+		}
 	ParameterContext[] mappingElements;
 		public ParameterContext[] getMappingElements() {
 			return mappingElements;

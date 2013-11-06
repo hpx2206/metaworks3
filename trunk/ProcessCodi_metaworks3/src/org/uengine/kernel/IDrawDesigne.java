@@ -10,4 +10,7 @@ public interface IDrawDesigne {
 	 */
 	public void drawInit() throws Exception;
 	
+	public String getParentEditorId();
+	public void setParentEditorId(String parentEditorId);
+	
 }

@@ -21,9 +21,15 @@ public class MappingTree extends Tree{
 		public void setPreLoaded(boolean preLoaded) {
 			this.preLoaded = preLoaded;
 		}
-
-	@ServiceMethod(payload={"id", "align"} , target=ServiceMethodContext.TARGET_SELF)
-	public void init(){
+	String parentEditorId;
+		public String getParentEditorId() {
+			return parentEditorId;
+		}
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}
+	@ServiceMethod(payload={"id", "align","parentEditorId"} , target=ServiceMethodContext.TARGET_SELF)
+	public void init() throws Exception{
 		ArrayList<Role>	 roleList = rolePanel.getRoleList();
         ArrayList<ProcessVariable> variableList = processVariablePanel.getVariableList();
         
@@ -70,10 +76,10 @@ public class MappingTree extends Tree{
 		setPreLoaded(true);
 	}
 	
-	@AutowiredFromClient
+	@AutowiredFromClient(select="typeof parentEditorId!='undefined' && parentEditorId==autowiredObject.editorId")
 	transient public RolePanel rolePanel;
 	
-	@AutowiredFromClient
+	@AutowiredFromClient(select="typeof parentEditorId!='undefined' && parentEditorId==autowiredObject.editorId")
 	transient public ProcessVariablePanel processVariablePanel;
 	
 	
