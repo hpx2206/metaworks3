@@ -226,6 +226,10 @@ public class ProcessDesignerContainer {
 	}
 	
 	public void loadValueChain(ValueChainDefinition def) throws Exception{
+		
+		rolePanel.setEditorId(editorId);
+		processVariablePanel.setEditorId(editorId);
+		
 		int maxX = 0;
 		int maxY = 0;
 		if(valueChainList == null){

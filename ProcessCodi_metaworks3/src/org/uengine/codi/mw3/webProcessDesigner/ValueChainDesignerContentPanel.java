@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.GlobalContext;
@@ -28,6 +26,9 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		ValueChainDefinition def = (ValueChainDefinition) GlobalContext.deserialize(definitionString);
 		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.loadValueChain(def);
+		
+		rolePanel = processDesignerContainer.getRolePanel();
+		processVariablePanel = processDesignerContainer.getProcessVariablePanel();
 		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
