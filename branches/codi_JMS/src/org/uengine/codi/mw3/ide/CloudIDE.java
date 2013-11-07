@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessFormPanel;
 import org.uengine.codi.mw3.processexplorer.ViewContentWindow;
@@ -113,7 +114,7 @@ public class CloudIDE {
 		public void setPageNavigator(PageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
 		}		
-		
+	
 	public void load(Session session) throws Exception{
 		// make workspace
 		Workspace workspace = new Workspace();
@@ -164,12 +165,16 @@ public class CloudIDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(centerLayout);
-		outerLayout.setNorth(new TopPanel(session));
+		if("oce".equals(session.getUx())){
+			outerLayout.setNorth(new ProcessTopPanel(session));
+		}else{
+			outerLayout.setNorth(new TopPanel(session));
+		}
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
 
 		this.setLayout(outerLayout);
 		
-		this.pageNavigator = new PageNavigator();
+
 	}
 	
 	public void load(Session session, String projectId){
