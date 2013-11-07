@@ -24,9 +24,13 @@ public class TenantAwareFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		
+		String tenantId = null;
+		
 		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "1"))){
 			//request 의 url 의 동적 변경...가능할런지..		
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			
+			/*
 			String pathInfo = httpServletRequest.getPathInfo();
 			
 			if(pathInfo!=null){
@@ -38,20 +42,24 @@ public class TenantAwareFilter implements Filter{
 			        dispatcher.forward(request, response);
 				}
 			}
+			*/
+			
 			//
 			String serverName = httpServletRequest.getServerName();
 			if(serverName!=null){
 				int tenantIdPos = serverName.indexOf(".");
 				if(tenantIdPos > 0){
-					String tenantId = serverName.substring(0, tenantIdPos);				
-					new TenantContext(tenantId); //create unique tenant context for the requested thread.
-				}else{
-					new TenantContext(null);
+					tenantId = serverName.substring(0, tenantIdPos);				
+					
 				}
 			}			
-		}else{
-			new TenantContext(null);
 		}
+		
+		// TODO: 해당 부분은 프로퍼티 처리
+		if("www".equals(tenantId) || "processcodi".equals(tenantId))
+			tenantId = null;
+		
+		new TenantContext(tenantId); //create unique tenant context for the requested thread.
 		
 		chain.doFilter(request, response);		
 	}
