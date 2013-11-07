@@ -6,13 +6,8 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
 
-@Face(
-		ejsPathMappingByContext=
-	{
-		"{how: 'explorer', face: 'dwr/metaworks/org/uengine/codi/mw3/model/DocumentPanel_explorer.ejs'}",
-		"{how: 'perspectivePanel', face: 'dwr/metaworks/org/uengine/codi/mw3/model/DocumentPanel.ejs'}",
-	})
 public class DocumentPanel implements ContextAware {
 
 	
@@ -30,25 +25,13 @@ public class DocumentPanel implements ContextAware {
 	@AutowiredFromClient
 	transient public Session session;
 	
-	IDocumentNode documentNode;
-		public IDocumentNode getDocumentNode() {
-			return documentNode;
-		}
-		public void setDocumentNode(IDocumentNode documentNode) {
-			this.documentNode = documentNode;
-		}
 
-	
-	public void load() throws Exception{
+	@ServiceMethod
+	public Object[] load() throws Exception{
 
-		DocumentNode Node = new DocumentNode();
-		Node.session = session;
-//		Node.setId(session.getCompany().getComCode());
-		Node.setCompanyId(session.getCompany().getComCode());
+		String title = "도큐멘트";
+		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", "1", title);
 		
-		documentNode = Node.loadDocumentList();
-		documentNode.setMetaworksContext(this.getMetaworksContext());
-		documentNode.getMetaworksContext().setWhen("onlyView");
-		setDocumentNode(documentNode);
+		return returnObject;
 	}
 }

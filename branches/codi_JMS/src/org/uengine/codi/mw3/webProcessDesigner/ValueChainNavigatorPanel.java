@@ -53,16 +53,7 @@ public class ValueChainNavigatorPanel implements ContextAware {
 		
 		if( valueChain != null && valueChain.getMajorProcessDefinitionNode() != null ){
 			majorProcessDefinitionNode = valueChain.getMajorProcessDefinitionNode();
-			for(int i = 0; i < majorProcessDefinitionNode.getChild().size(); i++) {
-				if(majorProcessDefinitionNode.getChild().get(i) instanceof MajorProcessDefinitionNode) {
-					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)majorProcessDefinitionNode.getChild().get(i);
-					node.setMetaworksContext(this.getMetaworksContext());
-					
-				} else {
-					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)majorProcessDefinitionNode.getChild().get(i);
-					node.setMetaworksContext(this.getMetaworksContext());
-				}
-			}
+			majorProcessDefinitionNode.injectionMetaworksContext(this.getMetaworksContext(), majorProcessDefinitionNode.getChild());
 			majorProcessDefinitionNode.setName(valueChainName);
 			majorProcessDefinitionNode.setExpanded(true);
 		}else{
@@ -73,6 +64,7 @@ public class ValueChainNavigatorPanel implements ContextAware {
 			majorProcessDefinitionNode.setExpanded(true);
 			majorProcessDefinitionNode.setType(TreeNode.TYPE_FOLDER);
 			majorProcessDefinitionNode.setFolder(true);
+			majorProcessDefinitionNode.injectionMetaworksContext(this.getMetaworksContext(), null);
 		}
 		majorProcessDefinitionNode.session = session;
 		

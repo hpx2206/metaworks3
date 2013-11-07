@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor.process;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 
 public class ProcessEditor extends Editor {
@@ -42,6 +43,21 @@ public class ProcessEditor extends Editor {
 		}
 	}
 	
+	public ProcessEditor(ProcessNode processNode){
+		super(processNode);
+		this.setType("process");
+		
+		try {
+			ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
+			processDesignerContentPanel.session = processNode.session;
+			processDesignerContentPanel.setAlias(this.getProcessNode().getPath());
+			this.setProcessDesigner(processDesignerContentPanel);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	@Override
 	public String load() {
 		String definitionString = super.load();

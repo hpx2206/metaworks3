@@ -1,0 +1,43 @@
+<%
+if(value){
+
+%>
+<div class="daily_obj _ccast_list_group">		
+	<h4 class="ico_time"><%=fields.startedDate.here({when: 'timeago'})%></h4>
+	<ul day="20131014">
+		<li class="_ccast_list_item _ccast_item nlst nlst_first  " readcheck="true" serviceid="calendar" catid="1" timekey="5934492115264383284" style="display:inline">
+			<div onClick="<%=methods.goSns.caller()%>" class="tx_box_obj">
+				<div class="tx_tooltip">
+					<div class="tx_bubble">
+						<div class="thumb">
+							<%=fields.initiator.here() %>
+						</div>
+						<div class="bubble_content">
+							<div class="tx_width">
+								<strong class="ans_type"><%=value.initEp%></strong>
+								<span class="alarm_tx"><%=value.name%></span>		
+								<% if(value.lastCmntUser.name != null){ %>
+								<dl class="from_obj">
+									<dt><img src="images/waveStyle/re.gif" /></dt>
+									<dt><%=value.lastCmntUser.name%></dt>
+									<dd>
+										<span class="alarm_time"><%=value.lastCmnt%></span>			
+									</dd>
+								</dl>
+								<% } %>
+							</div>
+						</div>
+					</div>
+					<span class="bx_bg">
+						<span class="lft_t"></span><span class="lft_b"></span><span class="rgt_t"></span><span class="rgt_b"></span><span class="bot_shdw"></span><span class="tip_arrow"></span><span class="ico_timeDot"></span>
+					</span>
+				</div>
+			</div>
+		</li>
+	</ul>
+</div>
+
+<%
+
+}
+%>

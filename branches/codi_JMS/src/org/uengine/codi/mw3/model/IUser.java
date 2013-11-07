@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
@@ -118,5 +119,8 @@ public interface IUser extends IDAO{
 	@Face(displayName="$ApprovedSubscribe")
 	@Available(when={"admin"})
 	public void approvedSubscribe() throws Exception;
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object showMenu() throws Exception;
 
 }

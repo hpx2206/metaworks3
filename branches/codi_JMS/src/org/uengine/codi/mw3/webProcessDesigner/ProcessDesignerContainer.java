@@ -68,7 +68,20 @@ public class ProcessDesignerContainer {
 		public void setProcessVariablePanel(ProcessVariablePanel processVariablePanel) {
 			this.processVariablePanel = processVariablePanel;
 		}
-	
+	ProcessDetailPanel processDetailPanel;
+		public ProcessDetailPanel getProcessDetailPanel() {
+			return processDetailPanel;
+		}
+		public void setProcessDetailPanel(ProcessDetailPanel processDetailPanel) {
+			this.processDetailPanel = processDetailPanel;
+		}
+	ProcessSummaryPanel processSummaryPanel;
+		public ProcessSummaryPanel getProcessSummaryPanel() {
+			return processSummaryPanel;
+		}
+		public void setProcessSummaryPanel(ProcessSummaryPanel processSummaryPanel) {
+			this.processSummaryPanel = processSummaryPanel;
+		}
 	String viewType;
 		public String getViewType() {
 			return viewType;
@@ -108,13 +121,24 @@ public class ProcessDesignerContainer {
 		roleList = new ArrayList<Role>();
 		
 		rolePanel = new RolePanel();
+		rolePanel.getMetaworksContext().setHow("menu");
+		rolePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 		processVariablePanel = new ProcessVariablePanel();
+		processVariablePanel.getMetaworksContext().setHow("menu");
+		processVariablePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		processDetailPanel = new ProcessDetailPanel();
+		processSummaryPanel = new ProcessSummaryPanel();
+		
 	}
 	
 	public void load(ProcessDefinition def) throws Exception{
 		
 		rolePanel.setEditorId(editorId);
 		processVariablePanel.setEditorId(editorId);
+		processDetailPanel.setEditorId(editorId);
+		processSummaryPanel.setEditorId(editorId);
 		
 		int maxX = 0;
 		int maxY = 0;
@@ -142,6 +166,11 @@ public class ProcessDesignerContainer {
 			if( Integer.parseInt(activity.getTracingTag()) > tagCnt )
 				tagCnt = Integer.parseInt(activity.getTracingTag());
 			
+			if( activity.getDocumentation() != null && activity.getDocumentation().getActivityDetail() != null 
+					&& activity.getDocumentation().getActivityDetail().getContents() != null ){
+				processSummaryPanel.addDetailList(activity);
+			}
+			
 			activityList.add(activity);
 		}
 		lastTracingTag = String.valueOf(tagCnt + 1);
@@ -161,9 +190,13 @@ public class ProcessDesignerContainer {
 					role.getRoleView().setViewType(viewType);
 					role.getRoleView().setEditorId(getEditorId());
 					role.getRoleView().setRole(role);
+					
 					roleList.add(role);
-					rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 				}
+				role.setMetaworksContext(new MetaworksContext());
+				role.getMetaworksContext().setHow("menu");
+				role.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 			}
 		}
 		
@@ -171,12 +204,17 @@ public class ProcessDesignerContainer {
 		ProcessVariable[] processVariables = def.getProcessVariables();
 		for(int i=0; i < processVariables.length; i++){
 			ProcessVariable processVariable = processVariables[i];
+			processVariable.setMetaworksContext(new MetaworksContext());
+			processVariable.getMetaworksContext().setHow("menu");
+			processVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			pvList.add(this.ignoreVariableType(processVariable));
 		}
 		processVariablePanel.setVariableList(pvList);
+		
+		processDetailPanel.load(def.getDocumentation());
 	}
 	
-	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
+	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container) throws Exception{
 		ProcessDefinition def = new ProcessDefinition();
 		Role[] roles = new Role[1];
 		// default role
@@ -208,11 +246,17 @@ public class ProcessDesignerContainer {
 			}
 			def.setProcessVariables(pvs);
 		}
-		
+		def.setDocumentation(this.getProcessDetailPanel().getDocumentation());
 		return def;
 	}
 	
 	public void loadValueChain(ValueChainDefinition def) throws Exception{
+		
+		rolePanel.setEditorId(editorId);
+		processVariablePanel.setEditorId(editorId);
+		processDetailPanel.setEditorId(editorId);
+		processSummaryPanel.setEditorId(editorId);
+		
 		int maxX = 0;
 		int maxY = 0;
 		if(valueChainList == null){
@@ -271,7 +315,10 @@ public class ProcessDesignerContainer {
 			ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
 			if( contexts != null && contexts.length > 0){
 				for(int i=0; i < contexts.length; i++){
-					this.ignoreVariableType(contexts[i].getVariable());
+					ProcessVariable processVariable = contexts[i].getVariable();
+					processVariable.setMetaworksContext(new MetaworksContext());
+					processVariable.getMetaworksContext().setHow("activity");
+					this.ignoreVariableType(processVariable);
 				}
 			}
 		}
@@ -279,16 +326,20 @@ public class ProcessDesignerContainer {
 	}
 	
 	public ProcessVariable ignoreVariableType(ProcessVariable processVariable){
+		processVariable.setTypeInputter(processVariable.getType().getName());
 		processVariable.setType(null);
-		if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
+		if( processVariable.getDefaultValue() != null ){
+			processVariable.setTypeInputter(processVariable.getDefaultValue().getClass().getName());
+			if( processVariable.getDefaultValue() instanceof ComplexType ){
 			ComplexType complexType = (ComplexType)processVariable.getDefaultValue();
 			complexType.setDesignerMode(true);
+			}
 		}
 		
 		return processVariable;
 	}
 	
-	public Activity fillVariableType(Activity activity){
+	public Activity fillVariableType(Activity activity) throws Exception{
 		Class paramClass = activity.getClass();
 		boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
 		if( isReceiveActivity ){
@@ -303,11 +354,11 @@ public class ProcessDesignerContainer {
 		return activity;
 	}
 	
-	public ProcessVariable fillVariableType(ProcessVariable processVariable){
+	public ProcessVariable fillVariableType(ProcessVariable processVariable) throws Exception{
 		if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
 			processVariable.setType(ComplexType.class);
-		}else if(processVariable.getDefaultValue() != null){
-			processVariable.setType(String.class);
+		}else if(processVariable.getTypeInputter() != null ){
+			processVariable.setType( Class.forName(processVariable.getTypeInputter()) );
 		}
 		return processVariable;
 	}

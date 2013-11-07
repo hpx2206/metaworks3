@@ -70,8 +70,23 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			processExploreContent.load();
 			
 			return new Refresh(processExploreContent);
+		}else if("snsView".equals(this.getMetaworksContext().getHow()) &&  TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
 			
-		} else if("viewer".equals(this.getMetaworksContext().getHow())){
+			ProcessExploreContent processExploreContent = new ProcessExploreContent();
+			processExploreContent.setAlias(this.getPath());
+			processExploreContent.setDefId(this.getName());
+//			processExploreContent.setPath(this.getPath());
+			processExploreContent.session = session;
+			processExploreContent.load();
+			
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.setPanel(processExploreContent);
+			modalWindow.setWidth(700);
+			modalWindow.setHeight(500);
+			modalWindow.setTitle(this.getName());
+			
+			return modalWindow;
+		}else if("viewer".equals(this.getMetaworksContext().getHow())){
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setAlias(this.getPath());
 			processViewerPanel.setDefinitionId(this.getName());

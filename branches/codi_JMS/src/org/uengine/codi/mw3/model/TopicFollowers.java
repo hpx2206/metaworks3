@@ -17,7 +17,6 @@ public class TopicFollowers extends Followers{
 		
 		TopicMapping tm = new TopicMapping();
 		tm.setTopicId(session.getLastSelectedItem());
-		
 		IUser users = tm.findUser();
 		
 		users.getMetaworksContext().setWhen(CONTEXT_WHERE_TOPICFOLLOWERS);

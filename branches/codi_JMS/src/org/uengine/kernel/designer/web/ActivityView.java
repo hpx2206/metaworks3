@@ -97,14 +97,6 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
 			this.propertiesWindow = propertiesWindow;
 		}
-	transient ArrayList<ProcessVariable> wholeVariableList;
-	@Hidden
-		public ArrayList<ProcessVariable> getWholeVariableList() {
-			return wholeVariableList;
-		}
-		public void setWholeVariableList(ArrayList<ProcessVariable> wholeVariableList) {
-			this.wholeVariableList = wholeVariableList;
-		}
 		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
@@ -113,26 +105,23 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		ActivityWindow activityWindow = new ActivityWindow();
 		Activity activity = (Activity)propertiesWindow.getPanel();
 		
-		ArrayList<ProcessVariable> activityVariableList = null; 
+		ParameterContext[] contexts = null;
 		if( activity != null ){
 			Class paramClass = activity.getClass();
 			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
 			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
 			if( isDesigner ){
+				((IDrawDesigne)activity).setParentEditorId(this.getEditorId());
 				((IDrawDesigne)activity).drawInit();
 			}
 			
 			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
 			if( isReceiveActivity ){
-				ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
-				if( contexts != null && contexts.length > 0){
-					activityVariableList = new ArrayList<ProcessVariable>();
+				contexts = ((ReceiveActivity)activity).getParameters();
+				if( contexts != null ){
 					for(int i=0; i < contexts.length; i++){
-						ProcessVariable processVariable = contexts[i].getVariable();
-						processVariable.setMetaworksContext(new MetaworksContext());
-						processVariable.getMetaworksContext().setHow("list");
-						processVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-						activityVariableList.add(processVariable);
+						contexts[i].setMetaworksContext(new MetaworksContext());
+						contexts[i].getMetaworksContext().setHow("list");
 					}
 				}
 			}
@@ -143,24 +132,21 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		if( "definitionDiffView".equals(this.getViewType()) ){
 			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			activity.getDocumentationSub().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}else{
 			activity.setMetaworksContext(new MetaworksContext());
 			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			activity.getDocumentation().setMetaworksContext(new MetaworksContext());
 			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			activity.getDocumentationSub().setMetaworksContext(new MetaworksContext());
-			activity.getDocumentationSub().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		// 변수설정
 		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
-		parameterContextPanel.setWholeVariableList(wholeVariableList);
-		parameterContextPanel.setActivityVariableList(activityVariableList);
+		parameterContextPanel.setParameterContext(contexts);
+		parameterContextPanel.setEditorId(activity.getName() + "_" + activity.getTracingTag());
+		parameterContextPanel.setParentEditorId(this.getEditorId());
 		parameterContextPanel.load();
 		
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
-		activityWindow.getActivityPanel().setDocumentationSub(activity.getDocumentationSub());
 		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
 		popup.setPanel(activityWindow);
 		popup.setWidth(700);
@@ -183,39 +169,23 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 	
 	@ServiceMethod(callByContent = true)
 	public Object[] showActivityDocument() throws Exception {
-		if( processAttributePanel != null && processSubAttributePanel != null){
-			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
-			documentation.setMetaworksContext(new MetaworksContext());
-			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			documentation.getDescription().setMetaworksContext(new MetaworksContext());
-			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			documentation.getRegulation().setMetaworksContext(new MetaworksContext());
-			documentation.getRegulation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			documentation.getDefine().setMetaworksContext(new MetaworksContext());
-			documentation.getDefine().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			
-			DocumentationSub documentationSub = (DocumentationSub)this.getActivity().getDocumentationSub();
-			documentationSub.setMetaworksContext(new MetaworksContext());
-			documentationSub.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			documentationSub.getDescription().setMetaworksContext(new MetaworksContext());
-			documentationSub.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			documentationSub.getAttention().setMetaworksContext(new MetaworksContext());
-			documentationSub.getAttention().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			
-			
-			processAttributePanel.setDefId(null);
-			processAttributePanel.setFileList(null);
-			processAttributePanel.setDocumentation(documentation);
-			
-			processSubAttributePanel.setDefId(null);
-			processSubAttributePanel.setFileList(null);
-			processSubAttributePanel.setDocumentationSub(documentationSub);
-//			ProcessFormPanel processFormPanel = new ProcessFormPanel();
-			
-			return new Object[] { processAttributePanel, processSubAttributePanel  };
-		}else{
-			return null;
-		}
+//		if( processAttributePanel != null && processSubAttributePanel != null){
+//			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
+//			documentation.setMetaworksContext(new MetaworksContext());
+//			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			
+//			processAttributePanel.setDefId(null);
+//			processAttributePanel.setDocumentation(documentation);
+//			
+//			processSubAttributePanel.setDefId(null);
+//			processSubAttributePanel.setFileList(null);
+////			ProcessFormPanel processFormPanel = new ProcessFormPanel();
+//			
+//			return new Object[] { processAttributePanel, processSubAttributePanel  };
+//		}else{
+//			return null;
+//		}
+		return null;
 	}
 	
 	

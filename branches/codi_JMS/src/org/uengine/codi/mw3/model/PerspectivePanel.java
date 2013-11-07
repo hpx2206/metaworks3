@@ -2,7 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+import org.uengine.codi.mw3.processexplorer.ValuechainPerspective;
 import org.uengine.kernel.GlobalContext;
 
 public class PerspectivePanel  implements ContextAware {
@@ -67,6 +69,7 @@ public class PerspectivePanel  implements ContextAware {
 		public void setProjectPerspective(ProjectPerspective projectPerspective) {
 			this.projectPerspective = projectPerspective;
 		}
+		
 //	ProcessStatusPerspective processStatusPerspective;
 //		public ProcessStatusPerspective getProcessStatusPerspective() {
 //			return processStatusPerspective;
@@ -75,7 +78,7 @@ public class PerspectivePanel  implements ContextAware {
 //				ProcessStatusPerspective processStatusPerspective) {
 //			this.processStatusPerspective = processStatusPerspective;
 //		}
-//
+		
 	StrategicPerspective strategicPerspective;
 		public StrategicPerspective getStrategicPerspective() {
 			return strategicPerspective;
@@ -84,13 +87,12 @@ public class PerspectivePanel  implements ContextAware {
 			this.strategicPerspective = strategicPerspective;
 		}
 		
-	DocumentPerspective documentPerspective; 	
-		public DocumentPerspective getDocumentPerspective() {
-			return documentPerspective;
+	DocumentPanel documentPanel; 	
+		public DocumentPanel getDocumentPanel() {
+			return documentPanel;
 		}
-	
-		public void setDocumentPerspective(DocumentPerspective documentPerspective) {
-			this.documentPerspective = documentPerspective;
+		public void setDocumentPanel(DocumentPanel documentPanel) {
+			this.documentPanel = documentPanel;
 		}
 
 	TopicPerspective topicPerspective;
@@ -118,15 +120,23 @@ public class PerspectivePanel  implements ContextAware {
 				CommingTodoPerspective commingTodoPerspective) {
 			this.commingTodoPerspective = commingTodoPerspective;
 		}
+	ValuechainPerspective valuechainPerspective;	
+		public ValuechainPerspective getValuechainPerspective() {
+			return valuechainPerspective;
+		}
+		public void setValuechainPerspective(ValuechainPerspective valuechainPerspective) {
+			this.valuechainPerspective = valuechainPerspective;
+		}
+
+	@AutowiredFromClient
+	public Session session;
 		
 	public PerspectivePanel() throws Exception {
 		this(null);
 	}
 	
 	public PerspectivePanel(Session session) throws Exception {
-		
 		if(session != null){
-			
 			//개인별
 			if("1".equals(GlobalContext.getPropertyString("personal.use", "1"))){
 				personalPerspective = new PersonalPerspective();
@@ -135,7 +145,6 @@ public class PerspectivePanel  implements ContextAware {
 			}
 			
 			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-
 				//주제별
 				if("1".equals(GlobalContext.getPropertyString("topic.use", "1"))){
 					topicPerspective = new TopicPerspective();
@@ -146,13 +155,20 @@ public class PerspectivePanel  implements ContextAware {
 				//조직도
 				if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
 					organizationPerspectiveDept = new OrganizationPerspectiveDept();
+//					organizationPerspectiveDept.session = session;
 //					organizationPerspectiveDept.select();
+				}
+				// 벨류체인
+				if("1".equals(GlobalContext.getPropertyString("valuechain.use", "1"))){
+					valuechainPerspective = new ValuechainPerspective();
+					valuechainPerspective.getMetaworksContext().setHow("snsView");
 				}
 				
 				//역할
 				if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
 					organizationPerspectiveRole = new OrganizationPerspectiveRole();
-//					organizationPerspectiveRole.select();
+					organizationPerspectiveRole.session = session;
+					organizationPerspectiveRole.select();
 				}
 				
 				//프로세스별
@@ -162,36 +178,44 @@ public class PerspectivePanel  implements ContextAware {
 				}
 				
 				//문서
-				documentPerspective = new DocumentPerspective();
+//				documentPerspective = new DocumentPerspective();
+				documentPanel = new DocumentPanel();
 				setMetaworksContext(new MetaworksContext());
 				this.getMetaworksContext().setHow("perspectivePanel");
-				documentPerspective.setMetaworksContext(this.getMetaworksContext());
+				documentPanel.setMetaworksContext(this.getMetaworksContext());
 				
-				//앱
-				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
-					appPerspective = new OrganizationPerspectiveApp();
-				}
-				if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
-					//프로젝트
-					projectPerspective = new ProjectPerspective();
-//					projectPerspective.select();
-				}
+				//친구
 				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
-					//친구
 					contactPerspective = new ContactPerspective();
 					contactPerspective.session = session;
 					contactPerspective.select();
 				}
-				
-				commingTodoPerspective = new CommingTodoPerspective();
-				commingTodoPerspective.session = session;
-				commingTodoPerspective.select();
+				if("1".equals(GlobalContext.getPropertyString("commingTodo.use", "1"))){
+					commingTodoPerspective = new CommingTodoPerspective();
+					commingTodoPerspective.session = session;
+					commingTodoPerspective.select();
+				}
+				//앱
+				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
+					appPerspective = new OrganizationPerspectiveApp();
+					appPerspective.getMetaworksContext().setHow("dashboard");
+					appPerspective.getMetaworksContext().setWhere("oce_perspective");
+					appPerspective.session = session;
+					appPerspective.select();
+				}
+				//프로젝트
+				if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+					projectPerspective = new ProjectPerspective();
+					projectPerspective.session = session;
+					projectPerspective.select();
+				}
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
 			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
 				strategicPerspective = new StrategicPerspective();
 			}
-		}
+		}//session
 	}
+	
 }

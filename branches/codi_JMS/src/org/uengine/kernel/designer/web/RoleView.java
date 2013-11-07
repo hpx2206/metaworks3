@@ -39,6 +39,7 @@ public class RoleView extends CanvasDTO implements ContextAware {
 	public Object showProperties() throws Exception{
 		Popup popup = new Popup();
 		Role role = (Role)propertiesWindow.getPanel();
+		role.setCurrentEditorId(this.getEditorId());
 		role.setMetaworksContext(propertiesWindow.getMetaworksContext());
 		role.setRoleView(this);
 		

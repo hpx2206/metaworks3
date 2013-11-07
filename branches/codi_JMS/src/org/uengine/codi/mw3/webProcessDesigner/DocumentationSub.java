@@ -182,42 +182,4 @@ public class DocumentationSub implements Serializable , ContextAware{
 		setAttachfile3(new MetaworksFile());
 	}
 	
-	public boolean equals(Object obj) {
-		if(!(obj instanceof Documentation)) return false;
-		int returnFlag =  0;
-		Documentation doc = (Documentation)obj;
-		
-		
-		if( !(this.title == null && doc.title == null ) && !(this.title != null && this.title.equals(doc.getTitle()))){
-			returnFlag++;
-		}
-		if( !(this.document == null && doc.document == null ) && !(this.document != null && this.document.equals(doc.getDocument()))){
-			returnFlag++;
-		}
-		if( !(this.reference == null && doc.reference == null ) && !(this.reference != null && this.reference.equals(doc.getReference()))){
-			returnFlag++;
-		}
-		if( !(this.url == null && doc.url == null ) && !(this.url != null && this.url.equals(doc.getUrl()))){
-			returnFlag++;
-		}
-		if( !(this.departManagement == null && doc.departManagement == null ) && !(this.departManagement != null && this.departManagement.equals(doc.getDepartManagement()))){
-			returnFlag++;
-		}
-		if( !(this.regulation == null && doc.regulation == null ) && !(this.regulation != null && this.regulation.equals(doc.getRegulation()))){
-			returnFlag++;
-		}
-		if( !(this.description == null && doc.description == null ) &&
-				!(this.description != null && this.description.getContents() != null 
-				&& doc.getDescription() != null && doc.getDescription().getContents() != null && this.description.getContents().equals(doc.getDescription().getContents()))){
-			returnFlag++;
-		}
-		
-		if(returnFlag == 0){
-			return true;
-		}else{
-			return false;
-		}
-		
-	}
-		
 }

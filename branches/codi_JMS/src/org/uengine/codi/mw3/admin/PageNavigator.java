@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
@@ -25,27 +26,19 @@ public class PageNavigator{
 
 	@AutowiredFromClient
 	public Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 
 	public PageNavigator() {
 		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
 		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
 		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
-		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
 	public PageNavigator(String pageName) {
 		this.setPageName(pageName);
-		
+
 		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
 		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
 		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
-		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
 	boolean admin;
@@ -80,14 +73,14 @@ public class PageNavigator{
 			this.knowlege = knowlege;
 		}
 		
-	boolean project;
-		public boolean isProject() {
-			return project;
+	boolean oce;
+		public boolean isOce() {
+			return oce;
 		}
-		public void setProject(boolean project) {
-			this.project = project;
+		public void setOce(boolean oce) {
+			this.oce = oce;
 		}
-
+	
 	String pageName;
 		@Hidden
 		public String getPageName() {
@@ -100,6 +93,7 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
 		CloudIDE cloudIDE = new CloudIDE();
+		cloudIDE.setPageNavigator(new PageNavigator());
 		cloudIDE.load(session);
 			
 		return new MainPanel(cloudIDE);
@@ -109,7 +103,7 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
 		
-		session.getEmployee().setPreferUX(null);
+//		session.getEmployee().setPreferUX(null);
 		session.setLastPerspecteType(null);
 
 /*		String preferUX = session.getEmployee().getPreferUX();
@@ -153,6 +147,7 @@ public class PageNavigator{
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
+		marketplace.setPageNavigator(new PageNavigator());
 		marketplace.load();
 		
 		return new MainPanel(marketplace);
@@ -184,8 +179,8 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
 		
-		
 		SelfService selfService = new SelfService();
+		selfService.setPageNavigator(new PageNavigator());
 		selfService.session = session;
 		selfService.load();
 		
@@ -217,5 +212,10 @@ public class PageNavigator{
 		processExplorer.load(session); 
 			
 		return new MainPanel(processExplorer);
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goDashBoard() throws Exception {
+		return new MainPanel(new OceMain(session));
 	}
 }

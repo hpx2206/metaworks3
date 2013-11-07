@@ -29,6 +29,9 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.loadValueChain(def);
 		
+		rolePanel = processDesignerContainer.getRolePanel();
+		processVariablePanel = processDesignerContainer.getProcessVariablePanel();
+		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
 		

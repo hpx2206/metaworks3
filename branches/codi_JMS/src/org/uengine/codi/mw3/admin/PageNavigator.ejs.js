@@ -47,7 +47,7 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 	if(this.object.sns) {
 		if(this.object.ide){
 			if(this.object.knowlege){
-				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SIK.png) no-repeat right top'});
+				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation.png) no-repeat right top'});
 			}else{
 				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SI.png) no-repeat right top'});
 			}
@@ -58,7 +58,7 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 			}
 		}
 	}else {
-		$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_admin01.png) no-repeat right top'});
+		$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation.png) no-repeat right top'});
 	}
 	
 	/*

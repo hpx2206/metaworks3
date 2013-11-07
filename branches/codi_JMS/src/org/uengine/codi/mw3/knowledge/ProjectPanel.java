@@ -5,6 +5,8 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.metadata.MetadataFile;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
@@ -19,8 +21,8 @@ public class ProjectPanel {
 		projectTitle.setMetaworksContext(new MetaworksContext());
 		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		projectTitle.session = session;
-		
-		return new ModalWindow(projectTitle , 500, 300, "$CreateProject");
+//		projectTitle.setLogoFile(new MetaworksFile());
+		return new ModalWindow(projectTitle , 500, 400, "$CreateProject");
 	}
 	
 	

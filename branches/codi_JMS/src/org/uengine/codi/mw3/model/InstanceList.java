@@ -4,7 +4,7 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -23,6 +23,7 @@ public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 15;
 	final static int PAGE_CNT_MOBILE = 5;
+	final static int PAGE_CNT_DASHBOARD = 3;
 	
 	public InstanceList(){
 		this(null);
@@ -79,7 +80,7 @@ public class InstanceList implements ContextAware{
 			this.navigation = navigation;
 		}
 
-	@AutowiredFromClient
+	@AutowiredToClient
 	public Session session;
 	
 
@@ -138,20 +139,37 @@ public class InstanceList implements ContextAware{
 				
 			});
 		}
-		
-		int count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
-		
-		IInstance instanceContents = Instance.load(navigation,	getPage()-1, count);
+		int count;
+		Instance tempInstanceContent = new Instance();
+		tempInstanceContent.setMetaworksContext(new MetaworksContext());
+		if(getMetaworksContext()!=null && getMetaworksContext().getHow()!=null && "dashboard".equals(getMetaworksContext().getHow())){
+			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT_DASHBOARD);
+			tempInstanceContent.getMetaworksContext().setHow("dashboard");
+			
+		}else{
+			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
+		}
+		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}
 		String preferUX = session.getEmployee().getPreferUX();
 		
-		if("sns".equals(preferUX)){
-			instanceContents.setMetaworksContext(new MetaworksContext());
-			instanceContents.getMetaworksContext().setHow("sns");			
-			instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		if("oce".equals(session.getUx()) ){
+			if("dashboard".equals(session.getLastPerspecteType())){
+				instanceContents.getMetaworksContext().setWhere("dashboard");
+			}
 		}
+		
+//		if("sns".equals(preferUX)){
+//			if("oce".equals(session.getUx())){
+//				instanceContents.setMetaworksContext(new MetaworksContext());
+//				if("dashboard".equals(this.getMetaworksContext().getHow()))
+//					instanceContents.getMetaworksContext().setWhere("dashboard");
+//				instanceContents.getMetaworksContext().setHow("sns");			
+//				instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			}
+//		}
 		setInstances(instanceContents);
 
 		// setting moreInstanceList
@@ -166,9 +184,9 @@ public class InstanceList implements ContextAware{
 		return loadDocument(this.getNavigation());
 	}
 	public InstanceList loadDocument(Navigation navigation) throws Exception{
-		IInstance instance = Instance.loadDocument(getFolderId());
+		IInstance instance = Instance.loadDocument();
 		
-
+		instance.getMetaworksContext().setHow("document");
 		setInstances(instance);
 //		setWorkItem(workitem);
 		setMoreInstanceList(new InstanceList());
@@ -203,4 +221,11 @@ public class InstanceList implements ContextAware{
 //		}
 //		return -1;
 //	}
+	
+	@ServiceMethod(target="instances")
+	public void drillDown() throws Exception{
+		
+		System.out.println("SDfsdkf sldkfjs ldkfj sdlkfj seldkfj sdlkfj sldkjfsldkfj sdkl");
+		
+	}
 }

@@ -14,8 +14,17 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.metaworks.FieldDescriptor;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.metaworks.inputter.ArrayObjectInput;
+import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
+import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
+import org.uengine.codi.mw3.webProcessDesigner.SubProcessResourceTree;
+import org.uengine.contexts.SubProcessContext;
 import org.uengine.contexts.TextContext;
 import org.uengine.util.UEngineUtil;
 
@@ -73,6 +82,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     
     //add ryu start
     ProcessDefinition definitionObject;
+    @Hidden
    	public ProcessDefinition getDefinitionObject() {
    		return definitionObject;
    	}
@@ -92,6 +102,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
 */
   ProcessVariable dynamicDefinitionIdPV;
+  @Hidden
   	public ProcessVariable getDynamicDefinitionIdPV() {
 		return dynamicDefinitionIdPV;
 	}
@@ -109,6 +120,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
         
   ParameterContext[] variableBindings;
+  @Hidden
     public ParameterContext[] getVariableBindings() {
       return variableBindings;
     }
@@ -117,6 +129,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
     
   RoleParameterContext[] roleBindings;
+  @Hidden
     public RoleParameterContext[] getRoleBindings() {
       return roleBindings;
     }
@@ -149,6 +162,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
 
   Role forEachRole;
+  @Hidden
     public Role getForEachRole() {
       return forEachRole;
     }
@@ -157,6 +171,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     }
     
   ProcessVariable forEachVariable;
+  @Hidden
     public ProcessVariable getForEachVariable() {
       return forEachVariable;
     }
@@ -292,8 +307,8 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
         isConnectedMultipleSubProcesses = false;
 
         if(isConnectedMultipleSubProcesses && STATUS_RUNNING.equals(getStatus(instance))){
-      return;
-    }
+	      return;
+	    }
 
     Vector subprocessInstances = new Vector();
     Vector subprocessInstanceIds = new Vector();
@@ -480,6 +495,45 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 
 		ProcessInstance thePI = initiateSubProcess(thisDefinitionVersionId, instance, null, null, false, 0);
 		  
+		if( subProcessContext != null && subProcessContext.getMappingCanvas() != null ){
+			ParameterContext[] params = subProcessContext.getMappingCanvas().getMappingElements();
+			for (int i = 0; i < params.length; i++) {
+				ParameterContext param = params[i];
+				if( ParameterContext.DIRECTION_IN.equals(param.direction)){
+					
+					String srcVariableName = null;
+					String targetFieldName = param.getArgument().getText();
+					Object value = null;
+					
+					srcVariableName = param.getVariable().getName();		
+					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]")  || srcVariableName.startsWith("[roles]") ){
+						value = instance.getBeanProperty(srcVariableName); // varA
+					}else{
+						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
+						// wholePartPath.length >= 1 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+						if( wholePartPath.length >= 2 ){
+							String rootObjectName = wholePartPath[1] ;
+							if( wholePartPath.length > 2 ){
+								for(int j = 2 ; j < wholePartPath.length; j++){
+									rootObjectName += "."+ wholePartPath[j];
+								}
+							}
+							// 이걸 바로 호출
+							Object rootObject = instance.getBeanProperty(wholePartPath[0]);
+							if( rootObject != null ){
+								value = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
+							}
+						}else{
+							value = instance.getBeanProperty(srcVariableName); // varA
+						}
+					}
+					thePI.setBeanProperty(targetFieldName, (Serializable)value); //[instance].instanceId
+					
+				}
+				
+			}
+		}
+		
 		subprocessInstances.add(thePI);
 		subprocessInstanceIds.add(thePI.getInstanceId());
     }
@@ -550,14 +604,49 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
         }
       }catch(Exception e){
                 //e.printStackTrace();
-            }
-          //todo
-            isConnectedMultipleSubProcesses = false;
-
-            if(isConnectedMultipleSubProcesses){
-        connectedNextSubProcessActivity.onEvent(EVENT_ONE_OF_PREV_SP_COMPLETED, instance, new Integer(orderOfCurrentlyCompletedSubProcessInstance));
       }
-      
+      //todo
+      isConnectedMultipleSubProcesses = false;
+
+      if(isConnectedMultipleSubProcesses){
+    	  connectedNextSubProcessActivity.onEvent(EVENT_ONE_OF_PREV_SP_COMPLETED, instance, new Integer(orderOfCurrentlyCompletedSubProcessInstance));
+      }
+      if( subProcessContext != null && subProcessContext.getMappingCanvas() != null ){
+			ParameterContext[] params = subProcessContext.getMappingCanvas().getMappingElements();
+			for (int i = 0; i < params.length; i++) {
+				ParameterContext param = params[i];
+				if( ParameterContext.DIRECTION_OUT.equals(param.direction)){
+					
+					String srcVariableName = null;
+					String targetFieldName = param.getArgument().getText();
+					Object value = null;
+					
+					srcVariableName = param.getVariable().getName();		
+					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]")  || srcVariableName.startsWith("[roles]") ){
+						value = subProcessInstance.getBeanProperty(srcVariableName); // varA
+					}else{
+						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
+						// wholePartPath.length >= 1 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+						if( wholePartPath.length >= 2 ){
+							String rootObjectName = wholePartPath[1] ;
+							if( wholePartPath.length > 2 ){
+								for(int j = 2 ; j < wholePartPath.length; j++){
+									rootObjectName += "."+ wholePartPath[j];
+								}
+							}
+							// 이걸 바로 호출
+							Object rootObject = subProcessInstance.getBeanProperty(wholePartPath[0]);
+							if( rootObject != null ){
+								value = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
+							}
+						}else{
+							value = subProcessInstance.getBeanProperty(srcVariableName); // varA
+						}
+					}
+					instance.setBeanProperty(targetFieldName, (Serializable)value); //[instance].instanceId
+				}
+			}
+		}
       if(spIdSet.isEmpty()){
         if(skipped)
           fireSkipped(instance);
@@ -1111,12 +1200,61 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
     setSubprocessIds(instance, currSubProcessIds, SUBPROCESS_INST_ID);
     setSubprocessIds(instance, currSubProcessLabels, SUBPROCESS_INST_LABELS);
   }
-
-@Override
-public void drawInit() throws Exception {
-	// TODO Auto-generated method stub
-}
-
+  
+    SubProcessContext subProcessContext;
+		public SubProcessContext getSubProcessContext() {
+			return subProcessContext;
+		}
+		public void setSubProcessContext(SubProcessContext subProcessContext) {
+			this.subProcessContext = subProcessContext;
+		}
+	transient String parentEditorId;
+		public String getParentEditorId() {
+			return parentEditorId;
+		}
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}
+	@Override
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] apply(){
+		if( subProcessContext != null && subProcessContext.getMappingCanvas() != null ){
+			ParameterContext[] params = subProcessContext.getMappingCanvas().getMappingElements();
+			for (int i = 0; i < params.length; i++) {
+				ParameterContext param = params[i];
+				
+			}
+		}
+		
+		return super.apply();
+	}
+	@Override
+	public void drawInit() throws Exception {
+		String subProcessContextId = "sub";
+		if( subProcessContext == null ){
+			subProcessContext = new SubProcessContext();
+			subProcessContext.setId(subProcessContextId);
+			MappingCanvas canvas = new MappingCanvas();
+			canvas.setCanvasId("canvas" + subProcessContextId);
+			canvas.setInout(true);
+			subProcessContext.setMappingCanvas(canvas);
+		}
+		
+		MappingTree leftTree = new MappingTree();
+		leftTree.setId("mapping"+subProcessContextId);
+		leftTree.setAlign(TreeNode.ALIGN_LEFT);
+		leftTree.setParentEditorId(this.getParentEditorId());
+		subProcessContext.setMappingTree(leftTree);
+		
+		SubProcessResourceTree rightTree = new SubProcessResourceTree();
+		rightTree.setId("subProcess" + subProcessContextId);
+		rightTree.setAlign(TreeNode.ALIGN_RIGHT);
+		rightTree.setSubProcessDefinitionId(this.getDefinitionId());
+		subProcessContext.setSubProcessResourceTree(rightTree);
+		
+		subProcessContext.getMappingCanvas().setLeftTreeId(leftTree.getId());
+		subProcessContext.getMappingCanvas().setRightTreeId(rightTree.getId());
+	}
 
 }
 

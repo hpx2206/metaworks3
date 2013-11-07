@@ -9,6 +9,23 @@ if( mw3.how == 'valuechain'){
 			<dl class="leftMenuTabInner_ide">
 				<img src="images/opengraph/valuechain.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.Value_Chain" _classname="org.uengine.kernel.ValueChain" _viewclass="org.uengine.kernel.designer.web.ValueChainView" _classType="ValueChain" _width="230" _height="100" title="valuechain"/>
 			</dl>
+			<dt class="leftMenuTab_ide leftMenuTab_variable_<%=objectId%>">변수정의</dt>
+            <dl class="leftMenuTabInner_ide leftMenuTabInner_variable_<%=objectId%>">
+                 <div class="depth2">
+                 <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.processVariablePanel.here() %></li>
+                </ul>
+                </div>
+             </dl>
+             
+            <dt class="leftMenuTab_ide leftMenuTab_role_<%=objectId%>">참여자정의</dt>
+            <dl class="leftMenuTabInner_ide leftMenuTabInner_role_<%=objectId%>">
+                 <div class="depth2">
+                 <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.rolePanel.here() %></li>
+                </ul>
+                </div>
+             </dl>
 		</dd>
 	</div>
 	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">
@@ -130,6 +147,25 @@ if( mw3.how == 'valuechain'){
 	            <!-- InvocationActivity -->
 	            <img src="images/opengraph/group.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.InvocationActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group" _width="50" _height="50" title="InvocationActivity"/>	            
 	         </dl>
+	         
+	        <dt class="leftMenuTab_ide leftMenuTab_variable_<%=objectId%>">변수정의</dt>
+			<dl class="leftMenuTabInner_ide leftMenuTabInner_variable_<%=objectId%>">
+			     <div class="depth2">
+			     <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.processVariablePanel.here() %></li>
+                </ul>
+                </div>
+	         </dl>
+	         
+	        <dt class="leftMenuTab_ide leftMenuTab_role_<%=objectId%>">참여자정의</dt>
+			<dl class="leftMenuTabInner_ide leftMenuTabInner_role_<%=objectId%>">
+			     <div class="depth2">
+			     <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.rolePanel.here() %></li>
+                </ul>
+                </div>
+	         </dl>
+	         <dt class="leftMenuTab_detail_<%=objectId%>" style="padding:3px 8px; border:1px solid #B4B3B5; border-left:none; border-right:none; cursor: pointer">프로세스<br/>상세내용</dt>
 		</dd>
 	</div>
 	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">

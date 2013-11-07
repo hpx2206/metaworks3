@@ -1,15 +1,27 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.Calendar;
+
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.oce.dashboard.DashboardPanel;
+import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -17,71 +29,82 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	public final static String TYPE_PROJECT = "project";
 	
+	String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+
 	public ProjectNode(){
 		this.setType(TYPE_PROJECT);
 	}
 	
+	@ServiceMethod(callByContent = true)
 	public Object[] loadTopic() throws Exception {
-		// TODO Auto-generated method stub
 
-		if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
-			return new Object[]{new BrainstormPanel(this.getId())};
-		}else{
+		session.setLastPerspecteType(TYPE_PROJECT);
+		session.setLastSelectedItem(this.getId());
+		
+		Perspective perspective = new Perspective();
+		perspective.session = session;
+		
+		// recentItem 에 create
+		RecentItem recentItem = new RecentItem();
+		recentItem.setEmpCode(session.getEmployee().getEmpCode());
+		recentItem.setItemId(this.getId());
+		recentItem.setItemType(this.getType());
+		recentItem.setUpdateDate(Calendar.getInstance().getTime());
+		
+		recentItem.add();
+		
+		if("oce".equals(session.getUx())){
+//			session.setUx("oce_project");
+//		
+//			Object[] returnObject =  perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
+//			
+//			return new Object[]{new DashboardWindow(returnObject[1])};
 			
-			String title = "프로젝트: " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
+			session.setUx("sns");
 			
-			return returnObject;
+			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
+		}else {
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
+			return new Object[]{returnObject[1] };
 		}
+		
+		
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
-//		StringBuffer sb = new StringBuffer();
-//		sb.append("select * from bpm_knol knol");
-//		sb.append(" where knol.type = ?type");
-//		sb.append(" and knol.companyId = ?companyId");
-//		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
-//		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
-//		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
-//		sb.append(" order by no");
-//
-//		IProjectNode dao = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IProjectNode.class); 
-//		dao.set("type", "project");
-//		dao.set("userid", session.getEmployee().getEmpCode());
-//		dao.set("companyId", session.getCompany().getComCode());
-//		dao.select();
 		
-		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by name", IProjectNode.class);
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from bpm_knol knol");
+		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
+		sb.append(" where knol.type = ?type");
+		sb.append(" and knol.companyId = ?companyId");
+		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
+		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
+		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
+		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_CONTACT_COUNT));
+		
+		String tenantId;
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}else{
+			tenantId = session.getCompany().getComCode();
+		}
+		
+		IProjectNode dao = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IProjectNode.class); 
 		dao.set("type", TYPE_PROJECT);
-		
-		// TODO: modify multi tenancy
-		dao.set("companyId", session.getCompany().getComCode());
+		dao.set("userid", session.getEmployee().getEmpCode());
+		dao.set("companyId", tenantId);
 		dao.select();
+		
+		
 
 		return dao;
-	}
-	
-	public static IProjectNode completedProject(String companyId) throws Exception {
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("SELECT knol.id, knol.name ");
-		sql.append("  FROM bpm_knol knol");
-//		sql.append("  FROM bpm_procinst inst  ");
-		sql.append(" WHERE knol.type=?type AND knol.companyid=?companyid");
-//		sql.append("	AND knol.linkedinstid=inst.instid");
-		
-		
-		
-		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
-		
-		dao.setType(TYPE_PROJECT);
-		dao.setCompanyId(companyId);
-		dao.select();
-		
-		return dao;
-		
-		
 	}
 	
 	public IProjectNode findById() throws Exception {
@@ -99,7 +122,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		dao.select();
 		
 		return dao;
-		
 		
 	}
 	
@@ -124,7 +146,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		
 	}
-	
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		
 		if( session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || session.getEmployee().getIsAdmin()) {
@@ -159,6 +181,13 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		} else {
 			throw new Exception("관리자나 초기토픽생성자만 수정가능합니다.");
 		}
+		
+		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName()) && "dashboard".equals(this.session.getLastPerspecteType())){
+			DashboardPanel dashboardPanel = new DashboardPanel();
+			dashboardPanel.load(session);
+			return new Object[]{new MainPanel(new OceMain(session))};
+		}
+		
 		return new Object[]{new Remover(this)};
 	}
 	

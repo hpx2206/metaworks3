@@ -3,10 +3,10 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 
 public class Main {
@@ -24,13 +24,6 @@ public class Main {
 		}
 		
 	Session session;
-		@AutowiredToClient
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
 
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
@@ -92,8 +85,15 @@ public class Main {
 	
 	
 	public Main(Session session) throws Exception {
+		this(session, null);
+	}
+	
+	public Main(Session session, String instId) throws Exception {
+		this(session, instId, null);
+	}
+			
+	public Main(Session session, String instId, String topicId) throws Exception {
 		
-		//
 		String preferUX = session.getEmployee().getPreferUX();
 		String preferMob = session.getEmployee().getPreferMob();
 
@@ -150,7 +150,23 @@ public class Main {
 			
 			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 			
-			ContentWindow contentWindow = createNewInstancePanel(session);
+			ContentWindow contentWindow = new ContentWindow(); 
+			
+			if(topicId != null){
+				session.setLastPerspecteType("project");
+				session.setLastSelectedItem(topicId);
+					
+			}if(instId == null)
+				contentWindow = createNewInstancePanel(session);
+			else{
+				Instance instance = new Instance();
+				instance.instanceViewContent = new InstanceViewContent();
+				instance.session = session;
+						
+				instance.setInstId(new Long(instId));
+
+				contentWindow = (InstanceViewContent)instance.detail();
+			}
 			
 			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
 			
@@ -187,12 +203,17 @@ public class Main {
 			outerLayout.setUseHideBar(false);
 			
 			setLayout(outerLayout);
-			setSession(session);
 			
 //			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
 			
 			if(!session.getEmployee().isGuest()){
-				setPageNavigator(new PageNavigator("process"));
+				//향후 변경해야 할것 으로 보입니다.
+				if("oce".equals(session.getUx()))
+					setPageNavigator(new OcePageNavigator());
+				else if("sns".equals(session.getUx()))
+					setPageNavigator(new OcePageNavigator());
+				else
+					setPageNavigator(new PageNavigator("process"));
 			}
 			
 			

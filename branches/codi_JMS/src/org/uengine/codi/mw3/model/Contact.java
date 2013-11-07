@@ -2,9 +2,14 @@ package org.uengine.codi.mw3.model;
 
 
 import java.rmi.RemoteException;
+import java.util.StringTokenizer;
 
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.uengine.codi.mw3.knowledge.ProjectCommitter;
+import org.uengine.codi.mw3.knowledge.SvnUser;
 import org.uengine.kernel.GlobalContext;
 
 
@@ -25,11 +30,12 @@ public class Contact extends Database<IContact> implements IContact{
 		  .append("  	left join recentItem item ")
 		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
 		  .append(" where c.userId=?userId")
-		  .append("   and c.network=?network")
 		  .append("   and e.isDeleted=?isDeleted");
 		
-		if(this.getFriend() != null && this.getFriend().getName() != null)
+		if(this.getFriend() != null && this.getFriend().getName() != null){
 			sb.append("   and c.friendName like ?friendName");
+			sb.append("   and c.network=?network");
+		}
 		
 		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {			
 			if(TOPIC.equals(session.getLastInstanceId())) {
@@ -54,8 +60,10 @@ public class Contact extends Database<IContact> implements IContact{
 		
  		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());		
-		contacts.set("friendName", this.getFriend().getName() + "%");
-		contacts.set("network", this.getFriend().getNetwork());
+		if(this.getFriend() != null && this.getFriend().getName() != null){
+			contacts.set("friendName", this.getFriend().getName() + "%");
+			contacts.set("network", this.getFriend().getNetwork());
+		}
 		contacts.set("itemType", User.FRIEND);
 		contacts.set("isDeleted", "0");
 		contacts.select();
@@ -126,6 +134,14 @@ public class Contact extends Database<IContact> implements IContact{
 			this.userId = userId;
 		}		
 		
+	boolean checked;
+	public boolean isChecked() {
+		return checked;
+	}
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
 	@AutowiredFromClient
 	public Session session;
 		
@@ -145,6 +161,10 @@ public class Contact extends Database<IContact> implements IContact{
 		user.getMetaworksContext().setWhere(IUser.MW3_WHERE_ROLEUSER_PICKER_CALLER); //keep the context 
 		
 		return user;
+	}
+	
+	public void check(){
+		this.setChecked(!this.isChecked());
 	}
 	
 }

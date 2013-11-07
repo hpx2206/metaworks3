@@ -1,0 +1,22 @@
+<%
+    if( value ){
+%>
+    <%
+        if( mw3.how == 'ide' ){
+    %>
+            <div id="btnline" style="padding-top:8px;">
+                <ul>
+                    <li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>save</span></a></li>
+                </ul>
+            </div>    
+            <%= fields.documentation.here() %>
+    <%
+        }else if( mw3.how == 'snsView' ){
+    %>
+            <%= fields.documentation.here() %>
+    <%
+        }
+    %>
+<%
+    }
+%>

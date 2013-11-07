@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
 
@@ -26,18 +25,9 @@ public class ActivityPanel {
 		public void setDocument(Documentation document) {
 			this.document = document;
 		}
-	
-	DocumentationSub documentationSub;
-	@Face(displayName="추가도큐멘트")
-	public DocumentationSub getDocumentationSub() {
-		return documentationSub;
-	}
-	public void setDocumentationSub(DocumentationSub documentationSub) {
-		this.documentationSub = documentationSub;
-	}
 
 	ParameterContextPanel parameterContextPanel;
-		@Face(displayName="$ParameterSetting")
+	@Face(displayName="$ParameterSetting")
 		public ParameterContextPanel getParameterContextPanel() {
 			return parameterContextPanel;
 		}
@@ -45,24 +35,6 @@ public class ActivityPanel {
 			this.parameterContextPanel = parameterContextPanel;
 		}
 
-//	boolean documentFlag;
-//		@Hidden
-//		public boolean isDocumentFlag() {
-//			return documentFlag;
-//		}
-//		public void setDocumentFlag(boolean documentFlag) {
-//			this.documentFlag = documentFlag;
-//		}
-//
-//	boolean parameterFlag;
-//		@Hidden
-//		public boolean isParameterFlag() {
-//			return parameterFlag;
-//		}
-//		public void setParameterFlag(boolean parameterFlag) {
-//			this.parameterFlag = parameterFlag;
-//		}
-		
 	public ActivityPanel(){
 		
 	}

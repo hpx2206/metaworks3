@@ -18,6 +18,7 @@ import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
@@ -49,31 +50,38 @@ public class NewProcess extends Templete {
 		if(clipboard instanceof ResourceNode){
 			ResourceNode targetNode = (ResourceNode)clipboard;
 			
-			ResourceNode node = new ResourceNode();
+			ProcessNode node = new ProcessNode();
 			node.setName(this.getName() + ".process");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
-			
-			WorkItem workitem = new WorkItem();
-			workitem.session = session;
-			workitem.processManager = processManager;
-			workitem.setType("comment");
-			workitem.setTitle("process thread : "+this.getName());
-			
-			IInstance instance = workitem.save();
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.session = session;
-			instanceViewThreadPanel.setInstanceId(instance.getInstId()+"");
-			instanceViewThreadPanel.load();
-			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+			node.setType(TreeNode.TYPE_FILE_PROCESS);
+			node.setParentId(targetNode.getId());
+			node.setProjectId(targetNode.getParentId());
+//			
+//			WorkItem workitem = new WorkItem();
+//			workitem.session = session;
+//			workitem.processManager = processManager;
+//			workitem.setType("comment");
+//			workitem.setTitle("process thread : "+this.getName());
+//			
+//			IInstance instance = workitem.save();
+//			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+//			instanceViewThreadPanel.session = session;
+//			instanceViewThreadPanel.setInstanceId(instance.getInstId()+"");
+//			instanceViewThreadPanel.load();
+//			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+//			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			
 			ProcessEditor editor = new ProcessEditor(node);
-			editor.setProcessDesignerInstanceId(instance.getInstId()+"");
+//			editor.setProcessDesignerInstanceId(instance.getInstId()+"");
 			editor.getProcessDesigner().getProcessNameView().setAlias(this.getName());
+			editor.getProcessDesigner().getRolePanel().setEditorId(node.getPath());
+			editor.getProcessDesigner().getProcessVariablePanel().setEditorId(node.getPath());
+			editor.getProcessDesigner().getProcessDesignerContainer().getProcessDetailPanel().setEditorId(node.getPath());
+			
 			editor.save();
 			
-			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow()) , new Refresh(cloudInstanceWindow, true)};
+			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow()) };// , new Refresh(cloudInstanceWindow, true)};
 		}else{
 			throw new MetaworksException("finish error");
 		}

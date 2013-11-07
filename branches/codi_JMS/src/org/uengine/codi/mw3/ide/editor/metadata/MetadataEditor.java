@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.MultiPageEditor;
 
@@ -11,7 +12,7 @@ public class MetadataEditor extends MultiPageEditor{
 	}
 	public MetadataEditor(ResourceNode resourceNode){
 		super(resourceNode);
-		this.setType("metadata");
+		this.setType(TreeNode.TYPE_FILE_METADATA);
 	}
 	
 	public void loadPage() throws Exception{

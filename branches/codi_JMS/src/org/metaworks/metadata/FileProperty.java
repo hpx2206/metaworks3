@@ -86,13 +86,10 @@ public class FileProperty extends MetadataProperty {
 		metadataXML.properties.remove(this);
 		metadataXML.properties.add(index, editProperty);
 		
-		String metadataFileName = "uengine.metadata";
-		String metadataFilePath = metadataXML.getFilePath() + File.separatorChar + metadataFileName;
-		
 		
 		MetadataEditor metadataEditor = new MetadataEditor();
 		metadataEditor.setResourceNode(new ResourceNode());
-		metadataEditor.getResourceNode().setPath(metadataFilePath);
+		metadataEditor.getResourceNode().setPath(metadataXML.getFilePath());
 		metadataEditor.setContent(metadataXML.toXmlXStream());
 		metadataEditor.save();
 		

@@ -29,6 +29,13 @@ public class MyVendor {
 			
 		}
 
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 		
 	public void load(Session session) throws Exception{
 		
@@ -57,6 +64,7 @@ public class MyVendor {
 	public Object createApp() throws Exception {
 		
 		App app = new App();
+		app.session = session;
 		app.load();
 		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		

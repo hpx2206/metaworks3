@@ -2,10 +2,14 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
@@ -15,25 +19,34 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.knowledge.CloudInfo;
+import org.uengine.codi.mw3.knowledge.CreateDatabase;
+import org.uengine.codi.mw3.knowledge.FilepathInfo;
+import org.uengine.codi.mw3.knowledge.ICloudInfo;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
-import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
-import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.InstanceList;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.oce.AppServerManage;
+import org.uengine.codi.mw3.project.oce.KtProbProjectServers;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
+import org.uengine.codi.mw3.project.oce.NewServer;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+
+import com.thoughtworks.xstream.XStream;
 
 public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
@@ -46,7 +59,14 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public App() throws Exception{
 		
 	}
-	
+	String topicId;
+		@Hidden
+		public String getTopicId() {
+			return topicId;
+		}
+		public void setTopicId(String topicId) {
+			this.topicId = topicId;
+		}
 	int appId;
 		public int getAppId() {
 			return appId;
@@ -113,11 +133,9 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		}
 		
 	MetaworksFile logoFile;
-		@Override
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
-		@Override
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}
@@ -195,11 +213,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.attachProject = attachProject;
 		}
 		
-	IWfNode project;
-		public IWfNode getProject() {
+	WfNode project;
+		public WfNode getProject() {
 			return project;
 		}
-		public void setProject(IWfNode project) {
+		public void setProject(WfNode project) {
 			this.project = project;
 		}
 
@@ -234,7 +252,40 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		public void setInstallCnt(int installCnt) {
 			this.installCnt = installCnt;
 		}
-
+		
+	boolean companyUsed;
+		public boolean isCompanyUsed() {
+			return companyUsed;
+		}
+		public void setCompanyUsed(boolean companyUsed) {
+			this.companyUsed = companyUsed;
+		}
+		
+	SelectBox releaseVersion;
+		public SelectBox getReleaseVersion() {
+			return releaseVersion;
+		}
+		public void setReleaseVersion(SelectBox releaseVersion) {
+			this.releaseVersion = releaseVersion;
+		}
+		
+	int runningVersion;
+		public int getRunningVersion() {
+			return runningVersion;
+		}
+		public void setRunningVersion(int runningVersion) {
+			this.runningVersion = runningVersion;
+		}
+	
+	String subDomain;
+		public String getSubDomain() {
+			return subDomain;
+		}
+		public void setSubDomain(String subDomain) {
+			this.subDomain = subDomain;
+		}
+		
+		
 	@AutowiredFromClient
 	transient public Session session;
 	
@@ -341,14 +392,26 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 	}
 	
+	public Object readyApproved() throws Exception {
+		
+		this.setAppId(getAppId());
+		
+		this.setStatus(STATUS_APPROVED);
+		syncToDatabaseMe();
+		flushDatabaseMe();
+		
+		return this;
+		
+	}
+	
 	public void load() throws Exception {
-
 		SelectBox categories = new SelectBox();
 		SelectBox attachProject = new SelectBox();
 		
 		ICategory category = Category.loadRootCategory();
 		if (category.size() > 0) {
 			while (category.next()) {
+				
 				String categoryId = Integer.toString(category.getCategoryId());
 				String categoryName = category.getCategoryName();
 
@@ -356,48 +419,64 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			}
 		}
 		
-		IProjectNode projectList = ProjectNode.completedProject(TenantContext.getThreadLocalInstance().getTenantId());		
+		IProjectNode projectList = ProjectNode.load(session);	
+		FilepathInfo filepathInfo = new FilepathInfo();
+		int j = 0;
 		if(projectList.size() > 0) {
 			while(projectList.next()){
 				String projectId = projectList.getId();
 				String projectName = projectList.getName();
-				
+				if( j == 0 ){
+					filepathInfo.setProjectId(projectList.getId());
+				}
 				attachProject.add(projectName, projectId);
+				j++;
 			}
 		}
 		
 		this.setCategories(categories);
 		this.setAttachProject(attachProject);
+		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 		this.setLogoFile(new MetaworksFile());
-		
 	}
 	
 	public Object[] detail() throws Exception {
 		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
 		try {
-			centerPenal.setAppDetail(new AppDetail(databaseMe()));
+			this.copyFrom(this.databaseMe());
+			
+			AppMapping mapping = new AppMapping();
+			mapping.setAppId(this.appId);
+			mapping.setComCode(session.getEmployee().getGlobalCom());
+			IAppMapping iAppMapping = mapping.findMe();
+			if( iAppMapping != null ){
+				// 이미 취득한 앱
+				this.setCompanyUsed(true);
+			}
+			
+			centerPenal.setAppDetail(new AppDetail(this));
 			centerPenal.getMetaworksContext().setHow("detail");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
 		session.getEmployee().setPreferUX("sns");
 		session.setLastPerspecteType("topic");
 		session.setLastSelectedItem(this.getAppName());
 		
-		InstanceList instList = new InstanceList(session);
+		/*InstanceList instList = new InstanceList(session);
 		instList.load();
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.setInstanceList(instList);
 		
 		ContentWindow topicStreamWindow = new ContentWindow();
-		topicStreamWindow.setPanel(instanceListPanel);
+		topicStreamWindow.setPanel(instanceListPanel);*/
 		
 		
-		return new Object[]{instanceListPanel, centerPenal};
+		//return new Object[]{instanceListPanel, centerPenal};
+		return new Object[]{centerPenal};
 	}
 	
 	public Object edit() throws Exception {
@@ -411,57 +490,143 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		return new ModalPanel(this);
 	}
 
+	public Object serverManage() throws Exception {
+		
+		AppServerManage AppServerManage = new AppServerManage();
+		AppServerManage.session = session;
+		
+		KtProbProjectServers projectServers = new KtProbProjectServers(this.getProject().getId() , KtProjectServers.SERVER_PROB); // 운영
+		projectServers.loadOceServer();
+		
+		AppServerManage.setProjectServers(projectServers);
+		
+		return new ModalPanel(AppServerManage);
+	}
+
+	public Object step1() throws Exception {
+		NewServer newServer = new NewServer();
+		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				   this.getLogoFile().getFilename() != null && 
+				   this.getLogoFile().getFilename().length() > 0)			
+					this.getLogoFile().upload();
+		
+		newServer.setApp(this);
+		newServer.setServerGroup(KtProjectServers.SERVER_PROB);
+		newServer.setMetaworksContext(new MetaworksContext());
+		newServer.getMetaworksContext().setHow("appCreate");
+		newServer.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		return new ModalPanel(newServer);
+	}
+	
 	public Object save() throws Exception {
 
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
 
-		if(this.getLogoFile().getFileTransfer() != null &&
-		   this.getLogoFile().getFilename() != null && 
-		   this.getLogoFile().getFilename().length() > 0)			
-			this.getLogoFile().upload();
-
 		this.setCategory(category);
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			IWfNode project = new WfNode();
+			WfNode project = new WfNode();
 			project.setId(this.getAttachProject().getSelected());
-
-			setAppId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
-			setCreateDate(Calendar.getInstance().getTime());
-			setComcode(session.getCompany().getComCode());
-			setComName(session.getCompany().getComName());
-			
-			this.setProject(project);
-			this.setStatus(STATUS_REQUEST);
-			
-			createDatabaseMe();
-			
-
-			// 앱 등록일 경우 프로세스 발행
-			String defId = "AppRegister.process";
-			
-			ProcessMap goProcess = new ProcessMap();
-			goProcess.session = session;
-			goProcess.processManager = processManager;
-			goProcess.instanceView = instanceView;
-			goProcess.setDefId(defId);
-
-			// 프로세스 발행
-			Long instId = Long.valueOf(goProcess.initializeProcess());
-
-			// 프로세스 실행
-			ResultPayload rp = new ResultPayload();
-			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
-
-			// 무조건 compleate
-			processManager.executeProcessByWorkitem(instId.toString(), rp);
-			processManager.applyChanges();
+			project.copyFrom(project.databaseMe());
+//			if(project.getIsReleased()){
+				setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
+				setCreateDate(Calendar.getInstance().getTime());
+				setComcode(session.getCompany().getComCode());
+				setComName(session.getCompany().getComName());
+				
+				this.setSubDomain(this.getSubDomain());
+				this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
+				this.setProject(project);
+				this.setStatus(STATUS_REQUEST);
+				
+				createDatabaseMe();
+	
+				WfNode wfNode = new WfNode();
+				
+				if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+					wfNode.setName(this.getAppName());
+					wfNode.setType("app");
+					wfNode.setParentId(session.getCompany().getComCode());	
+					wfNode.setAuthorId(session.getUser().getUserId());		
+					String tenantId;
+					if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+						tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+					}else{
+						tenantId = session.getCompany().getComCode();
+					}
+					
+					wfNode.setCompanyId(tenantId);
+					wfNode.setDescription(this.getSimpleOverview());
+					wfNode.setStartDate(new Date());
+					wfNode.setLogoFile(this.getLogoFile());
+					wfNode.createMe(String.valueOf(this.getAppId()));
+					
+					TopicMapping tm = new TopicMapping();
+					tm.setTopicId(String.valueOf(this.getAppId()));
+					tm.setUserId(session.getUser().getUserId());
+					tm.setUserName(session.getUser().getName());
+					tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+					
+					tm.saveMe();
+					tm.flushDatabaseMe();
+					
+					this.setTopicId(wfNode.getId());
+				}else{
+					wfNode.setId(this.getTopicId());
+					
+					wfNode.copyFrom(wfNode.databaseMe());
+					
+					wfNode.setName(this.getAppName());
+					wfNode.saveMe();
+				}
+	
+				// 앱 등록일 경우 프로세스 발행
+				String defId = "AppRegister.process";
+				
+				ProcessMap goProcess = new ProcessMap();
+				goProcess.session = session;
+				goProcess.processManager = processManager;
+				goProcess.instanceView = instanceView;
+				goProcess.setDefId(defId);
+	
+				// 프로세스 발행
+				Long instId = Long.valueOf(goProcess.initializeProcess());
+	
+				// 프로세스 실행
+				ResultPayload rp = new ResultPayload();
+				rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
+	
+				// 무조건 compleate
+				processManager.executeProcessByWorkitem(instId.toString(), rp);
+				processManager.applyChanges();
+				
+	//			TopicMapping tm = new TopicMapping();
+	//			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
+	//			tm.setUserId(session.getUser().getUserId());
+	//			tm.setUserName(session.getUser().getName());
+	//			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+	//			
+	//			tm.saveMe();
+				flushDatabaseMe();
+//			}
+//			else{
+//				ModalWindow modalWindow = new ModalWindow();
+//				modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//				modalWindow.setWidth(300);
+//				modalWindow.setHeight(150);
+//								
+//				modalWindow.setTitle("$앱 등록 실패");
+//				modalWindow.setPanel(localeManager.getString("해당 프로젝트를 Release 하신 후 앱 등록을 하시기 바랍니다."));
+//				modalWindow.getButtons().put("$Confirm", "");		
+//				
+//				return modalWindow;
+//			}
 		}else{
 			syncToDatabaseMe();
+			flushDatabaseMe();
 		}
-		
-		flushDatabaseMe();
 
 		MyVendor myVendor = new MyVendor();
 		myVendor.load(session);
@@ -477,6 +642,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		return new ModalPanel(myVendor);
 	}
 	
+	@ServiceMethod(callByContent=true)
 	public Object[] addApp()throws Exception {
 		
 //		App app = new App();
@@ -550,22 +716,72 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //		
 //		return new Object[] {modalWindow, new Remover(removeWindow, true)};
 		
+		WfNode wfNode = new WfNode();
+		wfNode.setId(this.getProject().getId());
+		wfNode.copyFrom(wfNode.databaseMe());
+		Object warFile = null;
+		Object sqlPath = null;
+
+		CloudInfo cloudInfo = wfNode.getCloudInfo();
+		ICloudInfo cInfo = cloudInfo.findServerByProjectId(cloudInfo.getProjectId() , KtProjectServers.SERVER_PROB);
+		while(cInfo.next()){
+			// TODO 서버가 여러개 있는 경우를 체크해서 올려야함
+			cloudInfo.copyFrom(cInfo);
+		}
 		
+		XStream xstream = new XStream();
+		if (wfNode.getExt() != null) {
+			Object xstreamStr = xstream.fromXML(wfNode.getExt());
+			if (xstreamStr != null) {
+				Map<String, Object> list = (Map<String, Object>) xstreamStr;
+
+				warFile = list.get("warFile_Thumbnail");
+				sqlPath = list.get("sqlFile_Path");
+			}
+		}
+		String tenantId;
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}else{
+			tenantId = session.getCompany().getComCode();
+		}
+		if(warFile != null){
+			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + warFile.toString() + "/" + tenantId);
+//			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");	
+		}else{
+			//this.databaseMe().setUrl("Http://" + this.getAppName() + ".uenginecloud.com:8080/" + tenantId);
+//			this.databaseMe().setUrl("Http://27.1.126.73:9090/UrlRewrite/uengine/index.jsp");
+		}
+		syncToDatabaseMe();
+		flushDatabaseMe();
+		
+		//데이터베이스 생성
+		if(TenantContext.getThreadLocalInstance().getTenantId()!=null && sqlPath.toString()!= null){
+			CreateDatabase createDatabase = new CreateDatabase();
+			createDatabase.create(cloudInfo.getRootId(), cloudInfo.getServerIp(), cloudInfo.getRootPwd(), tenantId, sqlPath.toString());
+		}
 		AppMapping appmapping = new AppMapping();
 		
+		appmapping.session = session;
 		appmapping.setAppId(this.getAppId());
 		appmapping.setAppName(this.getAppName());
 		appmapping.setComCode(session.getCompany().getComCode());
 		appmapping.setIsDeleted(false);
-
+		appmapping.setUrl(this.getUrl());
 		appmapping.createDatabaseMe();
 		appmapping.flushDatabaseMe();
 		
-		PageNavigator pageNavigator = new PageNavigator();
-		pageNavigator.setSession(session);
+		return new Object[]{new MainPanel(new OceMain(session, this.getAppId()))};
 		
-		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
+	}
+	
+	@Hidden
+	@ServiceMethod(callByContent = true, eventBinding = "change", bindingFor = "attachProject", bindingHidden = true, target = ServiceMethodContext.TARGET_SELF)
+	public void changeProject() throws Exception{
+		FilepathInfo filepathInfo = new FilepathInfo();
+		filepathInfo.setProjectId(this.getAttachProject().getSelected());
 		
+		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 	}
 
 	@Override
@@ -593,5 +809,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 	}
 	
-
+	@AutowiredFromClient
+	public Locale localeManager;
+	
+	
 }

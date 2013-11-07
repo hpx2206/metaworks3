@@ -11,7 +11,7 @@ var org_uengine_codi_mw3_model_PerspectivePanel = function(objectId, className){
 	});
 	
 	$(this.divId).parent().css({"background":"none","width":"100%","overflow":"hidden"});
-	$(this.divId).parent().hover(function(){$(this).css({"overflow":"auto","margin-right":"0px"})},function(){$(this).css({"overflow":"hidden"})})
+	$(this.divId).parent().hover(function(){$(this).css({"overflow":"auto","margin-right":"0px"});},function(){$(this).css({"overflow":"hidden"});});
 	//$(this.divId).parent().parent().parent().parent().parent().append('<div class=\"hide_left_btn\" onclick=\""></div>')
 	
 };

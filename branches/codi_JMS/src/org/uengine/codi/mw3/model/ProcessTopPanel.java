@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class ProcessTopPanel {
@@ -27,8 +29,10 @@ public class ProcessTopPanel {
 		
 		setLoginUser(loginUser);
 		
-		if( "sns".equals(session.getEmployee().getPreferUX())){
+		if("oce".equals(session.getUx())){
 			InstanceSearchBox searchBox = new InstanceSearchBox();
+			searchBox.setMetaworksContext(new MetaworksContext());
+			searchBox.getMetaworksContext().setWhere("topPanel");
 			searchBox.setKeyUpSearch(true);
 			searchBox.setKeyEntetSearch(true);
 			setSearchBox(searchBox);
@@ -77,7 +81,6 @@ public class ProcessTopPanel {
 		}
 
 	Session session;
-		@AutowiredToClient
 		public Session getSession() {
 			return session;
 		}
@@ -92,7 +95,8 @@ public class ProcessTopPanel {
 		public void setLoginUser(IUser loginUser) {
 			this.loginUser = loginUser;
 		}
-	SearchBox searchBox;		
+	SearchBox searchBox;
+		@Face(options={"keyupSearch"}, values={"true"})
 		public SearchBox getSearchBox() {
 			return searchBox;
 		}

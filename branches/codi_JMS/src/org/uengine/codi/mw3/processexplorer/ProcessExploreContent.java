@@ -1,13 +1,17 @@
 package org.uengine.codi.mw3.processexplorer;
 
+import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.model.ContentWindow;
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDetailPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessSummaryPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 
-@Face(displayName="운영절차")
 public class ProcessExploreContent{
 	
 	@AutowiredFromClient
@@ -43,39 +47,26 @@ public class ProcessExploreContent{
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
-	
-	ProcessAttributePanel processAttributePanel;
-		public ProcessAttributePanel getProcessAttributePanel() {
-			return processAttributePanel;
+	ProcessDetailPanel processDetailPanel;
+		public ProcessDetailPanel getProcessDetailPanel() {
+			return processDetailPanel;
 		}
-		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
-			this.processAttributePanel = processAttributePanel;
+		public void setProcessDetailPanel(ProcessDetailPanel processDetailPanel) {
+			this.processDetailPanel = processDetailPanel;
 		}
-		
-	ProcessSubAttributePanel  processSubAttributePanel;
-		public ProcessSubAttributePanel getProcessSubAttributePanel() {
-			return processSubAttributePanel;
+	ProcessSummaryPanel processSummaryPanel;
+		public ProcessSummaryPanel getProcessSummaryPanel() {
+			return processSummaryPanel;
 		}
-		public void setProcessSubAttributePanel(
-				ProcessSubAttributePanel processSubAttributePanel) {
-			this.processSubAttributePanel = processSubAttributePanel;
+		public void setProcessSummaryPanel(ProcessSummaryPanel processSummaryPanel) {
+			this.processSummaryPanel = processSummaryPanel;
 		}
 
-	ProcessFormPanel processFormPanel;
-		public ProcessFormPanel getProcessFormPanel() {
-			return processFormPanel;
-		}
-		public void setProcessFormPanel(ProcessFormPanel processFormPanel) {
-			this.processFormPanel = processFormPanel;
-		}
-		
 	public ProcessExploreContent(){
 		processViewPanel = new ProcessViewPanel();
-		processAttributePanel = new ProcessAttributePanel();
-		processSubAttributePanel = new ProcessSubAttributePanel();
-		processFormPanel = new ProcessFormPanel();
+		processDetailPanel = new ProcessDetailPanel();
+		processSummaryPanel = new ProcessSummaryPanel();
 	}
-	
 	
 	public void load() throws Exception{
 		processViewPanel.setDefId(defId);
@@ -83,20 +74,26 @@ public class ProcessExploreContent{
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
 		
-//			ProcessFormPanel processFormPanel = new ProcessFormPanel();
+		ProcessDesignerContainer processDesignerContainer = processViewPanel.processViewer.getProcessDesignerContainer();
 		
-		processAttributePanel.setDocumentation(null);
-		processAttributePanel.setDefId(defId);
-		if( processViewPanel.processViewer != null ){
-			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
-		}
+		processDetailPanel.setDocumentation(processDesignerContainer.getProcessDetailPanel().getDocumentation());
+		getProcessDetailPanel().getMetaworksContext().setHow("snsView");
+		getProcessDetailPanel().getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
-		processSubAttributePanel.setDocumentationSub(null);
-		processSubAttributePanel.setDefId(defId);
-		if( processViewPanel.processViewer != null ){
-			processSubAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
-		}
+		processSummaryPanel.setDetailList(processDesignerContainer.getProcessSummaryPanel().getDetailList());
+		getProcessSummaryPanel().getMetaworksContext().setHow("snsView");
+		getProcessSummaryPanel().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] startProcess() throws Exception{
 		
+		return new Object[]{};
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] startPrint() throws Exception{
 		
+		return new Object[]{};
 	}
 }

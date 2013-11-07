@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.EventContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
@@ -62,7 +63,7 @@ public class WorkItemVersionChooser implements ORMappingListener{
 			this.selectedVersion = selectedVersion;
 		}
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE)
 	public IWorkItem choose() throws Exception{
 		
 		int i=0;

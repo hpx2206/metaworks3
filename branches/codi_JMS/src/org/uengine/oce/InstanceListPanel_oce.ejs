@@ -1,0 +1,29 @@
+<%
+
+    if(value == null && typeof value == 'undefined')
+        return;
+        
+	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+ 	var isProject = (mw3.how == "project");
+    
+%>
+
+<%
+	if(isProject){
+%>
+
+		<div class="top" style="overflow:hidden; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+			<%=isProject?fields.topicFollowers.here():''%>
+			<%=isProject?fields.projectInfo.here():''%>
+		</div>
+	
+<%
+	}
+%>
+		
+		
+		<%=value.newInstancePanel ? fields.newInstancePanel.here() : ""%>
+	
+		<div class="bottom" style="min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+		<%=value.instanceList ? fields.instanceList.here() : ""%>
+		</div>

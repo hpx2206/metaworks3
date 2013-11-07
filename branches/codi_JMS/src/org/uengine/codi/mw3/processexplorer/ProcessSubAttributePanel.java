@@ -47,35 +47,5 @@ public class ProcessSubAttributePanel {
 		setDefId(defId);
 	}
 	public void load( ProcessDesignerContainer processDesignerContainer ) throws Exception {
-		/* 
-		 * 파일을 뿌리게 되면.. ProcessViewWindow 를  AutowiredFromClient를 하였을때, marshalling data error 발생
-		if( processDesignerContainer != null && processDesignerContainer.getActivityList() != null ){
-			if( fileList == null ){
-				fileList = new ArrayList<MetaworksFile>();
-			}
-			ArrayList<Activity> activityList = processDesignerContainer.getActivityList();
-			for(Activity act : activityList){
-				Documentation doc = act.getDocumentation();
-				MetaworksFile file1 = doc.getAttachfile1();
-				if (file1 != null && file1.getUploadedPath() != null
-						&& file1.getFilename() != null){
-					file1.setFileTransfer(new FileTransfer(new String(file1.getFilename().getBytes("UTF-8"),"ISO8859_1"), file1.getMimeType(), new FileInputStream(file1.overrideUploadPathPrefix() + "/" + file1.getUploadedPath())));
-					fileList.add(file1);
-				}
-				MetaworksFile file2 = doc.getAttachfile2();
-				if (file2 != null && file2.getUploadedPath() != null
-						&& file2.getFilename() != null){
-					file2.setFileTransfer(new FileTransfer(new String(file2.getFilename().getBytes("UTF-8"),"ISO8859_1"), file2.getMimeType(), new FileInputStream(file2.overrideUploadPathPrefix() + "/" + file2.getUploadedPath())));
-					fileList.add(file2);
-				}
-				MetaworksFile file3 = doc.getAttachfile3();
-				if (file3 != null && file3.getUploadedPath() != null
-						&& file3.getFilename() != null){
-					file3.setFileTransfer(new FileTransfer(new String(file3.getFilename().getBytes("UTF-8"),"ISO8859_1"), file3.getMimeType(), new FileInputStream(file3.overrideUploadPathPrefix() + "/" + file3.getUploadedPath())));
-					fileList.add(file3);
-				}
-			}
-		}
-		*/
 	}
 }

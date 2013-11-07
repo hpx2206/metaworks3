@@ -94,7 +94,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 			this.type = type;
 		}
 		
-	String typeInputter;
+	transient String typeInputter;
 		@Range(options={"Text", "Complex"}, values={"java.lang.String", "org.uengine.contexts.ComplexType"})
 		public String getTypeInputter() {
 			return typeInputter;
@@ -389,33 +389,62 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 		}
 	}
 	
-	@AutowiredFromClient
-	transient public ParameterContextPanel parameterContextPanel;
-	
-	@AutowiredFromClient
+	transient String currentEditorId;
+	@Hidden
+		public String getCurrentEditorId() {
+			return currentEditorId;
+		}
+		public void setCurrentEditorId(String currentEditorId) {
+			this.currentEditorId = currentEditorId;
+		}
+		
+	@AutowiredFromClient(select="autowiredObject.editorId==currentEditorId +'_dummy'")
 	transient public ProcessVariablePanel processVariablePanel;
 	
+	/*
+	 * 전체 변수를 확가지고 있는 ProcessVariablePanel
+	 * 현재 ProcessVariable 이 팝업창으로 띄어져 있을때, 체크되어 사용된다.
+	 */
+	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.editorId")
+	transient public ProcessVariablePanel wholeProcessVariablePanel;
+	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	@Face(displayName="$Save")
 	public Object[] saveVariable() throws Exception{
+		ArrayList<Object> returnList = new ArrayList<Object>();
+		returnList.add(new Remover(new ModalWindow() , true));
+		
 		if( processVariablePanel != null ){
 			this.getMetaworksContext().setHow("");
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			ArrayList<ProcessVariable> valList =  processVariablePanel.getVariableList();
+			valList.remove(this);
 			valList.add(this);
 			processVariablePanel.setVariableList(valList);
+			
+			returnList.add(new Refresh(processVariablePanel));
 		}
-		if( parameterContextPanel != null ){
-			this.getMetaworksContext().setHow("list");
+		if( wholeProcessVariablePanel != null ){
+			
+			wholeProcessVariablePanel.getMetaworksContext().setHow("menu");
+			this.getMetaworksContext().setHow("menu");
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			ArrayList<ProcessVariable> wholeValList =  parameterContextPanel.getWholeVariableList();
-			wholeValList.add(this);
-			parameterContextPanel.setWholeVariableList(wholeValList);
+			ArrayList<ProcessVariable> valList =  wholeProcessVariablePanel.getVariableList();
+			valList.remove(this);
+			valList.add(this);
+			wholeProcessVariablePanel.setVariableList(valList);
+			
+			returnList.add(new Refresh(wholeProcessVariablePanel));
 		}
-		
-		return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(processVariablePanel) , new Refresh(parameterContextPanel)};
+		Object[] returnObject = new Object[returnList.size()];
+		for( int i =0; i < returnList.size(); i++ ){
+			returnObject[i] = returnList.get(i);
+		}
+		return returnObject;
 	}
 
 	@ServiceMethod(callByContent=true)
+	@Hidden
     public void changeType() throws Exception{		
 		if( "org.uengine.contexts.ComplexType".equals(this.getTypeInputter())){
 			ComplexType complexType = new ComplexType();

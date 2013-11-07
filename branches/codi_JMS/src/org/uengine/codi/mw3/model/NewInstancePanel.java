@@ -108,27 +108,48 @@ public class NewInstancePanel implements ContextAware {
 	public void load(Session session) throws Exception{
 		this.setTopicNodeId(session.getLastSelectedItem());
 		
-		newInstantiator = new CommentWorkItem();
-		newInstantiator.setWriter(session.getUser());		
-
-		/* for helper */
-		if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-			processMapPanel = new ProcessMapPanel();		
-			processMapPanel.setMetaworksContext(this.getMetaworksContext());
-			processMapPanel.load(session);						
+		if("document".equals(session.getLastPerspecteType())){
+			newInstantiator = new FileWorkItem();
+			newInstantiator.setType(IWorkItem.WORKITEM_TYPE_FILE);
+		}else{
+			newInstantiator = new CommentWorkItem();
 		}
+		
+		newInstantiator.session = session;
+		newInstantiator.setWriter(session.getUser());
+		if(this.session == null)
+			this.session = session;
+			
+	
+		Choice securityLevel = new Choice();
+
+		if(session.getUx()!= "oce_app" && session.getUx() != "oce" && session.getUx() != "oce_project"){
+			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
+				
+				processMapPanel = new ProcessMapPanel();		
+				processMapPanel.setMetaworksContext(this.getMetaworksContext());
+				processMapPanel.load(session);			
+				
+				securityLevel.add("$Privacy.Normal","0");
+				securityLevel.add("$Privacy.OnlyFollowers","1");
+				securityLevel.add("$Privacy.Public","2");
+			}
+			
+		}
+		/* for helper */
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			getMetaworksContext().setHow("sns");
-			
 			newInstantiator.getMetaworksContext().setHow("sns");			
 		}
+		if("oce".equals(session.getUx())){
+			newInstantiator.getMetaworksContext().setWhere("oce");
+		}else if("oce_app".equals(session.getUx()) || "oce_project".equals(session.getUx())){
+			newInstantiator.getMetaworksContext().setHow("sns");
+			newInstantiator.getMetaworksContext().setWhere("oce");
+		}
 		
-		Choice securityLevel = new Choice();
-		securityLevel.add("$Privacy.Normal","0");
-		securityLevel.add("$Privacy.OnlyFollowers","1");
-		securityLevel.add("$Privacy.Public","2");
-		
+	
 		/*
 		 * default security level
 		 * 

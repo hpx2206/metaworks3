@@ -18,6 +18,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.Download;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
 import org.uengine.codi.platform.Console;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -150,11 +152,9 @@ public class ResourceFile implements ContextAware{
 
 	@XStreamImplicit
 	ArrayList<ResourceFile> childs;
-
 		public ArrayList<ResourceFile> getChilds() {
 			return childs;
 		}
-	
 		public void setChilds(ArrayList<ResourceFile> childFiles) {
 			this.childs = childFiles;
 		}
@@ -178,7 +178,16 @@ public class ResourceFile implements ContextAware{
 		
 		Workspace workspace = new Workspace();
 		workspace.load(session);
-		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
+//		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
+		String resourceBase;
+		
+		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "1"))){
+			resourceBase = CodiClassLoader.mySourceCodeBase();
+		}else{
+			String tenantId = session.getCompany().getComCode();
+			String projectId = MetadataBundle.getProjectId();
+			resourceBase = CodiClassLoader.mySourceCodeBase(projectId,tenantId);
+		}
 		// TODO workspace.getProjects().get(0) 이 부분을  loop 를 돌려서 프로젝트까지 보이도록 해야함
 		File file = new File(resourceBase + getAlias());
 		

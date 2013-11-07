@@ -26,7 +26,13 @@ public class ProcessViewPanel {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
-		
+	String projectId;
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}	
 	public ProcessViewer processViewer;
 		public ProcessViewer getProcessViewer() {
 			return processViewer;
@@ -41,6 +47,7 @@ public class ProcessViewPanel {
 		if(UEngineUtil.isNotEmpty(alias)  && UEngineUtil.isNotEmpty(defId)){
 			processViewer.setDefId(defId);
 			processViewer.setAlias(alias);
+			processViewer.setProjectId(projectId);
 //			processViewer.setAlias(codebase + File.separatorChar + alias);
 			processViewer.setViewType(viewType);
 			processViewer.load();

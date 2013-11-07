@@ -1,10 +1,10 @@
 <%
 if(value){
-	
-	var instanceTitle = value.name;
+	var instanceTitle = value.name ? value.name : " ";
 	var lastCmnt = value.lastCmnt;
 	var lastCmnt2 = value.lastCmnt2;
 	var topicName = value.topicName;
+	var isDashboard = (mw3.how == "dashboard");
 	 
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	if(session && session.searchKeyword != null && session.searchKeyword.length > 0){
@@ -54,6 +54,8 @@ if(value){
 			</div>				
 		</td> 
 		<td id="td_<%=objectId%>">
+										<!--oce 버전 기능 잠시 죽입니다:cjs -->
+										<!--
 										<% if(mw3.how == 'sns'){ %>
 												<div class="instanceBtn instanceBtn_sns">
 													<span style="float:left"><%=fields.instanceTooltip.here()%></span>
@@ -61,6 +63,7 @@ if(value){
 													<div class="clear"></div>
 												</div>
 											<%}%>									
+										-->
 			<ul class="lst_type">										
 				<li class="trigger">					
 					<div class="instanceTitle">
@@ -147,14 +150,17 @@ if(value){
 			    
 			    if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>			     
 			    <% }else if(value.lastCmnt != null){%>
-			    <% if(value.currentUser && value.currentUser.userId){%>
-			    <!-- && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)-->
 			    
-			    <li>
-			    	<!--style="margin-left:38px;"-->
-			   		<table><td><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
-			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
-			 	</li>
+				    <% if(value.currentUser && value.currentUser.userId){%>
+				    
+			   		<% if(!isDashboard){%>
+					    <li>
+					    	<!--style="margin-left:38px;"-->
+					   		<table><td><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
+					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
+					 	</li>
+			   		<%}%>
+
 			   		<%if(value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
 					    	<!--style="margin-left:38px;"-->

@@ -396,7 +396,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		employee.getMetaworksContext().setHow("detail");
 		employee.getMetaworksContext().setWhen(WHEN_EDIT);
-		employee.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+		employee.getMetaworksContext().setWhere("inDetailWindow");
 
 		employee.setImageFile(new PortraitImageFile());
 		employee.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
@@ -579,15 +579,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
-	public Object showDetail() throws Exception {
-		IEmployee employee = findMe();
-		employee.setMetaworksContext(getMetaworksContext());
-		employee.getMetaworksContext().setHow("detail");
-		employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		employee.getMetaworksContext().setWhere("inDetailWindow");
-		
-		
-		return new ModalWindow(new EmployeeInfo(employee), 700, 400, employee.getEmpName());
+	public Object[] showDetail() throws Exception {
+		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
 	}
 	
 	@Override
@@ -729,7 +722,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if (this.getMetaworksContext().getWhere().equals("inDetailWindow"))
 			return new Object[]{new Remover(new ModalWindow()), session.logout()};
 		else
-			return new Object[]{new Remover(new Popup()), session.logout()};
+			return new Object[]{session.logout()};
 	}
 	@Override
 	public Session drag() throws Exception {
@@ -752,4 +745,5 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
 	}
+	
 }

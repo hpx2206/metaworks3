@@ -6,6 +6,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -23,13 +24,14 @@ import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(displayName = "$AppInfo", ejsPath = "genericfaces/FormFace.ejs", options = { "fieldOrder" }, values = { "categories,appName,simpleOverview,fullOverview,pricing,attachProject,logoFile" })
+@Face(displayName = "$AppInfo")
 public class AppInformation implements ContextAware, ITool {
 
 	public AppInformation() throws Exception {
@@ -39,6 +41,11 @@ public class AppInformation implements ContextAware, ITool {
 
 	}
 
+	public AppInformation(int appId) throws Exception {
+		this.setAppId(appId);
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+	}
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -146,7 +153,15 @@ public class AppInformation implements ContextAware, ITool {
 		public void setProjectName(String projectName) {
 			this.projectName = projectName;
 		}
-
+		
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+		
 	@Autowired
 	transient public ProcessManagerRemote processManager;
 
@@ -167,7 +182,7 @@ public class AppInformation implements ContextAware, ITool {
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
 
-		IWfNode project = new WfNode();
+		WfNode project = new WfNode();
 		project.setId(this.getAttachProject().getSelected());
 
 		App listing = new App();
@@ -277,4 +292,26 @@ public class AppInformation implements ContextAware, ITool {
 
 	}
 
+	public void load() throws Exception{
+		App app = new App();
+		app.setAppId(this.getAppId());
+		
+		try {
+			app.copyFrom(app.databaseMe());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		this.appName = app.getAppName();
+		this.simpleOverview = app.getSimpleOverview();			
+		this.fullOverview = app.getFullOverview(); 
+		this.logoFile = app.getLogoFile();
+		this.setUrl(app.getUrl());
+		
+	}
+	
+	@ServiceMethod(target = ServiceMethodContext.TARGET_NONE)
+	public void appExcute(){
+	}
 }

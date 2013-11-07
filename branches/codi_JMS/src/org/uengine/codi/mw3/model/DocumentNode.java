@@ -156,6 +156,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		sb.append(" where knol.type = ?type");
 		sb.append(" and parentid = ?parentid");
 		sb.append(" and companyId =?companyId");
+		sb.append(" and authorid=?authorid");
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
 		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
@@ -166,6 +167,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		dao.set("type", TYPE_DOC);
 		dao.set("parentid", "Main");
 		dao.set("companyId", this.getCompanyId());
+		dao.set("authorid",session.getUser().getUserId());
 		dao.select();
 		
 		return dao;
