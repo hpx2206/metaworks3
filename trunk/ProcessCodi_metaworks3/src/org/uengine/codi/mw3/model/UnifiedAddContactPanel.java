@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -10,7 +11,10 @@ public class UnifiedAddContactPanel {
 	public UnifiedAddContactPanel(Session session) throws Exception {
 		setLocalContact(new AddLocalContactPanel(session));
 		setFacebookContact(new AddContactPanel());
-		setInviteByEmail(new Invitation());
+		Invitation invitation = new Invitation();
+		invitation.setMetaworksContext(new MetaworksContext());
+		invitation.getMetaworksContext().setHow("invite");
+		setInviteByEmail(invitation);
 	}
 
 	AddLocalContactPanel localContact;
