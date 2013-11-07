@@ -46,10 +46,13 @@ public class DocWorkItem extends WorkItem {
 		fileWorkItem.processManager = this.processManager;
 		fileWorkItem.instanceViewContent = this.instanceViewContent;
 		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
 		fileWorkItem.setWriter(session.getUser());
 		fileWorkItem.setFile(this.getFile());
 		fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
 		fileWorkItem.setMajorVer(1);
+		fileWorkItem.setFolderId(this.getFolderId());
+		fileWorkItem.setGrpTaskId(this.getTaskId());
 		fileWorkItem.add();
 		
 		DocumentTool tool = new DocumentTool();

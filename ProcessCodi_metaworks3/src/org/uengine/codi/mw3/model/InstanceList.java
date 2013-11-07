@@ -179,12 +179,18 @@ public class InstanceList implements ContextAware{
 		
 		return this;
 	}
-
+	
 	public InstanceList loadDocument() throws Exception{
 		return loadDocument(this.getNavigation());
 	}
 	public InstanceList loadDocument(Navigation navigation) throws Exception{
-		IInstance instance = Instance.loadDocument();
+		IInstance instance = null;
+		
+		if("UnlabeledDocument".equals(this.getMetaworksContext().getHow())){
+			instance = Instance.loadDocument();
+		}else{
+			instance = Instance.loadDocument(getFolderId());
+		}
 		
 		instance.getMetaworksContext().setHow("document");
 		setInstances(instance);

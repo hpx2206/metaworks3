@@ -815,7 +815,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(this.getTitle());
+				if(this.getFolderId() != null){
+					instanceRef.setTopicId(this.getFolderId());
+				}
+				
 				instanceRef.setIsDocument(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType()));
+				
+				
 				
 				afterInstantiation(instanceRef);				
 			}else{

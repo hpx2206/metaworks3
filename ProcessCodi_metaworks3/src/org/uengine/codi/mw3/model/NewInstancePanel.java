@@ -109,7 +109,8 @@ public class NewInstancePanel implements ContextAware {
 		this.setTopicNodeId(session.getLastSelectedItem());
 		
 		if("document".equals(session.getLastPerspecteType())){
-			newInstantiator = new FileWorkItem();
+			newInstantiator = new DocWorkItem();
+			newInstantiator.setFolderId(getTopicNodeId());
 			newInstantiator.setType(IWorkItem.WORKITEM_TYPE_FILE);
 		}else{
 			newInstantiator = new CommentWorkItem();

@@ -1589,19 +1589,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	}
-	public static IInstance loadDocument() throws Exception {
+	public static IInstance loadDocument(String folderId) throws Exception {
 		// TODO Auto-generated method stub
 			
 			StringBuffer sql = new StringBuffer();
 			
-
-			sql.append("select *");
-			sql.append(" from bpm_procinst proc");
-			sql.append(" where proc.isDocument=?isDocument");
-			sql.append(" order by proc.InstId desc");
+//select * from bpm_procinst where isdocument ='1' and topicid='324' order by instid desc;
+			sql.append("select * from bpm_procinst ");
+			sql.append("where isdocument =?isdocument and topicId=?topicId ");
+			sql.append("order by InstId desc");
 			IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
 			
-			instance.set("isDocument", 1);
+			instance.set("isdocument", 1);
+			instance.set("topicId",folderId);
 			instance.select();
 			
 			while(instance.next()){
@@ -1613,7 +1613,25 @@ public class Instance extends Database<IInstance> implements IInstance{
 			return instance;
 			
 	}
-	
+	public static IInstance loadDocument() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select * from bpm_procinst ");
+		sql.append("where isdocument =?isdocument and topicId is null ");
+		sql.append("order by InstId desc");
+		IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
+		
+		instance.set("isdocument", 1);
+		instance.select();
+		
+		while(instance.next()){
+			Instance inst = new Instance();
+			inst.copyFrom(instance);
+			inst.getMetaworksContext().setHow("document");
+		}
+
+		return instance;
+	}
 	public MainPanel goSns() throws Exception {
 		if(session != null){
 			session.setLastPerspecteType("allICanSee");
