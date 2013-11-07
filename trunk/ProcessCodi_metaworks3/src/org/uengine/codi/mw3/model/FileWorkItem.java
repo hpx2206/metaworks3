@@ -86,8 +86,9 @@ public class FileWorkItem extends WorkItem{
 		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 
 //		// 추가모드 일때
-		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))		
-//			this.setGrpTaskId(this.getTaskId());
+		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))	
+				if(this.getGrpTaskId() == null)
+					this.setGrpTaskId(this.getTaskId());
 //
 //			// default 버전
 //			this.setMajorVer(1);

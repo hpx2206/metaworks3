@@ -105,7 +105,8 @@ public class DocumentTitle implements ContextAware{
 		node.setType(DocumentNode.TYPE_DOC);
 		node.setSecuopt(documentSecuopt ? "1" : "0");
 		node.setStartDate(Calendar.getInstance().getTime());		
-		node.setParentId("Main");	
+//		node.setParentId("Main");	
+		node.setParentId("tid_"+session.getCompany().getComCode());	
 		node.setAuthorId(session.getUser().getUserId());		
 		node.setCompanyId(session.getCompany().getComCode());
 		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());

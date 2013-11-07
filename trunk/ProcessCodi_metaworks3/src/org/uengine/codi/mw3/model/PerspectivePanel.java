@@ -86,12 +86,12 @@ public class PerspectivePanel  implements ContextAware {
 			this.strategicPerspective = strategicPerspective;
 		}
 		
-	DocumentPanel documentPanel; 	
-		public DocumentPanel getDocumentPanel() {
-			return documentPanel;
+	DocumentPerspective documentPerspective;
+		public DocumentPerspective getDocumentPerspective() {
+			return documentPerspective;
 		}
-		public void setDocumentPanel(DocumentPanel documentPanel) {
-			this.documentPanel = documentPanel;
+		public void setDocumentPerspective(DocumentPerspective documentPerspective) {
+			this.documentPerspective = documentPerspective;
 		}
 
 	TopicPerspective topicPerspective;
@@ -165,11 +165,12 @@ public class PerspectivePanel  implements ContextAware {
 				}
 				
 				//문서
-//				documentPerspective = new DocumentPerspective();
-				documentPanel = new DocumentPanel();
-				setMetaworksContext(new MetaworksContext());
-				this.getMetaworksContext().setHow("perspectivePanel");
-				documentPanel.setMetaworksContext(this.getMetaworksContext());
+				if("1".equals(GlobalContext.getPropertyString("document.use","1"))){
+					documentPerspective = new DocumentPerspective();
+					setMetaworksContext(new MetaworksContext());
+					this.getMetaworksContext().setHow("perspectivePanel");
+					documentPerspective.setMetaworksContext(this.getMetaworksContext());
+				}
 				
 				//친구
 				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
