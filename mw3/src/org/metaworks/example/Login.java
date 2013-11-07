@@ -1,6 +1,7 @@
 package org.metaworks.example;
 
 import org.metaworks.dao.Database;
+import org.metaworks.widget.Popup;
 
 public class Login extends Database<ILogin> implements ILogin {
 	
@@ -17,9 +18,15 @@ public class Login extends Database<ILogin> implements ILogin {
 		public void setPassword(String password) throws Exception { this.password = password; }
 	
 	
-	public void createUser() throws Exception {
-		createDatabaseMe();
+	public Popup createUser() throws Exception {
+		Popup pop = new Popup();
+		Employee emp = new Employee();
+		pop.setPanel(emp);
+		pop.setWidth(300);
+		pop.setHeight(160);
+		return new Popup(300, 150, new Employee());
+		/*createDatabaseMe();
 		
-		System.out.println("id = " + id + ", userId = " + userId + ", password = " + password);
+		System.out.println("id = " + id + ", userId = " + userId + ", password = " + password);*/
 	}
 }

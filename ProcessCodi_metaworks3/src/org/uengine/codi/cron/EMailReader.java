@@ -25,15 +25,18 @@ import org.metaworks.MetaworksContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.model.Company;
+import org.uengine.codi.mw3.model.EmailWorkItem;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Invitation;
-import org.uengine.codi.mw3.model.MemoWorkItem;
 import org.uengine.codi.mw3.model.User;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class EMailReader {
-    
+	
+	public ProcessManagerRemote processManager;
+	
     public EMailReader() {
         
     }
@@ -78,44 +81,223 @@ public class EMailReader {
         
 
     }
-
     
-    @Autowired
-    MemoWorkItem memoWorkItem;
-
     public void read() throws Exception{
-        
-    		Properties props = System.getProperties();
-    		props.setProperty("mail.store.protocol", "imaps");
+    	
+    	System.out.println("--- 메일 읽기 시작");
+    	System.out.println("processManager");
+    	System.out.println(processManager);
+    	
+
+  		Company company = new Company();
+		ICompany findcompany = company.findMe();
+
+		
+   		Properties props = System.getProperties();
+   		props.setProperty("mail.store.protocol", "imaps");
     				
-				ICompany company = new Company().auto();
-				company.setIsDeleted("0");
-				company.select();
+		Session session = Session.getDefaultInstance(props, null);
+		Store store = null;
+
+		while(findcompany.next()){
+			
+			if(findcompany.getRepMlHst()==null || findcompany.getRepMail()==null || findcompany.getRepMlPwd()==null)
+				continue;
+			
+			if(findcompany.getRepMail().equals("")){
+				continue;
+			}		
+
+			try {
+				store = session.getStore("imaps");
 				
-				while(company.next()){
+				org.uengine.codi.mw3.model.Session codiSession = new org.uengine.codi.mw3.model.Session();
+				codiSession.setCompany(findcompany);
 				
-					if(company.getRepMlHst()==null || company.getRepMail()==null || company.getRepMlPwd()==null)
-						continue;
+				/*
+				try{
+					Invitation invitation = new Invitation();
+					invitation.setEmail(findcompany.getRepMail());
+					invitation.session = codiSession;
+					invitation.invite();
+				}catch(Exception e){}
+				*/
+				
+				Employee representiveMailEmp = new Employee();
+				representiveMailEmp.setEmpCode("1");
+				
+				
+				IEmployee repMailEmp = representiveMailEmp.findMe();
+				
+				repMailEmp.setGlobalCom(findcompany.getComCode());
+				
+				//store.connect("imap.gmail.com", "jinyoungj3@gmail.com", "29036jyjang");
+								
+				store.connect(findcompany.getRepMlHst(), findcompany.getRepMail(), findcompany.getRepMlPwd());
+				
+				System.out.println(findcompany.getAlias() + " : "+store);
+	
+				Folder inbox = store.getFolder("Inbox");
+				inbox.open(Folder.READ_WRITE);
+				
+		    	Flags seen = new Flags(Flags.Flag.SEEN);
+		        FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
+		        
+		        Message[] messages = inbox.search(unseenFlagTerm);
+		        
+		        
+		        FetchProfile fp = new FetchProfile();
+		        fp.add(FetchProfile.Item.ENVELOPE);        
+		        inbox.fetch(messages, fp);
+		  
+	
+				//Message messages[] = inbox.search()
+				for(Message message:messages) {
+					//System.out.println(message);
+					Properties mailInfo = new Properties();
+					StringBuffer sb = new StringBuffer();
 					
+					
+			        Address[] from;
+			        // FROM
+			        from = message.getFrom();
+			        
+			        
+			        Address[] to;// TO
+			        to = message.getRecipients(Message.RecipientType.TO);
+			        
+	
+					
+					dumpPart(message, sb, mailInfo);
+					
+					ArrayList<User> fromUsers = new ArrayList<User>();
+	//	    					ArrayList<User> fromUsers = new ArrayList<User>();
+					for(Address theFrom : from){
+						IEmployee fromUserIsEmployee = new Employee().auto();
+						String theFromString = theFrom.toString();
+						String theFromName = theFromString;
+						
+						int whereMailAddress = theFromString.indexOf("<");
+						if(whereMailAddress>-1){
+	    					theFromName = theFromString.substring(0, whereMailAddress);
+	    					theFromString = theFromString.substring(whereMailAddress+1, theFromString.length()-1);
+						}
+						
+						fromUserIsEmployee.setEmail(theFromString);
+						fromUserIsEmployee.select();
+						
+						if(fromUserIsEmployee.next()){
+							User fromUser = new User();
+							fromUser.setName(fromUserIsEmployee.getEmpName());
+							fromUser.setUserId(fromUserIsEmployee.getEmpCode());
+							fromUser.setNetwork("local");
+							fromUsers.add(fromUser);
+						}else{
+							//TODO tries facebook, twitter, google+ by email searching
+							User fromUser = new User();
+							fromUser.setName(theFromName);
+							fromUser.setUserId(theFromString);
+							fromUser.setNetwork("ext");
+							fromUsers.add(fromUser);					
+						}
+					}
+					
+					EmailWorkItem emailWorkItem = new EmailWorkItem();
+					emailWorkItem.processManager = processManager;
+					emailWorkItem.setMemo(new WebEditor());
+					emailWorkItem.getMemo().setContents(sb.toString());
+					emailWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+					
+					User theFirstWriter;
+					if(fromUsers.size() > 0){
+						theFirstWriter = fromUsers.get(0);
+					}else{
+						theFirstWriter = new User();
+						theFirstWriter.setName("unknown");
+						theFirstWriter.setUserId("unknown");
+						theFirstWriter.setNetwork("ext");
+					}
+					
+					emailWorkItem.setWriter(theFirstWriter);
+					emailWorkItem.setTitle(message.getSubject());
+					emailWorkItem.setStartDate(message.getReceivedDate());
+					
+					User receiver = new User();
+					receiver.setUserId(repMailEmp.getEmpCode());
+					receiver.setName(repMailEmp.getEmpName());
+					receiver.setNetwork("local");
+					codiSession.setUser(receiver);
+					codiSession.setEmployee(repMailEmp);
+					codiSession.setCompany(findcompany);
+					
+					emailWorkItem.session = codiSession;
+					//emailWorkItem.instanceViewContent.instanceView.session = codiSession;
+					
+					emailWorkItem.add();
+					
+					//emailWorkItem.flushDatabaseMe();
+					
+					message.setFlag(Flags.Flag.SEEN, true);
+					//message.saveChanges();
+	
+				}
+				
+			} catch (NoSuchProviderException e) {
+				
+				throw new Exception("No Provider", e);
+			} catch (MessagingException e) {
+				throw new Exception("Messaging Error", e);
+			} catch (Exception e) {
+				throw new Exception("Error while getting email", e);
+			} finally {
+				if(store != null){
+					store.close();
+					store = null;
+				}
+			}
+		}
+    	
+    }
+    
+   /* public void readEmailByUser() throws Exception{
+    	
+		Properties props = System.getProperties();
+		props.setProperty("mail.store.protocol", "imaps");
+		
+		IEmployee employee = new Employee().auto();
+		employee.setIsDeleted("0");
+		employee.select();
+		
+		while(employee.next()){
+			Employee findEmployee = new Employee();
+			findEmployee.copyFrom(employee);
+			org.uengine.codi.mw3.model.Session codiSession = new org.uengine.codi.mw3.model.Session();
+			codiSession.setEmployee(findEmployee);
+			codiSession.fillSession();
+			if(codiSession != null && codiSession.getEmployee() != null 
+					&& !"".equals(codiSession.getEmployee().getEmail()) && !"".equals(codiSession.getEmployee().getPassword()) ){
+				String userEmail = codiSession.getEmployee().getEmail();
+				String userPasssd = codiSession.getEmployee().getPassword();
+				if( userEmail == null || "".equals(userEmail)){
+					continue;
+				}
 	    			try {
-	    				
-    					org.uengine.codi.mw3.model.Session codiSession = new org.uengine.codi.mw3.model.Session();
-    					codiSession.setCompany(company);
-	    				
 	    				try{
 	    					Invitation invitation = new Invitation();
-	    					invitation.setEmail(company.getRepMail());
+	    					invitation.setEmail(userEmail);
 	    					invitation.session = codiSession;
 	    					invitation.invite();
 	    				}catch(Exception e){}
-
-	    				Employee representiveMailEmp = new Employee();
-	    				representiveMailEmp.setEmpCode(company.getRepMail());
-	    				IEmployee repMailEmp = representiveMailEmp.databaseMe();
-	    				
+	
 	    				Session session = Session.getDefaultInstance(props, null);
 	    				Store store = session.getStore("imaps");
-	    				store.connect(company.getRepMlHst(), company.getRepMail(), company.getRepMlPwd());
+	    				try{
+	    					store.connect("imap.gmail.com", userEmail, userPasssd);
+	    				}catch(Exception excp){
+	    					System.err.println(userEmail + " can not connect google mail server! ");
+	    					continue;
+	    				}
+	//    				store.connect("imap.gmail.com", "scottUengine@gmail.com", "uengine81");
 	    				//"imap.gmail.com", "jinyoungj3@gmail.com", "29036jyjang");
 	    				System.out.println(store);
 	
@@ -132,28 +314,22 @@ public class EMailReader {
 	    		        fp.add(FetchProfile.Item.ENVELOPE);        
 	    		        inbox.fetch(messages, fp);
 	    		  
-	    		        StringBuffer sb = new StringBuffer();
-	
 	    				//Message messages[] = inbox.search()
 	    				for(Message message:messages) {
 	    					//System.out.println(message);
 	    					Properties mailInfo = new Properties();
-	    					
+	    					StringBuffer sb = new StringBuffer();
 	    					
 	    			        Address[] from;
 	    			        // FROM
 	    			        from = message.getFrom();
 	    			        
-	    			        
 	    			        Address[] to;// TO
 	    			        to = message.getRecipients(Message.RecipientType.TO);
 	    			        
-	
-	    					
 	    					dumpPart(message, sb, mailInfo);
 	    					
 	    					ArrayList<User> fromUsers = new ArrayList<User>();
-//	    					ArrayList<User> fromUsers = new ArrayList<User>();
 	    					for(Address theFrom : from){
 	        					IEmployee fromUserIsEmployee = new Employee().auto();
 	        					String theFromString = theFrom.toString();
@@ -184,9 +360,9 @@ public class EMailReader {
 	        					}
 	    					}
 	    					
-	    					memoWorkItem.setMemo(new WebEditor());
-	    					memoWorkItem.getMemo().setContents(sb.toString());
-	    					memoWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+	    					emailWorkItem.setMemo(new WebEditor());
+	    					emailWorkItem.getMemo().setContents(sb.toString());
+//	    					emailWorkItem.setInstantiation(true);
 	    					
 	    					User theFirstWriter;
 	    					if(fromUsers.size() > 0){
@@ -198,22 +374,86 @@ public class EMailReader {
 	    						theFirstWriter.setNetwork("ext");
 	    					}
 	    					
-	    					memoWorkItem.setWriter(theFirstWriter);
-	    					memoWorkItem.setTitle(message.getSubject());
-	    					memoWorkItem.setStartDate(message.getReceivedDate());
+	    					Address[] cc = message.getRecipients(Message.RecipientType.CC);
+	    					ArrayList<User> ccUsers = new ArrayList<User>();
+	    					if( cc != null ){
+		    					for(Address ccUser : cc){
+		        					IEmployee fromUserIsEmployee = new Employee().auto();
+		        					String theFromString = ccUser.toString();
+		        					String theFromName = theFromString;
+		        					
+		        					int whereMailAddress = theFromString.indexOf("<");
+									if(whereMailAddress>-1){
+		            					theFromName = theFromString.substring(0, whereMailAddress);
+		            					theFromString = theFromString.substring(whereMailAddress+1, theFromString.length()-1);
+		        					}
+		        					
+		        					fromUserIsEmployee.setEmail(theFromString);
+		        					fromUserIsEmployee.select();
+		        					
+		        					if(fromUserIsEmployee.next()){
+		        						User fromUser = new User();
+		        						fromUser.setName(fromUserIsEmployee.getEmpName());
+		        						fromUser.setUserId(fromUserIsEmployee.getEmpCode());
+		        						fromUser.setNetwork("local");
+		        						ccUsers.add(fromUser);
+		        					}else{
+		        						//TODO tries facebook, twitter, google+ by email searching
+		        						User fromUser = new User();
+		        						fromUser.setName(theFromName);
+		        						fromUser.setUserId(theFromString);
+		        						fromUser.setNetwork("ext");
+		        						ccUsers.add(fromUser);					
+		        					}
+		    					}
+	    					}
+	    					Address[] bcc = message.getRecipients(Message.RecipientType.BCC);
+	    					ArrayList<User> bccUsers = new ArrayList<User>();
+	    					if( bcc != null ){
+		    					for(Address bccUser : bcc){
+		        					IEmployee fromUserIsEmployee = new Employee().auto();
+		        					String theFromString = bccUser.toString();
+		        					String theFromName = theFromString;
+		        					
+		        					int whereMailAddress = theFromString.indexOf("<");
+									if(whereMailAddress>-1){
+		            					theFromName = theFromString.substring(0, whereMailAddress);
+		            					theFromString = theFromString.substring(whereMailAddress+1, theFromString.length()-1);
+		        					}
+		        					
+		        					fromUserIsEmployee.setEmail(theFromString);
+		        					fromUserIsEmployee.select();
+		        					
+		        					if(fromUserIsEmployee.next()){
+		        						User fromUser = new User();
+		        						fromUser.setName(fromUserIsEmployee.getEmpName());
+		        						fromUser.setUserId(fromUserIsEmployee.getEmpCode());
+		        						fromUser.setNetwork("local");
+		        						bccUsers.add(fromUser);
+		        					}else{
+		        						//TODO tries facebook, twitter, google+ by email searching
+		        						User fromUser = new User();
+		        						fromUser.setName(theFromName);
+		        						fromUser.setUserId(theFromString);
+		        						fromUser.setNetwork("ext");
+		        						bccUsers.add(fromUser);					
+		        					}
+		    					}
+	    					}
+	    					emailWorkItem.setWriter(theFirstWriter);
+	    					emailWorkItem.setCcUsers(ccUsers);
+	    					emailWorkItem.setBccUsers(bccUsers);
+	    					emailWorkItem.setTitle(message.getSubject());
+	    					emailWorkItem.setStartDate(message.getReceivedDate());
 	    					
 	    					User receiver = new User();
-	    					receiver.setUserId(repMailEmp.getEmpCode());
-	    					receiver.setName(repMailEmp.getEmpName());
+	    					receiver.setUserId(findEmployee.getEmpCode());
+	    					receiver.setName(findEmployee.getEmpName());
 	    					receiver.setNetwork("local");
-	    					codiSession.setUser(receiver);
-	    					codiSession.setEmployee(repMailEmp);
-	    					codiSession.setCompany(company);
 	    					
-	    					memoWorkItem.session = codiSession;
-	    					memoWorkItem.instanceViewContent.instanceView.session = codiSession;
-	    					
-	    					memoWorkItem.add();
+	    					emailWorkItem.session = codiSession;
+	    					emailWorkItem.instanceViewContent.instanceView.session = codiSession;
+	    					emailWorkItem.add();
 	    					
 	    					message.setFlag(Flags.Flag.SEEN, true);
 	    					//message.saveChanges();
@@ -228,11 +468,9 @@ public class EMailReader {
 	        		} catch (Exception e) {
 	        			throw new Exception("Error while getting email", e);
 	    			}
-    			}
-    		
-
-    	
-    }
+				}
+	    }
+    }*/
     
 }
 
