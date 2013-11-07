@@ -20,7 +20,8 @@ import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
 
 @Table(name = "emptable")
-@Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
+//@Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
+@Face(options={"fieldOrder"}, values={"empName,password"})
 public interface IEmployee extends IDAO {
 
 /*	
@@ -46,6 +47,9 @@ public interface IEmployee extends IDAO {
 	public String getEmpName();
 	public void setEmpName(String empName);
 
+	public String getAuthKey();
+	public void setAuthKey(String authKey);
+	
 	//@Hidden
 	public String getFacebookId();
 	public void setFacebookId(String facebookId);
@@ -59,14 +63,14 @@ public interface IEmployee extends IDAO {
 	public String getPassword();
 	public void setPassword(String password);
 	
-	@Hidden(when = "view")
-	@Face(options="type", values="password")
+//	@Hidden(when = "view")
+//	@Face(options="type", values="password")
 	@NonLoadable
 	@NonSavable
-	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호 확인를 입력하여 주십시오."),
-		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password != confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
-	})
+//	@ValidatorSet({
+//		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호 확인를 입력하여 주십시오."),
+//		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password != confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
+//	})
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
 	
@@ -233,4 +237,6 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
 	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object saveEmp() throws Exception;
 }

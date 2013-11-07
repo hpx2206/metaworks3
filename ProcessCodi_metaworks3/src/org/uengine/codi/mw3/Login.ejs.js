@@ -33,7 +33,10 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		delCookie("codi.rememberMe", "/","");
 		delCookie("codi.facebookSSO", "/","");
 	}
-	
+	console.log("--------------------");
+//	var ip = Request.UserHostAddress.ToString();
+	console.log("********************");
+
 	var rememberMe = getCookie("codi.rememberMe");
 	if(rememberMe!=null && rememberMe){
 		var id = getCookie("codi.id");

@@ -12,13 +12,20 @@ import org.metaworks.dao.IDAO;
 @Face(displayName="$Company")
 public interface ICompany extends IDAO {
 	@Id
+	@Hidden
 	public String getComCode();
 	public void setComCode(String comCode);
 
+	@Face(displayName="$SALESEARLYSALES_BASECOMPANY_NAME")
+	public String getAlias();
+	public void setAlias(String alias);
+	
 	@Name
+	@Hidden
 	public String getComName();
 	public void setComName(String comName);
 
+	@Hidden
 	public String getDescription();
 	public void setDescription(String description);
 
@@ -32,7 +39,7 @@ public interface ICompany extends IDAO {
 
 	public String getRepMlHst();
 	public void setRepMlHst(String repMlHst);
-
+	
 	public String getRepMlPwd();
 	public void setRepMlPwd(String repMlPwd);
 	
@@ -41,4 +48,6 @@ public interface ICompany extends IDAO {
 	
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception;
+	
+	public ICompany findByAlias() throws Exception;
 }
