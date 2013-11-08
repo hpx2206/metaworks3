@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
+import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
@@ -18,9 +19,11 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.CodiLog;
 import org.uengine.codi.mw3.marketplace.MyVendor;
+import org.uengine.kernel.GlobalContext;
 
 	
 public class Session implements ContextAware{
@@ -210,16 +213,16 @@ public class Session implements ContextAware{
 		}
 		
 	@ServiceMethod(callByContent=true)
-	public Login logout() throws Exception {
+	public Object[] logout() throws Exception {
 		removeUserInfoFromHttpSession();
 		
-		Login login = new Login();
-		login.setStatus("login");
-		login.fireServerSession(this);
-		
-		login.setMetaworksContext(new MetaworksContext());
-		login.getMetaworksContext().setHow("logout");
-		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//		Login login = new Login();
+//		login.setStatus("login");
+//		login.fireServerSession(this);
+//		
+//		login.setMetaworksContext(new MetaworksContext());
+//		login.getMetaworksContext().setHow("logout");
+//		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		//login.getMetaworksContext().setWhere("user");
         
 		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
@@ -234,7 +237,26 @@ public class Session implements ContextAware{
         log.setDate(new Date());
         log.setIp(ipAddress);
         log.createDatabaseMe();
-		return login;
+        
+        String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
+        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
+     
+        String tenant = TenantContext.getThreadLocalInstance().getTenantId();
+        
+        String host = GlobalContext.getPropertyString("web.server.ip");
+    	String port = GlobalContext.getPropertyString("web.server.port");
+    	String root = GlobalContext.getPropertyString("web.context.root");
+    		
+           	
+    		
+        String url = "http://"+ tenant +"."+ host + ":" + port + root;
+		
+        
+        TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("loggedUserId", null);		
+		
+        
+		return new Object[]{new Forward(url)};
+		//return login;
 	}
 	
 		

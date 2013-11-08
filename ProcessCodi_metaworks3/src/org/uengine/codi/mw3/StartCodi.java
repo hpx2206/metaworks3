@@ -2,6 +2,7 @@ package org.uengine.codi.mw3;
 
 import javax.servlet.http.HttpSession;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -106,7 +107,14 @@ public class StartCodi {
 				}
 			}
 			
-			return new Login();
+			Login login = new Login();
+			login.setStatus("login");
+			
+			login.setMetaworksContext(new MetaworksContext());
+			login.getMetaworksContext().setHow("logout");
+			login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			return login;
+			//return new Login();
 		}else{
 			// 잘못 입력되었을때. - ex) asdf.processcodi.com:8080/uengine-web
 			//return new ErrorPage();
