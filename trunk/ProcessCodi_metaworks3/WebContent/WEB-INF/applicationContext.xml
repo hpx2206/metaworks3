@@ -160,7 +160,7 @@
 	
 	
 	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/>
+		<property name="jobClass" value="org.uengine.codi.cron.EmailCronJob"/>
 		<property name="jobDataAsMap">
 			<map>
 				<entry key="connectionFactory">
