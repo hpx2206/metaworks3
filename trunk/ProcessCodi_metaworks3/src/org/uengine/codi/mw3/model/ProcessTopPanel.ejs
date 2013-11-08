@@ -1,5 +1,8 @@
 <%
 	if(value){
+		 	
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		
 			if( value.session && "sns" == value.session.employee.preferUX ){
 %>
 
@@ -40,9 +43,17 @@
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
 		 	
+		 	
+		 	<div style="float:left; margin-left:10px; margin-top:15px;">
+	
+			<%if(value.session!=null && value.session.employee!=null && value.session.employee.isAdmin){%>
+				<a id="wBtn" href="#" onClick="<%=methods.companyRepInfo.caller() %>"><span><%=mw3.localize("회사 이메일")%></span></a>
+				</div>
+			<%}%>
+			
 		 	<%=fields.tray.here()%>
 		 	
-		 	<div class="info">
+			<div class="info">
 			 	<div style="float:left;">
 			 		<%=fields.loginUser.here({when: 'self_small'})%>
 			 	</div>
