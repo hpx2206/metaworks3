@@ -191,23 +191,55 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 	
 	
 	@ServiceMethod(callByContent = true)
-	public Object[] showActiDocument(){
-		if( processAttributePanel != null){
-//			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
-//			documentation.setMetaworksContext(new MetaworksContext());
-//			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			documentation.getDescription().setMetaworksContext(new MetaworksContext());
-//			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			processAttributePanel.setDefId(null);
-//			processAttributePanel.setFileList(null);
-//			processAttributePanel.setDocumentation(documentation);
-//			
-//			return new Object[] { processAttributePanel};
-			return null;
+	public ModalWindow showActiDocument() throws Exception{
+		ModalWindow modalWindow = new ModalWindow();
+		ActivityWindow activityWindow = new ActivityWindow();
+		Activity activity = (Activity)propertiesWindow.getPanel();
+		
+		ParameterContext[] contexts = null;
+		if( activity != null ){
+			Class paramClass = activity.getClass();
+			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
+			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
+			if( isDesigner ){
+				((IDrawDesigne)activity).setParentEditorId(this.getEditorId());
+				((IDrawDesigne)activity).drawInit();
+			}
+			
+			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
+			if( isReceiveActivity ){
+				contexts = ((ReceiveActivity)activity).getParameters();
+				if( contexts != null ){
+					for(int i=0; i < contexts.length; i++){
+						contexts[i].setMetaworksContext(new MetaworksContext());
+						contexts[i].getMetaworksContext().setHow("list");
+					}
+				}
+			}
+			
 		}
-		else{
-			return null;
-		}
+		activity.setActivityView(this);
+		
+		activity.setMetaworksContext(new MetaworksContext());
+		activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		activity.getDocumentation().setMetaworksContext(new MetaworksContext());
+		activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		// 변수설정
+		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
+		parameterContextPanel.setParameterContext(contexts);
+		parameterContextPanel.setEditorId(activity.getName() + "_" + activity.getTracingTag());
+		parameterContextPanel.setParentEditorId(this.getEditorId());
+		parameterContextPanel.load();
+		
+		activityWindow.getActivityPanel().setActivity(activity);
+		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
+		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
+		modalWindow.setPanel(activityWindow);
+		modalWindow.setTitle("액티비티설정");
+		modalWindow.setWidth(700);
+		modalWindow.setHeight(500);
+		
+		return modalWindow;
 	}
 	
 	
