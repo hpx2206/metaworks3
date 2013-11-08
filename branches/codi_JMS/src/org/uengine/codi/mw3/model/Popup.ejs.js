@@ -19,7 +19,7 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	
 	//var openerDiv = $("#objDiv_" + mw3.recentOpenerObjectId);
 //	var x = openerDiv.offset().left + (openerDiv.children()[0].offsetWidth);
-//	var y = openerDiv.offset().top;
+///	var y = openerDiv.offset().top;
 	
 	var faceHelper = this;
 	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);
