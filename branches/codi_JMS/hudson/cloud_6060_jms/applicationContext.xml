@@ -248,7 +248,7 @@
 	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader" scope="request" />
 	
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
-	
+	<bean id="ProcessExploreContent" class="org.uengine.codi.mw3.processexplorer.ProcessExploreContent"/>
 	
 	
 </beans>
