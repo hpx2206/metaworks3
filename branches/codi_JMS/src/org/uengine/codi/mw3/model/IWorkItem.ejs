@@ -77,12 +77,12 @@
 		if(isMine == true){
 %>
 	<div style="position:relative;">
-		<div class="view_box3" style="margin-right:14px; width:80%;  float:right;position:relative">
+		<div class="view_box3" style="margin-right:14px; width:90%;  float:right;position:relative">
 		<div class="guide">
 			<span class="tl"></span>
 			<span class="tr"></span>
 		</div>
-	
+
 <%
 		} else if(isMine == false){%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -255,7 +255,7 @@
 			<span class="lb"></span>
 			<span class="rb"></span>
 		</div>
-	</div>
+	</div> 
 	<div class="clear"></div>
 	
 	
@@ -266,13 +266,13 @@
 	if(mw3.how != 'minimised'){
 		if(isMine == true){
 %>
-		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>
+		<!--<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div> -->
 	</div>		
 <%
 		}else if(isMine == false){
 			if(value.dispatchOption != 1 && value.status != 'DELEGATED'){
 %>								
-				<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" >						
+			<!-	<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" >			-->			
 <%
 			}
 %>

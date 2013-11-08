@@ -815,6 +815,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(this.getTitle());
+				if(this.getFolderId() != null){
+					instanceRef.setTopicId(this.getFolderId());
+				}
 				instanceRef.setIsDocument(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType()));
 				
 				afterInstantiation(instanceRef);				
@@ -1361,12 +1364,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	public IWorkItem load(String id) throws Exception{
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where instId=?id");
-		sb.append(" order by taskid");
+		sb.append(" select * from bpm_worklist where majorver in (select max(majorver) from bpm_worklist where instId=?instId)");
+		sb.append(" and instId=?instId");
 		
 		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
 		
-		workitem.set("id",id);
+		workitem.set("instId",id);
 		workitem.select();
 		
 		if(workitem.next())

@@ -85,31 +85,31 @@ public class FileWorkItem extends WorkItem{
 		//		
 		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 
-		// 추가모드 일때
-		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){		
-			this.setGrpTaskId(this.getTaskId());
-
-			// default 버전
-			this.setMajorVer(1);
-			this.setMinorVer(0);
-			// 수정모드 일때
-		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){		
-			// 기존 버전 delete 처리하여 안보이게
-			IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?grpTaskId");
-			worklist.set("grpTaskId", getGrpTaskId());
-			worklist.update();
-
-			// 새로운 버전 업 처리
-			if("Major".equals(getVersionUpOption())){
-				setMajorVer(getMajorVer()+1);
-				setMinorVer(0);
-			}else{
-				setMinorVer(getMinorVer()+1);
-			}
-
-			//this.setWorkItemVersionChooser(null);
-		}
-		
+//		// 추가모드 일때
+		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))	
+				if(this.getGrpTaskId() == null)
+					this.setGrpTaskId(this.getTaskId());
+//
+//			// default 버전
+//			this.setMajorVer(1);
+//			this.setMinorVer(0);
+//			// 수정모드 일때
+//		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){		
+//			
+//				// 기존 버전 delete 처리하여 안보이게
+//				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?grpTaskId");
+//				worklist.set("grpTaskId", getGrpTaskId());
+//				worklist.update();
+//	
+//				// 새로운 버전 업 처리
+//				if("Major".equals(getVersionUpOption())){
+//					setMajorVer(getMajorVer()+1);
+//					setMinorVer(0);
+//				}else{
+//					setMinorVer(getMinorVer()+1);
+//				}
+//			//this.setWorkItemVersionChooser(null);
+//		}
 		if(this.getWorkItemVersionChooser() != null)
 			this.getWorkItemVersionChooser().setTaskId(this.getTaskId());
 

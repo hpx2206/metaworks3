@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 
 import org.metaworks.EventContext;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
@@ -63,24 +64,27 @@ public class WorkItemVersionChooser implements ORMappingListener{
 			this.selectedVersion = selectedVersion;
 		}
 
-	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE)
-	public IWorkItem choose() throws Exception{
-		
-		int i=0;
-		for(String value : getVersionSelector().getOptionValues()){
-			if(value.equals(getVersionSelector().getSelected())){
-				WorkItem workItem = new WorkItem();
-				workItem.setTaskId(getTaskIdsPerVersion().get(i));
-				
-				return workItem.databaseMe();
-				
+		@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE)
+		public IWorkItem choose() throws Exception{
+			WorkItem workItem = null;
+			int i=0;
+			for(String value : getVersionSelector().getOptionValues()){
+				if(value.equals(getVersionSelector().getSelected())){
+					workItem = new WorkItem();
+					workItem.setTaskId(getTaskIdsPerVersion().get(i));
+					workItem.copyFrom(workItem.databaseMe());
+					while(workItem.next()){
+						workItem.setMetaworksContext(new MetaworksContext());
+						workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+					}
+
+				}
+				i++;
 			}
-			i++;
+			
+			
+			return workItem;
 		}
-		
-		
-		return null;
-	}
 
 	@Override
 	public void onRelation2Object() {
