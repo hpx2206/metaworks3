@@ -148,6 +148,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
 		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
+		modalWindow.setTitle("엑티비티 설정");
 		modalWindow.setPanel(activityWindow);
 		modalWindow.setWidth(700);
 		modalWindow.setHeight(500);
