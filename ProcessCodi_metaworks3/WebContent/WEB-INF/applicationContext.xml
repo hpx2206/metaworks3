@@ -33,7 +33,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/uengine?useUnicode=true&amp;characterEncoding=UTF8&amp;useOldAliasMetadataBehavior=true" />
 		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="password" value="" />
 		<property name="validationQuery" value="SELECT 1" />
 		
 		<!-- CUBRID Data Source -->
@@ -69,8 +69,7 @@
 	<bean id="springConnectionFactory"
 		class="org.uengine.codi.MetaworksUEngineSpringConnectionAdapter"></bean>
 	
-	<bean id="processManagerBean" class="org.uengine.codi.CodiProcessManagerBean"
-		scope="request">
+	<bean id="processManagerBean" class="org.uengine.codi.CodiProcessManagerBean" scope="request">
 		<property name="managedTransaction" value="true" />
 		<property name="autoCloseConnection" value="false" />
 		<property name="connectionFactory" ref="springConnectionFactory" />
@@ -94,86 +93,7 @@
 		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
 	</bean>
 
-	<!-- ============================================================= -->
-    <!-- Cron Job -->
-    <!-- ============================================================= -->
-
-
-<!--    <bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
-<!--        <property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/> -->
-<!--        <property name="jobDataAsMap"> -->
-<!--            <map> -->
-<!--                <entry key="connectionFactory"> -->
-<!--                    <ref local="springConnectionFactoryForMetaworks"/> -->
-<!--                </entry> -->
-<!--                <entry key="emailReader"> -->
-<!--                    <ref local="EMailReader"/> -->
-<!--                </entry> -->
-<!--            </map> -->
-<!--        </property> -->
-<!--    </bean> -->
-        
-    <!-- bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="cronQuartzJob"/>
-        <property name="cronExpression" value="0/1 * * * * ?"/>
-    </bean-->
-    
-<!--    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean"> -->
-<!--        <property name="jobDetail" ref="cronQuartzJob"/> -->
-<!--        <property name="startDelay" value="60000"/> -->
-<!--        <property name="repeatInterval" value="120000"/> -->
-<!--    </bean> -->
-    
-    <bean id="waitJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-        <property name="jobClass" value="org.uengine.codi.scheduler.WaitJob" />
-        <property name="jobDataAsMap">
-            <map>
-                <entry key="connectionFactory">
-                    <ref local="springConnectionFactoryForMetaworks"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
-    
-    <bean id="waitTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-        <property name="jobDetail" ref="waitJob"/>
-        <property name="startDelay" value="5000"/>
-        <property name="repeatInterval" value="20000"/>
-    </bean>
-    
-    <bean id="solrCheckJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-        <property name="jobClass" value="org.uengine.search.solr.SolrServerJob" />
-    </bean>
-    
-    <bean id="solrCheckTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-        <property name="jobDetail" ref="solrCheckJob"/>
-        <property name="startDelay" value="5000"/>
-        <property name="repeatInterval" value="60000"/>
-    </bean>
-    
-    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="waitTrigger"/>
-                <ref bean="solrCheckTrigger"/>
-            </list>
-        </property>
-        <!-- property name="schedulerContextAsMap">
-            <map>
-               <entry key="connectionFactory" value-ref="springConnectionFactoryForMetaworks" />
-               <entry key="emailReader" value-ref="EMailReader" />
-            </map>
-        </property -->
-    <property name="quartzProperties">
-            <props>
-                <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
-                <prop key="org.quartz.threadPool.threadCount">5</prop>
-                <prop key="org.quartz.threadPool.threadPriority">4</prop>
-                <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
-                <prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
-            </props>
-        </property>
-    </bean>
+	
 	
 	<!-- ============================================================= -->
 	<!-- Process Codi Services -->
@@ -228,12 +148,62 @@
 	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
 	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
 	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem"/>
-	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader"/>
+	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader" />
+	<bean id="EmailWorkItem" class="org.uengine.codi.mw3.model.EmailWorkItem"/>
+	
+	<bean id="TestEmailReader" class="examples.TestEmailReader" />
+	
+	
 	
 	<bean id="ProcessGanttChart" class="org.uengine.codi.gantt.ProcessGanttChart"/>
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
 	
-	<bean id="KtProjectServer" class="org.uengine.codi.mw3.project.oce.NewServer"/>
+	
+	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="connectionFactory">
+					<ref local="springConnectionFactoryForMetaworks"/>										
+				</entry>
+			</map>
+		</property>
+	</bean>
+		
+	<!-- bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="cronQuartzJob"/>
+		<property name="cronExpression" value="0/1 * * * * ?"/>
+	</bean-->
+	
+	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="cronQuartzJob"/>
+		<property name="startDelay" value="5000"/>
+		<property name="repeatInterval" value="10000"/>
+	</bean>
+	
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">	
+		<property name="triggers">
+			<list>
+<!-- 				 <ref bean="simpleTrigger"/>   -->
+			</list>
+		</property>
+		<!-- property name="schedulerContextAsMap">
+		    <map>
+		       <entry key="connectionFactory" value-ref="springConnectionFactoryForMetaworks" />
+		       <entry key="emailReader" value-ref="EMailReader" />
+		    </map>
+	    </property-->
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+    			<prop key="org.quartz.threadPool.threadCount">5</prop>
+    			<prop key="org.quartz.threadPool.threadPriority">4</prop>
+    			<prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+    			<prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
+			</props>
+		</property>
+	</bean>
 	
 	
 </beans>
