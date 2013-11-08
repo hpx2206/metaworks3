@@ -18,7 +18,7 @@
 				<include name="**/*" />
 			</fileset>
 		</copy> 
-	   <javac srcdir="${src.dir}" destdir="${build.dir}" source="1.6" target="1.6" debug="true" deprecation="false" optimize="false" failonerror="true" encoding="UTF-8">
+	   <javac srcdir="${src.dir}" destdir="${build.dir}" source="1.6" target="1.6" debug="true" includeantruntime="false" deprecation="false" optimize="false" failonerror="true" encoding="UTF-8">
 		  <classpath refid="master-classpath"/>
 	   </javac>
     </target>
