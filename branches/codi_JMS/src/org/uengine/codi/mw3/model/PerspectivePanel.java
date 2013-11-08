@@ -178,10 +178,11 @@ public class PerspectivePanel  implements ContextAware {
 				}
 				
 				//문서
-					documentPerspective = new DocumentPerspective();
-					setMetaworksContext(new MetaworksContext());
-					this.getMetaworksContext().setHow("perspectivePanel");
-					documentPerspective.setMetaworksContext(this.getMetaworksContext());
+				documentPerspective = new DocumentPerspective();
+				setMetaworksContext(new MetaworksContext());
+				this.getMetaworksContext().setHow("perspectivePanel");
+				documentPerspective.setMetaworksContext(this.getMetaworksContext());
+				
 				//친구
 				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
 					contactPerspective = new ContactPerspective();
