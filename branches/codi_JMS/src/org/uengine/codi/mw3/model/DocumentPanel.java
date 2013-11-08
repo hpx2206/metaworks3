@@ -24,12 +24,12 @@ public class DocumentPanel implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}	
 	
-	IDocumentNode documentNode;
-		public IDocumentNode getDocumentNode() {
-			return documentNode;
+	IDocumentNode idocumentNode;
+		public IDocumentNode getIdocumentNode() {
+			return idocumentNode;
 		}
-		public void setDocumentNode(IDocumentNode documentNode) {
-			this.documentNode = documentNode;
+		public void setIdocumentNode(IDocumentNode idocumentNode) {
+			this.idocumentNode = idocumentNode;
 		}
 		
 	public DocumentPanel(){
@@ -49,13 +49,13 @@ public class DocumentPanel implements ContextAware {
 	}
 
 	public void load() throws Exception{
-		DocumentNode node = new DocumentNode();
-		node.session = session;
-		node.setCompanyId(session.getCompany().getComCode());
+		DocumentNode dnode = new DocumentNode();
+		dnode.session = session;
+		dnode.setCompanyId(session.getCompany().getComCode());
 		
-		documentNode = node.loadDocumentList();
-		documentNode.setMetaworksContext(this.getMetaworksContext());
-		documentNode.getMetaworksContext().setWhen("onlyView");
-		setDocumentNode(documentNode);
+		idocumentNode = dnode.loadDocumentList();
+		idocumentNode.setMetaworksContext(this.getMetaworksContext());
+		idocumentNode.getMetaworksContext().setWhen("onlyView");
+		setIdocumentNode(idocumentNode);
 	}
 }

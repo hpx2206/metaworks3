@@ -8,15 +8,14 @@ import org.metaworks.widget.ModalWindow;
 
 public class DocumentPerspective extends Perspective  implements ContextAware {
 	
-	DocumentPanel documentPanel;
-		public DocumentPanel getDocumentPanel() {
-			return documentPanel;
+	DocumentPanel dtPanel;
+		public DocumentPanel getDtPanel() {
+			return dtPanel;
 		}
-	
-		public void setDocumentPanel(DocumentPanel documentPanel) {
-			this.documentPanel = documentPanel;
+		public void setDtPanel(DocumentPanel dtPanel) {
+			this.dtPanel = dtPanel;
 		}
-		
+
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -31,20 +30,20 @@ public class DocumentPerspective extends Perspective  implements ContextAware {
 
 	@Override
 	protected void loadChildren() throws Exception {
-		documentPanel = new DocumentPanel();
+		dtPanel = new DocumentPanel();
 		if("explorer".equals(getMetaworksContext().getHow())){
-			documentPanel.getMetaworksContext().setHow("explorer");
+			dtPanel.getMetaworksContext().setHow("explorer");
 		}else if("perspectivePanel".equals(getMetaworksContext().getHow())){
-			documentPanel.getMetaworksContext().setHow("perspectivePanel");
+			dtPanel.getMetaworksContext().setHow("perspectivePanel");
 		}
-		documentPanel.session = session;
-		documentPanel.load();
+		dtPanel.session = session;
+		dtPanel.load();
 	}
 
 	@Override
 	protected void unloadChildren() throws Exception {
 		// TODO Auto-generated method stub
-		setDocumentPanel(null);
+		setDtPanel(null);
 	}
 	
 	@ServiceMethod(inContextMenu=true, target="popup")
