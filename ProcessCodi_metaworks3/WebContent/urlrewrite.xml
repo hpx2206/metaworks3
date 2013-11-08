@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN" "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+   
+	<rule>
+        <from>^/activate/([a-z 0-9\\-]+)?(.*)$</from>
+        <to>/index.jsp?type=activation&amp;key=$1$2</to>
+    </rule>
+
+
+    <!--
+    <rule>
+        <from>^/sns/([a-z]+)$</from>
+        <to>/index.jsp?level1=sns&amp;level2=$1</to>
+    </rule>
+    -->
+    <!-- 
+	<rule>
+        <from>^/sns$</from>
+        <to>/index.jsp?level1=sns</to>
+    </rule>
+     -->     
+    <!-- 
+    <rule>
+        <from>^/sns/$</from>
+        <to type="redirect">inbox</to>
+    </rule>    
+    <rule>
+        <from>^/sns$</from>
+        <to type="redirect">sns/inbox</to>
+    </rule>    
+ 	-->
+ 	
+ 	<!-- 
+	<rule>
+        <from>^/$</from>
+        <to type="redirect">sns</to>
+    </rule>
+     -->
+     
+    <!-- 
+    <rule>
+        <from>^/sns$</from>
+        <to type="redirect">sns/inbox</to>
+    </rule>
+     -->
+    
+    <!-- 
+    <outbound-rule>
+    	<from>/index.jsp?level1=([a-z]+)$</from>
+    	<to>$1</to>
+    </outbound-rule>
+     -->
+     
+	<!--
+    <rule>
+        <note>
+            Allow TomCat to have SES links.
+        </note>
+        <condition type="request-uri" operator="notequal">\.(bmp|gif|jpe?g|png|css|js|txt|pdf|doc|xls|xml|cfc|ico|php|asp)$</condition>
+        
+        <from>^/(?!cdn|src|railo-context|test|mxuni	t|remote)(.*)$</from>
+        <to>/index.html/$1</to>
+    </rule>
+    -->
+</urlrewrite>
