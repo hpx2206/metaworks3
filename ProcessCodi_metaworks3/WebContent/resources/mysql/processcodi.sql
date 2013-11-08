@@ -941,3 +941,16 @@ alter table filepathinfo add column distributor varchar(20);
 alter table bpm_procinst add column isdocument int(11) default 0;
 
 alter table bpm_worklist change content content mediumtext;
+
+--2013.10.29
+alter table comtable add column alias varchar(30);
+alter table emptable add column authkey varchar(100);
+
+--2013.11.07
+create table logtable(
+id int(11) not null primary key,
+type varchar(20) not null,
+empcode varchar(100) not null,
+comcode varchar(100),
+ip varchar(50),
+date varchar(50));
