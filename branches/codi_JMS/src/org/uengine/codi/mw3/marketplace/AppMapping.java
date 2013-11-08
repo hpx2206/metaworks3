@@ -141,7 +141,14 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 //		findApp.setIsDeleted(this.getIsDeleted());
 //		findApp.select();
 		
-		return null;
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * from bpm_knol where id=?id");
+		
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, sql.toString());
+		findApp.set("id","id03323");
+		findApp.select();
+		
+		return findApp;
 	}
 	
 	public IAppMapping findMyApp() throws Exception{
