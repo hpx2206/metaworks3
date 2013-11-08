@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
@@ -28,6 +29,7 @@ public class ActivityPanel {
 
 	ParameterContextPanel parameterContextPanel;
 	@Face(displayName="$ParameterSetting")
+		@Available(when="edit")
 		public ParameterContextPanel getParameterContextPanel() {
 			return parameterContextPanel;
 		}

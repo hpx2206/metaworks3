@@ -62,32 +62,32 @@ public class SubProcessActivityView extends ActivityView{
 	 }
 	
 	@Override
-	public Object[] showActivityDocument() throws Exception{
-		Object[] returnObject = super.showActivityDocument();
+	public ModalWindow showActivityDocument() throws Exception{
+		ModalWindow returnObject = super.showActivityDocument();
 		
-		SubProcessActivity activity = (SubProcessActivity)this.getActivity();
-		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
-		processViewerPanel.setViewType("definitionView");
-		processViewerPanel.setViewType(this.getViewType());
-		if( activity == null || (activity != null && activity.getAlias() == null || "".equals(activity.getAlias()))){
-			throw new MetaworksException("서브 프로세스가 정의되어있지 않습니다.");
-		}
-		if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
-			processViewerPanel.setDefinitionId(activity.getDefinitionId());
-			processViewerPanel.setAlias(activity.getAlias());
-			processViewerPanel.setOpenerActivity(this.getActivity());
-			processViewerPanel.setOpenerActivityViewId(this.getId());	
-			processViewerPanel.loadDefinitionView();
-		}
+//		SubProcessActivity activity = (SubProcessActivity)this.getActivity();
+//		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
+//		processViewerPanel.setViewType("definitionView");
+//		processViewerPanel.setViewType(this.getViewType());
+//		if( activity == null || (activity != null && activity.getAlias() == null || "".equals(activity.getAlias()))){
+//			throw new MetaworksException("서브 프로세스가 정의되어있지 않습니다.");
+//		}
+//		if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
+//			processViewerPanel.setDefinitionId(activity.getDefinitionId());
+//			processViewerPanel.setAlias(activity.getAlias());
+//			processViewerPanel.setOpenerActivity(this.getActivity());
+//			processViewerPanel.setOpenerActivityViewId(this.getId());	
+//			processViewerPanel.loadDefinitionView();
+//		}
+//		
+//		ProcessFormPanel processFormPanel = new ProcessFormPanel();
+//		processFormPanel.getMetaworksContext().setHow("subprocess");
+//		processFormPanel.setActivityPanel(processViewerPanel);
+//		
+//		Object[] newObject = new Object[returnObject.length + 1];
+//		System.arraycopy(returnObject, 0, newObject, 0, returnObject.length);
+//		newObject[returnObject.length] = processFormPanel;
 		
-		ProcessFormPanel processFormPanel = new ProcessFormPanel();
-		processFormPanel.getMetaworksContext().setHow("subprocess");
-		processFormPanel.setActivityPanel(processViewerPanel);
-		
-		Object[] newObject = new Object[returnObject.length + 1];
-		System.arraycopy(returnObject, 0, newObject, 0, returnObject.length);
-		newObject[returnObject.length] = processFormPanel;
-		
-		return newObject;
+		return returnObject;
 	}
 }
