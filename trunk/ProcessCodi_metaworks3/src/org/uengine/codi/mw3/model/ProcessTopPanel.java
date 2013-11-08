@@ -1,7 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
@@ -46,7 +48,14 @@ public class ProcessTopPanel {
 		public void setWindowPanel(WindowPanel windowPanel) {
 			this.windowPanel = windowPanel;
 		}
-	
+	boolean isAdmin;
+		public boolean isAdmin() {
+			return isAdmin;
+		}
+		public void setAdmin(boolean isAdmin) {
+			this.isAdmin = isAdmin;
+		}
+
 	Tray tray;
 		public Tray getTray() {
 			return tray;
@@ -110,5 +119,20 @@ public class ProcessTopPanel {
 		}
 		public void setMode(String mode) {
 			this.mode = mode;
-		}	
+		}
+	
+	public ProcessTopPanel(){
+			
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup  companyRepInfo() throws Exception{
+		Company company = new Company();
+		company.setComCode(session.getEmployee().getGlobalCom());
+		ICompany findCompany = company.findByCode();
+		if(findCompany!=null)
+			return new Popup(findCompany);
+		
+		return null;
+		
+	}
 }
