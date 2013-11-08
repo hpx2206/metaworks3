@@ -180,6 +180,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		ParameterValue[] parameters = new ParameterValue[0];
 		if( this.getActivity() != null &&  this.getActivity() instanceof HumanActivity ){
 			HumanActivity humanActivity = (HumanActivity)this.getActivity();
+			if( humanActivity.getParameters() != null ){
 			parameters = new ParameterValue[humanActivity.getParameters().length];
 			for(int i=0; i<humanActivity.getParameters().length; i++){
 				ParameterContext pc = humanActivity.getParameters()[i];
@@ -242,6 +243,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			
 			TransactionContext.getThreadLocalInstance().setSharedContext(
 					ITool.ITOOL_MAP_KEY, null);
+			}
 		}
 		modalWindow.setPanel(parameters);
 		modalWindow.setTitle("액티비티뷰");
