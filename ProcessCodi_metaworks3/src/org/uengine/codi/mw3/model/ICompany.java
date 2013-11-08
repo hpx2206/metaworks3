@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.Remover;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -47,7 +48,7 @@ public interface ICompany extends IDAO {
 	public ICompany load() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
-	public void save() throws Exception;
+	public Remover save() throws Exception;
 	
 	public ICompany findByAlias() throws Exception;
 }

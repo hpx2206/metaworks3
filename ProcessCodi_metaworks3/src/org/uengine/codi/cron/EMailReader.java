@@ -124,7 +124,7 @@ public class EMailReader {
 				*/
 				
 				Employee representiveMailEmp = new Employee();
-				representiveMailEmp.setEmpCode("1");
+				representiveMailEmp.setEmpCode("0");
 				
 				
 				IEmployee repMailEmp = representiveMailEmp.findMe();

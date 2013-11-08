@@ -2,6 +2,7 @@ package org.uengine.codi.mw3;
 
 import javax.servlet.http.HttpSession;
 
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToOpener;
@@ -9,12 +10,14 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 public class StartCodi {
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
@@ -66,7 +69,40 @@ public class StartCodi {
 					ModalWindow removeWindow = new ModalWindow();
 					removeWindow.setId("subscribe");
 					
-					return new MainPanel(new Main(session));	
+					
+					String pageNavigatorPropertyName;
+					String className;
+					PageNavigator pageNavigator;
+					MainPanel mainPanel;
+					if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+						pageNavigatorPropertyName = "oce.pagenavigator.class";
+						session.setUx("oce");
+					}
+					else{
+						pageNavigatorPropertyName = "codi.pagenavigator.class";
+					}
+					
+					className = GlobalContext.getPropertyString(pageNavigatorPropertyName);
+					
+					Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName));
+					Object object = c.newInstance();
+					
+					if(object instanceof PageNavigator){
+						pageNavigator = (PageNavigator)object;
+					}
+					else{
+						throw new Exception("pageNavigator가 잘못 지정되었습니다. uengine.properties의 pagenavigatorClassName을 수정해주세요.");
+					}
+					
+					pageNavigator.session = session;
+					
+					if("oce".equals(session.getUx())){
+						mainPanel = pageNavigator.goDashBoard();
+						return new Object[]{new Refresh(mainPanel, false, true)};
+					}
+					
+				
+				return new MainPanel(new Main(session));	
 				}
 			}
 			

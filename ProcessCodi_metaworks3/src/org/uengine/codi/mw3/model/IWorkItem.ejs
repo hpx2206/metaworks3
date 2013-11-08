@@ -43,7 +43,7 @@
 					<%if(value.type=='file'){%>			
 							<div style="width:auto;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%></div>
 					<%}%>
-					<%if(value.type=='memo'){%>
+					<%if(value.type=='memo' || value.type=='email'){%>
 							<%=fields.memo.here({when: 'view'})%>						
 						
 					<%}%>
@@ -199,7 +199,7 @@
 						<%}%>
 						</td>
 						<%}%>
-						<%if(value.type=='memo'){%>
+						<%if(value.type=='memo'|| value.type=='email'){%>
 						<td>
 							<%=fields.memo.here({when : 'view'})%>						
 						</td>
@@ -272,7 +272,7 @@
 		}else if(isMine == false){
 			if(value.dispatchOption != 1 && value.status != 'DELEGATED'){
 %>								
-			<!-	<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" >			-->			
+			<!--	<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" >			-->			
 <%
 			}
 %>
