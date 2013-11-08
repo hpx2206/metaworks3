@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.metaworks.Remover;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
@@ -91,8 +92,9 @@ public class Company extends Database<ICompany> implements ICompany {
 	}
 
 	@Override
-	public void save() throws Exception {
+	public Remover save() throws Exception {
 		syncToDatabaseMe();
+		return new Remover(new Popup());
 	}
 
 	public ICompany findByName() throws Exception {

@@ -136,6 +136,7 @@ public interface IWorkItem extends IDAO{
 						"postings",
 						"generic",
 						"memo",
+						"email",
 						"ovryCmnt",
 						"replyCmnt",
 						"remoteConf"
@@ -152,6 +153,7 @@ public interface IWorkItem extends IDAO{
 						FacebookFeedback.class,
 						GenericWorkItem.class,
 						MemoWorkItem.class,
+						EmailWorkItem.class,
 						OverlayCommentWorkItem.class,
 						ReplyOverlayCommentWorkItem.class,
 						RemoteConferenceWorkItem.class

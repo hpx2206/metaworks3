@@ -4,12 +4,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.oauth.dna.OAuthBasic;
@@ -18,10 +23,10 @@ import net.oauth.dna.OAuthDB;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
+import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -32,17 +37,22 @@ import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Invitation;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
+
 
 public class Login implements ContextAware {
 	
@@ -167,7 +177,7 @@ public class Login implements ContextAware {
 		Session session = new Session();
 		
 		IEmployee emp = new Employee();
-		emp.setEmpCode(getUserId());
+		emp.setEmail(getUserId());
 		emp.setPassword(getPassword().trim());
 		
 		if(this.isFacebookSSO()){
@@ -182,6 +192,7 @@ public class Login implements ContextAware {
 		}
 		
 		session.fillSession();
+		session.fillUserInfoToHttpSession();
 		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
@@ -280,8 +291,8 @@ public class Login implements ContextAware {
 //		
 //	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP	)
-	public Object popupSubscribe() throws Exception{
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND	)
+	public Object popupSubscribe1() throws Exception{
 		
 		this.setStatus("subscribe");
 		
@@ -291,6 +302,12 @@ public class Login implements ContextAware {
 		
 		return window;
 	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF	)
+	public Object popupSubscribe() throws Exception{
+		return new SignUp();
+	}
+	
 	
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_SELF)
 	public Object subscribe() throws Exception{
@@ -358,6 +375,18 @@ public class Login implements ContextAware {
 	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
+
+		Employee emp = new Employee();
+		emp.setEmail(getUserId());
+		IEmployee findEmp = emp.findByEmail();
+		
+		Company company = new Company();
+		company.setComCode(findEmp.getGlobalCom());
+		ICompany findcompany = company.findByCode();
+//		if(!findcompany.getAlias().equals(TenantContext.getThreadLocalInstance().getTenantId())){
+//			throw new Exception("");
+//		}
+		
 		
 		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
 			goTadpoleLogin(userId, password);
@@ -459,9 +488,62 @@ public class Login implements ContextAware {
 			oauthDB.update(session.getUser().getUserId(), session.getAccessToken());
 		}
 		
-		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
-	}
+		
+		
+		
+	
+		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
+		
+		String ipAddress = httpServletRequest.getRemoteAddr();
+		String hostAddress = httpServletRequest.getRemoteHost();
+		
+        InetAddress local = InetAddress.getLocalHost();
 
+		System.out.println("-------- client 접속 ------------------");
+		System.out.println("Client 명 : "+hostAddress);
+		System.out.println("Client Ip : "+ipAddress);
+		System.out.println();
+        System.out.println("서버 pc 명: " + local.getHostName());
+        System.out.println("서버    IP: " + local.getHostAddress());
+        System.out.println("---------------------------------------");
+       
+        
+//        CodiLog  log = new CodiLog();
+//        log.setId(log.createNewId());
+//        log.setEmpcode(findEmp.getEmpCode());
+//        log.setComCode(findEmp.getGlobalCom());
+//        log.setType("login");
+//        log.setDate(new Date());
+//        log.setIp(ipAddress);
+//        log.createDatabaseMe();
+		// new Remover(new ModalWindow(), true), 
+		//return new Object[]{new Refresh(locale), new Refresh(mainPanel, false, true)};
+		
+		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
+        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
+     
+        String tenantId = findcompany.getAlias();
+       	
+       	String host = GlobalContext.getPropertyString("web.server.ip");
+    	String port = GlobalContext.getPropertyString("web.server.port");
+    	String root = GlobalContext.getPropertyString("web.context.root");
+    		
+           	
+    		
+        String url = "http://"+ tenantId +"."+ host + ":" + port + root;
+		
+		return new Object[]{new Forward(url)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	public Object findPassword(){
+		SignUp signUp = new SignUp();
+		signUp.setInvitation(new Invitation());
+		signUp.getInvitation().getMetaworksContext().setHow("findpw");
+
+		return signUp;
+	}
+	
 	public void fireServerSession(Session session) {
 		String userId = session.getUser().getUserId().toUpperCase();
 		

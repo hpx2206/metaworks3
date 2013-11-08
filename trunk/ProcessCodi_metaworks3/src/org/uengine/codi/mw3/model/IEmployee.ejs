@@ -75,24 +75,7 @@ if(value){
 				<div class="form_table">
 					<table border="1" cellspacing="0" summary="">
 						<tbody>
-						<!--tr>	
-							<th scope="row"><%=mw3.localize("$Id")%></th>
-							<td>
-								<div class="item">
-									<span style="float:left;"><%=fields.empCode.here({when:'new'}) %></span><a style="margin-left:10px;" id="wBtn" href="#" onClick="<%=methods.checkEmpCode.caller()%>"><span>Check ID</span></a>
-									<span style="float:left;" id="checkEmpCode_<%=objectId%>"></span>
-								</div>
-							</td>
-						</tr
-						<tr>
-							<th scope="row"><%=mw3.localize("$Email")%>(<%=mw3.localize("$Id")%>)</th>
-							<td>
-								<div class="item">
-									<span style="float:left;"><%=fields.email.here({when:'new'}) %></span><a style="margin-left:10px;" id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').checkId()"><span>Check ID</span></a>
-									<span style="float:left; color:red; padding-left:10px;" id="checkId_<%=objectId%>"></span>
-								</div>
-							</td>
-						</tr-->
+						
 						<tr>
 							<th scope="row"><%=mw3.localize("$Name")%></th>
 							<td>
@@ -101,14 +84,7 @@ if(value){
 								</div>
 							</td>
 						</tr>
-						<tr>
-							<th scope="row"><%=mw3.localize("$CompanyName")%></th>
-							<td>
-								<div class="item">
-									<%=fields.globalCom.here({when:'new'}) %>
-								</div>
-							</td>
-						</tr>
+					
 						<tr>
 							<th scope="row"><%=mw3.localize("$Password")%></th>
 							<td>
@@ -117,24 +93,47 @@ if(value){
 								</div>
 							</td>
 						</tr>
-						<tr>
-							<th scope="row"><%=mw3.localize("$Re-Password")%></th>
-							<td>
-								<div class="item">
-									<%=fields.confirmPassword.here({when:'new'}) %>
-								</div>
-							</td>
-						</tr>
+					
 						</tbody>
 					</table>
 				</div>
 
 			 	
 				<div id="btnline">
-					<ul>	
-						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
+					<ul>
+						<li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep3.caller()%>"><span><%=mw3.localize('$Next')%></span></a></li>
 					</ul>
-				</div>				
+				</div>
+			<%
+			} else if(mw3.when == 'findpw') {
+			%>	
+				<ul id="green_and_orange_step_menu">
+					
+				</ul>
+				<div class="form_table">
+					<table border="1" cellspacing="0" summary="">
+						<tbody>
+						
+						
+						<tr>
+							<th scope="row"><%=mw3.localize("$Password")%></th>
+							<td>
+								<div class="item">
+									<%=fields.password.here({when:'new'}) %>
+								</div>
+							</td>
+						</tr>
+					
+						</tbody>
+					</table>
+				</div>
+
+			 	
+				<div id="btnline">
+					<ul>
+						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmp.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
+					</ul>
+				</div>		
 		 	
 			<%
 			} else if(mw3.when == 'new3') {
@@ -179,10 +178,33 @@ if(value){
 					<ul>	
 						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
 					</ul>
-				</div>			 	
+				</div>
 			<%
 			} else if(mw3.when == 'edit') {
+				
 			%>
+			<ul>
+		<li>
+			<dl class="lst_type2">
+				<dd class="photo2">
+					<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" src="<%=portrait %>" width="104" height="104"></div>
+				</dd>
+				<dd class="tit">
+					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Portrait")%> : </span><span><%=fields.imageFile.here() %></span></div>
+				</dd>
+
+   			</dl>
+  		</li>    
+ 	</ul>
+
+	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+		<ul>	
+			<li><a id="wBtn" href="#" onClick="<%=methods.saveEmp.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Save")%></span></a></li>
+		</ul>
+	</div>
+				
+							 	
+		
 				<%=methods.saveEmployeeInfo.here() %>
 			<%
 			}
