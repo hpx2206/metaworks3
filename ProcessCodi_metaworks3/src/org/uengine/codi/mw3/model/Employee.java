@@ -4,15 +4,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
+import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
@@ -38,6 +47,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.user = user;
 		}
 	*/
+	String authKey;
+		public String getAuthKey() {
+			return authKey;
+		}
+		public void setAuthKey(String authKey) {
+			this.authKey = authKey;
+		}
 
 	boolean validEmail;
 		public boolean isValidEmail() {
@@ -236,13 +252,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public IEmployee load() throws Exception {
 		String errorMessage;
-		if (getEmpCode() != null) {
-			IEmployee emp = (IEmployee) findMe();
+		if (getEmail() != null) {
+			IEmployee emp = (IEmployee) findByEmail();
 			
 			if(emp.getIsDeleted() != null && emp.getIsDeleted().equals("1")) {
 				errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
 			} else if(getPassword().equals(emp.getPassword())) {
-				emp = findMe();				
+				//emp = findMe();				
 				// emp = databaseMe();
 
 				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -264,10 +280,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
 		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
-		sb.append("where emptable.EMPCODE=?empCode ");
+		sb.append("where emptable.empcode=?empcode ");
 		
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
-		findEmployee.set("empCode", getEmpCode());
+		findEmployee.set("empcode", this.getEmpCode());
 		findEmployee.select();
 		if (findEmployee.next()) {
 			employee.copyFrom(findEmployee);
@@ -405,6 +421,103 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	@Override
+	public Object saveEmp() throws Exception {
+		
+		
+		this.setGlobalCom(this.globalCom);
+		this.setLocale(this.getLocale());
+		this.setApproved(true);
+		
+		this.setPartCode(this.getDept().getPartCode());
+		syncToDatabaseMe();
+		flushDatabaseMe();
+		
+		
+		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
+			getImageFile().setEmpCode(this.getEmpCode());
+			getImageFile().upload();
+		}
+		
+		
+		
+		//////////////////////////////////////////////////////////////////////////////////
+		
+		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
+			session.setEmployee(findMe());
+			
+			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
+		}
+		
+		/*
+		if(this.getIsAdmin() == false && !this.isApproved()){
+			Session session = new Session();
+			session.setEmployee(this);
+			session.fillSession();
+			session.setGuidedTour(true);
+			
+			CommentWorkItem newComment = new CommentWorkItem();
+			newComment.processManager = processManager;
+			newComment.session = session;
+
+			newComment.setTitle(localeManager.getResourceBundle().getProperty("RequestJoinApprovedMessage"));
+			newComment.save();
+			
+			processManager.applyChanges();
+		}
+		*/
+		
+		
+		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
+			
+			StringBuffer param = new StringBuffer();
+			
+			//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
+			param.append("?comcode=").append(this.getGlobalCom()).append("&");
+			param.append("userId=").append(this.getEmpCode()).append("&");
+			param.append("pw=").append(this.getPassword()).append("&");
+			param.append("userName=").append(this.getEmpName());
+			
+			Tadpole tadpole = new Tadpole();
+			tadpole.session = session;
+			tadpole.createUserAtTadpole(param.toString());
+		}
+	
+		
+		session = new Session();
+		session.setEmployee(this);
+		session.fillSession();
+		session.fillUserInfoToHttpSession();
+		
+		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
+		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+		String id = (String)httpSession.getId();
+		
+		System.out.println("id : " + id);
+		System.out.println("loggedUserId : " + loggedUserId);
+		
+		
+		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
+        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
+        
+        URL urlURL = new java.net.URL(base);
+       	String host = urlURL.getHost();
+       	int port = urlURL.getPort();
+       	String protocol = urlURL.getProtocol();
+
+       //	String tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+        Company company = new Company();
+        company.setComCode(this.getGlobalCom());
+        ICompany findCompany = company.findByCode();
+        String tenantId = findCompany.getAlias();
+        
+       	
+       	
+		String url = protocol + "://" + (tenantId==null?"":tenantId+".")  + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+
+		return new Forward(url);
+	}
+	
+	@Override
 	public boolean saveMe() throws Exception {
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			checkRegistered();
@@ -503,6 +616,104 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object activate() throws MetaworksException{
+System.out.println("authKey= "+ getAuthKey());
+		
+		Employee employee = new Employee();
+		employee.setAuthKey(this.getAuthKey());
+		IEmployee findEmployee = null;
+		
+		try {
+			findEmployee = employee.findByKey();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new MetaworksException(e.getMessage());
+		}
+		
+		if(findEmployee == null)
+			throw new MetaworksException("wrong access");
+		
+		if(findEmployee.isApproved()){
+			Login login = new Login();
+			login.setUserId(findEmployee.getEmail());
+			
+			return login;
+		}
+		
+		if(!findEmployee.getAuthKey().equals(this.getAuthKey()))
+			throw new MetaworksException("not match activation code");
+
+	
+		findEmployee.getMetaworksContext().setWhere("admin");
+		findEmployee.getMetaworksContext().setHow("detail");
+//		findEmployee.getMetaworksContext().setWhen("findpw");
+		findEmployee.getMetaworksContext().setWhen("new2");			
+		findEmployee.setImageFile(new PortraitImageFile());
+		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		
+		//defaultUX, defaultMob 값 설정
+		String defaultUX = "wave";
+		String defaultMob = "auto";
+				
+		findEmployee.setPreferUX(defaultUX);
+		findEmployee.setPreferMob(defaultMob);
+		findEmployee.setEmpName(null);
+		findEmployee.setPassword(null);
+//		return new ModalWindow(findEmployee, 600, 500, "ddd");
+		return findEmployee;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object findpw() throws MetaworksException{
+		System.out.println("authKey= "+ getAuthKey());
+		
+		Employee employee = new Employee();
+		employee.setAuthKey(this.getAuthKey());
+		IEmployee findEmployee = null;
+		
+		try {
+			findEmployee = employee.findByKey();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new MetaworksException(e.getMessage());
+		}
+		
+		if(findEmployee == null)
+			throw new MetaworksException("wrong access");
+		
+		if(findEmployee.isApproved()){
+			Login login = new Login();
+			login.setUserId(findEmployee.getEmail());
+			
+			return login;
+		}
+		
+		if(!findEmployee.getAuthKey().equals(this.getAuthKey()))
+			throw new MetaworksException("not match activation code");
+
+	
+		findEmployee.getMetaworksContext().setWhere("admin");
+		findEmployee.getMetaworksContext().setHow("detail");
+		findEmployee.getMetaworksContext().setWhen("findpw");
+		findEmployee.setImageFile(new PortraitImageFile());
+		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		
+		//defaultUX, defaultMob 값 설정
+		String defaultUX = "wave";
+		String defaultMob = "auto";
+				
+		findEmployee.setPreferUX(defaultUX);
+		findEmployee.setPreferMob(defaultMob);
+		findEmployee.setPassword(null);
+//		return new ModalWindow(findEmployee, 600, 500, "ddd");
+		return findEmployee;
+	}
+	
 	
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
@@ -695,9 +906,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	@Override
 	public Object subscribeStep3() throws Exception {
-		getMetaworksContext().setWhen("finish");
-
-		return this;
+		
+		Locale locale = new Locale();
+		this.setLocale(localeManager.getLanguage());
+		locale.setLanguage(localeManager.getLanguage());
+		locale.load();
+		
+		getMetaworksContext().setHow("detail");
+		getMetaworksContext().setWhen("edit");
+		getMetaworksContext().setWhere("admin");
+		
+		this.setImageFile(new PortraitImageFile());
+		this.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
+		
+		return new Object[]{locale, this};
 	}
 	
 	@Override
@@ -743,7 +965,82 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		ModalWindow removeWindow = new ModalWindow();
 		removeWindow.setId("subscribe");
 		
-		return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
+		return new Object[]{new Remover(removeWindow, true), new ToOpener(new MainPanel(new Main(session)))};		
+		//return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
 	}
 	
+	public IEmployee findByEmail(){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
+		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
+		sb.append("where emptable.email=?email ");
+		
+		IEmployee dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setEmail(this.getEmail());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao; 
+	}
+	
+	public IEmployee findByKey(){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from ");
+		sb.append("emptable ");
+		sb.append("where authKey=?authKey ");
+		
+		IEmployee dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setAuthKey(this.getAuthKey());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao; 
+	}
+	
+	
+	public static String extractTenantName(String email){
+		
+		String str = email.substring(email.indexOf("@")+1);
+
+		return str.substring(0, str.indexOf("."));
+		
+		
+	}
+	
+	public String createNewId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("emptable", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		return number.toString();
+	}
+
 }
