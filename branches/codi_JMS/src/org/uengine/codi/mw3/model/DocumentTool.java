@@ -31,7 +31,7 @@ public class DocumentTool implements ITool, Serializable{
 	public void onLoad() {
 		try {
 			IWorkItem workitem = new WorkItem();
-			
+			this.workitem = new WorkItem();
 			this.workitem = workitem.load(instId);
 			this.workitem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
 			
