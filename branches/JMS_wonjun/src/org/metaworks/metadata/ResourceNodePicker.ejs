@@ -1,0 +1,17 @@
+<%
+	if(value != null && typeof value != 'undefined'){
+%>
+	<div>
+		<a id="wBtn" href="#" onClick="mw3.call(<%=objectId%>, 'findResource')"><span><%=mw3.localize("$ide.findResource")%></span></a>
+<%
+		if(value.id){
+%>
+		<span style="line-height: 210%; margin-left: 10px;"><%=value.name%></span>
+		<!-- <span style="line-height: 210%; margin-left: 10px;"><img src="images/waveStyle/delete.png" onclick="<%=methods.deleteResourcePicker.caller()%>" style="cursor:point;" /></span> --!>
+<%
+		}
+%>
+	</div>
+<%
+	}
+%>

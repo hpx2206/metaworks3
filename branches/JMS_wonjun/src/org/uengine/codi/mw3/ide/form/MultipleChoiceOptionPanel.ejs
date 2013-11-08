@@ -1,0 +1,31 @@
+<div class="poperty_box">
+
+<%
+	if(mw3.when == mw3.WHEN_EDIT) {
+%>	
+		<label class="fb_box_desc2" id=""><%=mw3.localize('$form.option.displayname')%></label>
+<%
+	}
+	
+	if(mw3.when == mw3.WHEN_VIEW && mw3.how == 'selectbox'){
+%>
+		<select id="" class="select medium">
+<%
+			for(var i = 0; i < value.choiceOptions.length; i++) {
+%>
+				<option><%=value.choiceOptions[i].option%></option>
+<%				
+			}
+%>			
+		</select>
+<%
+	}else{
+%>
+		<%=fields.choiceOptions.here()%>
+<%
+	}
+%>	
+
+</div>
+
+ 
