@@ -11,6 +11,14 @@ var Tab = function(objectId, className){
 				mw3.getFaceHelper(objectId).resize(ui);
 		}
 	});
+	var zIndex = 1005;
+	
+	if(modalWindow.length > 0){
+		zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
+		zIndex = String(Number(zIndex)+1);
+	}		
+	
+	$('#tabs_'+objectId).css({position:'absolute','z-index':zIndex,display:'none'});
 	
 	var objectMetadata = mw3.getMetadata(className);
 	
