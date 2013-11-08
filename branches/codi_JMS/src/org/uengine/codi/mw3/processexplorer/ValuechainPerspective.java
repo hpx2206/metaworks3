@@ -46,7 +46,7 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 		}
 		
 	public ValuechainPerspective() {
-		setLabel("Valuechain");
+		setLabel("원전 프로세스");
 		valueChainTreeList = new ArrayList<Tree>();
 		setLoaded(false);
 		
