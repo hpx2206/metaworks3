@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.view;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -12,6 +13,7 @@ import org.uengine.codi.mw3.ide.ResourceTree;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.libraries.RolePerspective;
 import org.uengine.codi.mw3.ide.libraries.SearchResultPanel;
+import org.uengine.codi.mw3.model.DocumentPerspective;
 import org.uengine.codi.mw3.model.SearchBox;
 
 public class Navigator {
@@ -60,7 +62,13 @@ public class Navigator {
 		public void setRolePerspective(RolePerspective rolePerspective) {
 			this.rolePerspective = rolePerspective;
 		}
-
+	DocumentPerspective documentPerspective;
+		public DocumentPerspective getDocumentPerspective() {
+			return documentPerspective;
+		}
+		public void setDocumentPerspective(DocumentPerspective documentPerspective) {
+			this.documentPerspective = documentPerspective;
+		}
 	SearchBox searchBox;
 		public SearchBox getSearchBox() {
 			return searchBox;
@@ -75,6 +83,9 @@ public class Navigator {
 		this.setName("$Navigator");
 //		this.rolePerspective = new RolePerspective();
 		this.searchBox = new SearchBox();
+		this.documentPerspective = new DocumentPerspective();
+		documentPerspective.setMetaworksContext(new MetaworksContext());
+		documentPerspective.getMetaworksContext().setHow("explorer");
 	}
 	
 	public void load(Workspace workspace){
