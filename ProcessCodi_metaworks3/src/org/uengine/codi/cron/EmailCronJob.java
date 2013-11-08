@@ -5,15 +5,10 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.spring.SpringConnectionFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import org.uengine.codi.CodiProcessManagerBean;
 import org.uengine.codi.MetaworksUEngineSpringConnectionAdapter;
-import org.uengine.codi.mw3.model.EmailWorkItem;
-import org.uengine.codi.mw3.model.InstanceView;
-import org.uengine.codi.mw3.model.InstanceViewContent;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 @Component
 public class EmailCronJob extends QuartzJobBean{
