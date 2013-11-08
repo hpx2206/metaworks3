@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.libraries.OrganizationRole;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
@@ -37,12 +38,12 @@ public class RoleView extends CanvasDTO implements ContextAware {
 		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
-		Popup popup = new Popup();
+		ModalWindow popup = new ModalWindow();
 		Role role = (Role)propertiesWindow.getPanel();
 		role.setCurrentEditorId(this.getEditorId());
 		role.setMetaworksContext(propertiesWindow.getMetaworksContext());
 		role.setRoleView(this);
-		
+		popup.setTitle("역할 설정");
 		popup.setPanel(role);
 		popup.setWidth(700);
 		popup.setHeight(500);
