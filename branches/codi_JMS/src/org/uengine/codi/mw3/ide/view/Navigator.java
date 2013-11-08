@@ -85,7 +85,7 @@ public class Navigator {
 		this.searchBox = new SearchBox();
 		this.documentPerspective = new DocumentPerspective();
 		documentPerspective.setMetaworksContext(new MetaworksContext());
-		documentPerspective.getMetaworksContext().setHow("explorer");
+		documentPerspective.getMetaworksContext().setHow("perspectivePanel");
 	}
 	
 	public void load(Workspace workspace){
