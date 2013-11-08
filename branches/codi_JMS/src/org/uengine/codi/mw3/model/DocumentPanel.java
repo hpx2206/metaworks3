@@ -51,7 +51,6 @@ public class DocumentPanel implements ContextAware {
 	public void load() throws Exception{
 		DocumentNode node = new DocumentNode();
 		node.session = session;
-//		Node.setId(session.getCompany().getComCode());
 		node.setCompanyId(session.getCompany().getComCode());
 		
 		documentNode = node.loadDocumentList();
