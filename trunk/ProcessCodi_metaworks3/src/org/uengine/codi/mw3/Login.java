@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -503,14 +504,14 @@ public class Login implements ContextAware {
         System.out.println("---------------------------------------");
        
         
-//        CodiLog  log = new CodiLog();
-//        log.setId(log.createNewId());
-//        log.setEmpcode(findEmp.getEmpCode());
-//        log.setComCode(findEmp.getGlobalCom());
-//        log.setType("login");
-//        log.setDate(new Date());
-//        log.setIp(ipAddress);
-//        log.createDatabaseMe();
+        CodiLog  log = new CodiLog();
+        log.setId(log.createNewId());
+        log.setEmpcode(findEmp.getEmpCode());
+        log.setComCode(findEmp.getGlobalCom());
+        log.setType("login");
+        log.setDate(new Date());
+        log.setIp(ipAddress);
+        log.createDatabaseMe();
 		// new Remover(new ModalWindow(), true), 
 		//return new Object[]{new Refresh(locale), new Refresh(mainPanel, false, true)};
 		
