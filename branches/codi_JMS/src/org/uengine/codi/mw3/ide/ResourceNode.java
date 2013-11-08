@@ -278,7 +278,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
 			
-		this.changeProject();
+//		this.changeProject();
 		
 		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
 			metadataProperty.setResourceNode(this);

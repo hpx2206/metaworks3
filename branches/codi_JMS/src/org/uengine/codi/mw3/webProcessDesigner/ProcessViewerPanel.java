@@ -214,7 +214,6 @@ public class ProcessViewerPanel implements ContextAware {
 					for(int i=0; i < targetNode.getChild().size(); i++){
 						TreeNode childNode = (TreeNode) targetNode.getChild().get(i);
 						if( childNode == null ){
-							targetNode.getChild().remove(i);
 							continue;
 						}
 						if( defId.equals(childNode.getName()) ){

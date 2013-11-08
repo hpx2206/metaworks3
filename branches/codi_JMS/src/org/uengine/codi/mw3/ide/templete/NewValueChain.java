@@ -43,6 +43,10 @@ public class NewValueChain extends Templete {
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			
 			ValueChainEditor editor = new ValueChainEditor(node);
+			editor.getValueChainDesigner().getProcessNameView().setAlias(this.getName());
+			editor.getValueChainDesigner().getRolePanel().setEditorId(node.getPath());
+			editor.getValueChainDesigner().getProcessVariablePanel().setEditorId(node.getPath());
+			editor.getValueChainDesigner().getProcessDesignerContainer().getProcessDetailPanel().setEditorId(node.getPath());
 			editor.save();
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};

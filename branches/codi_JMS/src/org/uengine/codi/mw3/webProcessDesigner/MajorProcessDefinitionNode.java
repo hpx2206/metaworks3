@@ -172,7 +172,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	
 	public void removeNullChild(ArrayList<TreeNode> childNodes){
 		if( childNodes != null ){
-			for(int i=0; i < childNodes.size();i++){
+			for(int i=childNodes.size()-1; i >= 0 ;i--){
 				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
 					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
 					if( node.getChild() != null && node.getChild().size() > 0 ){
