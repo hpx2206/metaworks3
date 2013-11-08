@@ -42,13 +42,13 @@ public class DashboardPanel {
 			this.myAppPanel = myAppPanel;
 		}
 
-	MyProjectPanel projectPanel;
-		public MyProjectPanel getProjectPanel() {
-			return projectPanel;
-		}
-		public void setProjectPanel(MyProjectPanel projectPanel) {
-			this.projectPanel = projectPanel;
-		}
+//	MyProjectPanel projectPanel;
+//		public MyProjectPanel getProjectPanel() {
+//			return projectPanel;
+//		}
+//		public void setProjectPanel(MyProjectPanel projectPanel) {
+//			this.projectPanel = projectPanel;
+//		}
 
 	MyServicePanel myServicePanel;
 		public MyServicePanel getMyServicePanel() {
@@ -82,10 +82,10 @@ public class DashboardPanel {
 		myAppPanel.load();
 		
 
-		//MyProject
-		projectPanel = new MyProjectPanel();
-		projectPanel.session = session;
-		projectPanel.load();
+//		//MyProject
+//		projectPanel = new MyProjectPanel();
+//		projectPanel.session = session;
+//		projectPanel.load();
 
 		//MyService
 		setMyServicePanel(new MyServicePanel(session));
