@@ -4034,6 +4034,23 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					closeOutsideContainer(mw3.popupDivId);				
 
 			};
+			Metaworks3.prototype.showOverPopop = function(objId, serviceMethodContext, result){
+				var zIndex = 10;
+				if( serviceMethodContext.target=="popupOverPopup" ){
+					var modalWindow = $('.ui-dialog');
+					if(modalWindow.length > 0){
+						zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
+						zIndex = String(Number(zIndex)+1);
+					}else{
+						zIndex = 101;
+					}		
+				}
+				
+				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='z-index:"+zIndex+";position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+				
+				mw3.locateObject(result, null, '#' + mw3.popupDivId);				
+				
+			};
 
 			Metaworks3.prototype.getValueForFieldDescriptor = function(object, type){
 				if(object && object.__className){
@@ -4379,10 +4396,13 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 				if(placeholder)
 					mw3.removeObject(placeholder);
 				
-				if(serviceMethodContext.target == 'popup')
+				if(serviceMethodContext.target == 'popup'){
 					mw3.showPopop(objId, serviceMethodContext, result);
-				else
+				}else if(serviceMethodContext.target == 'popupOverPopup'){
+					mw3.showOverPopop(objId, serviceMethodContext, result);
+				}else{
 					mw3.showStick(objId, serviceMethodContext, result);
+				}
 								
 				$('#' + mw3._getObjectDivId(result.__objectId)).one('destroy', function(){
 					mw3.recentOpenerObjectId.pop();
