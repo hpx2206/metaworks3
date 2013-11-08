@@ -954,3 +954,7 @@ empcode varchar(100) not null,
 comcode varchar(100),
 ip varchar(50),
 date varchar(50));
+
+--2013.11.08 코디 시스템 관리자 계정.( Email을 인스턴스 발행하는 계정.)
+insert into emptable values("0", "CODI", "test", "1", null, null, null, "0", "0", "ko", null, null, null, null, null, null, "wave", "auto", null, null, "1", "0", null, "0", "0", null);
+
