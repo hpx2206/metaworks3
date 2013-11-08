@@ -419,7 +419,7 @@
 				
  				var locatePage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.model.Locale",
- //                   language : 'ko'
+                    language : navigator.language
                 }, 'body').load();
  				
  				mw3.metadataBundle = function(key, defaultValue){

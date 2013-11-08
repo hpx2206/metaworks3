@@ -417,7 +417,7 @@
 				
  				var locatePage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.model.Locale",
-                    language : 'ko'
+                    language : navigator.language
                 }, 'body').load();
  				
  				mw3.metadataBundle = function(key, defaultValue){
@@ -440,33 +440,37 @@
                     __className : "org.metaworks.metadata.MetadataBundle"
                 }, 'body').loadProperty();
  				*/ 				
+ 				var startcodi = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.StartCodi",
+             
+                }, 'body').load();
  				
- 				var object = null;
- 				var instanceId = request.getParameter("instanceId");
+//  				var object = null;
+//  				var instanceId = request.getParameter("instanceId");
 
- 				if(instanceId == null || typeof instanceId == 'undefined' || instanceId.length == 0){
- 					var object = {
-						fullClassName: 'org.uengine.codi.mw3.Login', 								
-						__className: 'org.uengine.codi.mw3.common.GatewayRunner'
-					};
+//  				if(instanceId == null || typeof instanceId == 'undefined' || instanceId.length == 0){
+//  					var object = {
+// 						fullClassName: 'org.uengine.codi.mw3.StartCodi', 								
+// 						__className: 'org.uengine.codi.mw3.common.GatewayRunner'
+// 					};
  					
- 					mw3.locateObject(object, null, 'body').call('run');
- 				}else{
- 					object = {
-	 					__className:"org.uengine.codi.mw3.model.InstanceViewPublic"			,
-	 					instanceId : instanceId
- 					}
+//  					mw3.locateObject(object, null, 'body').call('run');
+//  				}else{
+//  					object = {
+// 	 					__className:"org.uengine.codi.mw3.model.InstanceViewPublic"			,
+// 	 					instanceId : instanceId
+//  					}
  					
- 					var mainPage = new MetaworksObject(object, 'body');
- 				}
+//  					var mainPage = new MetaworksObject(object, 'body');
+//  				}
  				
 				
 				mw3.onLoadFaceHelperScript();
 				
-				document.oncontextmenu = function() { return false; };
-				window.onbeforeunload= function(){
-				    return 'You are about to leave this page, OK?';
-				};
+// 				document.oncontextmenu = function() { return false; };
+// 				window.onbeforeunload= function(){
+// 				    return 'You are about to leave this page, OK?';
+// 				};
 				
 				/*
 				sso test
