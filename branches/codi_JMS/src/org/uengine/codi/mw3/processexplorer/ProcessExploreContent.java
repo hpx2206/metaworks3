@@ -180,16 +180,18 @@ public class ProcessExploreContent{
 		String convertedFilename = processName.replace(".", "@").split("@")[0];
 		String convertedFilepath = GlobalContext.getPropertyString("filesystem.path") + convertedFilename;
 		
-		FileWriter writer = null;
-
+		BufferedWriter writer = null;
+		FileOutputStream fos = null;
+		OutputStreamWriter osw = null;
 		try {
 			File file = new File(convertedFilepath + ".svg");
 			if(!file.exists()){
 				file.getParentFile().mkdirs();
 				file.createNewFile();
 			}
-
-			writer = new FileWriter(file);
+			fos = new FileOutputStream(convertedFilepath + ".svg");
+			osw = new OutputStreamWriter(fos, "UTF-8");
+			writer = new BufferedWriter(osw);
 			writer.write(ProcessDesignerContentPanel.unescape(this.getSvgData()));
 
 		} catch (IOException e) {
@@ -199,6 +201,20 @@ public class ProcessExploreContent{
 			if(writer != null)
 				try {
 					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if(fos != null)
+				try {
+					fos.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if(osw != null)
+				try {
+					osw.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
