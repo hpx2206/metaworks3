@@ -1,8 +1,11 @@
 package org.uengine.codi.mw3.processexplorer;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.directwebremoting.io.FileTransfer;
@@ -176,10 +179,31 @@ public class ProcessExploreContent{
 		String processName = this.getDefId();
 		String convertedFilename = processName.replace(".", "@").split("@")[0];
 		String convertedFilepath = GlobalContext.getPropertyString("filesystem.path") + convertedFilename;
+		
+		FileWriter writer = null;
 
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(convertedFilepath + ".svg"), "UTF-8"));
-		bw.write(ProcessDesignerContentPanel.unescape(this.getSvgData()));
-		bw.close();
+		try {
+			File file = new File(convertedFilepath + ".svg");
+			if(!file.exists()){
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
+
+			writer = new FileWriter(file);
+			writer.write(ProcessDesignerContentPanel.unescape(this.getSvgData()));
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			if(writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 		
 		ImageMagick im = new ImageMagick();
 		im.convertFile(convertedFilepath + ".svg", convertedFilepath + ".pdf");
