@@ -1,11 +1,19 @@
 package org.uengine.codi.mw3.processexplorer;
 
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
+import org.directwebremoting.io.FileTransfer;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.Download;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.Instance;
@@ -16,10 +24,13 @@ import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.ImageMagick;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDetailPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessSummaryPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessExploreContent{
@@ -48,6 +59,13 @@ public class ProcessExploreContent{
 		}
 		public void setPath(String path) {
 			this.path = path;
+		}
+	String svgData;
+		public String getSvgData() {
+			return svgData;
+		}
+		public void setSvgData(String svgData) {
+			this.svgData = svgData;
 		}
 
 	ProcessViewPanel processViewPanel;
@@ -151,5 +169,21 @@ public class ProcessExploreContent{
 	public Object[] startPrint() throws Exception{
 		
 		return new Object[]{};
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] downloadPdf() throws Exception{
+		String processName = this.getDefId();
+		String convertedFilename = processName.replace(".", "@").split("@")[0];
+		String convertedFilepath = GlobalContext.getPropertyString("filesystem.path") + convertedFilename;
+
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(convertedFilepath + ".svg"), "UTF-8"));
+		bw.write(ProcessDesignerContentPanel.unescape(this.getSvgData()));
+		bw.close();
+		
+		ImageMagick im = new ImageMagick();
+		im.convertFile(convertedFilepath + ".svg", convertedFilepath + ".pdf");
+		
+		return new Object[]{new Download(new FileTransfer(new String(convertedFilename.getBytes("UTF-8"),"ISO8859_1"), "application/pdf", new FileInputStream(convertedFilepath+ ".pdf")))};
 	}
 }

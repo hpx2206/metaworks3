@@ -11,3 +11,12 @@ var org_uengine_codi_mw3_processexplorer_ProcessExploreContent = function(object
 	
 	this.objectDiv.css({position: 'relative', height: '100%'});
 };
+
+org_uengine_codi_mw3_processexplorer_ProcessExploreContent.prototype = {
+		downloadPdf : function(){
+			 var data = (new XMLSerializer).serializeToString(document.body.getElementsByTagName("svg")[0]);
+			 var object = mw3.objects[this.objectId];
+			 object.svgData=data;
+			 object.downloadPdf();
+		}
+};
