@@ -177,9 +177,13 @@ if(value){
 
 		
 		<td width="20"  class="instanceMove">
+		
 			<% if(mw3.how != 'sns'){ %>
+				<%if(mw3.how != 'document'){%>
 				<div class="instanceBtn" style="width: 15px;margin: 0 auto;"><%=fields.instanceDrag.here()%></div>
-			<% } %>
+			<% }
+				}
+			 %>
 		</td>
 		
 	</tr>

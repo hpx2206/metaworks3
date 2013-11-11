@@ -90,7 +90,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 			how = "sns";
 		else if("oce".equals(session.getUx()))	
 			how = "sns";
-		else if("document".equals(session.getLastPerspecteType()))
+		else if("document".equals(session.getLastPerspecteType()) || "UnlabeledDocument".equals(session.getLastPerspecteType()))
 			how = "document";
 		else
 			how = "normal";
@@ -119,7 +119,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		setThread(thread);
 		
-		if("document".equals(session.getLastPerspecteType())){
+		if("document".equals(session.getLastPerspecteType()) || "UnlabeledDocument".equals(session.getLastPerspecteType())){
 			DocWorkItem fileItem = new DocWorkItem();
 			fileItem.setInstId(new Long(getInstanceId()));
 			fileItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
