@@ -196,12 +196,21 @@ public class PerspectivePanel  implements ContextAware {
 					projectPerspective.session = session;
 					projectPerspective.select();
 				}
+				
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
 			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
 				strategicPerspective = new StrategicPerspective();
 			}
+			
+			//문서
+		    if("1".equals(GlobalContext.getPropertyString("document.use","1"))){
+		     documentPerspective = new DocumentPerspective();
+		     setMetaworksContext(new MetaworksContext());
+		     this.getMetaworksContext().setHow("perspectivePanel");
+		     documentPerspective.setMetaworksContext(this.getMetaworksContext());
+		    }
 		}//session
 	}
 	
