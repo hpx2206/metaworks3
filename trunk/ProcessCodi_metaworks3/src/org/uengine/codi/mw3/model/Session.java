@@ -213,17 +213,17 @@ public class Session implements ContextAware{
 		}
 		
 	@ServiceMethod(callByContent=true)
-	public Object[] logout() throws Exception {
+	public Login logout() throws Exception {
 		removeUserInfoFromHttpSession();
 		
-//		Login login = new Login();
-//		login.setStatus("login");
-//		login.fireServerSession(this);
-//		
-//		login.setMetaworksContext(new MetaworksContext());
-//		login.getMetaworksContext().setHow("logout");
-//		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		//login.getMetaworksContext().setWhere("user");
+		Login login = new Login();
+		login.setStatus("login");
+		login.fireServerSession(this);
+		
+		login.setMetaworksContext(new MetaworksContext());
+		login.getMetaworksContext().setHow("logout");
+		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		login.getMetaworksContext().setWhere("user");
         
 		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
 		
@@ -238,25 +238,7 @@ public class Session implements ContextAware{
         log.setIp(ipAddress);
         log.createDatabaseMe();
         
-        String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-     
-        String tenant = TenantContext.getThreadLocalInstance().getTenantId();
-        
-        String host = GlobalContext.getPropertyString("web.server.ip");
-    	String port = GlobalContext.getPropertyString("web.server.port");
-    	String root = GlobalContext.getPropertyString("web.context.root");
-    		
-           	
-    		
-        String url = "http://"+ tenant +"."+ host + ":" + port + root;
-		
-        
-        TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("loggedUserId", null);		
-		
-        
-		return new Object[]{new Forward(url)};
-		//return login;
+        return login;
 	}
 	
 		
