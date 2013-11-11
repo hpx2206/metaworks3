@@ -24,6 +24,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -512,23 +513,8 @@ public class Login implements ContextAware {
         log.setDate(new Date());
         log.setIp(ipAddress);
         log.createDatabaseMe();
-		// new Remover(new ModalWindow(), true), 
-		//return new Object[]{new Refresh(locale), new Refresh(mainPanel, false, true)};
-		
-		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-     
-        String tenantId = findcompany.getAlias();
-       	
-       	String host = GlobalContext.getPropertyString("web.server.ip");
-    	String port = GlobalContext.getPropertyString("web.server.port");
-    	String root = GlobalContext.getPropertyString("web.context.root");
-    		
-           	
-    		
-        String url = "http://"+ tenantId +"."+ host + ":" + port + root;
-		
-		return new Object[]{new Forward(url)};
+		//new Remover(new ModalWindow(), true), 
+		return new Object[]{new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
