@@ -108,8 +108,18 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
 	this.leftTreeId = object.leftTreeId;
 	this.rightTreeId = object.rightTreeId;
     var leftTreeObj = this.parentDivObj.find("#" + this.leftTreeId );
+    var leftTreeHeight = 0;
+    var rightTreeHeight = 0;
+    
+    var canvasDivObj = $('#'+this.canvasId);
+    var canvasWidth = canvasDivObj.width();
     
     leftTreeObj.bind('loaded', {align : 'left'}, function(event){
+    	leftTreeHeight = $(this).find('div .filemgr-tree').height();
+    	if( leftTreeHeight > rightTreeHeight){
+    		console.log( "leftTree set");
+    		canvas.setCanvasSize([canvasWidth, leftTreeHeight]);	
+    	}
 		faceHelper.drawTerminals(this.id, true, canvas , null , false);
     }).bind('expanded', function(){
     	faceHelper.drawTerminals(this.id, true, canvas , null , false);
@@ -121,6 +131,10 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
     
     var rightTreeObj = this.parentDivObj.find("#"+ this.rightTreeId);
     rightTreeObj.bind('loaded', {align : 'right'}, function(event){
+    	rightTreeHeight = $(this).find('.filemgr-tree').height();
+    	if( rightTreeHeight > leftTreeHeight){
+    		canvas.setCanvasSize([canvasWidth, rightTreeHeight]);	
+    	}
 		faceHelper.drawTerminals(this.id, false, canvas , null , false);
     }).bind('expanded', function(){
     	faceHelper.drawTerminals(this.id, false, canvas , null , false);

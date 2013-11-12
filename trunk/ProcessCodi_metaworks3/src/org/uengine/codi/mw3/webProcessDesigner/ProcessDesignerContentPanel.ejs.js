@@ -243,12 +243,19 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    canvas.onDrawShape(function (event, shapeElement) {
 	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
 	    	if($(shapeElement).attr('auto_draw') && $(shapeElement).attr('auto_draw') == 'yes'){
+	    		if( $(shapeElement).attr('_shape_id') == 'OG.shape.bpmn.A_Task' ){
+	    			$(shapeElement).attr('_width', '70');
+	    			$(shapeElement).attr('_height', '50');
+	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.HumanActivity');
+	    			$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.HumanActivityView');
+	    		}else if( $(shapeElement).attr('_shape_id') == 'OG.shape.bpmn.E_End' ){
+	    			$(shapeElement).attr('_width', '30');
+	    			$(shapeElement).attr('_height', '30');
+	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.StartActivity');
+	    			$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.ActivityView');
+	    		}
+	    		$(shapeElement).attr('_classType', 'Activity');
 		    	$(shapeElement).attr('_shape_type', 'GEOM');
-		    	$(shapeElement).attr('_width', '70');
-		    	$(shapeElement).attr('_height', '50');
-		    	$(shapeElement).attr('_classname', 'org.uengine.kernel.HumanActivity');
-		    	$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.HumanActivityView');
-		    	$(shapeElement).attr('_classType', 'Activity');
 		    	$(shapeElement).attr('_tracingTag', ++faceHelper.tracingTag);
 		    	
 		    	var activityView = {
