@@ -18,6 +18,9 @@ import org.uengine.codi.mw3.marketplace.AppInformation;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
+
+import examples.PerspectiveInfo;
+import examples.TopicInfo;
 @Face(
 		ejsPathMappingByContext=
 	{
@@ -88,6 +91,9 @@ public class InstanceListPanel implements ContextAware{
 				this.getMetaworksContext().setHow("topic");
 			if("project".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("project");
+			
+			if("organization.group".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("organization.group");
 			
 			if("document".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("document");
@@ -166,7 +172,14 @@ public class InstanceListPanel implements ContextAware{
 		public void setNewInstancePanel(NewInstancePanel newInstancePanel) {
 			this.newInstancePanel = newInstancePanel;
 		}
-	
+	PerspectiveInfo perspectiveInfo;
+		public PerspectiveInfo getPerspectiveInfo() {
+			return perspectiveInfo;
+		}
+		public void setPerspectiveInfo(PerspectiveInfo perspectiveInfo) {
+			this.perspectiveInfo = perspectiveInfo;
+		}
+
 	WorkItem newInstantiator;
 		public WorkItem getNewInstantiator() {
 			return newInstantiator;
@@ -400,6 +413,22 @@ public class InstanceListPanel implements ContextAware{
 	public void projectInfoLoad() throws Exception {
 		projectInfo = new ProjectInfo(session.getLastSelectedItem());
 		projectInfo.load();
+	}
+	
+	
+	Dept deptInfo;
+		public Dept getDeptInfo() {
+			return deptInfo;
+		}
+		public void setDeptInfo(Dept deptInfo) {
+			this.deptInfo = deptInfo;
+		}
+
+
+	public void deptInfoLoad() throws Exception {
+		deptInfo = new Dept(session.getLastSelectedItem());;
+		deptInfo.getMetaworksContext().setHow("info");
+		
 	}
 	
 	@Face(displayName = "등록")
