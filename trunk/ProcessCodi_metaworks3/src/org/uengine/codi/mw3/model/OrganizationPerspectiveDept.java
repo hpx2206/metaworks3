@@ -28,7 +28,6 @@ public class OrganizationPerspectiveDept extends Perspective {
 		
 	@Override
 	protected void loadChildren() throws Exception {
-		System.out.println("loadChildren");
 		
 		IDept dept = new Dept();
 		dept.getMetaworksContext().setHow("tree");
@@ -41,16 +40,16 @@ public class OrganizationPerspectiveDept extends Perspective {
 		setDeptList(deptList);
 		
 		
-		IEmployee employee = new Employee();
-		employee.getMetaworksContext().setWhere("navigator");
-		employee.getMetaworksContext().setHow("tree");
-		employee.setGlobalCom(session.getEmployee().getGlobalCom());
+//		IEmployee employee = new Employee();
+//		employee.getMetaworksContext().setWhere("navigator");
+//		employee.getMetaworksContext().setHow("tree");
+//		employee.setGlobalCom(session.getEmployee().getGlobalCom());
+//		
+//		EmployeeList employeeList = new EmployeeList();			
+//		employeeList.getMetaworksContext().setWhen("navigator");
+//		employeeList.setEmployee(employee.findByDeptOther());
 		
-		EmployeeList employeeList = new EmployeeList();			
-		employeeList.getMetaworksContext().setWhen("navigator");
-		employeeList.setEmployee(employee.findByDeptOther());
-		
-		setDeptEmployee(employeeList);		
+//		setDeptEmployee(employeeList);		
 	}
 
 	@Override
@@ -59,9 +58,9 @@ public class OrganizationPerspectiveDept extends Perspective {
 		deptList.setId("/ROOT/");				
 		setDeptList(deptList);
 		
-		EmployeeList employeeList = new EmployeeList();
-		employeeList.setId("/ROOT/");
-		setDeptEmployee(employeeList);				
+//		EmployeeList employeeList = new EmployeeList();
+//		employeeList.setId("/ROOT/");
+//		setDeptEmployee(employeeList);				
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)

@@ -25,7 +25,7 @@ public class InstanceMonitorPanel {
 		}
 		
 		
-	public void load(String instanceId, Session session, ProcessManagerRemote processManager) throws Exception {
+	public boolean load(String instanceId, Session session, ProcessManagerRemote processManager) throws Exception {
 
 		instanceMonitorNavigator = new InstanceMonitorNavigator();
 		instanceMonitorNavigator.session = session;
@@ -37,11 +37,12 @@ public class InstanceMonitorPanel {
 			instanceMonitor.session = session;
 			instanceMonitor.processManager = processManager; 
 			instanceMonitor.load(instance.getInstId().toString());
-
-			
 			instance.beforeFirst();
-		}else{
 			
+			return true;
+		}else{
+			// 프로세스가 없는 경우임..
+			return false;
 		}
 	}
 	
