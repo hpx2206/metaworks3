@@ -5,13 +5,13 @@
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var isTopic = (mw3.how == "topic");
 	var isProject = (mw3.how == "project");
+	var isDept = (mw3.how == "organization.group");
 	var isDashboard = (mw3.how == "dashboard");
 	var isApp = (mw3.how == "app");
-	
 	var height = 0;
 	if(isTopic) {
-		height = 115;
-	}else if(isProject || isApp){
+		height = 300;
+	}else if(isProject || isApp || isDept){
 		height = 300;
 	}else if(isDashboard){
 		height = 38;
@@ -41,8 +41,15 @@
 <% }else{%>
 <div class="top" style="height: <%=height%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
 
+
+	<%=value.perspectiveInfo?fields.perspectiveInfo.here():''%>
+	
 	<%=isApp?fields.topicFollowers.here():''%>
 	<%=isApp?fields.appInformation.here():''%>
+	
+	<%=isDept?fields.topicFollowers.here():''%>
+	<%=isDept?fields.deptInfo.here():''%>
+	
 	
 	<%=isTopic?fields.topicFollowers.here():''%>
 	<%=isProject?fields.topicFollowers.here():''%>
@@ -77,7 +84,7 @@
 		            </div>    
 		          
 		          	<!-- codi에 영향 미칩니다 . 주석처리하지 마세요. -->
-		            <% if(!isProject && !isApp){ %>
+		            <% if(!isProject && !isApp && !value.perspectiveInfo){ %>
 		               
 			            <div class="toolbar">
 		                    <ul>
