@@ -20,6 +20,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.common.MainPanel;
@@ -1402,9 +1403,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public ModalWindow monitor() throws Exception{
 
 		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-		processInstanceMonitorPanel.load(this.getInstId().toString(), session, processManager);
+		boolean flag = processInstanceMonitorPanel.load(this.getInstId().toString(), session, processManager);
+		if( flag ){
+			return new ModalWindow(processInstanceMonitorPanel, 1024, 768, "Process Monitoring");
+		}else{
+			ErrorPage errorPage = new ErrorPage();
+			errorPage.setErrorMessage("프로세스가 존재하지 않습니다.");
+			return new ModalWindow(errorPage, 300, 150, "");
+		}
 		
-		return new ModalWindow(processInstanceMonitorPanel, 1024, 768, "Process Monitoring");
 	}
 	
 	public ModalWindow ganttChart() throws Exception{

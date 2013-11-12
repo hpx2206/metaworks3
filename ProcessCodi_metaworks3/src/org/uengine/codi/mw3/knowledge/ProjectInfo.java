@@ -31,6 +31,7 @@ import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.PerspectiveInfo;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
@@ -42,7 +43,7 @@ import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class ProjectInfo implements ContextAware {
+public class ProjectInfo extends PerspectiveInfo implements ContextAware {
 
 	MetaworksContext metaworksContext;
 

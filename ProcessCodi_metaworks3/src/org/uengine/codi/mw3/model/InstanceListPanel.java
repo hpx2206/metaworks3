@@ -19,8 +19,6 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-import examples.PerspectiveInfo;
-import examples.TopicInfo;
 @Face(
 		ejsPathMappingByContext=
 	{
@@ -87,26 +85,28 @@ public class InstanceListPanel implements ContextAware{
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				this.getMetaworksContext().setWhere("oce");
 			}
-			if("topic".equals(session.getLastPerspecteType()))
-				this.getMetaworksContext().setHow("topic");
-			if("project".equals(session.getLastPerspecteType()))
-				this.getMetaworksContext().setHow("project");
-			
-			if("organization.group".equals(session.getLastPerspecteType()))
-				this.getMetaworksContext().setHow("organization.group");
-			
-			if("document".equals(session.getLastPerspecteType()))
-				this.getMetaworksContext().setHow("document");
-			
-			if("explorer".equals(session.getLastPerspecteType()))
-				this.getMetaworksContext().setHow("explorer");		
-			
-			if("app".equals(session.getLastPerspecteType()))
-				this.getMetaworksContext().setHow("app");
 			
 			if("oce_project".equals(session.getUx()))
 				this.getMetaworksContext().setWhere("oce_project");
 			
+			if("topic".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("topic");
+				perspectiveInfo = new TopicInfo();
+			}else if("project".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("project");
+				perspectiveInfo = new ProjectInfo();
+			}else if("organization.group".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("organization.group");
+				perspectiveInfo = new DeptInfo();
+			}else	if("document".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("document");
+			}else if("explorer".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("explorer");		
+			}else if("app".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("app");
+			}else{
+				perspectiveInfo = new PerspectiveInfo(); 
+			}
 			
 			instanceList = new InstanceList(session);
 			
@@ -413,22 +413,6 @@ public class InstanceListPanel implements ContextAware{
 	public void projectInfoLoad() throws Exception {
 		projectInfo = new ProjectInfo(session.getLastSelectedItem());
 		projectInfo.load();
-	}
-	
-	
-	Dept deptInfo;
-		public Dept getDeptInfo() {
-			return deptInfo;
-		}
-		public void setDeptInfo(Dept deptInfo) {
-			this.deptInfo = deptInfo;
-		}
-
-
-	public void deptInfoLoad() throws Exception {
-		deptInfo = new Dept(session.getLastSelectedItem());;
-		deptInfo.getMetaworksContext().setHow("info");
-		
 	}
 	
 	@Face(displayName = "등록")

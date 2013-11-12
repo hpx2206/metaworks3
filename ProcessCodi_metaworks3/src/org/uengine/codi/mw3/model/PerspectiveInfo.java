@@ -8,16 +8,15 @@ import org.uengine.codi.mw3.model.WorkItem;
 
 public class PerspectiveInfo implements IPerspectiveInfo{
 
-	String type;
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-
+	Followers followers;
+		public Followers getFollowers() {
+			return followers;
+		}
+		public void setFollowers(Followers followers) {
+			this.followers = followers;
+		}
 	@Override
-	public void add() {
+	public void add() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
@@ -35,9 +34,9 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 	}
 
 	@Override
-	public void load() {
+	public void load() throws Exception{
 		// TODO Auto-generated method stub
-		
+		followers = new Followers();
 	}
 
 	@Override
