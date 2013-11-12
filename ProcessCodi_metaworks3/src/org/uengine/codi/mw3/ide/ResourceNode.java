@@ -348,7 +348,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return nodeType;
 	}
 
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, mouseBinding="drag")
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId", "parentId"}, mouseBinding="drag")
 	public Object drag() {
 		System.out.println("drag : " + this.getId());
 		
@@ -365,28 +365,29 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] drop(){
 		
-		if(this.isFolder()){
+		if(this.isFolder() && !(this instanceof ProcessNode)){
 			Object clipboard = session.getClipboard();
 			
 			if(clipboard instanceof ResourceNode){
 				ResourceNode resourceNode = (ResourceNode)clipboard;
-				
-				if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){
-					File file = new File(resourceNode.getPath());
-					
-					if(file.exists()){
-						File dstFile = new File(this.getPath() + File.separatorChar + resourceNode.getName());
+				if( !this.getId().equals(resourceNode.getParentId()) ){
+					if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){
+						File file = new File(resourceNode.getPath());
 						
-						file.renameTo(dstFile);
-					}
-					
-					try {
-						this.setExpanded(true);
+						if(file.exists()){
+							File dstFile = new File(this.getPath() + File.separatorChar + resourceNode.getName());
+							
+							file.renameTo(dstFile);
+						}
 						
-						return new Object[]{new Refresh(this.expand()), new Remover(resourceNode)};
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						try {
+							this.setExpanded(true);
+							
+							return new Object[]{new Refresh(this.expand()), new Remover(resourceNode)};
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}

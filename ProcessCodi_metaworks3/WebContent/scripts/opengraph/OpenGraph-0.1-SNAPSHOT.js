@@ -19814,6 +19814,7 @@ OG.handler.EventHandler.prototype = {
 					    var eventOffset = me._getOffset(event), shape, newElement,
 					    bBoxArray = $(root).data("bBoxArray");
                         shape = new OG.shape.bpmn.E_End();
+                        $(shape).attr('auto_draw', 'yes');
                         newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
                         me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
@@ -19830,7 +19831,7 @@ OG.handler.EventHandler.prototype = {
 					    var newElement,
                         shape = new OG.shape.bpmn.E_End(),
                         envelope = element.shape.geom.getBoundary();
-
+					    $(shape).attr('auto_draw', 'yes');
                         newElement = me._RENDERER._CANVAS.drawShape([envelope.getUpperRight().x + 50, envelope.getCentroid().y], shape, [30, 30]);
                         me._RENDERER._CANVAS.connect(element, newElement);
 					},
