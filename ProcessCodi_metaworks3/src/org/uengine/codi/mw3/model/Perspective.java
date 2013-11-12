@@ -198,17 +198,18 @@ public class Perspective {
 		}else if( title == null ){
 			title = "$perspective." + perspectiveType;
 		}
-		if("topic".equals(perspectiveType) || "project".equals(perspectiveType) || "app".equals(perspectiveType)){
-			instListPanel.topicFollowersLoad();
-			
-		}
-		if("project".equals(perspectiveType)){
-			instListPanel.projectInfoLoad();
-		}
-		if("app".equals(perspectiveType)){
-			instListPanel.appInfoLoad();
-		}
+//		if("topic".equals(perspectiveType) || "project".equals(perspectiveType) || "app".equals(perspectiveType)){
+//			instListPanel.topicFollowersLoad();
+//			
+//		}
+//		if("project".equals(perspectiveType)){
+//			instListPanel.projectInfoLoad();
+//		}
+//		if("app".equals(perspectiveType)){
+//			instListPanel.appInfoLoad();
+//		}
 		instListPanel.setTitle(title);
+		instListPanel.getPerspectiveInfo().load();
 		session.setWindowTitle(title);
 
 		
