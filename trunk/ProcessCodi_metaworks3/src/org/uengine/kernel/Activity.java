@@ -33,6 +33,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
@@ -1615,13 +1616,13 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			}
 		}
 //		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
-		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new Popup() , true)};
+		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new ModalWindow() , true)};
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] cancel(){
 //		return new Object[]{new Remover(new PropertiesWindow())};
-		return new Object[]{new Remover(new Popup() , true)};
+		return new Object[]{new Remover(new ModalWindow() , true)};
 		
 	}
 }

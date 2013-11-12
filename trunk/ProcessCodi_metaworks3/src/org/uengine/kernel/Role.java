@@ -20,6 +20,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
 import org.metaworks.validator.Validator;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.codi.mw3.webProcessDesigner.RolePanel;
@@ -462,13 +463,13 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 			rolePanel.setRoleList(roles);
 		}
 		
-		return new Object[]{new ApplyProperties(this.getRoleView().getId() , this), new Remover(new Popup() , true) , new Refresh(rolePanel) };
+		return new Object[]{new ApplyProperties(this.getRoleView().getId() , this), new Remover(new ModalWindow() , true) , new Refresh(rolePanel) };
 	}
 
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] cancel(){
-		return new Object[]{new Remover(new Popup() , true)};
+		return new Object[]{new Remover(new ModalWindow() , true)};
 		
 	}
 }

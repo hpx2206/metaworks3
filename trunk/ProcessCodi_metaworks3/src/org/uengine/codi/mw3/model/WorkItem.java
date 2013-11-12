@@ -19,6 +19,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.IFrame;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
@@ -599,9 +600,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	
 	
-	public Popup workItemPopup() throws Exception{
+	public ModalWindow workItemPopup() throws Exception{
 		
 		Object result = null;
+		ModalWindow modalWindow = new ModalWindow();
 		
 		if("file".equals(this.getType())){
 			String path = "preview/" +this.getTaskId() + ".pdf";
@@ -618,7 +620,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			throw new Exception("$CannotOpen");
 		}
 		
-		return new Popup(850, 600, result);//(result, 0, 0, getTitle());
+		modalWindow.setPanel(result);
+		modalWindow.setWidth(1000);
+		modalWindow.setHeight(800);
+		modalWindow.setTitle(title);
+		
+		return modalWindow;//(result, 0, 0, getTitle());
 	}
 	
 	@Autowired

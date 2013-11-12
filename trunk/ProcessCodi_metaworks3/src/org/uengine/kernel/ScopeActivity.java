@@ -1,19 +1,15 @@
 package org.uengine.kernel;
 
 import java.beans.PropertyChangeEvent;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import org.metaworks.FieldDescriptor;
 import org.metaworks.Type;
-import org.metaworks.inputter.SelectInput;
-import org.uengine.kernel.GlobalContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.uengine.kernel.graph.FlowActivity;
-import org.uengine.processdesigner.ProcessDesigner;
 import org.uengine.util.UEngineUtil;
 
 
@@ -28,6 +24,7 @@ public class ScopeActivity extends FlowActivity implements MessageListener{
 	ProcessVariable[] processVariableDescriptors;
 
 	transient Hashtable processVariableDescriptorsHT;
+		@Hidden
 		public ProcessVariable[] getProcessVariables(){
 			return processVariableDescriptors;
 		}		
@@ -65,8 +62,10 @@ public class ScopeActivity extends FlowActivity implements MessageListener{
 			firePropertyChangeEvent(new PropertyChangeEvent(this, "processVariables", pvds, pvds));
 		}
 
+	EventHandlerPanel eventHandlerPanel;
 
 	EventHandler[] eventHandlers;
+		@Hidden
 		public EventHandler[] getEventHandlers() {
 			return eventHandlers;
 		}

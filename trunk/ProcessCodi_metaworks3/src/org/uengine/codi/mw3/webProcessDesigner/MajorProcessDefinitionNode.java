@@ -144,6 +144,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	}
 	
 	public void injectionMetaworksContext(MetaworksContext context , ArrayList<TreeNode> childNodes){
+		this.setMetaworksContext(context);
 		if( childNodes != null ){
 			for(int i=0; i < childNodes.size();i++){
 				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
@@ -157,6 +158,24 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				} else {
 					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
 					node.setMetaworksContext(context);
+				}
+			}
+		}
+	}
+	public void removeNullChild(ArrayList<TreeNode> childNodes){
+		if( childNodes != null ){
+			for(int i=childNodes.size()-1; i >= 0 ;i--){
+				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						removeNullChild(node.getChild() );
+					}
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
+					if( node == null ){
+						childNodes.remove(i);
+					}
 				}
 			}
 		}

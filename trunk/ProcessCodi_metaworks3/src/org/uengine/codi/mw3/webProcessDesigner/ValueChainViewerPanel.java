@@ -78,6 +78,7 @@ public class ValueChainViewerPanel implements ContextAware{
 	public Object[] saveLink(){
 		ValueChain valueChain = this.getOpenerValueChain();
 		MajorProcessDefinitionNode node = (MajorProcessDefinitionNode) valueChainNavigatorPanel.getMajorProcessDefinitionTree().getNode();
+		node.removeNullChild(node.getChild());
 		valueChain.setMajorProcessDefinitionNode(node);
 		TextContext name = new TextContext();
 		name.setText(node.getName());

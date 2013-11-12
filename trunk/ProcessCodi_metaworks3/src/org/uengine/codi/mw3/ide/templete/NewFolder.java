@@ -58,6 +58,9 @@ public class NewFolder extends Templete {
 					// 중복 폴더 체크
 					for(int i=0; i < targetNode.getChild().size(); i++){
 						TreeNode childNode = (TreeNode) targetNode.getChild().get(i);
+						if( childNode == null ){
+							continue;
+						}
 						if( this.getName().equals(childNode.getName()) ){
 							throw new MetaworksException("same process remain!!");
 						}

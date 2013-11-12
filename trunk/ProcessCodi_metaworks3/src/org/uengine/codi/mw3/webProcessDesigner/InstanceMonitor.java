@@ -1,9 +1,5 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -13,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessInstance;
-import org.uengine.kernel.viewer.DefaultActivityViewer;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.util.UEngineUtil;
 
 public class InstanceMonitor {
 	static Properties statusColors = new Properties();
@@ -36,20 +29,6 @@ public class InstanceMonitor {
 		return statusColors.getProperty(status);
 	}
 	
-	CanvasDTO cell[];
-	public CanvasDTO[] getCell() {
-		return cell;
-	}
-	public void setCell(CanvasDTO[] cell) {
-		this.cell = cell;
-	}
-	String graphString;
-	public String getGraphString() {
-		return graphString;
-	}
-	public void setGraphString(String graphString) {
-		this.graphString = graphString;
-	}
 	String instanceId;
 	public String getInstanceId() {
 		return instanceId;
@@ -78,78 +57,46 @@ public class InstanceMonitor {
 	public void setTempTracingTag(String tempTracingTag) {
 		this.tempTracingTag = tempTracingTag;
 	}
+	
+	ProcessViewer processViewer;
+		public ProcessViewer getProcessViewer() {
+			return processViewer;
+		}
+		public void setProcessViewer(ProcessViewer processViewer) {
+			this.processViewer = processViewer;
+		}
 	public void load(String instanceId) throws Exception {
 		this.setInstanceId(instanceId);
 		ProcessInstance instance = processManager.getProcessInstance(instanceId);
 		ProcessDefinition procDef = instance.getProcessDefinition();
-		if( procDef.getExtendedAttributes() == null ) return;
-		/*
-		ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) procDef.getExtendedAttributes().get("cells");
-		DefaultActivityViewer dav = new DefaultActivityViewer();
-		if( cellsList != null){
-			CanvasDTO []cells = new CanvasDTO[cellsList.size()];
-			for(int i = 0; i < cellsList.size(); i++){
-				cells[i] = (CanvasDTO)cellsList.get(i);
-				if( cells[i] != null && cells[i].getJsonString() != null){
-					this.setGraphString(cells[i].getJsonString());
-				}
-				String tracingTag = cells[i].getTracingTag();
-				String status = null;
-				if( tracingTag != null && cells[i].getShapeType().equals("GEOM")){	// TODO GEOM 으로 체크하는 로직 삭제
-					//				Activity activity = procDef.getActivity(tracingTag);
-					//				instance.getStatus(activity.getTracingTag());
-					status = instance.getStatus(tracingTag);
-					cells[i].setInstStatus(status);
-					cells[i].setBackgroundColor( getStatusColor(status) );
-				}
-			}
-			// canvas setting
-			this.setCell(cells);
-		}
-		 */
 
+		processViewer = new ProcessViewer();
+		
+		ProcessDesignerContainer processDesignerContainer = new ProcessDesignerContainer();
+		processDesignerContainer.setViewType("definitionView");
+		processDesignerContainer.setEditorId(instanceId);
+		processDesignerContainer.init();
+		processDesignerContainer.load(procDef);
+		
+		ArrayList<Activity> activityList = processDesignerContainer.getActivityList();
+		for (int l = 0; l < activityList.size(); l++) {
+			Activity activity = activityList.get(l);
+			String status = instance.getStatus(activity.getTracingTag());
+			activity.getActivityView().setBackgroundColor(InstanceMonitor.getStatusColor(status));
+		}
+		
+		
+		processViewer.setProcessDesignerContainer(processDesignerContainer);
+		processViewer.setProcessDesignerInstanceId(procDef.getProcessDesignerInstanceId());
+		processViewer.setTitle(procDef.getName().getText());
+		
+		processViewer.setDesignerMaxX(processDesignerContainer.getMaxX());
+		processViewer.setDesignerMaxY(processDesignerContainer.getMaxY());
 	}
 
 	public void loadProcess(String path) throws Exception {
 		System.out.println("path = " + path);
 
-		/*
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		InputStream is = null;
-		try {
-			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-			UEngineUtil.copyStream(is, bao);
-
-			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
-			if( def.getExtendedAttributes() == null ) return;
-
-			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
-			DefaultActivityViewer dav = new DefaultActivityViewer();
-			if( cellsList != null){
-				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
-				for(int i = 0; i < cellsList.size(); i++){
-					cells[i] = (CanvasDTO)cellsList.get(i);
-					if( cells[i] != null && cells[i].getJsonString() != null){
-						this.setGraphString(cells[i].getJsonString());
-					}
-				}
-				// canvas setting
-				this.setCell(cells);
-			}
-
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			if(is != null){
-				try { is.close(); is = null; } catch (IOException e) {		e.printStackTrace();}
-			}
-			if(bao != null){
-				try { bao.close(); bao = null; } catch (IOException e) {		e.printStackTrace();}
-			}
-		}
-		*/
 	}
 
 	@ServiceMethod(callByContent=true, target="popup")
