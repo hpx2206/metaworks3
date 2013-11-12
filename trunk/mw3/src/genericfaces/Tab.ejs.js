@@ -11,6 +11,9 @@ var Tab = function(objectId, className){
 				mw3.getFaceHelper(objectId).resize(ui);
 		}
 	});
+	
+	var modalWindow = $('.ui-dialog');
+	
 	var zIndex = 1005;
 	
 	if(modalWindow.length > 0){

@@ -217,14 +217,16 @@ org_metaworks_component_Splitter.prototype = {
 				this.resplit(newPos);
 		},
 		resize : function(){
-			if(this.opts.origin == this.object.align){
-				this.objectDiv.css(this.opts.side1, this.A[0][this.opts.pxSplit]);
-			}else{
-				this.objectDiv.css(this.opts.side1, this.A[0][this.opts.pxSplit]);
+			if(this.opts){
+				if(this.opts.origin == this.object.align){
+					this.objectDiv.css(this.opts.side1, this.A[0][this.opts.pxSplit]);
+				}else{
+					this.objectDiv.css(this.opts.side1, this.A[0][this.opts.pxSplit]);
+				}
+				
+				this.max = this.A[0][this.opts.pxSplit]  + this.B[0][this.opts.pxSplit];
+				
+				this.splitterToggle.css(this.opts.side3, this.objectDiv[0][this.opts.pxFixed] / 2 - (this.splitterToggle[0][this.opts.pxFixed] / 2) + 'px');
 			}
-			
-			this.max = this.A[0][this.opts.pxSplit]  + this.B[0][this.opts.pxSplit];
-			
-			this.splitterToggle.css(this.opts.side3, this.objectDiv[0][this.opts.pxFixed] / 2 - (this.splitterToggle[0][this.opts.pxFixed] / 2) + 'px');
 		}
 };
