@@ -209,9 +209,11 @@ public class ProcessViewerPanel implements ContextAware {
 				MajorProcessDefinitionNode targetNode = (MajorProcessDefinitionNode)clipboard;
 				targetNode.setExpanded(true);
 				if(targetNode.getChild() != null){
-					// 중복 프로세스 체크
 					for(int i=0; i < targetNode.getChild().size(); i++){
 						TreeNode childNode = (TreeNode) targetNode.getChild().get(i);
+						if( childNode == null ){
+							continue;
+						}
 						if( defId.equals(childNode.getName()) ){
 							throw new MetaworksException("same process remain!!");
 						}

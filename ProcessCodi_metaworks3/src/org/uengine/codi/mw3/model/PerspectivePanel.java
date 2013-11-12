@@ -154,8 +154,8 @@ public class PerspectivePanel  implements ContextAware {
 				//역할
 				if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
 					organizationPerspectiveRole = new OrganizationPerspectiveRole();
-					organizationPerspectiveRole.session = session;
-					organizationPerspectiveRole.select();
+//					organizationPerspectiveRole.session = session;
+//					organizationPerspectiveRole.select();
 				}
 				
 				//프로세스별

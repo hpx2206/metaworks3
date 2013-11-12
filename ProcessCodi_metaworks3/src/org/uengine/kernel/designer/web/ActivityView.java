@@ -96,7 +96,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
-		Popup popup = new Popup();
+		ModalWindow popup = new ModalWindow();
 		
 		ActivityWindow activityWindow = new ActivityWindow();
 		Activity activity = (Activity)propertiesWindow.getPanel();
@@ -144,6 +144,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
 		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
+		popup.setTitle(activity.getDescription() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
 		popup.setPanel(activityWindow);
 		popup.setWidth(700);
 		popup.setHeight(500);

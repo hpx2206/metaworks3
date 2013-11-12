@@ -55,6 +55,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 	        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
 	        	
 	        	// object.activityClass : Activity , object.__className : ActivityView
+				if( object.backgroundColor ){
+					canvas.setShapeStyle(element, {"fill": object.backgroundColor , "fill-opacity": 0.5});
+				}
+				
 	        	$(element).attr("_classname", object.activityClass);
 	        	$(element).attr("_viewClass", object.__className);
 	        	$(element).attr("_classType", object.classType);
