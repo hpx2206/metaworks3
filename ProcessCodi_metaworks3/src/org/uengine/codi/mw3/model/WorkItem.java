@@ -1102,17 +1102,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			while(iterator.hasNext()){
 				String followerUserId = (String)iterator.next();
 				Notification noti = new Notification();
-				
-				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-				noti.setUserId(followerUserId);
-				noti.setActorId(session.getUser().getUserId());
-				noti.setConfirm(false);
-				noti.setInputDate(Calendar.getInstance().getTime());
-				noti.setTaskId(getTaskId());
-				noti.setInstId(getInstId());					
-				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-	
-				noti.add(copyOfInstance);
+				INotiSetting notiSetting = new NotiSetting();
+				INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+				findResult.next();
+				if(findResult.isWriteInstance()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(followerUserId);
+					noti.setActorId(session.getUser().getUserId());
+					noti.setConfirm(false);
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setTaskId(getTaskId());
+					noti.setInstId(getInstId());					
+					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+		
+					noti.add(copyOfInstance);
+				}
 			}
 			
 			// noti 발송
@@ -1160,8 +1164,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 					new Object[]{new WorkItemListener(copyOfThis)});	
 		}		
-		
-		
 		
 		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
 		scEvent.setTitle(instanceRef.getName());
