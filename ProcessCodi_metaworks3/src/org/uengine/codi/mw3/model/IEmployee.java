@@ -158,9 +158,6 @@ public interface IEmployee extends IDAO {
 	public boolean isGuest();
 	public void setGuest(boolean guest);
 	
-	public boolean isMailNoti();
-	public void setMailNoti(boolean mailNoti);
-	
 	@Hidden
 	public String getInviteUser();
 	public void setInviteUser(String inviteUser);
@@ -189,6 +186,9 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
 	public Object editEmployeeInfo() throws Exception;
 	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
+	public Object editNotiSetting() throws Exception;
+	
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW)
 	public Object[] subscribeStep1() throws Exception;
 	
@@ -212,6 +212,9 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object showDetail() throws Exception;
+	
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object[] showNotiSetting() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public Refresh addContact() throws Exception;
