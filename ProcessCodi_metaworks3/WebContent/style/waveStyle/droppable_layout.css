@@ -1564,7 +1564,7 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
-    overflow: hidden; /* when page gets too small for container min-width/height */
+    /*overflow: hidden;*/ /* when page gets too small for container min-width/height */
 }
 
 .mw3_layout {
@@ -2595,3 +2595,26 @@ select.select[class] {
 .bx_bg span.bot_shdw{left:14px;bottom:0;width:100%; margin-left:-10px;height:2px;background:url(../../images/waveStyle/txBox_shadow.gif) repeat-x}
 .bx_bg span.tip_arrow{left:-9px;top:28px;width:9px;height:15px;background-position:-200px 0}
 .bx_bg span.ico_timeDot{left:-29px;top:30px;width:12px;height:12px;background:url(../../images/waveStyle/sp_me_high.png) no-repeat -320px -270px}
+
+
+
+/* index page */
+.clear { clear:both }
+.width1200 { max-width:1200px; margin:0 auto; }
+#wrap { width:100%; height:100%;padding:0px; margin:0px; font-family:'맑은 고딕', 'Malgun gothic', Arial; font-size:12px; }
+.logoline { position:absolute; z-index:3; width:100%; padding-top:3px; }
+.index_top { width:100%; background:url('../../images/waveStyle/index_main_bg.gif') #333; position:relative; text-align:center; /*background:url(testMain.png) center no-repeat*/ }
+.index_top .index_topmenu { position:absolute; z-index:2; top:0px; width:100%; height:50px; background:#000; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; filter: alpha(opacity=50); opacity: .5; }
+.index_logo { float:left; margin-left:15px; }
+.index_menu { float:right; margin-right:15px; margin-top:10px; }
+.index_menu ul { margin:0px; padding:0px; }
+.index_menu ul li { float:left; color:#FFF; list-style:none; margin-left:20px; font-weight:bold }
+.index_signup { background:#1f1f1f; height:60px; }
+.index_signup .index_signup_inner { width:500px; margin:0 auto; padding-top:7px; }
+.index_signup .index_signup_inner input { height:26px; line-height:26px; border-radius:27px; width:400px; border:none; padding-left:20px; color:#666 }
+.index_signup .index_signup_inner .ebutton { margin-top:5px; position:relative; top:10px; }
+.index_content { }
+.index_content .line1 { background:#f3f3f3; padding:40px 20px; border-bottom:1px solid #d9d9d9 }
+.index_content .line2 { background:#f7f7f7; padding:40px 20px;  border-bottom:1px solid #d9d9d9 }
+.row .col3 { float:left; width:40%; text-align:center }
+.row .col7 { float:left; width:60%; line-height:25px; }
