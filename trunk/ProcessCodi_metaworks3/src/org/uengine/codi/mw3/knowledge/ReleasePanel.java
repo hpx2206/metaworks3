@@ -76,7 +76,7 @@ public class ReleasePanel {
 		}
 		
 	String comment;
-		@Face(displayName = "$Comment", options={"rows", "cols"}, values = {"5", "130"})
+		@Face(displayName = "$Comment", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"5", "130"})
 		public String getComment() {
 			return comment;
 		}
