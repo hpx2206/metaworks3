@@ -424,6 +424,19 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	@Override
+	public Object editNotiSetting() throws Exception {
+		INotiSetting notiSetting = new NotiSetting();
+		//notiSetting.findByUserId(this.getEmpCode());
+		
+		notiSetting.getMetaworksContext().setWhen(WHEN_EDIT);
+		notiSetting.setAddFriend(true);
+		notiSetting.setBeforehandNoti(true);
+		notiSetting.setId(11);
+		
+		return notiSetting;
+	}
+	
+	@Override
 	public Object saveEmp() throws Exception {
 		
 		
@@ -796,6 +809,11 @@ System.out.println("authKey= "+ getAuthKey());
 	@Override
 	public Object[] showDetail() throws Exception {
 		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
+	}
+	
+	@Override
+	public Object[] showNotiSetting() throws Exception {
+		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editNotiSetting(), 400, 550, "$NotiSetting")};
 	}
 	
 	@Override
