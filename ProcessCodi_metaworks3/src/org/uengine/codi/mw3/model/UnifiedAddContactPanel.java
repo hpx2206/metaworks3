@@ -5,7 +5,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/Tab.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 public class UnifiedAddContactPanel {
 	
 	public UnifiedAddContactPanel(Session session) throws Exception {
@@ -27,7 +27,7 @@ public class UnifiedAddContactPanel {
 		}
 
 	AddContactPanel facebookContact;
-		@Hidden
+	@Face(displayName="페이스북")
 		public AddContactPanel getFacebookContact() {
 			return facebookContact;
 		}

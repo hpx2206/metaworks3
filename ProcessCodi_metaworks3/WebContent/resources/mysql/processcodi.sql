@@ -938,6 +938,8 @@ alter table filepathinfo add column moddate DATETIME;
 
 alter table filepathinfo add column distributor varchar(20);
 
+
+--2013.11.06 문서관리 , content(genericWorkItem)
 alter table bpm_procinst add column isdocument int(11) default 0;
 
 alter table bpm_worklist change content content mediumtext;

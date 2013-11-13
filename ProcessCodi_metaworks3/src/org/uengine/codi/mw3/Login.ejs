@@ -14,9 +14,10 @@
 	<div class="fbloginBox" style="border-top:1px solid #e9e9e9; padding-top:40px;">
 		
 		<span style="float:left; margin-left:170px; margin-right:10px;" onClick="mw3.getFaceHelper(<%=objectId%>).loginFacebook()"><img src="images/signIn/fb_btn.png" /></span>
-		
+			<!--
 		<span  style="float:left; margin-left:10px; margin-right:10px;"><img src="images/signIn/tw_btn.png" /></span>
 		<span style="float:left; margin-left:10px; margin-right:10px;"><img src="images/signIn/in_btn.png" /></span>
+			-->
 	<div>
 	
 	
@@ -42,7 +43,7 @@
 			
 			
             <span id="method_<%=objectId%>_login"><div id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="<%=methods.login.caller() %>"></div></span>
-
+		    <span id="method_facebook_<%=objectId%>" style="display:none"><div id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"></div></span>
 <%
 		if(value.useSubscribe){
 %>		
@@ -55,9 +56,10 @@
 
 
 
-            <span id="method_facebook_<%=objectId%>" style="display:none"><div id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"></div></span>
+			<!--
             <span id="method_twitter_<%=objectId%>" style=""><input id="twitter" class="submitTwitter"  value="" title="click is twitter subscribe" alt="click is twitter subscribe" onclick=""/></span>
             <span id="method_linkedin_<%=objectId%>" style=""><input id="linkedin" class="submitLinkedin"  value="" title="click is linkedin subscribe" alt="click is linkedin subscribe" onclick=""/></span>
+            -->
             <div>
                 <div class="options" id="divCookie"">
 	            	<!-- 

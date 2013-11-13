@@ -110,10 +110,10 @@ public class User extends Database<IUser> implements IUser {
 		String type = "addPicker";
 		ContactPanel contactPanel = new ContactPanel(session.getUser());
 		contactPanel.getContactListPanel().setId(type);
-		if(contactPanel.getContactListPanel().getLocalContactList() != null)
-			contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
-		if(contactPanel.getContactListPanel().getSocialContactList() != null)
-			contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen(type);
+		if(contactPanel.getContactListPanel().getContactList() != null)
+			contactPanel.getContactListPanel().getContactList().getMetaworksContext().setWhen(type);		
+		if(contactPanel.getContactListPanel().getContactList() != null)
+			contactPanel.getContactListPanel().getContactList().getMetaworksContext().setWhen(type);
 		contactPanel.getUser().getMetaworksContext().setWhen(type);
 		
 		/*AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addAskFollower" );
@@ -472,26 +472,6 @@ public class User extends Database<IUser> implements IUser {
 				throw new Exception("삭제 실패");
 			}
 			
-		}else if("documentFollowers".equals(this.getMetaworksContext().getWhen())){
-			TopicMapping tm = new TopicMapping();
-			tm.setTopicId(session.getLastSelectedItem());
-			tm.setUserId(this.getUserId());
-			
-			ITopicMapping rs = tm.findByUser();
-			if(rs.next()){
-				tm.setTopicMappingId(rs.getTopicMappingId());
-				tm.remove();
-				
-				DocumentFollowers documentFollowers = new DocumentFollowers();
-				documentFollowers.session = session;
-				documentFollowers.load();
-				
-				return new Object[]{new Refresh(documentFollowers)};
-
-			}else{
-				throw new Exception("삭제 실패");
-			}
-			
 		}else{
 			String instId = instanceFollowers.getInstanceId();
 			
@@ -542,22 +522,34 @@ public class User extends Database<IUser> implements IUser {
 		
 		Contact contact = new Contact();
 		contact.setFriend(this);
-		contact.setFriendId(this.getUserId());
+		if(this.getNetwork() != null && this.getNetwork().equals("fb"))
+			contact.setFriendId(this.getName());
+		else
+			contact.setFriendId(this.getUserId());
+		
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
+		
+		
+		
 		
 		ContactList contactList = new ContactList();
 		contactList.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
 		
-		if(this.getNetwork() != null && this.getNetwork().equals("fb"))
+		if(this.getNetwork() != null && this.getNetwork().equals("fb")){
 			contactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
-		else
+//			Invitation invitation = new Invitation();
+//			invitation.session = session;
+//			invitation.setEmail(this.getFriendEmail());
+//			invitation.invite();
+		}else{
 			contactList.getMetaworksContext().setWhere(ContactList.LOCAL);
-		
+		}
 		contactList.load(session.getUser().getUserId());		
 		
 		return new Refresh(contactList);
 	}	
+	
 	
 	public Object[] removeContact() throws Exception {
 		Contact contact = new Contact();

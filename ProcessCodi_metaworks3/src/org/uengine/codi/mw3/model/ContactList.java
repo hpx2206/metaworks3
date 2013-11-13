@@ -32,27 +32,33 @@ public class ContactList implements ContextAware {
 		IUser friend = new User();
 		friend.setName(friendName);
 		friend.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-		
-		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
-			friend.setNetwork(LOCAL);			
-			contact.setFriend(friend);
-			if(FOLLOWER.equals(this.getMetaworksContext().getHow())){
-				this.setSelectedMore(true);
-			}
-			
-			setContacts(contact.loadContacts(this.isSelectedMore()));
-			
-			if(getContacts().size()==0){
-				invitation = new Invitation();
-				//invitation.session = session;
-			}
-			
-		}else if(FACEBOOK.equals(this.getMetaworksContext().getWhere())){
-			friend.setNetwork(FACEBOOK);
-			contact.setFriend(friend);
-			
-			setContacts(contact.loadContacts(this.isSelectedMore()));
+		contact.setFriend(friend);
+		setContacts(contact.loadContacts(this.isSelectedMore()));
+		if(getContacts().size()==0){
+			invitation = new Invitation();
+			//invitation.session = session;
 		}
+		
+//		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
+//			friend.setNetwork(LOCAL);			
+//			contact.setFriend(friend);
+//			if(FOLLOWER.equals(this.getMetaworksContext().getHow())){
+//				this.setSelectedMore(true);
+//			}
+//			
+//			setContacts(contact.loadContacts(this.isSelectedMore()));
+//			
+//			if(getContacts().size()==0){
+//				invitation = new Invitation();
+//				//invitation.session = session;
+//			}
+//			
+//		}else if(FACEBOOK.equals(this.getMetaworksContext().getWhere())){
+//			friend.setNetwork(FACEBOOK);
+//			contact.setFriend(friend);
+//			
+//			setContacts(contact.loadContacts(this.isSelectedMore()));
+//		}
 	}
 	
 	@ServiceMethod

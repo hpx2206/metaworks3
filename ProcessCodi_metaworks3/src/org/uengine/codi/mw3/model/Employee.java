@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -24,6 +23,7 @@ import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Forward;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.tadpole.Tadpole;
@@ -251,21 +251,23 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public IEmployee load() throws Exception {
-		String errorMessage;
+		String errorMessage = null;
 		if (getEmail() != null) {
 			IEmployee emp = (IEmployee) findByEmail();
 			
-			if(emp.getIsDeleted() != null && emp.getIsDeleted().equals("1")) {
-				errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
-			} else if(getPassword().equals(emp.getPassword())) {
-				//emp = findMe();				
-				// emp = databaseMe();
-
-				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-				return emp;				
-			}	else {
-				errorMessage = "<font color=blue>Wrong User or Password! forgot?</font>";
-			}
+				if(emp.getIsDeleted() != null && emp.getIsDeleted().equals("1")) {
+					errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
+					
+					}
+				if(getPassword().equals(emp.getPassword())) {
+						//emp = findMe();				
+						// emp = databaseMe();
+		
+						getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+						return emp;				
+				}else {
+						errorMessage = "<font color=blue>Wrong User or Password! forgot?</font>";
+					}
 		} else {
 			errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
 		}
@@ -280,10 +282,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
 		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
-		sb.append("where emptable.empcode=?empcode ");
+		sb.append("where emptable.email=?email ");
 		
+
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
-		findEmployee.set("empcode", this.getEmpCode());
+		findEmployee.set("email", this.getEmail());
 		findEmployee.select();
 		if (findEmployee.next()) {
 			employee.copyFrom(findEmployee);
@@ -526,7 +529,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.setApproved(true);
 			
 			if(this.getGlobalCom()==null){
-				this.setGlobalCom("uEngine");
+				this.setGlobalCom("uengine.org");
 			}else{
 				
 				Company company = new Company();

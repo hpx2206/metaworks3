@@ -453,10 +453,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
 			.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
 			.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
-			.append("   AND inst.isdeleted!=?instIsdelete ");
+			.append("   AND inst.isdeleted!=?instIsdelete ")
+			.append("and inst.isDocument =?isDocument ");
 			
 			criteria.put("instIsdelete", "1");			
-		
+			criteria.put("isDocument", "0");
 		}else if("all"
 				.equals(navigation.getPerspectiveType())) {
 			
@@ -506,6 +507,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instInitep", navigation.getEmployee().getEmpCode());
 			instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+			instanceSql.append("and inst.isDocument =?isDocument ");
+			criteria.put("isDocument", "0");
 
 		}else if("stopped"
 					.equals(navigation.getPerspectiveType())) {
@@ -514,7 +517,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instStatus", "Stopped");
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
-
+			instanceSql.append("and inst.isDocument =?isDocument ");
+			criteria.put("isDocument", "0");
+			
 			// secureopt
 			instanceSql
 			.append(" and	exists ( ")
