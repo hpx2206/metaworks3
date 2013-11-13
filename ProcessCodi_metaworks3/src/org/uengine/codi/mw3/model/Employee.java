@@ -726,7 +726,8 @@ System.out.println("authKey= "+ getAuthKey());
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
 			
-			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
+//			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
+			return new Object[] {new Remover(new ModalWindow(), true), new Refresh(new MainPanel(new Main(session)))};
 		}
 		
 		if(this.getIsAdmin() == false && !this.isApproved()){
