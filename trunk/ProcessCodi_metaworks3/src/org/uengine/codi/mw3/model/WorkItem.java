@@ -911,13 +911,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
 								
 			IUser writer = new User();
-			writer.setUserId(session.getUser().getUserId());
-			writer.setName(session.getUser().getName());
+			if( this.getWriter() == null || (this.getWriter() != null && this.getWriter().getUserId() == null)){
+				writer.setUserId(session.getUser().getUserId());
+				writer.setName(session.getUser().getName());
+				this.setWriter(writer);
+			}
 			
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 			
-			this.setWriter(writer);
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
@@ -1251,11 +1253,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		setStartDate(null);
 		setEndDate(null);		
 		*/
-		if("generic".equals(this.getType()) || "minimised".equals(this.getMetaworksContext().getHow())){
-			throw new MetaworksException("$CanNotDocumentEdit");
-		}else{
-			getMetaworksContext().setWhen("edit");		
-		}
+//		if("generic".equals(this.getType()) || "minimised".equals(this.getMetaworksContext().getHow())){
+//			throw new MetaworksException("$CanNotDocumentEdit");
+//		}else{
+		getMetaworksContext().setWhen("edit");		
+//		}
 	}
 
 	protected void afterInstantiation(IInstance instanceRef) throws Exception {

@@ -69,7 +69,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
         	        ];
         }else{
         	return [
-        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN)
+        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT)
         	        ];
         }
     };

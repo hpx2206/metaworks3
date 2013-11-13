@@ -17,8 +17,11 @@ import java.nio.channels.FileChannel;
 import javax.imageio.ImageIO;
 
 import org.directwebremoting.io.FileTransfer;
+import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
@@ -83,65 +86,93 @@ public class FileWorkItem extends WorkItem{
 				|| this.getFile().getFileTransfer().getFilename() == null)
 			throw new MetaworksException("파일을 첨부해주세요.");
 		//		
-		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 
 //		// 추가모드 일때
-		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))	
+		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))	{
+			this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 				if(this.getGrpTaskId() == null)
 					this.setGrpTaskId(this.getTaskId());
-//
-//			// default 버전
-//			this.setMajorVer(1);
-//			this.setMinorVer(0);
-//			// 수정모드 일때
-//		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){		
+		
+			if(this.getWorkItemVersionChooser() != null)
+				this.getWorkItemVersionChooser().setTaskId(this.getTaskId());
+	
+			// 제목이 없으면 파일명을 제목으로
+			if(!UEngineUtil.isNotEmpty(getTitle())){
+				setTitle(getFile().getFileTransfer().getFilename());
+			}
+	
+			this.setFileTransfer(this.getFile().getFileTransfer());
+			// 파일 업로드
+			getFile().upload();
+	
+			this.setContent(this.getFile().getUploadedPath());
+			this.setTool(this.getFile().getMimeType());
+			this.setExtFile(this.getFile().getFilename());
+	
+			String mimeType = getFile().getMimeType();
+			if(mimeType != null && mimeType.indexOf("image") != 0){
+				Preview preview = new Preview();
+				preview.setTaskId(getTaskId());
+				preview.setMimeType(mimeType);
+				this.setPreview(preview);
+			}else{
+				this.setPreview(null);
+			}
+	
+			// WorkItem 추가
+			returnObject = super.add();
+	
+			this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
+
+		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+			
+			int nextVersion = this.getMajorVer()+1;
+			
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			this.setMajorVer(nextVersion);
+			this.databaseMe().setTitle(getFile().getFileTransfer().getFilename());
+			String originInstId = instanceViewContent.getInstanceView().getInstanceId();
+			
+			FileWorkItem fileWorkItem = new FileWorkItem();
+			fileWorkItem.setInstId(new Long(originInstId));
+			fileWorkItem.session = session;
+			fileWorkItem.processManager = this.processManager;
+			fileWorkItem.instanceViewContent = this.instanceViewContent;
+			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			fileWorkItem.setWriter(session.getUser());
+			fileWorkItem.setFile(this.getFile());
+			fileWorkItem.setGrpTaskId(this.getGrpTaskId());
+			fileWorkItem.setMajorVer(nextVersion);
+			fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+			fileWorkItem.add();
+			
+			String thisVersion = String.valueOf(nextVersion+ "." + 0);
+			WorkItemVersionChooser workItemVersionChooser = this.getWorkItemVersionChooser();
+			workItemVersionChooser.getVersionSelector().add(thisVersion , thisVersion);
+			workItemVersionChooser.setSelectedVersion(thisVersion);
+			
+			SystemWorkItem SystemWorkItem = new SystemWorkItem();
+			SystemWorkItem.session = session;
+			SystemWorkItem.processManager = this.processManager;
+			SystemWorkItem.instanceViewContent = this.instanceViewContent;
+			SystemWorkItem.setInstId(new Long(originInstId));
+			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. ");
+			SystemWorkItem.add();
+			
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			instanceViewThreadPanel.setInstanceId(originInstId);
+			
+			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser) , new ToAppend(instanceViewThreadPanel, SystemWorkItem)};
+			
+//			Object[] temReturnObject = fileWorkItem.add();
+//			returnObject = new Object[temReturnObject.length + 1];
+//			System.arraycopy(temReturnObject, 0, returnObject, 0, temReturnObject.length);
 //			
-//				// 기존 버전 delete 처리하여 안보이게
-//				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?grpTaskId");
-//				worklist.set("grpTaskId", getGrpTaskId());
-//				worklist.update();
-//	
-//				// 새로운 버전 업 처리
-//				if("Major".equals(getVersionUpOption())){
-//					setMajorVer(getMajorVer()+1);
-//					setMinorVer(0);
-//				}else{
-//					setMinorVer(getMinorVer()+1);
-//				}
-//			//this.setWorkItemVersionChooser(null);
-//		}
-		if(this.getWorkItemVersionChooser() != null)
-			this.getWorkItemVersionChooser().setTaskId(this.getTaskId());
-
-		// 제목이 없으면 파일명을 제목으로
-		if(!UEngineUtil.isNotEmpty(getTitle())){
-			setTitle(getFile().getFileTransfer().getFilename());
+//			returnObject[temReturnObject.length] = new Remover(this);
 		}
-
-		this.setFileTransfer(this.getFile().getFileTransfer());
-		// 파일 업로드
-		getFile().upload();
-
-		this.setContent(this.getFile().getUploadedPath());
-		this.setTool(this.getFile().getMimeType());
-		this.setExtFile(this.getFile().getFilename());
-
-		String mimeType = getFile().getMimeType();
-		if(mimeType != null && mimeType.indexOf("image") != 0){
-			Preview preview = new Preview();
-			preview.setTaskId(getTaskId());
-			preview.setMimeType(mimeType);
-			this.setPreview(preview);
-		}else{
-			this.setPreview(null);
-		}
-
-		// WorkItem 추가
-		returnObject = super.add();
-
-		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
-
+		
 		return returnObject;
+		
 	}
 
 	@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, except="file")
