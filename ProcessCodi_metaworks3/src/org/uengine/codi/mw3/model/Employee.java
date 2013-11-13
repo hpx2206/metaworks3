@@ -282,11 +282,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
 		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
-		sb.append("where emptable.email=?email ");
+		sb.append("where emptable.empcode=?empcode ");
 		
-
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
-		findEmployee.set("email", this.getEmail());
+		findEmployee.set("empcode", this.getEmpCode());
 		findEmployee.select();
 		if (findEmployee.next()) {
 			employee.copyFrom(findEmployee);

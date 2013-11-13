@@ -102,6 +102,7 @@ public class DocWorkItem extends WorkItem {
 			fileWorkItem.processManager = this.processManager;
 			fileWorkItem.instanceViewContent = this.instanceViewContent;
 			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			fileWorkItem.getMetaworksContext().setHow("document");
 			fileWorkItem.setWriter(session.getUser());
 			fileWorkItem.setFile(this.getFile());
 			fileWorkItem.setGrpTaskId(item.getGrpTaskId());

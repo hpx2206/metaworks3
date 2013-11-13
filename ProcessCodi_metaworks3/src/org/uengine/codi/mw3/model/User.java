@@ -23,6 +23,7 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.webservices.emailserver.EMailServerSoapBindingImpl;
 
 public class User extends Database<IUser> implements IUser {
 	
@@ -538,10 +539,20 @@ public class User extends Database<IUser> implements IUser {
 		
 		if(this.getNetwork() != null && this.getNetwork().equals("fb")){
 			contactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
-//			Invitation invitation = new Invitation();
-//			invitation.session = session;
-//			invitation.setEmail(this.getFriendEmail());
-//			invitation.invite();
+			
+			Employee employee = new Employee();
+			employee.setEmpCode(this.getUserId());
+			employee.setEmpName(this.getName());
+			employee.setPassword("");
+			employee.setIsAdmin(false);
+			employee.setEmail(this.getUserId()+"@uengine.org");
+			employee.setGlobalCom("uengine.org");
+			employee.setLocale("ko");
+			employee.setPreferUX("wave");
+			employee.setPreferMob("auto");
+			employee.setApproved(true);
+			employee.createDatabaseMe();
+			
 		}else{
 			contactList.getMetaworksContext().setWhere(ContactList.LOCAL);
 		}

@@ -219,7 +219,7 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object[] showNotiSetting() throws Exception;
 	
-	@ServiceMethod(callByContent=true, target="popup")
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Refresh addContact() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target="popup")
