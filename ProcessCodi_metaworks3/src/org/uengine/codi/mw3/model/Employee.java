@@ -4,11 +4,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -17,6 +21,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
@@ -284,6 +289,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
 		sb.append("where emptable.empcode=?empcode ");
 		
+
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
 		findEmployee.set("empcode", this.getEmpCode());
 		findEmployee.select();
@@ -383,6 +389,22 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return employee;
 	}
 	
+	@Override
+	public IEmployee findByGlobalCom(String GlobalCom) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT * ");
+		sb.append("FROM emptable ");
+		sb.append("WHERE globalCom=?GlobalCom");
+		
+		IEmployee employee = sql(sb.toString());
+		employee.set("GlobalCom", GlobalCom);
+		employee.select();
+		employee.setMetaworksContext(this.getMetaworksContext());
+		
+		return employee;
+	}
+	
 	
 	@AutowiredFromClient
 	public Session session;
@@ -425,14 +447,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public Object editNotiSetting() throws Exception {
 		INotiSetting notiSetting = new NotiSetting();
-		//notiSetting.findByUserId(this.getEmpCode());
+		SelectBox selectBox = new SelectBox();
+		INotiSetting result = notiSetting.findByUserId(this.getEmpCode());
+		result.next();
 		
-		notiSetting.getMetaworksContext().setWhen(WHEN_EDIT);
-		notiSetting.setAddFriend(true);
-		notiSetting.setBeforehandNoti(true);
-		notiSetting.setId(11);
+		result.getMetaworksContext().setWhen(WHEN_EDIT);
 		
-		return notiSetting;
+		result.setImageFile(new PortraitImageFile());
+		result.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
+		
+		selectBox.add("OnDate", "1");
+		selectBox.add("DayBefore", "2");
+		result.setSelectTime(selectBox);
+		
+		return result;
 	}
 	
 	@Override
@@ -525,11 +553,96 @@ public class Employee extends Database<IEmployee> implements IEmployee {
         ICompany findCompany = company.findByCode();
         String tenantId = findCompany.getAlias();
         
+       	this.notiToCompany();
        	
+       	NotiSetting notiSetting = new NotiSetting();
+       	notiSetting.setUserId(this.getEmpCode());
+       	notiSetting.setId(this.createNewNotiSettingId());
+       	notiSetting.createDatabaseMe();
        	
 		String url = protocol + "://" + (tenantId==null?"":tenantId+".")  + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
 
 		return new Forward(url);
+	}
+	
+	public void notiToCompany() throws Exception{
+		Notification noti = new Notification();
+		INotiSetting notiSetting = new NotiSetting();
+		Instance instance = new Instance();
+		noti.session = session;
+		instance = this.createWorkItem();
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.copyFrom(employee.databaseMe());
+		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
+		Employee codi = new Employee();
+		codi.setEmpCode("0");
+		
+		while(findResult.next()){
+			notiSetting.findByUserId(findResult.getEmpCode());
+			noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+			noti.setUserId(findResult.getEmpCode());
+			noti.setActorId(codi.getEmpName());
+			noti.setConfirm(false);
+			noti.setInstId(instance.getInstId());
+			noti.setInputDate(Calendar.getInstance().getTime());
+			noti.setActAbstract(session.getUser().getName() + " joined");
+
+			//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+	//			noti.createDatabaseMe();
+	//			noti.flushDatabaseMe();
+			
+			noti.add(instance);
+		
+			String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+			
+			try{
+				//NEW WAY IS GOOD
+				Browser.withSession(followerSessionId, new Runnable(){
+	
+					@Override
+					public void run() {
+						//refresh notification badge
+						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+					}
+					
+				});
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		
+		}		
+	}
+	
+	public Instance createWorkItem() throws Exception{
+		Employee representiveMailEmp = new Employee();
+		representiveMailEmp.setEmpCode("0");
+		
+		
+		IEmployee repMailEmp = representiveMailEmp.findMe();
+		
+		
+		CommentWorkItem comment = new CommentWorkItem();
+		comment.processManager = processManager;
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		User theFirstWriter;
+		theFirstWriter = new User();
+		theFirstWriter.setName(repMailEmp.getEmpName());
+		
+		comment.setWriter(theFirstWriter);
+		comment.setTitle(this.getEmpName() + "님이 가입 하셨습니다.");
+		comment.setStartDate(new Date());
+		
+		comment.session = session;
+		comment.add();
+		
+		Instance instance = new Instance();
+		instance.setInstId(comment.getInstId());
+		instance.copyFrom(instance.databaseMe());
+		
+		return instance;
 	}
 	
 	@Override
@@ -1062,6 +1175,20 @@ System.out.println("authKey= "+ getAuthKey());
 		Number number = kg.getKeyNumber();
 		
 		return number.toString();
+	}
+	
+	public int createNewNotiSettingId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("notisetting", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		return number.intValue();
 	}
 
 }
