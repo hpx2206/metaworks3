@@ -1,10 +1,10 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class ProcessTopPanel {
@@ -135,4 +135,21 @@ public class ProcessTopPanel {
 		return null;
 		
 	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object feedBackInfo() throws Exception{
+		ModalWindow modalWindow = new ModalWindow();
+		
+		ContactUs contactUs = new ContactUs();
+		contactUs.session = session;
+		modalWindow.setPanel(contactUs);
+		modalWindow.setTitle("Contact Us");
+		modalWindow.setWidth(600);
+		modalWindow.setHeight(600);
+		modalWindow.setMetaworksContext(new MetaworksContext());
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		return modalWindow;
+	}
+	
 }

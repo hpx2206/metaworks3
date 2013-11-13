@@ -189,10 +189,10 @@
 %>
 						<%if(value.type=='file'){%>
 						<td>
-							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' , htmlAttr:{style: 'float: left'}})%>
-						<%if(value.workItemVersionChooser!=null){%>
+						<%if(value.workItemVersionChooser!=null  && mw3.how == "minimised"){%>
 							<%=fields.workItemVersionChooser.here({htmlAttr:{style: 'float: right'}})%>
 						<%}%>
+							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' , htmlAttr:{style: 'float: left'}})%>
 						<div class="clear"></div>
 						
 						<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
