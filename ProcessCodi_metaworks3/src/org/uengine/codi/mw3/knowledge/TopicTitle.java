@@ -1,9 +1,13 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.net.URL;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -17,7 +21,19 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.model.CommentWorkItem;
+import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.model.IEmployee;
+import org.uengine.codi.mw3.model.INotiSetting;
+import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.NotiSetting;
+import org.uengine.codi.mw3.model.Notification;
+import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.User;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
 	  ejsPathMappingByContext=	{
@@ -82,6 +98,7 @@ public class TopicTitle  implements ContextAware{
 		public void setEmbeddedHtml(String embeddedHtml) {
 			this.embeddedHtml = embeddedHtml;
 		}
+		
 	
 	public void makeHtml() {
 		try{
@@ -163,7 +180,90 @@ public class TopicTitle  implements ContextAware{
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");	
 		
+		this.notiToCompany();
+		
 		return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Refresh(this)};
+	}
+	
+	
+	public void notiToCompany() throws Exception{
+		Notification noti = new Notification();
+		INotiSetting notiSetting = new NotiSetting();
+		Instance instance = new Instance();
+		noti.session = session;
+		instance = this.createWorkItem();
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.copyFrom(employee.databaseMe());
+		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
+		Employee codi = new Employee();
+		codi.setEmpCode("0");
+		
+		while(findResult.next()){
+			notiSetting.findByUserId(findResult.getEmpCode());
+			noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+			noti.setUserId(findResult.getEmpCode());
+			noti.setActorId(codi.getEmpName());
+			noti.setConfirm(false);
+			noti.setInstId(instance.getInstId());
+			noti.setInputDate(Calendar.getInstance().getTime());
+			noti.setActAbstract(session.getUser().getName() + " create topic");
+
+			//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+	//			noti.createDatabaseMe();
+	//			noti.flushDatabaseMe();
+			
+			noti.add(instance);
+		
+			String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+			
+			try{
+				//NEW WAY IS GOOD
+				Browser.withSession(followerSessionId, new Runnable(){
+	
+					@Override
+					public void run() {
+						//refresh notification badge
+						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+					}
+					
+				});
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		
+		}		
+	}
+	
+	public Instance createWorkItem() throws Exception{
+		Employee representiveMailEmp = new Employee();
+		representiveMailEmp.setEmpCode("0");
+		
+		
+		IEmployee repMailEmp = representiveMailEmp.findMe();
+		
+		
+		CommentWorkItem comment = new CommentWorkItem();
+		comment.processManager = processManager;
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		User theFirstWriter;
+		theFirstWriter = new User();
+		theFirstWriter.setName(repMailEmp.getEmpName());
+		
+		comment.setWriter(theFirstWriter);
+		comment.setTitle("주제 : " + this.getTopicTitle() + "이 생성되었습니다.");
+		comment.setStartDate(new Date());
+		
+		comment.session = session;
+		comment.add();
+		
+		Instance instance = new Instance();
+		instance.setInstId(comment.getInstId());
+		instance.copyFrom(instance.databaseMe());
+		
+		return instance;
 	}
 	
 	@Face(displayName="$Save")
@@ -189,4 +289,6 @@ public class TopicTitle  implements ContextAware{
 	@AutowiredFromClient
 	transient public Session session;
 	
+	@Autowired
+	public ProcessManagerRemote processManager;
 }
