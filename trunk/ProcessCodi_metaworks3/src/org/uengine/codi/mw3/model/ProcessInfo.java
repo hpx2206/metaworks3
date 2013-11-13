@@ -1,55 +1,45 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.knowledge.WfNode;
 
-public class RoleInfo extends PerspectiveInfo{
+public class ProcessInfo extends PerspectiveInfo{
 
-	public RoleInfo(){
+	String defId;
+		public String getDefId() {
+			return defId;
+		}
+		public void setDefId(String defId) {
+			this.defId = defId;
+		}
+		
+	public ProcessInfo(){
 		
 	}
-	public RoleInfo(Session session){
+	public ProcessInfo(Session session){
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
-	
 	@Override
-	public void add() {
+	public Object[] delete() throws Exception {
 		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Object[] delete() {
-		// TODO Auto-generated method stub
-		return null;
+		return super.delete();
 	}
 
 	@Override
 	public ModalWindow modify() throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return super.modify();
 	}
 
 	@Override
 	public void load() throws Exception {
-		this.followersLoad();
-		
-	}
+		System.out.println("TODO : DEFID-----ProcessInfo Load...");
 
-	@Override
-	public void followersLoad() throws Exception {
-		/*
-		 * TODO role follow 
-		 * 
-		 * followers = new RoleFollowers();
-		 * followers.session = session;
-		 * followers.load();
-		  
-		 */
-		
 	}
-
+	
 }

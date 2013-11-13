@@ -1,15 +1,22 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.uengine.codi.mw3.knowledge.BrainstormPanel;
 
 public class Role extends Database<IRole> implements IRole {
+	
+	public final static String ROLE = "role";
+	
 	@AutowiredFromClient
 	public Session session;
+	
 	
 	String roleCode;
 		@Override
@@ -258,6 +265,16 @@ public class Role extends Database<IRole> implements IRole {
 		}
 		session.setClipboard(null);
 		return null;
+	}
+	
+	@Override
+	public Object[] loadRole() throws Exception{
+		
+		String title = "주제 : " + this.getRoleCode();
+		Object[] returnObject = Perspective.loadInstanceListPanel(session, ROLE, this.getRoleCode(), title);
+		
+		return returnObject;
+		
 	}
 	
 }

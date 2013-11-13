@@ -394,8 +394,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		Perspective perspective = new Perspective();
 		
-		return perspective.loadInstanceListPanel(session, PROCESS, this.getDefId());
+		return perspective.loadInstanceListPanel(session, PROCESS, this.getDefId(), "프로세스 : " + this.getDefId());
 	}
-		
 }
+
 

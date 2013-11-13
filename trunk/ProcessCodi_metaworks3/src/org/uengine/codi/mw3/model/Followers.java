@@ -19,6 +19,7 @@ public class Followers implements ContextAware {
 	
 	static final String ADD_INSTANCEFOLLOWERS = "addInstanceFollower";
 	static final String ADD_TOPICFOLLOWERS = "addTopicFollower";
+	static final String ADD_DEPTFOLLOWERS = "addDeptFollower";
 	static final String ADD_DOCUMENTFOLLOWERS = "addDocumentFollower";
 	static final String ADD_ETCFOLLOWERS = "addEtcFollower";
 
@@ -99,8 +100,8 @@ public class Followers implements ContextAware {
 		String type = ADD_INSTANCEFOLLOWERS;
 		if("topic".equals(this.getInstanceId())){
 			type = ADD_TOPICFOLLOWERS;
-		}else if("document".equals(this.getInstanceId())){
-			type = ADD_DOCUMENTFOLLOWERS;
+		}else if("dept".equals(this.getInstanceId())){
+			type = ADD_DEPTFOLLOWERS;
 		}else if("etc".equals(this.getInstanceId())){
 			type = ADD_ETCFOLLOWERS;
 		}

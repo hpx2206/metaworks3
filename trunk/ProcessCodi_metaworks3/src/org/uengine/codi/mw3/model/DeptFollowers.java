@@ -7,9 +7,15 @@ public class DeptFollowers extends Followers{
 	
 	static final String CONTEXT_WHERE_DEPTFOLLOWERS = "deptFollowers";
 	
+	public DeptFollowers(){
+		setInstanceId("dept");
+	}
+	
 	@Override
 	public void load() throws Exception{
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		
 		
 		String partCode = session.getLastSelectedItem();
 		String globalCom = session.getEmployee().getGlobalCom();
@@ -22,21 +28,11 @@ public class DeptFollowers extends Followers{
 		setDeptFollowers(refDept);
 		
 		
-		IEmployee employee = new Employee();
-		employee.getMetaworksContext().setWhere("navigator");
-		employee.getMetaworksContext().setHow("tree");
-		employee.setGlobalCom(session.getEmployee().getGlobalCom());
-		IEmployee refEmployee = employee.findByDept(dept);
-		
-		IUser users =  (IUser)MetaworksDAO.createDAOImpl(IUser.class);
-		while(refEmployee.next()){
-			User user = new User();
-			user.setUserId(refEmployee.getEmpCode());
-			user.setName(refEmployee.getEmpName());
-			users.moveToInsertRow();
-			users.getImplementationObject().copyFrom(user);
+		IUser user = new User();
+		IUser users = user.findByDept(dept);
+		while(users.next()){
+			put(users);
 		}
-		setFollowers(users);
 		
 	}
 

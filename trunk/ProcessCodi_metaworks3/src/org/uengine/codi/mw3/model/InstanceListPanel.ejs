@@ -9,7 +9,14 @@
 	var isDashboard = (mw3.how == "dashboard");
 	var isApp = (mw3.how == "app");
 	var height = 0;
-	if(isTopic) {
+	if(value.perspectiveInfo){
+		height = 300;
+	}else if(isDashboard){
+		height = 38;
+	}else{
+		height = 68;
+	}
+/*	if(isTopic) {
 		height = 300;
 	}else if(isProject || isApp || isDept){
 		height = 300;
@@ -18,7 +25,7 @@
 	}else{
 		height = 68;
 	}
-	
+*/	
 %>
 
 <% if(isDashboard){%>
@@ -78,7 +85,7 @@
 		            </div>    
 		          
 		          	<!-- codi에 영향 미칩니다 . 주석처리하지 마세요. -->
-		            <% if(!isProject && !isApp && !value.perspectiveInfo){ %>
+		            <% if(!value.perspectiveInfo){ %>
 		               
 			            <div class="toolbar">
 		                    <ul>

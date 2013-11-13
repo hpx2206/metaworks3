@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 
 public class DocumentPerspective extends Perspective  implements ContextAware {
@@ -53,8 +54,9 @@ public class DocumentPerspective extends Perspective  implements ContextAware {
 		DocumentTitle documentTitle = new DocumentTitle();
 		documentTitle.setMetaworksContext(new MetaworksContext());
 		documentTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		documentTitle.setLogoFile(new MetaworksFile());
 		documentTitle.session = session;
-		return new ModalWindow(documentTitle , 500, 200,  "$addDocument");
+		return new ModalWindow(documentTitle , 500, 250,  "$addDocument");
 		
 	}
 
