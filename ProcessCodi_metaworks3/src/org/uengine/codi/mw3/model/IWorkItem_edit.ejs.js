@@ -419,13 +419,10 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		/////// assists about user names //////
     	
 		var contactListPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactListPanel');
-		
 		if(text && text.length>0 && contactListPanel){
-			var contactList = contactListPanel.localContactList;
+			var contactList = contactListPanel.contactList;
 
 			var exisingFollowers = {};
-			
-			
 			var value = mw3.objects[this.objectId];
 			
 			if(value.instId){

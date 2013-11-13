@@ -299,7 +299,9 @@ public class ProcessDesignerContainer {
 	}
 	
 	public ProcessVariable ignoreVariableType(ProcessVariable processVariable){
-		processVariable.setTypeInputter(processVariable.getType().getName());
+		if( processVariable.getTypeInputter() == null){
+			processVariable.setTypeInputter(processVariable.getType().getName());
+		}
 		processVariable.setType(null);
 		if( processVariable.getDefaultValue() != null ){
 			processVariable.setTypeInputter(processVariable.getDefaultValue().getClass().getName());

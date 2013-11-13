@@ -49,7 +49,9 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_TYPE_DOCUMENT = "document";
 		
 		public final static String WORKITEM_TYPE_REMOTECONF	 = "remoteConf";
-		public final static String WORKITEM_TYPE_DOCUMENTLIST = "documentList";		
+		public final static String WORKITEM_TYPE_DOCUMENTLIST = "documentList";
+		
+		public final static String WORKITEM_TYPE_SYSTEM = "system";		
 		
 		public final static int TITLE_LIMIT_SIZE             = 2900;
 		public final static int LASTCMT_LIMIT_SIZE             = 200;
