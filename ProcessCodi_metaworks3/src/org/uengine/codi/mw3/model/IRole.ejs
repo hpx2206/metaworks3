@@ -26,7 +26,9 @@
 		<%
 				if(mw3.where == 'navigator'){
 		%>	
-			<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.descr.here() %></a>
+			<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.descr.here() %>--drillDown</a>
+			<a onClick="<%=methods.loadRole.caller() %>" class="idept"><%=fields.descr.here() %>--loadRole</a>
+			
 		<%
 					if(value.selected) {
 		%>

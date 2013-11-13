@@ -122,5 +122,6 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object showMenu() throws Exception;
-
+	
+	public IUser findByDept(Dept dept) throws Exception;
 }

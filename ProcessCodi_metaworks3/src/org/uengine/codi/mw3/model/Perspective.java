@@ -7,6 +7,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
 
 public class Perspective {
@@ -93,7 +94,8 @@ public class Perspective {
 			}
 			instListPanel.setTitle(title);
 			session.setWindowTitle(title);
-			
+			if(instListPanel.getPerspectiveInfo()!= null)
+				instListPanel.getPerspectiveInfo().load();
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 			
 			return new Object[]{session, instListPanel};
@@ -198,18 +200,13 @@ public class Perspective {
 		}else if( title == null ){
 			title = "$perspective." + perspectiveType;
 		}
-//		if("topic".equals(perspectiveType) || "project".equals(perspectiveType) || "app".equals(perspectiveType)){
-//			instListPanel.topicFollowersLoad();
-//			
-//		}
-//		if("project".equals(perspectiveType)){
-//			instListPanel.projectInfoLoad();
-//		}
-//		if("app".equals(perspectiveType)){
-//			instListPanel.appInfoLoad();
-//		}
+
+		
 		instListPanel.setTitle(title);
-		instListPanel.getPerspectiveInfo().load();
+		
+		if(instListPanel.getPerspectiveInfo()!= null)
+			instListPanel.getPerspectiveInfo().load();
+		
 		session.setWindowTitle(title);
 
 		

@@ -19,13 +19,14 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 
 
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-			options={"fieldOrder"}, values={"name,description"})
+			options={"fieldOrder"}, values={"name,description,logoFile"})
 public class DocumentTitle implements ContextAware{
 	
 	@AutowiredFromClient
@@ -42,6 +43,15 @@ public class DocumentTitle implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+	
+	MetaworksFile logoFile;
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}	
 		
 	String id;
 		@Hidden
@@ -110,6 +120,12 @@ public class DocumentTitle implements ContextAware{
 		node.setAuthorId(session.getUser().getUserId());		
 		node.setCompanyId(session.getCompany().getComCode());
 		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+		
+		if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+			node.setUrl(this.getLogoFile().getUploadedPath());
+			node.setThumbnail(this.getLogoFile().getFilename());
+		}
+		
 		node.createMe();
 		
 		TopicMapping tm = new TopicMapping();
@@ -150,6 +166,11 @@ public class DocumentTitle implements ContextAware{
 		node.setAuthorId(session.getUser().getUserId());		
 		node.setCompanyId(session.getCompany().getComCode());
 		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+		if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+			node.setUrl(this.getLogoFile().getUploadedPath());
+			node.setThumbnail(this.getLogoFile().getFilename());
+		}
+		
 		node.createMe();
 		
 		
@@ -180,6 +201,12 @@ public class DocumentTitle implements ContextAware{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
 		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()) && 
 				"sub".equals(this.getMetaworksContext().getHow())){
 			
@@ -203,15 +230,25 @@ public class DocumentTitle implements ContextAware{
 	@Available(when={MetaworksContext.WHEN_EDIT})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] modify() throws Exception{
+		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 		DocumentNode node = new DocumentNode();
 		node.setId(this.getId());
+		
+		node.copyFrom(node.databaseMe());
+		
+		if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+			node.setUrl(this.getLogoFile().getUploadedPath());
+			node.setThumbnail(this.getLogoFile().getFilename());
+		}
+		
 		node.setName(this.getName());
 		node.setDescription(this.getDescription());
-		node.setAuthorId(session.getUser().getUserId());
-		node.setCompanyId(session.getCompany().getComCode());
-		node.setParentId(this.getParentId());
-		node.setType(DocumentNode.TYPE_DOC);
-		node.setSecuopt(documentSecuopt ? "1" : "0");
 		node.saveMe();
 		return new Object[]{ new Refresh(node), new Remover(new ModalWindow())};
 	}

@@ -11,6 +11,7 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
 
 @Table(name = "PARTTABLE")
@@ -41,9 +42,21 @@ public interface IDept extends IDAO {
 
 	public void setDescription(String description);
 
+	public String getUrl();
+	public void setUrl(String url);
+
+	public String getThumbnail();
+	public void setThumbnail(String thumbnail);
+
+	
 //	public String getComCode();
 //
 //	public void setComCode(String comCode);
+	
+	@NonSavable
+	@NonLoadable
+	public MetaworksFile getLogoFile();
+	public void setLogoFile(MetaworksFile logoFile);
 	
 	public String getGlobalCom();
 

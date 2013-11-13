@@ -67,7 +67,24 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setAuthorId(String authorId) {
 			this.authorId = authorId;
 		}
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
 		
+	String thumbnail;
+		public String getThumbnail() {
+			return thumbnail;
+		}
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
+		}
+		
+		
+
 	public int loadDepth = 0;
 		public int getLoadDepth() {
 			return loadDepth;
@@ -289,6 +306,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		documentTitle.setDescription(this.getDescription());
 		documentTitle.setParentId(this.getParentId());
 		documentTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		documentTitle.setLogoFile(new MetaworksFile());
 		documentTitle.session = session;
 		return new ModalWindow(documentTitle, 500,250, "문서제목수정");
 	}
@@ -392,10 +410,12 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		documentSubTitle.setId(this.getId());
 		documentSubTitle.getMetaworksContext().setHow("sub");
 		documentSubTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		documentSubTitle.setLogoFile(new MetaworksFile());
 		documentSubTitle.session = session;
 		
 		return new ModalWindow(documentSubTitle , 500, 200,  "$addSubDocument");
 	}
+	
 	
 
 	

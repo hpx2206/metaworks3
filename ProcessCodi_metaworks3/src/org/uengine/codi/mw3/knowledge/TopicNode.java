@@ -10,6 +10,7 @@ import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.Instance;
@@ -183,14 +184,13 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 
 	public ModalWindow modify() throws Exception {
-		if( !session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || !session.getEmployee().getIsAdmin()) {
-			throw new Exception("$OnlyEditAdmin");
-		}
+		
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setTopicId(this.getId());
 		topicTitle.setTopicTitle(this.getName());
 		topicTitle.setMetaworksContext(new MetaworksContext());
 		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		topicTitle.setLogoFile(new MetaworksFile());
 		topicTitle.session = session;
 		return new ModalWindow(topicTitle, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "$EditTopic");
 

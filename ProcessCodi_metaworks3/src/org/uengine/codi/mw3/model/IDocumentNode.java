@@ -28,6 +28,14 @@ public interface IDocumentNode extends IDAO {
 	public String getName();
 	public void setName(String name);
 	
+	@Hidden
+	public String getUrl() ;
+	public void setUrl(String url);
+	
+	@Hidden
+	public String getThumbnail();
+	public void setThumbnail(String thumbnail);
+	
 	public String getSecuopt();
 	public void setSecuopt(String secuopt);
 	

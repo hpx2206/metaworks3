@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +29,14 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 			this.followers = followers;
 		}
 		
+	MetaworksFile logoFile;
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}
+
 	String type;
 		public String getType() {
 			return type;
@@ -49,8 +60,15 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 		public void setName(String name) {
 			this.name = name;
 		}
-
 	
+	String description;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		
 	@Override
 	public void add() {
 		// TODO Auto-generated method stub
@@ -58,7 +76,7 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 	}
 
 	@Override
-	public Object[] delete() {
+	public Object[] delete() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
