@@ -196,7 +196,7 @@ public class ProjectTitle implements ContextAware {
 			String passwd = GlobalContext.getPropertyString("vm.manager.password");
 			String command = null;
 	
-			JschCommand jschServerBehaviour = new JschCommand();
+			/*JschCommand jschServerBehaviour = new JschCommand();
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			// create SVN
@@ -217,7 +217,7 @@ public class ProjectTitle implements ContextAware {
 			
 			//Setting Hudson
 			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
-			jschServerBehaviour.runCommand(command);
+			jschServerBehaviour.runCommand(command);*/
 			
 		}
 		

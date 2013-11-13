@@ -60,6 +60,8 @@ public interface IRole extends IDAO {
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] drop() throws Exception;
 	
+	@ServiceMethod(callByContent=true)
+	public Object[] loadRole() throws Exception;
 	
 	// function
 	public IRole findByGlobalCom() throws Exception;
