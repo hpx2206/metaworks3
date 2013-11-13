@@ -176,6 +176,7 @@ public interface IEmployee extends IDAO {
 	public IEmployee findByDept(Dept dept) throws Exception;
 	public IEmployee findByRole(Role role) throws Exception;
 	public IEmployee findByDeptOther() throws Exception;
+	public IEmployee findByGlobalCom(String GlobalCom) throws Exception;
 	
 	@ServiceMethod(where="navigator", payload={"empCode", "empName", "jikName"})
 	public Object[] loadOrganization() throws Exception;
