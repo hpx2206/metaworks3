@@ -151,7 +151,6 @@
 	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader" />
 	<bean id="EmailWorkItem" class="org.uengine.codi.mw3.model.EmailWorkItem"/>
 	
-	<bean id="TestEmailReader" class="examples.TestEmailReader" />
 	
 	
 	
