@@ -966,3 +966,26 @@ insert into emptable (empcode, empname, password, isadmin, globalcom, isdeleted,
 --2013.11.11 dept = input image
 alter table PARTTABLE add column url varchar(200);
 alter table PARTTABLE add column thumbnail varchar(200);
+
+--2013.11.13 노티 관련 테이블
+create table notisetting(
+    id int NOT NULL,
+	userId varchar(20) not null,
+	checkLogin int default 1,
+    notiAdvice int default 1,
+	modiUser int default 1,
+	modiTopic int default 1,
+	modiOrgan int default 1,
+	writeBookmark int default 1,
+	writeTopic int default 1,
+	writeOrgan int default 1,
+	writeInstance int default 1,
+	inviteTopic int default 1,
+	inviteOrgan int default 1,
+	addFriend int default 1,
+	beforehandNoti int default 1,
+	notiTime int default 1,
+	defaultNotiTime varchar(20),
+	notiEmail int default 1,
+	primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
