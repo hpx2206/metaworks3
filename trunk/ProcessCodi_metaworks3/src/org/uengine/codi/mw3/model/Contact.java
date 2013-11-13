@@ -23,49 +23,57 @@ public class Contact extends Database<IContact> implements IContact{
 		IUser friend = new User();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, item.updatedate")
-		  .append("  from contact c ")
-		  .append("  	left join emptable e")
-		  .append("    		on c.friendid = e.empcode")
-		  .append("  	left join recentItem item ")
-		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
-		  .append(" where c.userId=?userId")
-		  .append("   and e.isDeleted=?isDeleted");
+//		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, item.updatedate")
+//		  .append("  from contact c ")
+//		  .append("  	left join emptable e")
+//		  .append("    		on c.friendid = e.empcode")
+//		  .append("  	left join recentItem item ")
+//		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
+//		  .append(" where c.userId=?userId")
+//		  .append("   and e.isDeleted=?isDeleted");
+//		
+//		if(this.getFriend() != null && this.getFriend().getName() != null){
+//			sb.append("   and c.friendName like ?friendName");
+////			sb.append("   and c.network=?network");
+//		}
+//		
+//		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {			
+//			if(TOPIC.equals(session.getLastInstanceId())) {
+//				sb.append(" and not exists")
+//				  .append(" (select t.userid")
+//				  .append(" from bpm_topicmapping t")
+//				  .append(" where topicid='" + session.getLastSelectedItem() + "' and assigntype=0 and t.userid=c.friendId)");
+//			}else if(ETC.equals(session.getLastInstanceId())) {
+//			}else {
+//				sb.append(" and not exists")
+//				  .append(" (select distinct r.endpoint")
+//				  .append(" from bpm_rolemapping r")
+//				  .append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
+//			}
+//		}
+//		
+//		sb.append(" order by updatedate desc ");
+//		
+//		if(!isSelected) {
+//			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
+//		}
+//		
+// 		IContact contacts = sql(sb.toString());
+//		contacts.setUserId(getUserId());		
+//		if(this.getFriend() != null && this.getFriend().getName() != null){
+//			contacts.set("friendName", this.getFriend().getName() + "%");
+////			contacts.set("network", this.getFriend().getNetwork());
+//		}
 		
-		if(this.getFriend() != null && this.getFriend().getName() != null){
-			sb.append("   and c.friendName like ?friendName");
-			sb.append("   and c.network=?network");
-		}
+		sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
+		sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
+		sb.append(" where c.userid=?userId");
 		
-		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {			
-			if(TOPIC.equals(session.getLastInstanceId())) {
-				sb.append(" and not exists")
-				  .append(" (select t.userid")
-				  .append(" from bpm_topicmapping t")
-				  .append(" where topicid='" + session.getLastSelectedItem() + "' and assigntype=0 and t.userid=c.friendId)");
-			}else if(ETC.equals(session.getLastInstanceId())) {
-			}else {
-				sb.append(" and not exists")
-				  .append(" (select distinct r.endpoint")
-				  .append(" from bpm_rolemapping r")
-				  .append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
-			}
-		}
+		IContact contacts = sql(sb.toString());
 		
-		sb.append(" order by updatedate desc ");
 		
-		if(!isSelected) {
-			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
-		}
 		
- 		IContact contacts = sql(sb.toString());
-		contacts.setUserId(getUserId());		
-		if(this.getFriend() != null && this.getFriend().getName() != null){
-			contacts.set("friendName", this.getFriend().getName() + "%");
-			contacts.set("network", this.getFriend().getNetwork());
-		}
-		contacts.set("itemType", User.FRIEND);
-		contacts.set("isDeleted", "0");
+		contacts.set("userId",getUserId());
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());
 		return contacts;

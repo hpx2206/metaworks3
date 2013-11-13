@@ -40,10 +40,10 @@ public class ContactPanel {
 		contactListPanel.session = session;
 		contactListPanel.load(session.getUser().getUserId());
 		
-		if(contactListPanel.getLocalContactList() != null)
-			contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
-		if(contactListPanel.getSocialContactList() != null)
-			contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
+		if(contactListPanel.getContactList() != null)
+			contactListPanel.getContactList().getMetaworksContext().setWhen(type);
+		if(contactListPanel.getContactList() != null)
+			contactListPanel.getContactList().getMetaworksContext().setWhen(type);
 
 		this.setContactListPanel(contactListPanel);
 		
@@ -82,6 +82,7 @@ public class ContactPanel {
 			this.contactListPanel = contactListPanel;
 		}
 
+
 	int pageX;
 		@Hidden
 		public int getPageX() {
@@ -108,7 +109,6 @@ public class ContactPanel {
 		
 //			popup.setPageX(this.pageX);
 //			popup.setPageY(this.pageY);
-		
 		popup.setPanel(new UnifiedAddContactPanel(session));
 		//popup.setTitle("연락처 추가");
 		return popup;

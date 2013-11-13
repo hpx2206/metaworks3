@@ -35,24 +35,32 @@ public class ContactListPanel implements ContextAware {
 	public void load(String userId, String keyword) throws Exception {
 		setId(getMetaworksContext().getWhen());
 		
-		ContactList localContactList = new ContactList();
-		localContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
-		localContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
-		localContactList.getMetaworksContext().setWhere(ContactList.LOCAL);
-		localContactList.session = session;
-		localContactList.load(userId, keyword);
+//		ContactList localContactList = new ContactList();
+//		localContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
+//		localContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+//		localContactList.getMetaworksContext().setWhere(ContactList.LOCAL);
+//		localContactList.session = session;
+//		localContactList.load(userId, keyword);
+//		
+//		setLocalContactList(localContactList);
+//		
+//		if("1".equals(GlobalContext.getPropertyString("facebook.use", "1"))){
+//			ContactList socialContactList = new ContactList();
+//			socialContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
+//			socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+//			socialContactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
+//			socialContactList.load(userId, keyword);
+//			
+//			setSocialContactList(socialContactList);
+//		}		
 		
-		setLocalContactList(localContactList);
+		ContactList contactList = new ContactList();
+		contactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
+		contactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+		contactList.session = session;
+		contactList.load(userId, keyword);
+		setContactList(contactList);
 		
-		if("1".equals(GlobalContext.getPropertyString("facebook.use", "1"))){
-			ContactList socialContactList = new ContactList();
-			socialContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
-			socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
-			socialContactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
-			socialContactList.load(userId, keyword);
-			
-			setSocialContactList(socialContactList);
-		}		
 		
 //		if(localContactList.getContacts().size() + socialContactList.getContacts().size() == 0){
 //			invitation = new Invitation();
@@ -80,22 +88,25 @@ public class ContactListPanel implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 
-	ContactList localContactList;
-		public ContactList getLocalContactList() {
-			return localContactList;
+	ContactList contactList;
+		public ContactList getContactList() {
+			return contactList;
 		}
-		public void setLocalContactList(ContactList localContactList) {
-			this.localContactList = localContactList;
+		
+		public void setContactList(ContactList contactList) {
+			this.contactList = contactList;
 		}
 	
-	ContactList socialContactList;
-		public ContactList getSocialContactList() {
-			return socialContactList;
-		}
-		public void setSocialContactList(ContactList socialContactList) {
-			this.socialContactList = socialContactList;
-		}	
+//	ContactList socialContactList;
+//		public ContactList getSocialContactList() {
+//			return socialContactList;
+//		}
+//		public void setSocialContactList(ContactList socialContactList) {
+//			this.socialContactList = socialContactList;
+//		}	
 		
+
+
 	Invitation invitation;
 		public Invitation getInvitation() {
 			return invitation;

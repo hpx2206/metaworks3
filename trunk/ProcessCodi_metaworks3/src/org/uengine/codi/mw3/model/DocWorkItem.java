@@ -40,38 +40,41 @@ public class DocWorkItem extends WorkItem {
 		if(!UEngineUtil.isNotEmpty(getTitle())){
 			setTitle(getFile().getFileTransfer().getFilename());
 		}
-		
-		FileWorkItem fileWorkItem = new FileWorkItem();
-		fileWorkItem.session = session;
-		fileWorkItem.processManager = this.processManager;
-		fileWorkItem.instanceViewContent = this.instanceViewContent;
-		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-		fileWorkItem.setWriter(session.getUser());
-		fileWorkItem.setFile(this.getFile());
-		fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
-		fileWorkItem.setMajorVer(1);
-		fileWorkItem.setFolderId(this.getFolderId());
-		fileWorkItem.setGrpTaskId(this.getTaskId());
-		fileWorkItem.add();
-		
-		DocumentTool tool = new DocumentTool();
-		tool.session = session;
-		tool.setInstId(fileWorkItem.getInstId().toString());
-		
-		GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
-		genericWIH.setTool(tool);
-		
-		GenericWorkItem genericWI = new GenericWorkItem();
-		genericWI.session = session;
-		genericWI.processManager = this.processManager;
-		genericWI.instanceViewContent = this.instanceViewContent;
-		genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		genericWI.setWriter(session.getUser());
-		genericWI.setTitle(this.getTitle());//parent.getName());
-		genericWI.setGenericWorkItemHandler(genericWIH);
-		
-		return genericWI.add();
+			FileWorkItem fileWorkItem = new FileWorkItem();
+			fileWorkItem.session = session;
+			fileWorkItem.processManager = this.processManager;
+			fileWorkItem.instanceViewContent = this.instanceViewContent;
+			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			
+			fileWorkItem.setWriter(session.getUser());
+			fileWorkItem.setFile(this.getFile());
+			fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+			fileWorkItem.setMajorVer(1);
+			fileWorkItem.setFolderId(this.getFolderId());
+			fileWorkItem.setGrpTaskId(this.getTaskId());
+			fileWorkItem.add();
+			
+			DocumentTool tool = new DocumentTool();
+			tool.session = session;
+			tool.setInstId(fileWorkItem.getInstId().toString());
+			
+			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+			genericWIH.setTool(tool);
+			
+			GenericWorkItem genericWI = new GenericWorkItem();
+			genericWI.session = session;
+			genericWI.processManager = this.processManager;
+			genericWI.instanceViewContent = this.instanceViewContent;
+			if("normal".equals(this.getMetaworksContext().getHow())){
+				genericWI.setInstId(this.getInstId());
+			}else{
+				genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			}
+			genericWI.setWriter(session.getUser());
+			genericWI.setTitle(this.getTitle());//parent.getName());
+			genericWI.setGenericWorkItemHandler(genericWIH);
+			
+			return genericWI.add();
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
@@ -492,7 +493,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setMore(boolean more) {
 			this.more = more;
 		}
-	
+
 	public DocumentDrag documentDrag;	
 		public DocumentDrag getDocumentDrag() {
 			return documentDrag;
@@ -1036,7 +1037,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 							returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
+					InstanceViewThreadPanel genericWorkItem = new InstanceViewThreadPanel();
+					genericWorkItem.session = session;
+					genericWorkItem.session.setLastPerspecteType("normal");
+					genericWorkItem.load(this.getInstId().toString());
+					
+//					CommentWorkItem commentWorkItem = new CommentWorkItem();
+//					commentWorkItem.setInstId(this.getInstId());
+//					commentWorkItem.setWriter(session.getUser());
+//					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//					
+//					DocumentTool documentTool = new DocumentTool();
+//					documentTool.setInstId(this.getFileInstId().toString());
+//					documentTool.onLoad();
+					
+					
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(genericWorkItem)};
 				}else{
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
 					commentWorkItem.setInstId(this.getInstId());
@@ -1235,8 +1251,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		setStartDate(null);
 		setEndDate(null);		
 		*/
-		
-		getMetaworksContext().setWhen("edit");		
+		if("generic".equals(this.getType()) || "minimised".equals(this.getMetaworksContext().getHow())){
+			throw new MetaworksException("$CanNotDocumentEdit");
+		}else{
+			getMetaworksContext().setWhen("edit");		
+		}
 	}
 
 	protected void afterInstantiation(IInstance instanceRef) throws Exception {
@@ -1374,11 +1393,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		workitem.set("instId",id);
 		workitem.select();
 		
-		if(workitem.next())
+		if(workitem.next()){
 			return workitem;
-		else
+		}else{
 			return null;
-	
+		}
 	}
 	
 	

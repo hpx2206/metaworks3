@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -68,6 +69,13 @@ public class DocumentDrag {
 			return session;
 		}
 		
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] drop() throws Exception{
+		Object clipboard = session.getClipboard();
+		
+		return null;
+		
+	}
 		@AutowiredFromClient
 		public Session session;
 	}
