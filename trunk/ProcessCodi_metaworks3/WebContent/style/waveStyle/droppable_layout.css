@@ -2601,7 +2601,7 @@ select.select[class] {
 /* index page */
 .clear { clear:both }
 .width1200 { max-width:1200px; margin:0 auto; }
-#wrap { width:100%; height:100%;padding:0px; margin:0px; font-family:'맑은 고딕', 'Malgun gothic', Arial; font-size:12px; }
+#wrap { width:100%; padding:0px; margin:0px; font-size:12px; }
 .logoline { position:absolute; z-index:3; width:100%; padding-top:3px; }
 .index_top { width:100%; background:url('../../images/waveStyle/index_main_bg.gif') #333; position:relative; text-align:center; /*background:url(testMain.png) center no-repeat*/ }
 .index_top .index_topmenu { position:absolute; z-index:2; top:0px; width:100%; height:50px; background:#000; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; filter: alpha(opacity=50); opacity: .5; }
@@ -2611,10 +2611,19 @@ select.select[class] {
 .index_menu ul li { float:left; color:#FFF; list-style:none; margin-left:20px; font-weight:bold }
 .index_signup { background:#1f1f1f; height:60px; }
 .index_signup .index_signup_inner { width:500px; margin:0 auto; padding-top:7px; }
-.index_signup .index_signup_inner input { height:26px; line-height:26px; border-radius:27px; width:400px; border:none; padding-left:20px; color:#666 }
-.index_signup .index_signup_inner .ebutton { margin-top:5px; position:relative; top:10px; }
+.index_signup .index_signup_inner span{ float:left; padding-top:7px;]}
+.index_signup .index_signup_inner input { height:26px; line-height:26px; border-radius:27px; width:400px; border:none; padding-left:20px; color:#666; background:#fff !important; }
+.index_signup .index_signup_inner .ebutton {position:relative; top:2px; margin-left:5px; cursor:pointer }
 .index_content { }
 .index_content .line1 { background:#f3f3f3; padding:40px 20px; border-bottom:1px solid #d9d9d9 }
 .index_content .line2 { background:#f7f7f7; padding:40px 20px;  border-bottom:1px solid #d9d9d9 }
 .row .col3 { float:left; width:40%; text-align:center }
 .row .col7 { float:left; width:60%; line-height:25px; }
+.row .col7 h1{ background:none; font-size:20px; padding-left:0px;}
+
+@media all and (max-width: 480px) {
+	.index_signup .index_signup_inner { width:300px;  }
+	.index_signup .index_signup_inner input {width:180px;}
+    .row .col3{display:none}
+    .row .col7 { width:100%; }
+}
