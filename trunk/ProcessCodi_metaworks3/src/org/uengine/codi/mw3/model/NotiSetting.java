@@ -1,7 +1,10 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
+import org.metaworks.widget.ModalWindow;
 
 public class NotiSetting extends Database<INotiSetting> implements INotiSetting{
 	
@@ -140,22 +143,72 @@ public class NotiSetting extends Database<INotiSetting> implements INotiSetting{
 		public void setNotiEmail(boolean notiEmail) {
 			this.notiEmail = notiEmail;
 		}
+		
+	PortraitImageFile imageFile;		
+		public PortraitImageFile getImageFile() {
+			return imageFile;
+		}
+		public void setImageFile(PortraitImageFile imageFile) {
+			this.imageFile = imageFile;
+		}
 	
+	String empCode;
+		public String getEmpCode() {
+			return empCode;
+		}
+		public void setEmpCode(String empCode) {
+			this.empCode = empCode;
+		}
+		
+	SelectBox selectTime;
+		public SelectBox getSelectTime() {
+			return selectTime;
+		}
+		public void setSelectTime(SelectBox selectTime) {
+			this.selectTime = selectTime;
+		}
 	
-	public void save() throws Exception{
+	String defaultNotiTime;
+		public String getDefaultNotiTime() {
+			return defaultNotiTime;
+		}
+		public void setDefaultNotiTime(String defaultNotiTime) {
+			this.defaultNotiTime = defaultNotiTime;
+		}
+		
+		
+	public Remover save() throws Exception{
+		this.setDefaultNotiTime(this.getSelectTime().getSelected());
 		this.syncToDatabaseMe();
-
+		
+		return new Remover(new ModalWindow());
 	}
 	
 	public INotiSetting findByUserId(String userId) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from ");
-		sb.append("notiSetting");
-		sb.append("where userId = ?userId ");
+		sb.append("notisetting ");
+		sb.append("where userId=?userId");
 		
 		INotiSetting findNotiSetting = (INotiSetting) sql(sb.toString());
 		findNotiSetting.set("userId", userId);
 		findNotiSetting.select();
+		
+		findNotiSetting.setMetaworksContext(this.getMetaworksContext());
+		
+		return findNotiSetting;
+	}
+	
+	public INotiSetting findByEmpcode(String Empcode) throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from ");
+		sb.append("emptable ");
+		sb.append("where userId=?userId");
+		
+		INotiSetting findNotiSetting = (INotiSetting) sql(sb.toString());
+		findNotiSetting.set("userId", userId);
+		findNotiSetting.select();
+		
 		findNotiSetting.setMetaworksContext(this.getMetaworksContext());
 		
 		return findNotiSetting;

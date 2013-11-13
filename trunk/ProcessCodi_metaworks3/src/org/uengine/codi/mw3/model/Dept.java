@@ -1,5 +1,10 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -7,7 +12,10 @@ import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Dept extends Database<IDept> implements IDept {
 	String partCode;
@@ -311,6 +319,8 @@ public class Dept extends Database<IDept> implements IDept {
 			else
 				deptList.setId(this.getParent_PartCode());
 			
+			this.notiToCompany();
+			
 			return new Object[]{new Remover(new Popup()), new ToAppend(deptList, this)};
 			
 			//drillDown
@@ -332,6 +342,86 @@ public class Dept extends Database<IDept> implements IDept {
 		// returnValueDept.drillDown();
 		
 		//return new Object[] { returnValueDept, resultSaveDeptPanel };
+	}
+	
+	public void notiToCompany() throws Exception{
+		Notification noti = new Notification();
+		INotiSetting notiSetting = new NotiSetting();
+		Instance instance = new Instance();
+		noti.session = session;
+		instance = this.createWorkItem();
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.copyFrom(employee.databaseMe());
+		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
+		Employee codi = new Employee();
+		codi.setEmpCode("0");
+		
+		while(findResult.next()){
+			notiSetting.findByUserId(findResult.getEmpCode());
+			noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+			noti.setUserId(findResult.getEmpCode());
+			noti.setActorId(codi.getEmpName());
+			noti.setConfirm(false);
+			noti.setInstId(instance.getInstId());
+			noti.setInputDate(Calendar.getInstance().getTime());
+			noti.setActAbstract(session.getUser().getName() + " create Organ");
+
+			//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+	//			noti.createDatabaseMe();
+	//			noti.flushDatabaseMe();
+			
+			noti.add(instance);
+		
+			String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+			
+			try{
+				//NEW WAY IS GOOD
+				Browser.withSession(followerSessionId, new Runnable(){
+	
+					@Override
+					public void run() {
+						//refresh notification badge
+						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+					}
+					
+				});
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		
+		}		
+	}
+	
+	public Instance createWorkItem() throws Exception{
+		Employee representiveMailEmp = new Employee();
+		representiveMailEmp.setEmpCode("0");
+		
+		
+		IEmployee repMailEmp = representiveMailEmp.findMe();
+		
+		
+		CommentWorkItem comment = new CommentWorkItem();
+		comment.processManager = processManager;
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		User theFirstWriter;
+		theFirstWriter = new User();
+		theFirstWriter.setName(repMailEmp.getEmpName());
+		
+		comment.setWriter(theFirstWriter);
+		comment.setTitle("조직 : " + this.getPartName() + "이 생성되었습니다.");
+		comment.setStartDate(new Date());
+		
+		comment.session = session;
+		comment.add();
+		
+		Instance instance = new Instance();
+		instance.setInstId(comment.getInstId());
+		instance.copyFrom(instance.databaseMe());
+		
+		return instance;
 	}
 
 	private IDept findRefreshableParentDept() throws Exception {
@@ -484,4 +574,6 @@ public class Dept extends Database<IDept> implements IDept {
 			return new Object[]{new Remover(employeeInClipboard)};
 	}
 	
+	@Autowired
+	public ProcessManagerRemote processManager;
 }
