@@ -2491,7 +2491,7 @@ select.select[class] {
 .compareTitle{ height:32px; line-height:32px; border-bottom:1px solid #999; border-top:1px solid #E4F1FE; background:#C9E2FC; padding:0 15px;}
 
 .windowSubTitle{background:#dfe6ed; border-bottom:1px solid #bfcddb; padding:8px;}
-.windowSubTitle .ProcessNameView{margin-right:10px;"}
+.windowSubTitle .ProcessNameView{margin-right:10px;}
 .documentNavigation{background:#dfe6ed; border-bottom:1px solid #bfcddb; padding:3px 8px;-webkit-box-shadow:0 3px 4px #ccc; margin-bottom:15px;}
 .documentFolderPanel{padding:10px;}
 .documentFolderPanel_inner_box{padding:10px; border:1px solid #eee; -moz-border-radius: 6px;
@@ -2601,7 +2601,7 @@ select.select[class] {
 /* index page */
 .clear { clear:both }
 .width1200 { max-width:1200px; margin:0 auto; }
-#wrap { width:100%; padding:0px; margin:0px; font-size:12px; }
+#wrap { width:100%; overfloae:auto; padding:0px; margin:0px; font-size:12px; }
 .logoline { position:absolute; z-index:3; width:100%; padding-top:3px; }
 .index_top { width:100%; background:url('../../images/waveStyle/index_main_bg.gif') #333; position:relative; text-align:center; /*background:url(testMain.png) center no-repeat*/ }
 .index_top .index_topmenu { position:absolute; z-index:2; top:0px; width:100%; height:50px; background:#000; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; filter: alpha(opacity=50); opacity: .5; }
