@@ -10,10 +10,10 @@ public class EmployeeInfo {
 	}
 	
 	IEmployee employee;
-		public IEmployee getEmployee() {
-			return employee;
-		}	
-		public void setEmployee(IEmployee employee) {
-			this.employee = employee;
-		}	
+	public IEmployee getEmployee() {
+		return employee;
+	}	
+	public void setEmployee(IEmployee employee) {
+		this.employee = employee;
+	}
 }
