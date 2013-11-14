@@ -126,15 +126,17 @@ public class FileWorkItem extends WorkItem{
 
 		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
 			
+			int thisMajorVersion = this.getMajorVer();
 			int nextVersion = this.getMajorVer()+1;
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			this.setMajorVer(nextVersion);
 			this.databaseMe().setTitle(getFile().getFileTransfer().getFilename());
 			String originInstId = instanceViewContent.getInstanceView().getInstanceId();
+			String title = this.getTitle();
 			
 			FileWorkItem fileWorkItem = new FileWorkItem();
-			fileWorkItem.setInstId(new Long(originInstId));
+			fileWorkItem.setInstId(new Long(this.getInstId()));
 			fileWorkItem.session = session;
 			fileWorkItem.processManager = this.processManager;
 			fileWorkItem.instanceViewContent = this.instanceViewContent;
@@ -143,11 +145,10 @@ public class FileWorkItem extends WorkItem{
 			fileWorkItem.setFile(this.getFile());
 			fileWorkItem.setGrpTaskId(this.getGrpTaskId());
 			fileWorkItem.setMajorVer(nextVersion);
-			fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+			fileWorkItem.setTitle(title);
 			fileWorkItem.add();
 			
 			String thisVersion = String.valueOf(nextVersion+ "." + 0);
-			WorkItemVersionChooser workItemVersionChooser = this.getWorkItemVersionChooser();
 			workItemVersionChooser.getVersionSelector().add(thisVersion , thisVersion);
 			workItemVersionChooser.setSelectedVersion(thisVersion);
 			
@@ -156,7 +157,7 @@ public class FileWorkItem extends WorkItem{
 			SystemWorkItem.processManager = this.processManager;
 			SystemWorkItem.instanceViewContent = this.instanceViewContent;
 			SystemWorkItem.setInstId(new Long(originInstId));
-			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. ");
+			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. " + title + " version "+ String.valueOf(thisMajorVersion+ "." + 0) +" =>" + thisVersion) ;
 			SystemWorkItem.add();
 			
 			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
