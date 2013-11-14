@@ -54,56 +54,21 @@ public class StartCodi {
 			 * false : 로그인 안되었으므로 로그인 화면
 			 */
 			if(loggedUserId != null){
-				
-				
 				Employee employee = new Employee();
 				employee.setEmpCode(loggedUserId);
 				employee.copyFrom(employee.findMe());
-				
 				if(employee.getGlobalCom().equals(findTenant.getComCode())){
-					Session session = new Session();
-					session.setEmployee(employee);
-					session.fillSession();
-	
-					// TODO : guided tour 는 실행여부를 database 로 관리하여 진행하게 한다.
-			
-					ModalWindow removeWindow = new ModalWindow();
-					removeWindow.setId("subscribe");
+					Login login = new Login();
+					login.SessionIdForCompanyMapping = Login.SessionIdForCompanyMapping;
+					login.SessionIdForDeptMapping = Login.SessionIdForDeptMapping;
+					login.SessionIdForEmployeeMapping = Login.SessionIdForEmployeeMapping;
+					login.userIdDeviceMapping = Login.userIdDeviceMapping;
+					login.setStatus("login");
+					login.setUserId(employee.getEmail());
+					login.setPassword(employee.getPassword());
 					
+					return login.login();
 					
-					String pageNavigatorPropertyName;
-					String className;
-					PageNavigator pageNavigator;
-					MainPanel mainPanel;
-					if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
-						pageNavigatorPropertyName = "oce.pagenavigator.class";
-						session.setUx("oce");
-					}
-					else{
-						pageNavigatorPropertyName = "codi.pagenavigator.class";
-					}
-					
-					className = GlobalContext.getPropertyString(pageNavigatorPropertyName);
-					
-					Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName));
-					Object object = c.newInstance();
-					
-					if(object instanceof PageNavigator){
-						pageNavigator = (PageNavigator)object;
-					}
-					else{
-						throw new Exception("pageNavigator가 잘못 지정되었습니다. uengine.properties의 pagenavigatorClassName을 수정해주세요.");
-					}
-					
-					pageNavigator.session = session;
-					
-					if("oce".equals(session.getUx())){
-						mainPanel = pageNavigator.goDashBoard();
-						return new Object[]{new Refresh(mainPanel, false, true)};
-					}
-					
-				
-				return new MainPanel(new Main(session));	
 				}
 			}
 			
