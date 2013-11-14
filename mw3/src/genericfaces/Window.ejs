@@ -17,14 +17,6 @@
 		
 		var color = objectMetadata.getOptionValue('color', 'blue');
 		var mobile;
-		
-		/*
-		var windowTitle = null;
-
-		if(value.__className=='org.metaworks.widget.Window'){
-			windowTitle = value.title; 
-			showLabel = false;	
-		*/
 				
 		var objectName; 
 		var windowTitle = value.title;
@@ -54,13 +46,15 @@
 		<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:90px; position:relative;">	
 		    <div class="boxtopleft">
 		    	<span class="boxtopright">
-		    		<div id="navigationTitle" class="mw3_window_title">
-		    			<span>
+		    		<div id="navigationTitle">
+		    			<span title="<%=windowTitle?mw3.localize(windowTitle):mw3.localize(objectName)%>">
+		    				<div>
 				            <%if(windowTitle){%>
 				    			<%=mw3.localize(windowTitle)%>
 				    		<%}else{%>
 				    			<%=mw3.localize(objectName)%>
 				    		<%}%>
+				    		</div>
 		    			</span>
 		    		</div>
 		    	</span>
