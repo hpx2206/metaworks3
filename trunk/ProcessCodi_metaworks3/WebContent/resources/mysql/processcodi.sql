@@ -957,17 +957,17 @@ comcode varchar(100),
 ip varchar(50),
 date varchar(50));
 
---2013.11.08 코디 시스템 관리자 계정.( Email을 인스턴스 발행하는 계정.)
+-- 2013.11.08 코디 시스템 관리자 계정.( Email을 인스턴스 발행하는 계정.)
 --insert into emptable values("0", "CODI", "test", "1", null, null, null, "0", "0", "ko", null, null, null, null, null, null, "wave", "auto", null, null, "1", "0", null, "0", "0", null);
 insert into emptable (empcode, empname, password, isadmin, globalcom, isdeleted, locale, preferux, prefermob, approved, guest, mailnoti) 
 			   values("0", "CODI", "test", 1, "uengine.org", "0", "ko", "wave", "auto", 1, 0, 0);
 
 
---2013.11.11 dept = input image
+-- 2013.11.11 dept = input image
 alter table PARTTABLE add column url varchar(200);
 alter table PARTTABLE add column thumbnail varchar(200);
 
---2013.11.13 노티 관련 테이블
+-- 2013.11.13 노티 관련 테이블
 create table notisetting(
     id int NOT NULL,
 	userId varchar(20) not null,
