@@ -41,7 +41,7 @@ public class ProjectManager implements ContextAware {
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
-	public void load(String projectId){
+	public void load(String projectId) throws Exception{
 		ProjectInfo projectInfo = new ProjectInfo(projectId);
 		projectInfo.load();
 		

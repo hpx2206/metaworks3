@@ -164,9 +164,6 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 	public Object[] remove() throws Exception {
 		
-		if( !session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || !session.getEmployee().getIsAdmin()) {
-			throw new Exception("$OnlyEditAdmin");
-		}
 		// 삭제는 진짜 삭제가 아닌 topic 만 제거를 하여 지식노드에서는 보이도록 설정됨
 		// deleteDatabaseMe();
 		StringBuffer sb = new StringBuffer();
