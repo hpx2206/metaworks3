@@ -85,29 +85,40 @@ public class InstanceListPanel implements ContextAware{
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				this.getMetaworksContext().setWhere("oce");
 			}
+			if("topic".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("topic");
+				this.setPerspectiveInfo(new TopicInfo(session));
+			}
+			if("project".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("project");
+				this.setPerspectiveInfo(new ProjectInfo(session));
+			}
+			if("document".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("document");
+				this.setPerspectiveInfo(new DocumentInfo(session));
+			}
+			if("organization.group".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("organization.group");
+				this.setPerspectiveInfo(new DeptInfo(session));
+			}
+			if("role".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("document");
+				this.setPerspectiveInfo(new RoleInfo(session));
+			}
+			
+			if("explorer".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("explorer");		
+			
+			if("app".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("app");
 			
 			if("oce_project".equals(session.getUx()))
 				this.getMetaworksContext().setWhere("oce_project");
 			
-			if("topic".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("topic");
-				perspectiveInfo = new TopicInfo();
-			}else if("project".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("project");
-				perspectiveInfo = new ProjectInfo();
-			}else if("organization.group".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("organization.group");
-				perspectiveInfo = new DeptInfo();
-			}else	if("document".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("document");
-			}else if("explorer".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("explorer");		
-			}else if("app".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("app");
-			}else{
-				perspectiveInfo = new PerspectiveInfo(); 
+			if("process".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("process");
+				this.setPerspectiveInfo(new ProcessInfo(session));
 			}
-			
 			instanceList = new InstanceList(session);
 			
 			this.setPreloaded(true);
@@ -402,18 +413,6 @@ public class InstanceListPanel implements ContextAware{
 		return window;
 	}
 	
-	ProjectInfo projectInfo;
-		public ProjectInfo getProjectInfo() {
-			return projectInfo;
-		}
-		public void setProjectInfo(ProjectInfo projectInfo) {
-			this.projectInfo = projectInfo;
-		}
-	
-	public void projectInfoLoad() throws Exception {
-		projectInfo = new ProjectInfo(session.getLastSelectedItem());
-		projectInfo.load();
-	}
 	
 	@Face(displayName = "등록")
 	@ServiceMethod(target="popup", callByContent=true)
