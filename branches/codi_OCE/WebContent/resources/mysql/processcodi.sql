@@ -937,3 +937,61 @@ alter table filepathinfo add column comment varchar(1000);
 alter table filepathinfo add column moddate DATETIME;
 
 alter table filepathinfo add column distributor varchar(20);
+
+
+-- 2013.11.06 문서관리 , content(genericWorkItem)
+alter table bpm_procinst add column isdocument int(11) default 0;
+
+alter table bpm_worklist change content content mediumtext;
+
+-- 2013.10.29
+alter table comtable add column alias varchar(30);
+alter table emptable add column authkey varchar(100);
+
+-- 2013.11.07
+create table logtable(
+id int(11) not null primary key,
+type varchar(20) not null,
+empcode varchar(100) not null,
+comcode varchar(100),
+ip varchar(50),
+date varchar(50));
+
+-- 2013.11.08 코디 시스템 관리자 계정.( Email을 인스턴스 발행하는 계정.)
+-- insert into emptable values("0", "CODI", "test", "1", null, null, null, "0", "0", "ko", null, null, null, null, null, null, "wave", "auto", null, null, "1", "0", null, "0", "0", null);
+insert into emptable (empcode, empname, password, isadmin, globalcom, isdeleted, locale, preferux, prefermob, approved, guest, mailnoti) 
+			   values("0", "CODI", "test", 1, "uengine.org", "0", "ko", "wave", "auto", 1, 0, 0);
+
+
+-- 2013.11.11 dept = input image
+alter table PARTTABLE add column url varchar(200);
+alter table PARTTABLE add column thumbnail varchar(200);
+
+-- 2013.11.13 노티 관련 테이블
+create table notisetting(
+    id int NOT NULL,
+	userId varchar(20) not null,
+	checkLogin int default 1,
+    notiAdvice int default 1,
+	modiUser int default 1,
+	modiTopic int default 1,
+	modiOrgan int default 1,
+	writeBookmark int default 1,
+	writeTopic int default 1,
+	writeOrgan int default 1,
+	writeInstance int default 1,
+	inviteTopic int default 1,
+	inviteOrgan int default 1,
+	addFriend int default 1,
+	beforehandNoti int default 1,
+	notiTime int default 1,
+	defaultNotiTime varchar(20),
+	notiEmail int default 1,
+	primary key(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- 2013.11.14 role 사진 추가
+alter table roletable add column URL varchar(200);
+alter table roletable add column THUMBNAIL varchar(200);
+
