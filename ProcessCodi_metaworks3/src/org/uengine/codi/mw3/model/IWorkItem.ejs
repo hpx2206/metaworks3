@@ -195,7 +195,7 @@
 							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' , htmlAttr:{style: 'float: left'}})%>
 						<div class="clear"></div>
 						
-						<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0 && value.ext1 != null ){%>
+						<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0  ){%>
 			                <%=fields.preview.here()%>
 						<%}%>
 						</td>

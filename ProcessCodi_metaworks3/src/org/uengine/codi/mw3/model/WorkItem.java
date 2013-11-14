@@ -975,7 +975,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		instance.copyFrom(instanceRef);
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
-
+		instance.flushDatabaseMe();
+		
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);

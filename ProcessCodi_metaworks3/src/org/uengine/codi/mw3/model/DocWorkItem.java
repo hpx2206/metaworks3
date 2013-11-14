@@ -48,7 +48,7 @@ public class DocWorkItem extends WorkItem {
 			
 			fileWorkItem.setWriter(session.getUser());
 			fileWorkItem.setFile(this.getFile());
-			fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+			fileWorkItem.setTitle(this.getTitle());
 			fileWorkItem.setMajorVer(1);
 			fileWorkItem.setFolderId(this.getFolderId());
 			fileWorkItem.setGrpTaskId(this.getTaskId());
