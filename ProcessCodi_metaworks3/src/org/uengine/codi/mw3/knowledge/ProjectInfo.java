@@ -25,13 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
+import org.uengine.codi.mw3.model.GroupInfo;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.PerspectiveInfo;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
@@ -43,7 +43,7 @@ import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class ProjectInfo extends PerspectiveInfo implements ContextAware {
+public class ProjectInfo extends GroupInfo implements ContextAware {
 
 	MetaworksContext metaworksContext;
 
@@ -230,13 +230,15 @@ public class ProjectInfo extends PerspectiveInfo implements ContextAware {
 		this(null);
 	}
 	
-	public ProjectInfo(String projectId){
-		this.setProjectId(projectId);
+	public ProjectInfo(Session session){
+		this.session = session;
+		this.setProjectId(session.getLastSelectedItem());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
-	public void load() {
+	public void load() throws Exception {
+		followersLoad();
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
 		
@@ -628,7 +630,6 @@ public class ProjectInfo extends PerspectiveInfo implements ContextAware {
 		instanceListPanel.session = session;
 		instanceListPanel.setNewInstancePanel(newInstancePanel);
 		instanceListPanel.getInstanceList().load();
-		instanceListPanel.projectInfoLoad();
 		instanceListPanel.topicFollowersLoad();
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
@@ -645,9 +646,6 @@ public class ProjectInfo extends PerspectiveInfo implements ContextAware {
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 
-	@AutowiredFromClient
-	public Session session;
-	
 	@AutowiredFromClient
 	public Locale localeManager;
 }
