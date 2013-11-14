@@ -181,7 +181,7 @@ public class ResourceFile implements ContextAware{
 //		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
 		String resourceBase;
 		
-		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "1"))){
+		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "0"))){
 			resourceBase = CodiClassLoader.mySourceCodeBase();
 		}else{
 			String tenantId = session.getCompany().getComCode();
