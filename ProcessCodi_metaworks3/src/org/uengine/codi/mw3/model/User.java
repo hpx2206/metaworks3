@@ -263,6 +263,9 @@ public class User extends Database<IUser> implements IUser {
 	public TopicFollowers topicFollowers;
 	
 	@AutowiredFromClient
+	public DeptFollowers deptFollowers;
+	
+	@AutowiredFromClient
 	public DocumentFollowers documentFollowers;
 	
 	@AutowiredFromClient
@@ -437,8 +440,20 @@ public class User extends Database<IUser> implements IUser {
 			
 			
 			//TODO: restored by jjy. 
+		}else if("addDeptFollower".equals(this.getMetaworksContext().getWhen())){
+			IEmployee findEmp = new Employee();
+			findEmp.setEmpCode(this.getUserId());
 			
-			//
+			Employee emp = new Employee();
+			emp.copyFrom(findEmp.findMe());
+			emp.setPartCode(session.getLastSelectedItem());
+			emp.syncToDatabaseMe();
+			
+			deptFollowers.session = session;
+			deptFollowers.load();
+			
+			return new Object[]{new Remover(this), new Refresh(deptFollowers)};
+//			deptFollowers.put(this);
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			
@@ -788,5 +803,27 @@ public class User extends Database<IUser> implements IUser {
 		menu.setPanel(employee);
 		
 		return menu;
+	}
+	
+	@Override
+	public IUser findByDept(Dept dept) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select emptable.empcode as userId, emptable.empname as name  from ");
+		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
+		if (dept.getPartCode() != null) {
+			sb.append("where emptable.partcode=?partCode ");
+		} else {
+			sb.append("where emptable.partcode is null ");
+		}
+		sb.append("and emptable.globalcom=?globalCom ");
+		IUser deptEmployee = sql(sb.toString());
+		if (dept.getPartCode() != null) {
+			deptEmployee.set("partCode" , dept.getPartCode());
+		}
+		deptEmployee.set("globalCom" , dept.getGlobalCom());
+		deptEmployee.select();
+		deptEmployee.setMetaworksContext(this.getMetaworksContext());
+		
+		return deptEmployee;
 	}
 }
