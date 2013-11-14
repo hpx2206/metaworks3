@@ -23,7 +23,8 @@ var org_uengine_codi_mw3_model_InstanceListener = function(objectId, className){
 				// sns 모드일 경우 instance 가 열려있지 않을 경우에만 action
 				if( 'sns' != preferUx || !faceHelper.isOpenInstance(instId) )
 					faceHelper.changeInstance(instId, value);
-											
+			}else if(this.object.command == 'remove'){
+				faceHelper.removeInstance(instId);
 			}else{
 				// sns 모드일 경우 instance 가 열려있지 않을 경우에만 action
 				if( 'sns' != preferUx || !faceHelper.isOpenInstance(instId) ){

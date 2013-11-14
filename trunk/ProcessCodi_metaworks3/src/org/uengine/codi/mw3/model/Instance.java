@@ -25,6 +25,7 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.widget.IFrame;
@@ -1532,11 +1533,51 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public void toggleSecurityConversation() throws Exception{
 		String secuopt = this.getSecuopt();
+		IInstance instanceRef = databaseMe();
+		this.fillFollower();
+		
+		IUser followers = getFollowers().getFollowers();
+		followers.beforeFirst();
+		
+		boolean iCanSee = false;
+		while(followers.next()){
+			if(session.getUser().getUserId().equals(followers.getUserId())){
+				iCanSee = true;
+				break;
+			}
+		}
+		followers.beforeFirst();
+		IDept deptFollower = getFollowers().getDeptFollowers();
+		if( deptFollower.getImplementationObject().getCachedRows() != null ){
+			deptFollower.beforeFirst();
+			while( deptFollower.next() ){
+				if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
+					iCanSee = true;
+					break;
+				}
+			}
+			deptFollower.beforeFirst();
+		}
+		
+		if( !iCanSee ){
+			throw new Exception("$OnlyFollowerCanSecuopt");
+		}
+		
 		if (secuopt.charAt(0) != '0') {
 			databaseMe().setSecuopt("0");
 		} else {
 			databaseMe().setSecuopt("1");
 		}
+		
+		
+		// 비공개로 설정할 경우 나를 제외한 다른 사람의 인스턴스목록에서 글 제거
+		if( "1".equals(instanceRef.getSecuopt()) ){
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
+					new Object[]{new InstanceListener(InstanceListener.COMMAND_REMOVE, instanceRef)});			
+		}
+		// 자기자신의 인스턴스 상태를 변경함
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
 	}
 	
 	public void complete() throws Exception{
@@ -1584,6 +1625,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 		TodoBadge todoBadge = new TodoBadge();
 		todoBadge.session = session;
 		todoBadge.refresh();
+		
+		CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
+		commingTodoPerspective.setSelected(true);
+		commingTodoPerspective.loadChildren();
 
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem)});			
