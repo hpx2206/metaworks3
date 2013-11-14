@@ -20,6 +20,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
@@ -38,7 +39,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
 	  ejsPathMappingByContext=	{
 				"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/TopicTitle.ejs'}"
-}, options={"fieldOrder"}, values={"topicTitle,topicSecuopt,url"})
+}, options={"fieldOrder"}, values={"topicTitle,topicSecuopt,url,logoFile"})
 public class TopicTitle  implements ContextAware{
 	public TopicTitle(){
 		setMetaworksContext(new MetaworksContext());
@@ -51,7 +52,16 @@ public class TopicTitle  implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-
+	
+	MetaworksFile logoFile;
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}	
+		
 	String topicId;
 		@Hidden
 		public String getTopicId() {
@@ -126,6 +136,12 @@ public class TopicTitle  implements ContextAware{
 	public void saveMe() throws Exception {
 		WfNode wfNode = new WfNode();
 		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			wfNode.setName(this.getTopicTitle());
 			wfNode.setType("topic");
@@ -133,6 +149,10 @@ public class TopicTitle  implements ContextAware{
 			wfNode.setParentId(session.getCompany().getComCode());	
 			wfNode.setAuthorId(session.getUser().getUserId());		
 			wfNode.setCompanyId(session.getCompany().getComCode());
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				wfNode.setUrl(this.getLogoFile().getUploadedPath());
+				wfNode.setThumbnail(this.getLogoFile().getFilename());
+			}
 			wfNode.createMe();
 			
 			TopicMapping tm = new TopicMapping();
@@ -148,6 +168,11 @@ public class TopicTitle  implements ContextAware{
 			wfNode.setId(this.getTopicId());
 			
 			wfNode.copyFrom(wfNode.databaseMe());
+			
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				wfNode.setUrl(this.getLogoFile().getUploadedPath());
+				wfNode.setThumbnail(this.getLogoFile().getFilename());
+			}
 			
 			wfNode.setName(this.getTopicTitle());
 			wfNode.saveMe();
@@ -174,6 +199,7 @@ public class TopicTitle  implements ContextAware{
 		TopicNode topicNode = new TopicNode();
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicTitle());
+		topicNode.setType(TopicNode.TOPIC);
 		
 		this.makeHtml();
 		
@@ -275,7 +301,8 @@ public class TopicTitle  implements ContextAware{
 		TopicNode topicNode = new TopicNode();
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicTitle());
-
+		topicNode.setType(TopicNode.TOPIC);
+		
 		return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};		
 	}
 	
