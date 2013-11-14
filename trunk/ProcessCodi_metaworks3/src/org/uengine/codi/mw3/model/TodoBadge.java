@@ -49,7 +49,7 @@ public class TodoBadge{
 		instList.load();
 		
 		Popup popup = new Popup();
-		popup.setName("Todo List");
+		popup.setName("$TodoList");
 		popup.setPanel(instList);
 		
 		this.refresh();

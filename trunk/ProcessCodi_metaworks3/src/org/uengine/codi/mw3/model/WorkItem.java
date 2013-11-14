@@ -1393,7 +1393,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	}
 
-	public IWorkItem load(String id) throws Exception{
+	public IWorkItem loadMajorVersionFile(String id) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select * from bpm_worklist where majorver in (select max(majorver) from bpm_worklist where instId=?instId)");
 		sb.append(" and instId=?instId");
