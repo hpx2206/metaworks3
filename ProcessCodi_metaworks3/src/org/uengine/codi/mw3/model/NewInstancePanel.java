@@ -133,7 +133,7 @@ public class NewInstancePanel implements ContextAware {
 				
 				securityLevel.add("$Privacy.Normal","0");
 				securityLevel.add("$Privacy.OnlyFollowers","1");
-				securityLevel.add("$Privacy.Public","2");
+//				securityLevel.add("$Privacy.Public","2");
 			}
 			
 		}

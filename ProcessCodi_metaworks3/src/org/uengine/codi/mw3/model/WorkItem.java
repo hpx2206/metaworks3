@@ -980,7 +980,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);
-			
+			this.getWriter().setMetaworksContext(this.getMetaworksContext());
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
 			copyOfInstance.fillFollower();
@@ -1017,7 +1017,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					WorkItem parentWorkItem = new WorkItem();
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
-					returnObjects = new Object[]{new ToAppend(parentWorkItem, this)};
+					returnObjects = new Object[]{new ToAppend(parentWorkItem, this) , new Refresh(instanceFollowers)};
 					
 				}else if(this instanceof CommentWorkItem){		
 					if("memo".equals(this.getType())){
@@ -1025,19 +1025,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						memo.copyFrom(this);
 						memo.setMemo(new WebEditor(this.getContent()));
 
-						returnObjects = new Object[]{new Refresh(memo, false, true)};
+						returnObjects = new Object[]{new Refresh(memo, false, true) , new Refresh(instanceFollowers)};
 					}else{
 						
-						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
-							
-							InstanceFollowers followers = new InstanceFollowers();
-							followers.setInstanceId(this.getInstId().toString());
-							followers.load();
-							
-							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
-						}
-						else
-							returnObjects = new Object[]{new Refresh(this, false, true)};	
+//						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
+//							
+//							InstanceFollowers followers = new InstanceFollowers();
+//							followers.setInstanceId(this.getInstId().toString());
+//							followers.load();
+//							
+//							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
+//						}
+//						else
+							returnObjects = new Object[]{new Refresh(this, false, true) , new Refresh(instanceFollowers)};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					InstanceViewThreadPanel genericWorkItem = new InstanceViewThreadPanel();
@@ -1055,20 +1055,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //					documentTool.onLoad();
 					
 					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(genericWorkItem)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(genericWorkItem)  , new Refresh(instanceFollowers)};
 				}else if(this instanceof FileWorkItem){
 					DocWorkItem docWorkItem = new DocWorkItem();
 					docWorkItem.setInstId(this.getInstId());
 					docWorkItem.getMetaworksContext().setHow("document");
 					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)  , new Refresh(instanceFollowers)};
 				}else{
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
 					commentWorkItem.setInstId(this.getInstId());
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)  , new Refresh(instanceFollowers)};
 				}
 				
 				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});

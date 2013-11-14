@@ -167,14 +167,6 @@ public class PerspectivePanel  implements ContextAware {
 //					processPerspective.select();
 				}
 				
-				//문서
-				if("1".equals(GlobalContext.getPropertyString("document.use","1"))){
-					documentPerspective = new DocumentPerspective();
-					setMetaworksContext(new MetaworksContext());
-					this.getMetaworksContext().setHow("perspectivePanel");
-					documentPerspective.setMetaworksContext(this.getMetaworksContext());
-				}
-				
 				//친구
 				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
 					contactPerspective = new ContactPerspective();
@@ -205,6 +197,12 @@ public class PerspectivePanel  implements ContextAware {
 			//지식맵
 			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
 				strategicPerspective = new StrategicPerspective();
+			}
+			if("1".equals(GlobalContext.getPropertyString("document.use","1"))){
+			     documentPerspective = new DocumentPerspective();
+			     setMetaworksContext(new MetaworksContext());
+			     this.getMetaworksContext().setHow("perspectivePanel");
+			     documentPerspective.setMetaworksContext(this.getMetaworksContext());
 			}
 		}//session
 	}

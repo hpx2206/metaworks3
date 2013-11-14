@@ -678,45 +678,6 @@ public class InstanceView {
 		
 		return instanceViewThreadPanel;
 	}
-
-	
-	@ServiceMethod(callByContent=true)
-	public void toggleSecurityConversation() throws Exception{
-		getInstanceSecurityConfigurer().toggleSecureConversation();
-		
-		Instance instance = new Instance();
-		instance.setInstId(new Long(instanceId));
-		
-		IUser followers = getFollowers().getFollowers();
-		followers.beforeFirst();
-		
-		boolean iCanSee = false;
-		while(followers.next()){
-			if(session.getUser().getUserId().equals(followers.getUserId())){
-				iCanSee = true;
-				break;
-			}
-		}
-		followers.beforeFirst();
-		IDept deptFollower = getFollowers().getDeptFollowers();
-		if( deptFollower.getImplementationObject().getCachedRows() != null ){
-			deptFollower.beforeFirst();
-			while( deptFollower.next() ){
-				if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
-					iCanSee = true;
-					break;
-				}
-			}
-			deptFollower.beforeFirst();
-		}
-		if(iCanSee){
-			String secuopt = instance.databaseMe().getSecuopt();
-			setSecuopt(secuopt);
-			this.load(instance);
-		}else{
-			throw new Exception("$OnlyFollowerCanSecuopt");
-		}
-	}
 	
 	public boolean verifyiCanSeePermissions() throws Exception {
 		
