@@ -1564,7 +1564,7 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
-    /*overflow: hidden;*/ /* when page gets too small for container min-width/height */
+    overflow: hidden; /* when page gets too small for container min-width/height */
 }
 
 .mw3_layout {
