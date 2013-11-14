@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
@@ -11,7 +13,10 @@ import org.metaworks.Remover;
 import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +56,6 @@ public class Dept extends Database<IDept> implements IDept {
 		setIsDeleted("0");
 		
 		setChildren(new DeptList());
-		setDeptEmployee(new EmployeeList());
 	}
 	
 	public String getPartCode() {
@@ -144,18 +148,6 @@ public class Dept extends Database<IDept> implements IDept {
 	@Override
 	public void setChildren(DeptList children) {
 		this.children = children;
-	}
-
-	EmployeeList deptEmployee;
-
-	@Override
-	public EmployeeList getDeptEmployee() {
-		return deptEmployee;
-	}
-
-	@Override
-	public void setDeptEmployee(EmployeeList deptEmployee) {
-		this.deptEmployee = deptEmployee;
 	}
 
 	@Override
@@ -272,10 +264,6 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			setChildren(deptList);
 			
-			EmployeeList employeeList = new EmployeeList();
-			employeeList.setId(this.getPartCode());
-			
-			setDeptEmployee(employeeList);
 		} else {
 			DeptList deptList = new DeptList();
 			deptList.setMetaworksContext(this.getMetaworksContext());
@@ -283,26 +271,6 @@ public class Dept extends Database<IDept> implements IDept {
 			deptList.setDept(this.findChildren());			
 			setChildren(deptList);			
 			
-			
-				
-			if(!("deptPicker".equals(this.getMetaworksContext().getWhere()))){
-				IEmployee employee = new Employee();
-				employee.setMetaworksContext(this.getMetaworksContext());
-				employee.getMetaworksContext().setHow("tree");
-				if( "addContact".equals(this.getMetaworksContext().getWhere()) ){
-					// TODO 이렇게 분기하는게 좋은 코드는 아니지만 우선 적용함 - 2/17 김형국
-					employee.getMetaworksContext().setWhere("addContact");
-				}else{
-					employee.getMetaworksContext().setWhere("navigator");
-				}
-				
-				EmployeeList employeeList = new EmployeeList();			
-				employeeList.setMetaworksContext(this.getMetaworksContext());
-				employeeList.setId(this.getPartCode());
-				employeeList.setEmployee(employee.findByDept(this));
-				
-				setDeptEmployee(employeeList);
-			}
 		}
 	}
 		
@@ -344,13 +312,19 @@ public class Dept extends Database<IDept> implements IDept {
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
+			
+			//deptFollow에 dept생성자 추가.
 			Employee emp = new Employee();
 			emp.setEmpCode(session.getEmployee().getEmpCode());
 			emp.copyFrom(emp.databaseMe());
-			emp.setPartCode(this.getPartCode());
+
+			String partCode = createNewId();
+			
+			emp.setPartCode(partCode);
 			emp.syncToDatabaseMe();
 			
 			// �앹꽦
+			this.setPartCode(partCode);
 			this.setGlobalCom(session.getCompany().getComCode());
 			this.setIsDeleted("0");		
 			
@@ -502,7 +476,7 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
 		
-		return new Object[]{new Remover(dept , true)};		
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};		
 	}
 
 	@Override
@@ -617,13 +591,21 @@ public class Dept extends Database<IDept> implements IDept {
 			locatorForEmployeeInClipboard.databaseMe().setPartCode(this.getPartCode());
 			locatorForEmployeeInClipboard.flushDatabaseMe();
 			
-			EmployeeList employeeList = new EmployeeList();			
-			employeeList.setMetaworksContext(this.getMetaworksContext());
-			employeeList.setId(this.getPartCode());
-			employeeList.setEmployee(locatorForEmployeeInClipboard.findByDept(this));
-			setDeptEmployee(employeeList);
-			
 			return new Object[]{new Remover(employeeInClipboard)};
+	}
+	
+	public String createNewId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("partTable", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		return number.toString();
 	}
 	
 	@Autowired

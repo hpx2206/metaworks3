@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import javax.validation.constraints.Pattern;
 
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -74,11 +75,6 @@ public interface IDept extends IDAO {
 	public DeptList getChildren() throws Exception;
 	public void setChildren(DeptList children) throws Exception;
 
-	@NonSavable
-	@NonLoadable
-	public EmployeeList getDeptEmployee() throws Exception;
-	public void setDeptEmployee(EmployeeList deptEmployee) throws Exception;
-
 	// methods
 	public IDept load() throws Exception;
 
@@ -108,7 +104,7 @@ public interface IDept extends IDAO {
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)//, validate=true
 	public Object[] saveDeptInfo() throws Exception;
 
-	@ServiceMethod(inContextMenu=true, needToConfirm=true)
+	@ServiceMethod(inContextMenu=true, needToConfirm=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] deleteDept() throws Exception;
 	
 	@ServiceMethod(callByContent = true)

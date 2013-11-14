@@ -19,6 +19,7 @@ public class Followers implements ContextAware {
 	
 	static final String ADD_INSTANCEFOLLOWERS = "addInstanceFollower";
 	static final String ADD_TOPICFOLLOWERS = "addTopicFollower";
+	static final String ADD_ROLEFOLLOWERS = "addRoleFollower";
 	static final String ADD_DEPTFOLLOWERS = "addDeptFollower";
 	static final String ADD_DOCUMENTFOLLOWERS = "addDocumentFollower";
 	static final String ADD_ETCFOLLOWERS = "addEtcFollower";
@@ -102,6 +103,8 @@ public class Followers implements ContextAware {
 			type = ADD_TOPICFOLLOWERS;
 		}else if("dept".equals(this.getInstanceId())){
 			type = ADD_DEPTFOLLOWERS;
+		}else if("role".equals(this.getInstanceId())){
+			type = ADD_ROLEFOLLOWERS;
 		}else if("etc".equals(this.getInstanceId())){
 			type = ADD_ETCFOLLOWERS;
 		}
@@ -137,18 +140,29 @@ public class Followers implements ContextAware {
 				TopicFollowers addFollower = new TopicFollowers();
 				addFollower.setInstanceId(getInstanceId());
 				newFollowUser.topicFollowers = addFollower;
-				newFollowUser.getMetaworksContext().setWhen("addTopicFollower");
+				newFollowUser.getMetaworksContext().setWhen(ADD_TOPICFOLLOWERS);
 			}else if("document".equals(this.getInstanceId())){
 				DocumentFollowers documentFollower = new DocumentFollowers();
 				documentFollower.setInstanceId(getInstanceId());
 				newFollowUser.documentFollowers = documentFollower;
 //				newFollowUser.setName(session.getUser().getName());
-				newFollowUser.getMetaworksContext().setWhen("addDocumentFollower");
-			}else{
+				newFollowUser.getMetaworksContext().setWhen(ADD_DOCUMENTFOLLOWERS);
+			}else if("role".equals(this.getInstanceId())){
+				RoleFollowers roleFollower = new RoleFollowers();
+				roleFollower.setInstanceId(getInstanceId());
+				newFollowUser.roleFollowers = roleFollower;
+				newFollowUser.getMetaworksContext().setWhen(ADD_ROLEFOLLOWERS);
+			}else if("dept".equals(this.getInstanceId())){
+				DeptFollowers deptFollower = new DeptFollowers();
+				deptFollower.setInstanceId(getInstanceId());
+				newFollowUser.deptFollowers = deptFollower;
+				newFollowUser.getMetaworksContext().setWhen(ADD_DEPTFOLLOWERS);
+			}
+			else{	
 				InstanceFollowers addFollower = new InstanceFollowers();
 				addFollower.setInstanceId(getInstanceId());
 				newFollowUser.instanceFollowers = addFollower;
-				newFollowUser.getMetaworksContext().setWhen("addInstanceFollower");
+				newFollowUser.getMetaworksContext().setWhen(ADD_INSTANCEFOLLOWERS);
 			}
 			newFollowUser.processManager = processManager;
 			newFollowUser.session = session;

@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.MetaworksFile;
 
 public class OrganizationPerspectiveRole extends Perspective {
 
@@ -42,6 +43,7 @@ public class OrganizationPerspectiveRole extends Perspective {
 		IRole role = new Role();
 		role.getMetaworksContext().setWhere("admin");
 		role.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		role.setLogoFile(new MetaworksFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(role);

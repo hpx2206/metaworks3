@@ -17,7 +17,7 @@ if(value){
                 <div class="mp_sub_rightBox">
                 	<dl class="mp_sub_dsc1">
                     	<dt style="font-size:16px;"><%=fields.name.here()%></dt>
-                    	<dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.secuopt%></span></dd>
+                    	<dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.description%></span></dd>
                                    
                         
                     </dl>                    
@@ -26,7 +26,6 @@ if(value){
                 <div id="searchbox" style="border-bottom:1px solid #9EBFC4;">
 	                <div class="positionRight" style="padding:5px 0">
 						<%=methods.modify.here()%>
-						<%=methods.exportHtml.here()%>
 						<%=methods.delete.here()%>
 						
 							

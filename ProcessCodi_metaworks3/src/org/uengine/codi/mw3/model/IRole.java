@@ -9,6 +9,7 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 
 @Table(name="roletable")
 public interface IRole extends IDAO {
@@ -24,6 +25,17 @@ public interface IRole extends IDAO {
 
 	public String getIsDeleted();
 	public void setIsDeleted(String isDeleted);
+	
+	public String getUrl();
+	public void setUrl(String url);
+	
+	public String getThumbnail();
+	public void setThumbnail(String thumbnail);
+	
+	@NonLoadable
+	@NonSavable
+	public MetaworksFile getLogoFile();
+	public void setLogoFile(MetaworksFile logoFile);
 	
 	@NonLoadable
 	@NonSavable

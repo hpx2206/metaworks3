@@ -4,7 +4,7 @@
 		
 		if(mw3.when == 'addContact'){
 			clickAction = methods.addContact.caller();
-		}else if(mw3.when == 'addTopicFollower' || mw3.when == 'addDocumentFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower'  || mw3.when == 'addDeptFollower' || mw3.when == 'addPicker'){
+		}else if(mw3.when == 'addTopicFollower' || mw3.when == 'addDocumentFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower'  || mw3.when == 'addRoleFollower' || mw3.when == 'addDeptFollower' || mw3.when == 'addPicker'){
 			clickAction = methods.addFollower.caller();
 		}else if(mw3.when == 'self' || mw3.when == 'self_small'){
 			/*clickAction = methods.info.caller();*/
@@ -171,7 +171,7 @@
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 				
 <%	
-			if(mw3.when == 'followers' || mw3.when == 'topicFollowers' || mw3.when == 'contacts'  || mw3.when == 'documentFollowers'){
+			if(mw3.when == 'followers' || mw3.when == 'topicFollowers' || mw3.when == 'deptFollowers' || mw3.when == 'roleFollowers' || mw3.when == 'contacts'  || mw3.when == 'documentFollowers'){
 
 %>
 				<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>

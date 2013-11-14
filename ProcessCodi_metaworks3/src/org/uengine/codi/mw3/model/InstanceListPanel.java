@@ -102,7 +102,7 @@ public class InstanceListPanel implements ContextAware{
 				this.setPerspectiveInfo(new DeptInfo(session));
 			}
 			if("role".equals(session.getLastPerspecteType())){
-				this.getMetaworksContext().setHow("document");
+				this.getMetaworksContext().setHow("role");
 				this.setPerspectiveInfo(new RoleInfo(session));
 			}
 			

@@ -208,7 +208,7 @@ public class TopicTitle  implements ContextAware{
 		
 		this.notiToCompany();
 		
-		return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Refresh(this)};
+		return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Remover(new ModalWindow())};
 	}
 	
 	
