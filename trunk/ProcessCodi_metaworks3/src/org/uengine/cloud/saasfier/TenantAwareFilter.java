@@ -26,7 +26,7 @@ public class TenantAwareFilter implements Filter{
 		
 		String tenantId = null;
 		
-		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "1"))){
+		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "0"))){
 			//request 의 url 의 동적 변경...가능할런지..		
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			

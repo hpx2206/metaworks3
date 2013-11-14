@@ -9,8 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
+import org.metaworks.Forward;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
@@ -28,7 +27,7 @@ import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Forward;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.tadpole.Tadpole;
@@ -464,105 +463,37 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
-	public Object saveEmp() throws Exception {
+	public void saveMe() throws Exception {
+		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+			this.setApproved(true);
+			
+			// 올챙이 연동
+			if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
+				StringBuffer param = new StringBuffer();
+				
+				//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
+				param.append("?comcode=").append(this.getGlobalCom()).append("&");
+				param.append("userId=").append(this.getEmpCode()).append("&");
+				param.append("pw=").append(this.getPassword()).append("&");
+				param.append("userName=").append(this.getEmpName());
+				
+				Tadpole tadpole = new Tadpole();
+				tadpole.session = session;
+				tadpole.createUserAtTadpole(param.toString());
+			}
+		}
 		
-		
-		this.setGlobalCom(this.globalCom);
-		this.setLocale(this.getLocale());
-		this.setApproved(true);
-		
-		this.setPartCode(this.getDept().getPartCode());
-		syncToDatabaseMe();
-		flushDatabaseMe();
-		
-		
+		// TODO: 부서 딕셔너리 처리 필		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
 			getImageFile().setEmpCode(this.getEmpCode());
 			getImageFile().upload();
 		}
 		
+		syncToDatabaseMe();
+		flushDatabaseMe();
 		
-		
-		//////////////////////////////////////////////////////////////////////////////////
-		
-		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
-			session.setEmployee(findMe());
-			
-			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
-		}
-		
-		/*
-		if(this.getIsAdmin() == false && !this.isApproved()){
-			Session session = new Session();
-			session.setEmployee(this);
-			session.fillSession();
-			session.setGuidedTour(true);
-			
-			CommentWorkItem newComment = new CommentWorkItem();
-			newComment.processManager = processManager;
-			newComment.session = session;
-
-			newComment.setTitle(localeManager.getResourceBundle().getProperty("RequestJoinApprovedMessage"));
-			newComment.save();
-			
-			processManager.applyChanges();
-		}
-		*/
-		
-		
-		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
-			
-			StringBuffer param = new StringBuffer();
-			
-			//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
-			param.append("?comcode=").append(this.getGlobalCom()).append("&");
-			param.append("userId=").append(this.getEmpCode()).append("&");
-			param.append("pw=").append(this.getPassword()).append("&");
-			param.append("userName=").append(this.getEmpName());
-			
-			Tadpole tadpole = new Tadpole();
-			tadpole.session = session;
-			tadpole.createUserAtTadpole(param.toString());
-		}
-	
-		
-		session = new Session();
 		session.setEmployee(this);
-		session.fillSession();
 		session.fillUserInfoToHttpSession();
-		
-		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
-		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
-		String id = (String)httpSession.getId();
-		
-		System.out.println("id : " + id);
-		System.out.println("loggedUserId : " + loggedUserId);
-		
-		
-		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-        
-        URL urlURL = new java.net.URL(base);
-       	String host = urlURL.getHost();
-       	int port = urlURL.getPort();
-       	String protocol = urlURL.getProtocol();
-
-       //	String tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-        Company company = new Company();
-        company.setComCode(this.getGlobalCom());
-        ICompany findCompany = company.findByCode();
-        String tenantId = findCompany.getAlias();
-        
-       	this.notiToCompany();
-       	
-       	NotiSetting notiSetting = new NotiSetting();
-       	notiSetting.setUserId(this.getEmpCode());
-       	notiSetting.setId(this.createNewNotiSettingId());
-       	notiSetting.createDatabaseMe();
-       	
-		String url = protocol + "://" + (tenantId==null?"":tenantId+".")  + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
-
-		return new Forward(url);
 	}
 	
 	public void notiToCompany() throws Exception{
@@ -645,6 +576,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return instance;
 	}
 	
+	/*
 	@Override
 	public boolean saveMe() throws Exception {
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
@@ -691,6 +623,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return true;
 	}
+	*/
 	
 	@Override
 	public boolean createCodi() throws Exception {
@@ -746,14 +679,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object activate() throws MetaworksException{
-System.out.println("authKey= "+ getAuthKey());
 		
-		Employee employee = new Employee();
-		employee.setAuthKey(this.getAuthKey());
 		IEmployee findEmployee = null;
 		
 		try {
-			findEmployee = employee.findByKey();
+			findEmployee = findByKey();
 		} catch (Exception e) {
 			e.printStackTrace();
 			
@@ -774,10 +704,10 @@ System.out.println("authKey= "+ getAuthKey());
 			throw new MetaworksException("not match activation code");
 
 	
-		findEmployee.getMetaworksContext().setWhere("admin");
-		findEmployee.getMetaworksContext().setHow("detail");
+		findEmployee.getMetaworksContext().setWhere("step1");
+		findEmployee.getMetaworksContext().setHow("signUp");
 //		findEmployee.getMetaworksContext().setWhen("findpw");
-		findEmployee.getMetaworksContext().setWhen("new2");			
+		findEmployee.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);			
 		findEmployee.setImageFile(new PortraitImageFile());
 		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
@@ -1175,6 +1105,35 @@ System.out.println("authKey= "+ getAuthKey());
 		Number number = kg.getKeyNumber();
 		
 		return number.toString();
+	}
+	
+	public void prevStep(){
+		this.getImageFile().setFileTransfer(null);
+		
+		int step = Integer.parseInt(this.getMetaworksContext().getWhere().substring(4));
+		this.getMetaworksContext().setWhere("step" + String.valueOf(step-1));
+	}
+	
+	public void nextStep(){
+		this.getImageFile().setFileTransfer(null);
+		
+		int step = Integer.parseInt(this.getMetaworksContext().getWhere().substring(4));
+		
+		this.getMetaworksContext().setWhere("step" + String.valueOf(step+1));
+	}
+	
+	public Forward finish() throws Exception {
+		
+		session = new Session();
+		
+		this.saveMe();
+		
+        Company company = new Company();
+        company.setComCode(this.getGlobalCom());
+        ICompany findCompany = company.findByCode();
+        String tenantId = findCompany.getAlias();
+		
+		return new Forward(TenantContext.getURL(tenantId));
 	}
 	
 	public int createNewNotiSettingId() throws Exception{

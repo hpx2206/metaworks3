@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -21,10 +22,12 @@ import org.metaworks.dao.IDAO;
 
 @Table(name = "emptable")
 //@Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
-@Face(options={"fieldOrder"}, values={"empName,password"})
+@Face(ejsPathMappingByContext={
+		"{how: 'signUp', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IEmployeeSignUp.ejs'}"
+	  }, options={"fieldOrder"}, values={"empName,password"})
 public interface IEmployee extends IDAO {
 
-/*	
+/*	          
     @Id
 	@ORMapping(databaseFields={"empCode", "empName"}, objectFields={"userId", "name"})
 	public IUser getUser();
@@ -40,6 +43,7 @@ public interface IEmployee extends IDAO {
 	public String getEmpCode();
 	public void setEmpCode(String empCode);
 
+	@Face(displayName="$Name")
 	@Name
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.when == 'new2'", message="성함을 입력하세요.")
@@ -59,7 +63,7 @@ public interface IEmployee extends IDAO {
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호를 입력하여 주십시오."),
 		@Validator(name=ValidatorContext.VALIDATE_MIN , options={"4"}, message="비밀번호는 4자 이상 입력하셔야 합니다.")
 	})
-	@Face(options="type", values="password")
+	@Face(displayName="$Password", options="type", values="password")
 	public String getPassword();
 	public void setPassword(String password);
 	
@@ -74,6 +78,7 @@ public interface IEmployee extends IDAO {
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
 	
+	@Face(displayName="$Position")
 	public String getJikName();
 	public void setJikName(String jikName);
 
@@ -85,6 +90,7 @@ public interface IEmployee extends IDAO {
 	public String getPartCode();	
 	public void setPartCode(String partCode);
 	
+	@Face(displayName="$Dept")
 	@NonSavable
 	public String getPartName();	
 	public void setPartName(String partName);
@@ -104,6 +110,7 @@ public interface IEmployee extends IDAO {
 	
 	
 	
+	@Face(displayName="$Email")
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.when == 'new2'", message="이메일을 입력하세요."),
 		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, condition="metaworksContext.when == 'new2'", options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
@@ -206,7 +213,7 @@ public interface IEmployee extends IDAO {
 	public Object[] saveEmployeeInfo() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
-	public boolean saveMe() throws Exception;
+	public void saveMe() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	boolean createCodi() throws Exception;
@@ -244,6 +251,16 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
 	
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object saveEmp() throws Exception;
+	@Hidden(where={"step1"})
+	@ServiceMethod(callByContent=true)
+	public void prevStep();
+	
+	@Hidden(where={"step2"})
+	@ServiceMethod(callByContent=true)
+	public void nextStep();
+	
+	@Available(where={"step2"})
+	@ServiceMethod(callByContent=true)
+	public Forward finish() throws Exception;
+
 }

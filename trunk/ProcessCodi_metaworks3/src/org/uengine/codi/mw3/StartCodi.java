@@ -3,23 +3,25 @@ package org.uengine.codi.mw3;
 import javax.servlet.http.HttpSession;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToOpener;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
-import org.uengine.codi.mw3.model.Main;
-import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.GlobalContext;
+
 public class StartCodi {
+
+	String key;
+	@Hidden
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public Object load() throws Exception{
@@ -85,5 +87,13 @@ public class StartCodi {
 			//return new ErrorPage();
 			return new Login();
 		}		
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object activate() throws Exception {
+		Employee employee = new Employee();
+		employee.setAuthKey(this.getKey());
+
+		return employee.activate();
 	}
 }

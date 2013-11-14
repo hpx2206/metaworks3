@@ -293,7 +293,9 @@ public class Session implements ContextAware{
 	public void fillUserInfoToHttpSession(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		httpSession.setAttribute("loggedUserId", getEmployee().getEmpCode());
-//			httpSession.setAttribute("loggedUserPw", session.getEmployee().getPassword());
+		
+		/*
+		httpSession.setAttribute("loggedUserPw", session.getEmployee().getPassword());
 		httpSession.setAttribute("loggedUserFullName", getEmployee().getEmpName());
 		httpSession.setAttribute("loggedUserIsAdmin", getEmployee().getIsAdmin());
 		httpSession.setAttribute("loggedUserJikName", getEmployee().getJikName());
@@ -301,9 +303,9 @@ public class Session implements ContextAware{
 		httpSession.setAttribute("loggedUserPartCode", getEmployee().getPartCode());
 		httpSession.setAttribute("loggedUserPartName", getEmployee().getPartName());
 		httpSession.setAttribute("loggedUserGlobalCom", getEmployee().getGlobalCom());
-
 		httpSession.setAttribute("loggedUserComName", getCompany().getComName());
 		httpSession.setAttribute("loggedUserLocale", getEmployee().getLocale());
+		*/
 	}
 	
 	public void removeUserInfoFromHttpSession(){
