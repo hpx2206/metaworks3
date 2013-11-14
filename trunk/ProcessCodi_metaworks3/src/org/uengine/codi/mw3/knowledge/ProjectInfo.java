@@ -227,7 +227,12 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		
 
 	public ProjectInfo(){
-		this(null);
+		//this(null);
+	}
+	public ProjectInfo(String projectId){
+		this.setProjectId(projectId);
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
 	public ProjectInfo(Session session){
