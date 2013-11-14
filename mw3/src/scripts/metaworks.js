@@ -3344,6 +3344,21 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			Metaworks3.prototype.isHiddenMethodContext = function(methodContext){
+				
+				if(methodContext.attributes){
+					if(methodContext.attributes['hidden.when']){
+						return (methodContext.attributes['hidden.when'][this.when]!=null);
+					} 
+					
+					if(methodContext.attributes['hidden.where']){
+						return (methodContext.attributes['hidden.where'][this.where]!=null);
+					} 
+	
+					if(methodContext.attributes['hidden.how']){
+						return (methodContext.attributes['hidden.how'][this.how]!=null);
+					}
+				}
+								
 				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
 					if(methodContext.when.indexOf(mw3.when + '|') == -1)
 						return true;						
@@ -3358,10 +3373,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(methodContext.how.indexOf(mw3.how + '|') == -1)
 						return true;						
 				}
-								
-				if(methodContext.when == '___hidden___')
-					return true;
-
+				
 				return false;				
 			}
 			
