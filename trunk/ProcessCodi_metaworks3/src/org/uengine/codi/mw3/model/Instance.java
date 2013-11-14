@@ -382,12 +382,17 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt
 		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
 		.append("   	   FROM bpm_worklist worklist");
-		
+		if("role".equals(navigation.getPerspectiveType())) {
+			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
+		}
 		if("organization.group"	.equals(navigation.getPerspectiveType())) {
 			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
 		}
 		stmt.append("  		  WHERE worklist.status != 'RESERVED'");
-		
+		if("role"	.equals(navigation.getPerspectiveType())) {
+			stmt.append("and rolemapping.rootinstid = worklist.instid ");
+			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
+		}
 		if("organization.group"	.equals(navigation.getPerspectiveType())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
 			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
@@ -565,6 +570,30 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 			
 		}else if("organization.group"
+				.equals(navigation.getPerspectiveType())) {
+			
+//			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
+			
+			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			
+			criteria.put("lastSelectedItem", navigation.getPerspectiveValue());			
+			criteria.put("instIsdelete", "1");
+			
+			// secureopt
+			instanceSql
+			.append(" and	exists ( ")
+			.append("			select 1 from bpm_procinst	 ")
+			.append("			where inst.instid = instid	 ")
+			.append("			and secuopt = 0	 ")
+			.append("			union all	 ")
+			.append("			select 1 from bpm_rolemapping rm	 ")
+			.append("			where inst.instid = rm.rootinstid	 ")
+			.append("			and inst.secuopt = 1	 ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
+			.append("			)	 ");
+
+		}else if("role"
 				.equals(navigation.getPerspectiveType())) {
 			
 //			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
