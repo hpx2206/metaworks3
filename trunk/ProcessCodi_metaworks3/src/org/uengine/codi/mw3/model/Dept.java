@@ -12,6 +12,8 @@ import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
@@ -24,7 +26,27 @@ public class Dept extends Database<IDept> implements IDept {
 	String isDeleted;
 	String description;
 //	String comCode;
+	
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
 
+	String thumbnail;
+		public String getThumbnail() {
+			return thumbnail;
+		}
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
+		}
+	
+	public Dept(String partCode){
+		this.partCode = partCode;
+	}
+	
 	public Dept(){
 		setIsDeleted("0");
 		
@@ -92,6 +114,14 @@ public class Dept extends Database<IDept> implements IDept {
 		this.globalCom = globalCom;
 	}
 
+	MetaworksFile logoFile;
+	public MetaworksFile getLogoFile() {
+		return logoFile;
+	}
+	public void setLogoFile(MetaworksFile logoFile) {
+		this.logoFile = logoFile;
+	}
+	
 	boolean selected;
 
 	@Override
@@ -288,6 +318,7 @@ public class Dept extends Database<IDept> implements IDept {
 		
 		dept.getMetaworksContext().setWhere("admin");
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		dept.setLogoFile(new MetaworksFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(dept);
@@ -302,14 +333,31 @@ public class Dept extends Database<IDept> implements IDept {
 	public Object[] saveDeptInfo() throws Exception {
 
 		this.getMetaworksContext().setHow("tree");
+		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 				
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
+			Employee emp = new Employee();
+			emp.setEmpCode(session.getEmployee().getEmpCode());
+			emp.copyFrom(emp.databaseMe());
+			emp.setPartCode(this.getPartCode());
+			emp.syncToDatabaseMe();
 			
 			// �앹꽦
 			this.setGlobalCom(session.getCompany().getComCode());
 			this.setIsDeleted("0");		
 			
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				this.setUrl(this.getLogoFile().getUploadedPath());
+				this.setThumbnail(this.getLogoFile().getFilename());
+			}
 			createDatabaseMe();
 			syncToDatabaseMe();			
 
@@ -331,11 +379,14 @@ public class Dept extends Database<IDept> implements IDept {
 		} else {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
-			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				this.setUrl(this.getLogoFile().getUploadedPath());
+				this.setThumbnail(this.getLogoFile().getFilename());
+			}
 			syncToDatabaseMe();
 			flushDatabaseMe();
 			
-			return new Object[]{new Remover(new Popup()), new Refresh(this)};
+			return new Object[]{new Remover(new Popup()), new Remover(new ModalWindow()), new Refresh(this)};
 		}
 		//}
 		// TODO execute drillDown()
@@ -475,7 +526,8 @@ public class Dept extends Database<IDept> implements IDept {
 		newDept.setParent_PartCode(getPartCode());
 		newDept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newDept.getMetaworksContext().setWhere("admin");
-
+		newDept.setLogoFile(new MetaworksFile());
+		
 		Popup popup = new Popup();
 		popup.setPanel(newDept);
 		
