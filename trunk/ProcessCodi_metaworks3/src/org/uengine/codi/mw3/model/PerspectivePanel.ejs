@@ -4,18 +4,20 @@
 	<%=fields.personalPerspective.here() %>
 	<%=fields.topicPerspective.here() %>
 	<%=fields.commingTodoPerspective.here() %>
-	<%=fields.processPerspective.here() %>
+	<%=fields.contactPerspective.here() %>
 	<%=fields.documentPerspective.here()%>
+	<%=fields.organizationPerspectiveDept.here() %>
 	<%=fields.organizationPerspectiveRole.here() %>
+	
+	
+	<!--
+	<%=fields.processPerspective.here() %>
 	<%=fields.projectPerspective.here() %>
 	<%=fields.appPerspective.here() %>
-	<%=fields.contactPerspective.here() %>
-	<%=fields.organizationPerspectiveDept.here() %>
+	-->
 </div>
-
-
 
 <div style="position:relative; bottom:0px;">
 	<a id="" href="#" onClick="<%=methods.companyRepInfo.caller() %>"><span id="navigator"><b><%=mw3.localize("$setComapnyRep")%></b></span></a><br>
 		<a id="" href="#" onClick="<%=methods.feedBackInfo.caller() %>"><span id="navigator"><b><%=mw3.localize("Contact Us")%></b></span></a>
-</div>	
+</div>
