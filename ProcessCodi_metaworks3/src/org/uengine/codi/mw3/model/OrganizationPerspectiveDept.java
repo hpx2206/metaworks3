@@ -3,6 +3,8 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.MetaworksFile;
+import org.uengine.kernel.GlobalContext;
 
 public class OrganizationPerspectiveDept extends Perspective {
 
@@ -66,8 +68,8 @@ public class OrganizationPerspectiveDept extends Perspective {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addDept() {
 		IDept dept = new Dept();
-		dept.getMetaworksContext().setHow("info");
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		dept.setLogoFile(new MetaworksFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(dept);
