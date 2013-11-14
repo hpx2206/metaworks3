@@ -1055,6 +1055,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					
 					
 					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(genericWorkItem)};
+				}else if(this instanceof FileWorkItem){
+					DocWorkItem docWorkItem = new DocWorkItem();
+					docWorkItem.setInstId(this.getInstId());
+					docWorkItem.getMetaworksContext().setHow("document");
+					
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)};
 				}else{
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
 					commentWorkItem.setInstId(this.getInstId());
@@ -1405,6 +1411,25 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 	
 	
+	public IWorkItem loadCurrentView() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append(" select * from bpm_worklist where taskId=?taskId");
+		sb.append(" and instId=?instId");
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
+		
+		workitem.set("taskId",this.getTaskId());
+		workitem.set("instId",this.getInstId());
+		workitem.select();
+		
+		if(workitem.next()){
+			this.setType("file");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			this.getMetaworksContext().setHow("document");
+			return workitem;
+		}else{
+			return null;
+		}
+	}
 	@AutowiredFromClient
 	public Session session;
 	
