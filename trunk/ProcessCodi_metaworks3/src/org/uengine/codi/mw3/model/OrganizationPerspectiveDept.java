@@ -20,14 +20,6 @@ public class OrganizationPerspectiveDept extends Perspective {
 			this.deptList = deptList;
 		}
 		
-	EmployeeList deptEmployee;
-		public EmployeeList getDeptEmployee() {
-			return deptEmployee;
-		}
-		public void setDeptEmployee(EmployeeList deptEmployee) {
-			this.deptEmployee = deptEmployee;
-		}		
-		
 	@Override
 	protected void loadChildren() throws Exception {
 		

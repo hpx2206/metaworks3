@@ -295,7 +295,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		documentNode.update();
 		
 		
-		return new Object[]{new Remover(this)};
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(this)};
 	}
 
 	@Override

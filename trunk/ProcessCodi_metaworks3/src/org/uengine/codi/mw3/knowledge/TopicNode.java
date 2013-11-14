@@ -16,6 +16,7 @@ import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceList;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
@@ -176,7 +177,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		updateNode.update();
 		
-		return new Object[]{new Remover(this)};
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(this)};
 	}
 	
 

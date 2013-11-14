@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
@@ -41,7 +42,7 @@ public class DeptInfo extends PerspectiveInfo{
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
 		
-		return new Object[]{new Remover(dept , true)};	
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};	
 	}
 
 	@Override

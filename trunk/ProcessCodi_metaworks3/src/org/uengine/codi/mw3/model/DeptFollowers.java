@@ -30,9 +30,8 @@ public class DeptFollowers extends Followers{
 		
 		IUser user = new User();
 		IUser users = user.findByDept(dept);
-		while(users.next()){
-			put(users);
-		}
+		setFollowers(users);
+
 		
 	}
 

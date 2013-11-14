@@ -1,13 +1,20 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.BrainstormPanel;
 
 public class Role extends Database<IRole> implements IRole {
@@ -27,6 +34,39 @@ public class Role extends Database<IRole> implements IRole {
 		public void setRoleCode(String roleCode) {
 			this.roleCode = roleCode;
 		}
+
+	String name;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+	
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+	String thumbnail;
+		public String getThumbnail() {
+			return thumbnail;
+		}
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
+		}
+
+	MetaworksFile logoFile;
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}
+	
 
 	String comCode;
 		@Override
@@ -152,29 +192,54 @@ public class Role extends Database<IRole> implements IRole {
 	
 	@Override
 	public Object[] saveMe() throws Exception {
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			// 생성
 			this.setComCode(session.getCompany().getComCode());
 			this.setIsDeleted("0");
 			
+			String roleCode = createNewId();
+			
+			this.setRoleCode(roleCode);
 			this.getMetaworksContext().setWhere("navigator");
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
+			
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				this.setUrl(this.getLogoFile().getUploadedPath());
+				this.setThumbnail(this.getLogoFile().getFilename());
+			}
+			//roleFollow에 dept생성자 추가.
+			
 			
 			createDatabaseMe();
 			syncToDatabaseMe();
 			
+			RoleUser roleUser = new RoleUser();
+			roleUser.setRoleCode(roleCode);
+			roleUser.setEmpCode(session.getEmployee().getEmpCode());
+			roleUser.createDatabaseMe();
 			RoleList roleList = new RoleList();
 			roleList.setId("/ROOT/");
 			
 			return new Object[]{new Remover(new Popup()), new ToAppend(roleList, this)};
 		} else {
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				this.setUrl(this.getLogoFile().getUploadedPath());
+				this.setThumbnail(this.getLogoFile().getFilename());
+			}
+			
 			syncToDatabaseMe();
 			flushDatabaseMe();
 			
 			this.getMetaworksContext().setWhere("navigator");
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
 			
-			return new Object[]{new Remover(new Popup()), new Refresh(this)};
+			return new Object[]{new Remover(new Popup()), new Remover(new ModalWindow()), new Refresh(this)};
 		}
 	}
 
@@ -199,6 +264,7 @@ public class Role extends Database<IRole> implements IRole {
 		
 		role.getMetaworksContext().setWhere("admin");
 		role.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		role.setLogoFile(new MetaworksFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(role);
@@ -270,11 +336,25 @@ public class Role extends Database<IRole> implements IRole {
 	@Override
 	public Object[] loadRole() throws Exception{
 		
-		String title = "주제 : " + this.getRoleCode();
+		String title = "역할 : " + this.getDescr();
 		Object[] returnObject = Perspective.loadInstanceListPanel(session, ROLE, this.getRoleCode(), title);
 		
 		return returnObject;
 		
 	}
 	
+	
+	public String createNewId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("roletable", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		return number.toString();
+	}
 }

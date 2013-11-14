@@ -36,7 +36,7 @@ public interface ITopicNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public Object[] loadTopic() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true)
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 		

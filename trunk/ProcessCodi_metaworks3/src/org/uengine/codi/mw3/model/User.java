@@ -263,6 +263,9 @@ public class User extends Database<IUser> implements IUser {
 	public TopicFollowers topicFollowers;
 	
 	@AutowiredFromClient
+	public RoleFollowers roleFollowers;
+
+	@AutowiredFromClient
 	public DeptFollowers deptFollowers;
 	
 	@AutowiredFromClient
@@ -454,6 +457,17 @@ public class User extends Database<IUser> implements IUser {
 			
 			return new Object[]{new Remover(this), new Refresh(deptFollowers)};
 //			deptFollowers.put(this);
+		}else if("addRoleFollower".equals(this.getMetaworksContext().getWhen())){
+			
+			RoleUser roleUser = new RoleUser();
+			roleUser.setRoleCode(session.getLastSelectedItem());
+			roleUser.setEmpCode(this.getUserId());
+			roleUser.createDatabaseMe();
+		 
+			roleFollowers.session = session;
+			roleFollowers.load();
+			return new Object[]{new Remover(this), new Refresh(roleFollowers)};
+		
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			
