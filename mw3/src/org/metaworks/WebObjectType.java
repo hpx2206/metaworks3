@@ -406,8 +406,10 @@ public class WebObjectType{
 						fd.setAttribute("show.when", hidden.when());
 					
 				}else
-					fd.setAttribute("hidden", hidden.on());
+					
 				*/
+				
+				fd.setAttribute("hidden", hidden.on());
 				
 				if(hidden.when().length > 0){
 					Map whens = new HashMap();
