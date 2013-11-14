@@ -2617,32 +2617,45 @@ select.select[class] {
 .index_content { }
 .index_content .line1 { background:#f3f3f3; padding:40px 20px; border-bottom:1px solid #d9d9d9 }
 .index_content .line2 { background:#f7f7f7; padding:40px 20px;  border-bottom:1px solid #d9d9d9 }
-.row .col3 { float:left; width:40%; text-align:center }
 .row .col7 { float:left; width:60%; line-height:25px; }
+.row .col7 h1{ background:none; font-size:20px; padding-left:0px;}
 
 /* sign up page */
-signup_popup { width:533px; margin:0 auto; box-shadow: 0px 5px 25px #bcbcbc; margin-top:150px;}
-#signup_popup .popup_title { height:39px; line-height:39px; background:#2485e8; color:#FFF; font-size:20px; font-weight:bold;  padding:0 15px; }
+#signup_popup { width:533px; margin:0 auto; box-shadow: 0px 5px 25px #bcbcbc; margin-top:100px; border-top-left-radius:10px;border-top-right-radius:10px}
+#signup_popup .popup_title { height:39px; line-height:39px; background:#ebebeb;  font-size:20px; font-weight:bold;  padding:0 15px;border-bottom:1px solid #dddddd;  }
 #signup_popup .popup_title .close_btn { float:right;cursor:pointer; }
+#signup_popup .login_top_oce{ height:10px; background:url('../../images/signIn/login_top_oce.png'); border-top-left-radius:10px;border-top-right-radius:10px;}
+#signup_popup .login_top_codi{ height:10px; background:url('../../images/signIn/login_top.png'); border-top-left-radius:10px;border-top-right-radius:10px;}
+#signup_popup .popup_logo_oce { height:75px; border-bottom:1px solid #dddddd; background:url(../../images/signIn/doore.png) center no-repeat #f6f6f6 }
+#signup_popup .popup_logo_codi { height:75px; border-bottom:1px solid #dddddd; background:url(../../images/signIn/codi_logo.png) center no-repeat #f6f6f6 }
 #signup_popup .popup_step { height:75px; background:#f6f6f6; border-bottom:1px solid #dddddd;  }
 #signup_popup .popup_step .stepbar{width:436px; height:7px; position:relative; top:25px; left:40px; background:#cecece}
 #signup_popup .popup_step .stepbar .first_circle{ position:absolute; width:26px; height:26px; left:0px; top:-10px;}
 #signup_popup .popup_step .stepbar .last_circle{position:absolute; width:26px; height:26px; right:0px; top:-10px;}
 #signup_popup .popup_step .stepbar .circle32{position:absolute; width:26px; height:26px; left:203px; top:-10px;}
 #signup_popup .popup_step .circle{ background:url(../../images/signIn/step_circle.png)}
-#signup_popup .popup_step .circle span{ position:relative; top:30px; font-size:12px;}
+#signup_popup .popup_step .circle span{ position:relative; top:30px; font-size:12px; white-space:nowrap;}
+#signup_popup .popup_step .circle .steptext{ margin-left:-25px;}
 #signup_popup .popup_step .circle span.ing{top:35px !important; left:6px;width:15px; height:12px; display:inline-block; background:url(../../images/signIn/step_ing.png) !important}
 #signup_popup .popup_step .completed{ background:url(../../images/signIn/step_circle_com.png) !important}
 #signup_popup .popup_content { padding:20px 40px; background:#FFF }
-#signup_popup .popup_content .signup_info{ line-height:30px; border:1px solid #CCC; font-weight:bold;width:416px; padding-left:15px; background:#f6f6f6; font-size:13px;}
+#signup_popup .popup_content .signup_info{ line-height:30px; border:1px solid #CCC; font-weight:bold;width:430px; padding-left:15px; background:#f6f6f6; font-size:13px;}
 #signup_popup .popup_content label { display:block; color:#555; margin:10px 0 5px; font-family:lato; font-size:16px; }
-#signup_popup .popup_content input { width:416px; height:38px; line-height:38px; border:1px solid #c7c7c7; padding-left:15px; color:#CCC }
-#signup_popup .popup_content .popup_btn_line{width:416px; text-align:right; padding-left:17px; padding-top:15px;}
-#signup_popup .popup_content .popup_btn_line .popup_btn_gray{ background:#ccc;padding:10px 20px;; color:#FFF; font-weight:bold; text-align:center; display:inline-block}
-#signup_popup .popup_content .popup_btn_line .popup_btn_blue{ cursor:pointer; background:#2485e8;padding:10px 20px;; color:#FFF; font-weight:bold; text-align:center; display:inline-block}
-#signup_popup .popup_bottom { height:30px; background:#f6f6f6; }=======
-.row .col7 { float:left; width:60%; line-height:25px; }
-.row .col7 h1{ background:none; font-size:20px; padding-left:0px;}
+#signup_popup .popup_content .textinput { width:430px; height:38px; line-height:38px; border:1px solid #c7c7c7; padding-left:15px; margin-right:15px; color:#CCC }
+#signup_popup .popup_content .textinputreadonly { background:#f6f6f6 !important; color:#a6a3af  !important;}
+#signup_popup .popup_content .popup_btn_line{width:430px; text-align:right; padding-left:17px; padding-top:15px;}
+#signup_popup .popup_content .popup_btn_line_login_l {float:left; padding-top:15px;}
+#signup_popup .popup_content .popup_btn_line_login_r {float:right; padding-top:23px; padding-right:5px; font-size:12px;}
+#signup_popup .popup_content .popup_btn_line_login_r span{ margin-left:15px; color:#06C; cursor:pointer}
+#signup_popup .popup_content .popup_btn_gray{ cursor:pointer; background:#ccc;padding:10px 20px;; color:#FFF; font-weight:bold; text-align:center; display:inline-block}
+#signup_popup .popup_content .popup_btn_blue{ cursor:pointer; background:#2485e8;padding:10px 20px;; color:#FFF; font-weight:bold; text-align:center; display:inline-block}
+#signup_popup .popup_bottom { height:30px; background:#f6f6f6; }
+#signup_popup .popup_content hr{ margin:15px 0; margin-bottom:0px;}
+#signup_popup .popup_content .singnup_pic{ width:110px; height:110px; border:1px solid #ccc; padding:6px; float:left}
+#signup_popup .popup_content .singnup_choose_pic{ float:left; margin-left:20px;}
+#signup_popup .fb_login{ margin-bottom:10px; margin-top:8px; color:#999}
+
+
 
 @media all and (max-width: 480px) {
 	.index_signup .index_signup_inner { width:300px;  }
