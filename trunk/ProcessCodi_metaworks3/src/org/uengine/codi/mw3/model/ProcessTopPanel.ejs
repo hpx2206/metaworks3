@@ -44,9 +44,9 @@
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
 		 	
 		 	
+			<%if(value.session!=null && value.session.employee!=null && value.session.employee.isAdmin){%>
 		 	<div style="float:left; margin-left:10px; margin-top:15px;">
 	
-			<%if(value.session!=null && value.session.employee!=null && value.session.employee.isAdmin){%>
 				<a id="wBtn" href="#" onClick="<%=methods.companyRepInfo.caller() %>"><span><%=mw3.localize("$setComapnyRep")%></span></a>
 				</div>
 			<% } %>
