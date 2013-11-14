@@ -398,7 +398,7 @@ public class WebObjectType{
 
 			Hidden hidden = (Hidden) getAnnotationDeeply(tryingClasses, fd.getName(), Hidden.class);
 			if(hidden !=null){
-				
+				/*
 				if(hidden.when().length() > 1){
 					if(hidden.on())
 						fd.setAttribute("hidden.when", hidden.when());
@@ -407,7 +407,35 @@ public class WebObjectType{
 					
 				}else
 					fd.setAttribute("hidden", hidden.on());
-
+				*/
+				
+				if(hidden.when().length > 0){
+					Map whens = new HashMap();
+					for(String when : hidden.when()){
+						whens.put(when, when);
+					}
+					
+					fd.setAttribute("hidden.when", whens);
+				}
+				
+				if(hidden.where().length > 0){
+					Map wheres = new HashMap();
+					for(String where : hidden.where()){
+						wheres.put(where, where);
+					}
+					
+					fd.setAttribute("hidden.where", wheres);
+				}
+				
+				if(hidden.how().length > 0){
+					Map hows = new HashMap();
+					for(String how : hidden.how()){
+						hows.put(how, how);
+					}
+					
+					fd.setAttribute("hidden.how", hows);
+				}
+				
 				if(hidden.media().length > 0){
 					Map medias = new HashMap();
 					for(String media : hidden.media()){
@@ -1041,6 +1069,38 @@ public class WebObjectType{
 					}
 					
 					smc.setHow(hows.toString());
+				}
+				
+				
+				if(hidden != null){
+					smc.setAttributes(new HashMap());
+					
+					if(hidden.when().length > 0){
+						Map whens = new HashMap();
+						for(String when : hidden.when()){
+							whens.put(when, when);
+						}
+						
+						smc.attributes.put("hidden.when", whens);
+					}
+					
+					if(hidden.where().length > 0){
+						Map wheres = new HashMap();
+						for(String where : hidden.where()){
+							wheres.put(where, where);
+						}
+						
+						smc.attributes.put("hidden.where", wheres);
+					}
+					
+					if(hidden.how().length > 0){
+						Map hows = new HashMap();
+						for(String how : hidden.how()){
+							hows.put(how, how);
+						}
+						
+						smc.attributes.put("hidden.how", hows);
+					}
 				}
 				
 				if(hidden!=null){
