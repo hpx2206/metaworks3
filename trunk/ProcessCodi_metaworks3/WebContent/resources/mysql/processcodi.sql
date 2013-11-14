@@ -989,3 +989,9 @@ create table notisetting(
 	notiEmail int default 1,
 	primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- 2013.11.14 role 사진 추가
+alter table roletable add column URL varchar(200);
+alter table roletable add column THUMBNAIL varchar(200);
+
