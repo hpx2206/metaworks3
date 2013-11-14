@@ -30,7 +30,7 @@ public class NotificationBadge{
 	@ServiceMethod(target="popup", loader="org.uengine.codi.mw3.model.Popup")
 	public Object[] showList() throws Exception{
 		Popup popup = new Popup();
-		popup.setName("Notification");
+		popup.setName("$Notification");
 		Notification notiList = new Notification();
 		popup.setPanel(	notiList.list(session));
 		setNewItemCount(notiList.count(session));

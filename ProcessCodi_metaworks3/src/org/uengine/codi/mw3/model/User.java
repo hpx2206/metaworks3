@@ -667,9 +667,10 @@ public class User extends Database<IUser> implements IUser {
 			employee.databaseMe().setIsDeleted("1");		
 			
 			if(getUserId().equals(session.getUser().getUserId()))
-				return new Object[]{session.logout(), new Remover(new ModalWindow())};
+				return new Object[]{session.logout(), new Remover(new Popup())};
 			else
-				return new Object[]{new Remover(employee , true)};
+//				return new Object[]{new Remover(employee , true)};
+				return new Object[]{new Remover(new Popup())};
 		}
 		else
 			throw new Exception("$OnlyTheAdminAndWriterAndInviteUserCanUnsubscribe");

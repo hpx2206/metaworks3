@@ -113,8 +113,8 @@ public interface IEmployee extends IDAO {
 	public void setEmail(String email);
 
 	@Range(
-			values={"en", "ko", "cn"},
-			options={"English", "Korean", "Chinese"}			
+			values={"ko"},
+			options={"Korean"}			
 //			values={"en", "ko", "jp", "cn", "joodle"},
 //			options={"English", "Korean", "Japanese", "Chinese", "joodle"}	
 			)
