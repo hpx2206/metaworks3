@@ -124,32 +124,5 @@ public class ProcessTopPanel {
 	public ProcessTopPanel(){
 			
 	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup  companyRepInfo() throws Exception{
-		Company company = new Company();
-		company.setComCode(session.getEmployee().getGlobalCom());
-		ICompany findCompany = company.findByCode();
-		if(findCompany!=null)
-			return new Popup(findCompany);
-		
-		return null;
-		
-	}
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object feedBackInfo() throws Exception{
-		ModalWindow modalWindow = new ModalWindow();
-		
-		ContactUs contactUs = new ContactUs();
-		contactUs.session = session;
-		modalWindow.setPanel(contactUs);
-		modalWindow.setTitle("Contact Us");
-		modalWindow.setWidth(600);
-		modalWindow.setHeight(600);
-		modalWindow.setMetaworksContext(new MetaworksContext());
-		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-		return modalWindow;
-	}
 	
 }

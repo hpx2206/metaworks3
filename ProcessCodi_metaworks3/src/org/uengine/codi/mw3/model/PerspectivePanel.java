@@ -2,7 +2,10 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.kernel.GlobalContext;
 
@@ -205,5 +208,31 @@ public class PerspectivePanel  implements ContextAware {
 			}
 		}//session
 	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup  companyRepInfo() throws Exception{
+		Company company = new Company();
+		company.setComCode(session.getEmployee().getGlobalCom());
+		ICompany findCompany = company.findByCode();
+		if(findCompany!=null)
+			return new Popup(findCompany);
+		
+		return null;
+		
+	}
 	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object feedBackInfo() throws Exception{
+		ModalWindow modalWindow = new ModalWindow();
+		
+		ContactUs contactUs = new ContactUs();
+		contactUs.session = session;
+		modalWindow.setPanel(contactUs);
+		modalWindow.setTitle("Contact Us");
+		modalWindow.setWidth(600);
+		modalWindow.setHeight(600);
+		modalWindow.setMetaworksContext(new MetaworksContext());
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		return modalWindow;
+	}
 }
