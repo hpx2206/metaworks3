@@ -15,7 +15,7 @@ public class FollowerSelectTab {
 		}
 		
 	OrganizationTreePanel deptTreePanel;
-		@Face(displayName="$FollowerOrganization")
+		@Face(displayName="$Organization")
 		public OrganizationTreePanel getDeptTreePanel() {
 			return deptTreePanel;
 		}
