@@ -9,7 +9,7 @@ import org.uengine.codi.ITool;
 public class DocumentTool implements ITool, Serializable{
 
 	@AutowiredFromClient
-	public Session session;
+	transient public Session session;
 
 	String instId;
 		public String getInstId() {

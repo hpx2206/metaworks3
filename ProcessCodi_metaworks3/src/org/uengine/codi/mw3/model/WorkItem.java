@@ -1463,21 +1463,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			return null;
 		}
 	}
-	
-	
+	@Override
 	public IWorkItem loadCurrentView() throws Exception{
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where instId=?instId");
-		sb.append(" and taskId=?taskid");
+		sb.append(" select * from bpm_worklist where grpTaskId=?grpTaskId");
+		sb.append(" and type=?type");
 		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
 		
-		workitem.set("taskid",this.getTaskId());
-		workitem.set("instId",this.getInstId());
+		workitem.set("grpTaskId",this.getGrpTaskId());
+		workitem.set("type",this.getType());
 		workitem.select();
 		
 		if(workitem.next()){
-			this.setType("file");
-			this.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+//			this.setType("file");
+//			this.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
 			return workitem;
 		}else{
 			return null;
