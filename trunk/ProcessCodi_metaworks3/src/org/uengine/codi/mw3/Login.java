@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -35,6 +36,7 @@ import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
@@ -49,6 +51,7 @@ import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 
 public class Login implements ContextAware {
@@ -61,7 +64,8 @@ public class Login implements ContextAware {
 	
 	public Login(){
 		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen("edit");
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		getMetaworksContext().setHow("login");
 		
 		this.setUseSubscribe("1".equals(GlobalContext.getPropertyString("signup.use", "1")));
 	}
@@ -82,15 +86,15 @@ public class Login implements ContextAware {
 		public void setStatus(String status) {
 			this.status = status;
 		}
-
-	String userId;
+		
+	String email;
 		@Face(options="placeholder", values="E-Mail")
 		@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
-		public String getUserId() {
-			return userId;
+		public String getEmail() {
+			return email;
 		}
-		public void setUserId(String userId) {
-			this.userId = userId;
+		public void setEmail(String email) {
+			this.email = email;
 		}
 
 	String name;
@@ -164,26 +168,33 @@ public class Login implements ContextAware {
 		public String getPassword() {
 			return password;
 		}
-	
 		public void setPassword(String password) {
 			this.password = password;
 		}
-		
+
+	Invitation invitation;
+		public Invitation getInvitation() {
+			return invitation;
+		}
+		public void setInvitation(Invitation invitation) {
+			this.invitation = invitation;
+		}
+
 	public Session loginService() throws Exception {
 		
 		Session session = new Session();
 		
 		IEmployee emp = new Employee();
-		emp.setEmail(getUserId());
+		emp.setEmail(getEmail());
 		emp.setPassword(getPassword().trim());
 		
 		if(this.isFacebookSSO()){
-			if (getUserId() != null){
+			if (getEmail() != null){
 				session.setEmployee(emp.findMe());
 			}
 			
 		}else{
-			if (getUserId() != null && getPassword() != null) {
+			if (getEmail() != null && getPassword() != null) {
 				session.setEmployee(emp.load());
 			}
 		}
@@ -305,9 +316,20 @@ public class Login implements ContextAware {
 		return new SignUp();
 	}
 	
-	
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_SELF)
-	public Object subscribe() throws Exception{
+	public void goLogin() throws Exception{
+		this.getMetaworksContext().setHow("login");
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	public void goSignUp() throws Exception{
+		
+		this.getMetaworksContext().setHow("signup");
+		
+		this.setInvitation(new Invitation());
+		this.getInvitation().getMetaworksContext().setHow("signup");
+
+		/*
 		Employee emp = new Employee();
 		emp.getMetaworksContext().setHow("detail");
 		emp.getMetaworksContext().setWhen("new");				
@@ -340,15 +362,125 @@ public class Login implements ContextAware {
 		emp.setPreferUX(defaultUX);
 		emp.setPreferMob(defaultMob);
 		return emp;
+		*/
+	}
+	
+	public void sendMailForSignUp(String signUpURL) throws Exception {
+		String from = "help@opencloudengine.org";
+		
+		String url = TenantContext.getURL(null);
+		url += "/" + signUpURL;
+		
+		System.out.println(url);
+		
+		String title = "Codi Account - Email Authority";
+		String content = "<p><a href='" + url + "'>Sign Up</a><br/>";
+		
+		try{
+			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
+		}catch(Exception e){
+			throw new Exception("$FailedToSendInvitationMail");
+		}
+	}
+	
+	public void sendMailForForgotPassword(String forgotPasswordURL) throws Exception {
+		String from = "help@opencloudengine.org";
+		
+		String url = TenantContext.getURL(null);
+		url += "/" + forgotPasswordURL;
+		
+		System.out.println(url);
+		
+		String title = "Codi Account - Email Authority";
+		String content = "<p><a href='" + url + "'>Sign Up</a><br/>";
+		
+		try{
+			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
+		}catch(Exception e){
+			throw new Exception("$FailedToSendInvitationMail");
+		}
+	}
+	
+	@ServiceMethod(payload={"email"})
+	public void signUp() throws Exception {
+		
+		Employee employee = new Employee();
+		employee.setEmail(this.getEmail());
+		IEmployee employeeRef = employee.findByEmail();
+		
+		// already sign up or invite user
+		if(employeeRef != null){
+			if(employeeRef.isApproved()){
+				throw new Exception("$AlreadyExistingUser");	
+			}else{
+				sendMailForSignUp("activate.html?key=" + employeeRef.getAuthKey());
+				
+				return;
+			}
+		}
+
+		String authKey = UUID.randomUUID().toString();
+		
+		employee.setAuthKey(authKey);
+		
+		String comAlias = Employee.extractTenantName(this.getEmail());
+		boolean isAdmin = false;
+		
+		Company company = new Company();
+		company.setAlias(comAlias);
+		
+		ICompany findCompany = company.findByAlias();
+		if(findCompany == null){
+			isAdmin = true;
+			
+			// not yet sign up tenant
+			try {
+				company.setComCode(company.createNewId());
+				company.setComName(comAlias);
+
+				findCompany = company.createDatabaseMe();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new MetaworksException(e.getMessage());
+			}
+		}
+
+		String tenantId = findCompany.getComCode();
+		String defaultUX = "wave";
+		String defaultMob = "auto";
+		
+		//tenantName.substring(0, tenantName.lastIndexOf("@"))
+		employee.setGlobalCom(tenantId);
+		employee.setAuthKey(authKey);
+		employee.setIsAdmin(isAdmin);
+		employee.setIsDeleted("0");
+		employee.setPreferUX(defaultUX);
+		employee.setPreferMob(defaultMob);
+		employee.setEmpCode(employee.createNewId());
+		
+		try {
+			employee.createDatabaseMe();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new MetaworksException(e.getMessage());
+		}
+		
+		/*
+		SignUpConfirm confirm = new SignUpConfirm();
+		confirm.setEmail(this.getEmail());
+		confirm.setUrl(activateURL);
+		return confirm;
+		*/
 	}
 		
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
 	public boolean checkAuthSocial(){
-		if(this.getUserId() == null || this.getUserId().length() == 0)
+		if(this.getEmail() == null || this.getEmail().length() == 0)
 			return false;
 		
 		Employee employee = new Employee();
-		employee.setEmpCode(this.getUserId());
+		employee.setEmpCode(this.getEmail());
 		
 		IEmployee employeeRef = null;
 		
@@ -374,7 +506,7 @@ public class Login implements ContextAware {
 	public Object[] login() throws Exception {
 
 		Employee emp = new Employee();
-		emp.setEmail(getUserId());
+		emp.setEmail(getEmail());
 		IEmployee findEmp = emp.findByEmail();
 		
 		Company company = new Company();
@@ -386,7 +518,7 @@ public class Login implements ContextAware {
 		
 		
 		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
-			goTadpoleLogin(userId, password);
+			goTadpoleLogin(this.getEmail(), password);
 		}
 		Session session = loginService();
 		
@@ -518,12 +650,31 @@ public class Login implements ContextAware {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
-	public Object findPassword(){
-		SignUp signUp = new SignUp();
-		signUp.setInvitation(new Invitation());
-		signUp.getInvitation().getMetaworksContext().setHow("findpw");
+	public void goForgotPassword(){
+		this.getMetaworksContext().setHow("forgotpassword");
+	}
+	
+	@ServiceMethod(payload={"email"})
+	public void forgotPassword() throws Exception{
+		
+		Employee employee = new Employee();
+		employee.setEmail(this.getEmail());
+		IEmployee employeeRef = employee.findByEmail();
 
-		return signUp;
+		// already s	ign up or invite user
+		if(employeeRef == null){
+			throw new Exception("$NoExistedUser");
+		}else if(!employeeRef.isApproved())
+			throw new Exception("$NoExistedUser");
+		
+		// not yet sign up user
+		String authKey = UUID.randomUUID().toString();
+		
+		employee.setEmpCode(employeeRef.getEmpCode());
+		employee.databaseMe().setAuthKey(authKey);
+		
+		// send mail
+		this.sendMailForForgotPassword("findpw.html?key=" + authKey);
 	}
 	
 	public void fireServerSession(Session session) {
@@ -665,7 +816,7 @@ public class Login implements ContextAware {
 		IUser loginUser = new User();
 		
 		loginUser.setName(getName());
-		loginUser.setUserId(getUserId());
+		loginUser.setUserId(getEmail());
 				
 		Session session = new Session();
 		session.setUser(loginUser);

@@ -54,7 +54,7 @@ public class Loader {
 		boolean isAllow = false;
 		
 		Login login = new Login();
-		login.setUserId(this.getUserId());
+		login.setEmail(this.getUserId());
 		login.setPassword(this.getPassword());
 		
 		Session session = null;
