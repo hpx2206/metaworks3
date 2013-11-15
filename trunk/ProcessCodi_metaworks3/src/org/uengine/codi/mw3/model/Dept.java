@@ -352,10 +352,10 @@ public class Dept extends Database<IDept> implements IDept {
 			Employee emp = new Employee();
 			emp.setEmpCode(session.getEmployee().getEmpCode());
 			emp.copyFrom(emp.databaseMe());
-
+			
 			String partCode = createNewId();
 			
-			emp.setPartCode(partCode);
+			emp.setPartCode(this.getPartCode());
 			emp.syncToDatabaseMe();
 			
 			// �앹꽦
@@ -415,43 +415,47 @@ public class Dept extends Database<IDept> implements IDept {
 		employee.setEmpCode(session.getEmployee().getEmpCode());
 		employee.copyFrom(employee.databaseMe());
 		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
+		INotiSetting findNotiSetting;
 		Employee codi = new Employee();
 		codi.setEmpCode("0");
 		
 		while(findResult.next()){
-			notiSetting.findByUserId(findResult.getEmpCode());
-			noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-			noti.setUserId(findResult.getEmpCode());
-			noti.setActorId(codi.getEmpName());
-			noti.setConfirm(false);
-			noti.setInstId(instance.getInstId());
-			noti.setInputDate(Calendar.getInstance().getTime());
-			noti.setActAbstract(session.getUser().getName() + " create Organ");
-
-			//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
-	//			noti.createDatabaseMe();
-	//			noti.flushDatabaseMe();
-			
-			noti.add(instance);
+			findNotiSetting = notiSetting.findByUserId(findResult.getEmpCode());
+			if(findNotiSetting.next()){
+				if(findNotiSetting.isModiOrgan()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(findResult.getEmpCode());
+					noti.setActorId(session.getEmployee().getEmpName());
+					noti.setConfirm(false);
+					noti.setInstId(instance.getInstId());
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setActAbstract(session.getUser().getName() + " create Dept " + this.getPartName());
 		
-			String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
-			
-			try{
-				//NEW WAY IS GOOD
-				Browser.withSession(followerSessionId, new Runnable(){
-	
-					@Override
-					public void run() {
-						//refresh notification badge
-						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-					}
+					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+			//			noti.createDatabaseMe();
+			//			noti.flushDatabaseMe();
 					
-				});
-			}catch(Exception e){
-				e.printStackTrace();
+					noti.add(instance);
+				
+					String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+					
+					try{
+						//NEW WAY IS GOOD
+						Browser.withSession(followerSessionId, new Runnable(){
+			
+							@Override
+							public void run() {
+								//refresh notification badge
+								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+							}
+							
+						});
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
 			}
-		
-		}		
+		}				
 	}
 	
 	public Instance createWorkItem() throws Exception{
@@ -462,7 +466,7 @@ public class Dept extends Database<IDept> implements IDept {
 		IEmployee repMailEmp = representiveMailEmp.findMe();
 		
 		
-		CommentWorkItem comment = new CommentWorkItem();
+		SystemWorkItem comment = new SystemWorkItem();
 		comment.processManager = processManager;
 		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
