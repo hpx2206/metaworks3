@@ -429,7 +429,13 @@ public class Dept extends Database<IDept> implements IDept {
 					noti.setConfirm(false);
 					noti.setInstId(instance.getInstId());
 					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setActAbstract(session.getUser().getName() + " create Dept " + this.getPartName());
+					if(MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext().getWhen())){
+						noti.setActAbstract(session.getUser().getName() + "님이 부서 " + this.getPartName() + "를 생성하였습니다.");
+					}
+					else if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+						noti.setActAbstract(session.getUser().getName() + "님이  " + this.getPartName() + " 부서를 제거하였습니다.");
+					}
+					
 		
 					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
 			//			noti.createDatabaseMe();
@@ -475,7 +481,13 @@ public class Dept extends Database<IDept> implements IDept {
 		theFirstWriter.setName(repMailEmp.getEmpName());
 		
 		comment.setWriter(theFirstWriter);
-		comment.setTitle("조직 : " + this.getPartName() + "이 생성되었습니다.");
+		if(MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext().getWhen())){
+			comment.setTitle(session.getUser().getName() + "님이 부서 " + this.getPartName() + "를 생성하였습니다.");
+		}
+		else if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+			comment.setTitle(session.getUser().getName() + "님이  " + this.getPartName() + " 부서를 제거하였습니다.");
+		}
+		
 		comment.setStartDate(new Date());
 		
 		comment.session = session;
@@ -507,7 +519,7 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.setPartCode(this.getPartCode());		
 		dept.copyFrom(dept.databaseMe());
 		dept.setIsDeleted("1");
-		
+		this.setPartName(dept.getPartName());
 		
 /*		if( (this.getChildren() != null && this.getChildren().size() > 0) || (this.getDeptEmployee() != null && this.getDeptEmployee().size() > 0))
 			throw new Exception("�섏쐞 �몃뱶媛�議댁옱�섎㈃ ��젣�����놁뒿�덈떎.");*/
@@ -515,9 +527,14 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
 		
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		this.notiToCompany();
+		
 		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};		
 	}
 
+	
 	@Override
 	public Object[] restoreDept() throws Exception {
 		setIsDeleted("0");
