@@ -187,6 +187,10 @@
 					//console.log(message);
 					return message;
 		 		}
+		 		var locatePage = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.model.Locale",
+                    language : navigator.language
+                }, 'body').load();
 		 		
 		 		mw3.getMessage = function(key, defaultValue){
 		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
