@@ -36,6 +36,14 @@ public class Notification extends Database<INotification> implements INotificati
 			this.inputDate = inputDate;
 		}
 
+	Date instStartedDate;
+		public Date getInstStartedDate() {
+			return instStartedDate;
+		}
+		public void setInstStartedDate(Date instStartedDate) {
+			this.instStartedDate = instStartedDate;
+		}
+
 	String userId;
 		public String getUserId() {
 			return userId;
@@ -192,7 +200,7 @@ public class Notification extends Database<INotification> implements INotificati
 	}
 		
 	INotification list(Session session) throws Exception{
-		INotification noti =  sql("select * from bpm_noti where userId = ?userId order by inputdate desc limit 30");
+		INotification noti =  sql("select * from bpm_noti where userId = ?userId order by instStartedDate desc limit 30");
 		noti.setUserId(session.user.getUserId());
 		noti.select();
 		
