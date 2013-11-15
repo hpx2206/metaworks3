@@ -265,5 +265,6 @@ public interface IEmployee extends IDAO {
 	@Available(where={"step2"})
 	@ServiceMethod(callByContent=true)
 	public Forward finish() throws Exception;
-
+	
+	public IEmployee findCompanyAdmin() throws Exception;
 }

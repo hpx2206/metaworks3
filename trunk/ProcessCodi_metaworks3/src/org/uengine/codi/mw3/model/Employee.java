@@ -263,8 +263,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 					
 					}
 				if(getPassword().equals(emp.getPassword())) {
-						//emp = findMe();				
-						// emp = databaseMe();
+						Employee employee = new Employee();
+						employee.copyFrom(emp);
+						emp = employee.findMe();				
 		
 						getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 						return emp;				
@@ -1202,6 +1203,22 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		Number number = kg.getKeyNumber();
 		
 		return number.intValue();
+	}
+	
+	public IEmployee findCompanyAdmin() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from ");
+		sb.append("emptable ");
+		sb.append("where isAdmin=?isAdmin ");
+		sb.append("and globalCom=?globalCom ");
+		
+		IEmployee dao = sql(sb.toString());
+//		dao.set("isAdmin", "1");
+		dao.setIsAdmin(true);
+		dao.setGlobalCom(this.getGlobalCom());
+		dao.select();
+		
+		return dao; 
 	}
 
 	public static IEmployee getSystemUser() throws Exception{

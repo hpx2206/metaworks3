@@ -520,8 +520,10 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 					}
 				}catch(Exception e){	
 				}
-				
-				if(roleMapping==null){
+				if( thisIsInitiationActivity ){
+					roleMapping = currentLogin;
+					instance.putRoleMapping(getRole().getName(), roleMapping);
+				}else if(roleMapping==null){
 	
 					if(currentLogin==null){
 						throw new UEngineException("Couldn't get the actual user for the role [" + getName() + "]. The reason maybe among these: 1. you didn't assign any role for this activity. 2. you didn't give login information for the current login user");

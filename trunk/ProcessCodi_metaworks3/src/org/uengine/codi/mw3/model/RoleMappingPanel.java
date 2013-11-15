@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.dao.MetaworksDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -38,7 +39,7 @@ public class RoleMappingPanel implements ContextAware{
 	public RoleMappingPanel(){}
 
 
-	public RoleMappingPanel(ProcessManagerRemote processManager, String defId, Session session) throws RemoteException{
+	public RoleMappingPanel(ProcessManagerRemote processManager, String defId, Session session) throws Exception{
 		
 		roleMappingDefinitions = new ArrayList<IRoleMappingDefinition>();
 		
@@ -48,13 +49,30 @@ public class RoleMappingPanel implements ContextAware{
 			roleMappingDefinition.setRoleDefId(TenantContext.getThreadLocalInstance().getTenantId() + "." + defId + "." + role.getName());
 			
 			try{
-				roleMappingDefinitions.add(roleMappingDefinition.databaseMe());
+				IRoleMappingDefinition roleMappingDef = roleMappingDefinition.databaseMe();
+				if( roleMappingDef.getMappedUser() != null && roleMappingDef.getMappedUser().getUserId() != null ){
+					Employee user = new Employee();
+					user.setEmpCode(roleMappingDef.getMappedUser().getUserId());
+					user.copyFrom(user.databaseMe());
+					System.out.println("user.getEmpName() = " + user.getEmpName());
+					IUser usr = new User();
+					usr.setUserId(roleMappingDef.getMappedUser().getUserId());
+					usr.setName(user.getEmpName());
+					roleMappingDef.setMappedUser(usr);
+				}
+				
+				System.out.println("roleMappingDef : " + roleMappingDef.getMappedUser().getName());
+				roleMappingDefinitions.add(roleMappingDef);
 			}catch(Exception e){
-				roleMappingDefinition.setDefId(defId);
-				roleMappingDefinition.setRoleName(role.getName());
-				roleMappingDefinition.setMappedUser(new User());
-				roleMappingDefinition.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
-				roleMappingDefinitions.add(roleMappingDefinition);
+				IRoleMappingDefinition roleMappingDef = (IRoleMappingDefinition)MetaworksDAO.createDAOImpl(IRoleMappingDefinition.class);
+				roleMappingDef.setRoleDefId(roleMappingDefinition.getRoleDefId());
+				roleMappingDef.setDefId(defId);
+				roleMappingDef.setRoleName(role.getName());
+				roleMappingDef.setMappedUser(new User());
+				roleMappingDef.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
+				roleMappingDef.setRoleDefType(RoleMappingDefinition.ROLE_DEF_TYPE_USER);
+				
+				roleMappingDefinitions.add(roleMappingDef);
 			}
 		}
 	}
@@ -85,12 +103,20 @@ public class RoleMappingPanel implements ContextAware{
 	
 	public void putRoleMappings(ProcessManagerRemote processManager, String instId) throws Exception{
 		for(IRoleMappingDefinition roleMappingDefinition: roleMappingDefinitions){
-			
-			if(roleMappingDefinition.getMappedUser()!=null && roleMappingDefinition.getMappedUser().getUserId()!=null){
+			if( RoleMappingDefinition.ROLE_DEF_TYPE_USER.equals(roleMappingDefinition.getRoleDefType() )){
 				if(roleMappingDefinition.getMappedUser()!=null && roleMappingDefinition.getMappedUser().getUserId()!=null){
 					processManager.putRoleMapping(instId, roleMappingDefinition.getRoleName(), roleMappingDefinition.getMappedUser().getUserId());
 				}
-				
+			}else if( RoleMappingDefinition.ROLE_DEF_TYPE_ROLE.equals(roleMappingDefinition.getRoleDefType() )){
+				if(roleMappingDefinition.getMappedRoleCode()!=null ){
+					RoleUser roleUser = new RoleUser();
+					roleUser.setRoleCode(roleMappingDefinition.getMappedRoleCode());
+					IRoleUser refRoleUser = roleUser.findUserByRoleCode();
+					while(refRoleUser.next()){
+						processManager.putRoleMapping(instId, roleMappingDefinition.getRoleName(), refRoleUser.getEmpCode() );
+					}
+					
+				}
 			}
 		}
 	}

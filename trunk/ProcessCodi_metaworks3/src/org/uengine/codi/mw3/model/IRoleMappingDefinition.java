@@ -27,6 +27,12 @@ public interface IRoleMappingDefinition extends IDAO{
 	public IUser getMappedUser();
 	public void setMappedUser(IUser mappedUser);
 	
+	public String getMappedRoleCode();
+	public void setMappedRoleCode(String mappedRoleCode);
+	
+	public String getRoleDefType();
+	public void setRoleDefType(String roleDefType);
+	
 	@ServiceMethod(callByContent=true, mouseBinding="drop")
 	public void drop();
 
