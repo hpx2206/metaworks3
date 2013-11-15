@@ -23,7 +23,7 @@ public class ToolbarClass extends Toolbar {
 		String userId = (String)httpSession.getAttribute("userId");
 		
 		Login login = new Login();
-		login.setUserId(userId);
+		login.setEmail(userId);
 
 		
 		Popup popup = new Popup();
