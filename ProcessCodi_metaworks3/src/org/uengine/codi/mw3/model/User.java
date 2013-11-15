@@ -289,22 +289,22 @@ public class User extends Database<IUser> implements IUser {
 			
 			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
 			
-		}else if("addDocumentFollower".equals(this.getMetaworksContext().getWhen())){
-			TopicMapping tm = new TopicMapping();
-			tm.setTopicId(session.getLastSelectedItem());
-			tm.setUserId(this.getUserId());
-			
-			if( !tm.findByUser().next() ){
-				tm.setUserName(this.getName());
-				tm.saveMe();
-				tm.flushDatabaseMe();
-			}
-			
-			DocumentFollowers documentFollowers = new DocumentFollowers();
-			documentFollowers.session = session;
-			documentFollowers.load();
-			
-			return new Object[]{new Refresh(documentFollowers)};
+//		}else if("addDocumentFollower".equals(this.getMetaworksContext().getWhen())){
+//			TopicMapping tm = new TopicMapping();
+//			tm.setTopicId(session.getLastSelectedItem());
+//			tm.setUserId(this.getUserId());
+//			
+//			if( !tm.findByUser().next() ){
+//				tm.setUserName(this.getName());
+//				tm.saveMe();
+//				tm.flushDatabaseMe();
+//			}
+//			
+//			DocumentFollowers documentFollowers = new DocumentFollowers();
+//			documentFollowers.session = session;
+//			documentFollowers.load();
+//			
+//			return new Object[]{new Refresh(documentFollowers)};
 		
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
 			
@@ -436,7 +436,7 @@ public class User extends Database<IUser> implements IUser {
 
 			Instance instance = new Instance();
 			instance.setInstId(new Long(instId));
-			
+			instance.copyFrom(instance.databaseMe());
 			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getUserId(), getUserId());
 			processManager.applyChanges();
 			
@@ -458,6 +458,7 @@ public class User extends Database<IUser> implements IUser {
 				noti.setActorId(session.getUser().getUserId());
 				noti.setConfirm(false);
 				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setInstStartedDate(instance.getStartedDate());
 				//noti.setTaskId(getTaskId());
 				noti.setInstId(new Long(instId));
 				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");

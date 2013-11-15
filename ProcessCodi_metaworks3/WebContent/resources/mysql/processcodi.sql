@@ -999,5 +999,6 @@ alter table bpm_roledef add column roleDefType varchar(10);
 alter table roletable add column URL varchar(200);
 alter table roletable add column THUMBNAIL varchar(200);
 
--- 2013.11.15 인스턴스 파일첨부 표시
+-- 2013.11.15 인스턴스 파일첨부 표시, 노티리스트 등록 된 순으로
 alter table bpm_procinst add column isfileadded int(11) default 0;
+alter table bpm_noti add column instStartedDate datetime;
