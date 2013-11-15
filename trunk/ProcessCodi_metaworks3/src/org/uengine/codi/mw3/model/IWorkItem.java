@@ -390,5 +390,8 @@ public interface IWorkItem extends IDAO{
 		public Object moreView() throws Exception;
 	
 		public IWorkItem loadMajorVersionFile(String id) throws Exception;
+		
+		@ServiceMethod(callByContent=true)
+		public IWorkItem loadCurrentView() throws Exception;
 }
 

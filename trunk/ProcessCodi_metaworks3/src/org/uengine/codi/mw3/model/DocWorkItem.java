@@ -72,6 +72,7 @@ public class DocWorkItem extends WorkItem {
 			}
 			genericWI.setWriter(session.getUser());
 			genericWI.setTitle(this.getTitle());//parent.getName());
+			genericWI.setGrpTaskId(fileWorkItem.getTaskId());
 			genericWI.setGenericWorkItemHandler(genericWIH);
 			
 			Object[] returnObj = genericWI.add();

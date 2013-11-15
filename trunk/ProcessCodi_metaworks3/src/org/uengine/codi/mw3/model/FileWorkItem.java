@@ -173,17 +173,18 @@ public class FileWorkItem extends WorkItem{
 			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. " + title + " version "+ String.valueOf(thisMajorVersion+ "." + 0) +" =>" + thisVersion);
 			SystemWorkItem.add();
 			
-			DocumentTool documentTool = new DocumentTool();
-			documentTool.setInstId(this.getInstId().toString());
-			documentTool.onLoad();
+//			WorkItem tempWorkItem = new WorkItem();
+			fileWorkItem.setGrpTaskId(this.getGrpTaskId());
+			fileWorkItem.setType(WORKITEM_TYPE_GENERIC);
+			fileWorkItem.loadCurrentView();
 			
 			
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.session = session;
-			instanceViewThreadPanel.setInstanceId(originInstId);
-			instanceViewThreadPanel.load();
+//			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+//			instanceViewThreadPanel.session = session;
+//			instanceViewThreadPanel.setInstanceId(originInstId);
+//			instanceViewThreadPanel.load();
 			
-			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser)};
+			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser.getVersionSelector())};
 			
 //			Object[] temReturnObject = fileWorkItem.add();
 //			returnObject = new Object[temReturnObject.length + 1];
