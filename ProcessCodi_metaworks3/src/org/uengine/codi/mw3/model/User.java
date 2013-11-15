@@ -289,22 +289,22 @@ public class User extends Database<IUser> implements IUser {
 			
 			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
 			
-//		}else if("addDocumentFollower".equals(this.getMetaworksContext().getWhen())){
-//			TopicMapping tm = new TopicMapping();
-//			tm.setTopicId(session.getLastSelectedItem());
-//			tm.setUserId(this.getUserId());
-//			
-//			if( !tm.findByUser().next() ){
-//				tm.setUserName(this.getName());
-//				tm.saveMe();
-//				tm.flushDatabaseMe();
-//			}
-//			
-//			DocumentFollowers documentFollowers = new DocumentFollowers();
-//			documentFollowers.session = session;
-//			documentFollowers.load();
-//			
-//			return new Object[]{new Refresh(documentFollowers)};
+		}else if("addDocumentFollower".equals(this.getMetaworksContext().getWhen())){
+			TopicMapping tm = new TopicMapping();
+			tm.setTopicId(session.getLastSelectedItem());
+			tm.setUserId(this.getUserId());
+			
+			if( !tm.findByUser().next() ){
+				tm.setUserName(this.getName());
+				tm.saveMe();
+				tm.flushDatabaseMe();
+			}
+			
+			DocumentFollowers documentFollowers = new DocumentFollowers();
+			documentFollowers.session = session;
+			documentFollowers.load();
+			
+			return new Object[]{new Refresh(documentFollowers)};
 		
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
 			
