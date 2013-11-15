@@ -170,14 +170,16 @@ public class WsCall extends HttpServlet {
 	}
 	
 	protected Session loginCheck(HttpServletRequest request) throws Exception{
-		String userId = request.getParameter("userId");
-		String password = request.getParameter("password");
-		
-		Login login = new Login();
-		login.setUserId(userId);
-		login.setPassword(password);
-		Session session = login.loginService();
-		return session;
+		// TODO 로그인이 변경되어서 일단 주석 처리함
+		return null;
+//		String userId = request.getParameter("userId");
+//		String password = request.getParameter("password");
+//		
+//		Login login = new Login();
+//		login.setUserId(userId);
+//		login.setPassword(password);
+//		Session session = login.loginService();
+//		return session;
 	}
 	
 }
