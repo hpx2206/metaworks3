@@ -5,7 +5,7 @@ if(value){
 	var lastCmnt2 = value.lastCmnt2;
 	var topicName = value.topicName;
 	var isDashboard = (mw3.how == "dashboard");
-	var isArchive = value.isArchive;
+	var isFileAdded = value.isFileAdded;
 	 
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	if(session && session.searchKeyword != null && session.searchKeyword.length > 0){
@@ -89,7 +89,7 @@ if(value){
 											<% }%>
 										</div>										
 										<div style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%> 
-											<% if(isArchive){ %>
+											<% if(isFileAdded){ %>
 												<span style="float:left"><img src="images/waveStyle/wihfile.png" width=13 height=13></span>
 											<% } %>
 										

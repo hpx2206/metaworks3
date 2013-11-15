@@ -837,7 +837,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 				
 				if(WORKITEM_TYPE_FILE.equals(this.getType()) || WORKITEM_TYPE_DOCUMENT.equals(this.getType()) || WORKITEM_TYPE_GENERIC.equals(this.getType()))
-					instanceRef.setIsArchive(true);
+					instanceRef.setIsFileAdded(true);
 				
 				instanceRef.setIsDocument(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType()));
 				
@@ -906,7 +906,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 				
 				if(WORKITEM_TYPE_FILE.equals(this.getType()) || WORKITEM_TYPE_DOCUMENT.equals(this.getType()) || WORKITEM_TYPE_GENERIC.equals(this.getType()))
-					instanceRef.setIsArchive(true);
+					instanceRef.setIsFileAdded(true);
 				
 				if(lastCmnt == null){
 					instanceRef.setLastCmnt(cmntTitle);
@@ -933,7 +933,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			
 			
-			if(this.getTitle() == null)
+			if(this.getTitle() == null && WORKITEM_TYPE_FILE.equals(this.getType()) ||
+					this.getTitle() == null && WORKITEM_TYPE_GENERIC.equals(this.getType()))
 				this.setTitle(getFile().getFileTransfer().getFilename());
 				
 			//기존 date 추가 부분
@@ -945,7 +946,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				this.setRootInstId(this.getInstId());
 			
 			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
-			if(this instanceof CommentWorkItem){
+			if(this instanceof CommentWorkItem && !(this instanceof SystemWorkItem)){
 				if(this.getTitle().length() > TITLE_LIMIT_SIZE){
 					this.setType(WORKITEM_TYPE_MEMO);
 					this.setContent(getTitle());

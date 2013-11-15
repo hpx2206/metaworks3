@@ -122,6 +122,9 @@ public interface IInstance extends IDAO{
 	public boolean getIsArchive();
 	public void setIsArchive(boolean isArchive);
 	
+	public boolean getIsFileAdded();
+	public void setIsFileAdded(boolean isFileAdded);
+	
 	public abstract String getAbsTrcPath();
 	public abstract void setAbsTrcPath(String value);
 

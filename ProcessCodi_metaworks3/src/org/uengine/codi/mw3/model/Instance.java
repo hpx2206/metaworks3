@@ -1073,6 +1073,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.isDocument = isDocument;
 		}
 
+	boolean isFileAdded;
+		public boolean getIsFileAdded() {
+			return isFileAdded;
+		}
+		public void setIsFileAdded(boolean isFileAdded) {
+			this.isFileAdded = isFileAdded;
+		}
+
 	boolean isSubProcess;
 		public boolean getIsSubProcess() {
 			return this.isSubProcess;
