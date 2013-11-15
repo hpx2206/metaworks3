@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3;
 
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.metaworks.MetaworksContext;
@@ -8,23 +11,48 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 
 public class StartCodi {
 
 	String key;
-	@Hidden
-	public String getKey() {
-		return key;
+		@Hidden
+		public String getKey() {
+			return key;
+		}
+		public void setKey(String key) {
+			this.key = key;
+		}
+		
+	Session session;
+		@Hidden
+		public Session getSession() {
+			return session;
+		}
+		public void setSession(Session session) {
+			this.session = session;
+		}
+		
+	public StartCodi(){
+		this(null);
 	}
-	public void setKey(String key) {
-		this.key = key;
+	
+	public StartCodi(Session session){
+		this(session, null);
 	}
-
+	
+	public StartCodi(Session session, String key){
+		this.setSession(session);
+		this.setKey(key);
+	}
+	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public Object load() throws Exception{
 		
@@ -74,6 +102,39 @@ public class StartCodi {
 		login.getMetaworksContext().setHow("login");
 		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		return login;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public MainPanel login() throws Exception {
+		
+		PageNavigator pageNavigator = new PageNavigator();
+		pageNavigator.session = session;
+		
+		return pageNavigator.goProcess();
+	}
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Login logout() throws Exception {
+		this.getSession().removeUserInfoFromHttpSession();
+		
+		Login login = new Login();
+		login.getMetaworksContext().setHow("logout");
+		login.fireServerSession(this.getSession());
+        
+		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
+		
+		String ipAddress = httpServletRequest.getRemoteAddr();
+		
+        CodiLog  log = new CodiLog();
+        log.setId(log.createNewId());
+        log.setEmpcode(this.getSession().getEmployee().getEmpCode());
+        log.setComCode(this.getSession().getEmployee().getGlobalCom());
+        log.setType("logout");
+        log.setDate(new Date());
+        log.setIp(ipAddress);
+        log.createDatabaseMe();
+        
+        return login;
 	}
 	
 	@ServiceMethod(callByContent=true)
