@@ -75,7 +75,7 @@ public class InstanceListPortlet extends Window {
 	@ServiceMethod(callByContent=true)
 	public Object[] load() throws Exception {
 		Login login = new Login();
-		login.setUserId("test");
+		login.setEmail("test");
 		login.setPassword("test");
 		
 /*		if( getCookiePasswd() == null || getCookieUserId() == null){
