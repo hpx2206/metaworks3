@@ -17,15 +17,15 @@
 		<%=fields.password.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your password'}}) %>
         
         <div class="popup_btn_line_login_l">
-            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.login.caller()%>">Login</div>
-        	<span style="display:inline-block"><%=fields.rememberMe.here({when:'edit'})%></span><label style="display:inline-block; font-size:12px; color:#666; position:relative;top:-2px;">Remember Me</label>
+            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.login.caller()%>"><%=mw3.localize("$Login")%></div>
+        	<span style="display:inline-block"><%=fields.rememberMe.here({when:'edit'})%></span><label style="display:inline-block; font-size:12px; color:#666; position:relative;top:-2px;"><%=mw3.localize("$RememberMe")%></label>
         </div>
         <div class="popup_btn_line_login_r">
-            <span onclick="<%=methods.goForgotPassword.caller()%>">Forgot password?</span>  
+            <span onclick="<%=methods.goForgotPassword.caller()%>"><%=mw3.localize("$ForgotPassword")%></span>  
             <%
 					if(value.useSubscribe){
 			%>
-            <span id="method_<%=objectId%>_subscribe" onclick="<%=methods.goSignUp.caller()%>">SignUp</span>
+            <span id="method_<%=objectId%>_subscribe" onclick="<%=methods.goSignUp.caller()%>"><%=mw3.localize("$SignUp")%></span>
             <%
 					}
 			%>
@@ -33,9 +33,20 @@
         <div style="clear:both"></div>
         <hr />
         <div class="popup_btn_line_login">
-        	<div class="fb_login">..or you can skip that and sign up codi</div>
+        	<div class="fb_login"><%=mw3.localize("$SignupOR")%></div>
             <span id="method_facebook_<%=objectId%>" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();" style="cursor:pointer"><img src="images/signIn/fbLogin.png" /></span>
         </div>
+<%
+		}else if('afterforgotpassword' == mw3.how){
+%>        
+        
+        <label><%=mw3.localize("$FindEmailPassword")%></label>
+        <%=fields.email.here({htmlAttrChild: {class:'textinput textinputreadonly', readonly: 'readonly'}})%>
+		        
+        <div class="popup_btn_line_login_l">
+            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>"><%=mw3.localize("$ReSend")%></div>
+        </div>
+        <div style="clear:both"></div>
 <%
 		}else if('signup' == mw3.how){
 %>
@@ -43,15 +54,15 @@
 		<%=fields.email.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your E-mail', style: 'margin-bottom:15px'}}) %>
         
         <div class="popup_btn_line_login_l">
-            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>">Sign Up</div>
+            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>"><%=mw3.localize("$SignUp")%></div>
         </div>
         <div class="popup_btn_line_login_r">
-            <span onclick="<%=methods.goLogin.caller()%>">Log In</span>  
+            <span onclick="<%=methods.goLogin.caller()%>"><%=mw3.localize("$Login")%></span>  
         </div>
         <div style="clear:both"></div>
         <hr />
         <div class="popup_btn_line_login">
-        	<div class="fb_login">..or you can skip that and sign up codi</div>
+        	<div class="fb_login"><%=mw3.localize("$SignupOR")%></div>
             <span id="method_facebook_<%=objectId%>" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();" style="cursor:pointer"><img src="images/signIn/fbLogin.png" /></span>
         </div>
         
@@ -62,10 +73,10 @@
 		<%=fields.email.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your E-mail', style: 'margin-bottom:15px'}}) %>
         
         <div class="popup_btn_line_login_l">
-            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.forgotPassword.caller()%>">Submit</div>
+            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.forgotPassword.caller()%>"><%=mw3.localize("$Send")%></div>
         </div>
          <div class="popup_btn_line_login_r">
-            <span onclick="<%=methods.goLogin.caller()%>">Log In</span>  
+            <span onclick="<%=methods.goLogin.caller()%>"><%=mw3.localize("$Login")%></span>  
         </div>
         <div style="clear:both"></div>
         
@@ -73,10 +84,11 @@
 		}else if('aftersignup'){
 %>
 		
-		dfkjdkf   <%=value.email%>   fdkjfdkjfdk
+		<label><%=mw3.localize("$ConfirmEmail")%></label>
+        <%=fields.email.here({htmlAttrChild: {class:'textinput textinputreadonly', readonly: 'readonly'}})%>
 		        
         <div class="popup_btn_line_login_l">
-            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>">Re-Send</div>
+            <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>"><%=mw3.localize("$ReSend")%></div>
         </div>
         <div style="clear:both"></div>
 
