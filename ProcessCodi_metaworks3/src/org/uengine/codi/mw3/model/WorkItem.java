@@ -924,6 +924,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 			
+			
+			
+			if(this.getTitle() == null)
+				this.setTitle(getFile().getFileTransfer().getFilename());
+				
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());

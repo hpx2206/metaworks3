@@ -13,6 +13,7 @@ import java.io.RandomAccessFile;
 import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 
@@ -136,17 +137,29 @@ public class FileWorkItem extends WorkItem{
 			String title = this.getTitle();
 			
 			FileWorkItem fileWorkItem = new FileWorkItem();
-			fileWorkItem.setInstId(new Long(this.getInstId()));
+			
+			this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
+			fileWorkItem.setTaskId(this.getTaskId());
+			fileWorkItem.setInstId(this.getInstId());
+			fileWorkItem.setRootInstId(this.getInstId());
+			fileWorkItem.setStartDate(Calendar.getInstance().getTime());
+			fileWorkItem.setEndDate(getStartDate());
+			this.setFileTransfer(this.getFile().getFileTransfer());
+			getFile().upload();
+			fileWorkItem.setContent(this.getFile().getUploadedPath());
+			fileWorkItem.setTool(this.getFile().getMimeType());
+			fileWorkItem.setExtFile(this.getFile().getFilename());
+			fileWorkItem.setStatus(WORKITEM_STATUS_FEED);
 			fileWorkItem.session = session;
 			fileWorkItem.processManager = this.processManager;
 			fileWorkItem.instanceViewContent = this.instanceViewContent;
-			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			fileWorkItem.setWriter(session.getUser());
 			fileWorkItem.setFile(this.getFile());
 			fileWorkItem.setGrpTaskId(this.getGrpTaskId());
 			fileWorkItem.setMajorVer(nextVersion);
 			fileWorkItem.setTitle(title);
-			fileWorkItem.add();
+			fileWorkItem.createDatabaseMe();
 			
 			String thisVersion = String.valueOf(nextVersion+ "." + 0);
 			workItemVersionChooser.getVersionSelector().add(thisVersion , thisVersion);
@@ -160,10 +173,17 @@ public class FileWorkItem extends WorkItem{
 			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. " + title + " version "+ String.valueOf(thisMajorVersion+ "." + 0) +" =>" + thisVersion);
 			SystemWorkItem.add();
 			
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.setInstanceId(originInstId);
+			DocumentTool documentTool = new DocumentTool();
+			documentTool.setInstId(this.getInstId().toString());
+			documentTool.onLoad();
 			
-			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser) , new ToAppend(instanceViewThreadPanel, SystemWorkItem)};
+			
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			instanceViewThreadPanel.session = session;
+			instanceViewThreadPanel.setInstanceId(originInstId);
+			instanceViewThreadPanel.load();
+			
+			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser)};
 			
 //			Object[] temReturnObject = fileWorkItem.add();
 //			returnObject = new Object[temReturnObject.length + 1];
