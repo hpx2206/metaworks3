@@ -204,10 +204,10 @@ public class TopicTitle  implements ContextAware{
 		
 		this.makeHtml();
 		
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		this.getMetaworksContext().setHow("html");	
-		
 		this.notiToCompany();
+		
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		this.getMetaworksContext().setHow("html");
 		
 		return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Remover(new ModalWindow())};
 	}
@@ -278,9 +278,9 @@ public class TopicTitle  implements ContextAware{
 		comment.session = session;
 		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()))
-			comment.setTitle(session.getUser().getName() + "님이 주제 " + this.getTopicTitle() + "를 등록하였습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이 주제 " + this.getTopicTitle() + "를 등록하였습니다.");
 		else{
-			comment.setTitle(session.getUser().getName() + "님이 주제를 " + this.getTopicTitle() + "로 변경하였습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이 주제를 " + this.getTopicTitle() + "로 변경하였습니다.");
 		}
 		
 		

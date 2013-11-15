@@ -20,12 +20,11 @@ public SystemWorkItem(){
 public Object[] add() throws Exception {
 	
 	Session codiSession = new Session();
-	Locale localeManager = new Locale();
 	
 	IEmployee emp = new Employee();
 	emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id")  + "." + session.getEmployee().getGlobalCom() );
-	emp.setGlobalCom(GlobalContext.getPropertyString("codi.user.name"));
 	emp = emp.findMe();
+	emp.setGlobalCom(session.getEmployee().getGlobalCom());
 
 	IUser writer = new User();
 	writer.setUserId(emp.getEmpCode());

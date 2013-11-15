@@ -482,10 +482,10 @@ public class Dept extends Database<IDept> implements IDept {
 		
 		comment.setWriter(theFirstWriter);
 		if(MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext().getWhen())){
-			comment.setTitle(session.getUser().getName() + "님이 부서 " + this.getPartName() + "를 생성하였습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이 부서 " + this.getPartName() + "를 생성하였습니다.");
 		}
 		else if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
-			comment.setTitle(session.getUser().getName() + "님이  " + this.getPartName() + " 부서를 제거하였습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이  " + this.getPartName() + " 부서를 제거하였습니다.");
 		}
 		
 		comment.setStartDate(new Date());
