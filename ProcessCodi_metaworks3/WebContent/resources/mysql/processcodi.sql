@@ -990,6 +990,10 @@ create table notisetting(
 	primary key(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 11.14 역할과 롤을 연결하기 위한 컬럼 추가
+alter table bpm_roledef add column mappedRoleCode varchar(100);
+alter table bpm_roledef add column roleDefType varchar(10);
+
 
 -- 2013.11.14 role 사진 추가
 alter table roletable add column URL varchar(200);

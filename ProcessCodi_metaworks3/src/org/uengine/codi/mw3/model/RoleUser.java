@@ -23,6 +23,20 @@ public class RoleUser extends Database<IRoleUser> implements IRoleUser {
 			this.empCode = empCode;
 		}
 		
+	public IRoleUser findUserByRoleCode() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from roleusertable");
+		sb.append(" WHERE roleCode=?roleCode ");
+		
+		IRoleUser dao = (IRoleUser) sql(IRoleUser.class, sb.toString());
+		
+       	dao.setRoleCode(this.getRoleCode());
+       	
+       	dao.select();
+       	
+       	return dao;
+	}
+		
 	public int removeMe() throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("delete from roleusertable");

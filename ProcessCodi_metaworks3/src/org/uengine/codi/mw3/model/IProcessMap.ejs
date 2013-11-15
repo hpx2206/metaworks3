@@ -45,16 +45,14 @@ if(mw3.when == 'filter'){
 <%		
 		}else{
 			var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
-			
+			console.log(session);
 			var admin = false;
 			if(session && session.employee)
 				admin = session.employee.isAdmin;		
 				
-			if(admin){
 %>
    	<div class="editicon" onclick="<%=methods.modify.caller()%>"></div>
 <%
-			}
 %>   
     <a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').whenClick()"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
     <%

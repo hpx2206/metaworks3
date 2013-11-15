@@ -23,9 +23,9 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 		
 		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
 		
-		var admin = false;
-		if(session && session.employee)
-			admin = session.employee.isAdmin;		
+		var admin = true;
+//		if(session && session.employee)
+//			admin = session.employee.isAdmin;		
 		
 		if(admin){
 			$( ".process_map2" ).sortable({

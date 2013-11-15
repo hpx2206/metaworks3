@@ -551,14 +551,18 @@ public class ResourceFile implements ContextAware{
 		processMap.setDefId(this.getAlias());
 		processMap.setName(name);
 		processMap.setComCode(session.getCompany().getComCode());
+		processMap.processManager = processManager;
 		
 		if(!processMap.confirmExist())
 			throw new Exception("$AlreadyAddedApp");
 
 		processMap.createMe();
+//		processMap.createRoleDef();
+		
 		
 		ProcessMapList processMapList = new ProcessMapList();
 		processMapList.load(session);
+		
 		
 		return new Object[]{processMapList, new Remover(new ModalWindow())};		
 	}

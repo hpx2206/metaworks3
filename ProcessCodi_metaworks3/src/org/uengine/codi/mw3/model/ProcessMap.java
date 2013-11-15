@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -8,11 +11,15 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.CodiProcessDefinitionFactory;
+import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -120,6 +127,26 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			this.cmTrgr = cmTrgr;
 		}
 
+	public void createRoleDef() throws Exception {
+		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(defId);
+		for(org.uengine.kernel.Role role : definition.getRoles()){
+			RoleMappingDefinition roleMappingDefinition = new RoleMappingDefinition();
+			roleMappingDefinition.setRoleDefId(TenantContext.getThreadLocalInstance().getTenantId() + "." + defId + "." + role.getName());
+			
+			if( "Initiator".equals(role.getName())){
+				continue;
+			}
+			User user = new User();
+			user.setUserId(role.getName());
+			roleMappingDefinition.setDefId(defId);
+			roleMappingDefinition.setRoleName(role.getName());
+			roleMappingDefinition.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
+			roleMappingDefinition.setMappedRoleCode(role.getName());
+			roleMappingDefinition.setRoleDefType(RoleMappingDefinition.ROLE_DEF_TYPE_ROLE);
+			
+			roleMappingDefinition.createDatabaseMe();
+		}
+	}
 	public void createMe() throws Exception {
 		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
 			getIconFile().upload();
@@ -242,7 +269,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
 	public Object[] initiate() throws Exception{
 //		InstanceViewContent instanceView// = new InstanceViewContent();
-		
+		// 프로세스 실행
 		String instId = this.initializeProcess();
 		
 		String title = null;		
@@ -346,6 +373,53 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		//set the role mappings the administrator set.
 		
 		roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
+		ArrayList<IRoleMappingDefinition> roleDefList = roleMappingPanel.getRoleMappingDefinitions();
+		for(IRoleMappingDefinition roleDef : roleDefList){
+			if( "Initiator".equals(roleDef.getRoleName())){
+				continue;
+			}
+			if( roleDef.getMappedUser().getUserId() == null ){
+				// user가 매핑이 안되어 있다면 유저를 매핑하라고 메시지를 띄우고 프로세스가 진행이 안됨
+				String systemAdmin = GlobalContext.getPropertyString("codi.user.id");
+				IEmployee correntUser = session.getEmployee();
+				Employee emp = new Employee();
+				emp.copyFrom(correntUser);
+				IEmployee adminUser = emp.findCompanyAdmin();
+				if( adminUser != null ){
+					int i =0;
+					while(adminUser.next() ){
+						if( i == 0 ){
+							systemAdmin = adminUser.getEmpName();
+						}else{
+							systemAdmin += " , " + adminUser.getEmpName();
+						}
+						i++;
+					}
+				}
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("<b>현재 프로세스에 역할자가 매핑이 되어 있지 않습니다.<br/>");
+				buffer.append(" <span style='color:blue'>" + systemAdmin + "</span> (관리자) 에게 문의하여 주세요.</b> <br/><br/>");
+				buffer.append(" <span style='color:blue'><b>* 매핑 가이드 </b></span><br/>");
+				buffer.append(" 관리자 Login > 프로세스앱 마우스 오버 > 톱니바퀴 클릭 > 친구선택     ");
+				 
+				
+				ErrorPage message = new ErrorPage();
+				message.setErrorMessage(buffer.toString());
+				
+				ModalWindow errorMessage = new ModalWindow();
+				errorMessage.setTitle("");
+				errorMessage.setWidth(450);
+				errorMessage.setHeight(200);
+				errorMessage.setPanel(message);
+				
+				return new Object[]{errorMessage};
+				
+//				throw new MetaworksException("역할 매핑이 안되어 있어요. 관리자에게 문의해 주세요.");
+			}
+		}
+		
+		
+		
 		roleMappingPanel.putRoleMappings(processManager, instId);
 		processManager.executeProcess(instId);
 		processManager.applyChanges();
@@ -374,7 +448,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		instanceListPanel.getInstanceList().load();
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			return new Object[]{instanceListPanel, new Remover(new Popup())};
+			return new Object[]{new Refresh(instanceListPanel), new Remover(new Popup())};
 		}else{
 			if(processMapList!=null && processMapList.getTitle()!=null){
 				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(title);
@@ -383,7 +457,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 
 			}
 			
-			return new Object[]{new Remover(new Popup() , true), instanceListPanel, instanceView};
+			return new Object[]{new Remover(new Popup() , true), new Refresh(instanceListPanel), new Refresh(instanceView)};
 		}
 
 		
