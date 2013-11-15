@@ -590,6 +590,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		return popup;
 	}
 
+	
+	/*
 	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, callByContent=true, when=MetaworksContext.WHEN_VIEW)
 	@Face(displayName = "Post to my wall")
 	public Popup share(){
@@ -605,6 +607,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		return popup;		
 	}
+	*/
 
 
 	public static ArrayList<String> listProperties(String className) {
