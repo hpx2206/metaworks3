@@ -75,6 +75,11 @@ public interface IDept extends IDAO {
 	public DeptList getChildren() throws Exception;
 	public void setChildren(DeptList children) throws Exception;
 
+	@NonSavable
+	@NonLoadable
+	public EmployeeList getDeptEmployee() throws Exception;
+	public void setDeptEmployee(EmployeeList deptEmployee) throws Exception;
+	
 	// methods
 	public IDept load() throws Exception;
 
