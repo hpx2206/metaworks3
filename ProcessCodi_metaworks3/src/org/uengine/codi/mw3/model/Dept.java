@@ -56,6 +56,7 @@ public class Dept extends Database<IDept> implements IDept {
 		setIsDeleted("0");
 		
 		setChildren(new DeptList());
+		setDeptEmployee(new EmployeeList());
 	}
 	
 	public String getPartCode() {
@@ -150,6 +151,18 @@ public class Dept extends Database<IDept> implements IDept {
 		this.children = children;
 	}
 
+	EmployeeList deptEmployee;
+
+	@Override
+	public EmployeeList getDeptEmployee() {
+		return deptEmployee;
+	}
+
+	@Override
+	public void setDeptEmployee(EmployeeList deptEmployee) {
+		this.deptEmployee = deptEmployee;
+	}
+	
 	@Override
 	public IDept load() throws Exception {
 		if (getPartCode() != null) {
@@ -264,6 +277,10 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			setChildren(deptList);
 			
+			EmployeeList employeeList = new EmployeeList();
+			employeeList.setId(this.getPartCode());
+			
+			setDeptEmployee(employeeList);
 		} else {
 			DeptList deptList = new DeptList();
 			deptList.setMetaworksContext(this.getMetaworksContext());
@@ -271,6 +288,24 @@ public class Dept extends Database<IDept> implements IDept {
 			deptList.setDept(this.findChildren());			
 			setChildren(deptList);			
 			
+			if(!("deptPicker".equals(this.getMetaworksContext().getWhere()))){
+				IEmployee employee = new Employee();
+				employee.setMetaworksContext(this.getMetaworksContext());
+				employee.getMetaworksContext().setHow("tree");
+				if( "addContact".equals(this.getMetaworksContext().getWhere()) ){
+					// TODO 이렇게 분기하는게 좋은 코드는 아니지만 우선 적용함 - 2/17 김형국
+					employee.getMetaworksContext().setWhere("addContact");
+				}else{
+					employee.getMetaworksContext().setWhere("navigator");
+				}
+				
+				EmployeeList employeeList = new EmployeeList();			
+				employeeList.setMetaworksContext(this.getMetaworksContext());
+				employeeList.setId(this.getPartCode());
+				employeeList.setEmployee(employee.findByDept(this));
+				
+				setDeptEmployee(employeeList);
+			}
 		}
 	}
 		
