@@ -107,6 +107,8 @@ public class Followers implements ContextAware {
 			type = ADD_ROLEFOLLOWERS;
 		}else if("etc".equals(this.getInstanceId())){
 			type = ADD_ETCFOLLOWERS;
+		}else if("document".equals(this.getInstanceId())){
+			type = ADD_DOCUMENTFOLLOWERS;
 		}
 		
 		session.setLastInstanceId(this.getInstanceId());
