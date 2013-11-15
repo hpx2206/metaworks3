@@ -149,9 +149,9 @@ public class ProjectTitle implements ContextAware {
 			this.projectAlias = projectAlias;
 		}
 		
-	@Face(displayName="$Next")
+//	@Face(displayName="$Next")
 	@Available(when={MetaworksContext.WHEN_NEW})
-	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
+//	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
 	public Object createProjectStep1() throws Exception {
 		NewServer newServer = new NewServer();
 		
@@ -171,14 +171,16 @@ public class ProjectTitle implements ContextAware {
 		
 			
 		
-		//@Face(displayName="$Create")
+	@Face(displayName="$Create")
 	@Available(when={MetaworksContext.WHEN_NEW})
-	//@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
+		this.saveMe();
 		
 		session.setLastPerspecteType("topic");
 		session.setLastSelectedItem(this.getTopicId());
 
+		
 		ProjectNode projectNode = new ProjectNode();
 		projectNode.setId(this.getTopicId());
 		projectNode.setName(this.getTopicTitle());
@@ -235,6 +237,7 @@ public class ProjectTitle implements ContextAware {
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
 		
 		return returnObject;
+		
 	}
 	
 	public void saveMe() throws Exception {

@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Date;
 
 import org.metaworks.MetaworksContext;
@@ -51,7 +53,7 @@ public class ReleasePanel {
 		
 	MetadataFile sqlFile;
 		@Face(displayName="$SqlFile")
-		@Available(when=MetaworksContext.WHEN_EDIT)
+		@Available(when={MetaworksContext.WHEN_EDIT})
 		public MetadataFile getSqlFile() {
 			return sqlFile;
 		}
@@ -87,8 +89,17 @@ public class ReleasePanel {
 	@Face(displayName = "$release")
 	@ServiceMethod(callByContent = true)
 	public Object release() throws Exception{
-		
+		ModalWindow modalWindow = new ModalWindow();
 		FilepathInfo filepathinfo = new FilepathInfo();
+		filepathinfo.setId(Integer.parseInt(this.getReflectVersion().toString()));
+		filepathinfo.copyFrom(filepathinfo.databaseMe());
+		
+		if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
+			filepathinfo.setReleaseVer(1);
+		}
+		else{
+			filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
+		}
 		
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
@@ -119,22 +130,12 @@ public class ReleasePanel {
 					setSqlFile(resourceFile);
 				}
 			
-			filepathinfo.setId(Integer.parseInt(this.getReflectVersion().toString()));
-			filepathinfo.copyFrom(filepathinfo.databaseMe());
-			
-			
-			if(!this.getCheck()){	//체크 박스 미 체크시
+			if(!this.getCheck()){	//반영된 버전 미 사용
 
 			}
-			else{	//체크 박스 체크시
+			else{	//반영된 버전 사용
 				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
 				filepathinfo.setWarPath(this.getWarFile().getFilename());
-			}
-			
-			if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
-				filepathinfo.setReleaseVer(1);
-			}else{
-				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
 			}
 			
 			filepathinfo.setId(filepathinfo.createNewId());
@@ -146,38 +147,48 @@ public class ReleasePanel {
 			filepathinfo.createDatabaseMe();
 		}
 		else if("svn".equals(wfNode.getVisType())){
-			ModalWindow modalWindow = new ModalWindow();
-			filepathinfo.setId(Integer.parseInt(this.getReflectVersion().toString()));
-			filepathinfo.copyFrom(filepathinfo.databaseMe());
-			
-			if(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) == 0){
-				filepathinfo.setReleaseVer(1);
+			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	//IaaS 연동 시
+				
+				filepathinfo.setComment(this.getComment());
+				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+				filepathinfo.setModdate(new Date());
+				filepathinfo.setId(filepathinfo.createNewId());
+				
+				filepathinfo.createDatabaseMe();
+				filepathinfo.flushDatabaseMe();
+				
 			}
-			else{
-				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()) + 1);
+			else{	//IaaS 미 연동 시
+				//
 			}
-			
-			filepathinfo.setComment(this.getComment());
-			filepathinfo.setDistributor(session.getEmployee().getEmpName());
-			filepathinfo.setModdate(new Date());
-			filepathinfo.setId(filepathinfo.createNewId());
-			
-			filepathinfo.createDatabaseMe();
-			filepathinfo.flushDatabaseMe();
-			
-			
-			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			modalWindow.setWidth(300);
-			modalWindow.setHeight(150);
-			modalWindow.setTitle("$Release");
-			modalWindow.setPanel(filepathinfo.getReleaseVer() + localeManager.getString(".0 버전으로 release 되었습니다."));
-			modalWindow.getButtons().put("$Confirm", "");		
-	
-			return modalWindow;
 		}
+		
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(150);
+		modalWindow.setTitle("$Release");
+		modalWindow.setPanel(filepathinfo.getReleaseVer() + localeManager.getString(".0 버전으로 release 되었습니다."));
+		modalWindow.getButtons().put("$Confirm", "");
 		
 		return new Remover(new ModalWindow());
 	}
+	
+	public String command(String cmd){
+		String result = null;
+		StringBuffer strbuf = new StringBuffer ( );
+		BufferedReader br = null;
+		try{ 
+			Process proc = Runtime.getRuntime ( ).exec ( cmd );
+			br = new BufferedReader ( new InputStreamReader ( proc.getInputStream ( ) ) );
+			String line;
+			while ( ( line = br.readLine ( ) ) != null )
+				strbuf.append ( line );
+			br.close ( );
+		}catch ( Exception e ) { result = "command file : " + e.toString(); }
+		  
+		result = strbuf.toString ( );
+		return result;
+	 }
 	
 	@AutowiredFromClient
 	public Locale localeManager;
