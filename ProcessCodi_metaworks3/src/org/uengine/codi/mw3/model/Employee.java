@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
 import org.metaworks.Forward;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
@@ -27,6 +28,7 @@ import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Forward;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
@@ -501,72 +503,119 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		INotiSetting notiSetting = new NotiSetting();
 		Instance instance = new Instance();
 		noti.session = session;
-		instance = this.createWorkItem();
+		instance = this.createWorkItem("join");
 		
 		Employee employee = new Employee();
 		employee.setEmpCode(session.getEmployee().getEmpCode());
 		employee.copyFrom(employee.databaseMe());
 		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
+		INotiSetting findNotiSetting;
 		Employee codi = new Employee();
 		codi.setEmpCode("0");
 		
 		while(findResult.next()){
-			notiSetting.findByUserId(findResult.getEmpCode());
-			noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-			noti.setUserId(findResult.getEmpCode());
-			noti.setActorId(codi.getEmpName());
-			noti.setConfirm(false);
-			noti.setInstId(instance.getInstId());
-			noti.setInputDate(Calendar.getInstance().getTime());
-			noti.setActAbstract(session.getUser().getName() + " joined");
-
-			//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
-	//			noti.createDatabaseMe();
-	//			noti.flushDatabaseMe();
-			
-			noti.add(instance);
+			findNotiSetting = notiSetting.findByUserId(findResult.getEmpCode());
+			if(findNotiSetting.next()){
+				if(findNotiSetting.isModiUser()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(findResult.getEmpCode());
+					noti.setActorId(session.getEmployee().getEmpName());
+					noti.setConfirm(false);
+					noti.setInstId(instance.getInstId());
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setActAbstract(session.getUser().getName() + "님이 가입하셨습니다.");
 		
-			String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
-			
-			try{
-				//NEW WAY IS GOOD
-				Browser.withSession(followerSessionId, new Runnable(){
-	
-					@Override
-					public void run() {
-						//refresh notification badge
-						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-					}
+					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+			//			noti.createDatabaseMe();
+			//			noti.flushDatabaseMe();
 					
-				});
-			}catch(Exception e){
-				e.printStackTrace();
+					noti.add(instance);
+				
+					String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+					
+					try{
+						//NEW WAY IS GOOD
+						Browser.withSession(followerSessionId, new Runnable(){
+			
+							@Override
+							public void run() {
+								//refresh notification badge
+								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+							}
+							
+						});
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
 			}
-		
-		}		
+		}
 	}
 	
-	public Instance createWorkItem() throws Exception{
+	public void notiToFriend() throws Exception{
+		Notification noti = new Notification();
+		INotiSetting notiSetting = new NotiSetting();
+		Instance instance = new Instance();
+		noti.session = session;
+		instance = this.createWorkItem("addFriend");
+		
+		INotiSetting findNotiSetting = notiSetting.findByUserId(this.getEmpCode());
+		if(findNotiSetting.next()){
+			if(findNotiSetting.isModiUser()){
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(this.getEmpCode());
+				noti.setActorId(session.getEmployee().getEmpName());
+				noti.setConfirm(false);
+				noti.setInstId(instance.getInstId());
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setActAbstract(session.getUser().getName() + "님이 친구로 추가 하셨습니다.");
+				
+				noti.add(instance);
+			
+				String followerSessionId = Login.getSessionIdWithUserId(this.getEmpCode());
+				
+				try{
+					//NEW WAY IS GOOD
+					Browser.withSession(followerSessionId, new Runnable(){
+		
+						@Override
+						public void run() {
+							//refresh notification badge
+							ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+						}
+					});
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+	
+	public Instance createWorkItem(String type) throws Exception{
 		Employee representiveMailEmp = new Employee();
 		representiveMailEmp.setEmpCode("0");
 		
 		
 		IEmployee repMailEmp = representiveMailEmp.findMe();
 		
-		
-		CommentWorkItem comment = new CommentWorkItem();
-		comment.processManager = processManager;
-		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
 		User theFirstWriter;
 		theFirstWriter = new User();
 		theFirstWriter.setName(repMailEmp.getEmpName());
 		
-		comment.setWriter(theFirstWriter);
-		comment.setTitle(this.getEmpName() + "님이 가입 하셨습니다.");
-		comment.setStartDate(new Date());
+		SystemWorkItem comment = new SystemWorkItem();
+		comment.processManager = processManager;
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
+		comment.setWriter(theFirstWriter);
+		if("join".equals(type)){
+			comment.setTitle(this.getEmpName() + "님이 가입 하셨습니다.");
+		}
+		else if("addFriend".equals(type)){
+			comment.setTitle(this.getEmpName() + "님이 친구로 추가 하셨습니다.");
+		}
 		comment.session = session;
+		
 		comment.add();
 		
 		Instance instance = new Instance();
@@ -679,7 +728,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object activate() throws MetaworksException{
-		
+
 		IEmployee findEmployee = null;
 		
 		try {
@@ -877,6 +926,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
 		
 		cp.load(session.getUser().getUserId());
+		
+		this.notiToFriend();
 		
 		return new Refresh(cp);
 	}
@@ -1150,4 +1201,22 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return number.intValue();
 	}
 
+	public static IEmployee getSystemUser() throws Exception{
+		
+		Employee find = new Employee();
+		
+		// TODO: System Empcode setting
+		find.setEmpCode("0");
+		
+		return find.findMe();
+		
+	}
+	
+	public IUser getUser(){
+		IUser user = new User();
+		user.setUserId(this.getEmpCode());
+		user.setName(this.getEmpName());
+		
+		return user;
+	}
 }
