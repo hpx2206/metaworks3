@@ -46,7 +46,7 @@ public class ContactUs {
 	@Face(displayName="$sendContactUs")
 	public Object sendFeedback() throws Exception{
 		String contents = this.getContents().getContents();
-		
+		String adminEmail = "help@uengine.org";
 		
 		EMailServerSoapBindingImpl emailServerSoapBindingImpl = new EMailServerSoapBindingImpl();
 		Company company = new Company();
@@ -54,10 +54,10 @@ public class ContactUs {
 		ICompany iCompany;
 		try {
 			iCompany = company.findByCode();
-			String mailto = iCompany.getRepMail();
+//			String mailto = iCompany.getRepMail();
 			emailServerSoapBindingImpl.sendMail(session.getEmployee().getEmail(), //송신자
 					session.getUser().getUserId(),
-					mailto, //수신자
+					adminEmail, //수신자
 					this.getTitle(), 
 					contents,
 					null,

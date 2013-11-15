@@ -42,6 +42,9 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_STATUS_SUSPENDED= "SUSPENDED";
 		//When user delegate a workitem, the workitem's status whould be changed to this status and another workitem.	
 		public final static String WORKITEM_STATUS_DELEGATED= "DELEGATED"; 
+		public final static String WORKITEM_STATUS_RUNNING = "Running";
+		
+		
 		public final static String WORKITEM_TYPE_GENERIC = "generic";
 		
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";

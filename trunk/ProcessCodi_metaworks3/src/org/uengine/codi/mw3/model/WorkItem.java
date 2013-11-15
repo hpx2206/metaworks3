@@ -829,12 +829,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
 				instanceRef.setInitiator(this.getWriter());
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
-				instanceRef.setStatus("Running");									// 처음 상태 Running
+				instanceRef.setStatus(WORKITEM_STATUS_RUNNING);									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(this.getTitle());
 				if(this.getFolderId() != null){
 					instanceRef.setTopicId(this.getFolderId());
 				}
+				
+				if(WORKITEM_TYPE_FILE.equals(this.getType()) || WORKITEM_TYPE_DOCUMENT.equals(this.getType()) || WORKITEM_TYPE_GENERIC.equals(this.getType()))
+					instanceRef.setIsArchive(true);
 				
 				instanceRef.setIsDocument(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType()));
 				
@@ -901,6 +904,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
 					cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
 				}
+				
+				if(WORKITEM_TYPE_FILE.equals(this.getType()) || WORKITEM_TYPE_DOCUMENT.equals(this.getType()) || WORKITEM_TYPE_GENERIC.equals(this.getType()))
+					instanceRef.setIsArchive(true);
+				
 				if(lastCmnt == null){
 					instanceRef.setLastCmnt(cmntTitle);
 					instanceRef.setLastCmntUser(session.getUser());
@@ -1459,18 +1466,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public IWorkItem loadCurrentView() throws Exception{
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where taskId=?taskId");
-		sb.append(" and instId=?instId");
+		sb.append(" select * from bpm_worklist where instId=?instId");
+		sb.append(" and taskId=?taskid");
 		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
 		
-		workitem.set("taskId",this.getTaskId());
+		workitem.set("taskid",this.getTaskId());
 		workitem.set("instId",this.getInstId());
 		workitem.select();
 		
 		if(workitem.next()){
 			this.setType("file");
-			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			this.getMetaworksContext().setHow("document");
+			this.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
 			return workitem;
 		}else{
 			return null;

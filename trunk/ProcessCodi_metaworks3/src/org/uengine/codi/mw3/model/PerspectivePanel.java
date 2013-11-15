@@ -225,7 +225,7 @@ public class PerspectivePanel  implements ContextAware {
 		ContactUs contactUs = new ContactUs();
 		contactUs.session = session;
 		modalWindow.setPanel(contactUs);
-		modalWindow.setTitle("Contact Us");
+		modalWindow.setTitle("Contact Us         -      AdminEmail : help@uengine.org");
 		modalWindow.setWidth(600);
 		modalWindow.setHeight(600);
 		modalWindow.setMetaworksContext(new MetaworksContext());
