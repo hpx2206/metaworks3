@@ -33,6 +33,7 @@ import org.uengine.codi.mw3.model.NotiSetting;
 import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.SystemWorkItem;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -223,66 +224,66 @@ public class TopicTitle  implements ContextAware{
 		employee.setEmpCode(session.getEmployee().getEmpCode());
 		employee.copyFrom(employee.databaseMe());
 		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
+		INotiSetting findNotiSetting;
 		Employee codi = new Employee();
 		codi.setEmpCode("0");
 		
 		while(findResult.next()){
-			notiSetting.findByUserId(findResult.getEmpCode());
-			noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-			noti.setUserId(findResult.getEmpCode());
-			noti.setActorId(codi.getEmpName());
-			noti.setConfirm(false);
-			noti.setInstId(instance.getInstId());
-			noti.setInputDate(Calendar.getInstance().getTime());
-			noti.setActAbstract(session.getUser().getName() + " create topic");
-
-			//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
-	//			noti.createDatabaseMe();
-	//			noti.flushDatabaseMe();
-			
-			noti.add(instance);
-		
-			String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
-			
-			try{
-				//NEW WAY IS GOOD
-				Browser.withSession(followerSessionId, new Runnable(){
-	
-					@Override
-					public void run() {
-						//refresh notification badge
-						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+			findNotiSetting = notiSetting.findByUserId(findResult.getEmpCode());
+			if(findNotiSetting.next()){
+				if(findNotiSetting.isModiTopic()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(findResult.getEmpCode());
+					noti.setActorId(session.getEmployee().getEmpName());
+					noti.setConfirm(false);
+					noti.setInstId(instance.getInstId());
+					noti.setInputDate(Calendar.getInstance().getTime());
+					if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()))
+						noti.setActAbstract(session.getUser().getName() + "님이 주제 " + this.getTopicTitle() + "를 등록하였습니다.");
+					else{
+						noti.setActAbstract(session.getUser().getName() + "님이 주제를 " + this.getTopicTitle() + "로 변경하였습니다.");
 					}
+				
+					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+			//			noti.createDatabaseMe();
+			//			noti.flushDatabaseMe();
 					
-				});
-			}catch(Exception e){
-				e.printStackTrace();
+					noti.add(instance);
+				
+					String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+					
+					try{
+						//NEW WAY IS GOOD
+						Browser.withSession(followerSessionId, new Runnable(){
+			
+							@Override
+							public void run() {
+								//refresh notification badge
+								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+							}
+							
+						});
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
 			}
-		
 		}		
 	}
 	
 	public Instance createWorkItem() throws Exception{
-		Employee representiveMailEmp = new Employee();
-		representiveMailEmp.setEmpCode("0");
 		
-		
-		IEmployee repMailEmp = representiveMailEmp.findMe();
-		
-		
-		CommentWorkItem comment = new CommentWorkItem();
+		SystemWorkItem comment = new SystemWorkItem();
 		comment.processManager = processManager;
-		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-		User theFirstWriter;
-		theFirstWriter = new User();
-		theFirstWriter.setName(repMailEmp.getEmpName());
-		
-		comment.setWriter(theFirstWriter);
-		comment.setTitle("주제 : " + this.getTopicTitle() + "이 생성되었습니다.");
-		comment.setStartDate(new Date());
-		
 		comment.session = session;
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()))
+			comment.setTitle(session.getUser().getName() + "님이 주제 " + this.getTopicTitle() + "를 등록하였습니다.");
+		else{
+			comment.setTitle(session.getUser().getName() + "님이 주제를 " + this.getTopicTitle() + "로 변경하였습니다.");
+		}
+		
+		
 		comment.add();
 		
 		Instance instance = new Instance();
@@ -302,6 +303,8 @@ public class TopicTitle  implements ContextAware{
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicTitle());
 		topicNode.setType(TopicNode.TOPIC);
+		
+		this.notiToCompany();
 		
 		return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};		
 	}
