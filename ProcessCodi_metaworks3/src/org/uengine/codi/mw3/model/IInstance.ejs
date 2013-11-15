@@ -88,12 +88,11 @@ if(value){
 												<!--<span class="type_topic"></span>-->
 											<% }%>
 										</div>										
-										<div style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%> 
+										<span style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%>    </span>
 											<% if(isFileAdded){ %>
-												<span style="float:left"><img src="images/waveStyle/wihfile.png" width=13 height=13></span>
+												<span style="float:left; margin:3px 8px 3px 0;"><img src="images/waveStyle/wihfile.png" width=15 height=15></span>
 											<% } %>
 										
-										   </div>
 										
 										<%if(value.dueDate){ 
 											if(value.status=='Completed'){
