@@ -30,6 +30,7 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
@@ -997,7 +998,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);
 			this.getWriter().setMetaworksContext(this.getMetaworksContext());
-			
+			if( session.getLastPerspecteType() != null && TopicNode.TOPIC.equals(session.getLastPerspecteType())){
+				TopicNode topic = new TopicNode();
+				topic.setId(session.getLastSelectedItem());
+				topic.copyFrom(topic.databaseMe());
+				instance.setTopicName(topic.getName());
+			}
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
 			copyOfInstance.fillFollower();

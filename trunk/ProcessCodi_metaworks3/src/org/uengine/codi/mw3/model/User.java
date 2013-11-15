@@ -489,10 +489,7 @@ public class User extends Database<IUser> implements IUser {
 			}
 //			////// end
 			
-			ContactPanel contactPanel = new ContactPanel(session, Followers.ADD_INSTANCEFOLLOWERS);
-			
-			return new Object[]{new Refresh(contactPanel), new Refresh(followers)};
-			
+			return new Object[]{new Refresh(followers)};
 			
 			//TODO: restored by jjy. 
 		}else if("addDeptFollower".equals(this.getMetaworksContext().getWhen())){

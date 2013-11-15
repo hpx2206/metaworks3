@@ -5,15 +5,25 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 
 public class ContactPanel {
 	
+	String contactViewType;
+	@Id
+		public String getContactViewType() {
+			return contactViewType;
+		}
+		public void setContactViewType(String contactViewType) {
+			this.contactViewType = contactViewType;
+		}
+
 	public ContactPanel(){}
 	
 	public ContactPanel(IUser user) throws Exception{
-		
+		setContactViewType(ContactListPanel.CONTACT);
 		ContactListPanel contactListPanel = new ContactListPanel();		
 		contactListPanel.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
 		contactListPanel.load(user.getUserId());		
@@ -33,7 +43,7 @@ public class ContactPanel {
 	}
 	
 	public ContactPanel(Session session, String type) throws Exception {
-		
+		setContactViewType(ContactListPanel.FOLLOWER);
 		ContactListPanel contactListPanel = new ContactListPanel();
 		contactListPanel.getMetaworksContext().setHow("follower");
 		contactListPanel.setId(type);
