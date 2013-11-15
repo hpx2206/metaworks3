@@ -5,14 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-import org.metaworks.Forward;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -28,7 +26,6 @@ import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Forward;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
@@ -744,7 +741,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		if(findEmployee.isApproved()){
 			Login login = new Login();
-			login.setUserId(findEmployee.getEmail());
+			login.setEmail(findEmployee.getEmail());
 			
 			return login;
 		}
@@ -774,7 +771,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-	public Object findpw() throws MetaworksException{
+	public Object forgotPassword() throws MetaworksException{
 		System.out.println("authKey= "+ getAuthKey());
 		
 		Employee employee = new Employee();
@@ -794,7 +791,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		if(findEmployee.isApproved()){
 			Login login = new Login();
-			login.setUserId(findEmployee.getEmail());
+			login.setEmail(findEmployee.getEmail());
 			
 			return login;
 		}
@@ -1087,9 +1084,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public IEmployee findByEmail(){
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
-		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
-		sb.append("where emptable.email=?email ");
+		sb.append("select emptable.*, PARTTABLE.PARTNAME");
+		sb.append("  from emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
+		sb.append(" where emptable.email=?email ");
+		sb.append("   and emptable.isdeleted = 0");
 		
 		IEmployee dao = null;
 		
@@ -1186,7 +1184,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return new Forward(TenantContext.getURL(tenantId));
 	}
-	
+
 	public int createNewNotiSettingId() throws Exception{
 		Map options = new HashMap();
 		options.put("useTableNameHeader", "false");

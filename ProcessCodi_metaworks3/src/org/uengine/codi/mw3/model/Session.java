@@ -214,13 +214,8 @@ public class Session implements ContextAware{
 		removeUserInfoFromHttpSession();
 		
 		Login login = new Login();
-		login.setStatus("login");
-		login.fireServerSession(this);
-		
-		login.setMetaworksContext(new MetaworksContext());
 		login.getMetaworksContext().setHow("logout");
-		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		login.getMetaworksContext().setWhere("user");
+		login.fireServerSession(this);
         
 		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
 		
