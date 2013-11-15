@@ -157,7 +157,7 @@ public class FileWorkItem extends WorkItem{
 			SystemWorkItem.processManager = this.processManager;
 			SystemWorkItem.instanceViewContent = this.instanceViewContent;
 			SystemWorkItem.setInstId(new Long(originInstId));
-			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. " + title + " version "+ String.valueOf(thisMajorVersion+ "." + 0) +" =>" + thisVersion) ;
+			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. " + title + " version "+ String.valueOf(thisMajorVersion+ "." + 0) +" =>" + thisVersion);
 			SystemWorkItem.add();
 			
 			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
@@ -357,7 +357,7 @@ public class FileWorkItem extends WorkItem{
 
 				}
 			}else if("image".equals(convertType)){
-				/*
+				
 				try {
 					int pageCount = getImageForPdf(convertedFilePath, convertedFilePath);
 
@@ -376,7 +376,7 @@ public class FileWorkItem extends WorkItem{
 					e.printStackTrace();
 					return false;
 				}
-				 */
+				
 			}
 		}
 
