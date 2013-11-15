@@ -539,6 +539,13 @@ public class Login implements ContextAware {
 		locale.setLanguage(session.getEmployee().getLocale());
 		locale.load();
 		
+		
+		
+		
+		
+		
+		
+		/*
 		MainPanel mainPanel=null;/*
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.setSession(session);
@@ -562,7 +569,6 @@ public class Login implements ContextAware {
 				mainPanel = pageNavigator.goProcess();
 			}
 		}
-*/		
 		PageNavigator pageNavigator = null;
 		String pageNavigatorPropertyName="";
 		String className = null;
@@ -627,11 +633,9 @@ public class Login implements ContextAware {
 			OAuthDB oauthDB = new OAuthDB(); 
 			oauthDB.update(session.getUser().getUserId(), session.getAccessToken());
 		}
+		*/
 		
-		
-		
-		
-	
+		/*
 		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
 		
 		String ipAddress = httpServletRequest.getRemoteAddr();
@@ -656,8 +660,10 @@ public class Login implements ContextAware {
         log.setDate(new Date());
         log.setIp(ipAddress);
         log.createDatabaseMe();
+        */
+		
 		//new Remover(new ModalWindow(), true), 
-		return new Object[]{new Refresh(locale), new Refresh(mainPanel, false, true)};
+		return new Object[]{new Refresh(locale), new Refresh(new StartCodi(session, "login"), false, true)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)

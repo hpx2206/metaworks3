@@ -39,11 +39,22 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		var id = getCookie("codi.id");
 		var password = getCookie("codi.password");
 		
-		mw3.getInputElement(objectId, "email").value = id;			
-		mw3.getInputElement(objectId, "password").value = password;
-		mw3.getInputElement(objectId, "rememberMe").checked = true;
+		var input_email = mw3.getInputElement(objectId, "email");
+		var input_password = mw3.getInputElement(objectId, "password");
+		
+		
+		console.log(input_rememberMe);
+		
+		if(input_email)
+			input_email.value = id;			
+		if(input_password)
+			input_password.value = password;
 	}
-	
+
+	var input_rememberMe = mw3.getInputElement(objectId, "rememberMe");
+	if(input_rememberMe)
+		input_rememberMe.checked = true;
+
 	mw3.getInputElement(this.objectId, 'email').focus();
  
 	$('#' + this.divId).bind('keydown', function(event){
@@ -59,8 +70,6 @@ org_uengine_codi_mw3_Login.prototype = {
 		if(login.email && login.password && login.rememberMe){
 			login.login();
 		}else{
-			mw3.getInputElement(this.objectId, "rememberMe").checked = true;
-			
 			var objectId = this.objectId;
 			
 			if(typeof FB == 'object'){
@@ -110,19 +119,6 @@ org_uengine_codi_mw3_Login.prototype = {
 	getValue : function(){
 		var login = mw3.getObjectFromUI(this.objectId);
 		
-		if (login.rememberMe){
-			setCookie("codi.id", login.email, 10, "/", "", "");
-			setCookie("codi.password", login.password, 10, "/", "", "");			
-			setCookie("codi.rememberMe", true, 10, "/", "", "");
-			setCookie("codi.facebookSSO", true, 10, "/", "", "");
-			
-		}else{
-			delCookie("codi.id", "/","");
-			delCookie("codi.password", "/","");
-			delCookie("codi.rememberMe", "/","");
-			delCookie("codi.facebookSSO", "/","");
-		}
-
 		var lastVisitPage = getCookie("codi.lastVisit");
 		if(lastVisitPage) 
 			login.lastVisitPage = lastVisitPage;
@@ -130,13 +126,17 @@ org_uengine_codi_mw3_Login.prototype = {
 		return login;
 	},
 	startLoading : function(){
-		$('body').prepend('<div style=\"position:absolute; z-index:99999; width:100%; height100%;\"><div id=\"mw3_progress\" style=\" width:70px; height:70px; background:url(images/waveStyle/loadingBg.png) no-repeat; margin:23% auto;\"><img style=\"margin:10px 0 0 17px;\" src=\"images/waveStyle/load.gif\" /></div></div>');
-	},
+		//$('body').prepend('<div style=\"position:absolute; z-index:99999; width:100%; height100%;\"><div id=\"mw3_progress\" style=\" width:70px; height:70px; background:url(images/waveStyle/loadingBg.png) no-repeat; margin:23% auto;\"><img style=\"margin:10px 0 0 17px;\" src=\"images/waveStyle/load.gif\" /></div></div>');
+	}
+	
+	/*,
+	
 	endLoading : function(){	
 		setTimeout(function(){
 			$('#mw3_progress').remove();
 		}, 100);		
-	},
+	}*/
+	,
 	destroy : function(){
 		$('#' + this.divId).unbind('keydown');
 		
@@ -145,8 +145,21 @@ org_uengine_codi_mw3_Login.prototype = {
 		}, 100);		
 		
 	},
-	showStatus : function(){
-		//alert('status');
+	showStatus : function(message){
+		if('login DONE.' == message){
+			if (this.object.rememberMe){
+				setCookie("codi.id", this.object.email, 10, "/", "", "");
+				setCookie("codi.password", this.object.password, 10, "/", "", "");			
+				setCookie("codi.rememberMe", true, 10, "/", "", "");
+				setCookie("codi.facebookSSO", true, 10, "/", "", "");
+				
+			}else{
+				delCookie("codi.id", "/","");
+				delCookie("codi.password", "/","");
+				delCookie("codi.rememberMe", "/","");
+				delCookie("codi.facebookSSO", "/","");
+			}
+		}
 	},
 	showError : function(message, methodName){
 		this.endLoading();
