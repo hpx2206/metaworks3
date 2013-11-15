@@ -5,8 +5,15 @@
     	
 <%
 		if('login' == mw3.how || 'logout' == mw3.how){
+		
 %>		
+		<!-- if remember me
+		<%=fields.email.here({htmlAttrChild: {class:'textinput textinputreadonly', readonly: 'readonly' , style: 'margin-bottom:15px; width:349px; float:left; margin-right:0px;' , value: 'ktw@test.com'}}) %>
+		<div class="remember_email">Change</div>
+		-->
+		
 		<%=fields.email.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your E-mail', style: 'margin-bottom:15px'}}) %>
+	
 		<%=fields.password.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your password'}}) %>
         
         <div class="popup_btn_line_login_l">
