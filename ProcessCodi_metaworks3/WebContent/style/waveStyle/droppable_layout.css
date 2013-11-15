@@ -2636,7 +2636,7 @@ select.select[class] {
 #signup_popup .popup_step .circle{ background:url(../../images/signIn/step_circle.png)}
 #signup_popup .popup_step .circle span{ position:relative; top:30px; font-size:12px; white-space:nowrap;}
 #signup_popup .popup_step .circle .steptext{ margin-left:-25px;}
-#signup_popup .popup_step .circle span.ing{top:35px !important; left:6px;width:15px; height:12px; display:inline-block; background:url(../../images/signIn/step_ing.png) !important}
+#signup_popup .popup_step .circle span.ing{top:34px !important; left:6px;width:15px; height:12px; display:inline-block; background:url(../../images/signIn/step_ing.png) !important}
 #signup_popup .popup_step .completed{ background:url(../../images/signIn/step_circle_com.png) !important}
 #signup_popup .popup_content { padding:20px 40px; background:#FFF }
 #signup_popup .popup_content .signup_info{ line-height:30px; border:1px solid #CCC; font-weight:bold;width:435px; padding-left:15px; background:#f6f6f6; font-size:13px;}
