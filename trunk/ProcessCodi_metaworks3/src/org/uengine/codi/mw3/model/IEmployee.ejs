@@ -294,6 +294,7 @@ if(value){
 			<% if(mw3.when == 'view') {%>
 			<li><a id="wBtn" href="#" onClick="<%=methods.editEmployeeInfo.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Edit")%></span></a></li>	
 			<% }else if(mw3.when == 'edit') {%>
+				<li><a id="wBtn" href="#" onClick="<%=methods.closeEmployeeInfo.caller()%>"><span><%=mw3.localize('$Close')%></span></a></li>
 			<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>" tabIndex="-1"><span><%=mw3.localize("$SaveProfile")%></span></a></li>
 			<%}%>
 		</ul>

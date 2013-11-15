@@ -170,6 +170,7 @@ public interface IInstance extends IDAO{
 	public InstanceViewThreadPanel getInstanceViewThreadPanel();
 	public void setInstanceViewThreadPanel(InstanceViewThreadPanel instanceViewThreadPanel);
 	
+	@NonSavable
 	@ORMapping(
 			objectFields={ "instanceId" , "status" }, 
 			databaseFields={ "instId" , "status" })

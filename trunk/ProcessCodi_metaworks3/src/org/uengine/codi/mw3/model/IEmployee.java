@@ -212,6 +212,9 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] saveEmployeeInfo() throws Exception;
 	
+	@ServiceMethod(callByContent=true)
+	public Object[] closeEmployeeInfo() throws Exception;
+	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public void saveMe() throws Exception;
 	
