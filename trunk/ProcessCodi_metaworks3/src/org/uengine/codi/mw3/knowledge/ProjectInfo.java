@@ -246,13 +246,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		followersLoad();
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
-		
-		try {
-			wfNode.copyFrom(wfNode.databaseMe());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		wfNode.copyFrom(wfNode.databaseMe());
 		
 /*		if(wfNode.getLinkedInstId() != null){
 			String linkedId = String.valueOf(wfNode.getLinkedInstId());*/
@@ -332,6 +326,9 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		ReleasePanel releasePanel = new ReleasePanel();
 		FilepathInfo filepathInfo = new FilepathInfo();
 		filepathInfo.setProjectId(this.getProjectId());
+		releasePanel.setReflectVersion(reflectVersion);
+		releasePanel.setProjectId(this.getProjectId());
+		reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
 		
 		if("war".equals(this.getType())){
 			MetadataFile sqlFile = new MetadataFile();
@@ -344,28 +341,20 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			
 			releasePanel.setSqlFile(sqlFile);
 			releasePanel.setWarFile(warFile);
-			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
-			releasePanel.setProjectId(this.getProjectId());
-			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setCheck(false);
 			releasePanel.setMetaworksContext(new MetaworksContext());
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		else if("svn".equals(this.getType())){
-			releasePanel.setProjectId(this.getProjectId());
-			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
-			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setMetaworksContext(new MetaworksContext());
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
 		}
-
+		
 		modalWindow.setTitle("$devrelease");
 		modalWindow.setPanel(releasePanel);
 		modalWindow.setHeight(300);
 		
 		return modalWindow;
-		
 	}
 
 	@Face(displayName = "$devreflect")
@@ -378,6 +367,14 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		CloudInfo cloudInfo = new CloudInfo();
 		FilepathInfo filepathInfo = new FilepathInfo();
 		filepathInfo.setProjectId(this.getProjectId());
+		reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
+		reflectPanel.setReflectVersion(reflectVersion);
+		reflectPanel.setProjectId(this.getProjectId());
+		
+		MetadataFile sqlFile = new MetadataFile();
+		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+		sqlFile.setBaseDir(codebase + File.separatorChar);
+		sqlFile.setTypeDir("sql");
 		
 		ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
 		while(findListing.next()){
@@ -385,37 +382,32 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		}
 		
 		if("war".equals(this.getType())){
-			
-			MetadataFile sqlFile = new MetadataFile();
-			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-			sqlFile.setBaseDir(codebase + File.separatorChar);
-			sqlFile.setTypeDir("sql");	
 			MetadataFile warFile = new MetadataFile();
 			warFile.setBaseDir(codebase + File.separatorChar);
 			warFile.setTypeDir("war");
-			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
-			reflectPanel.setReflectVersion(reflectVersion);
-			reflectPanel.setSqlFile(sqlFile);
+			
 			reflectPanel.setWarFile(warFile);
-			reflectPanel.setProjectId(this.getProjectId());
-			reflectPanel.setServerSelect(serverSelect);
 			reflectPanel.setCheck(false);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			modalWindow.setHeight(350);
+			modalWindow.setHeight(400);
+			
+			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	//Iaas 연동 시
+				reflectPanel.setServerSelect(serverSelect);
+			}
 		}
 		else if("svn".equals(this.getType())){
-			reflectPanel.setServerSelect(serverSelect);
-			reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
-			reflectPanel.setReflectVersion(reflectVersion);
-			reflectPanel.setProjectId(this.getProjectId());
+			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	// IaaS 연동 시
+				reflectPanel.setServerSelect(serverSelect);
+			}
+			reflectPanel.setSqlFile(sqlFile);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			modalWindow.setHeight(300);
+			modalWindow.setHeight(350);
+			
 		}
-		
+		modalWindow.setWidth(500);
 		modalWindow.setTitle("$devreflect");
-		
 		modalWindow.setPanel(reflectPanel);
 		
 		return modalWindow;
