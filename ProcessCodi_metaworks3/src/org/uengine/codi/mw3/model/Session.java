@@ -1,10 +1,8 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContextFactory;
@@ -18,8 +16,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.CodiLog;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.marketplace.MyVendor;
 
 	
@@ -210,27 +208,9 @@ public class Session implements ContextAware{
 		}
 		
 	@ServiceMethod(callByContent=true)
-	public Login logout() throws Exception {
-		removeUserInfoFromHttpSession();
-		
-		Login login = new Login();
-		login.getMetaworksContext().setHow("logout");
-		login.fireServerSession(this);
-        
-		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
-		
-		String ipAddress = httpServletRequest.getRemoteAddr();
-		
-        CodiLog  log = new CodiLog();
-        log.setId(log.createNewId());
-        log.setEmpcode(this.getEmployee().getEmpCode());
-        log.setComCode(this.getEmployee().getGlobalCom());
-        log.setType("logout");
-        log.setDate(new Date());
-        log.setIp(ipAddress);
-        log.createDatabaseMe();
-        
-        return login;
+	public StartCodi logout() throws Exception {
+
+        return new StartCodi(this, "logout");
 	}
 	
 		
