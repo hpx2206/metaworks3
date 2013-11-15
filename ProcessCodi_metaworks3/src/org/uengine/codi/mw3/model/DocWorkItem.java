@@ -74,7 +74,16 @@ public class DocWorkItem extends WorkItem {
 			genericWI.setTitle(this.getTitle());//parent.getName());
 			genericWI.setGenericWorkItemHandler(genericWIH);
 			
-			return genericWI.add();
+			Object[] returnObj = genericWI.add();
+			
+			
+			// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
+			// 수정처리 해야함
+			Instance tempInstance = new Instance();
+			tempInstance.setInstId(fileWorkItem.getInstId());
+			tempInstance.databaseMe().setStatus("Running");
+					
+			return returnObj;
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)

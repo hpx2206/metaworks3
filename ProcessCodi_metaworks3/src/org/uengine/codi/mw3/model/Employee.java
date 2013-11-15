@@ -818,6 +818,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return findEmployee;
 	}
 	
+	@Override
+	public Object[] closeEmployeeInfo() throws Exception{
+		
+		return new Object[]{new Remover(new ModalWindow(), true)};
+	}
 	
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
