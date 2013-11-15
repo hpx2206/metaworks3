@@ -14,7 +14,6 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
-import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 
 @Table(name="bpm_knol")
