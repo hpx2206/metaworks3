@@ -33,21 +33,18 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		delCookie("codi.rememberMe", "/","");
 		delCookie("codi.facebookSSO", "/","");
 	}
-	console.log("--------------------");
-//	var ip = Request.UserHostAddress.ToString();
-	console.log("********************");
 
 	var rememberMe = getCookie("codi.rememberMe");
 	if(rememberMe!=null && rememberMe){
 		var id = getCookie("codi.id");
 		var password = getCookie("codi.password");
 		
-		mw3.getInputElement(objectId, "userId").value = id;			
+		mw3.getInputElement(objectId, "email").value = id;			
 		mw3.getInputElement(objectId, "password").value = password;
 		mw3.getInputElement(objectId, "rememberMe").checked = true;
 	}
 	
-	mw3.getInputElement(this.objectId, 'userId').focus();
+	mw3.getInputElement(this.objectId, 'email').focus();
  
 	$('#' + this.divId).bind('keydown', function(event){
 		mw3.getFaceHelper(objectId).keydown(event);
@@ -59,7 +56,7 @@ org_uengine_codi_mw3_Login.prototype = {
 		var login = mw3.getObjectFromUI(this.objectId);
 		var facebookSSO = getCookie("codi.facebookSSO");
 		
-		if(login.userId && login.password && login.rememberMe){
+		if(login.email && login.password && login.rememberMe){
 			login.login();
 		}else{
 			mw3.getInputElement(this.objectId, "rememberMe").checked = true;
@@ -88,7 +85,7 @@ org_uengine_codi_mw3_Login.prototype = {
 						    var uid = response.authResponse.userID;
 							
 							FB.api('/' + uid, function(response) {
-								if(login.userId && login.rememberMe && facebookSSO)
+								if(login.email && login.rememberMe && facebookSSO)
 									login.getFaceHelper().facebookSSO(response);
 							});
 						}else if('not_authorized' == response.status){
@@ -114,7 +111,7 @@ org_uengine_codi_mw3_Login.prototype = {
 		var login = mw3.getObjectFromUI(this.objectId);
 		
 		if (login.rememberMe){
-			setCookie("codi.id", login.userId, 10, "/", "", "");
+			setCookie("codi.id", login.email, 10, "/", "", "");
 			setCookie("codi.password", login.password, 10, "/", "", "");			
 			setCookie("codi.rememberMe", true, 10, "/", "", "");
 			setCookie("codi.facebookSSO", true, 10, "/", "", "");
@@ -162,7 +159,7 @@ org_uengine_codi_mw3_Login.prototype = {
 		if(response.email){
 			var object = mw3.getAutowiredObject('org.uengine.codi.mw3.Login@login');
 			
-			mw3.getInputElement(object.__objectId, "userId").value = response.email;
+			mw3.getInputElement(object.__objectId, "email").value = response.email;
 			
 			var isAuth = object.checkAuthSocial();
 			
