@@ -401,7 +401,7 @@ public class Login implements ContextAware {
 		}
 	}
 	
-	@ServiceMethod(payload={"email"})
+	@ServiceMethod(callByContent=true, payload={"email"})
 	public void signUp() throws Exception {
 		
 		Employee employee = new Employee();
@@ -415,10 +415,11 @@ public class Login implements ContextAware {
 			}else{
 				sendMailForSignUp("activate.html?key=" + employeeRef.getAuthKey());
 				
-				
+				this.setEmail(employeeRef.getEmail());
 				this.getMetaworksContext().setHow("aftersignup");
-				return;
+				
 			}
+			return;
 		}
 
 		String authKey = UUID.randomUUID().toString();
@@ -477,6 +478,7 @@ public class Login implements ContextAware {
 		confirm.setUrl(activateURL);
 		return confirm;
 		*/
+		return;
 	}
 		
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
@@ -513,6 +515,10 @@ public class Login implements ContextAware {
 		Employee emp = new Employee();
 		emp.setEmail(getEmail());
 		IEmployee findEmp = emp.findByEmail();
+		
+		if(findEmp == null){
+			throw new Exception("$NoExistedUser");
+		}
 		
 		Company company = new Company();
 		company.setComCode(findEmp.getGlobalCom());
@@ -659,7 +665,7 @@ public class Login implements ContextAware {
 		this.getMetaworksContext().setHow("forgotpassword");
 	}
 	
-	@ServiceMethod(payload={"email"})
+	@ServiceMethod(callByContent=true, payload={"email"})
 	public void forgotPassword() throws Exception{
 		
 		Employee employee = new Employee();
@@ -677,9 +683,13 @@ public class Login implements ContextAware {
 		
 		employee.setEmpCode(employeeRef.getEmpCode());
 		employee.databaseMe().setAuthKey(authKey);
+		this.setEmail(employeeRef.getEmail());
 		
 		// send mail
 		this.sendMailForForgotPassword("findpw.html?key=" + authKey);
+		
+		this.getMetaworksContext().setHow("afterforgotpassword");
+		return;
 	}
 	
 	public void fireServerSession(Session session) {
