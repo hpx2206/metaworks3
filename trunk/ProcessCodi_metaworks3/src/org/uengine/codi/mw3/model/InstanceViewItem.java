@@ -63,7 +63,7 @@ public class InstanceViewItem {
 		String password = getPasswd();
 		
 		Login login = new Login();
-		login.setUserId(userId);
+		login.setEmail(userId);
 		login.setPassword(password);
 		Session session = login.loginService();
 		Instance theInstanceDAO = new Instance();

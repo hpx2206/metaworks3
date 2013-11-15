@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.uengine.kernel.GlobalContext;
+
 public class SystemWorkItem extends CommentWorkItem{
 
 	String systemMessage;
