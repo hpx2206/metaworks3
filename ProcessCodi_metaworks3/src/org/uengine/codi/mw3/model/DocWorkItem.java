@@ -81,7 +81,7 @@ public class DocWorkItem extends WorkItem {
 			// 수정처리 해야함
 			Instance tempInstance = new Instance();
 			tempInstance.setInstId(fileWorkItem.getInstId());
-			tempInstance.databaseMe().setStatus("Running");
+			tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
 					
 			return returnObj;
 	}
