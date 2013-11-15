@@ -415,6 +415,8 @@ public class Login implements ContextAware {
 			}else{
 				sendMailForSignUp("activate.html?key=" + employeeRef.getAuthKey());
 				
+				
+				this.getMetaworksContext().setHow("aftersignup");
 				return;
 			}
 		}
@@ -467,6 +469,8 @@ public class Login implements ContextAware {
 		}
 		
 		sendMailForSignUp("activate.html?key=" + authKey);
+		
+		this.getMetaworksContext().setHow("aftersignup");
 		/*
 		SignUpConfirm confirm = new SignUpConfirm();
 		confirm.setEmail(this.getEmail());
