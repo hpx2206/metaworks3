@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -24,10 +23,10 @@ import org.metaworks.dao.IDAO;
 //@Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
 @Face(ejsPathMappingByContext={
 		"{how: 'signUp', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IEmployeeSignUp.ejs'}"
-	  }, options={"fieldOrder"}, values={"empName,password"})
+}, options={"fieldOrder"}, values={"empName,password"})
 public interface IEmployee extends IDAO {
 
-/*	          
+/*	
     @Id
 	@ORMapping(databaseFields={"empCode", "empName"}, objectFields={"userId", "name"})
 	public IUser getUser();
