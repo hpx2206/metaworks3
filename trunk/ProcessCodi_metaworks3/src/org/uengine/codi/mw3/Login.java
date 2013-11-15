@@ -392,7 +392,7 @@ public class Login implements ContextAware {
 		System.out.println(url);
 		
 		String title = "Codi Account - Email Authority";
-		String content = "<p><a href='" + url + "'>Sign Up</a><br/>";
+		String content = "<p><a href='" + url + "'>Forgot Password</a><br/>";
 		
 		try{
 			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
@@ -466,6 +466,7 @@ public class Login implements ContextAware {
 			throw new MetaworksException(e.getMessage());
 		}
 		
+		sendMailForSignUp("activate.html?key=" + authKey);
 		/*
 		SignUpConfirm confirm = new SignUpConfirm();
 		confirm.setEmail(this.getEmail());
