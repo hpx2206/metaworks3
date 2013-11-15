@@ -94,6 +94,8 @@
 	<!-- ============================================================= -->
 	<!-- Cron Job -->
 	<!-- ============================================================= -->
+	<!-- Email Reader -->
+	<!-- 
 	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/>
 		<property name="jobDataAsMap">
@@ -107,6 +109,7 @@
 			</map>
 		</property>
 	</bean>
+	 -->
 	<!-- Schedule Reader -->
 	<bean id="scheduleReader" class="org.springframework.scheduling.quartz.JobDetailBean">
     	<property name="jobClass" value="org.uengine.codi.cron.ScheduleReader"/>
