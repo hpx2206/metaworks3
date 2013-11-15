@@ -402,6 +402,11 @@
 					return message;
 		 		}
 		 		
+		 		var locatePage = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.model.Locale",
+                    language : navigator.language
+                }, 'body').load();
+		 		
 		 		mw3.getMessage = function(key, defaultValue){
 		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
 		 			
@@ -417,10 +422,7 @@
 		 			return key;		
 		 		}
 				
- 				var locatePage = new MetaworksObject({
-                    __className : "org.uengine.codi.mw3.model.Locale",
-                    language : navigator.language
-                }, 'body').load();
+ 				
  				
  				mw3.metadataBundle = function(key, defaultValue){
                     var metadataHandler = mw3.getAutowiredObject("org.metaworks.metadata.MetadataBundle");
@@ -443,14 +445,24 @@
                 }, 'body').loadProperty();
  				*/ 				
  	
- 				var key = request.getParameter("key")!=null?request.getParameter("key"):"";	
- 				var employee = new MetaworksObject({ 
- 				__className: 'org.uengine.codi.mw3.model.Employee',
- 				authKey: key,
+//  				var key = request.getParameter("key")!=null?request.getParameter("key"):"";	
+//  				var employee = new MetaworksObject({ 
+//  				__className: 'org.uengine.codi.mw3.model.Employee',
+//  				authKey: key,
+//  				}, 'body');
+//  				employee.findpw();
+ 				
+// 				mw3.onLoadFaceHelperScript();
+				
+				var key = request.getParameter("key")!=null?request.getParameter("key"):"";	
+ 				var loader = new MetaworksObject({ 
+ 					__className: 'org.uengine.codi.mw3.StartCodi',
+ 					key: key,
  				}, 'body');
- 				employee.findpw();
  				
 				mw3.onLoadFaceHelperScript();
+				
+				loader.forgotPassword();
 				
 // 				document.oncontextmenu = function() { return false; };
 // 				window.onbeforeunload= function(){
