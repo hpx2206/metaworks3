@@ -465,7 +465,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public void saveMe() throws Exception {
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			this.setApproved(true);
 			
 			// 올챙이 연동
 			if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
@@ -482,6 +481,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				tadpole.createUserAtTadpole(param.toString());
 			}
 		}
+		this.setApproved(true);
+		this.setLocale(localeManager.getLanguage());
 		
 		// TODO: 부서 딕셔너리 처리 필		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
@@ -790,12 +791,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(findEmployee == null)
 			throw new MetaworksException("wrong access");
 		
-		if(findEmployee.isApproved()){
-			Login login = new Login();
-			login.setEmail(findEmployee.getEmail());
-			
-			return login;
-		}
+//		if(findEmployee.isApproved()){
+//			Login login = new Login();
+//			login.setEmail(findEmployee.getEmail());
+//			
+//			return login;
+//		}
 		
 		if(!findEmployee.getAuthKey().equals(this.getAuthKey()))
 			throw new MetaworksException("not match activation code");
@@ -804,16 +805,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		findEmployee.getMetaworksContext().setWhere("admin");
 		findEmployee.getMetaworksContext().setHow("detail");
 		findEmployee.getMetaworksContext().setWhen("findpw");
-		findEmployee.setImageFile(new PortraitImageFile());
-		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		//findEmployee.setImageFile(new PortraitImageFile());
+//		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		
 		//defaultUX, defaultMob 값 설정
-		String defaultUX = "wave";
-		String defaultMob = "auto";
+		//String defaultUX = "wave";
+		//String defaultMob = "auto";
 				
-		findEmployee.setPreferUX(defaultUX);
-		findEmployee.setPreferMob(defaultMob);
+		//findEmployee.setPreferUX(defaultUX);
+		//findEmployee.setPreferMob(defaultMob);
 		findEmployee.setPassword(null);
 //		return new ModalWindow(findEmployee, 600, 500, "ddd");
 		return findEmployee;
@@ -1177,6 +1178,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		this.getMetaworksContext().setWhere("step" + String.valueOf(step+1));
 	}
 	
+	@Override
 	public Forward finish() throws Exception {
 		
 		session = new Session();
