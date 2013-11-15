@@ -793,6 +793,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		boolean newInstance = false;
 		IInstance instanceRef = null;		
 		
+		
+		IUser writer = new User();
+		if( this.getWriter() == null || (this.getWriter() != null && this.getWriter().getUserId() == null)){
+			writer.setUserId(session.getUser().getUserId());
+			writer.setName(session.getUser().getName());
+			this.setWriter(writer);
+		}
+		
+		
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen()) || this instanceof FileWorkItem){
 			// 인스턴스 발행
@@ -816,9 +825,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instance.setInstId(this.getInstId());
 				
 				instanceRef = instance.databaseMe();	
-				
+
 				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
-				instanceRef.setInitiator(session.getUser());						// 시작자는 실행한 사람
+				instanceRef.setInitiator(this.getWriter());
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
@@ -908,14 +917,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}
 				}				
 			}
-			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
+			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
 								
-			IUser writer = new User();
-			if( this.getWriter() == null || (this.getWriter() != null && this.getWriter().getUserId() == null)){
-				writer.setUserId(session.getUser().getUserId());
-				writer.setName(session.getUser().getName());
-				this.setWriter(writer);
-			}
+
 			
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
@@ -976,11 +980,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
 		instance.flushDatabaseMe();
-		
+
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);
 			this.getWriter().setMetaworksContext(this.getMetaworksContext());
+			
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
 			copyOfInstance.fillFollower();
@@ -1037,7 +1042,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
 //						}
 //						else
-							returnObjects = new Object[]{new Refresh(this, false, true) , new Refresh(instanceFollowers)};	
+							returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					InstanceViewThreadPanel genericWorkItem = new InstanceViewThreadPanel();
@@ -1068,7 +1073,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)  , new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)  , new Refresh(instanceFollowers)};
 				}
 				
 				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
@@ -1104,6 +1109,41 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					notiUsers.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()) );
 				}
 			}
+			
+			//같은 조직인 사람에게 알림 처리
+//			IUser deptEmployee = deptFollowers.getFollowers();
+//			if(deptEmployee != null){
+//				deptEmployee.beforeFirst();
+//				
+//				while(deptEmployee.next()){
+//					if(session.getUser().getUserId().equals(deptEmployee.getUserId()))
+//						continue;
+//					
+//					notiUsers.put(deptEmployee.getUserId() , Login.getSessionIdWithUserId(deptEmployee.getUserId()));
+//					if(notiUsers.containsKey(deptEmployee.getUserId().toUpperCase())){
+//						notiUsers.remove(deptEmployee.getUserId().toUpperCase());
+//					}
+//					notiUsers.put(deptEmployee.getUserId() , Login.getSessionIdWithUserId(deptEmployee.getUserId()) );
+//				}
+//			}
+//				
+//			//주제에 추가된 팔로워 알림 처리		
+//			IUser topicFollower = topicFollowers.getFollowers();
+//			if(topicFollower != null){
+//				topicFollower.beforeFirst();
+//				
+//				while(topicFollower.next()){
+//					if(session.getUser().getUserId().equals(topicFollower.getUserId()))
+//						continue;
+//					
+//					notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()));
+//					if(notiUsers.containsKey(topicFollower.getUserId().toUpperCase())){
+//						notiUsers.remove(topicFollower.getUserId().toUpperCase());
+//					}
+//					notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()) );
+//				}
+//			}
+			
 			// noti 저장
 			Iterator<String> iterator = notiUsers.keySet().iterator();
 			while(iterator.hasNext()){
@@ -1440,7 +1480,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 
-	
+//	@AutowiredFromClient
+//	public TopicFollowers topicFollowers;
+//	
+//	@AutowiredFromClient
+//	public DeptFollowers deptFollowers;
 	
 	
 }
