@@ -264,7 +264,7 @@ public class User extends Database<IUser> implements IUser {
 	
 	@AutowiredFromClient
 	public RoleFollowers roleFollowers;
-
+	
 	@AutowiredFromClient
 	public DeptFollowers deptFollowers;
 	
@@ -307,14 +307,65 @@ public class User extends Database<IUser> implements IUser {
 			return new Object[]{new Refresh(documentFollowers)};
 		
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
+			
+			// TODO: add instance
+			
+			// TODO: send noti
+			Instance instance = new Instance();
+			instance.setInstId(new Long(session.getLastSelectedItem()));
+			
 			TopicMapping tm = new TopicMapping();
 			tm.setTopicId(session.getLastSelectedItem());
 			tm.setUserId(this.getUserId());
-			
+
 			if( !tm.findByUser().next() ){
 				tm.setUserName(this.getName());
 				tm.saveMe();
 				tm.flushDatabaseMe();
+			
+				Notification noti = new Notification();
+				INotiSetting notiSetting = new NotiSetting();
+				noti.session = session;
+				
+				INotiSetting findNotiSetting;
+				Employee codi = new Employee();
+				codi.setEmpCode("0");
+				
+				findNotiSetting = notiSetting.findByUserId(this.getUserId());
+				if(findNotiSetting.next()){
+					if(findNotiSetting.isModiTopic()){
+						noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+						noti.setUserId(this.getUserId());
+						noti.setActorId(session.getEmployee().getEmpName());
+						noti.setConfirm(false);
+						noti.setInstId(instance.getInstId());
+						noti.setInputDate(Calendar.getInstance().getTime());
+						noti.setActAbstract(session.getUser().getName() + " 님이 " + this.getUserId() + "님을 주제에 초대 했습니다.");
+			
+						//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+				//			noti.createDatabaseMe();
+				//			noti.flushDatabaseMe();
+						
+						noti.add(instance);
+					
+						String followerSessionId = Login.getSessionIdWithUserId(this.getUserId());
+						
+						try{
+							//NEW WAY IS GOOD
+							Browser.withSession(followerSessionId, new Runnable(){
+				
+								@Override
+								public void run() {
+									//refresh notification badge
+									ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+								}
+								
+							});
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 			
 			TopicFollowers topicFollowers = new TopicFollowers();
@@ -455,19 +506,55 @@ public class User extends Database<IUser> implements IUser {
 			deptFollowers.session = session;
 			deptFollowers.load();
 			
+			Instance instance = new Instance();
+			instance.setInstId(new Long(session.getLastSelectedItem()));
+			
+			Notification noti = new Notification();
+			INotiSetting notiSetting = new NotiSetting();
+			noti.session = session;
+			
+			INotiSetting findNotiSetting;
+			Employee codi = new Employee();
+			codi.setEmpCode("0");
+			
+			findNotiSetting = notiSetting.findByUserId(this.getUserId());
+			if(findNotiSetting.next()){
+				if(findNotiSetting.isModiTopic()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(this.getUserId());
+					noti.setActorId(session.getEmployee().getEmpName());
+					noti.setConfirm(false);
+					noti.setInstId(instance.getInstId());
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setActAbstract(session.getUser().getName() + " 님이 " + this.getUserId() + "님을 조직에 초대 했습니다.");
+		
+					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+			//			noti.createDatabaseMe();
+			//			noti.flushDatabaseMe();
+					
+					noti.add(instance);
+				
+					String followerSessionId = Login.getSessionIdWithUserId(this.getUserId());
+					
+					try{
+						//NEW WAY IS GOOD
+						Browser.withSession(followerSessionId, new Runnable(){
+			
+							@Override
+							public void run() {
+								//refresh notification badge
+								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+							}
+							
+						});
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+			
 			return new Object[]{new Remover(this), new Refresh(deptFollowers)};
 //			deptFollowers.put(this);
-		}else if("addRoleFollower".equals(this.getMetaworksContext().getWhen())){
-			
-			RoleUser roleUser = new RoleUser();
-			roleUser.setRoleCode(session.getLastSelectedItem());
-			roleUser.setEmpCode(this.getUserId());
-			roleUser.createDatabaseMe();
-		 
-			roleFollowers.session = session;
-			roleFollowers.load();
-			return new Object[]{new Remover(this), new Refresh(roleFollowers)};
-		
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			
@@ -681,9 +768,8 @@ public class User extends Database<IUser> implements IUser {
 			employee.databaseMe().setIsDeleted("1");		
 			
 			if(getUserId().equals(session.getUser().getUserId()))
-				return new Object[]{session.logout(), new Remover(new Popup())};
+				return new Object[]{session.logout(), new Remover(new ModalWindow())};
 			else
-//				return new Object[]{new Remover(employee , true)};
 				return new Object[]{new Remover(new Popup())};
 		}
 		else
@@ -841,4 +927,34 @@ public class User extends Database<IUser> implements IUser {
 		
 		return deptEmployee;
 	}
+	
+	public Instance createWorkItem() throws Exception{
+		
+		Employee representiveMailEmp = new Employee();
+		representiveMailEmp.setEmpCode("0");
+		
+		
+		IEmployee repMailEmp = representiveMailEmp.findMe();
+		
+		User theFirstWriter;
+		theFirstWriter = new User();
+		theFirstWriter.setName(repMailEmp.getEmpName());
+		
+		SystemWorkItem comment = new SystemWorkItem();
+		comment.processManager = processManager;
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		comment.setWriter(theFirstWriter);
+		comment.setTitle("주제 : " + " 이 생성되었습니다.");
+		
+		comment.session = session;
+		comment.add();
+		
+		Instance instance = new Instance();
+		instance.setInstId(comment.getInstId());
+		instance.copyFrom(instance.databaseMe());
+		
+		return instance;
+	}
+
 }
