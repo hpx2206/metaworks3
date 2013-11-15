@@ -995,3 +995,5 @@ create table notisetting(
 alter table roletable add column URL varchar(200);
 alter table roletable add column THUMBNAIL varchar(200);
 
+-- 2013.11.15 인스턴스 파일첨부 표시
+alter table bpm_procinst add column isfileadded int(11) default 0;
