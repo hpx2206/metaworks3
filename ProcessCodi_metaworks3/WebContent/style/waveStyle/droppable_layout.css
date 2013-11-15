@@ -2625,7 +2625,7 @@ select.select[class] {
 .row .col3 { float:left; width:40%; text-align:center }
 .row .col7 { float:left; width:60%; line-height:25px; }
 .row .col7 h1{ background:none; font-size:20px; padding-left:0px;}
-.middle_top_hr{height:5px; background:#434649}
+.middle_top_hr{height:2px; background:#434649}
 
 /* sign up page */
 #signup_popup { width:533px; margin:0 auto; box-shadow: 0px 5px 25px #bcbcbc; margin-top:100px; border-top-left-radius:10px;border-top-right-radius:10px}
@@ -2672,8 +2672,10 @@ select.select[class] {
 	.banner_img_div_disc span.bf{font-size:16px;}
 	.banner_img_div_disc_box{height:145px}
 	.banner_img_div_disc_box{width:100%}
-	.banner_img_div_disc{width:100%}
+	.banner_img_div_disc{width:90%}
 	.banner_img_div_disc span.sf{display:none}
+		.index_signup .index_signup_inner input {width:250px;}
+	
 	}
 	
 @media all and (max-width: 590px) {
