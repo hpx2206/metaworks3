@@ -608,10 +608,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		comment.setWriter(theFirstWriter);
 		if("join".equals(type)){
-			comment.setTitle(this.getEmpName() + "님이 가입 하셨습니다.");
+			comment.setSystemMessage(this.getEmpName() + "님이 가입 하셨습니다.");
 		}
 		else if("addFriend".equals(type)){
-			comment.setTitle(this.getEmpName() + "님이 친구로 추가 하셨습니다.");
+			comment.setSystemMessage(this.getEmpName() + "님이 친구로 추가 하셨습니다.");
 		}
 		comment.session = session;
 		
