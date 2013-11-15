@@ -6,15 +6,15 @@
 
 <div id="signup_popup">
 	<div class="login_top_codi"></div>
-    <div class="popup_title"> <span>가입</span> </div>
+    <div class="popup_title"> <span><%=mw3.localize("$SignUp")%></span> </div>
     <div class="popup_step">
     	<div class="stepbar">
         	<div class="first_circle circle <%=(step > 1)?'completed':''%>">
-        		<span class="steptext">Create Profile</span>
+        		<span class="steptext"><%=mw3.localize("$SignUp")%></span>
         		<%if(step==1){%><span class="ing"></span><%}%>
         	</div>
             <div class="last_circle circle">
-            	<span class="steptext">Add Your Photo</span>
+            	<span class="steptext"><%=mw3.localize("$AddYourPhoto")%></span>
             	<%if(step==2){%><span class="ing"></span><%}%>
             </div>
         </div>
@@ -40,6 +40,7 @@
 	<div class="singnup_pic">
 		<img id="userPicture_<%=objectId %>" src="<%='portrait/' + value.empCode + '.thumnail' %>" width="104" height="104" />	
 	</div>
+	
 	<div  class="singnup_choose_pic">
 		<%=fields.imageFile.here() %>	
 	</div>
@@ -49,19 +50,19 @@
 %>
 
         <div class="popup_btn_line">
-        	<div class="<%=isPrev?'popup_btn_blue':'popup_btn_gray'%>" onClick="<%=methods.prevStep.caller()%>">Prev</div>
+        	<div class="<%=isPrev?'popup_btn_blue':'popup_btn_gray'%>" onClick="<%=methods.prevStep.caller()%>"><%=mw3.localize("$Prev")%></div>
         	
 <%
 		if(!mw3.isHiddenMethod(methods.nextStep)){
 %>
-        	<div class="popup_btn_blue" onClick="<%=methods.nextStep.caller()%>">Next</div>
+        	<div class="popup_btn_blue" onClick="<%=methods.nextStep.caller()%>"><%=mw3.localize("$Next")%></div>
 <%
 		}
 %>
 <%
 		if(!mw3.isHiddenMethod(methods.finish)){
 %>
-        	<div class="popup_btn_blue" onClick="<%=methods.finish.caller()%>">Finish</div>
+        	<div class="popup_btn_blue" onClick="<%=methods.finish.caller()%>"><%=mw3.localize("$Finish")%></div>
 <%
 		}
 %>
