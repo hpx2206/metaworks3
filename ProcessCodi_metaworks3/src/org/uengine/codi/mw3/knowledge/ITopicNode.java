@@ -36,15 +36,15 @@ public interface ITopicNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public Object[] loadTopic() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, needToConfirm=true ,target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 		
-	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
+	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$Edit")
 	public ModalWindow modify() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true,target="popup")
+	@ServiceMethod(callByContent=true,target="popup")
 	@Face(displayName="$ExportHtml")
 	public ModalWindow exportHtml() throws Exception;
 	

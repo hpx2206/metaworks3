@@ -4,6 +4,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -80,6 +81,7 @@ public class TopicInfo extends GroupInfo{
 	
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Face(displayName="$ExportHtml")
 	public ModalWindow exportHtml() throws Exception {
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setTopicId(this.getId());

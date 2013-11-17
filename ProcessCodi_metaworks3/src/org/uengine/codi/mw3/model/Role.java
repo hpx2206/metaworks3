@@ -199,13 +199,20 @@ public class Role extends Database<IRole> implements IRole {
 		}
 		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
+			
+			//역할 중복 검사
+			Role role = new Role();
+			role.setRoleCode(this.getRoleCode());
+			IRole findRole = role.findByCode();
+			
+			if(findRole != null)
+				throw new Exception("$DuplicateName");
+			
 			// 생성
 			this.setComCode(session.getCompany().getComCode());
 			this.setIsDeleted("0");
 			
-			String roleCode = createNewId();
 			
-			this.setRoleCode(roleCode);
 			this.getMetaworksContext().setWhere("navigator");
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
 			
@@ -344,17 +351,26 @@ public class Role extends Database<IRole> implements IRole {
 	}
 	
 	
-	public String createNewId() throws Exception{
-		Map options = new HashMap();
-		options.put("useTableNameHeader", "false");
-		options.put("onlySequenceTable", "true");
+	public IRole findByCode() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from roleTable ");
+		sb.append("where rolecode=?rolecode");
 		
-		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("roletable", options);
-		kg.select();
-		kg.next();
+		IRole dao = null;
 		
-		Number number = kg.getKeyNumber();
+		try {
+			dao = sql(sb.toString());
+			dao.setRoleCode(this.getRoleCode());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return number.toString();
+		return dao;
 	}
 }
