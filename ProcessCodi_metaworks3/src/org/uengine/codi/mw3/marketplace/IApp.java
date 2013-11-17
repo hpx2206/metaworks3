@@ -181,17 +181,20 @@ public interface IApp extends IDAO{
 	public Object[] addApp()throws Exception;
 	
 	@Face(displayName="$Next")
-	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+	@Hidden
+//	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 	@ServiceMethod(callByContent=true)
 	public Object step1() throws Exception;
 
-//	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
-	@Hidden
+	@Face(displayName="$MyApps.add")
+	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+//	@Hidden
 	@ServiceMethod(callByContent=true)
 	public Object save() throws Exception;
 	
 	@Face(displayName="$Cancel")
-	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+	@Hidden
+//	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 	@ServiceMethod
 	public Object cancel() throws Exception;
 	
