@@ -131,36 +131,29 @@ public class ReleasePanel {
 				}
 			
 			if(!this.getCheck()){	//반영된 버전 미 사용
-
-			}
-			else{	//반영된 버전 사용
+				filepathinfo.setId(filepathinfo.createNewId());
 				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
 				filepathinfo.setWarPath(this.getWarFile().getFilename());
-			}
-			
-			filepathinfo.setId(filepathinfo.createNewId());
-			filepathinfo.setComment(this.getComment());
-			filepathinfo.setDistributor(session.getEmployee().getEmpName());
-			filepathinfo.setModdate(new Date());
-			filepathinfo.setReflectVer(0);
-			
-			filepathinfo.createDatabaseMe();
-		}
-		else if("svn".equals(wfNode.getVisType())){
-			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	//IaaS 연동 시
-				
 				filepathinfo.setComment(this.getComment());
 				filepathinfo.setDistributor(session.getEmployee().getEmpName());
 				filepathinfo.setModdate(new Date());
-				filepathinfo.setId(filepathinfo.createNewId());
+				filepathinfo.setReflectVer(0);
 				
 				filepathinfo.createDatabaseMe();
-				filepathinfo.flushDatabaseMe();
-				
 			}
-			else{	//IaaS 미 연동 시
-				//
+			else{	//반영된 버전 사용
+				filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
+				filepathinfo.copyFrom(filepathinfo.databaseMe());
 			}
+		}
+		else if("svn".equals(wfNode.getVisType())){
+			filepathinfo.setComment(this.getComment());
+			filepathinfo.setDistributor(session.getEmployee().getEmpName());
+			filepathinfo.setModdate(new Date());
+			filepathinfo.setId(filepathinfo.createNewId());
+			
+			filepathinfo.createDatabaseMe();
+			filepathinfo.flushDatabaseMe();
 		}
 		
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);

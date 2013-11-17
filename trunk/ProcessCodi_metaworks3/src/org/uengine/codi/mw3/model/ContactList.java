@@ -66,6 +66,12 @@ public class ContactList implements ContextAware {
 		this.setSelectedMore(true);
 		load(session.getEmployee().getEmpCode());
 	}
+	
+	@ServiceMethod
+	public void simpleView() throws Exception {
+		this.setSelectedMore(false);
+		load(session.getEmployee().getEmpCode());
+	}
 
 	String id;
 		@Id

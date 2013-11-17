@@ -9,6 +9,8 @@
 	
 			<% if(!value.selectedMore) { %>
 				<span class="west_more_btn" style="top:-20px;"><a onClick="<%=methods.moreView.caller()%>" href="#" style="display: inline-block"><%=mw3.localize('$More')%></a></span>
+			<% } else {%>
+				<span class="west_more_btn" style="top:-20px;"><a onClick="<%=methods.simpleView.caller()%>" href="#" style="display: inline-block"><%=mw3.localize('$SimpleView')%></a></span>
 			<% } %>
 <%
 		}

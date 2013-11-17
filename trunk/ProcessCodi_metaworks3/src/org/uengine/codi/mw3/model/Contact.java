@@ -65,13 +65,17 @@ public class Contact extends Database<IContact> implements IContact{
 ////			contacts.set("network", this.getFriend().getNetwork());
 //		}
 		
-		sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
-		sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
-		sb.append(" where c.userid=?userId");
+		if(isSelected){
+			sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
+			sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
+			sb.append(" where c.userid=?userId");
+		}else{
+			sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
+			sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
+			sb.append(" where c.userid=?userId limit 9");
+		}
 		
 		IContact contacts = sql(sb.toString());
-		
-		
 		
 		contacts.set("userId",getUserId());
 		contacts.select();
