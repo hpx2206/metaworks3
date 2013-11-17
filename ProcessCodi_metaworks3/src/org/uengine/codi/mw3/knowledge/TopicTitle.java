@@ -29,6 +29,7 @@ import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.INotiSetting;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.NotiSetting;
 import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
@@ -191,7 +192,7 @@ public class TopicTitle  implements ContextAware{
 		ITopicNode topicNodeList = TopicNode.moreView(session);
 		while(topicNodeList.next()){
 			if(this.getTopicTitle().equals(topicNodeList.getName())){
-				throw new Exception("토픽주제가 중복 됩니다.");
+				throw new Exception("$DuplicateName");
 			}
 		}
 		
@@ -201,15 +202,29 @@ public class TopicTitle  implements ContextAware{
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicTitle());
 		topicNode.setType(TopicNode.TOPIC);
+		topicNode.session = session;
 		
 		this.makeHtml();
 		
-		this.notiToCompany();
+//		this.notiToCompany();
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");
 		
-		return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Remover(new ModalWindow())};
+		
+		Object[] returnObj = topicNode.loadTopic();
+		Object[] returnObject = new Object[ returnObj.length + 3];
+		for (int i = 0; i < returnObj.length; i++) {
+			if( returnObj[i] instanceof InstanceListPanel){
+				returnObject[i] = new Refresh(returnObj[i]);
+			}else{
+				returnObject[i] = new Refresh(returnObj[i]);
+			}			
+		}
+		returnObject[returnObj.length ] = new ToAppend(new TopicPanel(), topicNode);
+		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
+		return returnObject;
+
 	}
 	
 	
