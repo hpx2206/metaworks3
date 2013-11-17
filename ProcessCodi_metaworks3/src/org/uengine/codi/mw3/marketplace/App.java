@@ -614,6 +614,9 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			flushDatabaseMe();
 		}
 
+		//이 부분에 vm 관련해서 뭔가를 해야할꺼 같음
+		
+		
 		MyVendor myVendor = new MyVendor();
 		myVendor.load(session);
 		

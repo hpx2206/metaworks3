@@ -280,7 +280,7 @@ public class TopicTitle  implements ContextAware{
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()))
 			comment.setSystemMessage(session.getUser().getName() + "님이 주제 " + this.getTopicTitle() + "를 등록하였습니다.");
 		else{
-			comment.setSystemMessage(session.getUser().getName() + "님이 주제를 " + this.getTopicTitle() + "로 변경하였습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이 주제 " + this.getTopicTitle() + "로 변경하였습니다.");
 		}
 		
 		

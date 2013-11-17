@@ -53,7 +53,7 @@ public class DocWorkItem extends WorkItem {
 			fileWorkItem.setFolderId(this.getFolderId());
 			fileWorkItem.setGrpTaskId(this.getTaskId());
 			fileWorkItem.add();
-			
+
 			DocumentTool tool = new DocumentTool();
 			tool.session = session;
 			tool.setInstId(fileWorkItem.getInstId().toString());

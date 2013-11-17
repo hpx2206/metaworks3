@@ -346,22 +346,18 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 
 	@Override
-	public IEmployee findByDeptOther() throws Exception {
+	public IEmployee findByDeptOther(String empCode) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT a.*, b.PARTNAME");
-		sb.append("  FROM emptable a");
-		sb.append("  LEFT OUTER JOIN partTable b on a.partcode=b.partcode");
-		sb.append(" WHERE a.globalCom=?globalCom");
-		sb.append("   AND a.isDeleted=?isDeleted");
-		sb.append("   AND NOT EXISTS");
-		sb.append(" 	(SELECT partCode");
-		sb.append(" 	   FROM partTable c");
-		sb.append(" 	  WHERE c.globalCom=?globalCom");
-		sb.append(" 	    AND a.partCode = c.partCode)");
+		sb.append("select * from emptable e");
+		sb.append(" where e.globalcom=?globalCom");
+		sb.append(" and e.empcode not in");
+		sb.append(" (select c.friendid as empcode from contact c");
+		sb.append(" where c.userId=?empCode)");
+		sb.append(" and e.empcode!=?empCode");
 				
 		IEmployee deptEmployee = sql(sb.toString());
 		deptEmployee.setGlobalCom(this.getGlobalCom());
-		deptEmployee.setIsDeleted("0");
+		deptEmployee.setEmpCode(empCode);
 		deptEmployee.select();
 		deptEmployee.setMetaworksContext(this.getMetaworksContext());
 		
@@ -571,7 +567,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				noti.setConfirm(false);
 				noti.setInstId(instance.getInstId());
 				noti.setInputDate(Calendar.getInstance().getTime());
-				noti.setActAbstract(session.getUser().getName() + "님이 친구로 추가 하셨습니다.");
+				noti.setActAbstract(session.getUser().getName() + "님이 " + this.getEmpName() + "님을 친구로 추가 하셨습니다.");
 				
 				noti.add(instance);
 			
@@ -615,7 +611,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			comment.setSystemMessage(this.getEmpName() + "님이 가입 하셨습니다.");
 		}
 		else if("addFriend".equals(type)){
-			comment.setSystemMessage(this.getEmpName() + "님이 친구로 추가 하셨습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이 " + this.getEmpName() + "님을 친구로 추가 하셨습니다.");
 		}
 		comment.session = session;
 		
@@ -917,7 +913,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
-	public Refresh addContact() throws Exception {
+	public Object[] addContact() throws Exception {
 		Contact contact = new Contact();
 		IUser friendUser = new User();
 		friendUser.setUserId(getEmpCode());
@@ -938,7 +934,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		this.notiToFriend();
 		
-		return new Refresh(cp);
+		return new Object[] {new Refresh(cp), new Remover(this)};
 	}
 	@Override
 	public void addTopicUser() throws Exception {

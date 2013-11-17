@@ -28,7 +28,7 @@ public class AddLocalContactPanel {
 		employee.setGlobalCom(session.getEmployee().getGlobalCom());
 		
 		EmployeeList employeeList = new EmployeeList();			
-		employeeList.setEmployee(employee.findByDeptOther());
+		employeeList.setEmployee(employee.findByDeptOther(session.getEmployee().getEmpCode()));
 		
 		setDeptEmployee(employeeList);				
 		

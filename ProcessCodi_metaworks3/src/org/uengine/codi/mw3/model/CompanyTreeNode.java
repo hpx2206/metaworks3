@@ -50,7 +50,7 @@ public class CompanyTreeNode extends TreeNode {
 			if(!this.isHiddenEmployee()){
 				IEmployee employee = new Employee();
 				employee.setGlobalCom(session.getEmployee().getGlobalCom());
-				employee = employee.findByDeptOther();
+//				employee = employee.findByDeptOther();
 				
 				while(employee.next()){
 					EmployeeTreeNode node = new EmployeeTreeNode();

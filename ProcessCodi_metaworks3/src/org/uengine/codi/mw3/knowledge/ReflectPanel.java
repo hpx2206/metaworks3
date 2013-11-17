@@ -119,61 +119,61 @@ public class ReflectPanel {
 		
 		
 		if ("war".equals(wfNode.getVisType())) {
+			if(!check){
+				if (this.getWarFile().getFileTransfer() != null
+						&& this.getWarFile().getFilename() != null
+						&& this.getWarFile().getFilename().length() > 0)
+	
+					if (this.getWarFile() != null) {
+						MetadataFile resourceFile = new MetadataFile();
+						resourceFile.setFilename(this.getWarFile().getFilename());
+						resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
+						resourceFile.setMimeType(this.getWarFile().getMimeType());
+						setWarFile(resourceFile);
+	
+					}
+				if (this.getSqlFile().getFileTransfer() != null
+						&& this.getSqlFile().getFilename() != null
+						&& this.getSqlFile().getFilename().length() > 0)
+	
+					if (this.getSqlFile() != null) {
+						MetadataFile resourceFile = new MetadataFile();
+						resourceFile.setFilename(this.getSqlFile().getFilename());
+						resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
+						resourceFile.setMimeType(this.getSqlFile().getMimeType());
+						setSqlFile(resourceFile);
+					}
+				
+				reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
+				if (reflectVer == 0) {
+					reflectVer = 1;
+				} else {
+					reflectVer++;
+				}
+	
+				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
+				filepathinfo.setWarPath(this.getWarFile().getFilename());
+				filepathinfo.setReflectVer(reflectVer);
+				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
+				filepathinfo.setFileType(wfNode.getVisType());
+				filepathinfo.setId(filepathinfo.createNewId());
+				filepathinfo.setComment(this.getComment());
+				filepathinfo.setModdate(new Date());
+				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+				
+				filepathinfo.createDatabaseMe();
+				filepathinfo.flushDatabaseMe();
+			}
+			else{
+				filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
+				filepathinfo.copyFrom(filepathinfo.databaseMe());
+			}
+			
 			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	// IaaS 연동 시
 				FileTransmition fileTransmition = new FileTransmition();
 	//			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
 				cloudInfo.setId(Long.parseLong(this.getServerSelect().toString()));
 				cloudInfo.copyFrom(cloudInfo.databaseMe());
-				
-				if(!check){
-					if (this.getWarFile().getFileTransfer() != null
-							&& this.getWarFile().getFilename() != null
-							&& this.getWarFile().getFilename().length() > 0)
-		
-						if (this.getWarFile() != null) {
-							MetadataFile resourceFile = new MetadataFile();
-							resourceFile.setFilename(this.getWarFile().getFilename());
-							resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
-							resourceFile.setMimeType(this.getWarFile().getMimeType());
-							setWarFile(resourceFile);
-		
-						}
-					if (this.getSqlFile().getFileTransfer() != null
-							&& this.getSqlFile().getFilename() != null
-							&& this.getSqlFile().getFilename().length() > 0)
-		
-						if (this.getSqlFile() != null) {
-							MetadataFile resourceFile = new MetadataFile();
-							resourceFile.setFilename(this.getSqlFile().getFilename());
-							resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
-							resourceFile.setMimeType(this.getSqlFile().getMimeType());
-							setSqlFile(resourceFile);
-						}
-					
-					reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
-					if (reflectVer == 0) {
-						reflectVer = 1;
-					} else {
-						reflectVer++;
-					}
-		
-					filepathinfo.setSqlPath(this.getSqlFile().getFilename());
-					filepathinfo.setWarPath(this.getWarFile().getFilename());
-					filepathinfo.setReflectVer(reflectVer);
-					filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
-					filepathinfo.setFileType(wfNode.getVisType());
-					filepathinfo.setId(filepathinfo.createNewId());
-					filepathinfo.setComment(this.getComment());
-					filepathinfo.setModdate(new Date());
-					filepathinfo.setDistributor(session.getEmployee().getEmpName());
-					
-					filepathinfo.createDatabaseMe();
-					filepathinfo.flushDatabaseMe();
-				}
-				else{
-					filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
-					filepathinfo.copyFrom(filepathinfo.databaseMe());
-				}
 				
 				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/jbossKill.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
 				command = "sh /root/jbossKill.sh";
@@ -210,6 +210,7 @@ public class ReflectPanel {
 //				//톰캣 시작
 //				cmd = "/oce/tomcat_dev/bin/startup.sh";
 //				this.command(cmd);
+				
 			}
 			
 		} else if ("svn".equals(wfNode.getVisType())) {
@@ -332,6 +333,16 @@ public class ReflectPanel {
 //				//톰캣 실행				
 //				cmd = GlobalContext.getPropertyString("dev.tomcat.start");
 //				this.command(cmd);
+				
+//				filepathinfo.setReflectVer(svn 현재 커밋버전);
+//				filepathinfo.setFileType(wfNode.getVisType());
+//				filepathinfo.setId(filepathinfo.createNewId());
+//				filepathinfo.setComment(this.getComment());
+//				filepathinfo.setModdate(new Date());
+//				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+//				
+//				filepathinfo.createDatabaseMe();
+//				filepathinfo.flushDatabaseMe();
 			}
 		}
 
