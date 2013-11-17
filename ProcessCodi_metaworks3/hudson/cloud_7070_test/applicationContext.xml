@@ -94,6 +94,7 @@
 	<!-- ============================================================= -->
 	<!-- Cron Job -->
 	<!-- ============================================================= -->
+	<!--  
 	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/>
 		<property name="jobDataAsMap">
@@ -103,6 +104,17 @@
 				</entry>
 				<entry key="emailReader">
 					<ref local="EMailReader"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	-->
+	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="org.uengine.codi.cron.EmailCronJob"/>
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="connectionFactory">
+					<ref local="springConnectionFactoryForMetaworks"/>										
 				</entry>
 			</map>
 		</property>
@@ -132,7 +144,8 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-	            <ref bean="scheduleTrigger"/>
+	            <!-- <ref bean="scheduleTrigger"/> -->
+	            <!-- 				 <ref bean="simpleTrigger"/>   -->
 			</list>
 		</property>
 		<!-- 
