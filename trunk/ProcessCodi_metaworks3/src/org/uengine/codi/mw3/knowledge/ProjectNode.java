@@ -146,7 +146,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		
 	}
-	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent = true, needToConfirm=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		
 		if( session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || session.getEmployee().getIsAdmin()) {

@@ -83,7 +83,7 @@ public interface IDocumentNode extends IDAO {
 	public boolean isFirst();
 	public void setFirst(boolean first);
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 	

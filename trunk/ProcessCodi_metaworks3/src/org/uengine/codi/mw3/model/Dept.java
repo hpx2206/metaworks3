@@ -22,6 +22,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
+import org.uengine.codi.mw3.knowledge.TopicPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Dept extends Database<IDept> implements IDept {
@@ -172,6 +173,30 @@ public class Dept extends Database<IDept> implements IDept {
 		return null;
 	}
 
+	
+	public IDept findByCode() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from partTable ");
+		sb.append("where partcode=?partcode");
+		
+		IDept dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setPartCode(this.getPartCode());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao;
+	}
+	
 //	@Override
 //	public IDept findByComCode(String comcode) throws Exception {
 //		String sql = "select * from parttable where comcode=?comCode";
@@ -347,19 +372,16 @@ public class Dept extends Database<IDept> implements IDept {
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
+			//그룹 중복 검사
+			Dept dept = new Dept();
+			dept.setPartCode(this.getPartName());
+			IDept findDept = dept.findByCode();
 			
-			//deptFollow에 dept생성자 추가.
-			Employee emp = new Employee();
-			emp.setEmpCode(session.getEmployee().getEmpCode());
-			emp.copyFrom(emp.databaseMe());
-			
-			String partCode = createNewId();
-			
-			emp.setPartCode(this.getPartCode());
-			emp.syncToDatabaseMe();
+			if(findDept != null)
+				throw new Exception("$DuplicateName");
 			
 			// �앹꽦
-			this.setPartCode(partCode);
+			this.setPartCode(this.getPartName());
 			this.setGlobalCom(session.getCompany().getComCode());
 			this.setIsDeleted("0");		
 			
@@ -376,9 +398,31 @@ public class Dept extends Database<IDept> implements IDept {
 			else
 				deptList.setId(this.getParent_PartCode());
 			
-			this.notiToCompany();
+			//deptFollow에 dept생성자 추가.
+			Employee emp = new Employee();
+			emp.setEmpCode(session.getEmployee().getEmpCode());
+			emp.copyFrom(emp.databaseMe());
+			emp.setPartCode(this.getPartCode());
+			emp.syncToDatabaseMe();
+			emp.flushDatabaseMe();
 			
-			return new Object[]{new Remover(new Popup()), new ToAppend(deptList, this)};
+//			this.notiToCompany();
+//			return new Object[]{new Remover(new Popup()), new ToAppend(deptList, this)};
+			
+			Object[] returnObj = this.loadDeptList();
+			Object[] returnObject = new Object[ returnObj.length + 2];
+			for (int i = 0; i < returnObj.length; i++) {
+				if( returnObj[i] instanceof InstanceListPanel){
+					returnObject[i] = new Refresh(returnObj[i]);
+				}else{
+					returnObject[i] = new Refresh(returnObj[i]);
+				}			
+			}
+			returnObject[returnObj.length] = new ToAppend(deptList, this);
+			returnObject[returnObj.length+1] = new Remover(new Popup());
+			return returnObject;
+
+//			return null;
 			
 			//drillDown
 			
@@ -529,9 +573,9 @@ public class Dept extends Database<IDept> implements IDept {
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-		this.notiToCompany();
+		//this.notiToCompany();
 		
-		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};		
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept)};		
 	}
 
 	
@@ -648,20 +692,6 @@ public class Dept extends Database<IDept> implements IDept {
 			locatorForEmployeeInClipboard.flushDatabaseMe();
 			
 			return new Object[]{new Remover(employeeInClipboard)};
-	}
-	
-	public String createNewId() throws Exception{
-		Map options = new HashMap();
-		options.put("useTableNameHeader", "false");
-		options.put("onlySequenceTable", "true");
-		
-		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("partTable", options);
-		kg.select();
-		kg.next();
-		
-		Number number = kg.getKeyNumber();
-		
-		return number.toString();
 	}
 	
 	@Autowired
