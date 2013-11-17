@@ -493,6 +493,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		syncToDatabaseMe();
 		flushDatabaseMe();
 		
+		NotiSetting notiSetting = new NotiSetting();
+		notiSetting.setId(this.createNewNotiSettingId());
+		notiSetting.setUserId(this.getEmpCode());
+		
+		notiSetting.createDatabaseMe();
+		
 		session.setEmployee(this);
 		session.fillUserInfoToHttpSession();
 	}
@@ -509,8 +515,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		employee.copyFrom(employee.databaseMe());
 		IEmployee findResult = employee.findByGlobalCom(employee.getGlobalCom());
 		INotiSetting findNotiSetting;
-		Employee codi = new Employee();
-		codi.setEmpCode("0");
 		
 		while(findResult.next()){
 			findNotiSetting = notiSetting.findByUserId(findResult.getEmpCode());
@@ -870,6 +874,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			tadpole.createUserAtTadpole(param.toString());
 		}
 		
+		this.notiToCompany();
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);

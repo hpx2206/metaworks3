@@ -530,99 +530,85 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			WfNode project = new WfNode();
 			project.setId(this.getAttachProject().getSelected());
 			project.copyFrom(project.databaseMe());
-//			if(project.getIsReleased()){
-				setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
-				setCreateDate(Calendar.getInstance().getTime());
-				setComcode(session.getCompany().getComCode());
-				setComName(session.getCompany().getComName());
-				
-				this.setSubDomain(this.getSubDomain());
-				this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
-				this.setProject(project);
-				this.setStatus(STATUS_REQUEST);
-				
-				createDatabaseMe();
-	
-				WfNode wfNode = new WfNode();
-				
-				if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-					wfNode.setName(this.getAppName());
-					wfNode.setType("app");
-					wfNode.setParentId(session.getCompany().getComCode());	
-					wfNode.setAuthorId(session.getUser().getUserId());		
-					String tenantId;
-					if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-						tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-					}else{
-						tenantId = session.getCompany().getComCode();
-					}
-					
-					wfNode.setCompanyId(tenantId);
-					wfNode.setDescription(this.getSimpleOverview());
-					wfNode.setStartDate(new Date());
-					wfNode.setLogoFile(this.getLogoFile());
-					wfNode.createMe(String.valueOf(this.getAppId()));
-					
-					TopicMapping tm = new TopicMapping();
-					tm.setTopicId(String.valueOf(this.getAppId()));
-					tm.setUserId(session.getUser().getUserId());
-					tm.setUserName(session.getUser().getName());
-					tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-					
-					tm.saveMe();
-					tm.flushDatabaseMe();
-					
-					this.setTopicId(wfNode.getId());
+			setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
+			setCreateDate(Calendar.getInstance().getTime());
+			setComcode(session.getCompany().getComCode());
+			setComName(session.getCompany().getComName());
+			
+			this.setSubDomain(this.getSubDomain());
+			this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
+			this.setProject(project);
+			this.setStatus(STATUS_REQUEST);
+			
+			createDatabaseMe();
+
+			WfNode wfNode = new WfNode();
+			
+			if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+				wfNode.setName(this.getAppName());
+				wfNode.setType("app");
+				wfNode.setParentId(session.getCompany().getComCode());	
+				wfNode.setAuthorId(session.getUser().getUserId());		
+				String tenantId;
+				if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+					tenantId = TenantContext.getThreadLocalInstance().getTenantId();
 				}else{
-					wfNode.setId(this.getTopicId());
-					
-					wfNode.copyFrom(wfNode.databaseMe());
-					
-					wfNode.setName(this.getAppName());
-					wfNode.saveMe();
+					tenantId = session.getCompany().getComCode();
 				}
-	
-				// 앱 등록일 경우 프로세스 발행
-				String defId = "AppRegister.process";
 				
-				ProcessMap goProcess = new ProcessMap();
-				goProcess.session = session;
-				goProcess.processManager = processManager;
-				goProcess.instanceView = instanceView;
-				goProcess.setDefId(defId);
-	
-				// 프로세스 발행
-				Long instId = Long.valueOf(goProcess.initializeProcess());
-	
-				// 프로세스 실행
-				ResultPayload rp = new ResultPayload();
-				rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
-	
-				// 무조건 compleate
-				processManager.executeProcessByWorkitem(instId.toString(), rp);
-				processManager.applyChanges();
+				wfNode.setCompanyId(tenantId);
+				wfNode.setDescription(this.getSimpleOverview());
+				wfNode.setStartDate(new Date());
+				wfNode.setLogoFile(this.getLogoFile());
+				wfNode.createMe(String.valueOf(this.getAppId()));
 				
-	//			TopicMapping tm = new TopicMapping();
-	//			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
-	//			tm.setUserId(session.getUser().getUserId());
-	//			tm.setUserName(session.getUser().getName());
-	//			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-	//			
-	//			tm.saveMe();
-				flushDatabaseMe();
-//			}
-//			else{
-//				ModalWindow modalWindow = new ModalWindow();
-//				modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//				modalWindow.setWidth(300);
-//				modalWindow.setHeight(150);
-//								
-//				modalWindow.setTitle("$앱 등록 실패");
-//				modalWindow.setPanel(localeManager.getString("해당 프로젝트를 Release 하신 후 앱 등록을 하시기 바랍니다."));
-//				modalWindow.getButtons().put("$Confirm", "");		
-//				
-//				return modalWindow;
-//			}
+				TopicMapping tm = new TopicMapping();
+				tm.setTopicId(String.valueOf(this.getAppId()));
+				tm.setUserId(session.getUser().getUserId());
+				tm.setUserName(session.getUser().getName());
+				tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+				
+				tm.saveMe();
+				tm.flushDatabaseMe();
+				
+				this.setTopicId(wfNode.getId());
+			}else{
+				wfNode.setId(this.getTopicId());
+				
+				wfNode.copyFrom(wfNode.databaseMe());
+				
+				wfNode.setName(this.getAppName());
+				wfNode.saveMe();
+			}
+
+			// 앱 등록일 경우 프로세스 발행
+			String defId = "AppRegister.process";
+			
+			ProcessMap goProcess = new ProcessMap();
+			goProcess.session = session;
+			goProcess.processManager = processManager;
+			goProcess.instanceView = instanceView;
+			goProcess.setDefId(defId);
+
+			// 프로세스 발행
+			Long instId = Long.valueOf(goProcess.initializeProcess());
+
+			// 프로세스 실행
+			ResultPayload rp = new ResultPayload();
+			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
+
+			// 무조건 compleate
+			processManager.executeProcessByWorkitem(instId.toString(), rp);
+			processManager.applyChanges();
+			
+//			TopicMapping tm = new TopicMapping();
+//			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
+//			tm.setUserId(session.getUser().getUserId());
+//			tm.setUserName(session.getUser().getName());
+//			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+//			
+//			tm.saveMe();
+			flushDatabaseMe();
 		}else{
 			syncToDatabaseMe();
 			flushDatabaseMe();
