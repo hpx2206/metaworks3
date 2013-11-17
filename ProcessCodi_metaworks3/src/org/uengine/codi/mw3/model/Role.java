@@ -253,7 +253,7 @@ public class Role extends Database<IRole> implements IRole {
 		role.syncToDatabaseMe();
 		role.flushDatabaseMe();
 		
-		return new Object[]{new Remover(role)};				
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(role)};				
 	}
 	
 	@Override
