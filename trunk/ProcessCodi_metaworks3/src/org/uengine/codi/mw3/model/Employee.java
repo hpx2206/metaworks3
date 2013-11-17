@@ -4,6 +4,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,11 +28,14 @@ import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.example.facebook.IPerson;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -460,6 +467,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public void saveMe() throws Exception {
+		if("signUp".equals(this.getMetaworksContext().getHow()) && "step2".equals(this.getMetaworksContext().getWhere())){
+			if(this.getIsAdmin()){
+				addBasicTopics();
+				addBasicProcess();
+			}
+			
+		}
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			
 			// 올챙이 연동
@@ -497,6 +511,54 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		session.setEmployee(this);
 		session.fillUserInfoToHttpSession();
+	}
+	
+	public void addBasicTopics() throws Exception{
+		
+		String topics[]={"영업관리","도서관리","연락처"};
+		
+		
+		for(int i=0; i<topics.length; i++){
+			WfNode wfNode = new WfNode();
+						
+			wfNode.setName(topics[i]);
+			wfNode.setType("topic");
+			wfNode.setSecuopt("0");
+			wfNode.setParentId(this.getGlobalCom());	
+			wfNode.setAuthorId(this.getEmpCode());		
+			wfNode.setCompanyId(this.getGlobalCom());
+			wfNode.createMe();
+			
+			TopicMapping tm = new TopicMapping();
+			tm.setTopicId(wfNode.getId());
+			tm.setUserId(this.getEmpCode());
+			tm.setUserName(this.getEmpName());
+			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+			
+			tm.saveMe();
+			
+		}
+		
+	}
+	
+	public void addBasicProcess() throws Exception{
+		
+		String[] mapId={"BuisinessTrip.process", "Contact.process", "Holiday.process", "Purchasing.process", "Sales.process", "TroubleTicket.process"};
+		String[] defId={"BuisinessTrip.process", "Contact.process", "Holiday.process", "Purchasing.process", "Sales.process", "TroubleTicket.process"};
+		String[] name={"BuisinessTrip", "Contact", "Holiday", "Purchasing", "Sales", "TroubleTicket"};
+		
+		for(int i=0; i<mapId.length; i++){
+			IProcessMap processMap = new ProcessMap();
+			processMap.setMapId(this.getGlobalCom()+"."+mapId[i]);
+			processMap.setDefId(defId[i]);
+			processMap.setName(name[i]);
+			processMap.setComCode(this.getGlobalCom());
+			processMap.setNo(i);
+			
+			processMap.createMe();
+			
+		}
+		
 	}
 	
 	public void notiToCompany() throws Exception{
