@@ -164,6 +164,7 @@ public class FileWorkItem extends WorkItem{
 			String thisVersion = String.valueOf(nextVersion+ "." + 0);
 			workItemVersionChooser.getVersionSelector().add(thisVersion , thisVersion);
 			workItemVersionChooser.setSelectedVersion(thisVersion);
+			workItemVersionChooser.getVersionSelector().setSelectedValue(workItemVersionChooser.getSelectedVersion());
 			
 			SystemWorkItem SystemWorkItem = new SystemWorkItem();
 			SystemWorkItem.session = session;
@@ -184,7 +185,7 @@ public class FileWorkItem extends WorkItem{
 //			instanceViewThreadPanel.setInstanceId(originInstId);
 //			instanceViewThreadPanel.load();
 			
-			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser.getVersionSelector())};
+			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser)};
 			
 //			Object[] temReturnObject = fileWorkItem.add();
 //			returnObject = new Object[temReturnObject.length + 1];
