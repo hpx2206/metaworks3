@@ -170,6 +170,7 @@ public class TopicTitle  implements ContextAware{
 			wfNode.setId(this.getTopicId());
 			
 			wfNode.copyFrom(wfNode.databaseMe());
+			wfNode.setSecuopt(topicSecuopt ? "1" : "0");
 			
 			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
 				wfNode.setUrl(this.getLogoFile().getUploadedPath());
@@ -213,7 +214,7 @@ public class TopicTitle  implements ContextAware{
 		
 		
 		Object[] returnObj = topicNode.loadTopic();
-		Object[] returnObject = new Object[ returnObj.length + 3];
+		Object[] returnObject = new Object[ returnObj.length + 2];
 		for (int i = 0; i < returnObj.length; i++) {
 			if( returnObj[i] instanceof InstanceListPanel){
 				returnObject[i] = new Refresh(returnObj[i]);
@@ -222,7 +223,7 @@ public class TopicTitle  implements ContextAware{
 			}			
 		}
 		returnObject[returnObj.length ] = new ToAppend(new TopicPanel(), topicNode);
-		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
+		returnObject[returnObj.length + 1] = new Remover(new ModalWindow());
 		return returnObject;
 
 	}
@@ -319,7 +320,7 @@ public class TopicTitle  implements ContextAware{
 		topicNode.setName(this.getTopicTitle());
 		topicNode.setType(TopicNode.TOPIC);
 		
-		this.notiToCompany();
+	//	this.notiToCompany();
 		
 		return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};		
 	}

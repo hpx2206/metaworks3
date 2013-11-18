@@ -22,9 +22,18 @@ public class TopicPanel {
 		public void setSelectedMore(boolean isSelectedMore) {
 			this.isSelectedMore = isSelectedMore;
 		}
-
+	int countTopicNode;	
+		public int getCountTopicNode() {
+			return countTopicNode;
+		}
+		public void setCountTopicNode(int countTopicNode) {
+			this.countTopicNode = countTopicNode;
+		}
+		
 	@ServiceMethod	
 	public void load() throws Exception {
+		ITopicNode countNodeList = TopicNode.moreView(session);
+		this.setCountTopicNode(countNodeList.size());
 		ITopicNode topicNodeList = TopicNode.load(session);
 		setTopicNode(topicNodeList);
 	}
