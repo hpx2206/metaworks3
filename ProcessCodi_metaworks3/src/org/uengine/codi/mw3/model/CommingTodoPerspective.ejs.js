@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_model_TopicPerspective = function(objectId, className){
+var org_uengine_codi_mw3_model_CommingTodoPerspective = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
@@ -9,15 +9,4 @@ var org_uengine_codi_mw3_model_TopicPerspective = function(objectId, className){
 
 	if(this.object.loader)
 		mw3.call(this.objectId, 'select');
-	else{
-		this.div.hover(
-			function(){
-				$(this).find('.west_more_btn').show();
-			},
-			function(){
-				$(this).find('.west_more_btn').hide();
-			}
-		)
-	}
-	
 };

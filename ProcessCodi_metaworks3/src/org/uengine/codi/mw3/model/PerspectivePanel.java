@@ -2,10 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.kernel.GlobalContext;
 
@@ -141,45 +138,40 @@ public class PerspectivePanel  implements ContextAware {
 			
 			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 				//주제별
-				if("1".equals(GlobalContext.getPropertyString("topic.use", "1"))){
+				if("1".equals(Perspective.USE_TOPIC)){
 					topicPerspective = new TopicPerspective();
-					topicPerspective.session = session;
-					topicPerspective.select();
 				}
 				
 				//조직도
-				if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
+				if("1".equals(Perspective.USE_GROUP)){
 					organizationPerspectiveDept = new OrganizationPerspectiveDept();
 //					organizationPerspectiveDept.session = session;
 //					organizationPerspectiveDept.select();
 				}
 				
 				//역할
-				if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
+				if("1".equals(Perspective.USE_ROLE)){
 					organizationPerspectiveRole = new OrganizationPerspectiveRole();
 //					organizationPerspectiveRole.session = session;
 //					organizationPerspectiveRole.select();
 				}
 				
 				//프로세스별
-				if("1".equals(GlobalContext.getPropertyString("process.use", "1"))){
+				if("1".equals(Perspective.USE_PROCESS)){
 					processPerspective = new ProcessPerspective();
 //					processPerspective.select();
 				}
 				
 				//친구
-				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
+				if("1".equals(Perspective.USE_CONATCT)){
 					contactPerspective = new ContactPerspective();
-					contactPerspective.session = session;
-					contactPerspective.select();
 				}
-				if("1".equals(GlobalContext.getPropertyString("commingTodo.use", "1"))){
+				if("1".equals(Perspective.USE_COMMINGTODO)){
 					commingTodoPerspective = new CommingTodoPerspective();
-					commingTodoPerspective.session = session;
-					commingTodoPerspective.select();
 				}
+				
 				//앱
-				if("1".equals(GlobalContext.getPropertyString("app.use", "0"))){
+				if("1".equals(Perspective.USE_APP)){
 					appPerspective = new OrganizationPerspectiveApp();
 					appPerspective.session = session;
 					if(!("goSns".equals(session.getLastSelectedItem()))){
