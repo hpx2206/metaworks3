@@ -22,6 +22,8 @@ import org.uengine.kernel.GlobalContext;
 
 public class StartCodi {
 
+	public final static String USE_OCE = GlobalContext.getPropertyString("oce.use", "0");
+	
 	String key;
 		@Hidden
 		public String getKey() {
@@ -66,7 +68,6 @@ public class StartCodi {
 		
 		if("1".equals(multitenancyUse)){
 			if(comAlias == null){
-				
 				return new SignUp();
 			}
 			
@@ -101,6 +102,7 @@ public class StartCodi {
 		login.setMetaworksContext(new MetaworksContext());
 		login.getMetaworksContext().setHow("login");
 		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
 		return login;
 	}
 	
@@ -110,7 +112,7 @@ public class StartCodi {
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.session = session;
 		
-		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+		if("1".equals(USE_OCE)){
 			return pageNavigator.goDashBoard();
 		}else{
 			return pageNavigator.goProcess();
