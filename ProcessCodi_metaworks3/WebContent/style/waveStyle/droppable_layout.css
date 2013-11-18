@@ -246,7 +246,6 @@ img {
 }
 .info_top_show_detail{
 
-display: inline-block;
 font-weight: bold;
 height: 29px;
 line-height: 29px;
@@ -267,7 +266,6 @@ border-color: #FBFBFB #FBFBFB #D3D3D7;
 border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-width:165px;
 cursor:pointer;
 }
 .info_top_show_detail img{
@@ -1857,6 +1855,33 @@ html, body {
     margin-left: 5px;
     margin-top: 6px;
 }
+.invitation_div{padding:15px;}
+.invitation_div .title{padding-left:25px; background:url(../../images/waveStyle/i_mail2.png) 3px no-repeat; }
+.invitation_div .invit_input{float:left;}
+.invitation_div .invit_input input{font-size: 10pt !important;
+width: 270px;
+height: 18px;
+line-height: 18px;
+-webkit-border-radius: 4px;
+outline: none;
+webkit-border-radius: 4px;
+border: 1px solid #CCD;
+background-color: #FFF;
+border: 1px solid #CCC;
+-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+-webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+-moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+-o-transition: border linear 0.2s, box-shadow linear 0.2s;
+transition: border linear 0.2s, box-shadow linear 0.2s;
+height: 20px;
+padding: 4px 6px;
+font-size: 14px;
+line-height: 20px;
+color: #555;
+vertical-align: middle;}
+
 
 .pageNavigator ul {
     list-style: none;
