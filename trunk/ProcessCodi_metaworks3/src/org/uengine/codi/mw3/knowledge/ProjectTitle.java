@@ -243,6 +243,12 @@ public class ProjectTitle implements ContextAware {
 	public void saveMe() throws Exception {
 		WfNode wfNode = new WfNode();
 		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().upload();
+		}
+		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			wfNode.setName(this.getTopicTitle());
 			wfNode.setProjectAlias(this.getProjectAlias());
@@ -252,8 +258,11 @@ public class ProjectTitle implements ContextAware {
 			wfNode.setSecuopt(projectSecuopt ? "1" : "0");
 			wfNode.setParentId(session.getCompany().getComCode());	
 			wfNode.setAuthorId(session.getUser().getUserId());
-			wfNode.setUrl(this.getLogoFile().getUploadedPath());
-			wfNode.setThumbnail(this.getLogoFile().getFilename());
+			
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				wfNode.setUrl(this.getLogoFile().getUploadedPath());
+				wfNode.setThumbnail(this.getLogoFile().getFilename());
+			}
 			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
 				wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
 			else
@@ -278,6 +287,11 @@ public class ProjectTitle implements ContextAware {
 			wfNode.setId(this.getTopicId());
 			
 			wfNode.copyFrom(wfNode.databaseMe());
+			
+			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
+				wfNode.setUrl(this.getLogoFile().getUploadedPath());
+				wfNode.setThumbnail(this.getLogoFile().getFilename());
+			}
 			
 			wfNode.setName(this.getTopicTitle());
 			wfNode.saveMe();
