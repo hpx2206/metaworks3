@@ -393,5 +393,8 @@ public interface IWorkItem extends IDAO{
 		
 		@ServiceMethod(callByContent=true)
 		public IWorkItem loadCurrentView() throws Exception;
+		
+		@ServiceMethod(callByContent=true)
+		public IWorkItem loadChooseView() throws Exception;
 }
 
