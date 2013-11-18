@@ -2090,15 +2090,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			Metaworks3.prototype.clientSideCall = function (objectId, methodName){
 				try{
-					var infoDivId = "#"+this._getInfoDivId(objectId);
-					$(infoDivId).html("<img src='dwr/metaworks/images/circleloading.gif'>");
-
-					var object = this.getObject();
-					var functionName = object.__className.replace('.', '_') + "_" + methodName;
-					eval(functionName+"('" + objectId + "')");
-					
-					// 2012-04-12 cjw showInfo 로 변경
-					this.showInfo( methodName + " DONE." );					
+//					var infoDivId = "#"+this._getInfoDivId(objectId);
+//					$(infoDivId).html("<img src='dwr/metaworks/images/circleloading.gif'>");
+//
+//					var object = this.getObject();
+//					var functionName = object.__className.replace('.', '_') + "_" + methodName;
+//					eval(functionName+"('" + objectId + "')");
+//					
+//					// 2012-04-12 cjw showInfo 로 변경
+//					this.showInfo( methodName + " DONE." );					
 					/*
 					$(infoDivId).html("<font color=blue> " + methodName + " DONE. </font>");
 					$(infoDivId).slideDown(500, function(){
@@ -2338,12 +2338,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         			}
         				
         			//TODO: why different method name?  showStatus and showInfo
-        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
-        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-        			}else{
-
-	    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
-        			}
+//        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+//        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+//        			}else{
+//
+//	    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+//        			}
     			}
     			
     			if(typeof callback == 'function')
@@ -4506,12 +4506,12 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 			}
 				
 			//TODO: why different method name?  showStatus and showInfo
-			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
-				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-			}else{
-
-				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
-			}
+//			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+//				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+//			}else{
+//
+//				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+//			}
 		}
 		
 		if(callback && typeof callback == 'function')
