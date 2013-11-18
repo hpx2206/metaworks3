@@ -23,6 +23,7 @@ public class TopicPanel {
 			this.isSelectedMore = isSelectedMore;
 		}
 
+	@ServiceMethod	
 	public void load() throws Exception {
 		ITopicNode topicNodeList = TopicNode.load(session);
 		setTopicNode(topicNodeList);
