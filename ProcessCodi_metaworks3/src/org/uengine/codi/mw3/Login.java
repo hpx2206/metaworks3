@@ -47,6 +47,7 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Invitation;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
@@ -520,30 +521,27 @@ public class Login implements ContextAware {
 			throw new Exception("$NoExistedUser");
 		}
 		
+		/*
 		Company company = new Company();
 		company.setComCode(findEmp.getGlobalCom());
 		ICompany findcompany = company.findByCode();
+		*/
+		
 //		if(!findcompany.getAlias().equals(TenantContext.getThreadLocalInstance().getTenantId())){
 //			throw new Exception("");
 //		}
 		
 		
-		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
+		if("1".equals(Perspective.USE_TADPOLE)){
 			goTadpoleLogin(this.getEmail(), password);
 		}
 		Session session = loginService();
 		
 		storeIntoServerSession(session);
-		
+
 		Locale locale = new Locale();
 		locale.setLanguage(session.getEmployee().getLocale());
 		locale.load();
-		
-		
-		
-		
-		
-		
 		
 		/*
 		MainPanel mainPanel=null;/*

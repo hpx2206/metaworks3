@@ -78,7 +78,7 @@ org_uengine_codi_mw3_Login.prototype = {
 				window.fbAsyncInit = function() {
 				    // init the FB JS SDK
 				    FB.init({
-				      appId      : '201078716741890', // App ID from the App Dashboard
+				      appId      : '119159701538006', // App ID from the App Dashboard
 				      //channelUrl : '//localhost:8080/uengine-web/index.html', // Channel File for x-domain communication
 				      status     : true, // check the login status upon init?
 				      cookie     : true, // set sessions cookies to allow your server to access the session?

@@ -4,7 +4,7 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Popup;
+import org.uengine.codi.mw3.model.Popup;
 
 public class ErrorPage {
 	
