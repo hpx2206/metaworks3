@@ -3947,7 +3947,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   			 				
 				   		    			// click(mouse right) is contextmenu block
 			   			 				if(which == 3){
-			   			 					document.oncontextmenu = function() { return false; };
+			   			 				theDiv[0].oncontextmenu = function() { return false; };
 			   			 				}
 			   			 			}
 			   									   						
