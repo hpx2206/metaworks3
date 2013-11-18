@@ -4,44 +4,41 @@ var org_metaworks_Remover = function(objectId, className){
 	if(this.object == null)
 		return true;	
 	
-	var objKeys = [];
-	if(this.object.match)
-		objKeys.push(mw3._createObjectKey(this.object.target));
-	else
-		objKeys = mw3._createObjectKey(this.object.target, true);
 	
-	if(objKeys && objKeys.length){
-		for(var i=0; i<objKeys.length; i++){			
-			mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
-
-			if(mappedObjId){
-				var faceHelper = mw3.getFaceHelper(mappedObjId);
-				
-				if(faceHelper && faceHelper.remover)
-					faceHelper.remover(this.object.target);
-				else	
-					mw3.removeObject(mappedObjId);
-				
-				break;
-			}	
+		if(typeof object.target == 'string'){
+			if(object.target == 'opener')
+				triggerObjId = mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1];
+			if(object.target == 'self')
+				triggerObjId = mw3.recentCallObjectId;
+					
+		}else{
+			var objKeys = [];
+			if(this.object.match)
+				objKeys.push(mw3._createObjectKey(this.object.target));
+			else
+				objKeys = mw3._createObjectKey(this.object.target, true);
 			
-/*			var mappedObjdivId = "objDiv_" + mappedObjId;
-			
-			if(mappedObjId && document.getElementById(divId)){ //if there's mappedObjId exists, replace that div part.
-				
-				if(serviceMethodContext.target=="append"){
-					mw3.locateObject(result_, null, "#"+mappedObjdivId);
-				}else if(serviceMethodContext.target=="prepend"){
-					mw3.locateObject(result_, null, "#"+mappedObjdivId, {prepend: true});
-				}else{
-					mw3.setObject(mappedObjId, result_);
+			if(objKeys && objKeys.length){
+				for(var i=0; i<objKeys.length; i++){			
+					mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
+		
+					if(mappedObjId){
+						triggerObjId = mappedObjId;
+						break;
+					}	
 				}
-				
-				neverShowed = false;
 			}
-			*/
 		}
-	}
+		
+		if(triggerObjId){
+			var faceHelper = mw3.getFaceHelper(mappedObjId);
+					
+			if(faceHelper && faceHelper.remover)
+				faceHelper.remover(this.object.target);
+			else	
+				mw3.removeObject(mappedObjId);
+		}
+	};
 	
 	this.loaded = function(){
 		if(mw3.objects[objectId] != null)
