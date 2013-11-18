@@ -4,6 +4,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
@@ -12,25 +13,25 @@ import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.OceMain;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.processmarket.Market;
 
 public class OcePageNavigator extends PageNavigator {
 	
 	public OcePageNavigator() {
-		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
-		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
+		this.setOce("1".equals(StartCodi.USE_OCE));
+		this.setProject("1".equals(Perspective.USE_PROJECT));
 	}
 	
 	public OcePageNavigator(String pageName) {
 		this.setPageName(pageName);
 
-		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
-		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
+		this.setOce("1".equals(StartCodi.USE_OCE));
+		this.setProject("1".equals(Perspective.USE_PROJECT));
 	}
 	
 	boolean admin;
