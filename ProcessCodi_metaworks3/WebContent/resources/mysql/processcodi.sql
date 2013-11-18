@@ -923,16 +923,16 @@ alter table filepathinfo add column moddate DATETIME;
 alter table filepathinfo add column distributor varchar(20);
 
 
---2013.11.06 문서관리 , content(genericWorkItem)
+-- 2013.11.06 문서관리 , content(genericWorkItem)
 alter table bpm_procinst add column isdocument int(11) default 0;
 
 alter table bpm_worklist change content content mediumtext;
 
---2013.10.29
+-- 2013.10.29
 alter table comtable add column alias varchar(30);
 alter table emptable add column authkey varchar(100);
 
---2013.11.07
+-- 2013.11.07
 create table logtable(
 id int(11) not null primary key,
 type varchar(20) not null,
@@ -942,7 +942,7 @@ ip varchar(50),
 date varchar(50));
 
 -- 2013.11.08 코디 시스템 관리자 계정.( Email을 인스턴스 발행하는 계정.)
---insert into emptable values("0", "CODI", "test", "1", null, null, null, "0", "0", "ko", null, null, null, null, null, null, "wave", "auto", null, null, "1", "0", null, "0", "0", null);
+-- insert into emptable values("0", "CODI", "test", "1", null, null, null, "0", "0", "ko", null, null, null, null, null, null, "wave", "auto", null, null, "1", "0", null, "0", "0", null);
 insert into emptable (empcode, empname, password, isadmin, globalcom, isdeleted, locale, preferux, prefermob, approved, guest, mailnoti) 
 			   values("0", "CODI", "test", 1, "uengine.org", "0", "ko", "wave", "auto", 1, 0, 0);
 
