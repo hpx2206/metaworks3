@@ -161,11 +161,6 @@ org_uengine_codi_mw3_Login.prototype = {
 			}
 		}
 	},
-	showError : function(message, methodName){
-		this.endLoading();
-		
-		$('#' + mw3._getObjectDivId(this.objectId)).find('.message:first').html(mw3.localize(message));
-	},
 	facebookSSO : function(response){
 		var objectId = this.objectId;
 		
