@@ -199,7 +199,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		this.setRoleMappingPanel(new RoleMappingPanel(processManager, this.getDefId(), session));
 		
 		
-		Popup popup = new Popup(580, 460);
+		Popup popup = new Popup(580, 500);
 		popup.setPanel(this);
 		popup.setName("프로세스 정보");
 		
