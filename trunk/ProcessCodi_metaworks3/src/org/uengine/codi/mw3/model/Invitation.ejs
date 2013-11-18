@@ -17,30 +17,11 @@
         <%
 			}else if(mw3.how == 'invite'){	
 		%>
-	
-			<p class="title"><%=mw3.localize('$InviteYourFriend')%></p>
-			
-			 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-	            <tbody>
-	                <tr>
-	                    <td style="padding:2px 12px 0 0;"><table width="*" border="0" cellspacing="0" cellpadding="0">
-	                            <tbody>
-	                                <tr height="25" valign="middle">
-	                                    <td bgcolor="white">
-	                                            <%=fields.email.here({when:'edit'})%>
-	                                       
-	                                        </td>
-	                                </tr>
-	                            </tbody>
-	                        </table></td>
-	                </tr>
-	                <tr>
-	                    <td>
-	                    	<div class="positionRight"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span><%=mw3.localize('$FriendInvite')%></span></a></div>
-	                    </td>
-	                </tr>
-	            </tbody>
-	        </table>
+			<div class="invitation_div">
+				<p class="title"><%=mw3.localize('$InviteYourFriend')%></p>
+				<div class="invit_input"><%=fields.email.here({when:'edit'})%></div>
+		        <div class="positionRight" style="margin-top: 3px;"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span><%=mw3.localize('$FriendInvite')%></span></a></div>
+	        </div>            
 		    </div>
 		    <div class="guide"><span class="lb"></span><span class="rb"></span></div>
 		<%
