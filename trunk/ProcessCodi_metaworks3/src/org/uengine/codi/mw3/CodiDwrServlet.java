@@ -171,38 +171,6 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 			}
 		});
 
-
-		System.setSecurityManager(new SecurityManager(){
-
-			
-//		    public void checkPermission(Permission perm)
-//		    		throws AccessControlException 
-//		    	    {
-//		    	
-//		    	super.checkPermission(perm);
-//		    	//Object context = super.getSecurityContext();
-//		    	//System.out.print(context);
-//		    }
-//		    
-		    
-			@Override
-			public void checkPackageAccess(String pkg){
-				CodiDwrServlet.checkPermission(pkg);
-				
-				super.checkPackageAccess(pkg);
-			}
-
-//			@Override
-//			public void checkPermission(Permission perm, Object context) {
-//				
-//				if(okIfSystem()) return;//TODO or we need to change the security profile.
-//				
-//				super.checkPermission(perm, context);
-//			}
-//
-			
-		});
-		
     	try {
 /////////////// TODO: disabled for easy testing. someday we need to find dettach with the server
 

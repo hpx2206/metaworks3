@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 
@@ -87,17 +88,21 @@ public class StartCodi {
 		}
 		
 		if(loggedUserId != null){
-			Employee employee = new Employee();
-			employee.setEmpCode(loggedUserId);
-			IEmployee employeeRef = employee.findMe();
+			boolean isLogin = false;
 			
-			if("0".equals(USE_MULTITENANCY) || employeeRef.getGlobalCom().equals(comCode)){
-				Login login = new Login();
-				login.setEmail(employeeRef.getEmail());
-				login.setPassword(employeeRef.getPassword());
+			if("1".equals(USE_MULTITENANCY)){
+				Employee employee = new Employee();
+				employee.setEmpCode(loggedUserId);
+				IEmployee employeeRef = employee.findMe();
 				
-				return login.login();
+				if(employeeRef.getGlobalCom().equals(comCode))
+					isLogin = true;
+			}else{
+				isLogin = true;
 			}
+			
+			if(isLogin)
+				return login();
 		}
 		
 		Login login = new Login();
@@ -109,17 +114,30 @@ public class StartCodi {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-	public MainPanel login() throws Exception {
+	public Object[] login() throws Exception {
+		
+		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
+		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+
+		Session session = new Session();
+		session.fillSession(loggedUserId);
+		
+		MainPanel mainPanel;
 		
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.session = session;
 		
 		if("1".equals(USE_OCE)){
-			return pageNavigator.goDashBoard();
+			mainPanel =  pageNavigator.goDashBoard();
 		}else{
-			return pageNavigator.goProcess();
+			mainPanel = pageNavigator.goProcess();
 		}
 		
+		Locale locale = new Locale();
+		locale.setLanguage(session.getEmployee().getLocale());
+		locale.load();
+
+		return new Object[]{locale, mainPanel};
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
