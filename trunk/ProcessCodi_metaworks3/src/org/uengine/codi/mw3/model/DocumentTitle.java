@@ -110,8 +110,8 @@ public class DocumentTitle implements ContextAware{
 
 	public void saveMain() throws Exception{
 		DocumentNode node = new DocumentNode();
+		node.setId(node.makeId());
 		node.setName(this.getName());
-		node.setId(node.getId());
 		node.setDescription(this.getDescription());
 		node.setType(DocumentNode.TYPE_DOC);
 		node.setSecuopt(documentSecuopt ? "1" : "0");
@@ -127,7 +127,8 @@ public class DocumentTitle implements ContextAware{
 			node.setThumbnail(this.getLogoFile().getFilename());
 		}
 		
-		node.createMe();
+		node.createDatabaseMe();
+		node.flushDatabaseMe();
 		
 		this.setId(node.getId());
 		
@@ -148,6 +149,7 @@ public class DocumentTitle implements ContextAware{
 		
 		tm.setTopicMappingId(number.longValue());
 		tm.createDatabaseMe();
+		tm.flushDatabaseMe();
 		
 	}
 	DocumentNode node;
@@ -239,9 +241,17 @@ public class DocumentTitle implements ContextAware{
 					returnObject[i] = new Refresh(returnObj[i]);
 				}			
 			}
+			
+//			DocumentPanel documentPanel = new DocumentPanel();
+//			documentPanel.session = session;
+//			documentPanel.load();
+//			returnObject[returnObj.length ] = new Refresh(documentPanel);
+			
 			returnObject[returnObj.length ] = new ToAppend(new DocumentPanel(), documentNode);
 			returnObject[returnObj.length + 1] = new Remover(new ModalWindow());
 			return returnObject;
+
+			
 		}
 		
 		return null;

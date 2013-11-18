@@ -54,7 +54,7 @@ public class DocumentInfo extends GroupInfo{
 		wfNode.setId(this.getId());
 		
 		try {
-			wfNode.copyFrom(wfNode.databaseMe());
+			wfNode.copyFrom(wfNode.findMe());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,7 +110,7 @@ public class DocumentInfo extends GroupInfo{
 		deletedNode.deleteDatabaseMe();
 		
 		//this가 아닌 Node지우기.
-		return new Object[]{new Remover(deletedNode), new Refresh(new InstanceListPanel())};
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(deletedNode)};
 	}
 	
 	@Override
