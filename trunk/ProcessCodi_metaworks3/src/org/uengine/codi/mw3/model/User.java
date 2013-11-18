@@ -458,7 +458,6 @@ public class User extends Database<IUser> implements IUser {
 				noti.setActorId(session.getUser().getUserId());
 				noti.setConfirm(false);
 				noti.setInputDate(Calendar.getInstance().getTime());
-				noti.setInstStartedDate(instance.getStartedDate());
 				//noti.setTaskId(getTaskId());
 				noti.setInstId(new Long(instId));
 				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");

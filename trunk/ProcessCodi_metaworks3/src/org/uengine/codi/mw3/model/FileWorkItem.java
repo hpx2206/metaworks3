@@ -99,7 +99,7 @@ public class FileWorkItem extends WorkItem{
 	
 			// 제목이 없으면 파일명을 제목으로
 			if(!UEngineUtil.isNotEmpty(getTitle())){
-				setTitle(getFile().getFileTransfer().getFilename());
+				setTitle(new String(this.getFile().getFilename()));
 			}
 	
 			this.setFileTransfer(this.getFile().getFileTransfer());

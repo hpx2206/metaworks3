@@ -7,12 +7,6 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-@Face(
-		ejsPathMappingByContext=
-	{
-		"{how: 'explorer', face: 'dwr/metaworks/org/uengine/codi/mw3/model/DocumentPanel_explorer.ejs'}",
-		"{how: 'perspectivePanel', face: 'dwr/metaworks/org/uengine/codi/mw3/model/DocumentPanel.ejs'}",
-	})
 public class DocumentPanel implements ContextAware {
 
 	

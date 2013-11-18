@@ -525,22 +525,6 @@ alter table bpm_knol add column type char(10);
 
  alter table contact add column network char(10);
  
-DROP TABLE IF EXISTS `bpm_noti`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-create table bpm_noti(
-	notiId long,
-	userId char(100),
-	actorId char(100),
-	instId int,
-	actAbstract varchar(300),
-	taskId int,
-	type int,
-	inputdate timestamp,
-	confirm int
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-	
 	 -- 3000자 이상의 content 가 입력되면 전체 본문을 파일로 저장할 위치를 받아놓음
 	 alter table bpm_worklist add column extfile varchar(200);
 	 
@@ -1001,4 +985,19 @@ alter table roletable add column THUMBNAIL varchar(200);
 
 -- 2013.11.15 인스턴스 파일첨부 표시, 노티리스트 등록 된 순으로
 alter table bpm_procinst add column isfileadded int(11) default 0;
-alter table bpm_noti add column instStartedDate datetime;
+
+-- 2013.11.18 노티 정렬때문에 timestamp -> date 변경
+DROP TABLE IF EXISTS `bpm_noti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+create table bpm_noti(
+	notiId long,
+	userId char(100),
+	actorId char(100),
+	instId int,
+	actAbstract varchar(300),
+	taskId int,
+	type int,
+	inputdate datetime,
+	confirm int
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
