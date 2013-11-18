@@ -153,9 +153,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
 		
-		//TODO delete printing
-		System.out.println("worklist sql:" + bottomList.toString());
-		
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		
 		criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
@@ -169,7 +166,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
-				System.out.println(key + " : " + criteria.get(key) );
+				//System.out.println(key + " : " + criteria.get(key) );
 				instanceContents.set(key, criteria.get(key));
 			}
 		}
@@ -275,9 +272,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
 		
-		//TODO delete printing
-		System.out.println("worklist sql:" + bottomList.toString());
-		
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		
 		criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
@@ -291,7 +285,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
-				System.out.println(key + " : " + criteria.get(key) );
+				//System.out.println(key + " : " + criteria.get(key) );
 				instanceContents.set(key, criteria.get(key));
 			}
 		}

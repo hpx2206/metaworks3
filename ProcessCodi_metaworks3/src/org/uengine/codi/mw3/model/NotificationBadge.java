@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -8,26 +9,34 @@ import org.metaworks.annotation.ServiceMethod;
 public class NotificationBadge{ 
 	
 	int newItemCount;
-	
 		public int getNewItemCount() {
 			return newItemCount;
 		}
-	
 		public void setNewItemCount(int newItemCount) {
 			this.newItemCount = newItemCount;
 		}
+
+	boolean loader;
+		public boolean isLoader() {
+			return loader;
+		}
+		public void setLoader(boolean loader) {
+			this.loader = loader;
+		}
 		
 	public NotificationBadge(){
-		
+		this.setLoader(true);
 	}
 	
 	@ServiceMethod
 	public void refresh() throws Exception{
+		this.setLoader(false);
+		
 		Notification notiList = new Notification();
 		setNewItemCount(notiList.count(session));
 	}
 
-	@ServiceMethod(target="popup", loader="org.uengine.codi.mw3.model.Popup")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, loader="org.uengine.codi.mw3.model.Popup")
 	public Object[] showList() throws Exception{
 		Popup popup = new Popup();
 		popup.setName("$Notification");

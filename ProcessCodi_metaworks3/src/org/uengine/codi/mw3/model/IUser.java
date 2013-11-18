@@ -120,7 +120,7 @@ public interface IUser extends IDAO{
 	@Available(when={"admin"})
 	public void approvedSubscribe() throws Exception;
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK)
 	public Object showMenu() throws Exception;
 	
 	public IUser findByDept(Dept dept) throws Exception;

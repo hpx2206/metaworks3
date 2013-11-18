@@ -267,4 +267,6 @@ public interface IEmployee extends IDAO {
 	public Forward finish() throws Exception;
 	
 	public IEmployee findCompanyAdmin() throws Exception;
+	
+	public IUser getUser();
 }

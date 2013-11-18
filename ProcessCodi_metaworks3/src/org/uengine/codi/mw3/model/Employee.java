@@ -1176,6 +1176,31 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return dao; 
 	}
 	
+	public IEmployee findForLogin(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("select empcode, password, globalcom");
+		sb.append("  from emptable");
+		sb.append(" where email=?email ");
+		sb.append("   and isdeleted = 0");
+		
+		IEmployee dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setEmail(this.getEmail());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao; 
+	}
+	
 	public IEmployee findByKey(){
 		
 		StringBuffer sb = new StringBuffer();

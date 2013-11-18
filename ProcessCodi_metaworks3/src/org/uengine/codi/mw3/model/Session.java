@@ -267,7 +267,7 @@ public class Session implements ContextAware{
 	// when need HttpSession
 	public void fillUserInfoToHttpSession(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		httpSession.setAttribute("loggedUserId", getEmployee().getEmpCode());
+		httpSession.setAttribute("loggedUserId", getUser().getUserId());
 		
 		/*
 		httpSession.setAttribute("loggedUserPw", session.getEmployee().getPassword());
@@ -328,6 +328,16 @@ public class Session implements ContextAware{
 			throw new Exception(
 					"There is no Company info in user info.");
 		}
+	}
+	
+	public void fillSession(String empCode) throws Exception {
+		Employee emp = new Employee();
+		emp.setEmpCode(empCode);
+		IEmployee findEmp = emp.findMe();
+		
+		this.setEmployee(findEmp);
+		
+		fillSession();
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

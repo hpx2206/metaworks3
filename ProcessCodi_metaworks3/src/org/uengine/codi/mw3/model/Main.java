@@ -223,9 +223,11 @@ public class Main {
 			throws Exception {
 		ContentWindow contentWindow = new ContentWindow();
 		contentWindow.setTitle("$New");
+		
 		NewInstancePanel instancePanel = new NewInstancePanel();
 		instancePanel.session = session;
 		instancePanel.load(session);
+		contentWindow.setPanel(instancePanel);
 //		contentWindow.setPanel(instancePanel);
 		
 //		Grid grid = new Grid();
@@ -233,7 +235,7 @@ public class Main {
 		//grid.set
 		
 		
-		contentWindow.setPanel(instancePanel);
+		
 //		contentWindow.setPanel(new IFrame("http://www.naver.com"));
 		return contentWindow;
 	}
