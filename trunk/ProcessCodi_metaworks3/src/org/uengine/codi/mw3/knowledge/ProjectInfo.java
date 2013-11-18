@@ -441,10 +441,15 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	}
 	
 	@Face(displayName = "$metadata")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public ModalWindow metadata() throws Exception {
 		ModalWindow modalWindow = new ModalWindow();
-		String mainPath = MetadataBundle.getProjectBasePath(projectId, session.getEmployee().getGlobalCom());
+		String tenantId = "root";
+//		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+//			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+//		}
+		
+		String mainPath = MetadataBundle.getProjectBasePath(projectName, tenantId );
 		CodiFileUtil.mkdirs(mainPath);
 
 		// OCE 모드에서 codi제거
