@@ -15,7 +15,6 @@ import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.util.CodiFileUtil;
-import org.uengine.kernel.GlobalContext;
 
 public class Workspace {
 

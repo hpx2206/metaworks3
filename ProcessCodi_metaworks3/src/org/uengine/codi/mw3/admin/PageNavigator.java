@@ -23,22 +23,31 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.processmarket.Market;
 
 public class PageNavigator{
+	
+	public final static String USE_SNS = GlobalContext.getPropertyString("sns.use", "1");
+	public final static String USE_IDE = GlobalContext.getPropertyString("ide.use", "1");
+	public final static String USE_SELF_SERVICE_PORTAL = GlobalContext.getPropertyString("selfserviceportal.use", "0");
+	public final static String USE_NKIA = GlobalContext.getPropertyString("nkia.use", "0");
+	public final static String USE_TADPOLE = GlobalContext.getPropertyString("tadpole.use", "0");
+	public final static String USE_KNOWLEDGE = GlobalContext.getPropertyString("knowledge.use", "1");
+	public final static String USE_MARKETPLACE = GlobalContext.getPropertyString("marketplace.use", "0");
+	
 
 	@AutowiredFromClient
 	public Session session;
 
 	public PageNavigator() {
-		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
-		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
-		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
+		this.setSns("1".equals(PageNavigator.USE_SNS));
+		this.setSns("1".equals(PageNavigator.USE_IDE));
+		this.setSns("1".equals(PageNavigator.USE_KNOWLEDGE));
 	}
 	
 	public PageNavigator(String pageName) {
 		this.setPageName(pageName);
 
-		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
-		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
-		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
+		this.setSns("1".equals(PageNavigator.USE_SNS));
+		this.setSns("1".equals(PageNavigator.USE_IDE));
+		this.setSns("1".equals(PageNavigator.USE_KNOWLEDGE));
 	}
 	
 	boolean admin;

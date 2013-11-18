@@ -9,18 +9,25 @@ options={"hideLabels", "tabsBottom"},
 values={"true", "true"})
 public class Mashup {
 	
+	public final static String USE_MASHUP_IMG = GlobalContext.getPropertyString("mashup.img.use", "0");
+	public final static String USE_MASHUP_LMS = GlobalContext.getPropertyString("mashup.lms.use", "0");
+	public final static String USE_MASHUP_KMS = GlobalContext.getPropertyString("mashup.kms.use", "0");
+	public final static String USE_MASHUP_VIDEO = GlobalContext.getPropertyString("mashup.video.use", "0");
+	public final static String USE_MASHUP_SLIDE = GlobalContext.getPropertyString("mashup.slide.use", "0");
+	public final static String USE_MASHUP_WIKI = GlobalContext.getPropertyString("mashup.wiki.use", "0");
+	
 	public Mashup(){
-		if("1".equals(GlobalContext.getPropertyString("mashup.img.use", "1")))
+		if("1".equals(Mashup.USE_MASHUP_IMG))
 			setMashupGoogleImage(new MashupGoogleImage());
-		if("1".equals(GlobalContext.getPropertyString("mashup.lms.use", "1")))
+		if("1".equals(Mashup.USE_MASHUP_LMS))
 			setMashupLMS(new MashupLMS());
-		if("1".equals(GlobalContext.getPropertyString("mashup.kms.use", "1")))
+		if("1".equals(Mashup.USE_MASHUP_KMS))
 			setMashupKMS(new MashupKMS());
-		if("1".equals(GlobalContext.getPropertyString("mashup.video.use", "1")))
+		if("1".equals(Mashup.USE_MASHUP_VIDEO))
 			setMashupVideo(new MashupVideo());
-		if("1".equals(GlobalContext.getPropertyString("mashup.slide.use", "1")))
+		if("1".equals(Mashup.USE_MASHUP_SLIDE))
 			setMashupSlideshare(new MashupSlideshare());
-		if("1".equals(GlobalContext.getPropertyString("mashup.wiki.use", "1")))
+		if("1".equals(Mashup.USE_MASHUP_WIKI))
 			setMashupWiki(new MashupWiki());
 	}
 

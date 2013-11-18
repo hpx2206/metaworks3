@@ -33,6 +33,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
@@ -477,7 +478,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			
 			// 올챙이 연동
-			if("1".equals(Perspective.USE_TADPOLE)){
+			if("1".equals(PageNavigator.USE_TADPOLE)){
 				StringBuffer param = new StringBuffer();
 				
 				//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
@@ -915,7 +916,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		
-		if("1".equals(Perspective.USE_TADPOLE)){
+		if("1".equals(PageNavigator.USE_TADPOLE)){
 			
 			StringBuffer param = new StringBuffer();
 			

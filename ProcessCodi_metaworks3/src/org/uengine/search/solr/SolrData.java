@@ -22,7 +22,7 @@ public class SolrData {
 	static SolrServer solrServer;
 	
 	public boolean init(){
-		if(!"1".equals(GlobalContext.getPropertyString("searchEngine.use", "0"))){
+		if(!"1".equals(SolrSearch.USE_SEARCH_ENGINE)){
 			return false;
 		}
 		if( solrServer == null ){

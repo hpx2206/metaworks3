@@ -2,13 +2,14 @@ package org.uengine.facebook.api;
 
 import java.io.BufferedReader;
 import java.io.File;
-
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -18,12 +19,12 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+import org.uengine.kernel.GlobalContext;
 
 
 public class Facebook extends DefaultFacebook{
+	
+	public final static String USE_FACEBOOK = GlobalContext.getPropertyString("facebook.use", "0");
 	
 	/**
 	 * facebook 객체 초기화 

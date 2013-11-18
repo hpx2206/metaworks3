@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -15,6 +16,7 @@ import org.metaworks.metadata.MetadataFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.hudson.HudsonJobApi;
 import org.uengine.codi.hudson.HudsonJobDDTO;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
@@ -101,7 +103,7 @@ public class ReflectPanel {
 		
 		
 	@Face(displayName = "$devreflect")
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Remover reflect() throws Exception {
 		// 배포 할ㄸㅐ 할일들
 		int reflectVer;
@@ -164,13 +166,13 @@ public class ReflectPanel {
 				
 				filepathinfo.createDatabaseMe();
 				filepathinfo.flushDatabaseMe();
-			}
-			else{
+			}else{
 				filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
 				filepathinfo.copyFrom(filepathinfo.databaseMe());
 			}
 			
-			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	// IaaS 연동 시
+			// IaaS 연동 시("war"파일 첨부)
+			if("1".equals(StartCodi.USE_IAAS)){
 				FileTransmition fileTransmition = new FileTransmition();
 	//			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
 				cloudInfo.setId(Long.parseLong(this.getServerSelect().toString()));
@@ -196,8 +198,58 @@ public class ReflectPanel {
 				channel.connect();
 				
 				channel.disconnect();
-			}
-			else{	//IaaS 미 연동 시
+				
+			//IaaS 미 연동 시("war"파일 첨부)
+			}else{
+				
+				/**
+				 * 작성:cjs
+				 * 
+				 * IaaS 연동이 제외된 시나리오에서 war 파일을 첨부 할 경우 순서는
+				 * 
+				 * 1. mysql(port:3307)에 데이터베이스를 생성한다.
+				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행한다.
+				 * 3. tomcat_dev 를 shutdown 한다.
+				 * 4. tomcat_dev/webapps에 첨부한 **.war 파일을 복사한다.
+				 * 5. tomcat_deb 를 start 시킨다. 
+				 * 
+				 */
+				
+				
+				
+				/*
+				 * 1. 프로젝트 명으로 데이터베이스 생성하기 
+				 * sell 명령어 = {path}/createDS.sh "databasePort" "projectAlias" 
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * "databasePort" =	3306 : garuda engine 관련 mysql
+				 * 					3307 : 프로젝트 생성 및 운영 관련 mysql
+				 * 					3308 : 앱 생성 및 운영 관련 mysql
+				 * 
+				 */
+				
+				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+				this.command(command);
+				
+				/*
+				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행하기
+				 * sell 명령어 = {path}/createDS.sh "databasePort" "projectAlias" "sqlFilePath"
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * "databasePort" =	3306 : garuda engine 관련 mysql
+				 * 					3307 : 프로젝트 생성 및 운영 관련 mysql
+				 * 					3308 : 앱 생성 및 운영 관련 mysql
+				 * "sqlFilePath"  = sql이 저장된 파일 경로를 불러온다.
+				 * 
+				 */
+				String sqlFilePath = this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath();
+				
+				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
+				this.command(command);
+				
+				
+				
+				
 				//톰캣 킬
 //				String cmd = "/oce/tomcat_dev/bin/shutdown.sh";
 //				this.command(cmd);
@@ -215,7 +267,7 @@ public class ReflectPanel {
 			}
 			
 		} else if ("svn".equals(wfNode.getVisType())) {
-			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	// IaaS 연동 시
+			if("1".equals(StartCodi.USE_IAAS)){	// IaaS 연동 시("svn" 빌드)
 				cloudInfo.setId(Long.parseLong(this.getServerSelect().toString()));
 				cloudInfo.copyFrom(cloudInfo.databaseMe());
 				if(!check){
@@ -314,11 +366,24 @@ public class ReflectPanel {
 					filepathinfo.createDatabaseMe();
 					filepathinfo.flushDatabaseMe();
 				}
-				else{
-					
-				}
-			}
-			else{	//IaaS 미 연동시
+			
+			//IaaS 미 연동시("svn" 빌드)
+			}else{
+				
+				
+				/**
+				 * 작성:cjs
+				 * 
+				 * IaaS 연동이 제외된 시나리오에서 svn 커밋버전을 빌드 할때 반영순서는 
+				 * 
+				 * 1. mysql(port:3307)에 데이터베이스를 생성한다.
+				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행한다.
+				 * 3. tomcat_dev 를 shutdown 한다.
+				 * 4. tomcat_dev/webapps에 첨부한 **.war 파일을 복사한다.
+				 * 5. tomcat_deb 를 start 시킨다. 
+				 * 
+				 */
+				
 				 //톰캣 킬
 //				String cmd = GlobalContext.getPropertyString("dev.tomcat.shutdown");
 //				this.command(cmd);

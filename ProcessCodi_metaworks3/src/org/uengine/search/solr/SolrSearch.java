@@ -1,16 +1,16 @@
 package org.uengine.search.solr;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
+import org.uengine.kernel.GlobalContext;
 
 public class SolrSearch {
+	
+	public final static String USE_SEARCH_ENGINE = GlobalContext.getPropertyString("searchEngine.use", "0");
 	
 	String keyword;
 		public String getKeyword() {

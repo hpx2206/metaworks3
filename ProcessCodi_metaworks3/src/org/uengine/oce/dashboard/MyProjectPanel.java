@@ -26,7 +26,7 @@ public class MyProjectPanel {
 		projectTitle.setLogoFile(new MetaworksFile());
 		
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		return new ModalWindow(projectTitle , 500, 480, "$CreateProject");
+		return new ModalWindow(projectTitle , 500, 500, "$CreateProject");
 	}
 	
 	

@@ -22,6 +22,7 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
@@ -44,16 +45,18 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProjectInfo extends GroupInfo implements ContextAware {
+	
+	public final static String MYSQL_GARUDA_PORT = "3306";
+	public final static String MYSQL_PROJECT_PORT = "3307";
+	public final static String MYSQL_APP_PORT = "3308";
 
 	MetaworksContext metaworksContext;
-
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	String projectId;
 		@Hidden
@@ -385,7 +388,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		reflectPanel.setSqlFile(sqlFile);
 		
 		// IaaS 연동 시
-		if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){
+		if("1".equals(StartCodi.USE_IAAS)){
 			reflectPanel.getMetaworksContext().setWhere("IaaS");
 	
 			ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");

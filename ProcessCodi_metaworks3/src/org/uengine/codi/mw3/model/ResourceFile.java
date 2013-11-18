@@ -24,12 +24,12 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
 import org.uengine.codi.platform.Console;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -181,7 +181,7 @@ public class ResourceFile implements ContextAware{
 //		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
 		String resourceBase;
 		
-		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "0"))){
+		if("1".equals(StartCodi.USE_MULTITENANCY)){
 			resourceBase = CodiClassLoader.mySourceCodeBase();
 		}else{
 			String tenantId = session.getCompany().getComCode();
