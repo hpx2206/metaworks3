@@ -176,40 +176,23 @@ public class Login implements ContextAware {
 		
 		Session session = new Session();
 		
-		IEmployee emp = new Employee();
+		Employee emp = new Employee();
 		emp.setEmail(getEmail());
-		emp.setPassword(getPassword().trim());
+		IEmployee findEmp = emp.findForLogin();
 		
-		if(this.isFacebookSSO()){
-			if (getEmail() != null){
-				session.setEmployee(emp.findMe());
-			}
-			
-		}else{
-			if (getEmail() != null && getPassword() != null) {
-				session.setEmployee(emp.load());
-			}
+		if(findEmp == null){
+			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");
 		}
 		
-		session.fillSession();
-		session.fillUserInfoToHttpSession();
-		
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
+		if(this.isFacebookSSO()){
 			
-			
-			//try {				
-/*			} catch (Exception e) {
-			MetaworksContext contextWhenEdit = new MetaworksContext();
-			contextWhenEdit.setWhen(MetaworksContext.WHEN_EDIT);
-			emp.setMetaworksContext(contextWhenEdit);
-			setErrorMessage(e.getMessage());
-*/
-			// FIXME Monitoring for login errors
-			//throw new RuntimeException(e);//.printStackTrace();
-		//}
+		}else{
+			if (!getPassword().equals(findEmp.getPassword()))
+				throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");	
+		}
 		
-		setPassword(null);
+		emp.copyFrom(findEmp);
+		session.setUser(emp.getUser());
 		
 		return session;
 	}
@@ -504,14 +487,6 @@ public class Login implements ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
 
-		Employee emp = new Employee();
-		emp.setEmail(getEmail());
-		IEmployee findEmp = emp.findByEmail();
-		
-		if(findEmp == null){
-			throw new Exception("$NoExistedUser");
-		}
-		
 		/*
 		Company company = new Company();
 		company.setComCode(findEmp.getGlobalCom());
@@ -522,17 +497,14 @@ public class Login implements ContextAware {
 //			throw new Exception("");
 //		}
 		
+		Session session = loginService();
 		
 		if("1".equals(PageNavigator.USE_TADPOLE)){
 			goTadpoleLogin(this.getEmail(), password);
 		}
-		Session session = loginService();
 		
+		session.fillUserInfoToHttpSession();
 		storeIntoServerSession(session);
-
-		Locale locale = new Locale();
-		locale.setLanguage(session.getEmployee().getLocale());
-		locale.load();
 		
 		/*
 		MainPanel mainPanel=null;/*
@@ -652,7 +624,7 @@ public class Login implements ContextAware {
         */
 		
 		//new Remover(new ModalWindow(), true), 
-		return new Object[]{new Refresh(locale), new Refresh(new StartCodi(session, "login"), false, true)};
+		return new Object[]{new Refresh(new StartCodi(session, "login"), false, true)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
@@ -739,7 +711,10 @@ public class Login implements ContextAware {
 		 * add tenant process
 		 */
 		String userId = session.getUser().getUserId().toUpperCase();
-		String tenantId = session.getCompany().getComCode();
+		String tenantId = null;
+		
+		if(session.getEmployee() != null)
+			tenantId = session.getEmployee().getGlobalCom();
 		
 		//setting the userId into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();
