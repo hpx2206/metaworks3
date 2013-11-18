@@ -164,7 +164,7 @@ public class TopicTitle  implements ContextAware{
 			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
 			
 			tm.saveMe();
-			
+			tm.flushDatabaseMe();
 			this.setTopicId(wfNode.getId());
 		}else{
 			wfNode.setId(this.getTopicId());
