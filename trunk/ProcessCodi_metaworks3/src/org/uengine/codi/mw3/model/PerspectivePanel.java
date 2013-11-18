@@ -179,7 +179,7 @@ public class PerspectivePanel  implements ContextAware {
 					commingTodoPerspective.select();
 				}
 				//앱
-				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
+				if("1".equals(GlobalContext.getPropertyString("app.use", "0"))){
 					appPerspective = new OrganizationPerspectiveApp();
 					appPerspective.session = session;
 					if(!("goSns".equals(session.getLastSelectedItem()))){
@@ -188,8 +188,8 @@ public class PerspectivePanel  implements ContextAware {
 						appPerspective.select();
 					}
 				}
-				//프로젝트
-				if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+				//프로젝트	
+				if("1".equals(Perspective.USE_PROJECT)){
 					projectPerspective = new ProjectPerspective();
 					projectPerspective.session = session;
 					projectPerspective.select();
@@ -197,7 +197,7 @@ public class PerspectivePanel  implements ContextAware {
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
-			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
+			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "0"))){
 				strategicPerspective = new StrategicPerspective();
 			}
 			if("1".equals(GlobalContext.getPropertyString("document.use","1"))){

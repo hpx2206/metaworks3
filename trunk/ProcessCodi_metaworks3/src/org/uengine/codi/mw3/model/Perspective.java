@@ -7,12 +7,15 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
+import org.uengine.kernel.GlobalContext;
 
 public class Perspective {
 	
 	public final static String TYPE_COMMINGTODO = "commingTodo";
+	
+	public final static String USE_PROJECT = GlobalContext.getPropertyString("project.use", "0");
+	public final static String USE_TADPOLE = GlobalContext.getPropertyString("tadpole.use", "0");
 	
 	String label;
 		@Id

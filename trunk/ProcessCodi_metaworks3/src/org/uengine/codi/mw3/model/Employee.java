@@ -477,7 +477,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			
 			// 올챙이 연동
-			if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
+			if("1".equals(Perspective.USE_TADPOLE)){
 				StringBuffer param = new StringBuffer();
 				
 				//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
@@ -915,7 +915,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		
-		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
+		if("1".equals(Perspective.USE_TADPOLE)){
 			
 			StringBuffer param = new StringBuffer();
 			
