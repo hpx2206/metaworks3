@@ -110,7 +110,12 @@ public class StartCodi {
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.session = session;
 		
-		return pageNavigator.goProcess();
+		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+			return pageNavigator.goDashBoard();
+		}else{
+			return pageNavigator.goProcess();
+		}
+		
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)

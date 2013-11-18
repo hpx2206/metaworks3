@@ -360,28 +360,44 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	@Face(displayName = "$devreflect")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
 	public Object distribute() throws Exception{
+		
 		ModalWindow modalWindow = new ModalWindow();
-		ReflectPanel reflectPanel = new ReflectPanel();
-		SelectBox serverSelect = new SelectBox();
-		SelectBox reflectVersion = new SelectBox();
-		CloudInfo cloudInfo = new CloudInfo();
+		
 		FilepathInfo filepathInfo = new FilepathInfo();
 		filepathInfo.setProjectId(this.getProjectId());
+		
+		SelectBox serverSelect = new SelectBox();
+		
+		SelectBox reflectVersion = new SelectBox();
 		reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
-		reflectPanel.setReflectVersion(reflectVersion);
-		reflectPanel.setProjectId(this.getProjectId());
+		
+		CloudInfo cloudInfo = new CloudInfo();
 		
 		MetadataFile sqlFile = new MetadataFile();
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 		sqlFile.setBaseDir(codebase + File.separatorChar);
 		sqlFile.setTypeDir("sql");
+
+		ReflectPanel reflectPanel = new ReflectPanel();
+		reflectPanel.setMetaworksContext(new MetaworksContext());
+		reflectPanel.setReflectVersion(reflectVersion);
+		reflectPanel.setProjectId(this.getProjectId());
+		reflectPanel.setSqlFile(sqlFile);
 		
-		ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
-		while(findListing.next()){
-			serverSelect.add(findListing.getServerName() + " : " + findListing.getServerIp(), String.valueOf(findListing.getId()));
+		// IaaS 연동 시
+		if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){
+			reflectPanel.getMetaworksContext().setWhere("IaaS");
+	
+			ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
+			while(findListing.next()){
+				serverSelect.add(findListing.getServerName() + " : " + findListing.getServerIp(), String.valueOf(findListing.getId()));
+			}
+			
+			reflectPanel.setServerSelect(serverSelect);
 		}
-		
+	
 		if("war".equals(this.getType())){
+
 			MetadataFile warFile = new MetadataFile();
 			warFile.setBaseDir(codebase + File.separatorChar);
 			warFile.setTypeDir("war");
@@ -392,20 +408,15 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			modalWindow.setHeight(400);
 			
-			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	//Iaas 연동 시
-				reflectPanel.setServerSelect(serverSelect);
-			}
 		}
 		else if("svn".equals(this.getType())){
-			if("1".equals(GlobalContext.getPropertyString("iaas.use", "1"))){	// IaaS 연동 시
-				reflectPanel.setServerSelect(serverSelect);
-			}
-			reflectPanel.setSqlFile(sqlFile);
+
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			modalWindow.setHeight(350);
 			
 		}
+		
 		modalWindow.setWidth(500);
 		modalWindow.setTitle("$devreflect");
 		modalWindow.setPanel(reflectPanel);

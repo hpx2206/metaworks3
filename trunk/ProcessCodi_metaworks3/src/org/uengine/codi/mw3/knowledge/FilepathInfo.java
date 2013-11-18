@@ -134,6 +134,10 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 			sb.add(String.valueOf(findListing.getReflectVer()) + "  " + findListing.getComment() + " " + findListing.getDistributor(), String.valueOf(findListing.getId()));
 		}
 		
+		if(findListing.size() == 0){
+			sb.add("1" , "0");
+		}
+		
 		return sb;
 	}
 	
