@@ -4,7 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.metaworks.dao.TransactionContext;
-import org.uengine.kernel.GlobalContext;
+import org.uengine.codi.mw3.StartCodi;
 
 
 
@@ -46,7 +46,7 @@ public class TenantContext{
        	StringBuffer url = new StringBuffer();
        	
        	url.append(protocol + "://");
-       	if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "0"))){
+       	if("1".equals(StartCodi.USE_MULTITENANCY)){
        		url.append((tenantId==null?"":tenantId+"."));
        	}
        	

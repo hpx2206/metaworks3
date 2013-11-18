@@ -5,13 +5,12 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.uengine.kernel.GlobalContext;
+import org.uengine.codi.mw3.StartCodi;
 
 public class TenantAwareFilter implements Filter{
 
@@ -26,7 +25,7 @@ public class TenantAwareFilter implements Filter{
 		
 		String tenantId = null;
 		
-		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "0"))){
+		if("1".equals(StartCodi.USE_MULTITENANCY)){
 			//request 의 url 의 동적 변경...가능할런지..		
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			

@@ -4,25 +4,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import net.oauth.dna.OAuthBasic;
-import net.oauth.dna.OAuthDB;
 
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
-import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -47,8 +40,6 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Invitation;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
-import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
@@ -68,7 +59,7 @@ public class Login implements ContextAware {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		getMetaworksContext().setHow("login");
 		
-		this.setUseSubscribe("1".equals(GlobalContext.getPropertyString("signup.use", "1")));
+		this.setUseSubscribe("1".equals(StartCodi.USE_SIGNUP));
 	}
 	
 	MetaworksContext metaworksContext;
@@ -532,7 +523,7 @@ public class Login implements ContextAware {
 //		}
 		
 		
-		if("1".equals(Perspective.USE_TADPOLE)){
+		if("1".equals(PageNavigator.USE_TADPOLE)){
 			goTadpoleLogin(this.getEmail(), password);
 		}
 		Session session = loginService();

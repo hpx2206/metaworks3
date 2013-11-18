@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
@@ -45,9 +44,11 @@ import org.uengine.webservices.worklist.DefaultWorkList;
 
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
+	public final static String USE_BBB = GlobalContext.getPropertyString("bbb.use", "0");
+	
 	public WorkItem(){
 		this.getMetaworksContext().setWhen(WHEN_NEW);
-		this.setUseBBB("1".equals(GlobalContext.getPropertyString("bbb.use", "1")));
+		this.setUseBBB("1".equals(USE_BBB));
 	}
 	
 	protected static IWorkItem find(String instanceId) throws Exception{

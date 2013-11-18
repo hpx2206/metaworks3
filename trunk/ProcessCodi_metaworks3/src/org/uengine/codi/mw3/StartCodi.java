@@ -23,7 +23,11 @@ import org.uengine.kernel.GlobalContext;
 public class StartCodi {
 
 	public final static String USE_OCE = GlobalContext.getPropertyString("oce.use", "0");
-	
+	public final static String USE_SIGNUP = GlobalContext.getPropertyString("signup.use", "1");
+	public final static String USE_DASHBOARD = GlobalContext.getPropertyString("dashboard.use", "0");
+	public final static String USE_MULTITENANCY = GlobalContext.getPropertyString("multitenancy.use", "0");
+	public final static String USE_IAAS = GlobalContext.getPropertyString("iaas.use", "0");
+
 	String key;
 		@Hidden
 		public String getKey() {
@@ -64,9 +68,7 @@ public class StartCodi {
 		String comAlias = TenantContext.getThreadLocalInstance().getTenantId();
 		String comCode = null;
 		
-		String multitenancyUse = GlobalContext.getPropertyString("multitenancy.use", "0");
-		
-		if("1".equals(multitenancyUse)){
+		if("1".equals(USE_MULTITENANCY)){
 			if(comAlias == null){
 				return new SignUp();
 			}
@@ -89,7 +91,7 @@ public class StartCodi {
 			employee.setEmpCode(loggedUserId);
 			IEmployee employeeRef = employee.findMe();
 			
-			if("0".equals(multitenancyUse) || employeeRef.getGlobalCom().equals(comCode)){
+			if("0".equals(USE_MULTITENANCY) || employeeRef.getGlobalCom().equals(comCode)){
 				Login login = new Login();
 				login.setEmail(employeeRef.getEmail());
 				login.setPassword(employeeRef.getPassword());

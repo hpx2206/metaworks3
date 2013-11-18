@@ -130,7 +130,7 @@ public class PerspectivePanel  implements ContextAware {
 	public PerspectivePanel(Session session) throws Exception {
 		if(session != null){
 			//개인별
-			if("1".equals(GlobalContext.getPropertyString("personal.use", "1"))){
+			if("1".equals(Perspective.USE_PERSONAL)){
 				personalPerspective = new PersonalPerspective();
 				personalPerspective.session = session;
 				personalPerspective.select();
@@ -163,7 +163,7 @@ public class PerspectivePanel  implements ContextAware {
 				}
 				
 				//친구
-				if("1".equals(Perspective.USE_CONATCT)){
+				if("1".equals(Perspective.USE_CONTACT)){
 					contactPerspective = new ContactPerspective();
 				}
 				if("1".equals(Perspective.USE_COMMINGTODO)){
@@ -189,10 +189,10 @@ public class PerspectivePanel  implements ContextAware {
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
-			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "0"))){
+			if("1".equals(Perspective.USE_PERSPECTIVE_KNOWLEDGE)){
 				strategicPerspective = new StrategicPerspective();
 			}
-			if("1".equals(GlobalContext.getPropertyString("document.use","1"))){
+			if("1".equals(Perspective.USE_DOCUMENT)){
 			     documentPerspective = new DocumentPerspective();
 			     setMetaworksContext(new MetaworksContext());
 			     this.getMetaworksContext().setHow("perspectivePanel");

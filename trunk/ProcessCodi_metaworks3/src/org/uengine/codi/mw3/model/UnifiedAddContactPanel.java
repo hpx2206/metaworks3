@@ -4,7 +4,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.uengine.kernel.GlobalContext;
+import org.uengine.facebook.api.Facebook;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 public class UnifiedAddContactPanel {
@@ -12,7 +12,7 @@ public class UnifiedAddContactPanel {
 	public UnifiedAddContactPanel(Session session) throws Exception {
 		setLocalContact(new AddLocalContactPanel(session));
 		
-		if("1".equals(GlobalContext.getPropertyString("facebook.use", "1")))
+		if("1".equals(Facebook.USE_FACEBOOK))
 			setFacebookContact(new AddContactPanel());
 		
 		Invitation invitation = new Invitation();

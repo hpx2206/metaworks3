@@ -25,7 +25,6 @@ import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
-import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
 
@@ -59,7 +58,7 @@ public class ProjectTitle implements ContextAware {
 		}
 		
 	String topicTitle;
-		@Face(displayName="$ProjectName")
+		@Face(displayName="$ProjectName", ejsPath="genericfaces/richText.ejs",options={"rows", "cols"}, values={"1", "50"})
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getTopicTitle() {
 			return topicTitle;
@@ -141,7 +140,7 @@ public class ProjectTitle implements ContextAware {
 		}
 	
 	String projectAlias;
-		@Face(displayName="$Alias")
+		@Face(displayName="$Alias", ejsPath="genericfaces/richText.ejs",options={"rows", "cols"}, values={"1", "50"})
 		public String getProjectAlias() {
 			return projectAlias;
 		}

@@ -9,6 +9,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
@@ -124,7 +125,7 @@ public class InstanceListPanel implements ContextAware{
 			this.setPreloaded(true);
 		}
 		
-		if("1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+		if("1".equals(PageNavigator.USE_KNOWLEDGE)){
 			this.setUseKnowledge(true);
 		}
 	}
