@@ -9,8 +9,10 @@ import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
@@ -57,7 +59,7 @@ public class Workspace {
 		String mainPath = MetadataBundle.getProjectBasePath(projectId, tenantId);
 		CodiFileUtil.mkdirs(mainPath);
 		
-		if(!"1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+		if(!"1".equals(StartCodi.USE_OCE)){
 			// OCE 모드에서 codi제거
 			Project main = new Project();
 			main.setId(projectId);
@@ -66,7 +68,7 @@ public class Workspace {
 			projects.add(main);		
 		}
 		
-		if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+		if("1".equals(Perspective.USE_PROJECT)){
 			// 테넌트의 프로젝트 불러오기
 			try {
 				IProjectNode projectList = ProjectNode.load(session);
