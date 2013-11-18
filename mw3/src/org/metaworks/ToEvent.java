@@ -1,9 +1,6 @@
 package org.metaworks;
 
 public class ToEvent {
-
-	public final static String TARGET_SELF    = "self";
-	public final static String TARGET_OPENER  = "opener";
 	
 	Object target;
 	public Object getTarget() {
