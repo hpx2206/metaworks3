@@ -53,7 +53,7 @@ public class OcePerspectivePanel extends Perspective{
 				appPerspective.select();
 			}
 			//프로젝트
-			if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+			if("1".equals(Perspective.USE_PROJECT)){
 				projectPerspective = new ProjectPerspective();
 				projectPerspective.session = session;
 				projectPerspective.select();
