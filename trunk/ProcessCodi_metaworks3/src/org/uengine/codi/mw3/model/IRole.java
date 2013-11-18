@@ -54,15 +54,15 @@ public interface IRole extends IDAO {
 	public void drillDown() throws Exception;
 
 	@Face(displayName="$role.Subscribe")
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, needToConfirm=true)
 	public Object subscribe() throws Exception;
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, needToConfirm=true)
 	@Face(displayName="$Remove")
 	public Object[] removeMe() throws Exception;
 
 	@Face(displayName="$Edit")
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Popup editPopup() throws Exception;
 
 	@Face(displayName="$Save")

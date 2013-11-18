@@ -5,6 +5,8 @@ import java.util.Date;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.WfNode;
@@ -85,6 +87,19 @@ public class DocumentInfo extends GroupInfo{
 		documentTitle.session = session;
 		
 		return new ModalWindow(documentTitle, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "문서제목수정");
+	}
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true, target="popup")
+	@Face(displayName="$addSubDocument")
+	public ModalWindow addSubFolder() throws Exception {
+		DocumentTitle documentSubTitle = new DocumentTitle();
+		documentSubTitle.setId(this.getId());
+		documentSubTitle.getMetaworksContext().setHow("sub");
+		documentSubTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		documentSubTitle.setLogoFile(new MetaworksFile());
+		documentSubTitle.session = session;
+		
+		return new ModalWindow(documentSubTitle , 500, 200,  "$addSubDocument");
 	}
 	
 	@Override

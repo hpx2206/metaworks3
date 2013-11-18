@@ -45,7 +45,6 @@ public class GroupInfo extends PerspectiveInfo{
 	
 
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public void convertSecuopt() throws Exception{
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getId());

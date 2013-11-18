@@ -103,22 +103,22 @@ public interface IDept extends IDAO {
 	@ServiceMethod(target="self", callByContent = true, payload = { "partCode", "selected" })
 	public void drillDown() throws Exception;
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object editDeptInfo() throws Exception;
 
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)//, validate=true
 	public Object[] saveDeptInfo() throws Exception;
 
-	@ServiceMethod(inContextMenu=true, needToConfirm=true , target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(needToConfirm=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] deleteDept() throws Exception;
 	
 	@ServiceMethod(callByContent = true)
 	public Object[] restoreDept() throws Exception;
 			
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object addNewChildDept() throws Exception;
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, needToConfirm=true)
 	public Object[] subscribe() throws Exception;
 
 	

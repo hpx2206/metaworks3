@@ -12,4 +12,6 @@ public interface IRoleUser extends IDAO {
 	public void setEmpCode(String empCode);
 	
 	public int removeMe() throws Exception;
+	
+	public IRoleUser findMe() throws Exception;
 }
