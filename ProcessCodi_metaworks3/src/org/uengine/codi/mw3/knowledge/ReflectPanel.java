@@ -46,6 +46,7 @@ public class ReflectPanel {
 	
 	SelectBox serverSelect;
 		@Face(displayName = "$ServerList")
+		@Available(where="IaaS")
 		public SelectBox getServerSelect() {
 			return serverSelect;
 		}
