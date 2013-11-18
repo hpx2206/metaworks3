@@ -4,6 +4,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -62,6 +64,7 @@ public class DeptInfo extends PerspectiveInfo{
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="$part.addNewChildDept")
 	public Object addNewChildDept() throws Exception {
 		IDept newDept = new Dept();
 		newDept.setParent_PartCode(this.getId());
@@ -102,5 +105,54 @@ public class DeptInfo extends PerspectiveInfo{
 		followers = new DeptFollowers();
 		followers.session = session;
 		followers.load();
+	}
+	
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="$part.Subscribe")
+	public Object[] subscribe() throws Exception {
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.copyFrom(employee.databaseMe());
+		
+		if(employee.getPartCode()!=null && this.getId().equals(employee.getPartCode())){
+			throw new Exception("$part.already.subscribe");
+		}
+		
+		employee.setPartCode(this.getId());
+		employee.syncToDatabaseMe();
+		employee.flushDatabaseMe();
+		
+		this.getFollowers().session = session;
+		this.getFollowers().load();
+			
+		return new Object[]{new Refresh(this.followers)};
+		
+		
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="$part.UnSubscribe")
+	public Object[] unSubscribe() throws Exception {
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.copyFrom(employee.databaseMe());
+		
+		if(!this.getId().equals(employee.getPartCode())){
+			throw new Exception("$part.still.UnSubscribe");
+		}
+		
+		employee.setPartCode("");
+		employee.syncToDatabaseMe();
+		employee.flushDatabaseMe();
+		
+		this.getFollowers().session = session;
+		this.getFollowers().load();
+			
+		return new Object[]{new Refresh(this.followers)};
+		
+		
 	}
 }

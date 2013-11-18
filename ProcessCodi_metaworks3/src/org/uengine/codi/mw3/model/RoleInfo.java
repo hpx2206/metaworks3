@@ -3,9 +3,11 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.knowledge.WfNode;
 
 public class RoleInfo extends PerspectiveInfo{
 
@@ -86,6 +88,30 @@ public class RoleInfo extends PerspectiveInfo{
 		followers = new RoleFollowers();
 		followers.session = session;
 		followers.load();
+	}
+	
+	
+	@Face(displayName="$role.Subscribe")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object subscribe() throws Exception {
+		
+		RoleUser roleUser = new RoleUser();
+		roleUser.setRoleCode(this.getId());
+		roleUser.setEmpCode(session.getEmployee().getEmpCode());
+		IRoleUser findRoleUser = roleUser.findMe();
+		
+		if(findRoleUser != null){
+			throw new Exception("$AlreadyExistingRole");
+		}
+		
+		roleUser.createDatabaseMe();
+		roleUser.flushDatabaseMe();
+		
+		this.getFollowers().session = session;
+		this.getFollowers().load();
+			
+		return new Refresh(this.followers);
+	
 	}
 
 }

@@ -22,6 +22,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.codi.mw3.knowledge.TopicPanel;
 
 
 
@@ -128,6 +129,8 @@ public class DocumentTitle implements ContextAware{
 		
 		node.createMe();
 		
+		this.setId(node.getId());
+		
 		TopicMapping tm = new TopicMapping();
 		tm.setTopicId(node.getId());
 		tm.setUserId(session.getUser().getUserId());
@@ -218,10 +221,27 @@ public class DocumentTitle implements ContextAware{
 		}else if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			
 			this.saveMain();
+			
+			
+			
 			DocumentNode documentNode = new DocumentNode();
 			documentNode.setId(this.getId());
+			documentNode.setName(this.getName());
+			documentNode.session = session;
+//			return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this), new Remover(new ModalWindow())};
 			
-			return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this), new Remover(new ModalWindow())};
+			Object[] returnObj = documentNode.loadDocument();
+			Object[] returnObject = new Object[ returnObj.length + 2];
+			for (int i = 0; i < returnObj.length; i++) {
+				if( returnObj[i] instanceof InstanceListPanel){
+					returnObject[i] = new Refresh(returnObj[i]);
+				}else{
+					returnObject[i] = new Refresh(returnObj[i]);
+				}			
+			}
+			returnObject[returnObj.length ] = new ToAppend(new DocumentPanel(), documentNode);
+			returnObject[returnObj.length + 1] = new Remover(new ModalWindow());
+			return returnObject;
 		}
 		
 		return null;

@@ -63,4 +63,29 @@ public class RoleUser extends Database<IRoleUser> implements IRoleUser {
        	dao.select();
        	return dao;
 	}
+	
+	public IRoleUser findMe() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from roleUserTable ");
+		sb.append("  where roleCode=?roleCode ");	
+		sb.append("   AND empCode=?empCode ");
+		
+		IRoleUser dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setRoleCode(this.getRoleCode());
+			dao.setEmpCode(this.getEmpCode());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao;
+	}
 }

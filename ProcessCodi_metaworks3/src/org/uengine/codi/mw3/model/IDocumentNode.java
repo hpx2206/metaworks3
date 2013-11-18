@@ -83,15 +83,15 @@ public interface IDocumentNode extends IDAO {
 	public boolean isFirst();
 	public void setFirst(boolean first);
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true,callByContent=true, target="popup")
+	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$Edit")
 	public ModalWindow modify() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, target="popup")
+	@ServiceMethod(target="popup")
 	@Face(displayName="$addSubDocument")
 	public ModalWindow addSubFolder() throws Exception;
 	

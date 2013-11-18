@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.website.MetaworksFile;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class PerspectiveInfo implements IPerspectiveInfo{
 	
-	@Autowired
+	@AutowiredFromClient
 	public Session session;
 	
 	MetaworksContext metaworksContext;
