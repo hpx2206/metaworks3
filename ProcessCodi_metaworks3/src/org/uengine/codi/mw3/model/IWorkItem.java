@@ -358,7 +358,7 @@ public interface IWorkItem extends IDAO{
 		@Test(scenario="first", starter=true, instruction="메모를 입력할 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newFile()")	
 		public IWorkItem newSourceCode() throws Exception;
 		
-		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 		public Popup newActivity() throws Exception;
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)

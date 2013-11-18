@@ -24,9 +24,62 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 
 org_uengine_codi_mw3_model_Popup.prototype = {
 	createPopup : function(w,h,x,y){
-	
+
+		var popLayerWidth = w;
+		var popLayerHeight = h;
+		
+		var bodyHeight = $('body').height();
+		var bodyWidth = $('body').width();
+		
+		var left = x;
+		var top = y;
 		
 
+		console.log('mouse.x = ' + x);
+		console.log('mouse.y = ' + y);
+
+		console.log('popLayer.width = ' + popLayerWidth);
+		console.log('popLayer.height = ' + popLayerHeight);
+
+		console.log('body.width = ' + bodyWidth);
+		console.log('body.height = ' + bodyHeight);
+
+		var position = 'right';
+		
+		// default position
+		top -= 40;
+		
+		if(top < -10){
+			// change bottom position
+			top = y;
+			left -= (popLayerWidth/2);
+
+			position = 'top'			
+		}else if(bodyHeight < top + popLayerHeight + 30){
+			top -= (popLayerHeight - 60);			
+		
+			if(bodyHeight < top + popLayerHeight + 30){
+				// change top position
+				top = y - popLayerHeight - 30;
+				left -= (popLayerWidth/2);
+				
+				position = 'bottom';
+			}
+		}
+		
+		console.log('position : ' + position);
+		
+		if(left < 0){
+			left = 0;
+		}else if(bodyWidth < left + popLayerWidth){
+			if(position == 'right')
+				left = x - popLayerWidth - 30;
+			else
+				left = bodyWidth - popLayerWidth - 30;
+		}
+		
+		this.divObj.css({left: left + 'px',top: top + 'px'});		
+	
 		this.divObj.show();
 	},
 	destoryPopup : function() {
