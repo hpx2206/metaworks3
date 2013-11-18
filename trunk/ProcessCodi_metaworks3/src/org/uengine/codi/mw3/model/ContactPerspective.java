@@ -6,7 +6,6 @@ public class ContactPerspective extends Perspective {
 		setLabel("Contact");
 	}
 	
-	
 	ContactPanel contactPanel;
 		public ContactPanel getContactPanel() {
 			return contactPanel;

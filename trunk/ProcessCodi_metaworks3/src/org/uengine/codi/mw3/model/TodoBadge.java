@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -13,17 +14,26 @@ public class TodoBadge{
 		public void setNewItemCount(int newItemCount) {
 			this.newItemCount = newItemCount;
 		}
+		
+	boolean loader;
+		public boolean isLoader() {
+			return loader;
+		}
+		public void setLoader(boolean loader) {
+			this.loader = loader;
+		}
 
 	@AutowiredFromClient
 	public Session session;
 
 	public TodoBadge(){
-		
+		this.setLoader(true);
 	}
 	
 	@ServiceMethod
 	public void refresh() throws Exception{
-	
+		this.setLoader(false);
+		
 		/*PersonalPerspective personalPerspective = new PersonalPerspective();
 
 		personalPerspective.session = session;
@@ -34,7 +44,7 @@ public class TodoBadge{
 		setNewItemCount(Instance.countTodo(session));
 	}
 	
-	@ServiceMethod(target="popup", loader="org.uengine.codi.mw3.model.Popup")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, loader="org.uengine.codi.mw3.model.Popup")
 	public Object[] showList() throws Exception{
 
 /*		PersonalPerspective personalPerspective = new PersonalPerspective();

@@ -18,12 +18,8 @@ public class ProcessTopPanel {
 		tray.load();
 		
 		notificationBadge = new NotificationBadge();
-		notificationBadge.session = session;
-		notificationBadge.refresh();
 		
 		todoBadge = new TodoBadge();
-		todoBadge.session = session;
-		todoBadge.refresh();
 		
 		IUser loginUser = new User();
 		loginUser.setUserId(session.getUser().getUserId());

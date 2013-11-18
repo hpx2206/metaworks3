@@ -208,10 +208,6 @@ public class Perspective {
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		
 		
-		NewInstancePanel newInstancePanel =  new NewInstancePanel();
-		newInstancePanel.session = session;
-		newInstancePanel.load(session);
-		
 		InstanceList instList = new InstanceList(session);
 		instList.session = session;
 		instList.setMetaworksContext(new MetaworksContext());
@@ -225,9 +221,15 @@ public class Perspective {
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.session = session;
-		instListPanel.setNewInstancePanel(newInstancePanel);
 		instListPanel.setInstanceList(instList);
 
+		if(false){
+			NewInstancePanel newInstancePanel =  new NewInstancePanel();
+			newInstancePanel.session = session;
+			newInstancePanel.load(session);
+			instListPanel.setNewInstancePanel(newInstancePanel);
+		}
+		
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){

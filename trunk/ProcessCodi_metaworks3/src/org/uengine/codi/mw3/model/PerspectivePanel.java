@@ -187,6 +187,7 @@ public class PerspectivePanel  implements ContextAware {
 					projectPerspective.select();
 				}
 			}
+			
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
 			if("1".equals(Perspective.USE_PERSPECTIVE_KNOWLEDGE)){

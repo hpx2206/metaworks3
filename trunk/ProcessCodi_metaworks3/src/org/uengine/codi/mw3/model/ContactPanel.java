@@ -111,7 +111,7 @@ public class ContactPanel {
 			this.pageY = pageY;
 		}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public Object addContact() throws Exception{
 		Popup popup = new Popup();
 		
@@ -124,7 +124,7 @@ public class ContactPanel {
 		return popup;
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public Object addLocalContact() throws Exception{
 		ModalWindow popup = new ModalWindow();
 //		Popup popup = new Popup();
