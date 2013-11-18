@@ -46,6 +46,9 @@
         <div class="popup_btn_line_login_l">
             <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>"><%=mw3.localize("$ReSend")%></div>
         </div>
+        <div class="popup_btn_line_login_r">
+            <span onclick="<%=methods.goLogin.caller()%>"><%=mw3.localize("$Login")%></span>  
+        </div>
         <div style="clear:both"></div>
 <%
 		}else if('signup' == mw3.how){
@@ -89,6 +92,9 @@
 		        
         <div class="popup_btn_line_login_l">
             <div id="method_<%=objectId%>_login" class="popup_btn_blue" onclick="<%=methods.signUp.caller()%>"><%=mw3.localize("$ReSend")%></div>
+        </div>
+        <div class="popup_btn_line_login_r">
+            <span onclick="<%=methods.goLogin.caller()%>"><%=mw3.localize("$Login")%></span>  
         </div>
         <div style="clear:both"></div>
 
