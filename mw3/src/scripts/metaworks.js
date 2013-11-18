@@ -2099,14 +2099,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //					
 //					// 2012-04-12 cjw showInfo 로 변경
 //					this.showInfo( methodName + " DONE." );					
-					/*
 					$(infoDivId).html("<font color=blue> " + methodName + " DONE. </font>");
 					$(infoDivId).slideDown(500, function(){
 						setTimeout(function() {
 							$( infoDivId ).slideUp(500);
 						}, 5000 );
 					});
-					*/
 					
 				}catch(e){
 					$(infoDivId).html("<font color=red>Error: "+ e.message +" [RETRY]</font> ");
@@ -2338,12 +2336,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         			}
         				
         			//TODO: why different method name?  showStatus and showInfo
-//        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
-//        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-//        			}else{
-//
-//	    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
-//        			}
+        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+        			}else{
+
+	    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+        			}
     			}
     			
     			if(typeof callback == 'function')
@@ -3942,6 +3940,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   		    			mw3.mouseY = e.pageY;
 		   			 				
 			   						eval(this['mouseCommand' + e.which]);
+			   						
+			   						if(e.which == which){
+				   				    	mw3.mouseX = e.pageX;
+				   		    			mw3.mouseY = e.pageY;
+			   			 				
+				   		    			// click(mouse right) is contextmenu block
+			   			 				if(which == 3){
+			   			 					document.oncontextmenu = function() { return false; };
+			   			 				}
+			   			 			}
 			   									   						
 		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
 		   			 			}
@@ -4506,12 +4514,12 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 			}
 				
 			//TODO: why different method name?  showStatus and showInfo
-//			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
-//				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-//			}else{
-//
-//				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
-//			}
+			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+			}else{
+
+				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+			}
 		}
 		
 		if(callback && typeof callback == 'function')
