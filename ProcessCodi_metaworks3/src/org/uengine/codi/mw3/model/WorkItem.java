@@ -936,7 +936,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			if(this.getTitle() == null && WORKITEM_TYPE_FILE.equals(this.getType()) ||
 					this.getTitle() == null && WORKITEM_TYPE_GENERIC.equals(this.getType()))
-				this.setTitle(getFile().getFileTransfer().getFilename());
+				this.setTitle(new String(this.getFile().getFilename()));
 				
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
@@ -956,7 +956,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			this.createDatabaseMe();
-			
+			Instance tempInstance = new Instance();
+			tempInstance.setInstId(this.getInstId());
+			tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
 		// 수정
 		}else{
 			Instance instance = new Instance();
@@ -993,7 +995,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		instance.copyFrom(instanceRef);
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
-
+		instance.flushDatabaseMe();
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);
@@ -1050,7 +1052,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 						returnObjects = new Object[]{new Refresh(memo, false, true) , new Refresh(instanceFollowers)};
 					}else{
-						
 //						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
 //							
 //							InstanceFollowers followers = new InstanceFollowers();
@@ -1090,7 +1091,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					commentWorkItem.setInstId(this.getInstId());
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-					
 					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)  , new Refresh(instanceFollowers)};
 				}
 				
@@ -1208,7 +1208,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
 					new Object[]{});
 			
-			// 본인 이외에 다른 사용자에게 push			
+			// 본인 이외에 다른 사용자에게 push -     뭐지?			
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
@@ -1474,16 +1474,55 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select * from bpm_worklist where grpTaskId=?grpTaskId");
 		sb.append(" and type=?type");
-		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
+		IWorkItem workItem = (IWorkItem) sql(IWorkItem.class,sb.toString());
 		
-		workitem.set("grpTaskId",this.getGrpTaskId());
-		workitem.set("type",this.getType());
-		workitem.select();
+		workItem.set("grpTaskId",this.getGrpTaskId());
+		workItem.set("type",this.getType());
+		workItem.select();
 		
-		if(workitem.next()){
+		if(workItem.next()){
 //			this.setType("file");
 //			this.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
-			return workitem;
+			return workItem;
+		}else{
+			return null;
+		}
+	}
+	
+	@Override
+	public IWorkItem loadChooseView() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append(" select * from bpm_worklist where grpTaskId=?grpTaskId");
+		sb.append(" and type=?type");
+		sb.append(" and taskId=?taskId");
+		IWorkItem workItem = (IWorkItem) sql(IWorkItem.class,sb.toString());
+		
+		workItem.set("grpTaskId",this.getGrpTaskId());
+		workItem.set("type",this.getType());
+		workItem.set("taskId",this.getTaskId());
+		workItem.select();
+		
+		if(workItem.next()){
+			workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+			return workItem;
+		}else{
+			return null;
+		}
+	}
+	
+	public IWorkItem findGenericWorkItem() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append(" select * from bpm_worklist where grpTaskId=?grpTaskId");
+		sb.append(" and type=?type");
+		
+		IWorkItem workItem = (IWorkItem)sql(IWorkItem.class,sb.toString());
+		
+		workItem.set("grpTaskId",this.getGrpTaskId());
+		workItem.set("type",this.getType());
+		workItem.select();
+		
+		if(workItem.next()){
+			return workItem;
 		}else{
 			return null;
 		}

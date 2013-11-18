@@ -48,8 +48,6 @@ public interface INotification extends IDAO{
 	public boolean isConfirm();
 	public void setConfirm(boolean confirm);
 
-	public Date getInstStartedDate();
-	public void setInstStartedDate(Date instStartedDate);
 	@ServiceMethod(callByContent=true)
 	public Object[] see() throws Exception;
 
