@@ -14,8 +14,18 @@ public class Perspective {
 	
 	public final static String TYPE_COMMINGTODO = "commingTodo";
 	
-	public final static String USE_PROJECT = GlobalContext.getPropertyString("project.use", "0");
-	public final static String USE_TADPOLE = GlobalContext.getPropertyString("tadpole.use", "0");
+	public final static String USE_TOPIC	 	= GlobalContext.getPropertyString("topic.use", "1");
+	public final static String USE_COMMINGTODO	= GlobalContext.getPropertyString("commingTodo.use", "1");
+	public final static String USE_DOCUMENT		= GlobalContext.getPropertyString("document.use", "1");
+	public final static String USE_GROUP		= GlobalContext.getPropertyString("group.use", "1");
+	public final static String USE_ROLE			= GlobalContext.getPropertyString("role.use", "1");
+	public final static String USE_PROCESS		= GlobalContext.getPropertyString("process.use", "1");
+	public final static String USE_CONATCT		= GlobalContext.getPropertyString("contact.use", "1");
+	
+	public final static String USE_PROJECT 	 	= GlobalContext.getPropertyString("project.use", "0");
+	public final static String USE_APP 		 	= GlobalContext.getPropertyString("app.use", "0");
+	
+	public final static String USE_TADPOLE	 	= GlobalContext.getPropertyString("tadpole.use", "0");
 	
 	String label;
 		@Id
@@ -34,8 +44,29 @@ public class Perspective {
 			this.selected = selected;
 		}
 		
+	boolean loaded;
+		public boolean isLoaded() {
+			return loaded;
+		}
+		public void setLoaded(boolean loaded) {
+			this.loaded = loaded;
+		}
+		
+	boolean loader;
+		public boolean isLoader() {
+			return loader;
+		}
+		public void setLoader(boolean loader) {
+			this.loader = loader;
+		}
+		
+	public Perspective(){
+		this.setLoader(true);
+	}
+	
 	@ServiceMethod(callByContent = true, payload = { "selected" })
 	public Object[] select() throws Exception {
+		setLoader(false);
 		setSelected(!isSelected()); // toggle
 		if (isSelected()) {
 			loadChildren();
