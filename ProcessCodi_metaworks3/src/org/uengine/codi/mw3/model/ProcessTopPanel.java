@@ -125,4 +125,39 @@ public class ProcessTopPanel {
 			
 	}
 	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow  companyRepInfo() throws Exception{
+		Company company = new Company();
+		company.setComCode(session.getEmployee().getGlobalCom());
+		ICompany findCompany = company.findByCode();
+		if(findCompany!=null){
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.setPanel(findCompany);
+			modalWindow.setWidth(400);
+			modalWindow.setHeight(200);
+			modalWindow.setTitle("$setComapnyRep");
+			modalWindow.setMetaworksContext(new MetaworksContext());
+			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			return modalWindow;
+		}
+		return null;
+		
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object feedBackInfo() throws Exception{
+		ModalWindow modalWindow = new ModalWindow();
+		
+		ContactUs contactUs = new ContactUs();
+		contactUs.session = session;
+		modalWindow.setPanel(contactUs);
+		modalWindow.setTitle("Contact Us");
+		modalWindow.setWidth(700);
+		modalWindow.setHeight(700);
+		modalWindow.setMetaworksContext(new MetaworksContext());
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		return modalWindow;
+	}
+	
 }
