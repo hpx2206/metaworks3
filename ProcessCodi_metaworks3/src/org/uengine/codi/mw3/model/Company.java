@@ -4,26 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.metaworks.Remover;
+import org.metaworks.annotation.Face;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 
 public class Company extends Database<ICompany> implements ICompany {
 	String comCode;
 	String comName;
 	String description;
 	String isDeleted;
-	String repMail;
-	
 	String alias;
 		public String getAlias() {
 			return alias;
 		}
 		public void setAlias(String alias) {
+			
 			this.alias = alias;
 		}
 
+	String repMail;
 	public String getRepMail() {
 		return repMail;
 	}
@@ -93,8 +95,10 @@ public class Company extends Database<ICompany> implements ICompany {
 
 	@Override
 	public Remover save() throws Exception {
+		
+		setRepMlHst("imap.gmail.com");
 		syncToDatabaseMe();
-		return new Remover(new Popup());
+		return new Remover(new ModalWindow());
 	}
 
 	public ICompany findByName() throws Exception {
