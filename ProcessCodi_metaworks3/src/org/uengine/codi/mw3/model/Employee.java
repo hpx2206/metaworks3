@@ -816,7 +816,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 		findEmployee.getMetaworksContext().setWhere("step1");
 		findEmployee.getMetaworksContext().setHow("signUp");
-//		findEmployee.getMetaworksContext().setWhen("findpw");
 		findEmployee.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);			
 		findEmployee.setImageFile(new PortraitImageFile());
 		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
@@ -830,7 +829,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		findEmployee.setPreferMob(defaultMob);
 		findEmployee.setEmpName(null);
 		findEmployee.setPassword(null);
-//		return new ModalWindow(findEmployee, 600, 500, "ddd");
 		return findEmployee;
 	}
 	
