@@ -151,7 +151,9 @@ public class InstanceList implements ContextAware{
 		}
 		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
 		instanceContents.setMetaworksContext(new MetaworksContext());
-		instanceContents.getMetaworksContext().setHow("instance");
+		if(!("TodoBadge".equals(this.getMetaworksContext().getWhen()))){
+			instanceContents.getMetaworksContext().setHow("instance");
+		}
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 			

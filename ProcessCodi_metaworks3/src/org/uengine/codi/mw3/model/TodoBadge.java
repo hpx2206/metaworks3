@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -56,6 +57,8 @@ public class TodoBadge{
 		session.setSearchKeyword(null);
 		
 		InstanceList instList = new InstanceList(session);
+		instList.setMetaworksContext(new MetaworksContext());
+		instList.getMetaworksContext().setWhen("TodoBadge");
 		instList.load();
 		
 		Popup popup = new Popup();
