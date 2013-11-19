@@ -1,8 +1,10 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -193,25 +195,35 @@ public class Invitation implements ContextAware{
 		String signUpURL = "signup.url";
 		String afterCompany =  Employee.extractTenantName(this.getEmail());
 
+		String content;
+		String tempContent = "";
+		
 		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
 		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
 			is = new FileInputStream(path);
-			UEngineUtil.copyStream(is, bao);
-			System.out.println();
+			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			
+			
+			while(true){
+				tempContent += br.readLine();
+				if(br.readLine() == null) break;
+				System.out.println(tempContent);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		
 		String title = afterCompany+" 의 "+ afterName + " 님이  당신을  코디에 초대 하였습니다";
 		System.out.println(bao.toString());
-		String tempContent = bao.toString();
 		
 		Login login = new Login();
-		String content = login.replaceString(tempContent,beforeName,afterName);
+		content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
 		content = login.replaceString(content, baseLinkUrl, baseUrl);
 		content = login.replaceString(content, signUpURL, url);
@@ -239,25 +251,35 @@ public class Invitation implements ContextAware{
 		String signUpURL = "signup.url";
 		
 		
+		String content;
+		String tempContent = "";
+		
 		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
 		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
 			is = new FileInputStream(path);
-			UEngineUtil.copyStream(is, bao);
-			System.out.println();
+			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			
+			
+			while(true){
+				tempContent += br.readLine();
+				if(br.readLine() == null) break;
+				System.out.println(tempContent);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		
 		String title = afterCompany+" 의 "+ afterName + " 님이  당신을  코디에 초대 하였습니다";
 		
-		String tempContent = bao.toString();
 		
 		Login login = new Login();
-		String content = login.replaceString(tempContent,beforeName,afterName);
+		content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
 		content = login.replaceString(content, signUpURL, url);
 		System.out.println(content);
