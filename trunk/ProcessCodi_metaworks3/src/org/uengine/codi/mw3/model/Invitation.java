@@ -125,14 +125,23 @@ public class Invitation implements ContextAware{
 			// different company
 			if(!session.getEmployee().getGlobalCom().equals(findEmp.getGlobalCom())){
 				String authKey = UUID.randomUUID().toString();
-				sendMailToUser(authKey);
 				
 				Employee saveEmp = new Employee();
 				saveEmp.copyFrom(findEmp);
 				saveEmp.setInviteUser(session.getEmployee().getEmpCode());
 				saveEmp.setAuthKey(authKey);
 				saveEmp.syncToDatabaseMe();
-				return new Object[]{ new Remover(new Popup(), true)};
+				addContactEachother();
+				
+				sendMailToUser(authKey);
+				ContactList cp = new ContactList();
+				cp.setId(ContactList.LOCAL);
+				cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+				cp.getMetaworksContext().setWhere(ContactList.LOCAL);
+				
+				cp.load(session.getUser().getUserId());
+				
+				return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 			}
 			
 			// 3. The invited person is already a member of my company.
@@ -148,7 +157,7 @@ public class Invitation implements ContextAware{
 			newContact.setFriend(user);
 			newContact.createDatabaseMe();
 			newContact.flushDatabaseMe();
-		
+			
 			
 			ContactList cp = new ContactList();
 			cp.setId(ContactList.LOCAL);
@@ -182,10 +191,51 @@ public class Invitation implements ContextAware{
 			throw new MetaworksException(e.getMessage());
 		}
 		sendMailToNoUser(authKey);
-					
-        return new Object[]{new Remover(new Popup(),true)};
+		
+		addContactEachother();
+		
+		ContactList cp = new ContactList();
+		cp.setId(ContactList.LOCAL);
+		cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
+		
+		cp.load(session.getUser().getUserId());
+		
+        return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
 		
 	}
+	
+	public void addContactEachother() throws Exception{
+		Employee newUser = new Employee();
+		newUser.setEmail(this.getEmail());
+		newUser.copyFrom(newUser.findByEmail());
+		
+		Contact newContact = new Contact();
+		newContact.setUserId(session.getUser().getUserId());
+		
+		IUser newUser_ = new User();
+		newUser_.setName(newUser.getEmpName());
+		newUser_.setUserId(newUser.getEmpCode());
+		newUser_.setNetwork("local");
+		newContact.setFriendId(newUser.getEmpCode());
+		newContact.setFriend(newUser_);
+		newContact.createDatabaseMe();
+		newContact.flushDatabaseMe();
+		
+		newContact = new Contact();
+		newContact.setUserId(newUser_.getUserId());
+		
+		IUser me_ = new User();
+		me_.setName(session.getUser().getName());
+		me_.setUserId(session.getUser().getUserId());
+		me_.setNetwork("local");
+		newContact.setFriendId(me_.getUserId());
+		newContact.setFriend(me_);
+		newContact.createDatabaseMe();
+		newContact.flushDatabaseMe();
+
+	}
+	
 	public void sendMailToUser(String authKey) throws Exception {
 		
 		String from = "help@opencloudengine.org";
@@ -193,9 +243,12 @@ public class Invitation implements ContextAware{
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
 		String beforeCompany = "user.company";
 		String baseLinkUrl = "base.url";
-		String baseUrl = TenantContext.getURL(null);
 		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail());
-		String url = "http://" + afterCompany + "."+ baseUrl + "/invite.html?key=" + authKey;
+		
+		String baseUrl = TenantContext.getURL(Employee.extractTenantName(this.getEmail()));
+		String url = "";
+		url += baseUrl + "/invite.html?key=" + authKey;
+		
 		String signUpURL = "signup.url";
 		String tenantId = Employee.extractTenantName(this.getEmail());
 		String beforeFaceIcon = "face.icon";
@@ -241,19 +294,18 @@ public class Invitation implements ContextAware{
 			throw new Exception("$FailedToSendInvitationMail");
 		}
 		
-		
-		
 	}
 	
 	public void sendMailToNoUser(String authKey) throws Exception {
 		
 		String from = "help@opencloudengine.org";
 		String beforeName = "user.name";
-		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
+		String afterName = session.getEmployee().getEmpName(); //초대 하는사람 이름
 		String beforeCompany = "user.company";
-		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail()); //초대 받는사람.
-		String baseUrl = TenantContext.getURL(null);
-		String url = "http://" + afterCompany + "."+ baseUrl + "/invite.html?key=" + authKey;
+		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail()); //초대 하는사람
+		String baseUrl = TenantContext.getURL(Employee.extractTenantName(this.getEmail()));
+		String url = "";
+		url += baseUrl + "/activate.html?key=" + authKey;
 		String beforeFaceIcon = "face.icon";
 		String afterFaceIcon = session.getEmployee().getEmpCode();
 		String baseLinkUrl = "base.url";
