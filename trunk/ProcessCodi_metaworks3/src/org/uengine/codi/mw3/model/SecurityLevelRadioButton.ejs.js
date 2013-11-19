@@ -8,7 +8,7 @@ var org_uengine_codi_mw3_model_SecurityLevelRadioButton = function(objectId, cla
 	
 	
 
-}
+};
 
 function check_img(a,b){
 	a="choiceImg"+a
@@ -16,7 +16,9 @@ function check_img(a,b){
 	   {
 	    b = "choice" + i;
 	    // 선택 안했을때의 이미지 경로
-	   document.all[b].src = "images/waveStyle/security_btn_off_"+i+".png";
+	    if(document.all[b] ){
+	    	document.all[b].src = "images/waveStyle/security_btn_off_"+i+".png";
+	    }
 	   }
 	  // 선택 했을때 의 이미지 경로
 	 $("#"+a).attr("src","images/waveStyle/security_btn_"+a+".png");	
