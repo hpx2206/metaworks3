@@ -260,8 +260,14 @@ public class Login implements ContextAware {
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String parameterSignUpURL = "signup.url";
 		String signUpBaseUrl = "signup.baseurl";
-		String baseUrl = TenantContext.getURL(null);
-		String url = "http://" + afterCompany + "." +baseUrl + "/" + signUpURL;
+		
+		String url = "";
+		String tenantId = Employee.extractTenantName(this.getEmail());
+		String baseUrl = TenantContext.getURL(tenantId);
+		
+		url += baseUrl + "/" + signUpURL;
+		
+	
 
 //		FileInputStream is;
 //		try {
@@ -331,8 +337,14 @@ public class Login implements ContextAware {
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String passwordURL = "password.url";
 		String signUpBaseUrl = "signup.baseurl";
-		String baseUrl = TenantContext.getURL(null);
-		String url = "http://" + afterCompany + "." +baseUrl + "/" + forgotPasswordURL;
+		
+		String url = "";
+		String tenantId = Employee.extractTenantName(this.getEmail());
+		String baseUrl = TenantContext.getURL(tenantId);
+		
+		url += baseUrl + "/" + forgotPasswordURL;
+		
+	
 		
 		String content;
 		String tempContent = "";
@@ -687,7 +699,7 @@ public class Login implements ContextAware {
 		this.setEmail(employeeRef.getEmail());
 		
 		// send mail
-		this.sendMailForForgotPassword("forgotPassword.html?key=" + authKey);
+		this.sendMailForForgotPassword("findpw.html?key=" + authKey);
 		
 		this.getMetaworksContext().setHow("afterforgotpassword");
 		return;
