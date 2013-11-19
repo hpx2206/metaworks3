@@ -119,29 +119,16 @@ public class StartCodi {
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
 		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
 
-		Login login = new Login();
-		login.getMetaworksContext().setHow("login");
+		Employee emp = new Employee();
+		emp.setEmpCode(loggedUserId);
+		IEmployee findEmp = emp.findMe();
 		
 		Session session = new Session();
-		session.fillSession(loggedUserId);
-		login.storeIntoServerSession(session);
+		session.setEmployee(findEmp);
 		
-		MainPanel mainPanel;
+		Login login = new Login();
 		
-		PageNavigator pageNavigator = new PageNavigator();
-		pageNavigator.session = session;
-		
-		if("1".equals(USE_OCE)){
-			mainPanel =  pageNavigator.goDashBoard();
-		}else{
-			mainPanel = pageNavigator.goProcess();
-		}
-		
-		Locale locale = new Locale();
-		locale.setLanguage(session.getEmployee().getLocale());
-		locale.load();
-
-		return new Object[]{locale, mainPanel};
+		return login.login(session);
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
