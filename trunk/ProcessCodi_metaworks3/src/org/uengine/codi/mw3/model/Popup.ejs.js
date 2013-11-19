@@ -91,7 +91,7 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 				this.divObj.removeClass('clue-right-rounded').addClass('clue-left-rounded');
 			
 			if(where == 'down')
-				this.divObj.find('.cluetip-arrows').css({'top':280});
+				this.divObj.find('.cluetip-arrows').css({'top':257});
 				
 		}else if(position == 'top' || position == 'bottom'){
 			if(position == 'top')

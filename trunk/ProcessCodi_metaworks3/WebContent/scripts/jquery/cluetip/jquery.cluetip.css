@@ -146,8 +146,8 @@ top: 7px;
 }
 .clue-left-rounded .cluetip-arrows {
   background-image: url(images/rarrowright.png);
-  left: 100%;
-  
+  right:-10px;
+  left:initial;
 }
 .clue-top-rounded .cluetip-arrows {
   background-image: url(images/rarrowdown.png);
@@ -156,6 +156,8 @@ top: 7px;
   margin-left: -11px;
   height: 11px;
   width: 22px;  
+  bottom: -9px;
+  top: initial
 }  
 .clue-bottom-rounded .cluetip-arrows {
   background-image: url(images/rarrowup.png);
