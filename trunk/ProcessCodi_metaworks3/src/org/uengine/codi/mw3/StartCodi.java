@@ -119,8 +119,12 @@ public class StartCodi {
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
 		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
 
+		Login login = new Login();
+		login.getMetaworksContext().setHow("login");
+		
 		Session session = new Session();
 		session.fillSession(loggedUserId);
+		login.storeIntoServerSession(session);
 		
 		MainPanel mainPanel;
 		

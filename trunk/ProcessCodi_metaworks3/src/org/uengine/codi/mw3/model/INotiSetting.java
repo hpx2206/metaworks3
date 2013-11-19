@@ -92,17 +92,6 @@ public interface INotiSetting extends IDAO{
 	public boolean isNotiEmail();
 	public void setNotiEmail(boolean notiEmail);
 	
-	@Hidden
-	@NonLoadable
-	@NonSavable
-	public String getEmpCode();
-	public void setEmpCode(String empCode);
-	
-	@NonLoadable
-	@NonSavable
-	public PortraitImageFile getImageFile();
-	public void setImageFile(PortraitImageFile imageFile);
-	
 	@ServiceMethod(callByContent=true)
 	@Face(displayName = "$Save")
 	public Remover save() throws Exception;

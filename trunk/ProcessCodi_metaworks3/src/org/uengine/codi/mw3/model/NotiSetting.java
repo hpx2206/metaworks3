@@ -1,9 +1,15 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.component.SelectBox;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 
 public class NotiSetting extends Database<INotiSetting> implements INotiSetting{
@@ -144,22 +150,6 @@ public class NotiSetting extends Database<INotiSetting> implements INotiSetting{
 			this.notiEmail = notiEmail;
 		}
 		
-	PortraitImageFile imageFile;		
-		public PortraitImageFile getImageFile() {
-			return imageFile;
-		}
-		public void setImageFile(PortraitImageFile imageFile) {
-			this.imageFile = imageFile;
-		}
-	
-	String empCode;
-		public String getEmpCode() {
-			return empCode;
-		}
-		public void setEmpCode(String empCode) {
-			this.empCode = empCode;
-		}
-		
 	SelectBox selectTime;
 		public SelectBox getSelectTime() {
 			return selectTime;
@@ -179,9 +169,15 @@ public class NotiSetting extends Database<INotiSetting> implements INotiSetting{
 		
 	public Remover save() throws Exception{
 		this.setDefaultNotiTime(this.getSelectTime().getSelected());
-		this.syncToDatabaseMe();
 		
-		return new Remover(new ModalWindow());
+		INotiSetting setting = this.findByUserId(this.getUserId());
+		if( setting.next() ){
+			this.syncToDatabaseMe();
+		}else{
+			this.setId(Integer.parseInt(this.createNewId()));
+			this.createDatabaseMe();
+		}
+		return new Remover(new ModalWindow() , true);
 	}
 	
 	public INotiSetting findByUserId(String userId) throws Exception{
@@ -199,18 +195,17 @@ public class NotiSetting extends Database<INotiSetting> implements INotiSetting{
 		return findNotiSetting;
 	}
 	
-	public INotiSetting findByEmpcode(String Empcode) throws Exception{
-		StringBuffer sb = new StringBuffer();
-		sb.append("select * from ");
-		sb.append("emptable ");
-		sb.append("where userId=?userId");
+	public String createNewId() throws Exception{
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
 		
-		INotiSetting findNotiSetting = (INotiSetting) sql(sb.toString());
-		findNotiSetting.set("userId", userId);
-		findNotiSetting.select();
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("notisetting", options);
+		kg.select();
+		kg.next();
 		
-		findNotiSetting.setMetaworksContext(this.getMetaworksContext());
+		Number number = kg.getKeyNumber();
 		
-		return findNotiSetting;
+		return number.toString();
 	}
 }
