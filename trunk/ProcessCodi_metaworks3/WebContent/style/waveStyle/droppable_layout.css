@@ -2676,7 +2676,7 @@ select.select[class] {
 #signup_popup .popup_content { padding:20px 40px; background:#FFF }
 #signup_popup .popup_content .signup_info{ line-height:30px; margin-bottom:15px; border:1px solid #CCC; font-weight:bold;width:435px; padding-left:15px; background:#EDF7FA; font-size:13px;}
 #signup_popup .popup_content label { display:block; color:#555; margin:0px 0 5px; font-family:lato; font-size:14px; }
-#signup_popup .popup_content .textinput { width:435px; height:38px; line-height:38px; border:1px solid #c7c7c7; padding-left:15px; margin-right:15px; color:#CCC }
+#signup_popup .popup_content .textinput { width:435px; height:38px; line-height:38px; border:1px solid #c7c7c7; padding-left:15px; margin-right:15px; color:#848484 }
 #signup_popup .popup_content .remember_email{float:left; background:#F6F6F6;height: 40px;line-height: 40px;border: 1px solid #C7C7C7;border-left:none; width:84px; text-align:center; cursor:pointer }
 #signup_popup .popup_content .textinputreadonly { background:#f6f6f6 !important; color:#a6a3af  !important;}
 #signup_popup .popup_content .popup_btn_line{width:435px; text-align:right; padding-left:17px; padding-top:15px;}
