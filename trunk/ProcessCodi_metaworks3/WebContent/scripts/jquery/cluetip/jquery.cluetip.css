@@ -159,9 +159,9 @@ top: 7px;
 }  
 .clue-bottom-rounded .cluetip-arrows {
   background-image: url(images/rarrowup.png);
-  top: -23px;
+  top: -10px;
   left: 50%;
-  margin-left: -11px;
+  margin-left: -27px;
   height: 11px;
   width: 22px;
 }

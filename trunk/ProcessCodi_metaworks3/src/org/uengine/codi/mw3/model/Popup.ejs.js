@@ -74,12 +74,26 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		}else if(bodyWidth < left + popLayerWidth){
 			if(position == 'right')
 				left = x - popLayerWidth - 30;
-			else
+			else{
 				left = bodyWidth - popLayerWidth - 30;
+				
+				position = 'left';
+			}
 		}
 		
-		this.divObj.css({left: left + 'px',top: top + 'px'});		
-	
+		this.divObj.css({left: left + 'px',top: top + 'px'});
+		
+		if(position == 'right'){
+			//this.divObj.find('.cluetip-arrows').css({'top':y});
+		}else if(position == 'top'){
+			this.divObj.removeClass('clue-right-rounded').addClass('clue-bottom-rounded');
+			this.divObj.find('.cluetip-arrows').css({'left':x+3});
+		}else if(position == 'bottom'){
+			this.divObj.removeClass('clue-right-rounded').addClass('clue-top-rounded');
+		}else if(position == 'left'){
+			this.divObj.removeClass('clue-right-rounded').addClass('clue-left-rounded');
+		}
+		
 		this.divObj.show();
 	},
 	destoryPopup : function() {
