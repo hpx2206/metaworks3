@@ -144,8 +144,8 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-	            <!-- <ref bean="scheduleTrigger"/> -->
-	            <!-- 				 <ref bean="simpleTrigger"/>   -->
+	            <ref bean="scheduleTrigger"/> 
+	            <ref bean="simpleTrigger"/>
 			</list>
 		</property>
 		<!-- 
