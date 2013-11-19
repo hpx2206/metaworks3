@@ -2725,6 +2725,6 @@ select.select[class] {
 }
 
 @media all and (max-height: 770px) {
-	#signup_popup { margin-top:15px !important; }
+	.esignup { margin-top:15px !important; }
 	
 }
