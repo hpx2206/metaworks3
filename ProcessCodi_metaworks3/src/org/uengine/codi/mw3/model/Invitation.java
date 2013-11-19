@@ -129,7 +129,9 @@ public class Invitation implements ContextAware{
 				Employee saveEmp = new Employee();
 				saveEmp.copyFrom(findEmp);
 				saveEmp.setInviteUser(session.getEmployee().getEmpCode());
+				saveEmp.setAuthKey(authKey);
 				saveEmp.syncToDatabaseMe();
+				return new Object[]{ new Remover(new Popup(), true)};
 			}
 			
 			// 3. The invited person is already a member of my company.
