@@ -198,8 +198,6 @@ public class InstanceList implements ContextAware{
 		IInstance instance = null;
 		
 		if("UnlabeledDocument".equals(this.getMetaworksContext().getHow())){
-			String tenentId = Employee.extractTenantName(session.getEmployee().getEmail());
-			instance.setInitComCd(tenentId);
 			instance = Instance.loadDocument();
 		}else{
 			instance = Instance.loadDocument(getFolderId());
