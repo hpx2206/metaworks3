@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
@@ -149,6 +151,7 @@ public class MetadataBundleBase {
 //									if( "image".equalsIgnoreCase(metadataProperty.getType()) ){
 //										filePath = metadataPath+ File.separatorChar + metadataProperty.getType() + File.separatorChar + value;
 //									}else{
+										value = value.replaceAll("\\", File.separator);
 										filePath = metadataPath + File.separatorChar + value;
 //									}
 									
@@ -253,5 +256,9 @@ public class MetadataBundleBase {
 	
 	public static String getBundleData(String key){
 		return MetadataBundleBase.projectBundle.getProperty(key);
+	}
+	
+	public static String getBundleForm(String key, JSONObject jsonObject){
+		return null;
 	}
 }
