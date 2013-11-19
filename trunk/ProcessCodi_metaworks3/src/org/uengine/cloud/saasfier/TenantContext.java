@@ -57,8 +57,8 @@ public class TenantContext{
 		url.append(TransactionContext.getThreadLocalInstance().getRequest().getContextPath());
 		*/
 		
-		String ip = GlobalContext.getPropertyString("web.server.ip", "processcodi.com");
-		String port = GlobalContext.getPropertyString("web.server.port", "");
+		String ip = GlobalContext.getPropertyString("web.server.ip", "uenginecloud.com");
+		String port = GlobalContext.getPropertyString("web.server.port", "7070");
 		String contextRoot = GlobalContext.getPropertyString("web.context.root", "");
 
 		StringBuffer url = new StringBuffer();
