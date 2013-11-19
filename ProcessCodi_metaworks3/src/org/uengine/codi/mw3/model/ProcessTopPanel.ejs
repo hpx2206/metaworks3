@@ -3,8 +3,6 @@
 		 	
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 		
-		console.log(value.session);
-		
 			if( value.session && "sns" == value.session.employee.preferUX ){
 %>
 
@@ -14,7 +12,11 @@
 			 		<img src="images/waveStyle/garuda_logo.png"/>
 			 	</div>
 		 	
-		 	<% } %>
+		 	<% } else{%>
+		 		<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/signIn/codi_logo.png"/>
+			 	</div>
+			<% } %>
 			
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
@@ -38,9 +40,17 @@
 <%
 			}else{
 %>
-		 	<div style="float:left;padding-top:10px; margin-right:5px;">
-		 		<img src="images/waveStyle/garuda_logo.png"/>
-		 	</div>
+		 	<% if(value.session.ux == 'oce'){ %>
+			
+				<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/waveStyle/garuda_logo.png"/>
+			 	</div>
+		 	
+		 	<% } else{%>
+		 		<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/signIn/codi_logo.png"/>
+			 	</div>
+			<% } %>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
