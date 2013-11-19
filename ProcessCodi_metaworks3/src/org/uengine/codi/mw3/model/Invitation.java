@@ -4,24 +4,30 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.SecureRandom;
+import java.util.Calendar;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.validation.constraints.Pattern;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToEvent;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.SignUpConfirm;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.util.UEngineUtil;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
@@ -31,13 +37,15 @@ import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 public class Invitation implements ContextAware{
 	
 	MetaworksContext metaworksContext;
+	
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
+	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-		
+
 	public Invitation(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
@@ -80,19 +88,147 @@ public class Invitation implements ContextAware{
 	}
 	
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, validate=true)
+	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$Invite")
-	public Object invite() throws Exception{
+	public Object[] invite() throws Exception{
 		
-		Employee employee = new Employee();
-		employee.setEmail(this.getEmail());
-		IEmployee findEmployee = employee.findByEmail();
+		// 1. The invited person is already one of my friends
+		Employee emp = new Employee();
+		emp.setEmail(this.getEmail());
+		IEmployee findEmp = emp.findByEmail();
+		
+		if(findEmp!=null){
+			if(!findEmp.isApproved()){
+				String authKey = UUID.randomUUID().toString();
+				sendMailToNoUser(authKey);
+				findEmp.setAuthKey(authKey);
+				
+				Employee saveEmp = new Employee();
+				saveEmp.copyFrom(findEmp);
+				saveEmp.syncToDatabaseMe();
+				
+				return new Object[]{new Remover(new Popup(), true)};
+			}
+			
+			
+			Contact friends = new Contact();
+			friends.setUserId(session.getEmployee().getEmpCode());
+			friends.setFriendId(findEmp.getEmpCode());
+			IContact findContact = friends.findContactsWithFriendId();
+			if(findContact != null)
+				throw new Exception("이미 내 친구 입니다.");
+		
+			// 2. The invited person is not a member of my company.
+			// different company
+			if(!session.getEmployee().getGlobalCom().equals(findEmp.getGlobalCom())){
+				String authKey = UUID.randomUUID().toString();
+				sendMailToUser(authKey);
+				
+				Employee saveEmp = new Employee();
+				saveEmp.copyFrom(findEmp);
+				saveEmp.syncToDatabaseMe();
+			}
+			
+			// 3. The invited person is already a member of my company.
+			//	      but, he is not my friend. 
+			Contact newContact = new Contact();
+			newContact.setUserId(session.getUser().getUserId());
+			
+			IUser user = new User();
+			user.setName(findEmp.getEmpName());
+			user.setUserId(findEmp.getEmpCode());
+			user.setNetwork("local");
+			newContact.setFriendId(user.getUserId());
+			newContact.setFriend(user);
+			newContact.createDatabaseMe();
+			newContact.flushDatabaseMe();
+		
+			
+			ContactList cp = new ContactList();
+			cp.setId(ContactList.LOCAL);
+			cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+			cp.getMetaworksContext().setWhere(ContactList.LOCAL);
+			
+			cp.load(session.getUser().getUserId());
+	
+			return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
+		
+		}
+		
+		// 4. The invited person is not CODI user.
+		String authKey = UUID.randomUUID().toString();
+		Employee newUser = new Employee();
+		newUser.setEmail(getEmail());
+		newUser.setEmpCode(newUser.createNewId());
+		newUser.setAuthKey(authKey);
+		newUser.setIsDeleted("0");
+		newUser.setApproved(false);
+		newUser.setInviteUser(session.getEmployee().getEmpCode());
+		
+
+		try {
+			newUser.createDatabaseMe();
+			newUser.flushDatabaseMe();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new MetaworksException(e.getMessage());
+		}
+		sendMailToNoUser(authKey);
+					
+        return new Object[]{new Remover(new Popup(),true)};
+		
+	}
+	public void sendMailToUser(String authKey) throws Exception {
 		
 		String from = "help@opencloudengine.org";
 		String beforeName = "user.name";
-		String afterName = findEmployee.getEmpName();
+		String afterName = session.getEmployee().getEmail(); //초대 하는사람
 		String beforeCompany = "user.company";
-		String afterCompany =  Employee.extractTenantName(this.getEmail());
+		String afterCompany =  Employee.extractTenantName(this.getEmail()); //초대 받는사람.
+		String path = this.getClass().getResource("").getPath();
+		for(int i =0; i<6 ; i++){
+			path = new File(path).getParent();
+		}
+		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is;
+		try {
+			is = new FileInputStream(path);
+			UEngineUtil.copyStream(is, bao);
+			System.out.println();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String title = afterCompany+" 의 "+ afterName + " 님이  당신을  코디에 초대 하였습니다";
+		System.out.println(bao.toString());
+		String tempContent = bao.toString();
+		
+		Login login = new Login();
+		String content = login.replaceString(tempContent,beforeName,afterName);
+		content = login.replaceString(content, beforeCompany, afterCompany);
+		System.out.println(content);
+		
+		try{
+			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
+		}catch(Exception e){
+			throw new Exception("$FailedToSendInvitationMail");
+		}
+		
+		
+		
+	}
+	
+	public void sendMailToNoUser(String authKey) throws Exception {
+		
+		String from = "help@opencloudengine.org";
+		String beforeName = "user.name";
+		String afterName = session.getEmployee().getEmail(); //초대 하는사람
+		String beforeCompany = "user.company";
+		String afterCompany =  Employee.extractTenantName(this.getEmail()); //초대 받는사람.
 		String path = this.getClass().getResource("").getPath();
 		for(int i =0; i<6 ; i++){
 			path = new File(path).getParent();
@@ -123,190 +259,6 @@ public class Invitation implements ContextAware{
 		}catch(Exception e){
 			throw new Exception("$FailedToSendInvitationMail");
 		}
-		
-		return new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE);
-	}
-	
-	
-	@ServiceMethod(callByContent=true, validate=true)
-	public Object signUp() throws Exception {
-		
-		Employee employee = new Employee();
-		employee.setEmail(this.getEmail());
-		IEmployee findEmployee = employee.findByEmail();
-
-		// already s	ign up or invite user
-		if(findEmployee != null){
-			throw new Exception("$AlreadyExistingUser");
-		}
-		
-		
-		// not yet sign up user
-		String authKey = UUID.randomUUID().toString();
-		String tenantName = Employee.extractTenantName(this.getEmail());
-		boolean isAdmin = false;
-		
-		System.out.println("authKey : " + authKey);
-		System.out.println("tenantName : " + tenantName);		
-		
-		
-		Company company = new Company();
-		company.setAlias(tenantName);
-		ICompany findCompany = company.findByName();
-
-	
-		if(findCompany == null){
-			// not yet sign up tenant
-			try {
-				company.setComCode(company.createNewId());
-				company.setComName(tenantName);
-
-				findCompany = company.createDatabaseMe();
-				isAdmin = true;
-				employee.setIsAdmin(true);
-				employee.setApproved(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new MetaworksException(e.getMessage());
-			}
-		}
-
-		String tenantId = findCompany.getComCode();
-		System.out.println("tenantId : " + tenantId);
-		String defaultUX = "wave";
-		String defaultMob = "auto";
-		
-		//tenantName.substring(0, tenantName.lastIndexOf("@"))
-		employee.setGlobalCom(tenantId);
-		employee.setAuthKey(authKey);
-		employee.setIsAdmin(isAdmin);
-		employee.setIsDeleted("0");
-		employee.setApproved(false);
-		employee.setPreferUX(defaultUX);
-		employee.setPreferMob(defaultMob);
-		employee.setEmpCode(employee.createNewId());
-		employee.setEmpName(getEmail().substring(0, getEmail().lastIndexOf("@")));
-		
-		try {
-			findEmployee = employee.createDatabaseMe();
-			employee.flushDatabaseMe();
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			throw new MetaworksException(e.getMessage());
-		}
-		
-		
-		
-	
-
-//		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-//        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-//        
-//        URL urlURL = new java.net.URL(base);
-//       	String host = urlURL.getHost();
-//       	int port = urlURL.getPort();
-//       	String protocol = urlURL.getProtocol();
-
-       	
-       	String host = GlobalContext.getPropertyString("web.server.ip");
-		String port = GlobalContext.getPropertyString("web.server.port");
-		String root = GlobalContext.getPropertyString("web.context.root");
-		
-       	
-		
-//		String activateURL = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath() + "/activate.html?key=" + findEmployee.getAuthKey() + "&mid=" + findEmployee.getEmpCode() + "&tid=" + findEmployee.getGlobalCom();
-       	String activateURL = "http://"+ host + ":" + port + root + "/activate.html?key=" + findEmployee.getAuthKey();
-		System.out.println(activateURL);
-		
-
-		try{
-			
-			(new EMailServerSoapBindingImpl()).sendMail(getEmail(), getEmail(), "Codi Account - Email Authority","<p><a href='" + activateURL + "'>"+"Click-"+activateURL+"</a><br/>");
-		
-		
-		}catch(Exception e){
-			throw new Exception("$FailedToSendInvitationMail");
-		}
-		
-		SignUpConfirm confirm = new SignUpConfirm();
-		confirm.setEmail(this.getEmail());
-		confirm.setUrl(activateURL);
-		
-		
-		return confirm;
-	}
-	
-	
-	@ServiceMethod(callByContent=true, validate=true)
-	public Object findPassword() throws Exception {
-		
-		Employee employee = new Employee();
-		employee.setEmail(this.getEmail());
-		IEmployee findEmployee = employee.findByEmail();
-
-		// already s	ign up or invite user
-		if(findEmployee == null){
-			throw new Exception("$NoExistedUser");
-		}
-		
-		
-		// not yet sign up user
-		String authKey = UUID.randomUUID().toString();
-		String tenantName = Employee.extractTenantName(this.getEmail());
-		boolean isAdmin = false;
-		
-		System.out.println("authKey : " + authKey);
-		System.out.println("tenantName : " + tenantName);		
-		
-		
-		employee.copyFrom(findEmployee);
-		employee.setApproved(false);
-		try {
-			employee.syncToDatabaseMe();
-			employee.flushDatabaseMe();
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			throw new MetaworksException(e.getMessage());
-		}
-		
-		
-		
-		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-        
-//        URL urlURL = new java.net.URL(base);
-//       	String host = urlURL.getHost();
-//       	int port = urlURL.getPort();
-//       	String protocol = urlURL.getProtocol();
-	
-       	
-//       	String findpwURL = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath() + "/findpw.html?key=" + findEmployee.getAuthKey() + "&mid=" + findEmployee.getEmpCode() + "&tid=" + findEmployee.getGlobalCom();
-     	String host = GlobalContext.getPropertyString("web.server.ip");
-    	String port = GlobalContext.getPropertyString("web.server.port");
-    	String root = GlobalContext.getPropertyString("web.context.root");
-    		
-           	
-    		
-//    	String activateURL = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath() + "/activate.html?key=" + findEmployee.getAuthKey() + "&mid=" + findEmployee.getEmpCode() + "&tid=" + findEmployee.getGlobalCom();
-        String findpwURL = "http://"+ host + ":" + port + root + "/findpw.html?key=" + findEmployee.getAuthKey();
-       	
-		System.out.println(findpwURL);
-
-		try{
-			
-			(new EMailServerSoapBindingImpl()).sendMail(getEmail(), getEmail(), "Codi Account - Email Authority","<p><a href='" + findpwURL + "'>"+"Click-"+findpwURL+"</a><br/>");
-		
-		
-		}catch(Exception e){
-			throw new Exception("$FailedToSendInvitationMail");
-		}
-		
-		SignUpConfirm confirm = new SignUpConfirm();
-		confirm.setEmail(this.getEmail());
-		confirm.setUrl(findpwURL);
-		return confirm;
 	}
 
 }
