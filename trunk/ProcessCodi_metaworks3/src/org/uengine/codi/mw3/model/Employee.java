@@ -502,7 +502,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.setGlobalCom(tenantId);
 		}
 		
-		// 초대 받아 가입 할경우 서로 친구 추가됨.
+		/*// 초대 받아 가입 할경우 서로 친구 추가됨.
 		if(this.getInviteUser() != null){
 			Contact newContact = new Contact();
 			newContact.setUserId(this.getEmpCode());
@@ -534,7 +534,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 //			recommender.syncToDatabaseMe();
 			
 			this.setInviteUser(null);
-		}
+		}*/
 			
 			
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
