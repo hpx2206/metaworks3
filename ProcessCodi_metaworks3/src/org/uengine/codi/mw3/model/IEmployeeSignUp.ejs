@@ -23,17 +23,19 @@
 <%
 		if('step1' == mw3.where){
 %>
-    	<div class="signup_info"><%=mw3.localize('$signup.welcome', 'tenant')%></div>
+    	<div class="signup_info">가입을 환영합니다.</div>
         <label><%=mw3.localize(fields.email.fieldDescriptor.displayName)%></label>
         <%=fields.email.here({htmlAttrChild: {class:'textinput textinputreadonly', readonly: 'readonly', style: 'margin-bottom:15px'}})%>
         <label><%=mw3.localize(fields.empName.fieldDescriptor.displayName)%></label>
         <%=fields.empName.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your name', style: 'margin-bottom:15px'}})%>
         <label><%=mw3.localize(fields.password.fieldDescriptor.displayName)%></label>
         <%=fields.password.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your password', style: 'margin-bottom:15px'}})%>
+        <!--
         <label><%=mw3.localize(fields.partName.fieldDescriptor.displayName)%></label>
         <%=fields.partName.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your dept', style: 'margin-bottom:15px'}})%>
         <label><%=mw3.localize(fields.jikName.fieldDescriptor.displayName)%></label>
         <%=fields.jikName.here({htmlAttrChild: {class:'textinput', placeholder: 'Enter your position', style: 'margin-bottom:15px'}})%>
+        -->
 <%
 		}else if('step2' == mw3.where){
 %>
@@ -41,9 +43,14 @@
 		<img id="userPicture_<%=objectId %>" src="<%='portrait/' + value.empCode + '.thumnail' %>" width="104" height="104" />	
 	</div>
 	
+	프로필 사진을 첨부해주세요.
+	<%=fields.imageFile.here() %>
+	
+	<div class="popup_btn_blue" onClick="<%=methods.nextStep.caller()%>"><%=mw3.localize("$Skip")%></div>
+	
 	<div  class="singnup_choose_pic">
-		<%=fields.imageFile.here() %>	
 	</div>
+	
 	<div class="clear"></div>
 <%
 		}
