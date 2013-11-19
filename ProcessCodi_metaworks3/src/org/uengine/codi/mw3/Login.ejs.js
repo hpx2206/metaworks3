@@ -32,7 +32,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'logout'){
 		delCookie("codi.id", "/","");
-		delCookie("codi.password", "/","");
 		delCookie("codi.rememberMe", "/","");
 		delCookie("codi.facebookSSO", "/","");
 	}
