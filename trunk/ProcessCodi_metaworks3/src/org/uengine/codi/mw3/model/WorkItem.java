@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -1244,6 +1246,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 				new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
 		
+		//NEW WAY IS GOOD
+		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
+			@Override
+			public void run() {
+				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + TodoBadge.class.getName() + "').refresh", new Object[]{});					
+			}
+			
+		});
 		
 		
 		
