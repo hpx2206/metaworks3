@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.StartCodi;
+import org.uengine.kernel.GlobalContext;
 
 
 
@@ -35,6 +36,7 @@ public class TenantContext{
 	
 	public static String getURL(String tenantId) throws MalformedURLException {
 
+		/*
 		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
         String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
         
@@ -53,6 +55,24 @@ public class TenantContext{
        	url.append(host);
 		url.append((port == 80 ? "" : ":"+port));
 		url.append(TransactionContext.getThreadLocalInstance().getRequest().getContextPath());
+		*/
+		
+		String ip = GlobalContext.getPropertyString("web.server.ip", "processcodi.com");
+		String port = GlobalContext.getPropertyString("web.server.port", "");
+		String contextRoot = GlobalContext.getPropertyString("web.context.root", "");
+
+		StringBuffer url = new StringBuffer();
+		url.append("http://");
+
+       	if("1".equals(StartCodi.USE_MULTITENANCY))
+       		url.append((tenantId==null?"":tenantId+"."));
+
+		url.append(ip);
+		
+		if(port.length() > 0)
+			url.append(":" + port);
+		if(contextRoot.length() > 0)
+			url.append("/" + contextRoot);
 		
 		return url.toString();
 	}
