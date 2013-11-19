@@ -108,6 +108,31 @@ public class Contact extends Database<IContact> implements IContact{
 		return contacts;
 	}
 	
+	public IContact findContactsWithFriendId() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from contact ");
+		sb.append(" where  userId=?userId ");
+		sb.append("  and friendId = ?friendId ");
+		
+		IContact dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setUserId(this.getUserId());
+			dao.setFriendId(this.getFriendId());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao;
+	}
+	
 	public void addContact() throws Exception{
 		if(!this.getUserId().equals(getFriend().getUserId())){
 			IContact contact = sql("select * from contact where userid = ?userId and friendId = ?friendId");
