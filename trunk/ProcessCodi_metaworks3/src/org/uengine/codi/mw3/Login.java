@@ -303,41 +303,6 @@ public class Login implements ContextAware {
 		
 		this.setInvitation(new Invitation());
 		this.getInvitation().getMetaworksContext().setHow("signup");
-
-		/*
-		Employee emp = new Employee();
-		emp.getMetaworksContext().setHow("detail");
-		emp.getMetaworksContext().setWhen("new");				
-		emp.getMetaworksContext().setWhere("admin");
-		emp.setImageFile(new PortraitImageFile());
-		emp.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
-		emp.setEmpCode(getUserId());
-		emp.setEmail(getUserId());
-		
-		emp.checkRegistered();
-		
-		String name = null;
-		if(getUserId().length() != 0){
-			try{
-				name = getUserId().substring(0, getUserId().indexOf("@"));
-			}catch(Exception e){
-				throw new MetaworksException("$InvalidMailAddress");
-			}
-		}else if(getUserId().length() == 0){
-			throw new MetaworksException("$YouMustCheckYourEmail");
-		}
-		
-		//defaultUX, defaultMob 값 설정
-		String defaultUX = "wave";
-		String defaultMob = "auto";
-				
-		emp.setEmpName(name);	
-		emp.setPassword(getPassword());
-		emp.setPreferUX(defaultUX);
-		emp.setPreferMob(defaultMob);
-		return emp;
-		*/
 	}
 	
 	public void sendMailForSignUp(String signUpURL) throws Exception {
@@ -348,9 +313,19 @@ public class Login implements ContextAware {
 		
 		System.out.println(url);
 		
-		String title = "Codi Account - Email Authority";
+		String title = "프로세스코디 계정을 활성화시키세요.";
+		
+		// TODO :
+		// 1. read signUp.html
+		// 2. to String
+		// 3. DI
+		// 3-1. replace("{company.name}", session.getCompany.getName());
+		// 3-2. replace("{signup.url}", url);
+		// 4. set content
+		
 		String content = "<p><a href='" + url + "'>Sign Up</a><br/>";
 		
+	
 		try{
 			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
 		}catch(Exception e){
@@ -366,7 +341,10 @@ public class Login implements ContextAware {
 		
 		System.out.println(url);
 		
-		String title = "Codi Account - Email Authority";
+		String title = "비밀번호 변경을 요청하셨습니다";
+		
+		
+		
 		String content = "<p><a href='" + url + "'>Forgot Password</a><br/>";
 		
 		try{
@@ -653,7 +631,7 @@ public class Login implements ContextAware {
 		this.setEmail(employeeRef.getEmail());
 		
 		// send mail
-		this.sendMailForForgotPassword("findpw.html?key=" + authKey);
+		this.sendMailForForgotPassword("forgotPassword.html?key=" + authKey);
 		
 		this.getMetaworksContext().setHow("afterforgotpassword");
 		return;
