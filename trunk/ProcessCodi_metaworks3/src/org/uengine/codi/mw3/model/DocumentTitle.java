@@ -27,7 +27,7 @@ import org.uengine.codi.mw3.knowledge.TopicPanel;
 
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-			options={"fieldOrder"}, values={"name,description,logoFile"})
+			options={"fieldOrder"}, values={"name,description,documentSecuopt,logoFile"})
 public class DocumentTitle implements ContextAware{
 	
 	@AutowiredFromClient
@@ -99,8 +99,8 @@ public class DocumentTitle implements ContextAware{
 		}	
 		
 	boolean documentSecuopt;		
-		@Hidden
-		@Face(displayName="$DocumentSecuopt")
+		@Face(displayName="$topicSecuopt")
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public boolean isDocumentSecuopt() {
 			return documentSecuopt;
 		}
@@ -279,6 +279,7 @@ public class DocumentTitle implements ContextAware{
 		
 		node.setName(this.getName());
 		node.setDescription(this.getDescription());
+		node.setSecuopt(documentSecuopt ? "1" : "0");
 		node.saveMe();
 		return new Object[]{ new Refresh(node), new Remover(new ModalWindow())};
 	}
