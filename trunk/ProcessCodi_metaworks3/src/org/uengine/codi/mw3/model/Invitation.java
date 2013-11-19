@@ -193,19 +193,14 @@ public class Invitation implements ContextAware{
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
 		String beforeCompany = "user.company";
 		String baseLinkUrl = "base.url";
-		String url = "";
+		String baseUrl = TenantContext.getURL(null);
+		String url = baseUrl + "/invite.html?key=" + authKey;
+		String signUpURL = "signup.url";
 		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
 		String beforeFaceIcon = "face.icon";
 		String afterFaceIcon = session.getEmployee().getEmpCode();
-		if("1".equals(StartCodi.USE_MULTITENANCY))
-       		url += ""+ ((tenantId==null?"":tenantId+"."));
-		
-		url += baseUrl + "/invite.html?key=" + authKey;
-		
-		String signUpURL = "signup.url";
 		String afterCompany =  Employee.extractTenantName(this.getEmail());
-
+		
 		String content;
 		String tempContent = "";
 		
@@ -231,7 +226,6 @@ public class Invitation implements ContextAware{
 		
 		
 		String title = afterCompany+" 의 "+ afterName + " 님이  당신을  코디에 초대 하였습니다";
-		System.out.println(bao.toString());
 		
 		Login login = new Login();
 		content = login.replaceString(tempContent,beforeName,afterName);
@@ -258,18 +252,12 @@ public class Invitation implements ContextAware{
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
 		String beforeCompany = "user.company";
 		String afterCompany =  Employee.extractTenantName(this.getEmail()); //초대 받는사람.
-		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
+		String baseUrl = TenantContext.getURL(null);
+		String url = baseUrl + "/invite.html?key=" + authKey;
 		String beforeFaceIcon = "face.icon";
 		String afterFaceIcon = session.getEmployee().getEmpCode();
-		
-		if("1".equals(StartCodi.USE_MULTITENANCY))
-       		url += ""+ ((tenantId==null?"":tenantId+"."));
-		
-		url += baseUrl + "/activate.html?key=" + authKey;
+		String baseLinkUrl = "base.url";
 		String signUpURL = "signup.url";
-		
 		
 		String content;
 		String tempContent = "";
@@ -301,6 +289,7 @@ public class Invitation implements ContextAware{
 		Login login = new Login();
 		content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
+		content = login.replaceString(content, baseLinkUrl, baseUrl);
 		content = login.replaceString(content, signUpURL, url);
 		content = login.replaceString(content, beforeFaceIcon, afterFaceIcon);
 		System.out.println(content);
