@@ -65,7 +65,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	});
 	
 	if(value.type=="file" || value.type == "document"){
-/*		setTimeout(function(){
+		setTimeout(function(){
 			var fileUplodaerObjectId = mw3.getChildObjectId(objectId, "file");
 			var fileUploaderFaceHelper = mw3.getFaceHelper(fileUplodaerObjectId);
 			fileUploaderFaceHelper.addFileChangeListener(function(file){
@@ -78,7 +78,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 					$("#post_" + objectId).val(file.filename);
 				}
 			});
-		}, 1000);*/
+		}, 1000);
 	}else if(value.type == 'comment'){
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
 		if( session.ux != 'phone' &&  session.ux != 'pad' ){
