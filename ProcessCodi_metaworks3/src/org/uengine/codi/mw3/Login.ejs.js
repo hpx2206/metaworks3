@@ -168,42 +168,31 @@ org_uengine_codi_mw3_Login.prototype = {
 			var isAuth = object.checkAuthSocial();
 			
 			
-			var str = response.email;
-			str = str.split("@");
-			
-//			if(mw3.getObject(objectId).status == 'subscribe'){
-				if(!isAuth){
-					var employee = {
-						__className : 'org.uengine.codi.mw3.model.Employee',
-						metaworksContext : {when : 'new'},
-						empCode : response.email,
-						empName : response.name,						
-						email   : response.email,
-						globalCom : str[1],
-						preferUX : "wave",
-						preferMob : "auto",
-						locale  : response.locale.substring(0,2)								
-					};
-					alert("GlobalCom:" + str[1]);
-					mw3.locateObject(employee, employee.className);
-					
-					var isSave = employee.saveMe();
-					$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);							
-					object.facebookSSO = true;
-					object.metaworksContext.how = 'facebook';
-					object.login();
-					var message = 'Facebook Login. . . .';
-					
-					object.getFaceHelper().showError(message);
-				}else if(isAuth){
-//			}else{
-					$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);	
-					object.facebookSSO = true;
-					object.metaworksContext.how = 'facebook';
-					object.login();
-					var message = 'Facebook Login. . . .';
-					
-					object.getFaceHelper().showError(message);
+			if(!isAuth){
+				var employee = {
+					__className : 'org.uengine.codi.mw3.model.Employee',
+					metaworksContext : {when : 'new'},
+					empName : response.name,						
+					email   : response.email,
+					facebookId   : response.id
+				};
+				mw3.locateObject(employee, employee.className);
+				
+				var isSave = employee.facebookSSO();
+				$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);							
+				object.facebookSSO = true;
+				object.metaworksContext.how = 'facebook';
+				var message = 'Facebook Login. . . .';
+				
+				object.getFaceHelper().showError(message);
+			}else if(isAuth){
+				$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);	
+				object.facebookSSO = true;
+				object.metaworksContext.how = 'facebook';
+				object.login();
+				var message = 'Facebook Login. . . .';
+				
+				object.getFaceHelper().showError(message);
 			}
 				
 				
