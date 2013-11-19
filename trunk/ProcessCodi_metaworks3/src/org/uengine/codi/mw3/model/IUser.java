@@ -48,14 +48,14 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] addFollower() throws Exception;
 		
-	@ServiceMethod(when="edit", inContextMenu=true, callByContent=true, target=TARGET_POPUP)
+	@ServiceMethod(when="edit", inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	@Face(displayName="$PickUp")
 	public Popup pickUp() throws Exception;
 	
-	@ServiceMethod(callByContent=true, target=TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public Popup openRoleUserPicker() throws Exception;
 
-	@ServiceMethod(callByContent=true, target=TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public Popup detail() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
@@ -77,7 +77,7 @@ public interface IUser extends IDAO{
 	@Available(when={"contacts"})
 	public Object[] removeContact() throws Exception;
 	
-	@ServiceMethod(target="popup", payload={"userId", "network", "name"})
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, payload={"userId", "network", "name"})
 	public Popup info() throws Exception;
 	
 	@ServiceMethod(payload={"userId", "network", "name", "mood"})
