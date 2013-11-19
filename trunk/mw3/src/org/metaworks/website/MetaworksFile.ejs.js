@@ -51,7 +51,6 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 			}
 		}	
 	}
-}
 
 org_metaworks_website_MetaworksFile.prototype.extraFilename = function(filepath){
 	
