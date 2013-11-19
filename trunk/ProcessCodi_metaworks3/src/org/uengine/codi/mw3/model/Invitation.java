@@ -132,16 +132,7 @@ public class Invitation implements ContextAware{
 				saveEmp.setInviteUser(session.getEmployee().getEmpCode());
 				saveEmp.setAuthKey(authKey);
 				saveEmp.syncToDatabaseMe();
-				addContactEachother();
-				
-				ContactList cp = new ContactList();
-				cp.setId(ContactList.LOCAL);
-				cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-				cp.getMetaworksContext().setWhere(ContactList.LOCAL);
-				
-				cp.load(session.getUser().getUserId());
-				
-				return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
+				return new Object[]{ new Remover(new Popup(), true)};
 			}
 			
 			// 3. The invited person is already a member of my company.
@@ -157,7 +148,7 @@ public class Invitation implements ContextAware{
 			newContact.setFriend(user);
 			newContact.createDatabaseMe();
 			newContact.flushDatabaseMe();
-			
+		
 			
 			ContactList cp = new ContactList();
 			cp.setId(ContactList.LOCAL);
@@ -191,51 +182,10 @@ public class Invitation implements ContextAware{
 			throw new MetaworksException(e.getMessage());
 		}
 		sendMailToNoUser(authKey);
-		
-		addContactEachother();
-		
-		ContactList cp = new ContactList();
-		cp.setId(ContactList.LOCAL);
-		cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
-		
-		cp.load(session.getUser().getUserId());
-		
-        return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
+					
+        return new Object[]{new Remover(new Popup(),true)};
 		
 	}
-	
-	public void addContactEachother() throws Exception{
-		Employee newUser = new Employee();
-		newUser.setEmail(this.getEmail());
-		newUser.copyFrom(newUser.findByEmail());
-		
-		Contact newContact = new Contact();
-		newContact.setUserId(session.getUser().getUserId());
-		
-		IUser newUser_ = new User();
-		newUser_.setName(newUser.getEmpName());
-		newUser_.setUserId(newUser.getEmpCode());
-		newUser_.setNetwork("local");
-		newContact.setFriendId(newUser.getEmpCode());
-		newContact.setFriend(newUser_);
-		newContact.createDatabaseMe();
-		newContact.flushDatabaseMe();
-		
-		newContact = new Contact();
-		newContact.setUserId(newUser_.getUserId());
-		
-		IUser me_ = new User();
-		me_.setName(session.getUser().getName());
-		me_.setUserId(session.getUser().getUserId());
-		me_.setNetwork("local");
-		newContact.setFriendId(me_.getUserId());
-		newContact.setFriend(me_);
-		newContact.createDatabaseMe();
-		newContact.flushDatabaseMe();
-
-	}
-	
 	public void sendMailToUser(String authKey) throws Exception {
 		
 		String from = "help@opencloudengine.org";
@@ -243,17 +193,11 @@ public class Invitation implements ContextAware{
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
 		String beforeCompany = "user.company";
 		String baseLinkUrl = "base.url";
-		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
-		
-		if("1".equals(StartCodi.USE_MULTITENANCY))
-       		url += ""+ ((tenantId==null?"":tenantId+"."));
-		
-		url += baseUrl + "/invite.html?key=" + authKey;
-		
+		String baseUrl = TenantContext.getURL(null);
+		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail());
+		String url = "http://" + afterCompany + "."+ baseUrl + "/invite.html?key=" + authKey;
 		String signUpURL = "signup.url";
-		String afterCompany =  Employee.extractTenantName(this.getEmail());
+		String tenantId = Employee.extractTenantName(this.getEmail());
 		String beforeFaceIcon = "face.icon";
 		String afterFaceIcon = session.getEmployee().getEmpCode();
 		
@@ -282,7 +226,6 @@ public class Invitation implements ContextAware{
 		
 		
 		String title = afterCompany+" 의 "+ afterName + " 님이  당신을  코디에 초대 하였습니다";
-		System.out.println(bao.toString());
 		
 		Login login = new Login();
 		content = login.replaceString(tempContent,beforeName,afterName);
@@ -290,6 +233,7 @@ public class Invitation implements ContextAware{
 		content = login.replaceString(content, baseLinkUrl, baseUrl);
 		content = login.replaceString(content, signUpURL, url);
 		content = login.replaceString(content, beforeFaceIcon, afterFaceIcon);
+		System.out.println(content);
 		
 		try{
 			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
@@ -307,19 +251,13 @@ public class Invitation implements ContextAware{
 		String beforeName = "user.name";
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
 		String beforeCompany = "user.company";
-		String afterCompany =  Employee.extractTenantName(this.getEmail()); //초대 받는사람.
-		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
+		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail()); //초대 받는사람.
+		String baseUrl = TenantContext.getURL(null);
+		String url = "http://" + afterCompany + "."+ baseUrl + "/invite.html?key=" + authKey;
 		String beforeFaceIcon = "face.icon";
 		String afterFaceIcon = session.getEmployee().getEmpCode();
 		String baseLinkUrl = "base.url";
-		if("1".equals(StartCodi.USE_MULTITENANCY))
-       		url += ""+ ((tenantId==null?"":tenantId+"."));
-		
-		url += baseUrl + "/activate.html?key=" + authKey;
 		String signUpURL = "signup.url";
-		
 		
 		String content;
 		String tempContent = "";
@@ -354,6 +292,8 @@ public class Invitation implements ContextAware{
 		content = login.replaceString(content, baseLinkUrl, baseUrl);
 		content = login.replaceString(content, signUpURL, url);
 		content = login.replaceString(content, beforeFaceIcon, afterFaceIcon);
+		System.out.println(content);
+		
 		try{
 			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
 		}catch(Exception e){

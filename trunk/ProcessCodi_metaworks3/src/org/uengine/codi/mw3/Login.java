@@ -260,18 +260,8 @@ public class Login implements ContextAware {
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String parameterSignUpURL = "signup.url";
 		String signUpBaseUrl = "signup.baseurl";
-		
-		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
-		
-		
-		if("1".equals(StartCodi.USE_MULTITENANCY))
-       		url += ""+ ((tenantId==null?"":tenantId+"."));
-		
-		url += baseUrl + "/" + signUpURL;
-		
-	
+		String baseUrl = TenantContext.getURL(null);
+		String url = "http://" + afterCompany + "." +baseUrl + "/" + signUpURL;
 
 //		FileInputStream is;
 //		try {
@@ -341,18 +331,8 @@ public class Login implements ContextAware {
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String passwordURL = "password.url";
 		String signUpBaseUrl = "signup.baseurl";
-		
-		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
-		
-		
-		if("1".equals(StartCodi.USE_MULTITENANCY))
-       		url += ""+ ((tenantId==null?"":tenantId+"."));
-		
-		url += baseUrl + "/" + forgotPasswordURL;
-		
-	
+		String baseUrl = TenantContext.getURL(null);
+		String url = "http://" + afterCompany + "." +baseUrl + "/" + forgotPasswordURL;
 		
 		String content;
 		String tempContent = "";
