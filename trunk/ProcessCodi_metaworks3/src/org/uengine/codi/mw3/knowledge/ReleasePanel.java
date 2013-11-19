@@ -15,8 +15,6 @@ import org.metaworks.metadata.MetadataFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.vm.JschCommand;
-import org.uengine.kernel.GlobalContext;
 
 @Face(ejsPath="", options={"fieldOrder"},values={"reflectVersion,check,warFile,sqlFile"})
 public class ReleasePanel {
@@ -130,7 +128,7 @@ public class ReleasePanel {
 					setSqlFile(resourceFile);
 				}
 			
-			if(!this.getCheck()){	//반영된 버전 미 사용
+			if(this.getCheck()){	//반영된 버전 미 사용
 				filepathinfo.setId(filepathinfo.createNewId());
 				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
 				filepathinfo.setWarPath(this.getWarFile().getFilename());
@@ -141,7 +139,7 @@ public class ReleasePanel {
 				
 				filepathinfo.createDatabaseMe();
 			}
-			else{	//반영된 버전 사용
+			else{	//반영된 버전 사용 ---?????? 반영된버전은 디비에 저장 안함?
 				filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
 				filepathinfo.copyFrom(filepathinfo.databaseMe());
 			}

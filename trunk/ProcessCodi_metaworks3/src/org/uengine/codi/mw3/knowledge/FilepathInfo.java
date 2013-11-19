@@ -9,13 +9,14 @@ import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 
 public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathInfo{
 	
 	String projectId;
 		public String getProjectId() {
 			return projectId;
-		}
+		}	
 		public void setProjectId(String projectId) {
 			this.projectId = projectId;
 		}
@@ -121,13 +122,13 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 			return 0;
 	}
 	
-	public SelectBox findReflectVersions(String id) throws Exception{
+	public SelectBox findReflectVersions() throws Exception{
 		SelectBox sb = new SelectBox();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from (select * from filepathinfo where projectId = ?id and releaseVer = 0) a order by reflectVer;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
-		findListing.set("id", id);
+		findListing.set("id", this.getProjectId());
 		findListing.select();
 		
 		while(findListing.next()){

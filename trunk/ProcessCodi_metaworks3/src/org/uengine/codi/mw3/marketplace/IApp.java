@@ -41,7 +41,7 @@ public interface IApp extends IDAO{
 	public void setAppId(int appId);
 
 	@Name
-	@Face(displayName="$App.Name", options={"size"}, values={"130"})
+	@Face(displayName="$App.Name", options={"size"}, values={"131"})
 	public String getAppName();
 	public void setAppName(String appName);
 	
@@ -145,7 +145,7 @@ public interface IApp extends IDAO{
 	public void setRunningVersion(int runningVersion);	
 	
 	
-	@Face(displayName = "$SubDomainName")
+	@Face(displayName = "$SubDomainName", options={"size"}, values={"131"})
 	public String getSubDomain();
 	public void setSubDomain(String subDomain);
 	
