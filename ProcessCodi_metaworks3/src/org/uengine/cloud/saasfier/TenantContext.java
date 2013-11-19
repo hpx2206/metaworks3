@@ -62,7 +62,7 @@ public class TenantContext{
 		String contextRoot = GlobalContext.getPropertyString("web.context.root", "");
 
 		StringBuffer url = new StringBuffer();
-		url.append("http://");
+		url.append("");
 
        	if("1".equals(StartCodi.USE_MULTITENANCY))
        		url.append((tenantId==null?"":tenantId+"."));
