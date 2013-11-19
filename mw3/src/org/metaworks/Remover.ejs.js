@@ -1,14 +1,13 @@
 var org_metaworks_Remover = function(objectId, className){
 	this.object = mw3.objects[objectId];	
-	var object = this.object;
 	
 	if(this.object == null)
 		return true;	
 	
-	if(typeof object.target == 'string'){
-		if(object.target == 'opener')
+	if(typeof this.object.target == 'string'){
+		if(this.object.target == 'opener')
 			triggerObjId = mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1];
-		if(object.target == 'self')
+		if(this.object.target == 'self')
 			triggerObjId = mw3.recentCallObjectId;
 				
 	}else{
@@ -20,7 +19,7 @@ var org_metaworks_Remover = function(objectId, className){
 		
 		if(objKeys && objKeys.length){
 			for(var i=0; i<objKeys.length; i++){			
-				mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
+				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 	
 				if(mappedObjId){
 					triggerObjId = mappedObjId;
