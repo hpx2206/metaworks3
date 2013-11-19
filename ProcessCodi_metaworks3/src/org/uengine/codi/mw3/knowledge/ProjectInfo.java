@@ -325,13 +325,15 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow releaseProject() throws Exception{
 		ModalWindow modalWindow = new ModalWindow();
-		SelectBox reflectVersion = new SelectBox();
-		ReleasePanel releasePanel = new ReleasePanel();
+		
 		FilepathInfo filepathInfo = new FilepathInfo();
 		filepathInfo.setProjectId(this.getProjectId());
-		releasePanel.setReflectVersion(reflectVersion);
+		
+		SelectBox reflectVersion = new SelectBox();
+		reflectVersion = filepathInfo.findReflectVersions();
+		
+		ReleasePanel releasePanel = new ReleasePanel();
 		releasePanel.setProjectId(this.getProjectId());
-		reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
 		
 		if("war".equals(this.getType())){
 			MetadataFile sqlFile = new MetadataFile();
@@ -342,20 +344,26 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			warFile.setBaseDir(codebase + File.separatorChar);
 			warFile.setTypeDir("war");
 			
-			releasePanel.setSqlFile(sqlFile);
-			releasePanel.setWarFile(warFile);
-			releasePanel.setCheck(false);
 			releasePanel.setMetaworksContext(new MetaworksContext());
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			
+			releasePanel.setSqlFile(sqlFile);
+			releasePanel.setWarFile(warFile);
+			releasePanel.setReflectVersion(reflectVersion);
+			releasePanel.setCheck(false);
+			
+			modalWindow.setHeight(300);
 		}
 		else if("svn".equals(this.getType())){
 			releasePanel.setMetaworksContext(new MetaworksContext());
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			
+			releasePanel.setReflectVersion(reflectVersion);
+			modalWindow.setHeight(150);
 		}
 		
 		modalWindow.setTitle("$devrelease");
 		modalWindow.setPanel(releasePanel);
-		modalWindow.setHeight(300);
 		
 		return modalWindow;
 	}
@@ -372,7 +380,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		SelectBox serverSelect = new SelectBox();
 		
 		SelectBox reflectVersion = new SelectBox();
-		reflectVersion = filepathInfo.findReflectVersions(filepathInfo.getProjectId());
+		reflectVersion = filepathInfo.findReflectVersions();
 		
 		CloudInfo cloudInfo = new CloudInfo();
 		

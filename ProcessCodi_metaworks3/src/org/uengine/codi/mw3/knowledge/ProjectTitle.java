@@ -58,7 +58,7 @@ public class ProjectTitle implements ContextAware {
 		}
 		
 	String topicTitle;
-		@Face(displayName="$ProjectName", ejsPath="genericfaces/richText.ejs",options={"rows", "cols"}, values={"1", "50"})
+		@Face(displayName="$ProjectName", options={"size"}, values={"51"})
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getTopicTitle() {
 			return topicTitle;
@@ -140,7 +140,7 @@ public class ProjectTitle implements ContextAware {
 		}
 	
 	String projectAlias;
-		@Face(displayName="$Alias", ejsPath="genericfaces/richText.ejs",options={"rows", "cols"}, values={"1", "50"})
+		@Face(displayName="$Alias", options={"size"}, values={"51"})
 		public String getProjectAlias() {
 			return projectAlias;
 		}

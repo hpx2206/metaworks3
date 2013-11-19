@@ -499,6 +499,14 @@ public class ReflectPanel {
 				
 				filepathinfo.createDatabaseMe();
 				filepathinfo.flushDatabaseMe();
+				
+				ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+				
+				((ChannelExec)channel).setCommand(command);
+				channel.setInputStream(null);
+				channel.connect();
+				
+				channel.disconnect();
 			}
 		}
 
