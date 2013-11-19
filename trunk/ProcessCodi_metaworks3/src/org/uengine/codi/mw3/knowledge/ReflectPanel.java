@@ -132,6 +132,7 @@ public class ReflectPanel {
 						resourceFile.setFilename(this.getWarFile().getFilename());
 						resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
 						resourceFile.setMimeType(this.getWarFile().getMimeType());
+						resourceFile.setBaseDir(this.getWarFile().getBaseDir());
 						setWarFile(resourceFile);
 	
 					}
@@ -144,6 +145,7 @@ public class ReflectPanel {
 						resourceFile.setFilename(this.getSqlFile().getFilename());
 						resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
 						resourceFile.setMimeType(this.getSqlFile().getMimeType());
+						resourceFile.setBaseDir(this.getWarFile().getBaseDir());
 						setSqlFile(resourceFile);
 					}
 				
@@ -154,8 +156,8 @@ public class ReflectPanel {
 					reflectVer++;
 				}
 	
-				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
-				filepathinfo.setWarPath(this.getWarFile().getFilename());
+				filepathinfo.setSqlPath(this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath());
+				filepathinfo.setWarPath(this.getWarFile().getBaseDir() + this.getWarFile().getUploadedPath());
 				filepathinfo.setReflectVer(reflectVer);
 				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
 				filepathinfo.setFileType(wfNode.getVisType());
@@ -188,17 +190,6 @@ public class ReflectPanel {
 				
 				command = "sh /root/startUp.sh" + " " + wfNode.getName() + " " + filepathinfo.getSqlPath();
 				
-				if( jschServerBehaviour.getJschSession() == null )
-					throw new Exception("not connected");
-				
-				ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
-				
-				((ChannelExec)channel).setCommand(command);
-				channel.setInputStream(null);
-				channel.connect();
-				
-				channel.disconnect();
-				
 			//IaaS 미 연동 시("war"파일 첨부)
 			}else{
 				
@@ -216,7 +207,6 @@ public class ReflectPanel {
 				 */
 				
 				
-				
 				/*
 				 * 1. 프로젝트 명으로 데이터베이스 생성하기 
 				 * sell 명령어 = {path}/createDS.sh "databasePort" "projectAlias" 
@@ -227,13 +217,13 @@ public class ReflectPanel {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-				
-				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
 				this.command(command);
+
 				
 				/*
 				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행하기
-				 * sell 명령어 = {path}/createDS.sh "databasePort" "projectAlias" "sqlFilePath"
+				 * sell 명령어 = {path}/execSql.sh "databasePort" "projectAlias" "sqlFilePath"
 				 * 
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * "databasePort" =	3306 : garuda engine 관련 mysql
@@ -247,24 +237,51 @@ public class ReflectPanel {
 				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				this.command(command);
 				
+				/*
+				 * 3. tomcat_dev 를 shutdown 한다.
+				 * sell 명령어 = {path}/killDev.sh
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.tomcat.killDevServer");
+				this.command(command);
+				
+				/*
+				 * 4. tomcat_dev/webapps에 첨부한 **.war 파일을 복사한다.
+				 * sell 명령어 = {path}/copyWarDev.sh "warFileName" "warFilePath" 
+				 * 
+				 * "warFileName" = 첨부한 war파일의 파일이름을 넘긴다. test.war일경우 "test" 값만 넘깁니다. (동일한 이름의 war파일이 존재 할 경우 폴더 및 war파일을 삭제한다.)
+				 * "warFilePath" = 첨부한 war파일이 저장된 full 경로를 넘깁니다.
+				 * 
+				 */
+				
+				String warFileName = this.getWarFile().getFilename().replace(".war", "");
+				String warFilePath = this.getWarFile().getBaseDir() + this.getWarFile().getUploadedPath();
+				
+				command = GlobalContext.getPropertyString("vm.tomcat.warCopyToDev") + " \"" + warFileName + "\"" + " \"" + warFilePath + "\"";
+				this.command(command);
 				
 				
 				
-				//톰캣 킬
-//				String cmd = "/oce/tomcat_dev/bin/shutdown.sh";
-//				this.command(cmd);
-//				
-//				//폴더랑 와르파일 삭제
-//				
-//				//와르파일 복사
-//				
-//				//sql
-//				
-//				//톰캣 시작
-//				cmd = "/oce/tomcat_dev/bin/startup.sh";
-//				this.command(cmd);
+				/*
+				 * 5. tomcat_deb 를 start 시킨다.
+				 * sell 명령어 = {path}/startDev.sh
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer");
+				this.command(command);
 				
 			}
+			
+			if( jschServerBehaviour.getJschSession() == null )
+				throw new Exception("not connected");
+			
+			ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+			
+			((ChannelExec)channel).setCommand(command);
+			channel.setInputStream(null);
+			channel.connect();
+			
+			channel.disconnect();
 			
 		} else if ("svn".equals(wfNode.getVisType())) {
 			if("1".equals(StartCodi.USE_IAAS)){	// IaaS 연동 시("svn" 빌드)
@@ -370,7 +387,6 @@ public class ReflectPanel {
 			//IaaS 미 연동시("svn" 빌드)
 			}else{
 				
-				
 				/**
 				 * 작성:cjs
 				 * 
@@ -379,36 +395,110 @@ public class ReflectPanel {
 				 * 1. mysql(port:3307)에 데이터베이스를 생성한다.
 				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행한다.
 				 * 3. tomcat_dev 를 shutdown 한다.
-				 * 4. tomcat_dev/webapps에 첨부한 **.war 파일을 복사한다.
-				 * 5. tomcat_deb 를 start 시킨다. 
+				 * 4. hudsonSetting.sh를 실행시켜 hudson job을 복사한다.
+				 * 5. hudsonBuild.sh를 실행시켜 jobs 경로 아래 projectAlias와 동일한 이름의 job을 생성한다.
+				 * 6. svnVersion을 체크하여 반영시 svn의 커밋버전을 기록한다.
+				 * 7. tomcat_dev/webapps에 build된 war 파일을 복사한다.
+				 * 8. tomcat_deb 를 start 시킨다. 
 				 * 
 				 */
 				
-				 //톰캣 킬
-//				String cmd = GlobalContext.getPropertyString("dev.tomcat.shutdown");
-//				this.command(cmd);
-//				
-//				//허드슨 빌드 커맨드 와르가 생기는 폴더가 픽스를 시켜
-//				
-//				//기존 폴더랑 와르 파일 삭제
-//
-//				//와르 파일이 생기고 생긴 파일을 개발 톰캣에 카피
-//				
-//				//sql 
-//				
-//				//톰캣 실행				
-//				cmd = GlobalContext.getPropertyString("dev.tomcat.start");
-//				this.command(cmd);
+				/*
+				 * 1. 프로젝트 명으로 데이터베이스 생성하기 
+				 * sell 명령어 = {path}/createDS.sh "databasePort" "projectAlias" 
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * "databasePort" =	3306 : garuda engine 관련 mysql
+				 * 					3307 : 프로젝트 생성 및 운영 관련 mysql
+				 * 					3308 : 앱 생성 및 운영 관련 mysql
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+				this.command(command);
 				
-//				filepathinfo.setReflectVer(svn 현재 커밋버전);
-//				filepathinfo.setFileType(wfNode.getVisType());
-//				filepathinfo.setId(filepathinfo.createNewId());
-//				filepathinfo.setComment(this.getComment());
-//				filepathinfo.setModdate(new Date());
-//				filepathinfo.setDistributor(session.getEmployee().getEmpName());
-//				
-//				filepathinfo.createDatabaseMe();
-//				filepathinfo.flushDatabaseMe();
+				/*
+				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행하기
+				 * sell 명령어 = {path}/execSql.sh "databasePort" "projectAlias" "sqlFilePath"
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * "databasePort" =	3306 : garuda engine 관련 mysql
+				 * 					3307 : 프로젝트 생성 및 운영 관련 mysql
+				 * 					3308 : 앱 생성 및 운영 관련 mysql
+				 * "sqlFilePath"  = sql이 저장된 파일 경로를 불러온다.
+				 * 
+				 */
+				String sqlFilePath = this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath();
+				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
+				this.command(command);
+				
+				/*
+				 * 3. tomcat_dev 를 shutdown 한다.
+				 * sell 명령어 = {path}/killDev.sh
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.tomcat.killDevServer");
+				this.command(command);
+				
+				/*
+				 * 4. hudsonSetting.sh를 실행시켜 hudson job을 복사한다.
+				 * sell 명령어 = {path}/hudsonSetting.sh "projectAlias" 
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + wfNode.getProjectAlias() + "\"";
+				this.command(command);
+				
+				/*
+				 * 5. hudsonBuild.sh를 실행시켜 jobs 경로 아래 projectAlias와 동일한 이름의 job을 생성한다.
+				 * sell 명령어 = {path}/hudsonMakeJob.sh "projectAlias" 
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + wfNode.getProjectAlias() + "\"";
+				this.command(command);
+				
+				/*
+				 * 6. svnVersion을 체크하여 반영시 svn의 커밋버전을 기록한다.
+				 * sell 명령어 = {path}/svnCheck.sh "projectAlias" 
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " \"" + wfNode.getProjectAlias() + "\"";
+				String svnVersion = this.command(command);
+				
+				/*
+				 * 7. tomcat_dev/webapps에 build된 war 파일을 복사한다.
+				 * sell 명령어 = {path}/copyWarDev.sh "projectAlias"
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * 
+				 */
+				
+				command = GlobalContext.getPropertyString("vm.tomcat.svnCopyToDev") + " \"" + wfNode.getProjectAlias() + "\"";
+				this.command(command);
+				
+				/*
+				 * 8. tomcat_deb 를 start 시킨다.
+				 * sell 명령어 = {path}/startDev.sh
+				 * 
+				 */
+				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer");
+				this.command(command);
+				
+				
+				filepathinfo.setReflectVer(Integer.parseInt(svnVersion));
+				filepathinfo.setFileType(wfNode.getVisType());
+				filepathinfo.setSqlPath(this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath());
+				filepathinfo.setId(filepathinfo.createNewId());
+				filepathinfo.setComment(this.getComment());
+				filepathinfo.setModdate(new Date());
+				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+				
+				filepathinfo.createDatabaseMe();
+				filepathinfo.flushDatabaseMe();
 			}
 		}
 
