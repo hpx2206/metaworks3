@@ -20,8 +20,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	if(this.object == null)
 		return true;	
 	
-	// 존재하는 팝업 제거
-	$('.target_popup,.target_stick').remove();	
 
 	var lastVisitPage = getCookie("codi.lastVisit");
 	if(lastVisitPage) 
@@ -30,7 +28,22 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.where == 'index')
 		return true;
 
+	console.log(this.object.metaworksContext.where );
+	
+	if(this.object && this.object.metaworksContext && this.object.metaworksContext.where == 'popup'){
+		var popupObj = $("#objDiv_" + this.objectId).closest('.target_popup,.target_stick');
+
+		var bodyHeight = $('body').height();
+		var bodyWidth = $('body').width();
+
+		
+		popupObj.css({left:(bodyWidth-popupObj.width())/2 + 'px', top: (bodyHeight-popupObj.height())/2-50 + 'px'});
+	}
+		
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'logout'){
+		// 존재하는 팝업 제거
+		$('.target_popup,.target_stick').remove();
+
 		delCookie("codi.id", "/","");
 		delCookie("codi.rememberMe", "/","");
 		delCookie("codi.facebookSSO", "/","");
