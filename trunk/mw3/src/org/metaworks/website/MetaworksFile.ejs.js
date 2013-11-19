@@ -12,8 +12,7 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 	
 	if(object && object.uploadedPath){
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
-		
-		if(object.filename)
+		if(object.filename){
 			faceHelper.setFilename(faceHelper.extraFilename(object.filename));
 		}else{
 			faceHelper.setFilename(faceHelper.extraFilename(object.uploadedPath));
@@ -21,7 +20,6 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		var imageDiv = $("#image_" + this.objectId);
 		
 		if(imageDiv.length > 0){
-			
 			try {
 				var image = object.downloadImage(false);
 				var width = 0;
@@ -45,12 +43,14 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 					
 					$("#convertProgress_" + objectId).hide();
 					$(this).show();
+					
 				});
 			}catch(e){
 				
 			}
 		}	
 	}
+}
 
 org_metaworks_website_MetaworksFile.prototype.extraFilename = function(filepath){
 	
@@ -87,6 +87,7 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 			}
 		}
 		
+		console.log("글자ㅏㅏㅏㅏㅏㅏㅏㅏㅏ:   "+filename)
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		$("#filebtndel_" + this.objectId).css('display', 'block');				
 	}
@@ -136,6 +137,7 @@ org_metaworks_website_MetaworksFile.prototype.reset = function(){
 org_metaworks_website_MetaworksFile.prototype.add = function(event){
 	$(mw3.getInputElement(this.objectId, 'fileTransfer')).trigger(event);
 }
+
 
 org_metaworks_website_MetaworksFile.prototype.del = function(event){
 	var object = mw3.objects[this.objectId];
