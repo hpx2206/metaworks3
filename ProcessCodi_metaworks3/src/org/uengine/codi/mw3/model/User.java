@@ -498,12 +498,13 @@ public class User extends Database<IUser> implements IUser {
 			emp.copyFrom(findEmp.findMe());
 			emp.setPartCode(session.getLastSelectedItem());
 			emp.syncToDatabaseMe();
+			emp.flushDatabaseMe();
 			
 			deptFollowers.session = session;
 			deptFollowers.load();
 			
-			Instance instance = new Instance();
-			instance.setInstId(new Long(session.getLastSelectedItem()));
+//			Instance instance = new Instance();
+//			instance.setInstId(new Long(session.getLastSelectedItem()));
 			
 			Notification noti = new Notification();
 			INotiSetting notiSetting = new NotiSetting();
@@ -515,20 +516,20 @@ public class User extends Database<IUser> implements IUser {
 			
 			findNotiSetting = notiSetting.findByUserId(this.getUserId());
 			if(findNotiSetting.next()){
-				if(findNotiSetting.isModiTopic()){
+				if(findNotiSetting.isModiOrgan()){
 					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
 					noti.setUserId(this.getUserId());
 					noti.setActorId(session.getEmployee().getEmpName());
 					noti.setConfirm(false);
-					noti.setInstId(instance.getInstId());
+//					noti.setInstId(instance.getInstId());
 					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setActAbstract(session.getUser().getName() + " 님이 " + this.getUserId() + "님을 조직에 초대 했습니다.");
+					noti.setActAbstract(session.getUser().getName() + " 님이 " + this.getUserId() + "님을 그룹에 초대 했습니다.");
 		
 					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
 			//			noti.createDatabaseMe();
 			//			noti.flushDatabaseMe();
 					
-					noti.add(instance);
+					noti.add(null);
 				
 					String followerSessionId = Login.getSessionIdWithUserId(this.getUserId());
 					

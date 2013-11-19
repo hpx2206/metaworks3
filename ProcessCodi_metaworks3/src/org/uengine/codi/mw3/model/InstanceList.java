@@ -158,11 +158,13 @@ public class InstanceList implements ContextAware{
 			setMetaworksContext(new MetaworksContext());
 			
 		}
-		String preferUX = session.getEmployee().getPreferUX();
-		
-		if("oce".equals(session.getUx()) ){
-			if("dashboard".equals(session.getLastPerspecteType())){
-				instanceContents.getMetaworksContext().setWhere("dashboard");
+		if( session != null ){
+			String preferUX = session.getEmployee().getPreferUX();
+			
+			if("oce".equals(session.getUx()) ){
+				if("dashboard".equals(session.getLastPerspecteType())){
+					instanceContents.getMetaworksContext().setWhere("dashboard");
+				}
 			}
 		}
 		
@@ -176,12 +178,12 @@ public class InstanceList implements ContextAware{
 //			}
 //		}
 		setInstances(instanceContents);
-
-		// setting moreInstanceList
-		setMoreInstanceList(new InstanceList());
-		getMoreInstanceList().setNavigation(navigation);
-		getMoreInstanceList().setPage(getPage()+1);
-		
+			// setting moreInstanceList
+		if( instanceContents.size() >= PAGE_CNT){
+			setMoreInstanceList(new InstanceList());
+			getMoreInstanceList().setNavigation(navigation);
+			getMoreInstanceList().setPage(getPage()+1);
+		}
 		return this;
 	}
 	
