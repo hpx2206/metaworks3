@@ -1,6 +1,10 @@
 package org.uengine.codi.mw3;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -46,6 +50,7 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.util.UEngineUtil;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 
@@ -255,23 +260,35 @@ public class Login implements ContextAware {
 	
 	public void sendMailForSignUp(String signUpURL) throws Exception {
 		String from = "help@opencloudengine.org";
-		
+		String beforeCompany = "company.name";
+		String afterCompany = Employee.extractTenantName(this.getEmail());
+		String signupURL = "signup.url";
 		String url = TenantContext.getURL(null);
 		url += "/" + signUpURL;
 		
-		System.out.println(url);
+		
+		String path = this.getClass().getResource("").getPath();
+		for(int i =0; i<5 ; i++){
+			path = new File(path).getParent();
+		}
+		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"inviteMail.html";
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is;
+		try {
+			is = new FileInputStream(path);
+			UEngineUtil.copyStream(is, bao);
+			System.out.println();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		String title = "프로세스코디 계정을 활성화시키세요.";
 		
-		// TODO :
-		// 1. read signUp.html
-		// 2. to String
-		// 3. DI
-		// 3-1. replace("{company.name}", session.getCompany.getName());
-		// 3-2. replace("{signup.url}", url);
-		// 4. set content
-		
-		String content = "<p><a href='" + url + "'>Sign Up</a><br/>";
+		String tempContent = bao.toString();
+		String content = this.replaceString(tempContent,beforeCompany,afterCompany);
+		content = this.replaceString(content, signupURL, url);
+		System.out.println(content);
 		
 	
 		try{
@@ -281,19 +298,43 @@ public class Login implements ContextAware {
 		}
 	}
 	
+	
+	public String replaceString(String lineString, String from, String to){
+		String returnValue = "";
+		returnValue = lineString.replaceAll(from, to);
+		return returnValue;
+	}
+	
 	public void sendMailForForgotPassword(String forgotPasswordURL) throws Exception {
 		String from = "help@opencloudengine.org";
+		String beforeCompany = "company.name";
+		String afterCompany = Employee.extractTenantName(this.getEmail());
+		String passwordURL = "password.url";
 		
 		String url = TenantContext.getURL(null);
 		url += "/" + forgotPasswordURL;
-		
-		System.out.println(url);
+		String path = this.getClass().getResource("").getPath();
+		for(int i =0; i<5 ; i++){
+			path = new File(path).getParent();
+		}
+		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"passwordChangeMail.html";
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is;
+		try {
+			is = new FileInputStream(path);
+			UEngineUtil.copyStream(is, bao);
+			System.out.println();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		String title = "비밀번호 변경을 요청하셨습니다";
 		
-		
-		
-		String content = "<p><a href='" + url + "'>Forgot Password</a><br/>";
+		String tempContent = bao.toString();
+		String content = this.replaceString(tempContent,beforeCompany,afterCompany);
+		content = this.replaceString(content, passwordURL, url);
+		System.out.println(content);
 		
 		try{
 			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
