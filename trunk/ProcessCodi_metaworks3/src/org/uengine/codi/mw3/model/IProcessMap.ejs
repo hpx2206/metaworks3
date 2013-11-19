@@ -57,15 +57,7 @@ if(mw3.when == 'filter'){
           }
 %>   
     <a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').whenClick()"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
-    <%
-    	var proc_name = value.name;
-		var full_name = '';
-		for(i = 0; i < proc_name.length; ++i) {
-			if(i != 0 && i % 6 == 0) full_name += '\n';
-			full_name += proc_name.charAt(i);
-		}
-    %>
-    <a href="#"><%=full_name%></a>
+    <a href="#"><%=value.name%></a>
 
 
 
