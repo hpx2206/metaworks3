@@ -203,18 +203,12 @@ public class Main {
 			outerLayout.setUseHideBar(false);
 			
 			setLayout(outerLayout);
-			
-			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
-				if(!session.getEmployee().isGuest()){
-					//향후 변경해야 할것 으로 보입니다.
-					if("oce".equals(session.getUx()))
-						setPageNavigator(new OcePageNavigator());
-					else if("sns".equals(session.getUx()))
-						setPageNavigator(new OcePageNavigator());
-					else
-						setPageNavigator(new PageNavigator("process"));
-				}
-			}
+		
+			//향후 변경해야 할것 으로 보입니다.
+			if("oce".equals(session.getUx()))
+				setPageNavigator(new OcePageNavigator());
+			else if("sns".equals(session.getUx()))
+				setPageNavigator(new OcePageNavigator());
 		}
 
 	}
