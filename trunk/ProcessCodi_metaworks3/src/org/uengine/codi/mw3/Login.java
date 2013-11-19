@@ -638,7 +638,7 @@ public class Login implements ContextAware {
 		locale.setLanguage(session.getEmployee().getLocale());
 		locale.load();
 
-		return new Object[]{locale, new Refresh(mainPanel, false, true)};
+		return new Object[]{new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
