@@ -7,6 +7,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -46,7 +47,7 @@ public class ContactUs {
 	@Face(displayName="$sendContactUs")
 	public Object sendFeedback() throws Exception{
 		String contents = this.getContents().getContents();
-		String adminEmail = "help@uengine.org";
+		String adminEmail = GlobalContext.getPropertyString("contactUs.feedbackMail");  //help@uengine.org
 		
 		EMailServerSoapBindingImpl emailServerSoapBindingImpl = new EMailServerSoapBindingImpl();
 		Company company = new Company();
