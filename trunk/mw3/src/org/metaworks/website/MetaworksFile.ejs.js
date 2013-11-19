@@ -15,9 +15,9 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		
 		if(object.filename)
 			faceHelper.setFilename(faceHelper.extraFilename(object.filename));
-		else
+		}else{
 			faceHelper.setFilename(faceHelper.extraFilename(object.uploadedPath));
-		
+		}
 		var imageDiv = $("#image_" + this.objectId);
 		
 		if(imageDiv.length > 0){
@@ -43,6 +43,7 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 						$(this).width("100%");
 					}
 					
+					$("#convertProgress_" + objectId).hide();
 					$(this).show();
 				});
 			}catch(e){
@@ -71,12 +72,22 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 	var object = mw3.objects[this.objectId];
 	
 	object.filename = filename;
-	
+	var str = filename;
+	var s = 0;
+	var count = 60;
 	if(filename == null){
 		filename = mw3.localize('$NoFileAttached');
 		$("#filebtnadd_" + this.objectId).css('display', 'block');
 		$("#filebtndel_" + this.objectId).css('display', 'none');
 	} else {
+		for (var i = 0; i<filename.length; i++){
+			s += (filename.charCodeAt(i) > 128) ? 2:1;
+			if(s >  count) {
+				filename = filename.substring(0,i) + '...';
+				return filename;
+			}
+		}
+		
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		$("#filebtndel_" + this.objectId).css('display', 'block');				
 	}

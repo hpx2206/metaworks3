@@ -9,6 +9,7 @@
 <%		
 		if(mw3.when == "image"){
 %>
+		<div id="convertProgress_<%=objectId%>" style="left:50%; top:50%; display:block;"><img src="images/img-loader.gif" /><span><i><%=mw3.localize('$ImageLoading')%></i></span></div>
 			<a target="_blink" id="image_<%=objectId%>">&nbsp;</a> 
 <%
 		}else{
@@ -26,14 +27,14 @@
 <%
 			if(showText){
 %>
-	<span style="float: left; line-height:1.8em; margin-left:10px; width:100px;" id="filename_<%=objectId%>"><%=mw3.localize('$NoFileAttached')%></span>
+	<span style="float: left; line-height:1.8em; margin-left:10px;" id="filename_<%=objectId%>"><%=mw3.localize('$NoFileAttached')%></span>
 <%
 				}
 			}else{
 				if(value.uploadedPath){		
 %>
 	
-	<a id="wBtn" href="#" onclick="<%=methods.download.caller()%>"><span><%=mw3.localize('$Download')%></span></a>
+	<a id="wBtn" href="#" onclick="<%=methods.download.caller()%>"><span style="z-index:1px;"><%=mw3.localize('$Download')%></span></a>
 <%		
 				}
 				
