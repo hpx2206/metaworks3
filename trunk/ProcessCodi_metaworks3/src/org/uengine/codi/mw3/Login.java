@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,12 +42,9 @@ import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
-import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.Invitation;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.util.UEngineUtil;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
@@ -262,9 +258,10 @@ public class Login implements ContextAware {
 		String from = "help@opencloudengine.org";
 		String beforeCompany = "company.name";
 		String afterCompany = Employee.extractTenantName(this.getEmail());
-		String signupURL = "signup.url";
-		String url = TenantContext.getURL(null);
-		url += "/" + signUpURL;
+		String parameterSignUpURL = "signup.url";
+		String signUpBaseUrl = "signup.baseurl";
+		String baseUrl = TenantContext.getURL(null);
+		String url = baseUrl + "/" + signUpURL;
 		
 		
 		String path = this.getClass().getResource("").getPath();
@@ -287,7 +284,8 @@ public class Login implements ContextAware {
 		
 		String tempContent = bao.toString();
 		String content = this.replaceString(tempContent,beforeCompany,afterCompany);
-		content = this.replaceString(content, signupURL, url);
+		content = this.replaceString(content, parameterSignUpURL, url);
+		content = this.replaceString(content, signUpBaseUrl, baseUrl);
 		System.out.println(content);
 		
 	
@@ -310,9 +308,11 @@ public class Login implements ContextAware {
 		String beforeCompany = "company.name";
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String passwordURL = "password.url";
+		String signUpBaseUrl = "signup.baseurl";
+		String baseUrl = TenantContext.getURL(null);
+		String url = baseUrl + "/" + forgotPasswordURL;
 		
-		String url = TenantContext.getURL(null);
-		url += "/" + forgotPasswordURL;
+		
 		String path = this.getClass().getResource("").getPath();
 		for(int i =0; i<5 ; i++){
 			path = new File(path).getParent();
@@ -334,6 +334,7 @@ public class Login implements ContextAware {
 		String tempContent = bao.toString();
 		String content = this.replaceString(tempContent,beforeCompany,afterCompany);
 		content = this.replaceString(content, passwordURL, url);
+		content = this.replaceString(content, signUpBaseUrl, baseUrl);
 		System.out.println(content);
 		
 		try{
