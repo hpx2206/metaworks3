@@ -1744,6 +1744,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		topicNode.session = session;
 		topicNode.setType(TopicNode.TOPIC);
 		topicNode.setId(this.getTopicId());
+		topicNode.setName(this.getTopicName());
 		return topicNode.loadTopic();
 	}
 }
