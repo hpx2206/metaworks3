@@ -384,8 +384,8 @@ public class Login implements ContextAware {
 		}
 	}
 	
-	@ServiceMethod(callByContent=true, payload={"email"}, validate=true)
-	public void signUp() throws Exception {
+	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_STICK)
+	public Object signUp() throws Exception {
 		
 		Employee employee = new Employee();
 		employee.setEmail(this.getEmail());
@@ -402,7 +402,10 @@ public class Login implements ContextAware {
 				this.getMetaworksContext().setHow("aftersignup");
 				
 			}
-			return;
+			
+			this.getMetaworksContext().setWhere("popup");
+			
+			return this;
 		}
 
 		String authKey = UUID.randomUUID().toString();
@@ -461,7 +464,7 @@ public class Login implements ContextAware {
 		confirm.setUrl(activateURL);
 		return confirm;
 		*/
-		return;
+		return this;
 	}
 		
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
