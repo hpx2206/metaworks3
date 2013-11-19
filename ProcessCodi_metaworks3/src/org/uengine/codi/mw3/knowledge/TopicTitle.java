@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,7 +23,6 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.INotiSetting;
@@ -35,7 +33,6 @@ import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.SystemWorkItem;
-import org.uengine.codi.mw3.model.User;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -56,6 +53,7 @@ public class TopicTitle  implements ContextAware{
 		}
 	
 	MetaworksFile logoFile;
+		@Face(displayName="주제로고")
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public MetaworksFile getLogoFile() {
 			return logoFile;
@@ -93,7 +91,7 @@ public class TopicTitle  implements ContextAware{
 		}
 	String url;
 		@Face(displayName="$topicUrl")
-		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+		@Hidden
 		public String getUrl() {
 			return url;
 		}
@@ -187,7 +185,7 @@ public class TopicTitle  implements ContextAware{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
 		if(this.getTopicTitle().equals("")){
-			throw new Exception("토픽주제를 입력해주세요");
+			throw new Exception("주제를 입력해주세요");
 		}
 		
 		ITopicNode topicNodeList = TopicNode.moreView(session);
