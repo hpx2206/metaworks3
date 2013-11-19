@@ -1001,3 +1001,7 @@ create table bpm_noti(
 	inputdate datetime,
 	confirm int
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+alter table filepathinfo add column warFileName varchar(30);
+alter table filepathinfo add column sqlFileName varchar(30);

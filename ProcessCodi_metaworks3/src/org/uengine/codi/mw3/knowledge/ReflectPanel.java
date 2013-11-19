@@ -165,6 +165,8 @@ public class ReflectPanel {
 				filepathinfo.setComment(this.getComment());
 				filepathinfo.setModdate(new Date());
 				filepathinfo.setDistributor(session.getEmployee().getEmpName());
+				filepathinfo.setWarFileName(this.getWarFile().getFilename());
+				filepathinfo.setSqlFileName(this.getSqlFile().getFilename());
 				
 				filepathinfo.createDatabaseMe();
 				filepathinfo.flushDatabaseMe();
@@ -272,16 +274,9 @@ public class ReflectPanel {
 				
 			}
 			
-			if( jschServerBehaviour.getJschSession() == null )
-				throw new Exception("not connected");
+			if( jschServerBehaviour.getJschSession() != null )
+				jschServerBehaviour.getJschSession().disconnect();
 			
-			ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
-			
-			((ChannelExec)channel).setCommand(command);
-			channel.setInputStream(null);
-			channel.connect();
-			
-			channel.disconnect();
 			
 		} else if ("svn".equals(wfNode.getVisType())) {
 			if("1".equals(StartCodi.USE_IAAS)){	// IaaS 연동 시("svn" 빌드)
@@ -489,9 +484,10 @@ public class ReflectPanel {
 				this.command(command);
 				
 				
-				filepathinfo.setReflectVer(Integer.parseInt(svnVersion));
+				filepathinfo.setReflectVer(Integer.parseInt(this.getReflectVersion().getSelectedText()));
 				filepathinfo.setFileType(wfNode.getVisType());
 				filepathinfo.setSqlPath(this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath());
+				filepathinfo.setSqlFileName(this.getSqlFile().getFilename());
 				filepathinfo.setId(filepathinfo.createNewId());
 				filepathinfo.setComment(this.getComment());
 				filepathinfo.setModdate(new Date());
@@ -500,13 +496,9 @@ public class ReflectPanel {
 				filepathinfo.createDatabaseMe();
 				filepathinfo.flushDatabaseMe();
 				
-				ChannelExec channel = (ChannelExec)jschServerBehaviour.getJschSession().openChannel("exec");
+				if(jschServerBehaviour.getJschSession() != null)
+					jschServerBehaviour.getJschSession().disconnect();
 				
-				((ChannelExec)channel).setCommand(command);
-				channel.setInputStream(null);
-				channel.connect();
-				
-				channel.disconnect();
 			}
 		}
 

@@ -19,6 +19,12 @@ public interface IFilepathInfo  extends IDAO{
 
 	public int getReleaseVer();
 	public void setReleaseVer(int releaseVer);
+	
+	public String getWarFileName();
+	public void setWarFileName(String warFileName);
+
+	public String getSqlFileName();
+	public void setSqlFileName(String sqlFileName);
 
 	public String getWarPath();
 	public void setWarPath(String warPath);
