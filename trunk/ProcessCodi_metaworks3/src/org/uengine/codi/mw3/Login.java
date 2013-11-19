@@ -262,13 +262,10 @@ public class Login implements ContextAware {
 		String signUpBaseUrl = "signup.baseurl";
 		String baseUrl = TenantContext.getURL(null);
 		String url = baseUrl + "/" + signUpURL;
+
+		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
+		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"inviteMail.html";
 		
-		
-		String path = this.getClass().getResource("").getPath();
-		for(int i =0; i<5 ; i++){
-			path = new File(path).getParent();
-		}
-		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"inviteMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
@@ -313,11 +310,8 @@ public class Login implements ContextAware {
 		String url = baseUrl + "/" + forgotPasswordURL;
 		
 		
-		String path = this.getClass().getResource("").getPath();
-		for(int i =0; i<5 ; i++){
-			path = new File(path).getParent();
-		}
-		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"passwordChangeMail.html";
+		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
+		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"passwordChangeMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
