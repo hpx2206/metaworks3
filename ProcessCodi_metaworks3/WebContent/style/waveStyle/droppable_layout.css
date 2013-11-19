@@ -2688,11 +2688,11 @@ select.select[class] {
 #signup_popup .popup_bottom { height:30px; background:#f6f6f6; }
 #signup_popup .popup_content hr{ margin:15px 0; margin-bottom:0px; border:1px solid #ccccdd; border-bottom:none}
 #signup_popup .popup_content .singnup_pic{ width:110px; height:110px; border:1px solid #ccc; padding:6px 0 0 6px; float:left}
-#signup_popup .popup_content .singnup_choose_pic{ float:left; margin-left:20px;}
+#signup_popup .popup_content .singnup_choose_pic{ float:left; margin-left:20px; width:250px}
 #signup_popup .fb_login{ margin-bottom:10px; margin-top:8px; color:#999}
 #signup_popup .after_result_label {margin-bottom:15px !important; font-size:13px !important; padding-left:25px; background:url(../../images/waveStyle/i_mail2.png) 3px no-repeat;}
 .signup_textbox{padding:10px; line-height:20px; border:1px solid #ccc;}
-
+.singnup_mutiline {margin-bottom:10px;}
 @media all and (max-width: 900px) {
 	.index_banner_r_btn, .index_banner_l_btn{display:none}
 	.banner_img_div_disc span.bf{font-size:20px;}
