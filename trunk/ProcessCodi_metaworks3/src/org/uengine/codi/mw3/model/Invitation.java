@@ -196,7 +196,8 @@ public class Invitation implements ContextAware{
 		String url = "";
 		String tenantId = Employee.extractTenantName(this.getEmail());
 		String baseUrl = TenantContext.getURL(tenantId);
-		
+		String beforeFaceIcon = "face.icon";
+		String afterFaceIcon = session.getEmployee().getEmpCode();
 		if("1".equals(StartCodi.USE_MULTITENANCY))
        		url += ""+ ((tenantId==null?"":tenantId+"."));
 		
@@ -237,7 +238,7 @@ public class Invitation implements ContextAware{
 		content = login.replaceString(content, beforeCompany, afterCompany);
 		content = login.replaceString(content, baseLinkUrl, baseUrl);
 		content = login.replaceString(content, signUpURL, url);
-		
+		content = login.replaceString(content, beforeFaceIcon, afterFaceIcon);
 		System.out.println(content);
 		
 		try{
@@ -260,7 +261,8 @@ public class Invitation implements ContextAware{
 		String url = "";
 		String tenantId = Employee.extractTenantName(this.getEmail());
 		String baseUrl = TenantContext.getURL(tenantId);
-		
+		String beforeFaceIcon = "face.icon";
+		String afterFaceIcon = session.getEmployee().getEmpCode();
 		
 		if("1".equals(StartCodi.USE_MULTITENANCY))
        		url += ""+ ((tenantId==null?"":tenantId+"."));
@@ -300,6 +302,7 @@ public class Invitation implements ContextAware{
 		content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
 		content = login.replaceString(content, signUpURL, url);
+		content = login.replaceString(content, beforeFaceIcon, afterFaceIcon);
 		System.out.println(content);
 		
 		try{
