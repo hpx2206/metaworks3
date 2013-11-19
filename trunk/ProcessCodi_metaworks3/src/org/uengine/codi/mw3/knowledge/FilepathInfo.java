@@ -9,7 +9,6 @@ import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.website.MetaworksFile;
 
 public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathInfo{
 	
@@ -37,6 +36,22 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 			this.releaseVer = releaseVer;
 		}
 	
+	String warFileName;
+		public String getWarFileName() {
+			return warFileName;
+		}
+		public void setWarFileName(String warFileName) {
+			this.warFileName = warFileName;
+		}
+		
+	String sqlFileName;
+		public String getSqlFileName() {
+			return sqlFileName;
+		}
+		public void setSqlFileName(String sqlFileName) {
+			this.sqlFileName = sqlFileName;
+		}
+
 	String warPath;
 		public String getWarPath() {
 			return warPath;
@@ -94,6 +109,17 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		}
 	
 		
+	public IFilepathInfo findReflectforProjectId() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * from filepathinfo where projectId =?projectId;");
+		
+		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
+		findListing.set("projectId", this.getProjectId());
+		findListing.select();
+		
+		return findListing;
+	}
+	
 	public int findReflectVersion(String id) throws Exception{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from (select * from filepathinfo where projectId = ?id) a order by reflectVer desc limit 1;");
