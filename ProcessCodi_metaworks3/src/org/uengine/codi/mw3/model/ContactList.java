@@ -22,6 +22,11 @@ public class ContactList implements ContextAware {
 	}
 	
 	public void load(String userId, String friendName) throws Exception{
+		Contact contactCount = new Contact();
+		contactCount.setUserId(userId);
+		int count = contactCount.findContactCount();
+		setContactCount(count);
+		
 		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
 		
 		Contact contact = new Contact();
@@ -114,7 +119,15 @@ public class ContactList implements ContextAware {
 		public void setSelectedMore(boolean selectedMore) {
 			this.selectedMore = selectedMore;
 		}
-		
+	
+	int contactCount;
+		public int getContactCount() {
+			return contactCount;
+		}
+		public void setContactCount(int contactCount) {
+			this.contactCount = contactCount;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 }
