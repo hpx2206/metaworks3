@@ -472,6 +472,70 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			}
 			
 		}
+		if(this.getGlobalCom() == null){
+			String comAlias = Employee.extractTenantName(this.getEmail());
+			boolean isAdmin = false;
+			
+			Company company = new Company();
+			company.setAlias(comAlias);
+			
+			ICompany findCompany = company.findByAlias();
+			if(findCompany == null){
+				isAdmin = true;
+				
+				// not yet sign up tenant
+				try {
+					company.setComCode(company.createNewId());
+					company.setComName(comAlias);
+
+					findCompany = company.createDatabaseMe();
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new MetaworksException(e.getMessage());
+				}
+			}
+
+			String tenantId = findCompany.getComCode();
+			String defaultUX = "wave";
+			String defaultMob = "auto";
+			this.setGlobalCom(tenantId);
+		}
+		
+		// 초대 받아 가입 할경우 서로 친구 추가됨.
+		if(this.getInviteUser() != null){
+			Contact newContact = new Contact();
+			newContact.setUserId(this.getEmpCode());
+			
+			Employee recommender = new Employee();
+			recommender.setEmpCode(this.getInviteUser());
+			recommender.copyFrom(recommender.findMe());
+			
+			IUser newUser_ = new User();
+			newUser_.setName(recommender.getEmpName());
+			newUser_.setUserId(recommender.getEmpCode());
+			newUser_.setNetwork("local");
+			newContact.setFriendId(newUser_.getUserId());
+			newContact.setFriend(newUser_);
+			newContact.createDatabaseMe();
+			
+			newContact = new Contact();
+			newContact.setUserId(recommender.getEmpCode());
+			
+			IUser me_ = new User();
+			me_.setName(this.getEmpName());
+			me_.setUserId(this.getEmpCode());
+			me_.setNetwork("local");
+			newContact.setFriendId(me_.getUserId());
+			newContact.setFriend(me_);
+			newContact.createDatabaseMe();
+			
+//			recommender.setInviteUser(null);
+//			recommender.syncToDatabaseMe();
+			
+			this.setInviteUser(null);
+		}
+			
+			
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			
 			// 올챙이 연동
@@ -818,6 +882,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(!findEmployee.getAuthKey().equals(this.getAuthKey()))
 			throw new MetaworksException("not match activation code");
 
+		if(findEmployee.getInviteUser() != null)
+			this.setInviteUser(findEmployee.getInviteUser());
 	
 		findEmployee.getMetaworksContext().setWhere("step1");
 		findEmployee.getMetaworksContext().setHow("signUp");
