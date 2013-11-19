@@ -9,6 +9,15 @@ import org.metaworks.widget.ModalWindow;
 
 public class DocumentPerspective extends Perspective  implements ContextAware {
 	
+	String tenentId;
+		public String getTenentId() {
+			return tenentId;
+		}
+	
+		public void setTenentId(String tenentId) {
+			this.tenentId = tenentId;
+		}
+
 	DocumentPanel documentPanel;
 		public DocumentPanel getDocumentPanel() {
 			return documentPanel;
@@ -39,6 +48,7 @@ public class DocumentPerspective extends Perspective  implements ContextAware {
 			documentPanel.getMetaworksContext().setHow("perspectivePanel");
 		}
 		documentPanel.session = session;
+		documentPanel.setTenentId(getTenentId());
 		documentPanel.load();
 	}
 

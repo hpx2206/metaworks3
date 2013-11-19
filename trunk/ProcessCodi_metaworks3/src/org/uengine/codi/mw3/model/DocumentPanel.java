@@ -9,7 +9,14 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 public class DocumentPanel implements ContextAware {
 
-	
+	String tenentId;
+		public String getTenentId() {
+			return tenentId;
+		}
+		public void setTenentId(String tenentId) {
+			this.tenentId = tenentId;
+		}
+
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -36,7 +43,7 @@ public class DocumentPanel implements ContextAware {
 	@ServiceMethod
 	public Object[] loadUnformed() throws Exception{
 
-		String title = "도큐멘트";
+		String title = tenentId+"의 미분류 문서";
 		Object[] returnObject = Perspective.loadDocumentListPanel(session, "UnlabeledDocument", "Main", title);
 		
 		return returnObject;

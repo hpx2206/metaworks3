@@ -198,6 +198,8 @@ public class PerspectivePanel  implements ContextAware {
 			     setMetaworksContext(new MetaworksContext());
 			     this.getMetaworksContext().setHow("perspectivePanel");
 			     documentPerspective.setMetaworksContext(this.getMetaworksContext());
+			     String tenentId = Employee.extractTenantName(session.getEmployee().getEmail());
+			     documentPerspective.setTenentId(tenentId);
 			}
 		}//session
 	}
