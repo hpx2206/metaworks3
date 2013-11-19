@@ -195,7 +195,7 @@
 							<%}%>
 							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' , htmlAttr:{style: 'float: left'}})%>
 							
-							<%if(value.file.mimeType.indexOf("ms")>=1   || value.file.mimeType.indexOf("officedocument")>=1  || value.file.mimeType.indexOf("plain")>=1 ){%>
+							<%if(value.file.mimeType.indexOf("ms")>=1   || value.file.mimeType.indexOf("officedocument")>=1  || value.file.mimeType.indexOf("plain")>=1  || value.file.mimeType.indexOf("pdf")>=1){%>
 								<%if(value.type=='file' && value.file.mimeType.indexOf("image") != 0){%>		
 									<a href="#" onClick="<%=methods.workItemPopup.caller()%>"> <img src="images/waveStyle/newWindow.png" style="position:relative; top:5px;" title="Open new window"></a>
 								<% }%>
@@ -204,7 +204,7 @@
 							
 						<div class="clear"></div>
 						
-						<%if(value.file.mimeType.indexOf("ms")>=1   || value.file.mimeType.indexOf("officedocument")>=1  || value.file.mimeType.indexOf("plain")>=1 ){%>
+						<%if(value.file.mimeType.indexOf("ms")>=1   || value.file.mimeType.indexOf("officedocument")>=1  || value.file.mimeType.indexOf("plain")>=1 || value.file.mimeType.indexOf("pdf")>=1){%>
 							<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
 							    <%=fields.preview.here()%>
 							<% }%>
