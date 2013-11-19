@@ -21,11 +21,14 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		return true;	
 	
 	// 존재하는 팝업 제거
-	$('.target_popup').remove();	
+	$('.target_popup,.target_stick').remove();	
 
 	var lastVisitPage = getCookie("codi.lastVisit");
 	if(lastVisitPage) 
 		this.object.lastVisitPage = lastVisitPage;
+
+	if(this.object && this.object.metaworksContext && this.object.metaworksContext.where == 'index')
+		return true;
 
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'logout'){
 		delCookie("codi.id", "/","");
@@ -185,51 +188,7 @@ org_uengine_codi_mw3_Login.prototype = {
 				var message = 'Facebook Login. . . .';
 				
 				object.getFaceHelper().showError(message);
-			}else if(isAuth){
-				$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);	
-				object.facebookSSO = true;
-				object.metaworksContext.how = 'facebook';
-				object.login();
-				var message = 'Facebook Login. . . .';
-				
-				object.getFaceHelper().showError(message);
 			}
-				
-				
-			//기존로직
-//				if(mw3.getObject(objectId).status == 'subscribe'){
-//					if(!isAuth){
-//						var employee = {
-//							__className : 'org.uengine.codi.mw3.model.Employee',
-//							metaworksContext : {when : 'new'},
-//							empCode : response.email,
-//							empName : response.name,
-//							email   : response.email,
-//							locale  : response.locale.substring(0,2)								
-//						};
-//						
-//						mw3.locateObject(employee, employee.className);
-//						
-//						var isSave = employee.saveMe();
-//					}
-//					
-//					$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);							
-//					object.facebookSSO = true;
-//					object.login();
-//
-//					
-//				}else{
-//					if(isAuth){								
-//						$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);	
-//						object.facebookSSO = true;
-//						object.login();
-//					}else{
-//						var message = 'There isn\'t an Process CODI account associated with ' + response.email + '. Sign Up';
-//						
-//						object.getFaceHelper().showError(message);
-//					}
-//				}
-				
 		}
 		
 	},
