@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -269,4 +268,7 @@ public interface IEmployee extends IDAO {
 	public IEmployee findCompanyAdmin() throws Exception;
 	
 	public IUser getUser();
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
+	public Object facebookSSO() throws Exception;
 }

@@ -30,6 +30,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
@@ -497,7 +498,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			getImageFile().upload();
 		}
 		
-		syncToDatabaseMe();
+		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+			this.setEmpCode(this.createNewId());
+			createDatabaseMe();
+		}else
+			syncToDatabaseMe();
+		
 		flushDatabaseMe();
 		
 		NotiSetting notiSetting = new NotiSetting();
@@ -506,8 +512,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		notiSetting.createDatabaseMe();
 		
-		session.setEmployee(this);
-		session.fillUserInfoToHttpSession();
+		if(session != null){
+			session.setEmployee(this);
+			session.fillUserInfoToHttpSession();
+		}
 	}
 	
 	public void addBasicTopics() throws Exception{
@@ -1318,21 +1326,18 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return user;
 	}
 	
-	public boolean facebookSSO(){
+	public Object facebookSSO() throws Exception {
 		IEmployee findEmp = this.findForLogin();
 		
-		/*
-		if(findEmp != null){
-			if(this.getFacebookId().equals(findEmp.getFacebookId())){
-				true;
-			}
-				
-		}else{
+		if(findEmp == null){
+			this.getMetaworksContext().setWhen(WHEN_NEW);
 			this.saveMe();
-			
 		}
-		*/
 		
-		return true;
+		Session session = new Session();
+		session.setEmployee(findEmp);
+		session.fillUserInfoToHttpSession();
+		
+		return new StartCodi(session);
 	}
 }
