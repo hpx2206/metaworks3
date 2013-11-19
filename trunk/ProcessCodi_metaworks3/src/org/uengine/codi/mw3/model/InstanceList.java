@@ -150,8 +150,11 @@ public class InstanceList implements ContextAware{
 			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
 		}
 		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
+		instanceContents.setMetaworksContext(new MetaworksContext());
+		instanceContents.getMetaworksContext().setHow("instance");
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
+			
 		}
 		String preferUX = session.getEmployee().getPreferUX();
 		

@@ -117,7 +117,10 @@ public class DocWorkItem extends WorkItem {
 			fileWorkItem.setFile(this.getFile());
 			fileWorkItem.setGrpTaskId(item.getGrpTaskId());
 			fileWorkItem.setMajorVer(item.getMajorVer()+1);
-			fileWorkItem.setTitle(getFile().getFileTransfer().getFilename());
+			if(!UEngineUtil.isNotEmpty(getTitle()))
+				fileWorkItem.setTitle(new String(this.getFile().getFilename()));
+			else
+				fileWorkItem.setTitle(this.getTitle());
 //			fileWorkItem.add();	
 //			returnObjects = new Object[]{new ToAppend(fileWorkItem, this), new Refresh(fileWorkItem,false,true),new Refresh(this)};
 			returnObjects = fileWorkItem.add();
