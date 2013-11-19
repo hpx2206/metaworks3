@@ -171,4 +171,12 @@ public class StartCodi {
 		return employee.forgotPassword();
  
 	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object invited() throws Exception {
+		Employee employee = new Employee();
+		employee.setAuthKey(this.getKey());
+		return employee.activate();
+ 
+	}
 }
