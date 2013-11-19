@@ -83,6 +83,21 @@ public class Contact extends Database<IContact> implements IContact{
 		return contacts;
 	}
 	
+	public int findContactCount() throws Exception{
+		
+		StringBuffer sb = new StringBuffer();
+
+		sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
+		sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
+		sb.append(" where c.userid=?userId");
+		
+		IContact contacts = sql(sb.toString());
+		
+		contacts.set("userId",getUserId());
+		contacts.select();
+		return contacts.size();
+	}
+	
 	public IContact findContactsWithFriendName(String keyword) throws Exception{
 		IContact contacts = sql("select * from contact where userId=?userId and friendName like '%" + keyword + "%'");
 		
