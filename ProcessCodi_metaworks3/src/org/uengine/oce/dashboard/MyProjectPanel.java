@@ -16,7 +16,7 @@ import org.uengine.kernel.GlobalContext;
 public class MyProjectPanel {
 	
 	@Face(displayName="$CreateProject")
-	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow addProject() throws Exception {
 
 		ProjectTitle projectTitle = new ProjectTitle();
