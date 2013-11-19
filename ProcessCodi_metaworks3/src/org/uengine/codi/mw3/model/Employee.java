@@ -606,20 +606,17 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
 			
 			tm.saveMe();
-			
 		}
-		
 	}
 	
 	public void addBasicProcess() throws Exception{
 		
-		String[] mapId={"BuisinessTrip.process", "Contact.process", "Holiday.process", "Purchasing.process", "Sales.process", "TroubleTicket.process"};
-		String[] defId={"BuisinessTrip.process", "Contact.process", "Holiday.process", "Purchasing.process", "Sales.process", "TroubleTicket.process"};
-		String[] name={"BuisinessTrip", "Contact", "Holiday", "Purchasing", "Sales", "TroubleTicket"};
+		String[] defId={"buisinesstrip/process/buisinesstrip.process", "contact/process/contactregistration.process", "holiday/process/applholiday.process", "purchasing/process/purchasingreq.process", "sales/process/sales.process", "troubleticket/process/troubleticket.process"};
+		String[] name={"출장", "연락처", "휴가", "구매", "영업", "클레임"};
 		
-		for(int i=0; i<mapId.length; i++){
+		for(int i=0; i<defId.length; i++){
 			IProcessMap processMap = new ProcessMap();
-			processMap.setMapId(this.getGlobalCom()+"."+mapId[i]);
+			processMap.setMapId(this.getGlobalCom()+"."+defId[i]);
 			processMap.setDefId(defId[i]);
 			processMap.setName(name[i]);
 			processMap.setComCode(this.getGlobalCom());
@@ -628,7 +625,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			processMap.createMe();
 			
 		}
-		
 	}
 	
 	public void notiToCompany() throws Exception{
