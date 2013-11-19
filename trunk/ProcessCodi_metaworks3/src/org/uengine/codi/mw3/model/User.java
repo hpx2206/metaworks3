@@ -225,7 +225,6 @@ public class User extends Database<IUser> implements IUser {
 		}
 		
 		Popup popup = new Popup(with, height);
-		popup.setName("Info");
 		popup.setPanel(this);
 
 		return popup;
@@ -896,7 +895,7 @@ public class User extends Database<IUser> implements IUser {
 		employee.getMetaworksContext().setWhere("user_menu_option");
 		
 		Popup menu = new Popup();
-		menu.setHeight(130);
+		menu.setHeight(88);
 		menu.setWidth(200);
 		menu.setPanel(employee);
 		

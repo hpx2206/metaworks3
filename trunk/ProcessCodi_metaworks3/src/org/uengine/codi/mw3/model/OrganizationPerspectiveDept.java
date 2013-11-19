@@ -57,7 +57,7 @@ public class OrganizationPerspectiveDept extends Perspective {
 //		setDeptEmployee(employeeList);				
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK)
 	public Popup addDept() {
 		IDept dept = new Dept();
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);

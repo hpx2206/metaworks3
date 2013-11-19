@@ -45,6 +45,7 @@ if(mw3.when == 'filter'){
 <%		
 		}else{
 			var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+			
 			var admin = false;
 			if(session && session.employee)
 				admin = session.employee.isAdmin;		
