@@ -201,6 +201,7 @@ public class TopicTitle  implements ContextAware{
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicTitle());
 		topicNode.setType(TopicNode.TOPIC);
+		topicNode.setSecuopt(this.isTopicSecuopt()?"1":"0");
 		topicNode.session = session;
 		
 		this.makeHtml();
