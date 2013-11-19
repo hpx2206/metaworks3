@@ -189,6 +189,8 @@ public class Invitation implements ContextAware{
 		String beforeCompany = "user.company";
 		String baseLinkUrl = "base.url";
 		String baseUrl = TenantContext.getURL(null);
+		String url = baseUrl + "/invite.html?key=" + authKey;
+		String signUpURL = "signup.url";
 		String afterCompany =  Employee.extractTenantName(this.getEmail());
 
 		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
@@ -212,6 +214,7 @@ public class Invitation implements ContextAware{
 		String content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
 		content = login.replaceString(content, baseLinkUrl, baseUrl);
+		content = login.replaceString(content, signUpURL, url);
 		System.out.println(content);
 		
 		try{
@@ -231,11 +234,13 @@ public class Invitation implements ContextAware{
 		String afterName = session.getEmployee().getEmail(); //초대 하는사람
 		String beforeCompany = "user.company";
 		String afterCompany =  Employee.extractTenantName(this.getEmail()); //초대 받는사람.
-		String path = this.getClass().getResource("").getPath();
-		for(int i =0; i<6 ; i++){
-			path = new File(path).getParent();
-		}
-		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
+		String baseUrl = TenantContext.getURL(null);
+		String url = baseUrl + "/activate.html?key=" + authKey;
+		String signUpURL = "signup.url";
+		
+		
+		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
+		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
@@ -254,6 +259,7 @@ public class Invitation implements ContextAware{
 		Login login = new Login();
 		String content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
+		content = login.replaceString(content, signUpURL, url);
 		System.out.println(content);
 		
 		try{
