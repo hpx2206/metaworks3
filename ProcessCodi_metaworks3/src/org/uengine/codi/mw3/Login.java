@@ -29,6 +29,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
@@ -82,37 +83,35 @@ public class Login implements ContextAware {
 		}
 		
 	String email;
-		@Face(options="placeholder", values="E-Mail")
-		@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
+		@Face(displayName="$Email")
+		@ValidatorSet({
+			@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이메일을 입력하세요."),
+			@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
+		})
 		public String getEmail() {
 			return email;
 		}
 		public void setEmail(String email) {
 			this.email = email;
 		}
-
-	String name;
-		public String getName() {
-			return name;
+		
+	String password;
+		@Face(options={"type", "placeholder"}, values={"password", "Password"})
+		@Validator(name = ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.how == 'login'", message="비밀번호를 입려하세요.")
+		@Hidden(when = MetaworksContext.WHEN_VIEW)
+		public String getPassword() {
+			return password;
 		}
-		public void setName(String name) {
-			this.name = name;
-		}
-
-	String portrait;
-		public String getPortrait() {
-			return portrait;
-		}
-		public void setPortrait(String portrait) {
-			this.portrait = portrait;
+		public void setPassword(String password) {
+			this.password = password;
 		}
 		
-	boolean isAdmin;
-		public boolean isAdmin() {
-			return isAdmin;
+	Boolean rememberMe;
+		public Boolean getRememberMe() {
+			return rememberMe;
 		}
-		public void setAdmin(boolean isAdmin) {
-			this.isAdmin = isAdmin;
+		public void setRememberMe(Boolean rememberMe) {
+			this.rememberMe = rememberMe;
 		}
 		
 	boolean useSubscribe;
@@ -122,30 +121,6 @@ public class Login implements ContextAware {
 		public void setUseSubscribe(boolean useSubscribe) {
 			this.useSubscribe = useSubscribe;
 		}
-
-	String defId;	
-		public String getDefId() {
-			return defId;
-		}
-		public void setDefId(String defId) {
-			this.defId = defId;
-		}
-		
-	boolean facebookSSO;
-		public boolean isFacebookSSO() {
-			return facebookSSO;
-		}
-		public void setFacebookSSO(boolean facebookSSO) {
-			this.facebookSSO = facebookSSO;
-		}
-
-	Boolean rememberMe;
-		public Boolean getRememberMe() {
-			return rememberMe;
-		}
-		public void setRememberMe(Boolean rememberMe) {
-			this.rememberMe = rememberMe;
-		}
 		
 	String lastVisitPage;
 		public String getLastVisitPage() {
@@ -153,25 +128,6 @@ public class Login implements ContextAware {
 		}
 		public void setLastVisitPage(String lastVisitPage) {
 			this.lastVisitPage = lastVisitPage;
-		}
-
-	String password;
-		@Face(options={"type", "placeholder"}, values={"password", "Password"})
-		@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
-		@Hidden(when = MetaworksContext.WHEN_VIEW)
-		public String getPassword() {
-			return password;
-		}
-		public void setPassword(String password) {
-			this.password = password;
-		}
-
-	Invitation invitation;
-		public Invitation getInvitation() {
-			return invitation;
-		}
-		public void setInvitation(Invitation invitation) {
-			this.invitation = invitation;
 		}
 
 	public Session loginService() throws Exception {
@@ -294,11 +250,7 @@ public class Login implements ContextAware {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public void goSignUp() throws Exception{
-		
 		this.getMetaworksContext().setHow("signup");
-		
-		this.setInvitation(new Invitation());
-		this.getInvitation().getMetaworksContext().setHow("signup");
 	}
 	
 	public void sendMailForSignUp(String signUpURL) throws Exception {
@@ -350,7 +302,7 @@ public class Login implements ContextAware {
 		}
 	}
 	
-	@ServiceMethod(callByContent=true, payload={"email"})
+	@ServiceMethod(callByContent=true, payload={"email"}, validate=true)
 	public void signUp() throws Exception {
 		
 		Employee employee = new Employee();
@@ -621,8 +573,6 @@ public class Login implements ContextAware {
         log.createDatabaseMe();
 
         
-        
-		
 		MainPanel mainPanel;
 		
 		PageNavigator pageNavigator = new PageNavigator();
@@ -810,6 +760,7 @@ public class Login implements ContextAware {
 
 	}
 
+	/*
 	@ServiceMethod(callByContent=true)
 	public MainPanel loginSocialCoding() throws Exception {
 		IUser loginUser = new User();
@@ -828,6 +779,7 @@ public class Login implements ContextAware {
 		return mainPanel;
 		//return new MainPanel(new Knowledge(session));
 	}
+	*/
 	
 	protected void goTadpoleLogin(String email, String pw){
 		String ip = GlobalContext.getPropertyString("pole.call.ip");

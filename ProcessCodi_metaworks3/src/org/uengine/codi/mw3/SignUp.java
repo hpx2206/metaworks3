@@ -2,21 +2,23 @@ package org.uengine.codi.mw3;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.model.Invitation;
 
 public class SignUp {
 
-	Invitation invitation;
-		public Invitation getInvitation() {
-			return invitation;
+	Login login;
+		public Login getLogin() {
+			return login;
 		}
-		public void setInvitation(Invitation invitation) {
-			this.invitation = invitation;
+		public void setLogin(Login login) {
+			this.login = login;
 		}
-		
+
 	public SignUp(){
-		this.setInvitation(new Invitation());
-		this.getInvitation().getMetaworksContext().setHow("signup");
+		Login login = new Login();
+		login.getMetaworksContext().setWhere("index");
+		login.getMetaworksContext().setHow("signup");
+		
+		this.setLogin(login);
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
