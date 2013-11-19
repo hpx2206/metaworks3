@@ -40,10 +40,8 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 					if($(this).width() > parentwidth){
 						$(this).width("100%");
 					}
-					
 					$("#convertProgress_" + objectId).hide();
 					$(this).show();
-					
 				});
 			}catch(e){
 				
@@ -87,7 +85,6 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 			}
 		}
 		
-		console.log("글자ㅏㅏㅏㅏㅏㅏㅏㅏㅏ:   "+filename)
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		$("#filebtndel_" + this.objectId).css('display', 'block');				
 	}
