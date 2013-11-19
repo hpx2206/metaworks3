@@ -146,7 +146,7 @@ public class Login implements ContextAware {
 		if(findEmp == null)
 			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");
 		
-		if (!getPassword().equals(findEmp.getPassword()))
+		if(!getPassword().equals(findEmp.getPassword()))
 			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");	
 		
 		session.setEmployee(findEmp);

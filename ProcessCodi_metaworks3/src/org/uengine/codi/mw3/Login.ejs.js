@@ -181,13 +181,7 @@ org_uengine_codi_mw3_Login.prototype = {
 				};
 				mw3.locateObject(employee, employee.className);
 				
-				var isSave = employee.facebookSSO();
-				$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);							
-				object.facebookSSO = true;
-				object.metaworksContext.how = 'facebook';
-				var message = 'Facebook Login. . . .';
-				
-				object.getFaceHelper().showError(message);
+				employee.facebookSSO();
 			}
 		}
 		
