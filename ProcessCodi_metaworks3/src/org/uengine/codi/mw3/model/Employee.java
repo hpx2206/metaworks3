@@ -1144,30 +1144,25 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		//return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
 	}
 	
-	public IEmployee findByEmail(){
+	public IEmployee findByEmail() throws Exception {
+		
+		Employee employee = null;
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select emptable.*, PARTTABLE.PARTNAME");
 		sb.append("  from emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
 		sb.append(" where emptable.email=?email ");
 		sb.append("   and emptable.isdeleted = 0");
-		
-		IEmployee dao = null;
-		
-		try {
-			dao = sql(sb.toString());
-			dao.setEmail(this.getEmail());
-			dao.select();
-			
-			if(!dao.next())
-				dao = null;
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		IEmployee findEmployee = (IEmployee) sql(sb.toString());
+		findEmployee.setEmail(this.getEmail());
+		findEmployee.select();
+		if (findEmployee.next()) {
+			employee = new Employee();
+			employee.copyFrom(findEmployee);
+			employee.getDept().getMetaworksContext().setHow("picker");
 		}
-		
-		return dao; 
+		return employee;
 	}
 	
 	public IEmployee findForLogin(){
