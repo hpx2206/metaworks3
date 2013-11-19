@@ -172,11 +172,30 @@ public class StartCodi {
  
 	}
 	
-	@ServiceMethod(callByContent=true)
-	public Object invited() throws Exception {
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object[] invited() throws Exception {
 		Employee employee = new Employee();
 		employee.setAuthKey(this.getKey());
-		return employee.activate();
+		
+		employee.copyFrom(employee.findByKey());
+		if(employee.getInviteUser() == null){
+			String url = null;
+			if("1".equals(StartCodi.USE_MULTITENANCY))
+	       		url = Employee.extractTenantName(employee.getEmail());
+///////////////////////////////////////////////-------------- 수정 -----------------/////////////////////////////////////////////////////			
+			return new Object[]{new Forward(TenantContext.getURL(null))};
+		}
+		Object[] returnObjects = null;
+		returnObjects = employee.applyForAddContact();
+		
+		if(returnObjects != null){
+			
+			String url = TenantContext.getURL(null);
+			//return new Object[]{new Forward(url)};
+			return returnObjects;
+		}
+		
+		return new Object[]{new ErrorPage()};
  
 	}
 }

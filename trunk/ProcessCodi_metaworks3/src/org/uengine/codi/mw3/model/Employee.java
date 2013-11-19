@@ -29,6 +29,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
@@ -904,6 +905,72 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object[] applyForAddContact() throws Exception{
+		
+		
+		IEmployee findEmployee = null;
+		
+		try {
+			findEmployee = findByKey();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new MetaworksException(e.getMessage());
+		}
+		
+		if(findEmployee == null)
+			throw new MetaworksException("wrong access");
+		
+		
+		
+		//초대 받는사람 - newContact
+		//초대 한 사람  - recommender
+		if(findEmployee.getInviteUser() != null){
+			
+			Contact newContact = new Contact();
+			newContact.setUserId(findEmployee.getEmpCode()); 
+			Employee recommender = new Employee();
+			recommender.setEmpCode(findEmployee.getInviteUser());
+			recommender.copyFrom(recommender.findMe());
+			
+			IUser newUser_ = new User();
+			newUser_.setName(recommender.getEmpName());
+			newUser_.setUserId(recommender.getEmpCode());
+			newUser_.setNetwork("local");
+			newContact.setFriendId(newUser_.getUserId());
+			newContact.setFriend(newUser_);
+			newContact.createDatabaseMe();
+			
+			newContact = new Contact();
+			newContact.setUserId(recommender.getEmpCode());
+			
+			IUser me_ = new User();
+			me_.setName(findEmployee.getEmpName());
+			me_.setUserId(findEmployee.getEmpCode());
+			me_.setNetwork("local");
+			newContact.setFriendId(me_.getUserId());
+			newContact.setFriend(me_);
+			newContact.createDatabaseMe();
+			
+			findEmployee.setInviteUser(null);
+			Employee saveEmp = new Employee();
+			saveEmp.copyFrom(findEmployee);
+			saveEmp.syncToDatabaseMe();
+			
+//			return saveEmp.forward();
+			
+			Login login = new Login();
+			login.setEmail(saveEmp.getEmail());
+			login.setPassword(saveEmp.getPassword());
+			return login.login();
+		}
+		
+		
+		return null;
+		
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object forgotPassword() throws MetaworksException{
 		System.out.println("authKey= "+ getAuthKey());
 		
@@ -921,14 +988,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		if(findEmployee == null)
 			throw new MetaworksException("wrong access");
-		
-//		if(findEmployee.isApproved()){
-//			Login login = new Login();
-//			login.setEmail(findEmployee.getEmail());
-//			
-//			return login;
-//		}
-		
 		if(!findEmployee.getAuthKey().equals(this.getAuthKey()))
 			throw new MetaworksException("not match activation code");
 
@@ -936,18 +995,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		findEmployee.getMetaworksContext().setWhere("admin");
 		findEmployee.getMetaworksContext().setHow("detail");
 		findEmployee.getMetaworksContext().setWhen("findpw");
-		//findEmployee.setImageFile(new PortraitImageFile());
-//		findEmployee.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
-		
-		//defaultUX, defaultMob 값 설정
-		//String defaultUX = "wave";
-		//String defaultMob = "auto";
-				
-		//findEmployee.setPreferUX(defaultUX);
-		//findEmployee.setPreferMob(defaultMob);
 		findEmployee.setPassword(null);
-//		return new ModalWindow(findEmployee, 600, 500, "ddd");
 		return findEmployee;
 	}
 	
@@ -1202,7 +1250,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object forward() throws Exception {
+	public Object[] forward() throws Exception {
 		Session session = new Session();
 		session.setEmployee(this);
 		session.fillSession();
