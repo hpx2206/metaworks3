@@ -6,11 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContext;
@@ -178,21 +180,15 @@ public class Login implements ContextAware {
 		
 		Employee emp = new Employee();
 		emp.setEmail(getEmail());
-		IEmployee findEmp = emp.findForLogin();
+		IEmployee findEmp = emp.findByEmail();
 		
-		if(findEmp == null){
+		if(findEmp == null)
 			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");
-		}
 		
-		if(this.isFacebookSSO()){
-			
-		}else{
-			if (!getPassword().equals(findEmp.getPassword()))
-				throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");	
-		}
+		if (!getPassword().equals(findEmp.getPassword()))
+			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");	
 		
-		emp.copyFrom(findEmp);
-		session.setUser(emp.getUser());
+		session.setEmployee(findEmp);
 		
 		return session;
 	}
@@ -477,12 +473,7 @@ public class Login implements ContextAware {
 		
 		Session session = loginService();
 		
-		if("1".equals(PageNavigator.USE_TADPOLE)){
-			goTadpoleLogin(this.getEmail(), password);
-		}
-		
-		session.fillUserInfoToHttpSession();
-		storeIntoServerSession(session);
+		return login(session);
 		
 		/*
 		MainPanel mainPanel=null;/*
@@ -602,7 +593,52 @@ public class Login implements ContextAware {
         */
 		
 		//new Remover(new ModalWindow(), true), 
-		return new Object[]{new Refresh(new StartCodi(session, "login"), false, true)};
+		
+	}
+	
+	public Object[] login(Session session) throws Exception {
+		
+		session.fillSession();
+		session.fillUserInfoToHttpSession();
+		
+		storeIntoServerSession(session);
+
+		if("1".equals(PageNavigator.USE_TADPOLE)){
+			goTadpoleLogin(session.getEmployee().getEmail(), password);
+		}
+		
+		HttpServletRequest httpServletRequest = TransactionContext.getThreadLocalInstance().getRequest();
+		
+		String ipAddress = httpServletRequest.getRemoteAddr();
+
+        CodiLog  log = new CodiLog();
+        log.setId(log.createNewId());
+        log.setEmpcode(session.getEmployee().getEmpCode());
+        log.setComCode(session.getEmployee().getGlobalCom());
+        log.setType("login");
+        log.setDate(new Date());
+        log.setIp(ipAddress);
+        log.createDatabaseMe();
+
+        
+        
+		
+		MainPanel mainPanel;
+		
+		PageNavigator pageNavigator = new PageNavigator();
+		pageNavigator.session = session;
+		
+		if("1".equals(StartCodi.USE_OCE)){
+			mainPanel =  pageNavigator.goDashBoard();
+		}else{
+			mainPanel = pageNavigator.goProcess();
+		}
+		
+		Locale locale = new Locale();
+		locale.setLanguage(session.getEmployee().getLocale());
+		locale.load();
+
+		return new Object[]{locale, new Refresh(mainPanel, false, true)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
