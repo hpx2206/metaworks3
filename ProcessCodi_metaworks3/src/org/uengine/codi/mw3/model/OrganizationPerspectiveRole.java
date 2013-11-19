@@ -38,7 +38,7 @@ public class OrganizationPerspectiveRole extends Perspective {
 		setRoleList(null);
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK)
 	public Popup addRole() {
 		IRole role = new Role();
 		role.getMetaworksContext().setWhere("admin");

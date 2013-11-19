@@ -45,9 +45,10 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		console.log('body.height = ' + bodyHeight);
 
 		var position = 'right';
+		var where = 'up';
 		
 		// default position
-		top -= 40;
+		top -= 20;
 		
 		if(top < -10){
 			// change bottom position
@@ -56,8 +57,9 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 
 			position = 'top'			
 		}else if(bodyHeight < top + popLayerHeight + 30){
-			top -= (popLayerHeight - 60);			
-		
+			top -= (popLayerHeight - 20);			
+			where = 'down'
+			
 			if(bodyHeight < top + popLayerHeight + 30){
 				// change top position
 				top = y - popLayerHeight - 30;
@@ -67,31 +69,35 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 			}
 		}
 		
-		console.log('position : ' + position);
-		
 		if(left < 0){
+			this.divObj.find('.cluetip-arrows').css({'left':x-12});
+			
 			left = 0;
 		}else if(bodyWidth < left + popLayerWidth){
-			if(position == 'right')
+			if(position == 'right'){
 				left = x - popLayerWidth - 30;
-			else{
-				left = bodyWidth - popLayerWidth - 30;
 				
 				position = 'left';
+			}else{
+				left = bodyWidth - popLayerWidth - 30;
 			}
 		}
 		
 		this.divObj.css({left: left + 'px',top: top + 'px'});
-		
-		if(position == 'right'){
-			//this.divObj.find('.cluetip-arrows').css({'top':y});
-		}else if(position == 'top'){
-			this.divObj.removeClass('clue-right-rounded').addClass('clue-bottom-rounded');
-			this.divObj.find('.cluetip-arrows').css({'left':x+3});
-		}else if(position == 'bottom'){
-			this.divObj.removeClass('clue-right-rounded').addClass('clue-top-rounded');
-		}else if(position == 'left'){
-			this.divObj.removeClass('clue-right-rounded').addClass('clue-left-rounded');
+
+		console.log('position : ' + position);
+		if(position == 'right' || position == 'left'){
+			if(position == 'left')
+				this.divObj.removeClass('clue-right-rounded').addClass('clue-left-rounded');
+			
+			if(where == 'down')
+				this.divObj.find('.cluetip-arrows').css({'top':280});
+				
+		}else if(position == 'top' || position == 'bottom'){
+			if(position == 'top')
+				this.divObj.removeClass('clue-right-rounded').addClass('clue-bottom-rounded');
+			else
+				this.divObj.removeClass('clue-right-rounded').addClass('clue-top-rounded');
 		}
 		
 		this.divObj.show();
