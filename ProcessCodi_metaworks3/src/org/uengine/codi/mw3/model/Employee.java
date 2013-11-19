@@ -585,7 +585,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	public void addBasicTopics() throws Exception{
 		
-		String topics[]={"영업관리","도서관리","연락처"};
+		String topics[]={"영업","도서","연락처"};
 		
 		
 		for(int i=0; i<topics.length; i++){
