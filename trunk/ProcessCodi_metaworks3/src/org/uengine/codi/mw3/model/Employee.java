@@ -4,22 +4,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.EventContext;
 import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -28,7 +26,6 @@ import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.example.facebook.IPerson;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
@@ -1121,11 +1118,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	public Object[] logout() throws Exception{
-		if (this.getMetaworksContext().getWhere().equals("inDetailWindow"))
-			return new Object[]{new Remover(new ModalWindow()), session.logout()};
-		else
-			return new Object[]{session.logout()};
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE), new Refresh(session.logout())};
 	}
+	
 	@Override
 	public Session drag() throws Exception {
 		session.setClipboard(this);
@@ -1326,5 +1321,23 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		user.setName(this.getEmpName());
 		
 		return user;
+	}
+	
+	public boolean facebookSSO(){
+		IEmployee findEmp = this.findForLogin();
+		
+		/*
+		if(findEmp != null){
+			if(this.getFacebookId().equals(findEmp.getFacebookId())){
+				true;
+			}
+				
+		}else{
+			this.saveMe();
+			
+		}
+		*/
+		
+		return true;
 	}
 }

@@ -1,17 +1,17 @@
 package org.uengine.codi.mw3.model;
 
 import java.math.BigInteger;
-import java.net.URL;
 import java.security.SecureRandom;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.validation.constraints.Pattern;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
-import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
@@ -26,15 +26,13 @@ import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 public class Invitation implements ContextAware{
 	
 	MetaworksContext metaworksContext;
-	
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
-	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-
+		
 	public Invitation(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
@@ -77,10 +75,11 @@ public class Invitation implements ContextAware{
 	}
 	
 	
-	@ServiceMethod(callByContent=true, target="popup")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, validate=true)
 	@Face(displayName="$Invite")
 	public Object invite() throws Exception{
 		
+		/*
 		Employee employee = new Employee();
 		employee.setEmail(this.getEmail());
 		IEmployee findEmployee = employee.findByEmail();
@@ -157,20 +156,7 @@ public class Invitation implements ContextAware{
     		
     	String activateURL = "http://"+ host + ":" + port + root + "/activate.html?key=" + findEmployee.getAuthKey();
 		System.out.println(activateURL);		
-
-//		    url = url + "?codi.id=" + getEmail() + "&codi.password=" + newUser.getPassword();
-//			
-//			(new EMailServerSoapBindingImpl()).sendMail(session.getEmployee().getEmail(), 
-//						session.getUser().getName(),
-//						getEmail(), 
-//						EmailInviteMsgTitle + session.getUser().getName(), 
-//						"<p><a href='" + url + "'>"+EmailInviteMsg+"</a><br/>"
-//						+EmailTempPw + newUser.getPassword()+"<br/>"
-//						+EmailChangePw, 
-//						null, 
-//						null,
-//						"UTF-8"
-//			);
+		
 		try{
 		    
 			(new EMailServerSoapBindingImpl()).sendMail(session.getEmployee().getEmail(), 
@@ -181,8 +167,9 @@ public class Invitation implements ContextAware{
 		}catch(Exception e){
 			throw new Exception("$FailedToSendInvitationMail");
 		}
+		*/
 		
-		
+		/*
 		Contact newContact = new Contact();
 		newContact.setUserId(session.getUser().getUserId());
 		
@@ -213,7 +200,9 @@ public class Invitation implements ContextAware{
 		cp.load(session.getUser().getUserId());
 
 		return new Refresh(cp);
+		*/
 		
+		return new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE);
 	}
 	
 	

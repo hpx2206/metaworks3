@@ -247,7 +247,7 @@ public interface IEmployee extends IDAO {
 	@Available(where={"inDetailWindow", "inDetailPopup"})
 	public Object[] unsubscribe() throws Exception;
 	
-	@ServiceMethod
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] logout() throws Exception;
 	
 	@Available(how={"tree"}) // 상황에 맞춰서 넣어 줘야 한다.
