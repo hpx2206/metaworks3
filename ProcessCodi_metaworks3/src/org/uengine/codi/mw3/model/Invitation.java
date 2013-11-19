@@ -126,6 +126,7 @@ public class Invitation implements ContextAware{
 				
 				Employee saveEmp = new Employee();
 				saveEmp.copyFrom(findEmp);
+				saveEmp.setInviteUser(session.getEmployee().getEmpCode());
 				saveEmp.syncToDatabaseMe();
 			}
 			
