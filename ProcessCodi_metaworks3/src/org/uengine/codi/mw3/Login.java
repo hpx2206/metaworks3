@@ -263,15 +263,41 @@ public class Login implements ContextAware {
 		String baseUrl = TenantContext.getURL(null);
 		String url = baseUrl + "/" + signUpURL;
 
+//		FileInputStream is;
+//		try {
+//			is = new FileInputStream(path);
+//			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+//			BufferedReader br = new BufferedReader(isr);
+//			
+//			
+//			while(true){
+//				content = br.readLine();
+//				if(content == null) break;
+//				System.out.println(content);
+//			}
+//			System.out.println();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		String content;
+		String tempContent = "";
+		
 		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
 		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"inviteMail.html";
-		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
 			is = new FileInputStream(path);
-			UEngineUtil.copyStream(is, bao);
-			System.out.println();
+			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			
+			
+			while(true){
+				tempContent += br.readLine();
+				if(br.readLine() == null) break;
+				System.out.println(tempContent);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -279,8 +305,7 @@ public class Login implements ContextAware {
 		
 		String title = "프로세스코디 계정을 활성화시키세요.";
 		
-		String tempContent = bao.toString();
-		String content = this.replaceString(tempContent,beforeCompany,afterCompany);
+		content = this.replaceString(tempContent,beforeCompany,afterCompany);
 		content = this.replaceString(content, parameterSignUpURL, url);
 		content = this.replaceString(content, signUpBaseUrl, baseUrl);
 		System.out.println(content);
@@ -310,23 +335,33 @@ public class Login implements ContextAware {
 		String url = baseUrl + "/" + forgotPasswordURL;
 		
 		
+		String content;
+		String tempContent = "";
+		
 		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
 		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"passwordChangeMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
 			is = new FileInputStream(path);
-			UEngineUtil.copyStream(is, bao);
-			System.out.println();
+			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+			BufferedReader br = new BufferedReader(isr);
+			
+			
+			while(true){
+				tempContent += br.readLine();
+				if(br.readLine() == null) break;
+				System.out.println(tempContent);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		
 		String title = "비밀번호 변경을 요청하셨습니다";
 		
-		String tempContent = bao.toString();
-		String content = this.replaceString(tempContent,beforeCompany,afterCompany);
+		content = this.replaceString(tempContent,beforeCompany,afterCompany);
 		content = this.replaceString(content, passwordURL, url);
 		content = this.replaceString(content, signUpBaseUrl, baseUrl);
 		System.out.println(content);
