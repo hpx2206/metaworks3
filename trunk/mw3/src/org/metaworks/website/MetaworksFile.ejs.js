@@ -20,6 +20,7 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		var imageDiv = $("#image_" + this.objectId);
 		
 		if(imageDiv.length > 0){
+			$("#convertProgress_" + objectId).show();
 			try {
 				var image = object.downloadImage(false);
 				var width = 0;
