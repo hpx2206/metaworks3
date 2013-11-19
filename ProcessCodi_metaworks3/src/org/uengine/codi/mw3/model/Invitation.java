@@ -187,7 +187,10 @@ public class Invitation implements ContextAware{
 		String beforeName = "user.name";
 		String afterName = session.getEmployee().getEmail(); //초대 하는사람
 		String beforeCompany = "user.company";
-		String afterCompany =  Employee.extractTenantName(this.getEmail()); //초대 받는사람.
+		String baseLinkUrl = "base.url";
+		String baseUrl = TenantContext.getURL(null);
+		String afterCompany =  Employee.extractTenantName(this.getEmail());
+
 		String path = this.getClass().getResource("").getPath();
 		for(int i =0; i<6 ; i++){
 			path = new File(path).getParent();
@@ -211,6 +214,7 @@ public class Invitation implements ContextAware{
 		Login login = new Login();
 		String content = login.replaceString(tempContent,beforeName,afterName);
 		content = login.replaceString(content, beforeCompany, afterCompany);
+		content = login.replaceString(content, baseLinkUrl, baseUrl);
 		System.out.println(content);
 		
 		try{
