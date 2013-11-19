@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -252,6 +253,8 @@ public interface IInstance extends IDAO{
 	public MainPanel goSns() throws Exception;
 	
 
+	@ServiceMethod(callByContent=true)
+	public Object[] loadTopic() throws Exception;
 	/*
 	@ServiceMethod(payload={"instId"}, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow monitor() throws Exception;
