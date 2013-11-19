@@ -449,21 +449,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object editNotiSetting() throws Exception {
-		INotiSetting notiSetting = new NotiSetting();
-		SelectBox selectBox = new SelectBox();
+		NotiSetting notiSetting = new NotiSetting();
+		notiSetting.getMetaworksContext().setWhen(WHEN_EDIT);
 		INotiSetting result = notiSetting.findByUserId(this.getEmpCode());
-		result.next();
-		
-		result.getMetaworksContext().setWhen(WHEN_EDIT);
-		
-		result.setImageFile(new PortraitImageFile());
-		result.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
-		
-		selectBox.add("OnDate", "1");
-		selectBox.add("DayBefore", "2");
-		result.setSelectTime(selectBox);
-		
-		return result;
+		if( result.next() ){
+			notiSetting.copyFrom(result);
+			SelectBox selectBox = new SelectBox();
+			selectBox.add("OnDate", "1");
+			selectBox.add("DayBefore", "2");
+			selectBox.setSelected(notiSetting.getDefaultNotiTime());
+			notiSetting.setSelectTime(selectBox);
+		}else{
+			notiSetting.setUserId(this.getEmpCode());
+		}
+		return notiSetting;
 	}
 	
 	@Override
@@ -965,12 +964,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] showDetail() throws Exception {
-		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
+		return new Object[]{new Remover(new Popup(), true), new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
 	}
 	
 	@Override
 	public Object[] showNotiSetting() throws Exception {
-		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editNotiSetting(), 400, 550, "$NotiSetting")};
+		return new Object[]{new Remover(new Popup(), true), new ModalWindow(this.editNotiSetting(), 700, 550, "$NotiSetting")};
 	}
 	
 	@Override

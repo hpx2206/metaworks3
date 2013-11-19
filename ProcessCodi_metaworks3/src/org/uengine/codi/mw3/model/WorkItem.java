@@ -1170,8 +1170,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				Notification noti = new Notification();
 				INotiSetting notiSetting = new NotiSetting();
 				INotiSetting findResult = notiSetting.findByUserId(followerUserId);
-				findResult.next();
-				if(findResult.isWriteInstance()){
+//				findResult.next();
+				if(!findResult.next() || findResult.isWriteInstance()){
 					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
 					noti.setUserId(followerUserId);
 					noti.setActorId(session.getUser().getUserId());
