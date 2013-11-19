@@ -4107,14 +4107,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			function isMouseInContanier(container, event){
 				var containerOffset = container.offset();
-				
-				containerOffset.right = parseInt(containerOffset.left) + container.width();
-				containerOffset.bottom = parseInt(containerOffset.top) + container.height();
-
-				if ('select-one' == event.srcElement.type ||
-					((containerOffset.left <= event.pageX && event.pageX <= containerOffset.right) && 
-					(containerOffset.top <= event.pageY && event.pageY <= containerOffset.bottom))){
-					return true;
+				if( containerOffset ){
+					containerOffset.right = parseInt(containerOffset.left) + container.width();
+					containerOffset.bottom = parseInt(containerOffset.top) + container.height();
+	
+					if ('select-one' == event.srcElement.type ||
+						((containerOffset.left <= event.pageX && event.pageX <= containerOffset.right) && 
+						(containerOffset.top <= event.pageY && event.pageY <= containerOffset.bottom))){
+						return true;
+					}else{
+						return false;
+					}
 				}else{
 					return false;
 				}
