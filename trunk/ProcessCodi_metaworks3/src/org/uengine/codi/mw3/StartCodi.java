@@ -183,14 +183,15 @@ public class StartCodi {
 			if("1".equals(StartCodi.USE_MULTITENANCY))
 	       		url = Employee.extractTenantName(employee.getEmail());
 ///////////////////////////////////////////////-------------- 수정 -----------------/////////////////////////////////////////////////////			
-			return new Object[]{new Forward(TenantContext.getURL(null))};
+			//return new Object[]{new Forward(TenantContext.getURL(null))};
+			return new Object[]{new ErrorPage()};
 		}
 		Object[] returnObjects = null;
 		returnObjects = employee.applyForAddContact();
 		
 		if(returnObjects != null){
 			
-			String url = TenantContext.getURL(null);
+			//String url = TenantContext.getURL(null);
 			//return new Object[]{new Forward(url)};
 			return returnObjects;
 		}
