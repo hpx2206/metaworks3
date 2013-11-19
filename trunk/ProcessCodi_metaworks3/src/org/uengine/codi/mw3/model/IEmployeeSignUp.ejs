@@ -43,12 +43,12 @@
 		<img id="userPicture_<%=objectId %>" src="<%='portrait/' + value.empCode + '.thumnail' %>" width="104" height="104" />	
 	</div>
 	
-	프로필 사진을 첨부해주세요.
-	<%=fields.imageFile.here() %>
-	
-	<div class="popup_btn_blue" onClick="<%=methods.nextStep.caller()%>"><%=mw3.localize("$Skip")%></div>
 	
 	<div  class="singnup_choose_pic">
+		<div class="singnup_mutiline">프로필 사진을 첨부해주세요.</div>
+		<div class="singnup_mutiline"><%=fields.imageFile.here() %></div>	
+		<div class="singnup_mutiline"><div class="popup_btn_gray" onClick="<%=methods.nextStep.caller()%>"><%=mw3.localize("$Skip")%></div></div>
+	
 	</div>
 	
 	<div class="clear"></div>
