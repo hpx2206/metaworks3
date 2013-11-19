@@ -90,7 +90,7 @@ public class Followers implements ContextAware {
 	}
 	
 	//, loader="auto", loadOnce=true
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public Object[] addFollowers() throws Exception{		
 		Popup popup = new Popup(400,400);
 //		Popup popup = new ModalWindow();

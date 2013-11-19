@@ -171,7 +171,7 @@ public class Notification extends Database<INotification> implements INotificati
 								actorUserInfoDB.getEmail(), 
 								actorUserInfoDB.getEmpName(),
 								userInfoDB.getEmail(), 
-								"[ProcessCodi] " + (instance.getName() == null ? GlobalContext.getLocalizedMessage("$AddFo") : instance.getName()), 
+								"[ProcessCodi] " + ( (instance != null && instance.getName() != null) ? instance.getName() : GlobalContext.getLocalizedMessage("$AddFo")), 
 								getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>", 
 								null, 
 								null,
@@ -216,6 +216,8 @@ public class Notification extends Database<INotification> implements INotificati
 			}
 			
 			return new Object[]{new MainPanel(new Main(session, String.valueOf(this.getInstId())))};
+		}else if(this.getInstId() == null || this.getInstId() < 1){
+			return null;
 		}else{
 			Instance instance = new Instance();
 			instance.setInstId(getInstId());
