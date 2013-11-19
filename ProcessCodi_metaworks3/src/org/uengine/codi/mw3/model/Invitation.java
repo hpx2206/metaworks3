@@ -191,11 +191,8 @@ public class Invitation implements ContextAware{
 		String baseUrl = TenantContext.getURL(null);
 		String afterCompany =  Employee.extractTenantName(this.getEmail());
 
-		String path = this.getClass().getResource("").getPath();
-		for(int i =0; i<6 ; i++){
-			path = new File(path).getParent();
-		}
-		path = path + File.separatorChar+"WebContent"+File.separatorChar+"resources"+File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
+		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
+		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
