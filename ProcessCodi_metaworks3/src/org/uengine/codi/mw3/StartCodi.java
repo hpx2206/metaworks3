@@ -60,7 +60,7 @@ public class StartCodi {
 		this.setKey(key);
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"key"}, target=ServiceMethodContext.TARGET_SELF)
 	public Object load() throws Exception{
 		
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
@@ -73,7 +73,7 @@ public class StartCodi {
 		
 		//String comCode = null;
 		
-		if("1".equals(USE_MULTITENANCY)){
+		if(!"login".equals(this.getKey())){
 			if(comAlias == null){
 				return new SignUp();
 			}

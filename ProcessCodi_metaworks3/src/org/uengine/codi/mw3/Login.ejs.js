@@ -44,7 +44,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		// 존재하는 팝업 제거
 		$('.target_popup,.target_stick').remove();
 
-		delCookie("codi.id", "/","");
 		delCookie("codi.rememberMe", "/","");
 		delCookie("codi.facebookSSO", "/","");
 	}
