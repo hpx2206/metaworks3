@@ -7,9 +7,11 @@ var org_uengine_codi_mw3_StartCodi = function(objectId, className){
 	this.object = mw3.objects[this.objectId];
 
 	if(this.object == null)
-		return true;	
-	
-	if(this.object.key == 'logout')
+		return true;
+		
+	if(this.object.key == 'loader'){
+		this.object.load();
+	}else if(this.object.key == 'logout')
 		this.object.logout();
 	else if(this.object.key == 'login')
 		this.object.login();
