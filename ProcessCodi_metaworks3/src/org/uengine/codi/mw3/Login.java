@@ -464,7 +464,11 @@ public class Login implements ContextAware {
 		confirm.setUrl(activateURL);
 		return confirm;
 		*/
+		
+		this.getMetaworksContext().setWhere("popup");
+		
 		return this;
+		
 	}
 		
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
