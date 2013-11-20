@@ -66,8 +66,12 @@ public class StartCodi {
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
 		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
 
+		if(loggedUserId != null)
+			return login();
+		
 		String comAlias = TenantContext.getThreadLocalInstance().getTenantId();
-		String comCode = null;
+		
+		//String comCode = null;
 		
 		if("1".equals(USE_MULTITENANCY)){
 			if(comAlias == null){
@@ -84,17 +88,18 @@ public class StartCodi {
 				//return new ErrorPage();
 				return new Login();
 			}else
-				comCode = findCompany.getComCode();
+				return new Login();
 		}
 		
+		/*
 		if(loggedUserId != null){
 			boolean isLogin = false;
-			
+
 			if("1".equals(USE_MULTITENANCY)){
 				Employee employee = new Employee();
 				employee.setEmpCode(loggedUserId);
 				IEmployee employeeRef = employee.findMe();
-				
+
 				if(employeeRef.getGlobalCom().equals(comCode))
 					isLogin = true;
 			}else{
@@ -104,6 +109,7 @@ public class StartCodi {
 			if(isLogin)
 				return login();
 		}
+		*/
 		
 		Login login = new Login();
 		login.setMetaworksContext(new MetaworksContext());
