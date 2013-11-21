@@ -574,6 +574,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		NotiSetting notiSetting = new NotiSetting();
 		notiSetting.setId(this.createNewNotiSettingId());
 		notiSetting.setUserId(this.getEmpCode());
+		notiSetting.setWriteInstance(true);
 		
 		notiSetting.createDatabaseMe();
 		
