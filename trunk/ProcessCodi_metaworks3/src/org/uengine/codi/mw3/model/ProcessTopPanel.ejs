@@ -55,14 +55,20 @@
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
 		 	
-		 	<%if(value.session!=null && value.session.employee!=null && value.session.employee.isAdmin){%>
+		 	<%if(false && value.session!=null && value.session.employee!=null && value.session.employee.isAdmin){%>
 		 		<div style="float:left; margin-left:10px; margin-top:15px;">
 					<a id="wBtn" href="#" onClick="<%=methods.companyRepInfo.caller() %>"><span><%=mw3.localize("$setComapnyRep")%></span></a>
 				</div>
 			<% } %>
+			<%
+			if(false){
+			%>
 			<div style="float:left; margin-left:10px; margin-top:15px;">
 					<a id="wBtn" href="#" onClick="<%=methods.feedBackInfo.caller() %>"><span><%=mw3.localize("$ContactUs")%></span></a>
 			</div>
+			<%
+			}
+			%>
 
 
 		 	<%=fields.tray.here()%>
