@@ -36,9 +36,9 @@ public class PortraitImageFile extends MetaworksFile {
 		if(getFileTransfer().getInputStream().available() == 0) return;		
 
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
-		String portraitPath = fileSystemPath + "/portrait";
-		String srcName = portraitPath + "/" + getEmpCode() + ".jpg";
-		String thumnailName = portraitPath + "/" + getEmpCode() + ".thumnail.jpg";
+		String portraitPath = fileSystemPath + File.separatorChar + "portrait";
+		String srcName = portraitPath + File.separatorChar + getEmpCode() + ".jpg";
+		String thumnailName = portraitPath + File.separatorChar + getEmpCode() + ".thumnail.jpg";
 		
 		// 업로드 폴더 확인 및 생성
 		File portraitFile = new File(portraitPath);

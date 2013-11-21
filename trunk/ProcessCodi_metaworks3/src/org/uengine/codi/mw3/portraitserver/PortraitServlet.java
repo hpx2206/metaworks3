@@ -54,9 +54,9 @@ public class PortraitServlet extends HttpServlet {
 		int pos = portraitName.lastIndexOf(".");
 		if(pos > -1 && ".thumnail".equals(portraitName.substring(pos))){
 			String empCode = portraitName.substring(0, pos);
-			String thumnailName = portraitPath + "/" + empCode + ".thumnail.jpg";
-			String srcName = portraitPath + "/" + empCode + ".jpg";
-			String unknownName = portraitPath + "/unknown_user.gif";
+			String thumnailName = portraitPath + File.separatorChar + empCode + ".thumnail.jpg";
+			String srcName = portraitPath + File.separatorChar + empCode + ".jpg";
+			String unknownName = portraitPath + File.separatorChar + "unknown_user.gif";
 			//String unknownName = this.getServletContext().getRealPath("/") +  "images/portrait/unknown_user.gif";
 			
 			// 쎔네일 파일 존재 확인
@@ -99,7 +99,7 @@ public class PortraitServlet extends HttpServlet {
 				}
 			}
 		}else{			
-			String srcName = portraitPath + "/" + pathInfo + ".jpg";
+			String srcName = portraitPath + File.separatorChar + pathInfo + ".jpg";
 			
 			System.out.println("원본 이미지 요청 : " + srcName);
 			
