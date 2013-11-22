@@ -178,7 +178,7 @@ public class ProcessExploreContent{
 	public Object[] downloadPdf() throws Exception{
 		String processName = this.getDefId();
 		String convertedFilename = processName.replace(".", "@").split("@")[0];
-		String convertedFilepath = GlobalContext.getPropertyString("filesystem.path") + convertedFilename;
+		String convertedFilepath = GlobalContext.getPropertyString("filesystem.path") + File.separatorChar + convertedFilename;
 		
 		BufferedWriter writer = null;
 		FileOutputStream fos = null;
@@ -225,5 +225,6 @@ public class ProcessExploreContent{
 		im.convertFile(convertedFilepath + ".svg", convertedFilepath + ".pdf");
 		
 		return new Object[]{new Download(new FileTransfer(new String(convertedFilename.getBytes("UTF-8"),"ISO8859_1"), "application/pdf", new FileInputStream(convertedFilepath+ ".pdf")))};
+		
 	}
 }
