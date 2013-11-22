@@ -854,7 +854,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object activate() throws MetaworksException{
 
 		IEmployee findEmployee = null;
@@ -988,10 +988,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(!findEmployee.getAuthKey().equals(this.getAuthKey()))
 			throw new MetaworksException("not match activation code");
 
-	
-		findEmployee.getMetaworksContext().setWhere("admin");
-		findEmployee.getMetaworksContext().setHow("detail");
-		findEmployee.getMetaworksContext().setWhen("findpw");
+		findEmployee.getMetaworksContext().setWhere("forgotpassword");
+		findEmployee.getMetaworksContext().setHow("signUp");
+		findEmployee.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);		
 		findEmployee.setPassword(null);
 		return findEmployee;
 	}
