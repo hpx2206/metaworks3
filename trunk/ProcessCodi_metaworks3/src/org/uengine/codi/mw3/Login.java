@@ -251,6 +251,7 @@ public class Login implements ContextAware {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public void goSignUp() throws Exception{
+		this.setStatus("signup");
 		this.getMetaworksContext().setHow("signup");
 	}
 	
@@ -384,7 +385,7 @@ public class Login implements ContextAware {
 		}
 	}
 	
-	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object signUp() throws Exception {
 		
 		Employee employee = new Employee();
@@ -470,7 +471,95 @@ public class Login implements ContextAware {
 		return this;
 		
 	}
+	
+	
+	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_STICK)
+	public Object firstSignUp() throws Exception {
 		
+		Employee employee = new Employee();
+		employee.setEmail(this.getEmail());
+		IEmployee employeeRef = employee.findByEmail();
+		
+		// already sign up or invite user
+		if(employeeRef != null){
+			if(employeeRef.isApproved()){
+				throw new Exception("$AlreadyExistingUser");	
+			}else{
+				sendMailForSignUp("activate.html?key=" + employeeRef.getAuthKey());
+				
+				this.setEmail(employeeRef.getEmail());
+				this.getMetaworksContext().setHow("aftersignup");
+				
+			}
+			
+			this.getMetaworksContext().setWhere("popup");
+			
+			return this;
+		}
+
+		String authKey = UUID.randomUUID().toString();
+		
+		employee.setAuthKey(authKey);
+		
+		String comAlias = Employee.extractTenantName(this.getEmail());
+		boolean isAdmin = false;
+		
+		Company company = new Company();
+		company.setAlias(comAlias);
+		
+		ICompany findCompany = company.findByAlias();
+		if(findCompany == null){
+			isAdmin = true;
+			
+			// not yet sign up tenant
+			try {
+				company.setComCode(company.createNewId());
+				company.setComName(comAlias);
+
+				findCompany = company.createDatabaseMe();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new MetaworksException(e.getMessage());
+			}
+		}
+
+		String tenantId = findCompany.getComCode();
+		String defaultUX = "wave";
+		String defaultMob = "auto";
+		
+		//tenantName.substring(0, tenantName.lastIndexOf("@"))
+		employee.setGlobalCom(tenantId);
+		employee.setAuthKey(authKey);
+		employee.setIsAdmin(isAdmin);
+		employee.setIsDeleted("0");
+		employee.setPreferUX(defaultUX);
+		employee.setPreferMob(defaultMob);
+		employee.setEmpCode(employee.createNewId());
+		
+		try {
+			employee.createDatabaseMe();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new MetaworksException(e.getMessage());
+		}
+		
+		sendMailForSignUp("activate.html?key=" + authKey);
+		
+		this.getMetaworksContext().setHow("aftersignup");
+		/*
+		SignUpConfirm confirm = new SignUpConfirm();
+		confirm.setEmail(this.getEmail());
+		confirm.setUrl(activateURL);
+		return confirm;
+		*/
+		
+		this.getMetaworksContext().setWhere("popup");
+		
+		return this;
+		
+	}
+	
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
 	public boolean checkAuthSocial(){
 		if(this.getEmail() == null || this.getEmail().length() == 0)
@@ -682,6 +771,7 @@ public class Login implements ContextAware {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public void goForgotPassword(){
+		this.setStatus("forgotpassword");
 		this.getMetaworksContext().setHow("forgotpassword");
 	}
 	
