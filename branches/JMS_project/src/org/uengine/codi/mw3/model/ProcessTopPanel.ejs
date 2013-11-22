@@ -1,0 +1,99 @@
+<%
+	if(value){
+		 	
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		
+			if( value.session && "sns" == value.session.employee.preferUX ){
+%>
+
+			<% if(value.session.ux == 'oce'){ %>
+			
+				<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/waveStyle/garuda_logo.png"/>
+			 	</div>
+		 	
+		 	<% } else{%>
+		 		<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/signIn/codi_logo.png"/>
+			 	</div>
+			<% } %>
+			
+			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
+			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
+			<div style="float:left;"><%=fields.windowPanel.here()%>	</div>
+			
+			<%=fields.tray.here()%>
+			
+		    <div class="info">
+		    <div style="float:left;"><%=fields.loginUser.here({when: 'self_small'})%></div>
+		  	<!--
+		    <%=fields.searchBox.here()%>
+		  	-->
+        	<%=fields.session.here({when:'view'})%>
+			    <div style="display:none">
+			        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
+			        <%}else{%>
+			        	session here.
+			        <%}%>	
+		        </div>
+			</div>	
+<%
+			}else{
+%>
+		 	<% if(value.session.ux == 'oce'){ %>
+			
+				<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/waveStyle/garuda_logo.png"/>
+			 	</div>
+		 	
+		 	<% } else{%>
+		 		<div style="float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/signIn/codi_logo.png"/>
+			 	</div>
+			<% } %>
+		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
+		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
+		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
+		 	
+		 	<%if(false && value.session!=null && value.session.employee!=null && value.session.employee.isAdmin){%>
+		 		<div style="float:left; margin-left:10px; margin-top:15px;">
+					<a id="wBtn" href="#" onClick="<%=methods.companyRepInfo.caller() %>"><span><%=mw3.localize("$setComapnyRep")%></span></a>
+				</div>
+			<% } %>
+			<%
+			if(false){
+			%>
+			<div style="float:left; margin-left:10px; margin-top:15px;">
+					<a id="wBtn" href="#" onClick="<%=methods.feedBackInfo.caller() %>"><span><%=mw3.localize("$ContactUs")%></span></a>
+			</div>
+			<%
+			}
+			%>
+
+
+		 	<%=fields.tray.here()%>
+		 	
+			<div class="info">
+			 	<div style="float:left;">
+			 		<%=fields.loginUser.here({when: 'self_small'})%>
+			 	</div>
+			 	<!--
+		    	<%=fields.searchBox.here()%>
+		    	-->
+		    	<%=fields.session.here({when:'view'})%>
+			</div>	
+			
+			<!--
+		    <div class="info" <% if(value.session && value.session.ux == 'phone') { %> style="right:0px;" <%}%>>
+		    
+		        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
+		        <%}else{%>
+		        	session here.
+		        <%}%>	
+			</div>	
+			-->
+			<div class="clear"></div>
+<%
+		}
+	}
+%>

@@ -1,0 +1,71 @@
+<%
+if(mw3.when == 'filter'){
+%>
+	<li>
+		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/>
+		<a href="#" onClick="<%=methods.processListFilter.caller()%>"><%=value.name%></a>
+	</li>
+<%
+}else{
+%>
+<span id="method_<%=objectId%>_initiate">
+<%
+	if(value){
+		if(mw3.when == 'new' || mw3.when == 'edit'){
+%>
+	<div class="form_table2"> 
+		<table style="width: 100%;" border="1" cellspacing="0" >	
+			<tbody>
+				<tr>
+					<td width="50">별칭</td>
+					<td><%=value.defId%></td>
+				</tr>
+				<tr>
+					<td><%=mw3.localize("$DisplayName")%></td>
+					<td><%=fields.name.here({when: 'edit'})%></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+		
+	<div id="editiconpop">
+		<%=fields.iconColor.here()%>
+		<div></div>
+	</div>
+	
+	<%=fields.roleMappingPanel.here()%>
+	
+	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
+		<ul>			
+			<li><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span>삭제</span></a></li>
+			<li><a id="wBtn" href="#" onClick="<%=methods.close.caller()%>"><span>취소</span></a></li>			
+			<li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>저장</span></a></li>			
+		</ul>
+	</div>
+<%		
+		}else{
+			var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+			
+			var admin = false;
+			if(session && session.employee)
+				admin = session.employee.isAdmin;		
+				
+		  if( admin ){
+%>
+   	<div class="editicon" onclick="<%=methods.modify.caller()%>"></div>
+<%
+          }
+%>   
+    <a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').whenClick()"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
+    <a href="#"><%=value.name%></a>
+
+
+
+	
+<%
+		}
+	}
+}
+%>	
+
+</span>
