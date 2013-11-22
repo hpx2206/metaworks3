@@ -123,8 +123,11 @@ org_uengine_codi_mw3_Login.prototype = {
 	keydown : function(e){
 		if(e.keyCode == 13){
 			window.event.returnValue = false;
-			if( this.object && this.object.status == 'subscribe'){
-				mw3.call(this.objectId, 'subscribe');
+			console.log(this.object);
+			if( this.object && this.object.status == 'forgotpassword'){
+				mw3.call(this.objectId, 'forgotPassword');
+			}else if(this.object && this.object.status == 'signup'){
+				mw3.call(this.objectId, 'signUp');
 			}else{
 				mw3.call(this.objectId, 'login');
 			}
