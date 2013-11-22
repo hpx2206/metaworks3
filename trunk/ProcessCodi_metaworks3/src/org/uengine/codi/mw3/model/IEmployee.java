@@ -45,7 +45,7 @@ public interface IEmployee extends IDAO {
 	@Face(displayName="$Name")
 	@Name
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.when == 'new2'", message="성함을 입력하세요.")
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="성함을 입력하세요.")
 	})	
 	public String getEmpName();
 	public void setEmpName(String empName);
@@ -70,10 +70,10 @@ public interface IEmployee extends IDAO {
 	@Face(options="type", values="password")
 	@NonLoadable
 	@NonSavable
-	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호 확인를 입력하여 주십시오."),
-		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password != confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
-	})
+//	@ValidatorSet({
+//		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호 확인를 입력하여 주십시오."),
+//		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password != confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
+//	})
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
 	
@@ -258,11 +258,11 @@ public interface IEmployee extends IDAO {
 	public void prevStep();
 	
 	@Hidden(where={"step2"})
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, validate=true)
 	public void nextStep();
 	
-	@Available(where={"step2"})
-	@ServiceMethod(callByContent=true)
+	@Available(where={"step2", "forgotpassword"})
+	@ServiceMethod(callByContent=true, validate=true)
 	public Forward finish() throws Exception;
 	
 	public IEmployee findCompanyAdmin() throws Exception;
