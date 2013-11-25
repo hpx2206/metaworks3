@@ -162,7 +162,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		}
 		
 		if(findListing.size() == 0){
-			sb.add("1" , "0");
+			sb.add("없음" , "0");
 		}
 		
 		return sb;
