@@ -123,11 +123,11 @@ public interface IApp extends IDAO{
 	public WfNode getProject();
 	public void setProject(WfNode project);
 	
-	@Face(displayName = "$ReleaseVersion")
-	@NonLoadable
-	@NonSavable
-	public SelectBox getReleaseVersion();
-	public void setReleaseVersion(SelectBox releaseVersion);
+//	@Face(displayName = "$ReleaseVersion")
+//	@NonLoadable
+//	@NonSavable
+//	public SelectBox getReleaseVersion();
+//	public void setReleaseVersion(SelectBox releaseVersion);
 	
 	@NonLoadable
 	@NonSavable
