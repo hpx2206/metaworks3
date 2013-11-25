@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+import org.uengine.codi.mw3.processexplorer.ValuechainPerspective;
 import org.uengine.kernel.GlobalContext;
 
 public class PerspectivePanel  implements ContextAware {
@@ -119,7 +120,14 @@ public class PerspectivePanel  implements ContextAware {
 				CommingTodoPerspective commingTodoPerspective) {
 			this.commingTodoPerspective = commingTodoPerspective;
 		}
-		
+	ValuechainPerspective valuechainPerspective;
+		public ValuechainPerspective getValuechainPerspective() {
+			return valuechainPerspective;
+		}
+		public void setValuechainPerspective(ValuechainPerspective valuechainPerspective) {
+			this.valuechainPerspective = valuechainPerspective;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 		
@@ -185,6 +193,11 @@ public class PerspectivePanel  implements ContextAware {
 					projectPerspective = new ProjectPerspective();
 					projectPerspective.session = session;
 					projectPerspective.select();
+				}
+				// 벨류체인
+				if("1".equals(Perspective.USE_VALUECHAIN)){
+					valuechainPerspective = new ValuechainPerspective();
+					valuechainPerspective.getMetaworksContext().setHow("snsView");
 				}
 			}
 			
