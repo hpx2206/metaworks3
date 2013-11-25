@@ -397,9 +397,10 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		
 		// IaaS 연동 시
 		if("1".equals(StartCodi.USE_IAAS)){
-			reflectPanel.getMetaworksContext().setWhere("IaaS");
-	
+			reflectPanel.getMetaworksContext().setHow("IaaS");
+			
 			ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
+			serverSelect.add("서버 없음", "0");
 			while(findListing.next()){
 				serverSelect.add(findListing.getServerName() + " : " + findListing.getServerIp(), String.valueOf(findListing.getId()));
 			}
