@@ -220,8 +220,8 @@ public class ReflectPanel {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+//				this.command(command);
 
 				
 				/*
@@ -266,7 +266,7 @@ public class ReflectPanel {
 				
 				
 				/*
-				 * 5. tomcat_deb 를 start 시킨다.
+				 * 5. tomcat_dev 를 start 시킨다.
 				 * sell 명령어 = {path}/startDev.sh
 				 * 
 				 */
@@ -409,8 +409,8 @@ public class ReflectPanel {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+//				this.command(command);
 				
 				/*
 				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행하기
@@ -442,10 +442,8 @@ public class ReflectPanel {
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + wfNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + wfNode.getProjectAlias() + "\"" + " \"dev\"";
-				jschServerBehaviour.runCommand(command);
+//				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + wfNode.getProjectAlias() + "\"";
+//				this.command(command);
 				
 				/*
 				 * 5. hudsonBuild.sh를 실행시켜 jobs 경로 아래 projectAlias와 동일한 이름의 job을 생성한다.
@@ -454,8 +452,8 @@ public class ReflectPanel {
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.hudson.build") + " \"" + wfNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
+//				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + wfNode.getProjectAlias() + "\"";
+//				this.command(command);
 				
 				/*
 				 * 6. svnVersion을 체크하여 반영시 svn의 커밋버전을 기록한다.
@@ -465,18 +463,18 @@ public class ReflectPanel {
 				 * 
 				 */
 				command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " \"" + wfNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
+				String svnVersion = jschServerBehaviour.runCommand(command);
 				
-//				/*
-//				 * 7. tomcat_dev/webapps에 build된 war 파일을 복사한다.
-//				 * sell 명령어 = {path}/copyWarDev.sh "projectAlias"
-//				 * 
-//				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
-//				 * 
-//				 */
-//				
-//				command = GlobalContext.getPropertyString("vm.tomcat.svnCopyToDev") + " \"" + wfNode.getProjectAlias() + "\"";
-//				this.command(command);
+				/*
+				 * 7. tomcat_dev/webapps에 build된 war 파일을 복사한다.
+				 * sell 명령어 = {path}/copyWarDev.sh "projectAlias"
+				 * 
+				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
+				 * 
+				 */
+				
+				command = GlobalContext.getPropertyString("vm.tomcat.svnCopyToDev") + " \"" + wfNode.getProjectAlias() + "\"";
+				this.command(command);
 				
 				/*
 				 * 8. tomcat_deb 를 start 시킨다.
@@ -486,8 +484,7 @@ public class ReflectPanel {
 				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer");
 				jschServerBehaviour.runCommand(command);
 				
-				
-				filepathinfo.setReflectVer(Integer.parseInt(this.getReflectVersion().getSelectedText()));
+				filepathinfo.setReflectVer(Integer.parseInt(svnVersion));
 				filepathinfo.setFileType(wfNode.getVisType());
 				filepathinfo.setSqlPath(this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath());
 				filepathinfo.setSqlFileName(this.getSqlFile().getFilename());
