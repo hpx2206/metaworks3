@@ -218,6 +218,10 @@ public class Perspective {
 		}else {
 			instList.getMetaworksContext().setWhere(selectedItem);
 		}
+		if(perspectiveType.equals("organization")){
+			instList.getMetaworksContext().setWhere(perspectiveType);
+		}	
+		
 		instList.load();
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);

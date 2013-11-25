@@ -170,9 +170,10 @@ public class Main {
 			
 			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
 			
-			westLayout.setCenter(perspectiveWindow);
+			westLayout.setWest(perspectiveWindow);
+			westLayout.setCenter(instanceListWindow);
 			westLayout.setUseHideBar(true);
-			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1,west__size: 160,  south__size:'50%'");
 			westLayout.setName("west");
 			
 			//Since there's are too many input boxes there, it is removed.
@@ -182,23 +183,16 @@ public class Main {
 //				westLayout.setSouth(contactWindow);
 //			}
 			
-			Layout eastLayout = new Layout();
-			eastLayout.setWest(instanceListWindow);
-			
-			eastLayout.setCenter(contentWindow);
-			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
-			eastLayout.setName("east");
-			eastLayout.setUseHideBar(false);
 			
 			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
+			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1,east__size:'50%'");
 			outerLayout.setNorth(processTopPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
 			//processTopPanel.setLoginUser(null);
 			
-			outerLayout.setWest(westLayout);
-			outerLayout.setCenter(eastLayout);		
+			outerLayout.setEast(contentWindow);
+			outerLayout.setCenter(westLayout);		
 			outerLayout.setName("center");
 			outerLayout.setUseHideBar(false);
 			

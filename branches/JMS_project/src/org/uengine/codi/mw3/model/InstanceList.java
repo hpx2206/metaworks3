@@ -140,6 +140,7 @@ public class InstanceList implements ContextAware{
 			});
 		}
 		int count;
+		IInstance instanceContents = null;
 		Instance tempInstanceContent = new Instance();
 		tempInstanceContent.setMetaworksContext(new MetaworksContext());
 		if(getMetaworksContext()!=null && getMetaworksContext().getHow()!=null && "dashboard".equals(getMetaworksContext().getHow())){
@@ -149,7 +150,12 @@ public class InstanceList implements ContextAware{
 		}else{
 			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
 		}
-		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
+		
+		if("organization".equals(this.getMetaworksContext().getWhere())){
+			instanceContents = tempInstanceContent.loadDept(session.getLastSelectedItem());
+		}else{
+			instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
+		}
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		
 		if(this.getMetaworksContext() == null) {

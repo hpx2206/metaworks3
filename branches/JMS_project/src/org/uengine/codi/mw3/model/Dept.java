@@ -335,7 +335,7 @@ public class Dept extends Database<IDept> implements IDept {
 	}
 		
 	public Object[] loadDeptList() throws Exception {
-		return Perspective.loadInstanceListPanel(session, "organization.group", getPartCode(), "부서 : " + this.getPartName());
+		return Perspective.loadInstanceListPanel(session,"organization", getPartCode(), "부서 : " + this.getPartName());
 	}
 
 	@Override

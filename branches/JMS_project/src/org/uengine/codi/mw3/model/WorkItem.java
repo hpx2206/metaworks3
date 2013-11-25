@@ -968,7 +968,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			instance.setInstId(this.getInstId());
 			
 			instanceRef = instance.databaseMe();
-			
+			if(this instanceof GenericWorkItem){
+				FileWorkItem fileWorkItem = new FileWorkItem();
+				fileWorkItem.setTaskId(this.getGrpTaskId());
+				fileWorkItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+				fileWorkItem.copyFrom(fileWorkItem.databaseMe());
+			}
 //			this.copyFrom(databaseMe());
 //			this.databaseMe();
 			this.syncToDatabaseMe();
@@ -1042,10 +1047,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				
 				if(this instanceof OverlayCommentWorkItem){
-					WorkItem parentWorkItem = new WorkItem();
+					GenericWorkItem parentWorkItem = new GenericWorkItem();
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
-					returnObjects = new Object[]{new ToAppend(parentWorkItem, this) , new Refresh(instanceFollowers)};
+					FileWorkItem fileWorkItem = new FileWorkItem();
+					fileWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
+					returnObjects = new Object[]{new ToAppend(parentWorkItem, this) ,new ToAppend(fileWorkItem,this), new Refresh(instanceFollowers)};
 					
 				}else if(this instanceof CommentWorkItem){		
 					if("memo".equals(this.getType())){
@@ -1055,15 +1062,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 						returnObjects = new Object[]{new Refresh(memo, false, true) , new Refresh(instanceFollowers)};
 					}else{
-//						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
-//							
-//							InstanceFollowers followers = new InstanceFollowers();
-//							followers.setInstanceId(this.getInstId().toString());
-//							followers.load();
-//							
-//							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
-//						}
-//						else
+						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
+							
+							InstanceFollowers followers = new InstanceFollowers();
+							followers.setInstanceId(this.getInstId().toString());
+							followers.load();
+							
+							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
+						}
+						else
 							returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
@@ -1318,7 +1325,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	public void edit() throws Exception{
 		
-		if(!"file".equals(this.getType())) {
+		if("generic".equals(this.getType())){
+			this.genericWorkItemEdit();
+			
+		}else if(!"file".equals(this.getType())) {
 			if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
 				throw new Exception("$CanNotEdit");
 			}
@@ -1338,7 +1348,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		getMetaworksContext().setWhen("edit");		
 //		}
 	}
-
+	public Object[] genericWorkItemEdit() throws Exception{
+		GenericWorkItem genericWI = new GenericWorkItem();
+		genericWI.session = session;
+		genericWI.setInstId(this.getInstId());
+		genericWI.setWriter(session.getUser());
+		genericWI.setTitle(this.getTitle());
+		genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		return new Object[]{new Refresh(genericWI)};
+	}
 	protected void afterInstantiation(IInstance instanceRef) throws Exception {
 		
 		if(newInstancePanel!=null){
