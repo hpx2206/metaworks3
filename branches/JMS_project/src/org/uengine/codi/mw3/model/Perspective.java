@@ -25,6 +25,7 @@ public class Perspective {
 	public final static String USE_PERSPECTIVE_KNOWLEDGE = GlobalContext.getPropertyString("perspective.knowledge.use", "1");
 	public final static String USE_DOCUMENT = GlobalContext.getPropertyString("document.use", "1");
 	public final static String USE_GROUP		= GlobalContext.getPropertyString("group.use", "1");
+	public final static String USE_VALUECHAIN		= GlobalContext.getPropertyString("valuechain.use", "0");
 	
 	public final static String TYPE_COMMINGTODO = "commingTodo";
 	
