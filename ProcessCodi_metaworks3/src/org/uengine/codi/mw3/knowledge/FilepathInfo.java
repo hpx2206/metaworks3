@@ -111,7 +111,7 @@ public class FilepathInfo extends Database<IFilepathInfo> implements IFilepathIn
 		
 	public IFilepathInfo findReflectforProjectId() throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from filepathinfo where projectId =?projectId;");
+		sql.append("select * from filepathinfo where projectId =?projectId order by moddate limit 1;");
 		
 		IFilepathInfo findListing = (IFilepathInfo) Database.sql(IFilepathInfo.class, sql.toString());
 		findListing.set("projectId", this.getProjectId());

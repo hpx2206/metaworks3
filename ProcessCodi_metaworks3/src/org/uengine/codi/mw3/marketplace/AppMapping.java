@@ -18,6 +18,7 @@ import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.OcePerspectivePanel;
 import org.uengine.oce.dashboard.DashboardWindow;
 
@@ -213,6 +214,8 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		app.setAppId(this.getAppId());
 		app.copyFrom(app.databaseMe());
 		
+		app.databaseMe().getUrl();
+		
 		InstanceListPanel instanceListPanel = new InstanceListPanel();
 		
 		Object[] returnObject = Perspective.loadInstanceListPanel(session, "app", session.getLastSelectedItem(), appDashboard.getTitle());
@@ -224,7 +227,8 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		Layout appPanel = new Layout();
 		appPanel.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__spacing_open:1, east__size:'400'");
-		appPanel.setCenter(new IFrame(app.url.replace("$tenantId", session.getEmployee().getGlobalCom())));
+//		appPanel.setCenter(new IFrame(app.url.replace("$tenantId", session.getEmployee().getGlobalCom())));
+		appPanel.setCenter(new IFrame("http://" + GlobalContext.getPropertyString("vm.manager.ip") + ":8080/" + app.getSubDomain()));
 		appPanel.setEast(returnObject[1]);
 		
 		appDashboard.setPanel(appPanel);

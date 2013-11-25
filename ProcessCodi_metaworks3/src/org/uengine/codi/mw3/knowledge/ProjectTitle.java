@@ -25,6 +25,7 @@ import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
+import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
 
@@ -197,7 +198,7 @@ public class ProjectTitle implements ContextAware {
 			String passwd = GlobalContext.getPropertyString("vm.manager.password");
 			String command = null;
 	
-			/*JschCommand jschServerBehaviour = new JschCommand();
+			JschCommand jschServerBehaviour = new JschCommand();
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			// create SVN
@@ -209,7 +210,7 @@ public class ProjectTitle implements ContextAware {
 			jschServerBehaviour.runCommand(command);
 			
 			//SVN 유저 추가
-			command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+			command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
 			jschServerBehaviour.runCommand(command);
 			
 			//Create Hudson
@@ -218,7 +219,7 @@ public class ProjectTitle implements ContextAware {
 			
 			//Setting Hudson
 			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
-			jschServerBehaviour.runCommand(command);*/
+			jschServerBehaviour.runCommand(command);
 			
 		}
 		
