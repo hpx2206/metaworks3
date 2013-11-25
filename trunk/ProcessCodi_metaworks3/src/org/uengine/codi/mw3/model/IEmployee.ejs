@@ -336,7 +336,9 @@ if(value){
 	
 	%>
 		<div class="info_top_show_detail" onClick="<%=methods.showDetail.caller() %>" style="cursor:pointer;"><img src="images/waveStyle/i_memo.png"><%=mw3.localize('$Profile')%></div>
+		<!-- 노티 기능 완벽하지 않아 주석 처리 합니다. 2013.11.22 민수환
 		<div class="info_top_show_detail" onClick="<%=methods.showNotiSetting.caller() %>" style="cursor:pointer;"><img src="images/waveStyle/i_memo.png"><%=mw3.localize('$NotiSetting')%></div>
+		-->
 		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><img src="images/waveStyle/i_logout.png"><%=mw3.localize('$Logout')%></div>
 	<%
 	} else {
