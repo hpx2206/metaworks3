@@ -12,17 +12,6 @@ var Tab = function(objectId, className){
 		}
 	});
 	
-	var modalWindow = $('.ui-dialog');
-	
-	var zIndex = 1005;
-	
-	if(modalWindow.length > 0){
-		zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
-		zIndex = String(Number(zIndex)+1);
-	}		
-	
-	$('#tabs_'+objectId).css({position:'absolute','z-index':zIndex,display:'none'});
-	
 	var objectMetadata = mw3.getMetadata(className);
 	
 	if(objectMetadata && objectMetadata.faceOptions && objectMetadata.faceOptions['tabsBottom'] == 'true'){
@@ -55,11 +44,19 @@ Tab.prototype.load = function(){
 
 
 	this.layout = $('#objDiv_' + this.objectId).layout(options);
-}
+	
+	var modalWindow = $('.ui-dialog');
+	var zIndex = 1005;
+	if(modalWindow.length > 0){
+		zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
+		zIndex = String(Number(zIndex)+1);
+	}		
+	$('#tabs_'+this.objectId).css({position:'absolute','z-index':zIndex});
+};
 
 Tab.prototype.destroy = function(){
 	$('#tabs_' + this.objectId).tabs('destroy');
-}
+};
 
 
 Tab.prototype.resize = function(ui){
@@ -68,7 +65,7 @@ Tab.prototype.resize = function(ui){
 		
 		this.resizeChild(ui);
 	}
-}
+};
 
 Tab.prototype.resizeChild = function(ui){
 	$(ui.panel).find('.mw3_resize').each(function(index, value){
