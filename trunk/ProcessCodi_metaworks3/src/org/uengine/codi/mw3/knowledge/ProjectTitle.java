@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Date;
 
@@ -20,6 +22,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
@@ -149,9 +152,9 @@ public class ProjectTitle implements ContextAware {
 			this.projectAlias = projectAlias;
 		}
 		
-//	@Face(displayName="$Next")
-	@Available(when={MetaworksContext.WHEN_NEW})
-//	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
+	@Face(displayName="$Next")
+	@Available(when={MetaworksContext.WHEN_EDIT})
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_SELF)
 	public Object createProjectStep1() throws Exception {
 		NewServer newServer = new NewServer();
 		
@@ -192,35 +195,72 @@ public class ProjectTitle implements ContextAware {
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");	
 
+		String command = null;
 		if("svn".equals(this.getFileType())){
 			String host = GlobalContext.getPropertyString("vm.manager.ip");
 			String userId = GlobalContext.getPropertyString("vm.manager.user");
 			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-			String command = null;
-	
+			
 			JschCommand jschServerBehaviour = new JschCommand();
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
-			// create SVN
-			command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
-			jschServerBehaviour.runCommand(command);
+			if("1".equals(StartCodi.USE_IAAS)){
+				
+				// create SVN
+				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				// setting SVN
+				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				//SVN 유저 추가
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				//Create Hudson
+				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
+				jschServerBehaviour.runCommand(command);
+				
+				//Setting Hudson
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
+				jschServerBehaviour.runCommand(command);
+			}
+			else{//IaaS 미 연동 시
+				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				// setting SVN
+				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				//SVN 유저 추가
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				//Create Hudson
+				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
+				jschServerBehaviour.runCommand(command);
+				
+				//Setting Hudson
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
+				jschServerBehaviour.runCommand(command);
+				
+				//Create Database
+				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+				jschServerBehaviour.runCommand(command);
+			}
 			
-			// setting SVN
-			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
-			jschServerBehaviour.runCommand(command);
+		}
+		else if("war".equals(this.getFileType())){
+			if("1".equals(StartCodi.USE_IAAS)){
 			
-			//SVN 유저 추가
-			command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
-			jschServerBehaviour.runCommand(command);
-			
-			//Create Hudson
-			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
-			jschServerBehaviour.runCommand(command);
-			
-			//Setting Hudson
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
-			jschServerBehaviour.runCommand(command);
-			
+			}else{//IaaS 미 연동 시
+				
+				//Create Database
+				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+				this.command(command);
+			}
 		}
 		
 		
@@ -328,6 +368,23 @@ public class ProjectTitle implements ContextAware {
 			e.printStackTrace();
 		}
 	}
+	
+	public String command(String cmd){
+		String result = null;
+		StringBuffer strbuf = new StringBuffer ( );
+		BufferedReader br = null;
+		try{ 
+			Process proc = Runtime.getRuntime ( ).exec ( cmd );
+			br = new BufferedReader ( new InputStreamReader ( proc.getInputStream ( ) ) );
+			String line;
+			while ( ( line = br.readLine ( ) ) != null )
+				strbuf.append ( line );
+			br.close ( );
+		}catch ( Exception e ) { result = "command file : " + e.toString(); }
+		  
+		result = strbuf.toString ( );
+		return result;
+	 }
 	
 	@AutowiredFromClient
 	transient public Session session;
