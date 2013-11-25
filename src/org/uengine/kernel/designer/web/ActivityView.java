@@ -162,19 +162,20 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 
 	@ServiceMethod(callByContent = true)
 	public Object[] showActivityDocument() {
-		if( processAttributePanel != null ){
-			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
-			documentation.setMetaworksContext(new MetaworksContext());
-			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			documentation.getDescription().setMetaworksContext(new MetaworksContext());
-			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			processAttributePanel.setDefId(null);
-			processAttributePanel.setFileList(null);
-			processAttributePanel.setDocumentation(documentation);
-			return new Object[] { processAttributePanel };
-		}else{
+//		if( processAttributePanel != null ){
+//			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
+//			documentation.setMetaworksContext(new MetaworksContext());
+//			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			documentation.getDescription().setMetaworksContext(new MetaworksContext());
+//			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//			processAttributePanel.setDefId(null);
+//			processAttributePanel.setFileList(null);
+//			processAttributePanel.setDocumentation(documentation);
+//			return new Object[] { processAttributePanel };
+//		}else{
+//			return null;
+//		}
 			return null;
-		}
 	}
 	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] copyRightToLeft() {

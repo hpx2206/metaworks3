@@ -29,19 +29,19 @@ public class LibraryActivity {
 	public void load() {
 		humanActivity = new HumanActivity();
 		
-		TextContext textContext = new TextContext();
-		textContext.setText("임시 액티비티");
-		
-		Documentation documentation = new Documentation();
-		documentation.setAlias("D:/codi/codebase/codi/root/GG.process");
-		documentation.setDefId("defId");
-		documentation.setDocument("임시 문서");
-		documentation.setTitle("임시 문서 제목");
-		
-		humanActivity.setId("0");
-		humanActivity.setName(textContext);
-		humanActivity.setDescription(textContext);
-		humanActivity.setDocumentation(documentation);
+//		TextContext textContext = new TextContext();
+//		textContext.setText("임시 액티비티");
+//		
+//		Documentation documentation = new Documentation();
+//		documentation.setAlias("D:/codi/codebase/codi/root/GG.process");
+//		documentation.setDefId("defId");
+//		documentation.setDocument("임시 문서");
+//		documentation.setTitle("임시 문서 제목");
+//		
+//		humanActivity.setId("0");
+//		humanActivity.setName(textContext);
+//		humanActivity.setDescription(textContext);
+//		humanActivity.setDocumentation(documentation);
 		
 		this.setType(TYPE_ACTIVITY);
 		

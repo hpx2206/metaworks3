@@ -78,18 +78,27 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 		var designerMaxX = object.designerMaxX;
 		var designerMaxY = object.designerMaxY;
 		// designerMaxX 가 현재 켄버스보다 작으면 스케일 적용 안함
+		var fixedCanvasWidth , fixedCanvasHeight;
+		
+		if( designerMaxX > canvasWidth){
+			xScale = canvasWidth / designerMaxX;
+			fixedCanvasWidth = designerMaxX;
+		}else{
+			fixedCanvasWidth = canvasWidth;
+		}
 		if( designerMaxY > canvasHeight){
 			yScale = canvasHeight / designerMaxY;
-		}else if( designerMaxX > canvasWidth){
-			xScale = canvasWidth / designerMaxX;
+			fixedCanvasHeight = designerMaxY;
+		}else{
+			fixedCanvasHeight = canvasHeight;
 		}
 		
+		this.icanvas.setCanvasSize([fixedCanvasWidth , fixedCanvasHeight]);
 		if( xScale != 1 && yScale != 1){
 			scaleSize = xScale > yScale ? xScale : yScale;
+			if( scaleSize < 0.5 ) scaleSize = 0.5;
 			canvas._RENDERER.setScale(scaleSize);
 		}
-			
-		this.icanvas.setCanvasSize([canvasWidth , canvasHeight]);
 	},
 	getValue : function(){
 		// TODO processDesignercontainerPanel 에 있는 getValue부분을 활욜할수 있는지.. 없으면 복사해서 붙여넣기
