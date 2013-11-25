@@ -68,7 +68,20 @@ public class ProcessDesignerContainer {
 		public void setProcessVariablePanel(ProcessVariablePanel processVariablePanel) {
 			this.processVariablePanel = processVariablePanel;
 		}
-	
+	ProcessDetailPanel processDetailPanel;
+		public ProcessDetailPanel getProcessDetailPanel() {
+			return processDetailPanel;
+		}
+		public void setProcessDetailPanel(ProcessDetailPanel processDetailPanel) {
+			this.processDetailPanel = processDetailPanel;
+		}
+	ProcessSummaryPanel processSummaryPanel;
+		public ProcessSummaryPanel getProcessSummaryPanel() {
+			return processSummaryPanel;
+		}
+		public void setProcessSummaryPanel(ProcessSummaryPanel processSummaryPanel) {
+			this.processSummaryPanel = processSummaryPanel;
+		}
 	String viewType;
 		public String getViewType() {
 			return viewType;
@@ -115,12 +128,17 @@ public class ProcessDesignerContainer {
 		processVariablePanel.getMetaworksContext().setHow("menu");
 		processVariablePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
+		processDetailPanel = new ProcessDetailPanel();
+		processSummaryPanel = new ProcessSummaryPanel();
+		
 	}
 	
 	public void load(ProcessDefinition def) throws Exception{
 		
 		rolePanel.setEditorId(editorId);
 		processVariablePanel.setEditorId(editorId);
+		processDetailPanel.setEditorId(editorId);
+		processSummaryPanel.setEditorId(editorId);
 		
 		int maxX = 0;
 		int maxY = 0;
@@ -147,6 +165,11 @@ public class ProcessDesignerContainer {
 			}
 			if( Integer.parseInt(activity.getTracingTag()) > tagCnt )
 				tagCnt = Integer.parseInt(activity.getTracingTag());
+			
+			if( activity.getDocumentation() != null && activity.getDocumentation().getActivityDetail() != null 
+					&& activity.getDocumentation().getActivityDetail().getContents() != null ){
+				processSummaryPanel.addDetailList(activity);
+			}
 			
 			activityList.add(activity);
 		}
@@ -187,6 +210,8 @@ public class ProcessDesignerContainer {
 			pvList.add(this.ignoreVariableType(processVariable));
 		}
 		processVariablePanel.setVariableList(pvList);
+		
+		processDetailPanel.load(def.getDocumentation());
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container) throws Exception{
@@ -221,7 +246,7 @@ public class ProcessDesignerContainer {
 			}
 			def.setProcessVariables(pvs);
 		}
-		
+		def.setDocumentation(this.getProcessDetailPanel().getDocumentation());
 		return def;
 	}
 	
@@ -229,6 +254,8 @@ public class ProcessDesignerContainer {
 		
 		rolePanel.setEditorId(editorId);
 		processVariablePanel.setEditorId(editorId);
+		processDetailPanel.setEditorId(editorId);
+		processSummaryPanel.setEditorId(editorId);
 		
 		int maxX = 0;
 		int maxY = 0;

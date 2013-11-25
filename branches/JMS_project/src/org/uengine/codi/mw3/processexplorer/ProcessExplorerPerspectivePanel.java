@@ -47,6 +47,7 @@ public class ProcessExplorerPerspectivePanel  implements ContextAware {
 	public ProcessExplorerPerspectivePanel(Session session) throws Exception{
 		valuechainPerspective = new ValuechainPerspective();
 		valuechainPerspective.session = session;
+		valuechainPerspective.getMetaworksContext().setHow("explorer");
 		valuechainPerspective.select();
 		
 		favoritePerspective = new FavoritePerspective();

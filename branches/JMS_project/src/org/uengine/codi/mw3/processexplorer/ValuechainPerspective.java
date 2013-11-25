@@ -49,6 +49,8 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 		setLabel("Valuechain");
 		valueChainTreeList = new ArrayList<Tree>();
 		setLoaded(false);
+		
+		this.setMetaworksContext(new MetaworksContext());
 	}
 	@Override
 	public void loadChildren() throws Exception {
@@ -83,8 +85,6 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 			for(int i=0; i < valueChainList.size(); i++){
 				ValueChain valueChain = valueChainList.get(i);
 				if( valueChain.getMajorProcessDefinitionNode() != null ){
-					this.setMetaworksContext(new MetaworksContext());
-					this.getMetaworksContext().setHow("explorer");
 				    MajorProcessDefinitionNode node = valueChain.getMajorProcessDefinitionNode();
 				    node.setMetaworksContext(this.getMetaworksContext());
 				    node.injectionMetaworksContext(this.getMetaworksContext(), node.getChild());

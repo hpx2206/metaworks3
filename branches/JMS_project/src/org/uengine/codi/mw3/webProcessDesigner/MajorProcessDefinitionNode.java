@@ -113,6 +113,13 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 			processViewWindow.load();
 			return new Object[] { new Refresh(processViewWindow) };
 			
+		}else if("snsView".equals(this.getMetaworksContext().getHow()) &&  TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.setWidth(700);
+			modalWindow.setHeight(500);
+			modalWindow.setTitle("$ValueChainEdit");
+			
+			return modalWindow;
 		}else if("tree".equals(this.getMetaworksContext().getHow()) &&  TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(this.getName());
@@ -162,6 +169,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 			}
 		}
 	}
+	
 	public void removeNullChild(ArrayList<TreeNode> childNodes){
 		if( childNodes != null ){
 			for(int i=childNodes.size()-1; i >= 0 ;i--){

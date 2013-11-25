@@ -1,0 +1,23 @@
+<% if(value){ 
+        if(mw3.when == 'view'){
+%>
+        <%
+            for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+                    var fd = objectMetadata.fieldDescriptors[i];
+                                            
+                    if(fd.name == 'metaworksContext') continue;
+                                
+                    if(mw3.isHidden(fd)) continue;
+                    
+        %>
+                    <b><%=mw3.localize(fd.displayName)%></b>
+                    <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+                    <div class="clear"></div>               
+        <%
+            }
+        %>
+<%
+        }
+    }
+%>
+

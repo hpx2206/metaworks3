@@ -204,11 +204,13 @@ public class Main {
 			
 			setLayout(outerLayout);
 		
-			//향후 변경해야 할것 으로 보입니다.
-			if("oce".equals(session.getUx()))
-				setPageNavigator(new OcePageNavigator());
-			else if("sns".equals(session.getUx()))
-				setPageNavigator(new OcePageNavigator());
+//			//향후 변경해야 할것 으로 보입니다.
+//			if("oce".equals(session.getUx()))
+//				setPageNavigator(new OcePageNavigator());
+//			else if("sns".equals(session.getUx()))
+//				setPageNavigator(new OcePageNavigator());
+			
+			setPageNavigator(new PageNavigator());
 		}
 
 	}
