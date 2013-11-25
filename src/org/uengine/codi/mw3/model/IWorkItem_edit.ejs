@@ -36,11 +36,11 @@
 								<%=fields.versionUpOption.here()%>
 							<%}%>
 						</td>
-						<td style=" padding:10px 15px 0px 10px;">
+						<td style=" padding:10px 15px 0px 0px;">
 							<%=fields.file.here()%>
 						</td>
 						<td style=" padding:10px 0px 0px 10px;">
-							<div style="float:right; margin-right:15px;"><a id="wBtn" href="#" onClick="<%=methods.addDocument.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></div>
+							<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addDocument.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></div>
 						</td>
 					</tr>	
 			</table>
@@ -191,11 +191,11 @@
 					<%=fields.versionUpOption.here()%>
 				<%}%>
 			</td>
-			<td style=" padding:10px 15px 0px 10px;">
+				<td style=" padding:10px 15px 0px 0px;">
 				<%=fields.file.here()%>
 			</td>
 			<td style=" padding:10px 0px 0px 10px;">
-				<div style="float:right; margin-right:15px;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></div>
+					<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></div>
 			</td>
 		</tr>
 <%	
@@ -214,7 +214,21 @@
 			
 		</tr>			
 <%		
-		}
+		}else if(value.type == "generic"){
+%>
+		<tr>
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>
+			<td style=" padding:10px 10px 0px 10px;"> 
+				<input id="post_<%=objectId%>" class=" wih_comment_input <%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
+			</td>			
+			<td style=" padding:10px 0px 0px 20px;">
+				<div style="float:center;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></div>
+			</td>
+		</tr>	
+
+<% }		
 %>
 	</table>
 	<!--/div-->

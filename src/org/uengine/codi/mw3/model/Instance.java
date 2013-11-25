@@ -1686,6 +1686,25 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	}
+	
+	public static IInstance loadDept(String deptId) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * from bpm_procinst ");
+		sql.append("where  topicId=?topicId ");
+		sql.append("and isdeleted=?isdeleted ");
+		sql.append("order by InstId desc");
+		IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
+		
+		instance.set("topicId",deptId);
+		instance.set("isdeleted",0);
+		instance.select();
+		
+
+		return instance;
+		
+	}	
+		
+	
 	public static IInstance loadDocument(String folderId) throws Exception {
 		// TODO Auto-generated method stub
 			

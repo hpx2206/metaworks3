@@ -318,9 +318,9 @@ public class InstanceView {
 		instanceNameChanger = new InstanceNameChanger();
 		instanceNameChanger.setInstanceId(this.getInstanceId());
 		instanceNameChanger.setInstanceName(this.getInstanceName());
+		instanceNameChanger.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		if(session!= null && session.getEmployee().getEmpCode().equals(inst.getInitEp())){
 			instanceNameChanger.session = session;
-			instanceNameChanger.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		
 		setInstanceSecurityConfigurer(new InstanceSecurityConfigurer());

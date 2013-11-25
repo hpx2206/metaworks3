@@ -301,6 +301,14 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	
 	// enter 이고 인스턴스를 발행해야 하는 경우가 아니라면
 	if (e.keyCode == 13 && !e.shiftKey) {
+		if(e.keyCode == 13){
+			var text = $("#post_" + this.objectId).val();  
+			while (text.indexOf("\n") > -1)
+				text = text.replace("\n"," ");
+			$("#post_" + this.objectId).val(text);
+			console.log(this);
+			console.log(text);
+		}
 		this.sendComment();
     }else{
     	// 입력된 값 parsing
