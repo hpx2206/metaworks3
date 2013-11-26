@@ -76,7 +76,24 @@
 		                </div>
 		                <div style="clear:both;"></div>
 		            </div>    
-		          
+		            
+		            
+		            
+		            <% if(value.perspectiveInfo !=null && value.perspectiveInfo.processViewer !=null){ 
+		            console.log(value.perspectiveInfo);
+		            %>
+		            	<div class="toolbar">
+		                    <ul>
+		                        <li onclick="<%=methods.switchToProcessAll.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_upcoming.png" border="0"></span><span>모두</span></li>
+		                        <li onclick="<%=methods.switchToProcessConversation.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_follow.png" border="0"></span><span >대화</span></li>               
+		                        <li onclick="<%=methods.switchToProcessOnly.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_todo.png" border="0"></span><span></span>프로세스</li>               
+		                        
+		                    </ul>
+	                	</div>
+		            <% }%>
+					
+					
+					
 		          	<!-- codi에 영향 미칩니다 . 주석처리하지 마세요. -->
 		            <% if(!value.perspectiveInfo){ %>
 		               

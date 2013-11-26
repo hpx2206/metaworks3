@@ -1008,7 +1008,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);
 			this.getWriter().setMetaworksContext(this.getMetaworksContext());
-			if( session.getLastPerspecteType() != null && TopicNode.TOPIC.equals(session.getLastPerspecteType())){
+			if( session.getLastPerspecteType() != null && TopicNode.TOPIC.equals(session.getLastPerspecteType())
+					|| "valuechain".equals(session.getLastPerspecteType()) || "activity".equals(session.getLastPerspecteType())){
 				TopicNode topic = new TopicNode();
 				topic.setId(session.getLastSelectedItem());
 				topic.copyFrom(topic.databaseMe());
