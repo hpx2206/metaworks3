@@ -1107,7 +1107,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		cp.load(session.getUser().getUserId());
 		
-		this.notiToFriend();
+		//this.notiToFriend();
 		
 		return new Object[] {new Refresh(cp), new Remover(this)};
 	}
