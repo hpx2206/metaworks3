@@ -104,7 +104,7 @@ public class Login implements ContextAware {
 			return password;
 		}
 		public void setPassword(String password) {
-			this.password = password;
+			this.password = password; 
 		}
 		
 	Boolean rememberMe;
