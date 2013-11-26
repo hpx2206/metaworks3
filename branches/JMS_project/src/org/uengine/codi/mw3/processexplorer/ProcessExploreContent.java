@@ -268,16 +268,20 @@ public class ProcessExploreContent{
 		
 		
 		Document document = new Document(PageSize.A4);
-		PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(convertedFilepath+ ".pdf"));
-		document.open();
-		
-		addTitle(document);
-		addForm(pdfWriter, document);
-        
-        Image image1 = Image.getInstance(convertedFilepath + ".png");
-        document.add(image1);
-        
-        document.close();
+		try{
+			PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(convertedFilepath+ ".pdf"));
+			document.open();
+			
+			addTitle(document);
+			addFormWithImage(pdfWriter, document);
+	        
+	        Image image1 = Image.getInstance(convertedFilepath + ".png");
+	        document.add(image1);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			document.close();
+		}
 		return new Object[]{new Download(new FileTransfer(new String(convertedFilename.getBytes("UTF-8"),"ISO8859_1"), "application/pdf", new FileInputStream(convertedFilepath+ ".pdf")))};
 		
 	}
@@ -287,22 +291,18 @@ public class ProcessExploreContent{
 		Documentation documentation = processDesignerContainer.getProcessDetailPanel().getDocumentation();
 		
 		
-		String chapter1 = "1.0  목 적";
-		String contents1 = documentation.getPurpose().getContents();
-		Anchor anchor = new Anchor(chapter1, subFont);
-	    anchor.setName(chapter1);
-	    // Second parameter is the number of the chapter
-		
-		String chapter2 = "2.0  참 조";
-		String contents2 = documentation.getReference().getContents();
-		
 		Paragraph preface = new Paragraph();
 		addEmptyLine(preface, 1);
 		
+		String chapter1 = "1.0  목 적";
+		String contents1 = documentation.getPurpose().getContents();
 		preface.add(new Paragraph(chapter1, subFont));
 		preface.add(new Paragraph(contents1, smallBold));
 		addEmptyLine(preface, 1);
 		
+		
+		String chapter2 = "2.0  참 조";
+		String contents2 = documentation.getReference().getContents();
 		preface.add(new Paragraph(chapter2, subFont));
 		preface.add(new Paragraph(contents2, smallBold));
 		addEmptyLine(preface, 1);
@@ -311,6 +311,34 @@ public class ProcessExploreContent{
 		document.add(preface);
 	}
 	
+	public void addFormWithImage(PdfWriter pdfWriter , Document document) throws DocumentException, IOException {
+		ProcessDesignerContainer processDesignerContainer = processViewPanel.processViewer.getProcessDesignerContainer();
+		ArrayList<Activity> activityList = processDesignerContainer.getActivityList();
+		for(Activity activity : activityList){
+			Class paramClass = activity.getClass();
+			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
+			if( isReceiveActivity ){
+				ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
+				if( contexts != null && contexts.length > 0){
+					for(int i=0; i < contexts.length; i++){
+						ProcessVariable processVariable = contexts[i].getVariable();
+						if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
+							String typeId = ((ComplexType)processVariable.getDefaultValue()).getTypeId();
+							String imgFilePath = CodiClassLoader.mySourceCodeBase(); 
+							String imgFileName = (typeId.substring(1, typeId.lastIndexOf("]"))).replace('.', File.separatorChar) + ".png";
+							Image image1 = Image.getInstance(imgFilePath + File.separatorChar + imgFileName);
+							
+							Paragraph pragraph = new Paragraph();
+							pragraph.add(new Paragraph(activity.getDescription().getText(), subFont));
+							document.add(pragraph);
+							
+					        document.add(image1);
+						}
+					}
+				}
+			}
+		}
+	}
 	public void addForm(PdfWriter pdfWriter , Document document) throws DocumentException, IOException {
 		ProcessDesignerContainer processDesignerContainer = processViewPanel.processViewer.getProcessDesignerContainer();
 		ArrayList<Activity> activityList = processDesignerContainer.getActivityList();
@@ -333,9 +361,7 @@ public class ProcessExploreContent{
 							try{
 								File file  = new File(imgFilePath + File.separatorChar + imgFileName);
 								String htmlString = FileUtils.readFileToString(file);
-								
 								System.out.println(htmlString);
-								
 								is = new FileInputStream(file);
 								DefaultFontProvider dfp=new DefaultFontProvider();
 							    XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document, is , Charset.forName(GlobalContext.ENCODING));

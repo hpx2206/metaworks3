@@ -14,6 +14,7 @@ import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.ValueChain;
@@ -124,50 +125,51 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 					
 					ArrayList<Activity> activityList = processDesignerContentPanel.processDesignerContainer.getActivityList();
 					for(Activity activity : activityList){
-						name = null;
-						name = activity.getDescription().getText();
-						type = "activity";
-						//name += "[" + activity.getTracingTag() + "]";
-						
-						wfNode = null;
-						wfNode = new WfNode();
-						wfNode.setName(name);
-						wfNode.setType(type);
-						wfNode.setParentId(parentId);	
-						wfNode.setAuthorId(session.getUser().getUserId());		
-						wfNode.setCompanyId(session.getCompany().getComCode());
-						wfNode.createMe();
-	
-						
-						processTopicMapping = null;
-						processTopicMapping = new ProcessTopicMapping();
-						processTopicMapping.setProcessPath(path);
-						processTopicMapping.setProcessName(name);
-						processTopicMapping.setType(type);
-						processTopicMapping.setTopicId(wfNode.getId());
-						processTopicMapping.createDatabaseMe();
-						processTopicMapping.flushDatabaseMe();
-						
-						processDesignerContainer = null;
-						roleList = null;
-						processDesignerContainer = processDesignerContentPanel.getProcessDesignerContainer();
-						roleList = processDesignerContainer.getRoleList();
-						for(Role role : roleList){
-							if( "Initiator".equalsIgnoreCase(role.getName()) ){
-								continue;
+						if( activity instanceof HumanActivity){
+							name = null;
+							name = activity.getDescription().getText();
+							type = "activity";
+							//name += "[" + activity.getTracingTag() + "]";
+							
+							wfNode = null;
+							wfNode = new WfNode();
+							wfNode.setName(name);
+							wfNode.setType(type);
+							wfNode.setParentId(parentId);	
+							wfNode.setAuthorId(session.getUser().getUserId());		
+							wfNode.setCompanyId(session.getCompany().getComCode());
+							wfNode.createMe();
+		
+							
+							processTopicMapping = null;
+							processTopicMapping = new ProcessTopicMapping();
+							processTopicMapping.setProcessPath(path);
+							processTopicMapping.setProcessName(name);
+							processTopicMapping.setType(type);
+							processTopicMapping.setTopicId(wfNode.getId());
+							processTopicMapping.createDatabaseMe();
+							processTopicMapping.flushDatabaseMe();
+							
+							processDesignerContainer = null;
+							roleList = null;
+							processDesignerContainer = processDesignerContentPanel.getProcessDesignerContainer();
+							roleList = processDesignerContainer.getRoleList();
+							for(Role role : roleList){
+								if( "Initiator".equalsIgnoreCase(role.getName()) ){
+									continue;
+								}
+								
+								TopicMapping tm = new TopicMapping();
+								tm.setTopicId(wfNode.getId());
+								tm.setUserId(role.getName());
+								tm.setUserName(role.getDisplayName().getText());
+								tm.setAssigntype(5);
+								tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+								
+								tm.saveMe();
+								tm.flushDatabaseMe();
 							}
-							
-							TopicMapping tm = new TopicMapping();
-							tm.setTopicId(wfNode.getId());
-							tm.setUserId(role.getName());
-							tm.setUserName(role.getDisplayName().getText());
-							tm.setAssigntype(5);
-							tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-							
-							tm.saveMe();
-							tm.flushDatabaseMe();
 						}
-						
 						
 					}
 				}else{//edit일때
