@@ -205,6 +205,8 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				$(element).unbind('dblclick').bind('dblclick' , function(event){
 				});
 				$(element).unbind('click').bind('click' , function(event){
+					object.id = $(this).attr('id');
+					object.activity = $(this).data('activity');
 					object.showActivityDocument();
 				});
 			}

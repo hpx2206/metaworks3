@@ -1,6 +1,6 @@
 package org.uengine.kernel.designer.web;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -8,19 +8,21 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.ide.compare.CompareOriginFilePanel;
-import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.ParameterValue;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
-import org.uengine.codi.mw3.webProcessDesigner.Documentation;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
+import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.IDrawDesigne;
+import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ParameterContextPanel;
-import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
 
 public class ActivityView extends CanvasDTO  implements ContextAware{
@@ -157,26 +159,90 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		return null;
 	}
 
-	@AutowiredFromClient
-	public ProcessAttributePanel processAttributePanel;
-
-	@ServiceMethod(callByContent = true)
-	public Object[] showActivityDocument() {
-//		if( processAttributePanel != null ){
-//			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
-//			documentation.setMetaworksContext(new MetaworksContext());
-//			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			documentation.getDescription().setMetaworksContext(new MetaworksContext());
-//			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			processAttributePanel.setDefId(null);
-//			processAttributePanel.setFileList(null);
-//			processAttributePanel.setDocumentation(documentation);
-//			return new Object[] { processAttributePanel };
-//		}else{
-//			return null;
-//		}
-			return null;
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow showActivityDocument() throws Exception {
+		ModalWindow modalWindow = new ModalWindow();
+		
+		modalWindow.setPanel(this.formDetail());
+		modalWindow.setTitle("액티비티뷰");
+		modalWindow.setWidth(400);
+		modalWindow.setHeight(400);
+		
+		return modalWindow;
 	}
+	
+	public ParameterValue[] formDetail() throws Exception{
+		ParameterValue[] parameters = new ParameterValue[0];
+		if( this.getActivity() != null &&  this.getActivity() instanceof HumanActivity ){
+			HumanActivity humanActivity = (HumanActivity)this.getActivity();
+			if( humanActivity.getParameters() != null ){
+			parameters = new ParameterValue[humanActivity.getParameters().length];
+			for(int i=0; i<humanActivity.getParameters().length; i++){
+				ParameterContext pc = humanActivity.getParameters()[i];
+				
+				parameters[i] = new ParameterValue();
+				
+				ParameterValue pv = parameters[i];
+				pv.setVariableName(pc.getVariable().getName());
+				pv.setArgument(pc.getArgument().getText());
+									
+				
+				MetaworksContext mc = new MetaworksContext();
+				
+				mc.setWhen( MetaworksContext.WHEN_VIEW);					
+				pv.setMetaworksContext(mc);
+				
+				
+				Object processVariableValue = new Object();
+				Class variableType = Class.forName(pc.getVariable().getTypeInputter());
+//			
+//				if(variableType == String.class){
+//					parameters[i].setValueString((String) processVariableValue);
+////				}else if(Long.class.isAssignableFrom(variableType)){
+////					parameters[i].setValueNumber((Number) processVariableValue);
+////				}else if(Calendar.class.isAssignableFrom(variableType)){
+////					parameters[i].setValueCalendar((Calendar) processVariableValue);
+//				}else 
+				
+				if(variableType == ComplexType.class){
+						ComplexType complexType = (ComplexType)pc.getVariable().getDefaultValue();
+						complexType.setDesignerMode(false);
+						processVariableValue = (Serializable) complexType.getTypeClass().newInstance();
+						
+						if(processVariableValue instanceof ContextAware){
+							((ContextAware)processVariableValue).setMetaworksContext(mc);
+						}
+						
+						if(processVariableValue instanceof NeedArrangementToSerialize){
+							((NeedArrangementToSerialize)processVariableValue).afterDeserialization();
+						}
+						
+						if(processVariableValue instanceof ITool){
+							((ITool)processVariableValue).onLoad();
+						}
+					
+				}else{
+					
+					if(variableType==Boolean.class){
+						processVariableValue = new Boolean(false);
+					}else if(variableType==Number.class){
+						processVariableValue = new Integer(0);
+					}else if(variableType==String.class){
+						processVariableValue = new String();
+					}else
+						processVariableValue = (Serializable) variableType.newInstance();
+				}
+				
+				pv.setValueObject(processVariableValue);
+			}
+			
+			TransactionContext.getThreadLocalInstance().setSharedContext(
+					ITool.ITOOL_MAP_KEY, null);
+			}
+		}
+		return parameters;
+	}
+	
 	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] copyRightToLeft() {
 		Long ID_PREFIX = Math.round(Math.random() * 10000);
