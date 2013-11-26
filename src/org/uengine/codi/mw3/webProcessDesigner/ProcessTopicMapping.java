@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.io.File;
+
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.model.IEmployee;
 
@@ -34,6 +36,80 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 			this.type = type;
 		}
 		
+		public void updateDatabaseMe() throws Exception{
+			/*StringBuffer sb = new StringBuffer();
+			sb.append("update ProcessTopicMapping set " +
+					" (processName, processPath, topicId, type)" +
+					" values(" +
+					" ?processName, ?processPath, ?topicId, ?type ) "
+					); 
+			
+			IProcessTopicMapping dao = null;
+			dao = sql(sb.toString());
+			dao.setProcessName(this.getProcessName());
+			dao.setProcessPath(this.getProcessPath());
+			dao.setTopicId(this.getTopicId());
+			dao.setType(this.getType());
+			dao.update();*/
+			
+		}
+		
+		public IProcessTopicMapping findByMe(){
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from ");
+			sb.append(" ProcessTopicMapping ");
+			sb.append(" where processName=?processName ");
+			sb.append(" and processPath=?processPath ");
+			
+			IProcessTopicMapping dao = null;
+			
+			try {
+				dao = sql(sb.toString());
+				dao.setProcessName(this.getProcessName());
+				dao.setProcessPath(this.getProcessPath());
+				dao.select();
+				
+				if(!dao.next())
+					dao = null;
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return dao; 
+		}
+		
+		public IProcessTopicMapping findByTypeByPath(){
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from ");
+			sb.append(" ProcessTopicMapping ");
+			sb.append(" where type=?type ");
+			sb.append(" and processPath=?processPath ");
+			
+			IProcessTopicMapping dao = null;
+			
+			try {
+				dao = sql(sb.toString());
+				dao.setType(this.getType());
+				dao.setProcessPath(this.getProcessPath());
+				dao.select();
+				
+				if(!dao.next())
+					dao = null;
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return dao; 
+		}
+		
+		
+
 		public IProcessTopicMapping findByProcess(String processPath, String type){
 			StringBuffer sb = new StringBuffer();
 			sb.append("select * from ");
@@ -108,5 +184,29 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 			
 			return dao; 
 		}	
-	
+		
+	public IProcessTopicMapping findByProcessPath(){
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from ");
+			sb.append("ProcessTopicMapping ");
+			sb.append("where processpath like ?processpath ");
+			
+			IProcessTopicMapping dao = null;
+			
+			try {
+				dao = sql(sb.toString());
+				dao.setProcessPath(this.getProcessPath());
+				dao.select();
+				
+				if(!dao.next())
+					dao = null;
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return dao; 
+		}	
 }

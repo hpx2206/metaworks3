@@ -56,8 +56,16 @@ public class ProcessInfo extends GroupInfo{
 	@Override
 	public void load() throws Exception {
 		this.followersLoad();
+		
+		ProcessTopicMapping ptm = new ProcessTopicMapping();
+		ptm.setProcessPath(this.getId());
+		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		if(findptm==null){
+			throw new Exception("wrong access");
+		}
+		
 		WfNode wfNode = new WfNode();
-		wfNode.setId(this.getId());
+		wfNode.setId(findptm.getTopicId());
 		
 		try {
 			wfNode.copyFrom(wfNode.databaseMe());
@@ -73,12 +81,6 @@ public class ProcessInfo extends GroupInfo{
 		logoFile.setFilename(wfNode.getThumbnail());
 		this.setLogoFile(logoFile);
 		
-		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setTopicId(this.getId());
-		IProcessTopicMapping findptm = ptm.findByTopicId();
-		if(findptm==null){
-			throw new Exception("wrong access");
-		}
 	
 		processViewer.setDefId(this.getTitle());
 		processViewer.setAlias(findptm.getProcessPath());
@@ -93,8 +95,8 @@ public class ProcessInfo extends GroupInfo{
 	public ModalWindow action() throws Exception{
 		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setTopicId(this.getId());
-		IProcessTopicMapping findptm = ptm.findByTopicId();
+		ptm.setProcessPath(this.getId());
+		IProcessTopicMapping findptm = ptm.findByProcessPath();
 		if(findptm==null){
 			throw new Exception("wrong access");
 		}
@@ -120,8 +122,8 @@ public class ProcessInfo extends GroupInfo{
 	@Face(displayName="$processinfo.execute")
 	public Object[] startProcess() throws Exception{
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setTopicId(this.getId());
-		IProcessTopicMapping findptm = ptm.findByTopicId();
+		ptm.setProcessPath(this.getId());
+		IProcessTopicMapping findptm = ptm.findByProcessPath();
 		if(findptm==null){
 			throw new Exception("wrong access");
 		}
