@@ -190,7 +190,7 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 			StringBuffer sb = new StringBuffer();
 			sb.append("select * from ");
 			sb.append("ProcessTopicMapping ");
-			sb.append("where processpath like ?processpath ");
+			sb.append("where processpath=?processpath ");
 			
 			IProcessTopicMapping dao = null;
 			
@@ -208,5 +208,33 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 			}
 			
 			return dao; 
-		}	
+		}
+	
+	public IProcessTopicMapping findByNameByType(){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from ");
+		sb.append(" ProcessTopicMapping ");
+		sb.append(" where processpath=?processpath ");
+		sb.append(" and type=?type ");
+		
+		IProcessTopicMapping dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setProcessPath(this.getProcessPath());
+			dao.setType(this.getType());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao; 
+	}
+	
 }
