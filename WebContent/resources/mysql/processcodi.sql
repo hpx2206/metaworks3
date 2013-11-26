@@ -1005,3 +1005,12 @@ create table bpm_noti(
 
 alter table filepathinfo add column warFileName varchar(30);
 alter table filepathinfo add column sqlFileName varchar(30);
+
+
+CREATE TABLE ProcessTopicMapping (
+  processName varchar(200) NOT NULL,
+  processPath varchar(200) NOT NULL,
+  topicId varchar(50) NOT NULL,
+  type varchar(20) NOT NULL,
+  PRIMARY KEY (processName)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
