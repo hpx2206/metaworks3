@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -89,17 +90,22 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			processViewerPanel.setViewType("definitionView");
 			processViewerPanel.loadValuechainView();
 			
+			String path = this.getPath();
+			if( (this.getPath().substring(0, 1)).equals(File.separator)  ){
+				path = path.substring(1);
+			}
 			String processName = processViewerPanel.getProcessViewPanel().getProcessViewer().getTitle();
 			ProcessTopicMapping ptm = new ProcessTopicMapping();
 			ptm.setProcessName(processName);
 			ptm.setType("process");
+			ptm.setProcessPath(path);
 			IProcessTopicMapping findptm = ptm.findByNameByType();
 			if(findptm==null){
 				throw new Exception("wrong access");
 			}
 			
 			String title = "프로세스 : " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, "valuechain", findptm.getProcessPath(), title);
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, "valuechainAll", findptm.getTopicId(), title);
 			
 			// recentItem 에 create
 			RecentItem recentItem = new RecentItem();
@@ -145,8 +151,15 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			
 		}else if("activity".equals(this.getMetaworksContext().getHow())){
 			ProcessTopicMapping ptm = new ProcessTopicMapping();
+			String path = this.getPath();
+			if( (this.getPath().substring(0, 1)).equals(File.separator)  ){
+				path = path.substring(1);
+			}
 			ptm.setProcessName(this.getName());
-			IProcessTopicMapping findptm = ptm.findByName();
+			ptm.setType("activity");
+			ptm.setProcessPath(path);
+			IProcessTopicMapping findptm = ptm.findByNameByType();
+			
 			if(findptm==null){
 				throw new Exception("wrong access");
 			}

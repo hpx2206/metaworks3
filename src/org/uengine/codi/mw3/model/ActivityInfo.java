@@ -105,7 +105,7 @@ public class ActivityInfo extends PerspectiveInfo{
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setPanel(processExploreContent);
 		modalWindow.setWidth(700);
-		modalWindow.setHeight(900);
+		modalWindow.setHeight(500);
 		modalWindow.setTitle(this.getTitle());
 		
 		return modalWindow;
