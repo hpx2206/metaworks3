@@ -10273,8 +10273,7 @@ OG.shape.HorizontalLaneShape.prototype.createShape = function () {
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'vertical',
 		'vertical-align' : 'top',
-		fill: "blue",
-		"fill-opacity" : 0.1
+		fill : 'none'
 	});
 
     return this.geom;
@@ -15795,7 +15794,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
             geom1 = new OG.PolyLine(points);
             switch (edge_direction[1]) {
                 case "e":
-                    geom2 = new OG.Polygon([
+                    geom2 = new OG.PolyLine([
                         [to.x + 10, to.y - 5],
                         [to.x, to.y],
                         [to.x + 10, to.y + 5]
@@ -18741,8 +18740,8 @@ OG.handler.EventHandler.prototype = {
 											edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
 
 											if (edge) {
-												guide = me._RENDERER.drawGuide(edge);
-												if (edge && guide) {
+												//guide = me._RENDERER.drawGuide(edge);
+												//if (edge && guide) {
 													// enable event
 													me.setClickSelectable(edge, me._isSelectable(edge.shape));
 													me.setMovable(edge, me._isMovable(edge.shape));
@@ -18751,8 +18750,8 @@ OG.handler.EventHandler.prototype = {
 														me.enableEditLabel(edge);
 													}
 
-													me._RENDERER.toFront(guide.group);
-												}
+													//me._RENDERER.toFront(guide.group);
+												//}
 											}
 										} else {
 											me._RENDERER.removeShape(edge);
@@ -22841,6 +22840,7 @@ OG.graph.Canvas.prototype = {
 				}
 				this._RENDERER.toFront(guide.group);
 			}
+			this._RENDERER.removeGuide(edge);
 		}
 
 		return edge;

@@ -264,13 +264,13 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.companyUsed = companyUsed;
 		}
 		
-//	SelectBox releaseVersion;
-//		public SelectBox getReleaseVersion() {
-//			return releaseVersion;
-//		}
-//		public void setReleaseVersion(SelectBox releaseVersion) {
-//			this.releaseVersion = releaseVersion;
-//		}
+	SelectBox releaseVersion;
+		public SelectBox getReleaseVersion() {
+			return releaseVersion;
+		}
+		public void setReleaseVersion(SelectBox releaseVersion) {
+			this.releaseVersion = releaseVersion;
+		}
 		
 	int runningVersion;
 		public int getRunningVersion() {
@@ -439,7 +439,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 		this.setCategories(categories);
 		this.setAttachProject(attachProject);
-//		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
+		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 		this.setLogoFile(new MetaworksFile());
 	}
 	

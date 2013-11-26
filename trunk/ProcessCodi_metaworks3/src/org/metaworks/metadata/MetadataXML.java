@@ -10,12 +10,16 @@ import java.util.ArrayList;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -160,7 +164,7 @@ public class MetadataXML implements ContextAware {
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 
 		ResourceNode resourceNode = new ResourceNode(); 
-		resourceNode.setId(this.getFilePath());
+		resourceNode.setPath(this.getFilePath());
 		resourceNode.setProjectId(this.getProjectId());
 
 		MetadataProperty newMetadataProperty = new MetadataProperty();
@@ -237,6 +241,19 @@ public class MetadataXML implements ContextAware {
 		}
 		
 		return true;
+	}
+	
+	@Face(displayName="저장")
+	@ServiceMethod(callByContent=true)
+	public Remover saveMetadata(){
+		MetadataEditor metadataEditor = new MetadataEditor(this.getMetadataPropertyInfo().getNewMetadataProperty().getResourceNode());
+		
+		String content = this.toXmlXStream();
+		
+		metadataEditor.setContent(content);
+		metadataEditor.save();
+		
+		return new Remover(new ModalWindow());
 	}
 	
 }

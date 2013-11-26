@@ -336,13 +336,8 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		releasePanel.setProjectId(this.getProjectId());
 		
 		if("war".equals(this.getType())){
-			MetadataFile sqlFile = new MetadataFile();
-			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-			sqlFile.setBaseDir(codebase + File.separatorChar);
-			sqlFile.setTypeDir("sql");
-			MetadataFile warFile = new MetadataFile();
-			warFile.setBaseDir(codebase + File.separatorChar);
-			warFile.setTypeDir("war");
+			MetaworksFile sqlFile = new MetaworksFile();
+			MetaworksFile warFile = new MetaworksFile();
 			
 			releasePanel.setMetaworksContext(new MetaworksContext());
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
@@ -352,7 +347,8 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setCheck(false);
 			
-			modalWindow.setHeight(300);
+			modalWindow.setHeight(360);
+			modalWindow.setWidth(540);
 		}
 		else if("svn".equals(this.getType())){
 			releasePanel.setMetaworksContext(new MetaworksContext());
@@ -384,10 +380,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		
 		CloudInfo cloudInfo = new CloudInfo();
 		
-		MetadataFile sqlFile = new MetadataFile();
-		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		sqlFile.setBaseDir(codebase + File.separatorChar);
-		sqlFile.setTypeDir("sql");
+		MetaworksFile sqlFile = new MetaworksFile();
 
 		ReflectPanel reflectPanel = new ReflectPanel();
 		reflectPanel.setMetaworksContext(new MetaworksContext());
@@ -410,15 +403,13 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	
 		if("war".equals(this.getType())){
 
-			MetadataFile warFile = new MetadataFile();
-			warFile.setBaseDir(codebase + File.separatorChar);
-			warFile.setTypeDir("war");
+			MetaworksFile warFile = new MetaworksFile();
 			
 			reflectPanel.setWarFile(warFile);
 			reflectPanel.setCheck(false);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			modalWindow.setHeight(400);
+			modalWindow.setHeight(370);
 			
 		}
 		else if("svn".equals(this.getType())){
