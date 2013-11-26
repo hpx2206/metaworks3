@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.ide.editor.form;
 
+import java.io.File;
+import java.io.Serializable;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
@@ -8,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
@@ -16,6 +20,7 @@ import org.uengine.codi.mw3.ide.form.FormFieldMenu;
 import org.uengine.codi.mw3.ide.form.FormPreview;
 import org.uengine.codi.mw3.ide.form.FormProperties;
 import org.uengine.codi.mw3.ide.form.Properties;
+import org.uengine.contexts.ComplexType;
 
 public class FormEditor extends Editor {
 
@@ -111,8 +116,38 @@ public class FormEditor extends Editor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		super.save();
 		
-		return super.save();
+		// 이미지 스샷 뜨기
+		
+		return null;
+	}
+	
+	@ServiceMethod(payload={"resourceNode", "form"}, target=ServiceMethodContext.TARGET_POPUP)
+	public Object formPreView() throws Exception {
+		ModalWindow modalWindow = new ModalWindow();
+		File file = new File(this.getResourceNode().getPath());
+		
+		Object processVariableValue = new Object();
+//		Class variableType = Class.forName(this.getForm().getFullClassName());
+		Class variableType = Thread.currentThread().getContextClassLoader().loadClass(this.getForm().getFullClassName());
+		processVariableValue = (Serializable) variableType.newInstance();
+		((ITool)processVariableValue).onLoad();
+		TransactionContext.getThreadLocalInstance().setSharedContext(ITool.ITOOL_MAP_KEY, null);
+		
+		String thumbnailPath = this.getResourceNode().getPath().substring(0, this.getResourceNode().getPath().lastIndexOf(".")) + ".html";
+		
+		FormThumbnail formThumbnail = new FormThumbnail();
+		formThumbnail.setFormObject(processVariableValue);
+		formThumbnail.setThumbnailPath(thumbnailPath);
+		
+		
+		modalWindow.setPanel(formThumbnail);
+		modalWindow.setWidth(600);
+		modalWindow.setHeight(600);
+		modalWindow.setTitle(getName());
+		
+		return modalWindow;
 	}
 	
 	@Face(displayName="$SaveAndPreview")

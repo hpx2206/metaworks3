@@ -10273,8 +10273,7 @@ OG.shape.HorizontalLaneShape.prototype.createShape = function () {
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'vertical',
 		'vertical-align' : 'top',
-		fill: "blue",
-		"fill-opacity" : 0.1
+		fill : 'none'
 	});
 
     return this.geom;
@@ -15795,7 +15794,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
             geom1 = new OG.PolyLine(points);
             switch (edge_direction[1]) {
                 case "e":
-                    geom2 = new OG.Polygon([
+                    geom2 = new OG.PolyLine([
                         [to.x + 10, to.y - 5],
                         [to.x, to.y],
                         [to.x + 10, to.y + 5]
