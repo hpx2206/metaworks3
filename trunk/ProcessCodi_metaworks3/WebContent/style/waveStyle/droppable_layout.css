@@ -2400,7 +2400,7 @@ vertical-align: middle;}
 /*formBuilder*/
 .fb_wrap{height:100%; background:#FFF; padding-right:346px;*display:inline-block;_width /**/:100%;}
 .fb_left{float:left;width:100%; height:100%; overflow:auto }
-.fb_content{float:left;position:relative;left:346px;width:345px;margin-left:-346px; overflow:auto; height:100%; border-left:1px solid #ccc}
+.fb_content{float:left;position:relative;left:346px;width:344px;margin-left:-346px; overflow:auto; height:100%; border-left:1px solid #ccc}
 .fb_property_apply {margin-top:15px; margin-bottom:20px; line-height:120px; border-top:1px dotted #CCC;}
 .fb_property_apply_tit {margin-top:5px; margin-bottom:10px; line-height:25px; cursor: pointer; cursor: hand; float:right; font-weight:bold; color:#039;}
 .fb_content .fb_property{ border-bottom:1px solid #ccc; padding:0 15px 15px 15px; background:#f3f7fb;}
