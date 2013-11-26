@@ -1,7 +1,11 @@
 <%
 	if(value != null) {
 %>
-		<a href="#" onClick="<%=methods.detail.caller()%>"><%=value.name%></a>
+		
+		<li>
+			<img class="navi_icon" src="images/waveStyle/nav_time.png">
+			<a href="#" onClick="<%=methods.detail.caller()%>"><%=value.name%></a>
+		</li>
 <%
 	}
 %>
