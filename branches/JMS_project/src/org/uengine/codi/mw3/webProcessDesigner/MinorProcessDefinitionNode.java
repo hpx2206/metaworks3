@@ -92,7 +92,8 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			String processName = processViewerPanel.getProcessViewPanel().getProcessViewer().getTitle();
 			ProcessTopicMapping ptm = new ProcessTopicMapping();
 			ptm.setProcessName(processName);
-			IProcessTopicMapping findptm = ptm.findByName();
+			ptm.setType("process");
+			IProcessTopicMapping findptm = ptm.findByNameByType();
 			if(findptm==null){
 				throw new Exception("wrong access");
 			}
