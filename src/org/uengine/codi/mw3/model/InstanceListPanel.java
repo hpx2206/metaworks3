@@ -120,6 +120,15 @@ public class InstanceListPanel implements ContextAware{
 				this.getMetaworksContext().setHow("process");
 				this.setPerspectiveInfo(new ProcessInfo(session));
 			}
+			if("valuechain".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("valuechain");
+				this.setPerspectiveInfo(new ProcessInfo(session));
+			}
+			
+			if("activity".equals(session.getLastPerspecteType())){
+				this.getMetaworksContext().setHow("activity");
+				this.setPerspectiveInfo(new ActivityInfo(session));
+			}
 			instanceList = new InstanceList(session);
 			
 			this.setPreloaded(true);

@@ -88,6 +88,8 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 				    MajorProcessDefinitionNode node = valueChain.getMajorProcessDefinitionNode();
 				    node.setMetaworksContext(this.getMetaworksContext());
 				    node.injectionMetaworksContext(this.getMetaworksContext(), node.getChild());
+				    node.makeMinorNodeToFolder(node.getChild());
+				    
 				    rootNode.add(node);
 				}
 			}

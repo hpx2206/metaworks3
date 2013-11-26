@@ -157,7 +157,6 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
 					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
 					node.setMetaworksContext(context);
-					
 					if( node.getChild() != null && node.getChild().size() > 0 ){
 						injectionMetaworksContext(context, node.getChild() );
 					}
@@ -165,6 +164,49 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				} else {
 					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
 					node.setMetaworksContext(context);
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						injectionMetaworksContext(context, node.getChild() );
+					}
+				}
+			}
+		}
+	}
+	
+	public ArrayList<String> findChildProcess(ArrayList<String> processPathList , ArrayList<TreeNode> childNodes){
+		if( childNodes != null ){
+			for(int i=0; i < childNodes.size();i++){
+				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
+					
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						findChildProcess( processPathList , node.getChild() );
+					}
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
+					String processPath = node.getPath();
+					processPathList.add(processPath);
+				}
+			}
+		}
+		return processPathList;
+	}
+	
+	public void makeMinorNodeToFolder(ArrayList<TreeNode> childNodes){
+		if( childNodes != null ){
+			for(int i=0; i < childNodes.size();i++){
+				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
+					
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						makeMinorNodeToFolder( node.getChild() );
+					}
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
+					node.setFolder(true);
+					node.setExpanded(false);
+					node.setLoaded(false);
 				}
 			}
 		}
