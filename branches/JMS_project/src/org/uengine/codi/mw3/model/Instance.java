@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,10 +13,8 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -29,7 +26,6 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
-import org.uengine.codi.mw3.knowledge.BrainstormPanel;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;

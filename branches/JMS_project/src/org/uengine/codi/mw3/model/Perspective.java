@@ -246,8 +246,11 @@ public class Perspective {
 		
 		instListPanel.setTitle(title);
 		
-		if(instListPanel.getPerspectiveInfo()!= null)
+		if(instListPanel.getPerspectiveInfo()!= null){
+			title = title.substring(title.indexOf(":")+2);
+			instListPanel.getPerspectiveInfo().setTitle(title);
 			instListPanel.getPerspectiveInfo().load();
+		}
 		
 		session.setWindowTitle(title);
 

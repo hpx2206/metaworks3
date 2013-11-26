@@ -37,6 +37,14 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}
+	
+	String title;
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
 
 	String type;
 		public String getType() {

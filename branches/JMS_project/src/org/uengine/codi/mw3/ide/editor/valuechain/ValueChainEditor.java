@@ -60,7 +60,9 @@ public class ValueChainEditor extends Editor{
 	@ServiceMethod(callByContent=true)
 	public Object save() {
 		try {
+			this.getValueChainDesigner().session = session;
 			this.getValueChainDesigner().saveMe(this);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

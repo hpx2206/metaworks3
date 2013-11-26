@@ -299,9 +299,10 @@ public class CloudIDE {
 	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.id")
 	public Editor editor;
 	
-	@ServiceMethod(payload={"currentEditorId", "workspace"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"currentEditorId", "workspace" , "session"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
 	public Object save() throws Exception{
 		editor.workspace = this.getWorkspace();
+		editor.session = session;
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -326,4 +327,7 @@ public class CloudIDE {
 
 		return new ModalWindow(openResource, 600, 450, "Open Resource");
 	}
+	
+	@AutowiredFromClient
+	public Session session;
 }
