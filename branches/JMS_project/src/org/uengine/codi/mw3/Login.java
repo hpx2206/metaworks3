@@ -96,7 +96,7 @@ public class Login implements ContextAware {
 			this.email = email;
 		}
 		
-	String password;
+	String password; 
 		@Face(options={"type", "placeholder"}, values={"password", "Password"})
 		@Validator(name = ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.how == 'login'", message="비밀번호를 입려하세요.")
 		@Hidden(when = MetaworksContext.WHEN_VIEW)
