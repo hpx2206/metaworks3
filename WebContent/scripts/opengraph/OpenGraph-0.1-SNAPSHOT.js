@@ -8567,7 +8567,7 @@ OG.geometry.Geometry.prototype = {
 		//	By examining the values of r & s, you can also determine some other
 		//	limiting conditions:
 		//		If 0<=r<=1 & 0<=s<=1, intersection exists
-		//		r<0 or r>1 or s<0 or s>1 line segments do not intersect
+		//		r<0 or r>1 or s<!-- <0 or s> -->1 line segments do not intersect
 		//		If the denominator in eqn 1 is zero, AB & CD are parallel
 		//		If the numerator in eqn 1 is also zero, AB & CD are collinear.
 		r_top = (A.y - C.y) * (D.x - C.x) - (A.x - C.x) * (D.y - C.y);
@@ -18740,8 +18740,8 @@ OG.handler.EventHandler.prototype = {
 											edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
 
 											if (edge) {
-												guide = me._RENDERER.drawGuide(edge);
-												if (edge && guide) {
+//												guide = me._RENDERER.drawGuide(edge);
+//												if (edge && guide) {
 													// enable event
 													me.setClickSelectable(edge, me._isSelectable(edge.shape));
 													me.setMovable(edge, me._isMovable(edge.shape));
@@ -18751,7 +18751,7 @@ OG.handler.EventHandler.prototype = {
 													}
 
 													me._RENDERER.toFront(guide.group);
-												}
+//												}
 											}
 										} else {
 											me._RENDERER.removeShape(edge);
@@ -22840,6 +22840,7 @@ OG.graph.Canvas.prototype = {
 				}
 				this._RENDERER.toFront(guide.group);
 			}
+			this._RENDERER.removeGuide(edge);
 		}
 
 		return edge;

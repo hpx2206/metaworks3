@@ -299,6 +299,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 			var rolePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.RolePanel@'+object.alias);
 			rolePanel.showWholeRole();
 		});
+		$('.leftMenuTab_detail_'+objectId).dblclick(function(){
+		   var processDetailPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDetailPanel@'+object.alias);
+		   processDetailPanel.showProcessDetail();
+		  });
 	},
 	findActivityData : function(tracingTag){
 		var object = mw3.objects[this.objectId];

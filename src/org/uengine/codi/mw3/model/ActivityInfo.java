@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
@@ -9,8 +11,10 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreContent;
 import org.uengine.codi.mw3.webProcessDesigner.IProcessTopicMapping;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessTopicMapping;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
+import org.uengine.kernel.Activity;
 import org.uengine.kernel.designer.web.ActivityView;
 
 public class ActivityInfo extends PerspectiveInfo{
@@ -22,7 +26,13 @@ public class ActivityInfo extends PerspectiveInfo{
 		public void setProcessViewer(ProcessViewer processViewer) {
 			this.processViewer = processViewer;
 		}
-		
+	Activity activity;	
+		public Activity getActivity() {
+			return activity;
+		}
+		public void setActivity(Activity activity) {
+			this.activity = activity;
+		}
 	public ActivityInfo(){
 		
 	}
@@ -50,11 +60,6 @@ public class ActivityInfo extends PerspectiveInfo{
 		
 		this.setName(wfNode.getName());
 		
-		MetaworksFile logoFile = new MetaworksFile();
-		logoFile.setUploadedPath(wfNode.getUrl());
-		logoFile.setFilename(wfNode.getThumbnail());
-		this.setLogoFile(logoFile);
-		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
 		ptm.setTopicId(this.getId());
 		IProcessTopicMapping findptm = ptm.findByTopicId();
@@ -66,6 +71,15 @@ public class ActivityInfo extends PerspectiveInfo{
 		processViewer.setAlias(findptm.getProcessPath());
 		processViewer.setViewType("definitionView");
 		processViewer.load();
+		
+		ProcessDesignerContainer processDesignerContainer = processViewer.getProcessDesignerContainer();
+		ArrayList<Activity> activityList = processDesignerContainer.getActivityList();
+		for(Activity activity : activityList){
+			if( activity.getDescription() != null && findptm.getProcessName().equals(activity.getDescription().getText())){
+				activity.getActivityView().setBackgroundColor("#ff0000");
+				this.setActivity(activity);
+			}
+		}
 	}
 	
 	
@@ -102,11 +116,14 @@ public class ActivityInfo extends PerspectiveInfo{
 	@Face(displayName="$processinfo.cheklist")
 	public ModalWindow showActivityDocument() throws Exception {
 		ModalWindow modalWindow = new ModalWindow();
-//		ActivityView activityView = new ActivityView();
-//		modalWindow.setPanel(activityView.formDetail());
+		if( this.getActivity() != null ){
+			ActivityView activityView = new ActivityView();
+			activityView.setActivity(getActivity());
+			modalWindow.setPanel(activityView.formDetail());
+		}
 		modalWindow.setTitle("액티비티뷰");
-		modalWindow.setWidth(400);
-		modalWindow.setHeight(400);
+		modalWindow.setWidth(600);
+		modalWindow.setHeight(500);
 		
 		return modalWindow;
 	}

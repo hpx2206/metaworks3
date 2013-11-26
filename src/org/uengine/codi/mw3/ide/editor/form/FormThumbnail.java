@@ -2,21 +2,12 @@ package org.uengine.codi.mw3.ide.editor.form;
 
 import gui.ava.html.image.generator.HtmlImageGenerator;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import javax.imageio.ImageIO;
-import javax.swing.JLabel;
-
-import org.apache.commons.io.FileUtils;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.kernel.GlobalContext;

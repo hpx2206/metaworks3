@@ -19,6 +19,7 @@ import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreContent;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.Role;
 
 public class MinorProcessDefinitionNode extends TreeNode implements ContextAware {
@@ -69,7 +70,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 	
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId", "metaworksContext"},target=ServiceMethodContext.TARGET_APPEND)
-	public Object action() throws Exception {
+	public Object[] action() throws Exception {
 		if("explorer".equals(this.getMetaworksContext().getHow())) {
 			
 			ProcessExploreContent processExploreContent = new ProcessExploreContent();
@@ -79,7 +80,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			processExploreContent.session = session;
 			processExploreContent.load();
 			
-			return new Refresh(processExploreContent);
+			return new Object[]{new Refresh(processExploreContent)};
 		}else if("snsView".equals(this.getMetaworksContext().getHow()) &&  TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
 			
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
@@ -108,7 +109,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			
 			recentItem.add();
 			
-			return new Object[]{new Refresh(returnObject[1]), returnObject[0]};
+			return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
 			
 			
 			
@@ -139,7 +140,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			modalWindow.setHeight(500);
 			modalWindow.setTitle("view Process");
 			
-			return modalWindow;
+			return new Object[]{modalWindow};
 			
 		}else if("activity".equals(this.getMetaworksContext().getHow())){
 			ProcessTopicMapping ptm = new ProcessTopicMapping();
@@ -161,7 +162,8 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			
 			recentItem.add();
 			
-			return new Object[]{new Refresh(returnObject[1]), returnObject[0]};
+			return new Object[]{new Refresh(returnObject[0]), new Refresh(returnObject[1])};
+//			return returnObject;
 			
 		}else if("process".equals(this.getMetaworksContext().getHow())){
 			
@@ -184,19 +186,21 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 		for(int aCount = 0; aCount < activityList.size(); aCount++) {
 			MinorProcessDefinitionNode activityNode = new MinorProcessDefinitionNode();
 			Activity activity = activityList.get(aCount);
-			String name = "";
-			if( activity.getName() != null && activity.getName().getText() != null){
-				name = activity.getDescription().getText();
-			}else{
-				name = activity.getClass().getName() + activity.getTracingTag();
+			if( activity instanceof HumanActivity ){
+				String name = "";
+				if( activity.getName() != null && activity.getName().getText() != null){
+					name = activity.getDescription().getText();
+				}else{
+					name = activity.getClass().getName() + activity.getTracingTag();
+				}
+				activityNode.setId("activity_" + activity.getTracingTag());
+				activityNode.setName(name);
+				activityNode.setPath(this.getPath());
+				activityNode.setParentId(this.getId());
+				activityNode.setType(ResourceNode.TYPE_ACTIVITY);
+				activityNode.getMetaworksContext().setHow("activity");
+				this.add(activityNode);
 			}
-			activityNode.setId("activity_" + activity.getTracingTag());
-			activityNode.setName(name);
-			activityNode.setPath(this.getPath());
-			activityNode.setParentId(this.getId());
-			activityNode.setType(ResourceNode.TYPE_ACTIVITY);
-			activityNode.getMetaworksContext().setHow("activity");
-			this.add(activityNode);
 		}
 		this.setLoaded(false);
 		return this;
