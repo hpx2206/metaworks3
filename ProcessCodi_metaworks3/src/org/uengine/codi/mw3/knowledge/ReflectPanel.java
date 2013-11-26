@@ -13,6 +13,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.metadata.MetadataFile;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.hudson.HudsonJobApi;
 import org.uengine.codi.hudson.HudsonJobDDTO;
@@ -26,23 +27,23 @@ import com.jcraft.jsch.ChannelExec;
 @Face(ejsPath = "", options = { "fieldOrder" }, values = { "serverSelect,reflectVersion,check,warFile,sqlFile,comment" })
 public class ReflectPanel {
 
-	MetadataFile warFile;
+	MetaworksFile warFile;
 		@Face(displayName = "$WarFile")
 		@Available(when=MetaworksContext.WHEN_EDIT)
-		public MetadataFile getWarFile() {
+		public MetaworksFile getWarFile() {
 			return warFile;
 		}
-		public void setWarFile(MetadataFile warFile) {
+		public void setWarFile(MetaworksFile warFile) {
 			this.warFile = warFile;
 		}
 
-	MetadataFile sqlFile;
+	MetaworksFile sqlFile;
 		@Face(displayName = "$SqlFile")
 		@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
-		public MetadataFile getSqlFile() {
+		public MetaworksFile getSqlFile() {
 			return sqlFile;
 		}
-		public void setSqlFile(MetadataFile sqlFile) {
+		public void setSqlFile(MetaworksFile sqlFile) {
 			this.sqlFile = sqlFile;
 		}
 	
@@ -121,34 +122,17 @@ public class ReflectPanel {
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
-		
 		if ("war".equals(wfNode.getVisType())) {
 			if(!check){
 				if (this.getWarFile().getFileTransfer() != null
 						&& this.getWarFile().getFilename() != null
 						&& this.getWarFile().getFilename().length() > 0)
-	
-					if (this.getWarFile() != null) {
-						MetadataFile resourceFile = new MetadataFile();
-						resourceFile.setFilename(this.getWarFile().getFilename());
-						resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
-						resourceFile.setMimeType(this.getWarFile().getMimeType());
-						resourceFile.setBaseDir(this.getWarFile().getBaseDir());
-						setWarFile(resourceFile);
-	
-					}
+						this.getWarFile().upload();
+					
 				if (this.getSqlFile().getFileTransfer() != null
 						&& this.getSqlFile().getFilename() != null
 						&& this.getSqlFile().getFilename().length() > 0)
-	
-					if (this.getSqlFile() != null) {
-						MetadataFile resourceFile = new MetadataFile();
-						resourceFile.setFilename(this.getSqlFile().getFilename());
-						resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
-						resourceFile.setMimeType(this.getSqlFile().getMimeType());
-						resourceFile.setBaseDir(this.getWarFile().getBaseDir());
-						setSqlFile(resourceFile);
-					}
+						this.getSqlFile().upload();
 				
 				reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
 				if (reflectVer == 0) {
@@ -157,8 +141,8 @@ public class ReflectPanel {
 					reflectVer++;
 				}
 	
-				filepathinfo.setSqlPath(this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath());
-				filepathinfo.setWarPath(this.getWarFile().getBaseDir() + this.getWarFile().getUploadedPath());
+				filepathinfo.setSqlPath(this.getSqlFile().getUploadedPath());
+				filepathinfo.setWarPath(this.getWarFile().getUploadedPath());
 				filepathinfo.setReflectVer(reflectVer);
 				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
 				filepathinfo.setFileType(wfNode.getVisType());
@@ -178,8 +162,9 @@ public class ReflectPanel {
 			
 			// IaaS 연동 시("war"파일 첨부)
 			if("1".equals(StartCodi.USE_IAAS)){
+				
 				FileTransmition fileTransmition = new FileTransmition();
-	//			jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
+				jschServerBehaviour.sessionLogin(cloudInfo.getServerIp(), cloudInfo.getRootId(), cloudInfo.getRootPwd());
 				cloudInfo.setId(Long.parseLong(this.getServerSelect().toString()));
 				cloudInfo.copyFrom(cloudInfo.databaseMe());
 				
@@ -192,6 +177,7 @@ public class ReflectPanel {
 				fileTransmition.send(GlobalContext.getPropertyString("codebase", "codebase") + "/startUp.sh", cloudInfo.getRootId(), cloudInfo.getRootPwd(), cloudInfo.getServerIp(), "/root");
 				
 				command = "sh /root/startUp.sh" + " " + wfNode.getName() + " " + filepathinfo.getSqlPath();
+				jschServerBehaviour.runCommand(command);
 				
 			//IaaS 미 연동 시("war"파일 첨부)
 			}else{
@@ -235,7 +221,7 @@ public class ReflectPanel {
 				 * "sqlFilePath"  = sql이 저장된 파일 경로를 불러온다.
 				 * 
 				 */
-				String sqlFilePath = this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath();
+				String sqlFilePath = this.getSqlFile().getUploadedPath();
 				
 				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
@@ -258,7 +244,7 @@ public class ReflectPanel {
 				 */
 				
 				String warFileName = this.getWarFile().getFilename().replace(".war", "");
-				String warFilePath = this.getWarFile().getBaseDir() + this.getWarFile().getUploadedPath();
+				String warFilePath = this.getWarFile().getUploadedPath();
 				
 				command = GlobalContext.getPropertyString("vm.tomcat.warCopyToDev") + " \"" + warFileName + "\"" + " \"" + warFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
@@ -278,8 +264,8 @@ public class ReflectPanel {
 			if( jschServerBehaviour.getJschSession() != null )
 				jschServerBehaviour.getJschSession().disconnect();
 			
-			
 		} else if ("svn".equals(wfNode.getVisType())) {
+		
 			if("1".equals(StartCodi.USE_IAAS)){	// IaaS 연동 시("svn" 빌드)
 				cloudInfo.setId(Long.parseLong(this.getServerSelect().toString()));
 				cloudInfo.copyFrom(cloudInfo.databaseMe());
@@ -423,7 +409,7 @@ public class ReflectPanel {
 				 * "sqlFilePath"  = sql이 저장된 파일 경로를 불러온다.
 				 * 
 				 */
-				String sqlFilePath = this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath();
+				String sqlFilePath = this.getSqlFile().getUploadedPath();
 				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
@@ -486,7 +472,7 @@ public class ReflectPanel {
 				
 				filepathinfo.setReflectVer(Integer.parseInt(svnVersion));
 				filepathinfo.setFileType(wfNode.getVisType());
-				filepathinfo.setSqlPath(this.getSqlFile().getBaseDir() + this.getSqlFile().getUploadedPath());
+				filepathinfo.setSqlPath(this.getSqlFile().getUploadedPath());
 				filepathinfo.setSqlFileName(this.getSqlFile().getFilename());
 				filepathinfo.setId(filepathinfo.createNewId());
 				filepathinfo.setComment(this.getComment());

@@ -196,6 +196,8 @@ public class ProjectTitle implements ContextAware {
 		this.getMetaworksContext().setHow("html");	
 
 		String command = null;
+		
+		
 		if("svn".equals(this.getFileType())){
 			String host = GlobalContext.getPropertyString("vm.manager.ip");
 			String userId = GlobalContext.getPropertyString("vm.manager.user");
@@ -203,7 +205,6 @@ public class ProjectTitle implements ContextAware {
 			
 			JschCommand jschServerBehaviour = new JschCommand();
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
-			
 			if("1".equals(StartCodi.USE_IAAS)){
 				
 				// create SVN
@@ -258,8 +259,8 @@ public class ProjectTitle implements ContextAware {
 			}else{//IaaS 미 연동 시
 				
 				//Create Database
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
-				this.command(command);
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+//				this.command(command);
 			}
 		}
 		

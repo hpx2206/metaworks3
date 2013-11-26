@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.ResourceNode;

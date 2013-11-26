@@ -12,11 +12,12 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.metadata.MetadataFile;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
 
-@Face(ejsPath="", options={"fieldOrder"},values={"reflectVersion,check,warFile,sqlFile"})
+@Face(ejsPath="", options={"fieldOrder"},values={"reflectVersion,check,warFile,sqlFile,comment"})
 public class ReleasePanel {
 	
 	SelectBox reflectVersion;
@@ -39,23 +40,23 @@ public class ReleasePanel {
 			this.check = check;
 		}
 		
-	MetadataFile warFile;
+	MetaworksFile warFile;
 		@Face(displayName="$WarFile")
 		@Available(when=MetaworksContext.WHEN_EDIT)
-		public MetadataFile getWarFile() {
+		public MetaworksFile getWarFile() {
 			return warFile;
 		}
-		public void setWarFile(MetadataFile warFile) {
+		public void setWarFile(MetaworksFile warFile) {
 			this.warFile = warFile;
 		}
 		
-	MetadataFile sqlFile;
+		MetaworksFile sqlFile;
 		@Face(displayName="$SqlFile")
 		@Available(when={MetaworksContext.WHEN_EDIT})
-		public MetadataFile getSqlFile() {
+		public MetaworksFile getSqlFile() {
 			return sqlFile;
 		}
-		public void setSqlFile(MetadataFile sqlFile) {
+		public void setSqlFile(MetaworksFile sqlFile) {
 			this.sqlFile = sqlFile;
 		}
 
@@ -76,7 +77,7 @@ public class ReleasePanel {
 		}
 		
 	String comment;
-		@Face(displayName = "$Comment", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"5", "130"})
+		@Face(displayName = "$Comment", ejsPath = "dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values = {"5", "50"})
 		public String getComment() {
 			return comment;
 		}
@@ -107,31 +108,15 @@ public class ReleasePanel {
 			if (this.getWarFile().getFileTransfer() != null
 					&& this.getWarFile().getFilename() != null
 					&& this.getWarFile().getFilename().length() > 0)
-
-				if (this.getWarFile() != null) {
-					MetadataFile resourceFile = new MetadataFile();
-					resourceFile.setFilename(this.getWarFile().getFilename());
-					resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
-					resourceFile.setMimeType(this.getWarFile().getMimeType());
-					setWarFile(resourceFile);
-
-				}
+				this.getWarFile().upload();
+			
 			if (this.getSqlFile().getFileTransfer() != null
 					&& this.getSqlFile().getFilename() != null
 					&& this.getSqlFile().getFilename().length() > 0)
-
-				if (this.getSqlFile() != null) {
-					MetadataFile resourceFile = new MetadataFile();
-					resourceFile.setFilename(this.getSqlFile().getFilename());
-					resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
-					resourceFile.setMimeType(this.getSqlFile().getMimeType());
-					setSqlFile(resourceFile);
-				}
+				this.getSqlFile().upload();
 			
-			if(this.getCheck()){	//반영된 버전 미 사용
+			if(!this.getCheck()){	//반영된 버전 미 사용
 				filepathinfo.setId(filepathinfo.createNewId());
-				filepathinfo.setSqlPath(this.getSqlFile().getFilename());
-				filepathinfo.setWarPath(this.getWarFile().getFilename());
 				filepathinfo.setComment(this.getComment());
 				filepathinfo.setDistributor(session.getEmployee().getEmpName());
 				filepathinfo.setModdate(new Date());
