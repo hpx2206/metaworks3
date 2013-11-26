@@ -72,139 +72,68 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 					// System.out.println(path);
 				}
 				
-				// processTopicMapping - name으로 topicID가져옴.
-				// null 이면 metaworksContext - new
-				// null 아니면 metaworksContext - edit
-				ProcessTopicMapping ptm = new ProcessTopicMapping();
-				//ptm.setProcessName(name);
-				ptm.setProcessPath(path);
-				ptm.setType("process");
-				IProcessTopicMapping findptm = ptm.findByTypeByPath();
+				
 				
 				String parentId=null;
 				
-				boolean isNew = false;
-				if(findptm!=null){
-//					this.getMetaworksContext().setWhen(metaworksContext.WHEN_EDIT);
-					isNew = false;
-					parentId = findptm.getTopicId();
-				}else{
-					isNew = true;
-				}
-				//saveTopic("process", path, name);
+			
 				
-//				if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){//new일때
-					WfNode wfNode = new WfNode();
-					if( isNew ){
+				WfNode wfNode = new WfNode();
+				wfNode.setName(name);
+				wfNode.setType(type);
+				wfNode.setParentId(session.getCompany().getComCode());
+				wfNode.setAuthorId(session.getUser().getUserId());		
+				wfNode.setCompanyId(session.getCompany().getComCode());
+				wfNode.createMe();
+				parentId = wfNode.getId();
+				
+	
+					
+				ProcessTopicMapping processTopicMapping = new ProcessTopicMapping();
+				processTopicMapping.setTopicId(parentId);
+				processTopicMapping.setProcessPath(path);
+				processTopicMapping.setProcessName(name);
+				processTopicMapping.setType(type);
+				processTopicMapping.createDatabaseMe();
+				processTopicMapping.flushDatabaseMe();
+					
+						
+				ArrayList<Activity> activityList = processDesignerContentPanel.processDesignerContainer.getActivityList();
+				for(Activity activity : activityList){
+					if( activity instanceof HumanActivity){
+						name = null;
+						name = activity.getDescription().getText();
+						type = "activity";
+						
+						String activitytId=null;
+						wfNode = null;
+						
+						wfNode = new WfNode();
 						wfNode.setName(name);
 						wfNode.setType(type);
-						wfNode.setParentId(session.getCompany().getComCode());
+						wfNode.setParentId(parentId);	
 						wfNode.setAuthorId(session.getUser().getUserId());		
 						wfNode.setCompanyId(session.getCompany().getComCode());
 						wfNode.createMe();
-						parentId = wfNode.getId();
-					}else{
-						wfNode.setId(parentId);
-						wfNode.setName(name);
-						wfNode.setType(type);
-						wfNode.setParentId(session.getCompany().getComCode());
-						wfNode.setAuthorId(session.getUser().getUserId());		
-						wfNode.setCompanyId(session.getCompany().getComCode());
-						wfNode.syncToDatabaseMe();
-					}
-					wfNode.flushDatabaseMe();
-					
-	
-			
-					
-					ProcessTopicMapping processTopicMapping = new ProcessTopicMapping();
-					processTopicMapping.setTopicId(parentId);
-					if( isNew ){
+						activitytId = wfNode.getId();
+						
+						wfNode.flushDatabaseMe();
+						
+						
+						processTopicMapping = null;
+						processTopicMapping = new ProcessTopicMapping();
 						processTopicMapping.setProcessPath(path);
 						processTopicMapping.setProcessName(name);
 						processTopicMapping.setType(type);
+						processTopicMapping.setTopicId(activitytId);
 						processTopicMapping.createDatabaseMe();
-					}else{
-						//processTopicMapping.copyFrom(processTopicMapping.databaseMe());
-						processTopicMapping.setProcessPath(path);
-						processTopicMapping.setProcessName(name);
-						processTopicMapping.setType(type);
-						processTopicMapping.syncToDatabaseMe();
+						
+						processTopicMapping.flushDatabaseMe();
+						
+						
 					}
-					processTopicMapping.flushDatabaseMe();
 					
-						
-					ArrayList<Activity> activityList = processDesignerContentPanel.processDesignerContainer.getActivityList();
-					for(Activity activity : activityList){
-						if( activity instanceof HumanActivity){
-							name = null;
-							name = activity.getDescription().getText();
-							type = "activity";
-							
-							String activitytId=null;
-							ptm = null;
-							findptm = null;
-							
-
-							ptm = new ProcessTopicMapping();
-//							ptm.setProcessName(name);
-							ptm.setProcessPath(path);
-							ptm.setType("activity");
-							findptm = ptm.findByTypeByPath();
-							
-							
-							isNew = false;
-							if(findptm!=null){
-								isNew = false;
-								activitytId = findptm.getTopicId();
-							}else{
-								isNew = true;
-							}
-							
-							
-							
-							
-							
-							wfNode = null;
-							
-							wfNode = new WfNode();
-//							if( isNew ){
-								wfNode.setName(name);
-								wfNode.setType(type);
-								wfNode.setParentId(parentId);	
-								wfNode.setAuthorId(session.getUser().getUserId());		
-								wfNode.setCompanyId(session.getCompany().getComCode());
-								wfNode.createMe();
-								activitytId = wfNode.getId();
-//							}else{
-//								wfNode.setId(activitytId);
-//								wfNode.setName(name);
-//								wfNode.setType(type);
-//								wfNode.setParentId(session.getCompany().getComCode());
-//								wfNode.setAuthorId(session.getUser().getUserId());		
-//								wfNode.setCompanyId(session.getCompany().getComCode());
-//								wfNode.syncToDatabaseMe();
-//							}
-							wfNode.flushDatabaseMe();
-							
-							
-							processTopicMapping = null;
-							processTopicMapping = new ProcessTopicMapping();
-							processTopicMapping.setProcessPath(path);
-							processTopicMapping.setProcessName(name);
-							processTopicMapping.setType(type);
-							processTopicMapping.setTopicId(activitytId);
-							if( isNew ){
-								processTopicMapping.createDatabaseMe();
-							}else{
-								processTopicMapping.syncToDatabaseMe();
-							}
-							processTopicMapping.flushDatabaseMe();
-							
-							
-						}
-						
-					}
+				}
 
 					
 									
