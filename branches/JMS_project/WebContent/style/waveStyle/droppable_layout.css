@@ -2662,7 +2662,7 @@ select.select[class] {
 .login_top_oce{ height:10px; background:url('../../images/signIn/login_top_oce.png'); border-top-left-radius:10px;border-top-right-radius:10px;}
 .login_top_codi{ height:10px; background:url('../../images/signIn/login_top.png'); border-top-left-radius:10px;border-top-right-radius:10px;}
 #signup_popup .popup_logo_oce { height:75px; border-bottom:1px solid #dddddd; background:url(../../images/signIn/doore.png) center no-repeat #f6f6f6 }
-#signup_popup .popup_logo_codi { height:75px; border-bottom:1px solid #dddddd; background:url(../../images/signIn/codi_logo.png) center no-repeat #f6f6f6 }
+#signup_popup .popup_logo_codi { height:75px; border-bottom:1px solid #dddddd; background:url(../../images/waveStyle/logo.png) center no-repeat #f6f6f6 }
 #signup_popup .popup_step { height:75px; background:#f6f6f6; border-bottom:1px solid #dddddd;  }
 #signup_popup .popup_step .stepbar{width:436px; height:7px; position:relative; top:25px; left:40px; background:#cecece}
 #signup_popup .popup_step .stepbar .first_circle{ position:absolute; width:26px; height:26px; left:-1px; top:-10px;}
