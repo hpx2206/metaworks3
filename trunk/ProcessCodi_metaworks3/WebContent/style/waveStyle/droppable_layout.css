@@ -629,10 +629,10 @@ cursor:pointer;
     margin-lef: 4px;
     margin-right: 4px;   
     background: #eef6f6;
-    -webkit-border-radius: 5px;
+   /*  -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px #888;    
+    box-shadow: 1px 1px 1px #888;    */ 
     -o-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
     -khtml-background-size: 100% 100%;
@@ -649,9 +649,9 @@ cursor:pointer;
 	background-color: #000;
 	text-align:center;
     color:#fff;
-	-webkit-border-radius: 2px;
+	/* -webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px;
+	border-radius: 2px; */
 	opacity: 0.5;
     -moz-opacity: 0.5;
     -khtml-opacity: 0.5;
@@ -720,9 +720,9 @@ margin-top:8px;
 .user .pic {
     width: 33px;
     height: 33px;
-    -webkit-border-radius: 3px;
+    /* -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
-    border-radius: 3px;
+    border-radius: 3px; */
 }
 
 .user .small {
@@ -1134,13 +1134,14 @@ margin-top:8px;
     height:13px;
 }
 #navigator .depth1 {
-    height: 25px;
+    /*height: 25px;
     line-height: 25px;
-    /*padding-left: 20px;
+    padding-left: 20px;
      border-top: 1px solid #ccc; 
     background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat;*/
     cursor: pointer;
     font-weight:bold;
+    margin-top:10px;
 }
 #navigator .depth1 .depth1td_on {
     height: 25px;
@@ -2676,7 +2677,7 @@ select.select[class] {
 #signup_popup .popup_content { padding:20px 40px; background:#FFF }
 #signup_popup .popup_content .signup_info{ line-height:30px; margin-bottom:15px; border:1px solid #CCC; font-weight:bold;width:435px; padding-left:15px; background:#EDF7FA; font-size:13px;}
 #signup_popup .popup_content label { display:block; color:#555; margin:0px 0 5px; font-family:lato; font-size:14px; }
-#signup_popup .popup_content .textinput { width:435px; height:38px; line-height:38px; border:1px solid #c7c7c7; padding-left:15px; margin-right:15px; color:#848484 }
+#signup_popup .popup_content .textinput { width:435px; height:38px; line-height:38px; border:1px solid #c7c7c7; padding-left:15px; margin-right:15px; color:#848484; font-size:16px; }
 #signup_popup .popup_content .remember_email{float:left; background:#F6F6F6;height: 40px;line-height: 40px;border: 1px solid #C7C7C7;border-left:none; width:84px; text-align:center; cursor:pointer }
 #signup_popup .popup_content .textinputreadonly { background:#f6f6f6 !important; color:#a6a3af  !important;}
 #signup_popup .popup_content .popup_btn_line{width:435px; text-align:right; padding-left:17px; padding-top:15px;}
