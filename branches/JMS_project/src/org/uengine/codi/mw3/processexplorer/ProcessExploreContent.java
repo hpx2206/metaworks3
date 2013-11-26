@@ -177,6 +177,9 @@ public class ProcessExploreContent{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
 		instance.databaseMe();
+		 
+		instance.databaseMe().setInitiator(session.getUser());
+		instance.databaseMe().setInitComCd(session.getCompany().getComCode());
 		
 		if( instanceViewContent == null ){
 			instanceViewContent = new InstanceViewContent();
@@ -196,7 +199,7 @@ public class ProcessExploreContent{
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(instanceListPanel)};
 		}else{
-			return new Object[]{new Remover(new ModalWindow() , true) , new Remover(new Popup() , true), new Refresh(instanceListPanel), new Refresh(instanceViewContent)};
+			return new Object[]{new Remover(new ModalWindow() , true) , new Remover(new Popup() , true), new Refresh(instanceViewContent)};
 		}
 	}
 	

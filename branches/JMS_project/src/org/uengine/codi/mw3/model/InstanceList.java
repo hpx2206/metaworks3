@@ -155,6 +155,9 @@ public class InstanceList implements ContextAware{
 			navigation.setPerspectiveType("topic");
 		}
 		
+		if(this.getMetaworksContext() == null) {
+			this.setMetaworksContext(new MetaworksContext());
+		}
 		if("organization".equals(this.getMetaworksContext().getWhere())){
 			instanceContents = tempInstanceContent.loadDept(session.getLastSelectedItem());
 		}else{
@@ -162,9 +165,6 @@ public class InstanceList implements ContextAware{
 		}
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		
-		if(this.getMetaworksContext() == null) {
-			this.setMetaworksContext(new MetaworksContext());
-		}
 		if(!("TodoBadge".equals(this.getMetaworksContext().getWhen()))){
 			instanceContents.getMetaworksContext().setHow("instance");
 		}

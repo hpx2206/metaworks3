@@ -554,14 +554,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	}
 	var object = mw3.objects[this.objectId];
 	var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel@'+object.alias);
-	
+	 var processDetailPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDetailPanel@'+object.alias);
 	var container = {
 			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
 			activityList : activityList,
 			transitionList : transitionList,
 			valueChainList : valueChainList,
 			roleList : roleList,
-			processVariablePanel : processVariablePanel
+			processVariablePanel : processVariablePanel,
+			processDetailPanel : processDetailPanel
 	};
 	object.processDesignerContainer = container;
 	if( object.processNameView ){

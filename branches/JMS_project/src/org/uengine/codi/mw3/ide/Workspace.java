@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
@@ -41,7 +42,9 @@ public class Workspace {
 	public void load(Session session){
 		
 		String tenantId = session.getCompany().getComCode();
-		
+		if( TenantContext.getThreadLocalInstance() != null ){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}
 		/* 2013-08-30 cjw
 		 * 태넌트 필터 사용안함
 		 * 

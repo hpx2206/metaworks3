@@ -34,6 +34,31 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 			this.type = type;
 		}
 		
+		public IProcessTopicMapping findByProcess(String processPath, String type){
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from ");
+			sb.append("ProcessTopicMapping ");
+			sb.append("where processPath=?processPath ");
+			sb.append("and type=?type ");
+			
+			IProcessTopicMapping dao = null;
+			
+			try {
+				dao = sql(sb.toString());
+				dao.setProcessPath(processPath);
+				dao.setType(type);
+				dao.select();
+				
+				if(!dao.next())
+					dao = null;
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return dao; 
+		}
+		
 		public IProcessTopicMapping findByName(){
 			
 			StringBuffer sb = new StringBuffer();
