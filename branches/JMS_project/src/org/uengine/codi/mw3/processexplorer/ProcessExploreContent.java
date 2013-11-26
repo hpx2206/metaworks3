@@ -4,24 +4,21 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 
+import org.apache.commons.io.FileUtils;
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.Download;
-import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
@@ -29,7 +26,6 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
-import org.uengine.codi.mw3.model.ParameterValue;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
@@ -47,24 +43,20 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
-import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.Chapter;
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactoryImp;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Section;
-import com.itextpdf.text.html.simpleparser.HTMLWorker;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -333,15 +325,33 @@ public class ProcessExploreContent{
 						if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
 							String typeId = ((ComplexType)processVariable.getDefaultValue()).getTypeId();
 							String imgFilePath = CodiClassLoader.mySourceCodeBase(); 
-							String imgFileName = (typeId.substring(1, typeId.lastIndexOf("]"))).replace('.', File.separatorChar) + ".png";
+							String imgFileName = (typeId.substring(1, typeId.lastIndexOf("]"))).replace('.', File.separatorChar) + ".html";
 							Paragraph pragraph = new Paragraph();
 							createTable(pragraph);
-//							System.out.println(imgFilePath + File.separatorChar + imgFileName);
+							System.out.println(imgFilePath + File.separatorChar + imgFileName);
+							InputStream is = null;
 							try{
-								Image image1 = Image.getInstance(imgFilePath + File.separatorChar + imgFileName);
-								pragraph.add(image1);
-							}catch(Exception e){
+								File file  = new File(imgFilePath + File.separatorChar + imgFileName);
+								String htmlString = FileUtils.readFileToString(file);
 								
+								System.out.println(htmlString);
+								
+								is = new FileInputStream(file);
+								DefaultFontProvider dfp=new DefaultFontProvider();
+							    XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document, is , Charset.forName(GlobalContext.ENCODING));
+							    
+							}catch(Exception e){
+								e.printStackTrace();
+							}finally {
+								if(is != null){
+									try {
+										is.close();
+										is = null;
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
 							}
 							document.add(pragraph);
 						}
@@ -422,5 +432,22 @@ public class ProcessExploreContent{
 	    for (int i = 0; i < number; i++) {
 	    	paragraph.add(new Paragraph(" "));
 	    }
+	  }
+	  
+	  class DefaultFontProvider extends FontFactoryImp {
+		  // I believe this is the correct override, but there are quite a few others.
+		  public Font getFont(String fontname,String encoding, boolean embedded, float size,int style, BaseColor color) {
+			  try {
+				  BaseFont objBaseFont = BaseFont.createFont("org/uengine/codi/util/font/NanumMyeongjo.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+				  return new Font(objBaseFont, 9, style, BaseColor.BLACK);
+			  } catch (DocumentException e) {
+				  // TODO Auto-generated catch block
+				  e.printStackTrace();
+			  } catch (IOException e) {
+				  // TODO Auto-generated catch block
+				  e.printStackTrace();
+			  }
+			  return null;
+		  }
 	  }
 }
