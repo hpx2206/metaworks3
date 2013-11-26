@@ -154,6 +154,7 @@ public class InstanceList implements ContextAware{
 		if("valuechain".equals(navigation.getPerspectiveType()) || "activity".equals(navigation.getPerspectiveType())){
 			navigation.setPerspectiveType("topic");
 		}
+		this.setMetaworksContext(new MetaworksContext());
 		
 		if(this.getMetaworksContext() == null) {
 			this.setMetaworksContext(new MetaworksContext());
