@@ -123,7 +123,7 @@ public class InstanceListPanel implements ContextAware{
 				this.getMetaworksContext().setHow("process");
 				this.setPerspectiveInfo(new ProcessInfo(session));
 			}
-			if("valuechain".equals(session.getLastPerspecteType())){
+			if("valuechain".equals(session.getLastPerspecteType()) || "valuechainAll".equals(session.getLastPerspecteType())){
 				this.getMetaworksContext().setHow("valuechain");
 				this.setPerspectiveInfo(new ProcessInfo(session));
 			}
@@ -452,14 +452,14 @@ public class InstanceListPanel implements ContextAware{
 		Perspective perspective = new Perspective();
 		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setProcessPath(session.getLastSelectedItem());
-		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		ptm.setTopicId(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByTopicId();
 		if(findptm == null)
 			throw new Exception("wrong access");
 		
-		Object[] returnObject =  perspective.loadInstanceListPanel(session, "valuechain", findptm.getTopicId(), "프로세스 : " + findptm.getProcessName());
+		Object[] returnObject =  perspective.loadInstanceListPanel(session, "valuechainAll", findptm.getTopicId(), "프로세스 : " + findptm.getProcessName());
 		
-		return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
+		return new Object[]{new Refresh(returnObject[1])};
 	}
 	
 	@Face(displayName = "대화")
@@ -468,14 +468,14 @@ public class InstanceListPanel implements ContextAware{
 		Perspective perspective = new Perspective();
 		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setProcessPath(session.getLastSelectedItem());
-		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		ptm.setTopicId(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByTopicId();
 		if(findptm == null)
 			throw new Exception("wrong access");
 		
 		Object[] returnObject =  perspective.loadInstanceListPanel(session, "valuechain", findptm.getTopicId(), "프로세스 : " + findptm.getProcessName());
 		
-		return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
+		return new Object[]{new Refresh(returnObject[1])};
 	}
 	
 	@Face(displayName = "프로세스")
@@ -485,14 +485,14 @@ public class InstanceListPanel implements ContextAware{
 		Perspective perspective = new Perspective();
 		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setProcessPath(session.getLastSelectedItem());
-		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		ptm.setTopicId(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByTopicId();
 		if(findptm == null)
 			throw new Exception("wrong access");
 		
 		Object[] returnObject =  perspective.loadInstanceListPanel(session, "process", findptm.getProcessPath(), "프로세스 : " + findptm.getProcessName());
 		
-		return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
+		return new Object[]{new Refresh(returnObject[1])};
 	}
 	
 	AppInformation appInformation;

@@ -106,11 +106,11 @@ public class NewInstancePanel implements ContextAware {
 	
 		
 	public void load(Session session) throws Exception{
-		if("topic".equals(session.getLastPerspecteType()) ||  "valuechain".equals(session.getLastPerspecteType())
-				||  "activity".equals(session.getLastPerspecteType()) ){
+		if("topic".equals(session.getLastPerspecteType()) ||  "valuechainAll".equals(session.getLastPerspecteType())
+				||  "activity".equals(session.getLastPerspecteType()) ||  "valuechain".equals(session.getLastPerspecteType()) ){
 			this.setTopicNodeId(session.getLastSelectedItem());
 			
-		}
+		} 
 		
 		if("document".equals(session.getLastPerspecteType())){
 			newInstantiator = new DocWorkItem();

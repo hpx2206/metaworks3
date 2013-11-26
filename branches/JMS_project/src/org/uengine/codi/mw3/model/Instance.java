@@ -27,8 +27,10 @@ import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.TopicNode;
+import org.uengine.codi.mw3.webProcessDesigner.IProcessTopicMapping;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessTopicMapping;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -748,6 +750,39 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
 //			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
+		}else if("valuechainAll".equals(navigation.getPerspectiveType())){
+			
+			ProcessTopicMapping ptm = new ProcessTopicMapping();
+			ptm.setTopicId(navigation.getPerspectiveValue());
+			IProcessTopicMapping findptm = ptm.findByTopicId();
+			
+			String topicId = navigation.getPerspectiveValue();
+			String processDefId = findptm.getProcessPath();
+			
+			instanceSql.append("and ( inst.defverid=?instDefVerId ");
+			criteria.put("instDefVerId", processDefId);
+			instanceSql.append("or inst.topicId =?topicId )");
+			criteria.put("topicId", topicId);
+			
+			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			criteria.put("instIsdelete", "1");
+
+			
+			// secureopt
+			instanceSql
+			.append(" and  exists ( ")
+			.append("			select 1 from bpm_procinst	 ")
+			.append("			where inst.instid = instid	 ")
+			.append("			and secuopt = 0	 ")
+			.append("			union all	 ")
+			.append("			select 1 from bpm_rolemapping rm	 ")
+			.append("			where inst.instid = rm.rootinstid	 ")
+			.append("			and inst.secuopt = 1	 ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
+			.append("			)	 ");
+			
+			
 		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "app".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");

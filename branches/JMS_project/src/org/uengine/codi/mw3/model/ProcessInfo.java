@@ -58,8 +58,14 @@ public class ProcessInfo extends GroupInfo{
 		this.followersLoad();
 		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setProcessPath(this.getId());
-		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		IProcessTopicMapping findptm = null;
+		if( !"process".equals(session.getLastPerspecteType())){
+			ptm.setTopicId(this.getId());
+			findptm = ptm.findByTopicId();
+		}else{
+			ptm.setProcessPath(this.getId());
+			findptm = ptm.findByProcess(this.getId() , "process");
+		}
 		if(findptm==null){
 			throw new Exception("wrong access");
 		}
@@ -95,8 +101,8 @@ public class ProcessInfo extends GroupInfo{
 	public ModalWindow action() throws Exception{
 		
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setProcessPath(this.getId());
-		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		ptm.setTopicId(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByTopicId();
 		if(findptm==null){
 			throw new Exception("wrong access");
 		}
@@ -122,8 +128,8 @@ public class ProcessInfo extends GroupInfo{
 	@Face(displayName="$processinfo.execute")
 	public Object[] startProcess() throws Exception{
 		ProcessTopicMapping ptm = new ProcessTopicMapping();
-		ptm.setProcessPath(this.getId());
-		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		ptm.setTopicId(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByTopicId();
 		if(findptm==null){
 			throw new Exception("wrong access");
 		}

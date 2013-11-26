@@ -217,6 +217,7 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 		sb.append(" ProcessTopicMapping ");
 		sb.append(" where processpath=?processpath ");
 		sb.append(" and type=?type ");
+		sb.append(" and processName=?processName ");
 		
 		IProcessTopicMapping dao = null;
 		
@@ -224,6 +225,7 @@ public class ProcessTopicMapping extends Database<IProcessTopicMapping> implemen
 			dao = sql(sb.toString());
 			dao.setProcessPath(this.getProcessPath());
 			dao.setType(this.getType());
+			dao.setProcessName(this.getProcessName());
 			dao.select();
 			
 			if(!dao.next())
