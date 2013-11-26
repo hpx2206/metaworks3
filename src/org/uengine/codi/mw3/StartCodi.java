@@ -72,7 +72,7 @@ public class StartCodi {
 		String comAlias = TenantContext.getThreadLocalInstance().getTenantId();
 		
 		//String comCode = null;
-		
+		/*
 		if(!"login".equals(this.getKey())){
 			if(comAlias == null){
 				return new SignUp();
@@ -89,7 +89,7 @@ public class StartCodi {
 				return new Login();
 			}else
 				return new Login();
-		}
+		}*/
 		
 		/*
 		if(loggedUserId != null){
