@@ -98,7 +98,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			}
 			
 			String title = "프로세스 : " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, "valuechain", findptm.getTopicId(), title);
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, "valuechain", findptm.getProcessPath(), title);
 			
 			// recentItem 에 create
 			RecentItem recentItem = new RecentItem();
