@@ -307,6 +307,36 @@ public class ProcessExploreContent{
 		preface.add(new Paragraph(contents2, smallBold));
 		addEmptyLine(preface, 1);
 		
+		String chapter3 = "3.0  책 임";
+		String contents3 = documentation.getResponsibility().getContents();
+		preface.add(new Paragraph(chapter3, subFont));
+		preface.add(new Paragraph(contents3, smallBold));
+		addEmptyLine(preface, 1);
+		
+		String chapter4 = "4.0  장 비";
+		String contents4 = documentation.getEquipment().getContents();
+		preface.add(new Paragraph(chapter4, subFont));
+		preface.add(new Paragraph(contents4, smallBold));
+		addEmptyLine(preface, 1);
+		
+		String chapter5 = "5.0  자격요건";
+		String contents5 = documentation.getRequirement().getContents();
+		preface.add(new Paragraph(chapter5, subFont));
+		preface.add(new Paragraph(contents5, smallBold));
+		addEmptyLine(preface, 1);
+		
+		String chapter6 = "6.0  판정기준";
+		String contents6 = documentation.getIndicationStandard().getContents();
+		preface.add(new Paragraph(chapter6, subFont));
+		preface.add(new Paragraph(contents6, smallBold));
+		addEmptyLine(preface, 1);
+		
+		String chapter7 = "7.0  초기조건";
+		String contents7 = documentation.getInitialCondition().getContents();
+		preface.add(new Paragraph(chapter7, subFont));
+		preface.add(new Paragraph(contents7, smallBold));
+		addEmptyLine(preface, 1);
+		
 		
 		document.add(preface);
 	}
