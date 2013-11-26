@@ -135,7 +135,7 @@ public class FormEditor extends Editor {
 		((ITool)processVariableValue).onLoad();
 		TransactionContext.getThreadLocalInstance().setSharedContext(ITool.ITOOL_MAP_KEY, null);
 		
-		String thumbnailPath = this.getResourceNode().getPath().substring(0, this.getResourceNode().getPath().lastIndexOf(".")) + ".html";
+		String thumbnailPath = this.getResourceNode().getPath().substring(0, this.getResourceNode().getPath().lastIndexOf("."));
 		
 		FormThumbnail formThumbnail = new FormThumbnail();
 		formThumbnail.setFormObject(processVariableValue);

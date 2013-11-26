@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.ide.editor.form;
 
+import gui.ava.html.image.generator.HtmlImageGenerator;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -60,11 +62,9 @@ public class FormThumbnail {
 		}
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_NONE)
 	public void formPreView() throws Exception {
-		// TODO input 이 안보임....  나중에 변경해야함
-		File  file = new File(thumbnailPath);
-		String codebase = GlobalContext.getPropertyString("codebase", "codebase/");
-		File htmlTemplateFile = new File(codebase + File.separatorChar +"templet.html");
-		String htmlString = FileUtils.readFileToString(htmlTemplateFile);
+		
+		/// 1. html 로 변환
+		String htmlString = htmlTemplet();
 		String title = "New Page";
 		htmlString = htmlString.replace("$title", title);
 		htmlString = htmlString.replace("$body", formHtml);
@@ -72,15 +72,15 @@ public class FormThumbnail {
 		FileOutputStream fos = null;
 		Writer out = null;
 		try {
-			fos = new FileOutputStream(thumbnailPath);
+			fos = new FileOutputStream(thumbnailPath + ".html");
 			osw = new OutputStreamWriter(fos , GlobalContext.ENCODING);
 			out = new BufferedWriter(osw);
 		    out.write(htmlString);
 		} finally {
-			if(fos != null){
+			if(out != null){
 				try {
-					fos.close();
-					fos = null;
+					out.close();
+					out = null;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -95,49 +95,58 @@ public class FormThumbnail {
 					e.printStackTrace();
 				}
 			}
-			if(out != null){
+			if(fos != null){
 				try {
-					out.close();
-					out = null;
+					fos.close();
+					fos = null;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-//		File newHtmlFile = new File(thumbnailPath);
-//		FileUtils.writeStringToFile(newHtmlFile, htmlString);
 		
+		// 2. jpg 파일로 변환
 		
-		/*
-		JLabel label = new JLabel(formHtml);
-		label.setSize(imageWidth + 200 , imageHeight + 300);
+		HtmlImageGenerator imageGenerator = new HtmlImageGenerator();
+		imageGenerator.loadHtml(formHtml);
+		imageGenerator.saveAsImage(thumbnailPath + ".png");
+//		imageGenerator.saveAsImage(thumbnailPath + ".jpg");
 		
-		BufferedImage image = new BufferedImage(
-	            label.getWidth(), label.getHeight(), 
-	            BufferedImage.TYPE_INT_ARGB);
-	    {
-	        Graphics g = image.getGraphics();
-	        g.setColor(Color.BLACK);
-	        label.paint(g);
-	        g.dispose();
-	    }
-	    
-//		BufferedImage bi = ImageIO.read(stream_file);
+//		File file = new File(thumbnailPath + ".jpg");
+//		JLabel label = new JLabel(formHtml);
+//		label.setSize(imageWidth + 200 , imageHeight + 300);
+//		
+//		BufferedImage image = new BufferedImage(
+//	            label.getWidth(), label.getHeight(), 
+//	            BufferedImage.TYPE_INT_ARGB);
+//	    {
+//	        Graphics g = image.getGraphics();
+//	        g.setColor(Color.BLACK);
+//	        label.paint(g);
+//	        g.dispose();
+//	    }
 //
-//		// 원본 이미지의 비율에 맞게 썸네일 이미지 비율을 정하는 부분.
-//		float cvtWidth = 0.0f;
-//		float cvtHeight = 0.0f;
-//
-//
-//		BufferedImage thumb = new BufferedImage
-//				((int)cvtWidth, (int)cvtHeight, BufferedImage.TYPE_INT_RGB);
-//		Graphics2D  g2 = thumb.createGraphics();
-//
-//		g2.drawImage(bi, 0, 0, (int)cvtWidth, (int)cvtHeight, null);
-
-		ImageIO.write(image, "png", file); 
+//		ImageIO.write(image, "jpg", file); 
 		
-		*/
 	}
+	
+	public String htmlTemplet(){
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("<!DOCTYPE html PUBLIC");
+		sb.append("-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
+		sb.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:fb=\"http://ogp.me/ns/fb#\" xml:lang=\"en\" lang=\"en\">");
+		sb.append("<head>");
+		sb.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>");
+		sb.append("<title>$title</title>");
+		sb.append("</head>");
+		sb.append("<body>$body");
+		sb.append("</body>");
+		sb.append("</html>");
+
+		
+		return sb.toString();
+	}
+	
 }
