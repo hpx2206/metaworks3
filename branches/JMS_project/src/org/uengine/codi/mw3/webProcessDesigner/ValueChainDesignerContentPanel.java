@@ -74,20 +74,26 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 				ProcessTopicMapping ptm = new ProcessTopicMapping();
 				ptm.setProcessName(name);
 				IProcessTopicMapping findptm = ptm.findByName();
+				
+				boolean isNew = false;
 				if(findptm!=null){
-					this.getMetaworksContext().setWhen(metaworksContext.WHEN_EDIT);
+//					this.getMetaworksContext().setWhen(metaworksContext.WHEN_EDIT);
+					isNew = false;
 				}else{
-					this.getMetaworksContext().setWhen(metaworksContext.WHEN_NEW);
+					isNew = true;
 				}
 				//saveTopic("process", path, name);
 				
-				if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){//new일때
+//				if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){//new일때
 					WfNode wfNode = new WfNode();
 					wfNode.setName(name);
 					wfNode.setType(type);
 					wfNode.setParentId(session.getCompany().getComCode());	
 					wfNode.setAuthorId(session.getUser().getUserId());		
 					wfNode.setCompanyId(session.getCompany().getComCode());
+					if( isNew ){
+						wfNode.createMe();
+					}
 					wfNode.createMe();
 					
 					String parentId = wfNode.getId();
@@ -99,7 +105,11 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 					processTopicMapping.setProcessName(name);
 					processTopicMapping.setType(type);
 					processTopicMapping.setTopicId(wfNode.getId());
-					processTopicMapping.createDatabaseMe();
+					if( isNew ){
+						processTopicMapping.createDatabaseMe();
+					}else{
+						processTopicMapping.syncToDatabaseMe();
+					}
 					processTopicMapping.flushDatabaseMe();
 					
 					ProcessDesignerContainer processDesignerContainer = processDesignerContentPanel.getProcessDesignerContainer();
@@ -138,8 +148,9 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 							wfNode.setParentId(parentId);	
 							wfNode.setAuthorId(session.getUser().getUserId());		
 							wfNode.setCompanyId(session.getCompany().getComCode());
-							wfNode.createMe();
-		
+							if( isNew ){
+								wfNode.createMe();
+							}
 							
 							processTopicMapping = null;
 							processTopicMapping = new ProcessTopicMapping();
@@ -147,7 +158,11 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 							processTopicMapping.setProcessName(name);
 							processTopicMapping.setType(type);
 							processTopicMapping.setTopicId(wfNode.getId());
-							processTopicMapping.createDatabaseMe();
+							if( isNew ){
+								processTopicMapping.createDatabaseMe();
+							}else{
+								processTopicMapping.syncToDatabaseMe();
+							}
 							processTopicMapping.flushDatabaseMe();
 							
 							processDesignerContainer = null;
@@ -172,11 +187,11 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 						}
 						
 					}
-				}else{//edit일때
+//				}else{//edit일때
 					/*
 					 * TODO case: edit
 					 */
-				}
+//				}
 				
 			}
 		}
