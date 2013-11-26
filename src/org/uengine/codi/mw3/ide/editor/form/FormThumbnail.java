@@ -4,7 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
@@ -63,8 +68,45 @@ public class FormThumbnail {
 		String title = "New Page";
 		htmlString = htmlString.replace("$title", title);
 		htmlString = htmlString.replace("$body", formHtml);
-		File newHtmlFile = new File(thumbnailPath);
-		FileUtils.writeStringToFile(newHtmlFile, htmlString);
+		OutputStreamWriter osw = null;
+		FileOutputStream fos = null;
+		Writer out = null;
+		try {
+			fos = new FileOutputStream(thumbnailPath);
+			osw = new OutputStreamWriter(fos , GlobalContext.ENCODING);
+			out = new BufferedWriter(osw);
+		    out.write(htmlString);
+		} finally {
+			if(fos != null){
+				try {
+					fos.close();
+					fos = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(osw != null){
+				try {
+					osw.close();
+					osw = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(out != null){
+				try {
+					out.close();
+					out = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+//		File newHtmlFile = new File(thumbnailPath);
+//		FileUtils.writeStringToFile(newHtmlFile, htmlString);
 		
 		
 		/*

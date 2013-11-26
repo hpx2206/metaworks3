@@ -1,14 +1,26 @@
 package org.uengine.kernel.designer.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.common.MetaworksUtil;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
+import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.IDrawDesigne;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ParameterContextPanel;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
 
 public class HumanActivityView extends ActivityView{
@@ -75,7 +87,7 @@ public class HumanActivityView extends ActivityView{
 		if( contexts != null ){
 			activityWindow.getActivityPanel().setMetaworksContext(new MetaworksContext());
 			activityWindow.getActivityPanel().getMetaworksContext().setHow("humanActivity");
-			activityWindow.getActivityPanel().setParameterValue(this.formDetail());
+			settingPvValue(activityWindow.getActivityPanel() , activity);
 		}
 		popup.setTitle(activity.getDescription() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
 		popup.setPanel(activityWindow);
@@ -83,5 +95,56 @@ public class HumanActivityView extends ActivityView{
 		popup.setHeight(500);
 		
 		return popup;
+	}
+	
+	public void settingPvValue(ActivityPanel activityPanel , Activity activity){
+		Class paramClass = activity.getClass();
+		boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
+		if( isReceiveActivity ){
+			ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
+			if( contexts != null && contexts.length > 0){
+				for(int i=0; i < contexts.length; i++){
+					ProcessVariable processVariable = contexts[i].getVariable();
+					if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
+						String typeId = ((ComplexType)processVariable.getDefaultValue()).getTypeId();
+						String imgFilePath = CodiClassLoader.mySourceCodeBase(); 
+						String imgFileName = (typeId.substring(1, typeId.lastIndexOf("]"))).replace('.', File.separatorChar) + ".html";
+						System.out.println(imgFilePath + File.separatorChar + imgFileName);
+						InputStream is = null;
+						ByteArrayOutputStream bao = null;
+						try{
+							bao = new ByteArrayOutputStream();
+							File file  = new File(imgFilePath + File.separatorChar + imgFileName);
+							is = new FileInputStream(file);
+							MetaworksUtil.copyStream(is, bao);
+							
+							activityPanel.setParameterValue(bao.toString(GlobalContext.ENCODING));
+						    
+						}catch(Exception e){
+							e.printStackTrace();
+						}finally {
+							if(is != null){
+								try {
+									is.close();
+									is = null;
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+							if(bao != null){
+								try {
+									bao.close();
+									bao = null;
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

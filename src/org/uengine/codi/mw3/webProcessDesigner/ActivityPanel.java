@@ -4,7 +4,6 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.model.ParameterValue;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
 
@@ -46,13 +45,13 @@ public class ActivityPanel implements ContextAware{
 			this.parameterContextPanel = parameterContextPanel;
 		}
 		
-	ParameterValue[] parameterValue;
+	Object parameterValue;
 	@Face(displayName="$formView")
 	@Available(how="humanActivity")
-		public ParameterValue[] getParameterValue() {
+		public Object getParameterValue() {
 			return parameterValue;
 		}
-		public void setParameterValue(ParameterValue[] parameterValue) {
+		public void setParameterValue(Object parameterValue) {
 			this.parameterValue = parameterValue;
 		}
 	public ActivityPanel(){
