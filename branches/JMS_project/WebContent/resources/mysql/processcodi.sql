@@ -1012,5 +1012,5 @@ CREATE TABLE ProcessTopicMapping (
   processPath varchar(200) NOT NULL,
   topicId varchar(50) NOT NULL,
   type varchar(20) NOT NULL,
-  PRIMARY KEY (processName)
+  PRIMARY KEY (topicId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
