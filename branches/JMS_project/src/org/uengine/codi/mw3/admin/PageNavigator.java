@@ -38,16 +38,16 @@ public class PageNavigator{
 
 	public PageNavigator() {
 		this.setSns("1".equals(PageNavigator.USE_SNS));
-		this.setSns("1".equals(PageNavigator.USE_IDE));
-		this.setSns("1".equals(PageNavigator.USE_KNOWLEDGE));
+		this.setIde("1".equals(PageNavigator.USE_IDE));
+		this.setKnowlege("1".equals(PageNavigator.USE_KNOWLEDGE));
 	}
 	
 	public PageNavigator(String pageName) {
 		this.setPageName(pageName);
 
 		this.setSns("1".equals(PageNavigator.USE_SNS));
-		this.setSns("1".equals(PageNavigator.USE_IDE));
-		this.setSns("1".equals(PageNavigator.USE_KNOWLEDGE));
+		this.setIde("1".equals(PageNavigator.USE_IDE));
+		this.setKnowlege("1".equals(PageNavigator.USE_KNOWLEDGE));
 	}
 	
 	boolean admin;

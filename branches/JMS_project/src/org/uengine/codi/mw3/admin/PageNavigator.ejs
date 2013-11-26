@@ -16,17 +16,14 @@
 	    <area shape="circle" coords="256,195,21" href="#"  onclick="<%=methods.goMarketplace.caller()%>" title="go Marketplace"/>
     
 	<% }else { %>
-		<area shape="rect" coords="153,37,199,84" href="#" onclick="<%=methods.goProcess.caller()%>" title="go Process" />
-		<area shape="rect" coords="219,108,265,157" href="#" onclick="<%=methods.goIDE.caller()%>" title="go IDE" />
-	
-		<% if(false) { %>
-		
 			<% if(value.ide){ %>
 				<% if(value.knowlege){ %>
 					<area shape="rect" coords="102,19,166,75" href="#" onclick="<%=methods.goProcess.caller()%>" title="go Process" />
-					<area shape="rect" coords="166,77,225,138" href="#" onclick="<%=methods.goKnowledge.caller()%>" title="go Knowledge" />
-					<area shape="rect" coords="224,141,285,204" href="#" onclick="<%=methods.goMarketplace.caller()%>" title="go Marketplace" />
+					<area shape="rect" coords="166,77,225,138" href="#" onclick="<%=methods.goProcessExplorer.caller()%>" title="go ProcessExplorer" />
+					<area shape="rect" coords="224,141,285,204" href="#" onclick="<%=methods.goIDE.caller()%>" title="go go IDE" />
 				<% }else{ %>
+            		<area shape="rect" coords="153,37,199,84" href="#" onclick="<%=methods.goProcess.caller()%>" title="go Process" />
+            		<area shape="rect" coords="219,108,265,157" href="#" onclick="<%=methods.goIDE.caller()%>" title="go IDE" />
 				<% } %>
 			<% }else{ %>
 				<% if(value.knowlege){ %>
@@ -34,7 +31,9 @@
 					<area shape="rect" coords="219,108,265,157" href="#" onclick="<%=methods.goKnowledge.caller()%>" title="go IDE" />
 				<% } %>
 			<% } %>
-		<% }else if(false){ %>
+		
+		
+		<% if(false){ %>
 			<area shape="rect" coords="88,32,132,73" href="#" onclick="<%=methods.goProcess.caller()%>" title="go Process" />
 		    <area shape="rect" coords="137,73,180,120" href="#" onclick="<%=methods.goSelfServicePortal.caller()%>" title="go Knowledge" />
 		    <area shape="rect" coords="185,124,230,170" href="#" onclick="<%=methods.goIDE.caller()%>" title="go IDE" />
@@ -44,6 +43,7 @@
 		    <area shape="rect" coords="233,80,279,200" href="#" onclick="<%=methods.goAppMap.caller()%>" title="go App Map"/>
 		    <area shape="rect" coords="232,175,284,222" href="#" onclick="<%=methods.goMarketplace.caller()%>" title="go Marketplace" />
 		<% } %>
+		
 	<% } %>
 	
 </map>
