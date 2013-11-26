@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -16,6 +17,8 @@ import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.codi.mw3.marketplace.AppInformation;
+import org.uengine.codi.mw3.webProcessDesigner.IProcessTopicMapping;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessTopicMapping;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -440,6 +443,56 @@ public class InstanceListPanel implements ContextAware{
 		
 		
 		return modalWindow;
+	}
+	
+	
+	@Face(displayName = "모두")
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object switchToProcessAll() throws Exception {
+		Perspective perspective = new Perspective();
+		
+		ProcessTopicMapping ptm = new ProcessTopicMapping();
+		ptm.setProcessPath(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		if(findptm == null)
+			throw new Exception("wrong access");
+		
+		Object[] returnObject =  perspective.loadInstanceListPanel(session, "valuechain", findptm.getTopicId(), "프로세스 : " + findptm.getProcessName());
+		
+		return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
+	}
+	
+	@Face(displayName = "대화")
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object switchToProcessConversation() throws Exception {
+		Perspective perspective = new Perspective();
+		
+		ProcessTopicMapping ptm = new ProcessTopicMapping();
+		ptm.setProcessPath(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		if(findptm == null)
+			throw new Exception("wrong access");
+		
+		Object[] returnObject =  perspective.loadInstanceListPanel(session, "valuechain", findptm.getTopicId(), "프로세스 : " + findptm.getProcessName());
+		
+		return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
+	}
+	
+	@Face(displayName = "프로세스")
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object switchToProcessOnly() throws Exception {
+		
+		Perspective perspective = new Perspective();
+		
+		ProcessTopicMapping ptm = new ProcessTopicMapping();
+		ptm.setProcessPath(session.getLastSelectedItem());
+		IProcessTopicMapping findptm = ptm.findByProcessPath();
+		if(findptm == null)
+			throw new Exception("wrong access");
+		
+		Object[] returnObject =  perspective.loadInstanceListPanel(session, "process", findptm.getProcessPath(), "프로세스 : " + findptm.getProcessName());
+		
+		return new Object[]{new Refresh(returnObject[1]), new Refresh(returnObject[0])};
 	}
 	
 	AppInformation appInformation;

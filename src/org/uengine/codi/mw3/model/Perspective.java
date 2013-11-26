@@ -205,7 +205,6 @@ public class Perspective {
 					new Object[]{new Refresh(todoBadge, true)});			
 		}
 			
-		
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		
 		
@@ -282,6 +281,9 @@ public class Perspective {
 		if("oce".equals(selectedItem)){
 			return new Object[] {instListPanel};
 		}
+//		if("valuechain".equals(perspectiveType) || "activity".equals(perspectiveType))
+//			session.setLastPerspecteType("topic");
+		
 		return new Object[] {session, instListPanel};
 	}
 
