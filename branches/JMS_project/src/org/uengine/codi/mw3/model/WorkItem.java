@@ -1047,12 +1047,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				
 				if(this instanceof OverlayCommentWorkItem){
-					GenericWorkItem parentWorkItem = new GenericWorkItem();
+					WorkItem parentWorkItem = new WorkItem();
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
-					FileWorkItem fileWorkItem = new FileWorkItem();
-					fileWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
-					returnObjects = new Object[]{new ToAppend(parentWorkItem, this) ,new ToAppend(fileWorkItem,this), new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(parentWorkItem,this), new Refresh(instanceFollowers)};
+					
 					
 				}else if(this instanceof CommentWorkItem){		
 					if("memo".equals(this.getType())){
@@ -1439,8 +1438,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		OverlayCommentWorkItem overlayCommentWorkItem = new OverlayCommentWorkItem();
 		overlayCommentWorkItem.setOverlayCommentOption(overlayCommentOption);
-		overlayCommentWorkItem.setInstId(getInstId());
 		
+		//임시적으로 FileWorkItem에서 설명을 달면 FileWorkItem이 아닌 상위의 감싸고있는 genericWorkItem instance를 바라보게 함 
+		if(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType())){
+			IWorkItem workItem = sql("select * from bpm_worklist where grpTaskId=?grpTaskId and type=?type");
+			workItem.set("grpTaskId", getTaskId());
+			workItem.set("type",WorkItem.WORKITEM_TYPE_GENERIC);
+			workItem.select();
+			
+			if(workItem.next()){
+				overlayCommentWorkItem.setInstId(workItem.getInstId());
+			}
+		}else{
+			overlayCommentWorkItem.setInstId(getInstId());
+		}
 //		overlayCommentWorkItem.session = session;
 //		overlayCommentWorkItem.processManager = processManager;
 //		
@@ -1519,44 +1530,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 	}
 	
-	@Override
-	public IWorkItem loadChooseView() throws Exception{
-		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where grpTaskId=?grpTaskId");
-		sb.append(" and type=?type");
-		sb.append(" and taskId=?taskId");
-		IWorkItem workItem = (IWorkItem) sql(IWorkItem.class,sb.toString());
-		
-		workItem.set("grpTaskId",this.getGrpTaskId());
-		workItem.set("type",this.getType());
-		workItem.set("taskId",this.getTaskId());
-		workItem.select();
-		
-		if(workItem.next()){
-			workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
-			return workItem;
-		}else{
-			return null;
-		}
-	}
-	
-	public IWorkItem findGenericWorkItem() throws Exception{
-		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where grpTaskId=?grpTaskId");
-		sb.append(" and type=?type");
-		
-		IWorkItem workItem = (IWorkItem)sql(IWorkItem.class,sb.toString());
-		
-		workItem.set("grpTaskId",this.getGrpTaskId());
-		workItem.set("type",this.getType());
-		workItem.select();
-		
-		if(workItem.next()){
-			return workItem;
-		}else{
-			return null;
-		}
-	}
 	@AutowiredFromClient
 	public Session session;
 	
