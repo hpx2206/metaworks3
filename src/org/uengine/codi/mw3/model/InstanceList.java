@@ -154,14 +154,12 @@ public class InstanceList implements ContextAware{
 		if("valuechain".equals(navigation.getPerspectiveType()) || "activity".equals(navigation.getPerspectiveType())){
 			navigation.setPerspectiveType("topic");
 		}
-		instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
 		
 		if("organization".equals(this.getMetaworksContext().getWhere())){
 			instanceContents = tempInstanceContent.loadDept(session.getLastSelectedItem());
 		}else{
 			instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
 		}
-
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		
 		if(this.getMetaworksContext() == null) {
