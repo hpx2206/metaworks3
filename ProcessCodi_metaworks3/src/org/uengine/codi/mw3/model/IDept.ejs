@@ -2,7 +2,6 @@
 	if(value){
 		if(mw3.how == 'tree'){
 %>
-		<div>	
 			<a onClick="<%=methods.drillDown.caller()%>; <% if(mw3.where!='addContact'){%><%=methods.loadDeptList.caller()%><% } %>" class="idept"><%=fields.partName.here()%></a>					
 <%
 			if(mw3.where=='deptPicker'){
@@ -11,16 +10,12 @@
 <%			
 			}
 %>		
-			<div style="clear"></div>	
-		</div>
 		
 <%		
 			if(value.selected) {
-%>
-				<ul>				
-<%
 				if(value.children) {
 %>
+				>
 					<li style=" padding-left:20px;"><%=fields.children.here() %></li>
 <%
 				}
@@ -30,9 +25,6 @@
 					<li style=" padding-left:20px;"><%=fields.deptEmployee.here() %></li>
 <%
 				}
-%>		
-				<ul>
-<%
 			}
 		} else if(mw3.how == 'picker'){
 %>
