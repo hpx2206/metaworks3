@@ -216,7 +216,7 @@ public class ProjectTitle implements ContextAware {
 				jschServerBehaviour.runCommand(command);
 				
 				//SVN 유저 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				//Create Hudson
@@ -228,6 +228,7 @@ public class ProjectTitle implements ContextAware {
 				jschServerBehaviour.runCommand(command);
 			}
 			else{//IaaS 미 연동 시
+				//SVN 생성
 				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
 				jschServerBehaviour.runCommand(command);
 				
@@ -236,7 +237,7 @@ public class ProjectTitle implements ContextAware {
 				jschServerBehaviour.runCommand(command);
 				
 				//SVN 유저 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				//Create Hudson
@@ -244,7 +245,7 @@ public class ProjectTitle implements ContextAware {
 				jschServerBehaviour.runCommand(command);
 				
 				//Setting Hudson
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias() + "dev";
 				jschServerBehaviour.runCommand(command);
 				
 				//Create Database
