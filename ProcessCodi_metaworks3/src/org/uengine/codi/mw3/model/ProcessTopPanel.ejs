@@ -5,6 +5,7 @@
 		
 			if( value.session && "sns" == value.session.employee.preferUX ){
 %>
+<!--
 
 			<% if(value.session.ux == 'oce'){ %>
 			
@@ -17,7 +18,8 @@
 			 		<img src="images/signIn/codi_logo.png"/>
 			 	</div>
 			<% } %>
-			
+-->			
+			<div style="float:left;"><%=fields.loginUser.here({when: 'self_small'})%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 			<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 			<div style="float:left;"><%=fields.windowPanel.here()%>	</div>
@@ -40,17 +42,18 @@
 <%
 			}else{
 %>
+<!--
 		 	<% if(value.session.ux == 'oce'){ %>
-			
 				<div style="float:left;padding-top:10px; margin-right:5px;">
 			 		<img src="images/waveStyle/garuda_logo.png"/>
 			 	</div>
-		 	
 		 	<% } else{%>
 		 		<div style="float:left;padding-top:10px; margin-right:5px;">
 			 		<img src="images/signIn/codi_logo.png"/>
 			 	</div>
 			<% } %>
+-->			
+			<div style="float:left;"><%=fields.loginUser.here({when: 'self_small'})%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
@@ -70,13 +73,11 @@
 			}
 			%>
 
-
 		 	<%=fields.tray.here()%>
-		 	
 			<div class="info">
-			 	<div style="float:left;">
-			 		<%=fields.loginUser.here({when: 'self_small'})%>
-			 	</div>
+				<div class="user">
+		 			<div style="float: left; padding-top: 10px;" onClick="<%=methods.showMenu.caller() %>"><b><%=value.loginUser.name%></b> ▼ </div>
+				</div>	
 			 	<!--
 		    	<%=fields.searchBox.here()%>
 		    	-->
