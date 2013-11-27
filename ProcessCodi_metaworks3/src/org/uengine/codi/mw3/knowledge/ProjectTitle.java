@@ -197,14 +197,14 @@ public class ProjectTitle implements ContextAware {
 
 		String command = null;
 		
+		String host = GlobalContext.getPropertyString("vm.manager.ip");
+		String userId = GlobalContext.getPropertyString("vm.manager.user");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
 		if("svn".equals(this.getFileType())){
-			String host = GlobalContext.getPropertyString("vm.manager.ip");
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-			
-			JschCommand jschServerBehaviour = new JschCommand();
-			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			if("1".equals(StartCodi.USE_IAAS)){
 				
 				// create SVN
@@ -260,8 +260,8 @@ public class ProjectTitle implements ContextAware {
 			}else{//IaaS 미 연동 시
 				
 				//Create Database
-//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
-//				this.command(command);
+				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+				jschServerBehaviour.runCommand(command);
 			}
 		}
 		
