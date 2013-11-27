@@ -10,18 +10,13 @@ var org_uengine_codi_mw3_knowledge_IProjectNode = function(objectId, className){
 };
 
 org_uengine_codi_mw3_knowledge_IProjectNode.prototype = {
-	startLoading : function(status){ },
-	endLoading : function(status){ },
+	startLoading : function(status){ 
+		
+	},
+	endLoading : function(status){ 
+		
+	},
 	showStatus : function(message){
-		if(message){
-			
-			var message_split = message.split(' ');
-
-			if(message_split[0] == 'loadTopic'){
-				$('#navigator .depth1').removeClass('selected');
-				$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
-				$('#objDiv_'  + this.objectId + ' li').addClass('selected_navi');
-			}
-		}
+	
 	}
 };
