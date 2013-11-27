@@ -23,7 +23,6 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.webservices.emailserver.EMailServerSoapBindingImpl;
 
 public class User extends Database<IUser> implements IUser {
 	
@@ -884,23 +883,6 @@ public class User extends Database<IUser> implements IUser {
 		Employee employee = new Employee();
 		employee.setEmpCode(this.getUserId());
 		employee.databaseMe().setApproved(true);
-	}
-	
-	public Object showMenu() throws Exception {
-		
-		Employee employee = new Employee();
-		
-		employee.setEmpCode(session.getEmployee().getEmpCode());
-		
-		employee.setMetaworksContext(new MetaworksContext());
-		employee.getMetaworksContext().setWhere("user_menu_option");
-		
-		Popup menu = new Popup();
-		menu.setHeight(60);
-		menu.setWidth(200);
-		menu.setPanel(employee);
-		
-		return menu;
 	}
 	
 	@Override

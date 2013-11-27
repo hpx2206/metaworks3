@@ -13,6 +13,9 @@ public class ProcessTopPanel {
 		setSession(session);
 		setWindowPanel(new WindowPanel());
 		
+		MetaworksContext metaworksContext = new MetaworksContext();
+		metaworksContext.setWhere("topPanel");
+		
 		tray = new Tray();
 		tray.session = session;
 		tray.load();
@@ -24,13 +27,14 @@ public class ProcessTopPanel {
 		IUser loginUser = new User();
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
+		loginUser.setMetaworksContext(metaworksContext);
+
 		
 		setLoginUser(loginUser);
 		
 		if("oce".equals(session.getUx())){
 			InstanceSearchBox searchBox = new InstanceSearchBox();
-			searchBox.setMetaworksContext(new MetaworksContext());
-			searchBox.getMetaworksContext().setWhere("topPanel");
+			searchBox.setMetaworksContext(metaworksContext);
 			searchBox.setKeyUpSearch(true);
 			searchBox.setKeyEntetSearch(true);
 			setSearchBox(searchBox);
@@ -154,6 +158,19 @@ public class ProcessTopPanel {
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
 		return modalWindow;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Popup showMenu() throws Exception {
+		
+		Employee employee = new Employee();
+		
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		
+		employee.setMetaworksContext(new MetaworksContext());
+		employee.getMetaworksContext().setWhere("user_menu_option");
+		
+		return new Popup(200, 89, employee);
 	}
 	
 }
