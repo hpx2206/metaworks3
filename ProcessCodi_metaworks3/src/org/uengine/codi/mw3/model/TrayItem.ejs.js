@@ -27,4 +27,4 @@ var org_uengine_codi_mw3_model_TrayItem = function(objectId, className){
 		
 		mw3.getFaceHelper(layoutId).layout.allowOverflow('north');		
 	}
-}
+};
