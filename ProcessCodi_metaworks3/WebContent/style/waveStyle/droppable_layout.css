@@ -459,7 +459,7 @@ cursor:pointer;
     right: 12px;
     cursor: pointer;
 }
-
+.top_window_btn_line{display:none;}
 .togglebtncalendar {
     width: 15px;
     height: 16px;
@@ -1441,7 +1441,7 @@ margin-top:8px;
 }
 
 #navigationTitle span div{
-    margin-right: 60px;
+    margin-right: 13px;
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;
