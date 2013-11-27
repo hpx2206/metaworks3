@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.AutowiredToClient;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.menu.MainMenuTop;
 import org.uengine.codi.mw3.model.Session;
 

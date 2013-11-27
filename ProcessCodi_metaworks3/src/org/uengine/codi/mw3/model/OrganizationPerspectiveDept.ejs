@@ -6,8 +6,9 @@
 		if(value.selected){
 %>
 	<div class="depth2">		
-		<div class="fist_menu"><%=fields.deptList.here()%></div>
-		<div class="fist_menu"><a id="wBtn" href="#" onClick="<%=methods.addDept.caller()%>"><span><%=mw3.localize('$newOrganization')%></span></a><div class="clear"></div></div>
+		<%=fields.deptList.here()%>
+		<a id="wBtn" href="#" onClick="<%=methods.addDept.caller()%>"><span><%=mw3.localize('$newOrganization')%></span></a>
+		<div class="clear"></div>
 	</div>	
 <%
 		}

@@ -23,15 +23,15 @@ org_uengine_codi_mw3_model_IDept.prototype = {
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 	},
 	showStatus : function(message){
-		if(message){
-			var message_split = message.split(' ');
-			
-			if(message_split[0] == 'drillDown'){
-				$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
-				$('.idept').removeClass('selected_navi2');
-				$('.iemployee').removeClass('selected_navi2');
-				this.objectDiv.find('a:first').addClass('selected_navi2');
-			}
-		}
+//		if(message){
+//			var message_split = message.split(' ');
+//			
+//			if(message_split[0] == 'drillDown'){
+//				$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+//				$('.idept').removeClass('selected_navi2');
+//				$('.iemployee').removeClass('selected_navi2');
+//				this.objectDiv.find('a:first').addClass('selected_navi2');
+//			}
+//		}
 	}
 };
