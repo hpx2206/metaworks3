@@ -120,7 +120,7 @@ public class ReflectPanel {
 		String passwd = GlobalContext.getPropertyString("vm.manager.password");
 		String command;
 		JschCommand jschServerBehaviour = new JschCommand();
-//		jschServerBehaviour.sessionLogin(host, userId, passwd);
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
 		if ("war".equals(wfNode.getVisType())) {
 			if(!check){
