@@ -63,12 +63,6 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 	showStatus : function(status){
 		var arrStatus = status.split(' ');
 		
-		if(arrStatus[0] == 'loadOrganization'){
-			$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
-			$('.idept').removeClass('selected_navi2');
-			$('.iemployee').removeClass('selected_navi2');
-			this.objectDiv.find('a:first').addClass('selected_navi2');
-		}
 		if(arrStatus[1] == 'DONE.'){
 			if(arrStatus[0] == 'checkEmpCode')
 				$('#checkEmpCode_' + this.objectId).html(mw3.localize('$sucessCheckEmpCode'));

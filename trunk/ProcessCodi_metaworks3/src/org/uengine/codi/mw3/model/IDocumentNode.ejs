@@ -4,13 +4,18 @@
 %>
 	<%
 		if( mw3.how == 'perspectivePanel' ){
+		
 	%>
+				<!--
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
+				-->
 					<img class="navi_icon" src="images/waveStyle/i_project.png" />	
 					<a onClick="<%=methods.loadDocument.caller()%>" href="#">
 						<%=value.name%>
 					</a>
+				<!--
 				</div>
+				-->
 				<div>
 						<span style="margin-left:10px;"><%=fields.childNode.here()%></span>
 				</div>
@@ -22,6 +27,8 @@
 				if(!value.close)
 					nodeStatus = "closed";
 			if(mw3.when == 'onlyView'){
+			
+			console.log("only");
 %>
 				
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">

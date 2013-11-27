@@ -342,6 +342,12 @@
                 
                 Metaworks3.prototype.endLoading = function(objId){
                      $('body>#loading_div_' + objId).remove();
+                     
+                     $('#navigator .depth2 a').click(function(){
+                 		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+                 		$(this).parent().addClass('selected_navi');
+                 		
+                 	});
                 };
                 
 		 		mw3.showError = function(objId, message, methodName){
