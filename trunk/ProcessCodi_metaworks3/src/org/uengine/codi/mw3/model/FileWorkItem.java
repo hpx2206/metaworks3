@@ -54,7 +54,7 @@ public class FileWorkItem extends WorkItem{
 	}	
 
 	public FileWorkItem(){
-		setType("file");
+		setType(WORKITEM_TYPE_FILE);
 		setFile(new MetaworksFile()); 
 	}
 
