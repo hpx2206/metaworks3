@@ -2575,7 +2575,7 @@ select.select[class] {
 .time_line .daily_obj:first-child{padding-top:0}
 .time_line .daily_obj h4{margin-top:0px;height:33px;background:url(../../images/waveStyle/ico_time.png) no-repeat;padding-left:40px;margin-bottom:0px; font-size:14px;color:#333;font-family:dotum;line-height:33px}
 .time_line .daily_obj h4 + .tx_box_obj{margin-top:0}
-.time_line .process_map2 li {margin-top:0px !important;}
+.time_line .process_map2 li {cursor:pointer; margin-top:0px !important;}
 .tx_box_obj{padding-left:39px;margin-top:2px; padding-bottom:9px;}
 .nlst_checked dt,.nlst_checked strong,.nlst_checked a,.nlst_checked em{color:#999 !important}
 .tx_tooltip{position:relative;min-height:72px;border-right:1px solid #ebebeb;border-left:1px solid #ebebeb;background:#fff}

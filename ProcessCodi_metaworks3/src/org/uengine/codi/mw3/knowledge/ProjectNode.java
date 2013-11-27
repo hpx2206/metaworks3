@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.util.Calendar;
 
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
@@ -22,6 +23,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.oce.dashboard.DashboardWindow;
+import org.uengine.oce.dashboard.MyProjectPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -74,7 +76,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			return new Object[]{returnObject[1] };
 		}
 		
-		
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
@@ -101,8 +102,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		dao.set("userid", session.getEmployee().getEmpCode());
 		dao.set("companyId", tenantId);
 		dao.select();
-		
-		
 
 		return dao;
 	}
@@ -146,26 +145,27 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		
 	}
+	
 	@ServiceMethod(callByContent = true, needToConfirm=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		
 		if( session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || session.getEmployee().getIsAdmin()) {
 			// 삭제는 진짜 삭제가 아닌 topic 만 제거를 하여 지식노드에서는 보이도록 설정됨
 			// deleteDatabaseMe();
-			 deleteDatabaseMe();
+			deleteDatabaseMe();
 			
-			 IInstance instance = (IInstance)sql(IInstance.class, "select * from bpm_procinst where topicId= ?topicId");
-			 instance.set("topicId", this.getId());
-			 instance.select();
+			IInstance instance = (IInstance)sql(IInstance.class, "select * from bpm_procinst where topicId= ?topicId");
+			instance.set("topicId", this.getId());
+			instance.select();
 			 
-			 if(instance.size() > 0) {
+			if(instance.size() > 0) {
 				instance.next();
 
 				Instance inst = new Instance();
 				inst.copyFrom(instance);
 				
 				inst.deleteDatabaseMe();
-			 }
+			}
 			 
 			 
 //			StringBuffer sb = new StringBuffer();
@@ -183,9 +183,13 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		}
 		
 		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName()) && "dashboard".equals(this.session.getLastPerspecteType())){
-			DashboardPanel dashboardPanel = new DashboardPanel();
-			dashboardPanel.load(session);
-			return new Object[]{new MainPanel(new OceMain(session))};
+//			DashboardPanel dashboardPanel = new DashboardPanel();
+//			dashboardPanel.load(session);
+			
+			MyProjectPanel myProjectPanel = new MyProjectPanel();
+			myProjectPanel.load(session);
+			
+			return new Object[]{new Refresh(myProjectPanel)};
 		}
 		
 		return new Object[]{new Remover(this)};
