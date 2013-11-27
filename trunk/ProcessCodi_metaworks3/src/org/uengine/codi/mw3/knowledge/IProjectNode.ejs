@@ -5,10 +5,13 @@
 <%
 		if(mw3.how == 'oce'){
 %>		
-			<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
-			<a onClick="<%=methods.loadTopic.caller()%>"><%=value.name%></a>
-			<div class="editicon3" onClick="<%=methods.remove.caller()%>">
-
+		<ul>
+			 <li onClick="<%=methods.loadTopic.caller()%>">
+				 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
+				 <%=value.name%>
+				 <div class="editicon3" onClick="<%=methods.remove.caller()%>">
+			 </li>
+		</ul>
 <%
 		}else{
 %>
