@@ -5,11 +5,9 @@
 <%
 		if(mw3.how == 'oce'){
 %>		
-			 <li onClick="<%=methods.loadTopic.caller()%>">
-				 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
-				 <%=value.name%>
-				 <div class="editicon3" onClick="<%=methods.remove.caller()%>">
-			 </li>
+			<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
+			<a onClick="<%=methods.loadTopic.caller()%>"><%=value.name%></a>
+			<div class="editicon3" onClick="<%=methods.remove.caller()%>">
 
 <%
 		}else{
@@ -18,14 +16,14 @@
 			if(value.secuopt=='1'){
 %>	
  			
- 					<li><img class="navi_icon" src="images/waveStyle/i_project.png"><a onClick="<%=methods.loadTopic.caller()%>" href="#"><%=value.name%></a></li>
+ 				<img class="navi_icon" src="images/waveStyle/i_project.png"><a onClick="<%=methods.loadTopic.caller()%>" href="#"><%=value.name%></a>
  				
 	 			
  			
 <%	
 			}else{
 %>	 
- 					<li><img class="navi_icon" src="images/waveStyle/i_project.png"><a onClick="<%=methods.loadTopic.caller()%>" href="#"><%=value.name%></a></li>
+				<img class="navi_icon" src="images/waveStyle/i_project.png"><a onClick="<%=methods.loadTopic.caller()%>" href="#"><%=value.name%></a>
  
  <%
 	 		}
