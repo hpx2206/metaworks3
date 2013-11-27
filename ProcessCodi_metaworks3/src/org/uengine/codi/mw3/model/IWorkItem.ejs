@@ -117,18 +117,16 @@
 			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tbody>
 					<tr>	
-					<% if(value.type!='comment' && value.type!='system'){%>						
-						<td rowspan="3" width="45" align="left" valign="top">
-							<div style="position:relative; height:38px;">
-							
-							<img src="images/waveStyle/wih<%=(typeof value.type != 'undefined')?value.type:''%>.png">
-								<% if(value.status && value.status != 'FEED' && value.type != 'remoteConf') { %>
-									<span style="position:absolute; bottom:3px; right:12px;"><img src="images/activity_status/i_status_<%=value.status%>.png" style="margin-top:1px;" title="<%=value.status%>"></span>										
-								<% } %>					
-						</td>
-					<% }%>
 						<td>
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal; border:none;"<% }%>>
+								<% if(value.type!='comment' && value.type!='system'){%>	
+										<span style="position:relative; height:38px; float:left; margin-right:10px;">										
+										<img src="images/waveStyle/wih<%=(typeof value.type != 'undefined')?value.type:''%>.png">
+											<% if(value.status && value.status != 'FEED' && value.type != 'remoteConf') { %>
+												<span style="position:absolute; bottom:3px; right:12px;"><img src="images/activity_status/i_status_<%=value.status%>.png" style="margin-top:1px;" title="<%=value.status%>"></span>										
+											<% } %>	
+										</span>
+								<% }%>
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic' || value.type=='remoteConf' || value.type=='system'){%>
 									<span>
 											<%=value.title.replace('\n','<br>')%> 
