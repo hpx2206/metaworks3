@@ -272,20 +272,20 @@ legend {display:none;}
     overflow: hidden
 }
 #wih_button .comment_btn_off {
-    background: url('../../images/waveStyle/i_comment.png') left 3px no-repeat; 
+    background: url('../../images/waveStyle/i_comment_off.png') left 3px no-repeat; 
     color:#ccc;  
 }
 #wih_button .memo_btn_off {
-    background: url('../../images/waveStyle/i_memo.png') left 3px no-repeat;color:#ccc; 
+    background: url('../../images/waveStyle/i_memo_off.png') left 3px no-repeat;color:#ccc; 
 }
 #wih_button .file_btn_off {
-    background: url('../../images/waveStyle/i_file.png') left 3px no-repeat;color:#ccc; 
+    background: url('../../images/waveStyle/i_file_off.png') left 3px no-repeat;color:#ccc; 
 }
 #wih_button .code_btn_off {
-    background: url('../../images/waveStyle/i_code.png') left 3px no-repeat;color:#ccc; 
+    background: url('../../images/waveStyle/i_code_off.png') left 3px no-repeat;color:#ccc; 
 }
 #wih_button .etc_btn_off {
-    background: url('../../images/waveStyle/i_etc.png') left 3px no-repeat;color:#ccc; 
+    background: url('../../images/waveStyle/i_etc_off.png') left 3px no-repeat;color:#ccc; 
 }
 
 #wih_button .comment_btn_off .comment_select,#wih_button .memo_btn_off .comment_select,#wih_button .file_btn_off .comment_select,#wih_button .code_btn_off .comment_select,#wih_button .etc_btn_off .comment_select{
