@@ -16,7 +16,7 @@ var Window = function(objectId, className){
 		
 	$('.mw3_window_last').removeClass('mw3_window_last');	
 	
-	this.divObj.addClass('mw3_window').addClass('mw3_layout').addClass('mw3_window_last').attr('objectId', objectId).css("padding-bottom","0px");
+	this.divObj.addClass('mw3_window').addClass('mw3_layout').addClass('mw3_window_last').attr('objectId', objectId).css("padding-bottom","35px");
 }
 
 Window.prototype.setTitle = function(title){
