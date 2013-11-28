@@ -9,15 +9,15 @@
 				<!--
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
 				-->
-					<img class="navi_icon" src="images/waveStyle/i_project.png" />	
+					
 					<a onClick="<%=methods.loadDocument.caller()%>" href="#">
-						<%=value.name%>
+						<span class="icon-folder"></span><%=value.name%>
 					</a>
 				<!--
 				</div>
 				-->
-				<div>
-						<span style="margin-left:10px;"><%=fields.childNode.here()%></span>
+				<div style="padding-left:15px;">
+					<%=fields.childNode.here()%>
 				</div>
 
 					
@@ -32,13 +32,13 @@
 %>
 				
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
-					<img class="navi_icon" src="images/waveStyle/i_project.png" />	
+					
 					<a onClick="<%=methods.loadExplorerDocument.caller()%>" href="#">
-						<%=value.name%>
+						<span class="icon-folder"></span><%=value.name%>
 					</a>
 				</div>
-				<div>
-						<span  style="margin-left:10px;"><%=fields.childNode.here()%></span>
+				<div style="padding-left:15px;">
+					<%=fields.childNode.here()%>
 				</div>
 				
 				

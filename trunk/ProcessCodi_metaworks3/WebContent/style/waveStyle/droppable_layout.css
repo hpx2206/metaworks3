@@ -663,7 +663,6 @@ cursor:pointer;
     -o-text-overow: ellipsis;
     line-height:10px !important;
     font-size:10px;
-    letter-spacing:-1px
 }
 
 .badge {
@@ -1032,6 +1031,7 @@ margin-top:8px;
     float: left;
     height: 20px;
 }
+.toolbarIcon{line-height:20px; padding:0px 4px; font-size:13px;}
 .toolbar .toolbar_current {
     background: url(../../images/waveStyle/toolbar_bg_current.gif) repeat-x;
 }
@@ -1123,6 +1123,10 @@ margin-top:8px;
 
 #navigator .depth2 .fist_menu li span {
     display: inline-block;
+    padding:0 10px;
+    font-size: 14px;
+	position: relative;
+	top: 1px
 }
 #navigator .depth2 .fist_menu .navi_icon{
 	float:left;

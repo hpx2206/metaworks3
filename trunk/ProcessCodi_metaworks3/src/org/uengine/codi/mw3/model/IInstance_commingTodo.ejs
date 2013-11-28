@@ -2,9 +2,8 @@
 	if(value != null) {
 %>
 		
-		<li>
-			<img class="navi_icon" src="images/waveStyle/nav_time.png">
-			<a href="#" onClick="<%=methods.detail.caller()%>"><%=value.name%></a>
+		<li>			
+			<a href="#" onClick="<%=methods.detail.caller()%>"><span class="icon-alarm2"></span><%=value.name%></a>
 		</li>
 <%
 	}
