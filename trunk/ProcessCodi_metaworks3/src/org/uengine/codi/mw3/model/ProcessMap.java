@@ -362,9 +362,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				panel.load(processMapList.getParentInstanceId().toString());
 				return new Object[]{panel, new Remover(new Popup() , true)};
 			}else{
-				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
-				rootInstanceView.load(rootInstanceRef);
-				return new Object[]{rootInstanceView, new Remover(new Popup() , true)};
+				instanceView.load(rootInstanceRef);
+				//InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
+				//rootInstanceView.load(rootInstanceRef);
+				return new Object[]{new Remover(new Popup() , true), new Refresh(instanceView)};
 			}
 		}
 		
