@@ -1,18 +1,19 @@
 <%
 	if(value){
 %>
+
+ 		<a onClick="<%=methods.loadTopic.caller()%>" href="#" title="<%=value.name%>">
 <%
 		if(value.secuopt=='1'){
 %>	
- 		<img class="navi_icon" src="images/waveStyle/nav_topic_sec.png" />
+ 		<span class="icon-lock"></span>
 <%
 		}else{
 %>
-		<img class="navi_icon" src="images/waveStyle/nav_topic.png" />
+		<span class="icon-bubble2"></span>
 <%
 		}
 %>
- 		<a onClick="<%=methods.loadTopic.caller()%>" href="#" title="<%=value.name%>">
  			<%=value.name%>
  		</a>
 <%	
