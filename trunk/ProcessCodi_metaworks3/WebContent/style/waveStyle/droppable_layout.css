@@ -1031,7 +1031,7 @@ margin-top:8px;
     float: left;
     height: 20px;
 }
-.toolbarIcon{line-height:20px; padding:0px 4px; font-size:13px;}
+.toolbarIcon{line-height:20px; padding:0px 4px; font-size:13px; color:#7A8794}
 .toolbar .toolbar_current {
     background: url(../../images/waveStyle/toolbar_bg_current.gif) repeat-x;
 }
