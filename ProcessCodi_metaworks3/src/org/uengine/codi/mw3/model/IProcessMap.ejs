@@ -1,9 +1,8 @@
 <%
 if(mw3.when == 'filter'){
 %>
-	<li>
-		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/>
-		<a href="#" onClick="<%=methods.processListFilter.caller()%>"><%=value.name%></a>
+	<li>		
+		<a href="#" onClick="<%=methods.processListFilter.caller()%>"><span class="icon-envelope"></span><%=value.name%></a>
 	</li>
 <%
 }else{
