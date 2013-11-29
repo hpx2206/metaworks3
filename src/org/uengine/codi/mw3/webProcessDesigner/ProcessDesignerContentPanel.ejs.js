@@ -130,6 +130,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	        helper  : 'clone',
 	        appendTo: "#canvas_" + objectId
 	    });
+	    
 	    canvasDivObj.droppable({
 	    	
 	        drop: function (event, ui) {
@@ -323,27 +324,29 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ca
 	if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
 		var newNodeWidth = 70 ;
 		var newNodeHeight = 50 ;
-		var knolElement = canvas.drawShape([
-         event.pageX - $('#canvas_' + objectId)[0].offsetLeft + $('#canvas_' + objectId)[0].scrollLeft	- $('#canvas_' + objectId).offsetParent().offset().left,
-         event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top ],
-         new OG.shape.bpmn.A_Task(clipboardNode.name) , [parseInt(newNodeWidth, 10), parseInt(newNodeHeight, 10)]);
-		var customData = [];
-		customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
-		canvas.setCustomData(knolElement, customData);
+    	var activityclass = "org.uengine.codi.activitytypes.KnowledgeActivity";
+		var	viewclass = "org.uengine.kernel.designer.web.ActivityView";
 		
-		var contentValue = {
-				__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
-				name : clipboardNode.name ,
-				typeId : clipboardNode.id ,
-				variableType : 'wfNode'
+    	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
+    	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
+    	var activityView = {
+				__className : viewclass,
+				x : pageX,
+				y : pageY,
+				shapeId : 'OG.shape.bpmn.A_Task',
+				shapeType : 'GEOM',
+				classType : activityclass,
+				activityClass : activityclass,
+				height : newNodeHeight,
+				width : newNodeWidth,
+				tracingTag : ++faceHelper.tracingTag,
+				editorId : object.alias
 		};
-		object.variableMap[clipboardNode.name] = contentValue;
-			
-		$(knolElement).attr("_classname", "org.uengine.codi.activitytypes.KnowledgeActivity");
-		$(knolElement).attr("_classType", "Activity");
-		$(knolElement).attr("_tracingTag",++faceHelper.tracingTag);
-		// 그리고 난 후의 엘리먼트에 이벤트 등록
-		faceHelper.addEventGeom(objectId, canvas, knolElement);
+    	
+    	var html = mw3.locateObject(activityView , activityView.____className);
+    	canvasDivObj.append(html);
+    	
+    	mw3.onLoadFaceHelperScript();
 		
 	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.OrganizationRole"){
 		var shapeWidth = "300";
@@ -515,7 +518,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 				activity.activityView = cellForDwr;
 				if(classType == 'Activity'){
 					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
-					if( classname == 'org.uengine.kernel.HumanActivity' && cellForDwr.parent){
+					if( (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity') && cellForDwr.parent){
 						var parentRoleId = this.findSwimlane(cellForDwr.parent);
 						if( parentRoleId != null ){
 							var role = $('#'+parentRoleId).data('role');
