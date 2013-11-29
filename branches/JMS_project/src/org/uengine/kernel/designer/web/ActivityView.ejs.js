@@ -30,6 +30,8 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 org_uengine_kernel_designer_web_ActivityView.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
+			var canvasObjectId = this.canvasObjectId;
+			var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObjectId);
 			var element = null;
 			var canvas = this.canvas;
 			if( object && !object.drawByCanvas){
@@ -135,6 +137,14 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         	 		var clipboardNode = session.clipboard;
         			if(clipboardNode){
         				switch (clipboardNode.__className){
+        				case 'org.uengine.codi.mw3.knowledge.WfNode':
+        					$(element).attr("_classname", "org.uengine.codi.activitytypes.KnowledgeActivity");
+        		        	$(element).attr("_viewClass", "org.uengine.kernel.designer.web.ActivityView");
+        		        	
+        		        	var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag") , knolNodeId : clipboardNode.id};
+        	        		$(element).data('activity', activityData);
+        	        		canvas.drawLabel(element, clipboardNode.name);
+        	        		
         				case 'org.uengine.codi.mw3.ide.ResourceNode':
         					switch (clipboardNode.type) {
         					case 'java':
