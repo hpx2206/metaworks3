@@ -94,7 +94,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	    	{
 	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
 	    			switch (e.keyCode) {
-	    				case 13 :	// enter
+	    				case 13 :	// enter	
 			    			mw3.getFaceHelper(objectId).selectAssist(e);
 			    	    	
 			    	    	break;
@@ -119,6 +119,8 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	    					mw3.mouseX = e.srcElement.offsetLeft + 4;
 	    					mw3.mouseY = e.srcElement.offsetTop + 18;
 	    					
+	    					faceHelper.lastCommandString = command;
+	    					faceHelper.assistType = 'requestAssist';	    					
 	    					faceHelper.requestAssist(e, command);
 	    					
 	    					break;
@@ -130,6 +132,8 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 								mw3.mouseX = e.srcElement.offsetLeft + 4;
 								mw3.mouseY = e.srcElement.offsetTop + 18;
 								
+								faceHelper.lastCommandString = command;
+		    					faceHelper.assistType = 'requestAssist';
 		    					faceHelper.requestAssist(e, command);
 							}
 							
@@ -246,7 +250,23 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		else
 			return range.start.row;
 	},
+	showOrganizeImports: function(command){
+		this.requestAssist('-oi ' + command);
+	},
+	organizeImports: function(assistId){
+		var selectedValue = mw3.getFaceHelper(assistId).select();
+			  
+		mw3.log(selectedValue);
+		
+		var position = this.getSourcePosition();
+					    		
+		var temp = selectedValue.split('-');		    			
 
+		
+		/*		
+		this.importPackage(temp[1].trim(), temp[0].trim(), Number(position));
+		mw3.removeObject(assistId);
+*/	},
 	getCommandString : function(){
 		var whereEnd = this.editor.getCursorPosition();
 		var whereStart = {column: 0, row: whereEnd.row};
@@ -318,7 +338,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	},
 
 	getCodeAssist : function(){
-		return mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.java.JavaCodeAssist');
+		return mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
 	},
 	
 	importPackage : function(importName, startPosition){
@@ -400,88 +420,23 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		}
 		
 	},
-	
 	requestAssist : function(e, command){
 		if(!this.loadRequestAssist){
-			this.loadRequestAssist = true;
+			var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
 			
-			var assist = this.getCodeAssist();
-			
-			if(assist != null)
-				return false;
-			
-			this.lastCommandString = command;
-			this.assistType = 'requestAssist';
-
-			var isImport = false;
-			var endChar = '';
-			var isAnnotation = false;
-			
-			var packageList = [];
-			var classList = [];
-			
-			if(command.startsWith('import ')){
-				isImport = true;
-				endChar = '.*';
+			if(assist == null){
+				this.lastCommandString = command;
 				
-				command = command.substring(7).trim();
-			}else if(command.startsWith('@')){			
-				isAnnotation = true;
-				
-				command = command.substring(1).trim();
-			}
-			
-			// event stop
-			if(!command.endsWith('.')){
-		   		if(typeof e != 'undefined')
-	    			this.event.stopEvent(e); 				
-			}
-	   		
-			// step 1 : isAnnotation, check options
-			if(isAnnotation){
-				var expression = command.toLowerCase();
-				
-				this.addAnnotation(classList, expression);
-
-			}else{
-				// step 2 : check endsWith(".")
-				if(command.endsWith(".")){					
-					var expression = command.substring(0, command.length - 1);
-					
-					// step 3 : check import
-					if(isImport){
-						this.addPackage(packageList, command, endChar);
-						this.addPackageClass(classList, expression);
-					}else{
-						if('this' == expression){
-						}else{
-						}
-					}
-				}else{
-					if(command == null || command.trim() == ''){
-					}else{
-						var expression = command.toLowerCase();
-						
-						this.addPackageStartWith(packageList, expression);
-						this.addClassesStartWith(classList, expression);
-					}
-				}
-			}
-			
-			packageList.sort();
-			classList.sort();
-			
-			var assistMap = classList.concat(packageList);
-			
-			var assist = new MetaworksObject({
-                __className : 'org.uengine.codi.mw3.ide.editor.java.JavaCodeAssist',
-                assistMap : assistMap,
-                editorId : this.object.id
-            }, 'body');
-			
-			mw3.onLoadFaceHelperScript();
+				if(command.length > 0){
+					var object = mw3.getObject(this.objectId);
+								
+					object.lineAssistRequested = command;
+					object.clientObjectId = this.objectId;
+					object.requestAssist();
+				}				
+			}			
 		}
-	},
+	},	
 	
 	change : function(event){
 		if(!this.loadRequestAssist){
@@ -503,7 +458,6 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		
 		if(assist){
 			var command = this.getCommandString();
-			
     		if(command.startsWith("import "))
     			command = command.substring("import ".length);
 
@@ -533,7 +487,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
     			this.event.stopEvent(e);    		
     		
     		if(this.assistType == 'requestAssist'){
-	    		var selectedValue = mw3.getFaceHelper(assist.__objectId).getSelectedAssist();
+	    		var selectedValue = mw3.getFaceHelper(assist.__objectId).getSelectedValue();
 	    		var selectedValues = selectedValue.split('/');
 
 	    		// remove assist
@@ -582,7 +536,10 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	    			whereStart = {column: whereEnd.column - (commandString.length - (pos + 1)), row: whereEnd.row};
 	    			
 	    			insertString = selectedValues[0];
-	    			insertPackage = selectedValues[1];	    			
+	    			insertPackage = selectedValues[1];
+	    			
+	    			if('this' == insertPackage)
+	    				isImport = true;
 	    		}
 	    		
 	    		if(whereStart.column != whereEnd.column){
