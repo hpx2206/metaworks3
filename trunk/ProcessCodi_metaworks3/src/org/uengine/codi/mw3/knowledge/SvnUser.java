@@ -25,6 +25,7 @@ public class SvnUser implements ContextAware {
 		public void setCommittor(String committor) {
 			this.committor = committor;
 		}
+		
 	Boolean isJoined;
 		@Hidden
 		public Boolean getIsJoined() {
@@ -42,11 +43,31 @@ public class SvnUser implements ContextAware {
 			this.isChecked = isChecked;
 		}
 	
+	String userName;
+		public String getUserName() {
+			return userName;
+		}
+	
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+
+	String email;
+		public String getEmail() {
+			return email;
+		}
+	
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
 	public SvnUser(){
 	}
 	
-	public SvnUser(String committor){
+	public SvnUser(String committor, String email, String userName){
 		setCommittor(committor);
+		setEmail(email);
+		setUserName(userName);
 		metaworksContext = new MetaworksContext();
 	}
 	
