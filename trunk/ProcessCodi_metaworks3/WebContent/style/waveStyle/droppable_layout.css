@@ -1078,6 +1078,9 @@ margin-top:8px;
 }
 #wihContent {
 }
+#navigator .depth2 {
+    position:relative
+}
 
 #navigator .depth2 .fist_menu {
     margin: 5px;
@@ -2491,7 +2494,7 @@ select.select[class] {
 .hide_east_btn{position:absolute;top:42%;  width:17px;height:114px; background:url(../../images/waveStyle/show_left_btn.png); cursor:pointer; z-index:2}
 .show_east_btn{position:absolute;top:42%; right:0px;width:17px;height:114px; background:url(../../images/waveStyle/show_right_btn.png); cursor:pointer; display:none; z-index:2}
 
-.west_more_btn{position:absolute; right:10px; top:-24px; font-size:11px; display:none;}
+.west_more_btn{position:absolute; right:10px; top:-18px; font-size:11px; display:none;}
 .west_more_btn a {color:#5896db !important;}
 
 .file_upload {

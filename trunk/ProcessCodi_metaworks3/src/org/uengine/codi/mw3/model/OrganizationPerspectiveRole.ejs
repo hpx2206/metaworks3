@@ -8,7 +8,10 @@
 %>
 	<div class="depth2">		
 		<div><%=fields.roleList.here()%></div>
-		<div class="fist_menu"><a id="wBtn" href="#" onClick="<%=methods.addRole.caller()%>"><span><%=mw3.localize('$newRole')%></span></a><div class="clear"></div></div>
+		<div>
+			<a id="wBtn" href="#" onClick="<%=methods.addRole.caller()%>" style="margin-left: 12px;"><span class="icon-plus"></span></a>
+			<div class="clear"></div>
+		</div>
 	</div>
 	
 <%
