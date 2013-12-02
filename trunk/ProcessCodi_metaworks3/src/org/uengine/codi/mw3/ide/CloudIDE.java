@@ -127,7 +127,7 @@ public class CloudIDE {
 		
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
-		CloudInstanceWindow instanceWindow = new CloudInstanceWindow();
+//		CloudInstanceWindow instanceWindow = new CloudInstanceWindow();
 		/*
 		ResourceNode resourceNode = new ResourceNode();
 		resourceNode.setProjectId("test0001");
@@ -151,7 +151,7 @@ public class CloudIDE {
 		centerLayout.setId("center");
 		centerLayout.setName("center");
 		centerLayout.setCenter(editorWindow);
-		centerLayout.setEast(instanceWindow);
+//		centerLayout.setEast(instanceWindow);
 		
 		//centerLayout.setCenter(editorWindow);
 		//centerLayout.setSouth(etcWindow);

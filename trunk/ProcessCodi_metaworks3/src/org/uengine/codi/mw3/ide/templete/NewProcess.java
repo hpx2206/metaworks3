@@ -64,22 +64,23 @@ public class NewProcess extends Templete {
 			workitem.setType("comment");
 			workitem.setTitle("process thread : "+this.getName());
 			
-			IInstance instance = workitem.save();
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.session = session;
-			instanceViewThreadPanel.setInstanceId(instance.getInstId()+"");
-			instanceViewThreadPanel.load();
-			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+//			IInstance instance = workitem.save();
+//			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+//			instanceViewThreadPanel.session = session;
+//			instanceViewThreadPanel.setInstanceId(instance.getInstId()+"");
+//			instanceViewThreadPanel.load();
+//			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+//			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			
 			ProcessEditor editor = new ProcessEditor(node);
-			editor.setProcessDesignerInstanceId(instance.getInstId()+"");
+//			editor.setProcessDesignerInstanceId(instance.getInstId()+"");
 			editor.getProcessDesigner().getProcessNameView().setAlias(this.getName());
 			editor.getProcessDesigner().getRolePanel().setEditorId(node.getPath());
 			editor.getProcessDesigner().getProcessVariablePanel().setEditorId(node.getPath());
 			editor.save();
 			
-			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow()) , new Refresh(cloudInstanceWindow, true)};
+			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};
+//			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow()) , new Refresh(cloudInstanceWindow, true)};
 		}else{
 			throw new MetaworksException("finish error");
 		}

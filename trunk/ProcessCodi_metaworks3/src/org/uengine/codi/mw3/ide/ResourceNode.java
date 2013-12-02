@@ -290,18 +290,19 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
 		}else{
 			Editor editor = this.beforeAction();
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			if(  editor instanceof ProcessEditor ){
-				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
-					instanceViewThreadPanel.session = session;
-					instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
-					instanceViewThreadPanel.load();
-				}
-			}
-			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+//			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+//			if(  editor instanceof ProcessEditor ){
+//				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
+//					instanceViewThreadPanel.session = session;
+//					instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
+//					instanceViewThreadPanel.load();
+//				}
+//			}
+//			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+//			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			
-			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) };
+//			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
 
