@@ -146,6 +146,14 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			this.projectAlias = projectAlias;
 		}
 	
+	boolean useIaaS;
+		public boolean isUseIaaS() {
+			return useIaaS;
+		}
+		public void setUseIaaS(boolean useIaaS) {
+			this.useIaaS = useIaaS;
+		}
+		
 	/*
 	@Hidden
 	String os;
@@ -229,6 +237,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		}*/
 		
 
+	
 	public ProjectInfo(){
 		//this(null);
 	}
@@ -246,6 +255,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	}
 	
 	public void load() throws Exception {
+		this.setUseIaaS("1".equals(StartCodi.USE_IAAS));
 		followersLoad();
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
@@ -321,7 +331,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		return new OpenBrowser(url);
 	}
 
-	@Face(displayName = "$devrelease")
+	@Face(displayName = "$release")
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow releaseProject() throws Exception{
 		ModalWindow modalWindow = new ModalWindow();
@@ -355,16 +365,17 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			
 			releasePanel.setReflectVersion(reflectVersion);
-			modalWindow.setHeight(150);
+			modalWindow.setHeight(250);
+			modalWindow.setWidth(540);
 		}
 		
-		modalWindow.setTitle("$devrelease");
+		modalWindow.setTitle("$release");
 		modalWindow.setPanel(releasePanel);
 		
 		return modalWindow;
 	}
 
-	@Face(displayName = "$devreflect")
+	@Face(displayName = "$reflect")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
 	public Object distribute() throws Exception{
 		
@@ -393,7 +404,6 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			reflectPanel.getMetaworksContext().setHow("IaaS");
 			
 			ICloudInfo findListing = cloudInfo.findServerByProjectId(this.getProjectId(), "dev");
-			serverSelect.add("서버 없음", "0");
 			while(findListing.next()){
 				serverSelect.add(findListing.getServerName() + " : " + findListing.getServerIp(), String.valueOf(findListing.getId()));
 			}
@@ -421,7 +431,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		}
 		
 		modalWindow.setWidth(500);
-		modalWindow.setTitle("$devreflect");
+		modalWindow.setTitle("$reflect");
 		modalWindow.setPanel(reflectPanel);
 		
 		return modalWindow;
@@ -572,10 +582,10 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		wfNode.copyFrom(wfNode.databaseMe());
 		projectCommitter.setProjectName(this.getProjectName());
 //		projectCommitter.setAccount(session.getUser().getName());
-		projectCommitter.setManagerAccount(wfNode.getAuthorId()); 
+		projectCommitter.setManagerAccount(wfNode.getAuthorId());
 		projectCommitter.load();
 		modalWindow.setPanel(projectCommitter);
-		modalWindow.setWidth(560);
+		modalWindow.setWidth(620);
 		modalWindow.setHeight(500);
 		modalWindow.setTitle("개발권한관리");
 		
