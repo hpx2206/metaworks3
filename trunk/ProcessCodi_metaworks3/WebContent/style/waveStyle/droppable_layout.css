@@ -626,13 +626,13 @@ cursor:pointer;
 
 .user .user_focus {
     float: left;
-    margin-lef: 4px;
+    margin-left: 4px;
     margin-right: 4px;   
     background: #eef6f6;
-   /*  -webkit-border-radius: 5px;
+   -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px #888;    */ 
+    box-shadow: 1px 1px 1px #888
     -o-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
     -khtml-background-size: 100% 100%;
@@ -649,9 +649,9 @@ cursor:pointer;
 	background-color: #000;
 	text-align:center;
     color:#fff;
-	/* -webkit-border-radius: 2px;
+	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px; */
+	border-radius: 2px;
 	opacity: 0.5;
     -moz-opacity: 0.5;
     -khtml-opacity: 0.5;
@@ -719,9 +719,9 @@ margin-top:8px;
 .user .pic {
     width: 33px;
     height: 33px;
-    /* -webkit-border-radius: 3px;
+    -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
-    border-radius: 3px; */
+    border-radius: 3px;
 }
 
 .user .small {
@@ -1842,7 +1842,7 @@ html, body {
     float: left;
 }
 .middle_con {
-    overflow: white;
+    overflow: auto;
     color: #000;
     padding-left: 6px;
 }
