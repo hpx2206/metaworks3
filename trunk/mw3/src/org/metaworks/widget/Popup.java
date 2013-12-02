@@ -3,7 +3,12 @@ package org.metaworks.widget;
 import javax.validation.Valid;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
+import org.metaworks.annotation.ServiceMethod;
 
 public class Popup implements ContextAware {
 	
@@ -65,6 +70,11 @@ public class Popup implements ContextAware {
 		public void setHeight(int height) {
 			this.height = height;
 		}	
+		
+	@ServiceMethod(eventBinding=EventContext.EVENT_CLOSE)
+	public Object close() {
+		return new Remover(ServiceMethodContext.TARGET_SELF);
+	}
 }
 
 
