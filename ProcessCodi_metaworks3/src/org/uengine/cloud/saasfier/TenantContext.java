@@ -80,7 +80,10 @@ public class TenantContext{
 	public static TenantContext getThreadLocalInstance(){
 		TenantContext tc = local.get();
 		
-		return tc;
+		if(tc != null)
+			return tc;
+		else
+			return new TenantContext(null);
 	}
 
 	
