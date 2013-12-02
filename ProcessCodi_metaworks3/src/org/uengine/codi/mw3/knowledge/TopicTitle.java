@@ -221,7 +221,10 @@ public class TopicTitle  implements ContextAware{
 				returnObject[i] = new Refresh(returnObj[i]);
 			}			
 		}
-		returnObject[returnObj.length ] = new ToAppend(new TopicPanel(), topicNode);
+		
+		TopicNode topicList = new TopicNode();
+		topicList.copyFrom(topicNodeList);
+		returnObject[returnObj.length ] = new ToAppend(topicList, topicNode);
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow());
 		return returnObject;
 

@@ -29,8 +29,7 @@ public class TopicPerspective extends Perspective {
 			this.topicMap = topicMap;
 		}
 	
-	@ServiceMethod(inContextMenu=true, target="popup")
-	@Face(displayName="$addTopic")
+	@ServiceMethod(target="popup")
 	public ModalWindow addTopic() throws Exception{
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setMetaworksContext(new MetaworksContext());
