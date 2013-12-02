@@ -108,16 +108,17 @@ public class ProcessNode extends ResourceNode{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
-				instanceViewThreadPanel.session = session;
-				instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
-				instanceViewThreadPanel.load();
-			}
-			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
-			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+//			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+//			if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
+//				instanceViewThreadPanel.session = session;
+//				instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
+//				instanceViewThreadPanel.load();
+//			}
+//			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+//			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			
-			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) };
+//			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}		
 	
