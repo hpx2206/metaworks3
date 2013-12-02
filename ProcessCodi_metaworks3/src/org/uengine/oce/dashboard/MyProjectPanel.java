@@ -44,10 +44,7 @@ public class MyProjectPanel {
 		}
 
 	public void load() throws Exception {
-				
-		IProjectNode projectNode = ProjectNode.load(session);
-		projectNode.getMetaworksContext().setHow("oce");
-		setProjectNode(projectNode);
+		load(session);
 	}
 	
 	public void load(Session session) throws Exception {
