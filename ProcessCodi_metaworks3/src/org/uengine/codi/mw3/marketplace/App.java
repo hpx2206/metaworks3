@@ -545,6 +545,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.setStatus(STATUS_APPROVED);
 			
 			createDatabaseMe();
+			flushDatabaseMe();
 
 			WfNode wfNode = new WfNode();
 			
