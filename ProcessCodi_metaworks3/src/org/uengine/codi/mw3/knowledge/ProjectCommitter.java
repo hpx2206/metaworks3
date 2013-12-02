@@ -12,7 +12,9 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Contact;
+import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IContact;
+import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.codi.vm.JschCommand;
@@ -118,6 +120,8 @@ public class ProjectCommitter {
 	
 		String tmp = jschServerBehaviour.runCommand(command);
 		String svnUser = null;
+		Employee employee = new Employee();
+		IEmployee committor = new Employee();
 		
 		int count = 0;
 		char[] c = tmp.toCharArray();
@@ -132,12 +136,15 @@ public class ProjectCommitter {
 			StringTokenizer st = new StringTokenizer(tmp,",");
 			while(st.hasMoreTokens()){
 				svnUser = st.nextToken();
-				SvnUser SvnUser = new SvnUser(svnUser);
+				employee.setEmail(svnUser);
+				committor = employee.findByEmail();
+				SvnUser SvnUser = new SvnUser(committor.getEmpCode(), committor.getEmail(), committor.getEmpName());
 				SvnUser.getMetaworksContext().setHow("svnUser");
 				SvnUser.setIsJoined(true);
 				svnUserList.add(SvnUser);
 			}
 		}
+		
 		Contact contact = new Contact();
 		contact.setUserId(this.getUserId());
 		IContact friends = contact.loadContacts(true);
@@ -147,7 +154,7 @@ public class ProjectCommitter {
 	}
 	
 		
-	@Face(displayName="▶")
+	@Face(displayName="▶ add")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
 	public void addCommitter() throws Exception{
 		String host = GlobalContext.getPropertyString("vm.manager.ip");
@@ -161,6 +168,7 @@ public class ProjectCommitter {
 			throw new Exception("관리자가 아닙니다");
 		}else{
 			Object svn = null;
+			Employee employee = new Employee();
 			contact.beforeFirst();
 			int size = svnUserList.size();
 			if(size == 0){
@@ -168,7 +176,8 @@ public class ProjectCommitter {
 				command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + this.getManagerAccount() + " " + getManagerAccount() + " ";
 			 	jschServerBehaviour.runCommand(command);
 			}
-				
+			
+			
 			while(contact.next()){
 				if(contact.isChecked()){
 					for(int i=0; i<size; i++){
@@ -176,12 +185,15 @@ public class ProjectCommitter {
 							break;
 						}
 						if(i == size-1){
-						  this.setAccount(contact.getFriendId());
-							  
-					 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + this.getAccount() + " " + this.getAccount() + " ";
+						this.setAccount(contact.getFriendId());
+						
+						employee.setEmpCode(contact.getFriendId());
+						employee.copyFrom(employee.databaseMe());						
+						
+					 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + employee.getEmail() + " " + employee.getPassword() + " ";
 					 	jschServerBehaviour.runCommand(command);
 						
-						SvnUser su = new SvnUser(getAccount());
+						SvnUser su = new SvnUser(employee.getEmpCode(), employee.getEmail(), employee.getEmpName());
 						su.setIsJoined(true);
 						su.setIsChecked(true);
 						
@@ -209,33 +221,36 @@ public class ProjectCommitter {
 		this.load();
 	
 	}
-	@Face(displayName="◀")
+	@Face(displayName="◀ remove")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
 	public void removeCommitter() throws Exception{
-		if(!contact.getUserId().equals(this.getManagerAccount())){
+		String host = GlobalContext.getPropertyString("vm.manager.ip");
+		String userId = GlobalContext.getPropertyString("vm.manager.user");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String command = null;
+		Employee employee = new Employee();
+
+		if (!contact.getUserId().equals(this.getManagerAccount())) {
 			throw new Exception("관리자가 아닙니다");
-		}else{
+		} else {
 			CopyOnWriteArrayList newUserList = new CopyOnWriteArrayList();
 			newUserList.addAll(svnUserList);
 			int size = newUserList.size();
 			int i = 0;
 			SvnUser su = null;
 			Iterator<SvnUser> iterator = newUserList.iterator();
-			while(iterator.hasNext()){
+			while (iterator.hasNext()) {
 				i++;
 				su = iterator.next();
-				if(su.getIsChecked()){
-				  String host = GlobalContext.getPropertyString("vm.manager.ip");
-				  String userId = GlobalContext.getPropertyString("vm.manager.user");
-				  String passwd = GlobalContext.getPropertyString("vm.manager.password");
-				  String command = null;
-					
-				  JschCommand jschServerBehaviour = new JschCommand();
-				  jschServerBehaviour.sessionLogin(host, userId, passwd);
-		//		  command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " + this.getProjectName() + " " + this.getAccount() + " " + this.getPassword();
-				  command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " +  this.getProjectName() + " " + su.getCommittor() + " " + this.getAccount();
-				  jschServerBehaviour.runCommand(command);
-				  newUserList.remove(su.getCommittor());
+				if (su.getIsChecked()) {
+					employee.setEmpCode(su.getCommittor());
+					employee.copyFrom(employee.databaseMe());
+
+					JschCommand jschServerBehaviour = new JschCommand();
+					jschServerBehaviour.sessionLogin(host, userId, passwd);
+					command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " + this.getProjectName() + " " + employee.getEmail() + " " + employee.getPassword();
+					jschServerBehaviour.runCommand(command);
+					newUserList.remove(su.getCommittor());
 				}
 			}
 			svnUserList.addAll(newUserList);
