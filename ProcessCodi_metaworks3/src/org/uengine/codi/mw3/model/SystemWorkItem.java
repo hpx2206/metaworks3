@@ -22,7 +22,7 @@ public Object[] add() throws Exception {
 	Session codiSession = new Session();
 	
 	IEmployee emp = new Employee();
-	emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id")  + "." + session.getEmployee().getGlobalCom() );
+	emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id"));
 	emp = emp.findMe();
 	emp.setGlobalCom(session.getEmployee().getGlobalCom());
 
