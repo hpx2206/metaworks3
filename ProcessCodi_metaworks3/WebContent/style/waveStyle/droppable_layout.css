@@ -1078,6 +1078,9 @@ margin-top:8px;
 }
 #wihContent {
 }
+#navigator {
+    padding-right:13px;
+}
 #navigator .depth2 {
     position:relative
 }
@@ -1149,6 +1152,9 @@ margin-top:8px;
     cursor: pointer;
     font-weight:bold;
     margin-top:10px;
+    margin-top: 10px;
+	border-top: 1px solid #c6cbd0;
+	padding-top: 7px;
 }
 #navigator .depth1 .depth1td_on {
     height: 25px;
