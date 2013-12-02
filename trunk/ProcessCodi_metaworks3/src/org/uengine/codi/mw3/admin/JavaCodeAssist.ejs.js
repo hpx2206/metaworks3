@@ -145,7 +145,7 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 		}
 	},
 	select : function(){
-		var javaSourceCode = mw3.getAutowiredObject('org.uengine.codi.mw3.model.JavaSourceCode');
+		var javaSourceCode = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor');
 		
 		if(javaSourceCode){
 			javaSourceCodeFaceHelper = mw3.getFaceHelper(javaSourceCode.__objectId);
