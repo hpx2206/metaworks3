@@ -38,9 +38,15 @@ if(value){
                 <div id="searchbox" style="border-bottom:1px solid #9EBFC4;">
 	                <div class="positionRight" style="padding:5px 0">
 						<%=methods.metadata.here()%>
-						<%=methods.server.here()%>
-						<%=methods.releaseProject.here()%>
+						<%
+							if(value.useIaaS ){
+						%>
+								<%=methods.server.here()%>
+						<%
+							}
+						%>
 						<%=methods.distribute.here()%>
+						<%=methods.releaseProject.here()%>
 						<%
 							if(value.type == "svn"){
 						%>
