@@ -4,6 +4,12 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+import org.uengine.codi.mw3.model.AppAlfresco;
+import org.uengine.codi.mw3.model.AppBBB;
+import org.uengine.codi.mw3.model.AppCalendar;
+import org.uengine.codi.mw3.model.AppMindMap;
+import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.OrganizationPerspectiveApp;
 import org.uengine.codi.mw3.model.Perspective;
@@ -89,5 +95,46 @@ public class OcePerspectivePanel extends Perspective{
 
 		return new Object[]{session , window};
 	}
+	
+	@ServiceMethod
+	public MainPanel goSNS() throws Exception {
+		if(session != null){
+			session.setLastSelectedItem("goSns");
+			session.setUx("sns");
+		}
+		
+		return new MainPanel(new Main(session));
+	}
+
+	@ServiceMethod
+	public ContentWindow goAlfresco() throws Exception {
+		
+		// TODO : locale 처리
+		return new ContentWindow(new AppAlfresco(), "문서관리");
+	}
+	
+	@ServiceMethod
+	public ContentWindow goCalendar() throws Exception {
+		
+		// TODO : locale 처리
+		return new ContentWindow(new AppCalendar(session), "일정관리");
+	}
+
+	
+	@ServiceMethod
+	public ContentWindow goBBB() throws Exception {
+		
+		// TODO : locale 처리
+		return new ContentWindow(new AppBBB(), "화상회의");
+	}
+	
+	@ServiceMethod
+	public ContentWindow goMindMap() throws Exception {
+		
+		// TODO : locale 처리
+		return new ContentWindow(new AppMindMap(), "마인드맵");
+	}
+	
+
 }
 
