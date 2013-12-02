@@ -122,6 +122,11 @@ public class ReflectPanel {
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
+		if (this.getSqlFile().getFileTransfer() != null
+				&& this.getSqlFile().getFilename() != null
+				&& this.getSqlFile().getFilename().length() > 0)
+				this.getSqlFile().upload();
+		
 		if ("war".equals(wfNode.getVisType())) {
 			if(!check){
 				if (this.getWarFile().getFileTransfer() != null
@@ -129,11 +134,6 @@ public class ReflectPanel {
 						&& this.getWarFile().getFilename().length() > 0)
 						this.getWarFile().upload();
 					
-				if (this.getSqlFile().getFileTransfer() != null
-						&& this.getSqlFile().getFilename() != null
-						&& this.getSqlFile().getFilename().length() > 0)
-						this.getSqlFile().upload();
-				
 				reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
 				if (reflectVer == 0) {
 					reflectVer = 1;
