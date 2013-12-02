@@ -6,9 +6,15 @@
 <%
 		if(value.selected){
 %>
+	
+
 	<div class="depth2">
 		<%=fields.topicMap.here()%>
+		<a id="wBtn" href="#" onClick="<%=methods.addTopic.caller()%>"><span><%=mw3.localize('$addTopic')%></span></a>
+		<div class="clear"></div>
 	</div>
+	
+	
 <%
 		}
 	}
