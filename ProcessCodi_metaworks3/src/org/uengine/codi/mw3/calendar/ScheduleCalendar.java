@@ -211,12 +211,21 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("title", title );
 				column.put("start", iInstance.getDueDate());
 				
+				Calendar c = Calendar.getInstance();
+				c.setTime(iInstance.getDueDate());
+
+				if("small".equals(this.getMetaworksContext().getHow()) || (c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)){
+					column.put("allDay", true);
+				}else{
+					column.put("allDay", false);
+				}
+				
+				/*
 				if(iInstance.getExt1() != null && "false".equals(iInstance.getExt1())){
 					column.put("allDay", false);
 				}else{
 					column.put("allDay", true);
 				}
-				/*
 				if(iInstance.getDueDate()!=null){
 					column.put("end", iInstance.getDueDate());
 				}
@@ -237,13 +246,13 @@ public class ScheduleCalendar implements ContextAware {
 				SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 				String dueDate = df.format(iInstance.getDueDate());
 				
-				if(!"oce".equals(session.getUx()) || prevDate == null || !prevDate.equals(dueDate)){
+				if(!"small".equals(this.getMetaworksContext().getHow()) || prevDate == null || !prevDate.equals(dueDate)){
 					arrListData.add(column);
 					
 					prevDate = dueDate;
 					prevCnt = 1;
 					
-					if("oce".equals(session.getUx())){
+					if("small".equals(this.getMetaworksContext().getHow())){
 						((HashMap)arrListData.get(arrListData.size()-1)).put("callType", "more" );
 						((HashMap)arrListData.get(arrListData.size()-1)).put("title", prevCnt +  "건");
 					}
@@ -315,7 +324,7 @@ public class ScheduleCalendar implements ContextAware {
 		}
 	}	
 	
-	@ServiceMethod(payload={"schdId", "callType"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"schdId", "callType"}, target=ServiceMethodContext.TARGET_STICK)
 	public Object[] linkScheduleEvent() throws Exception{
 		
 		String instId = null;
@@ -344,7 +353,6 @@ public class ScheduleCalendar implements ContextAware {
 			instList.load();
 			
 			Popup popup = new Popup();
-			popup.setName("Todo List");
 			popup.setPanel(instList);
 			
 			return new Object[]{ popup };
@@ -364,7 +372,7 @@ public class ScheduleCalendar implements ContextAware {
 				
 				return new Object[]{new Refresh(list)};
 				
-			} else if("oce".equals(session.getUx())){
+			} else if("small".equals(this.getMetaworksContext().getHow())){
 				session.setLastSelectedItem("goSns");
 				session.setUx("sns");
 				return new Object[]{new MainPanel(new Main(session, String.valueOf(instId)))};
@@ -399,17 +407,18 @@ public class ScheduleCalendar implements ContextAware {
 		if(!allDay)
 			dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, new Locale(session.getEmployee().getLocale()));
 
+		
 		String date = dateFormat.format(getSelDate());
 		SimpleDateFormat sf = (SimpleDateFormat) dateFormat;
 		String pattern = sf.toLocalizedPattern();
-		
-		if( getSelDate() != null ){
-			title = "[" + date + "]";
-			
-			Calendar c = Calendar.getInstance ( );
+
+		title = "[" + date + "]";
+		if( getSelDate() != null && this.isAllDay()){
+			Calendar c = Calendar.getInstance ();
 			c.setTime(getSelDate());
 			c.set ( c.HOUR_OF_DAY  , +23);
 			c.set ( c.MINUTE  , +59);
+			c.set ( c.SECOND  , +59);
 			
 			this.setSelDate(c.getTime());			
 		}
@@ -420,8 +429,6 @@ public class ScheduleCalendar implements ContextAware {
 		newInstantiator.setDueDate(this.getSelDate());
 		//newInstantiator.setStartDate();
 		newInstantiator.setTitle(title);
-		newInstantiator.setExt1(this.getViewMode());
-		newInstantiator.setExt2(String.valueOf(this.allDay));
 		newInstantiator.scheduleCalendar = this;
 		
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
