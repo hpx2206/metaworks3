@@ -128,7 +128,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 			this.timeout = setTimeout(function() {
 				mw3.getFaceHelper(objectId).assistEventCall();
 			}, 100);			
-			
 		}	
 	},
 	startLoading : function(serviceMethodName){
