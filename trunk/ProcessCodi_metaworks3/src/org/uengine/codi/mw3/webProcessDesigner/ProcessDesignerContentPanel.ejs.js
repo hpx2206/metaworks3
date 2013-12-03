@@ -244,7 +244,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
 	    	if($(shapeElement).attr('auto_draw') && $(shapeElement).attr('auto_draw') == 'yes'){
 	    		if( $(shapeElement).attr('_shape_id') == 'OG.shape.bpmn.A_Task' ){
-	    			$(shapeElement).attr('_width', '70');
+	    			$(shapeElement).attr('_width', '120');
 	    			$(shapeElement).attr('_height', '50');
 	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.HumanActivity');
 	    			$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.HumanActivityView');
@@ -513,7 +513,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 				activity.activityView = cellForDwr;
 				if(classType == 'Activity'){
 					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
-					if( classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity'  && cellForDwr.parent){
+					if( (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')  && cellForDwr.parent){
 						var parentRoleId = this.findSwimlane(cellForDwr.parent);
 						if( parentRoleId != null ){
 							var role = $('#'+parentRoleId).data('role');

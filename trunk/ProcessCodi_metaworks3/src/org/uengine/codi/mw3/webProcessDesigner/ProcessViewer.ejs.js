@@ -80,12 +80,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 		// designerMaxX 가 현재 켄버스보다 작으면 스케일 적용 안함
 		if( designerMaxY > canvasHeight){
 			yScale = canvasHeight / designerMaxY;
-		}else if( designerMaxX > canvasWidth){
+		}
+		if( designerMaxX > canvasWidth){
 			xScale = canvasWidth / designerMaxX;
 		}
 		
-		if( xScale != 1 && yScale != 1){
-			scaleSize = xScale > yScale ? xScale : yScale;
+		if( xScale != 1 || yScale != 1){
+			scaleSize = xScale > yScale ? yScale : xScale;
 			canvas._RENDERER.setScale(scaleSize);
 		}
 			

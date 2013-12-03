@@ -144,7 +144,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
 		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
-		popup.setTitle(activity.getDescription() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
+		popup.setTitle(activity.getDescription() != null && activity.getDescription().getText() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
 		popup.setPanel(activityWindow);
 		popup.setWidth(700);
 		popup.setHeight(500);
