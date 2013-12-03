@@ -36,9 +36,19 @@ if(mw3.when == 'filter'){
 	
 	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
 		<ul>			
+<%
+		if(mw3.how == 'run'){
+%>
+		<li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>실행</span></a></li>
+<%
+		}else{
+%>
 			<li><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span>삭제</span></a></li>
 			<li><a id="wBtn" href="#" onClick="<%=methods.close.caller()%>"><span>취소</span></a></li>			
 			<li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>저장</span></a></li>			
+<%
+		}
+%>
 		</ul>
 	</div>
 <%		
