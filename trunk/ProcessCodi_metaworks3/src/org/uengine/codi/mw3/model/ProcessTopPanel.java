@@ -2,43 +2,22 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
-public class ProcessTopPanel {
+public class ProcessTopPanel extends TopPanel {
+
+	public ProcessTopPanel(){
+	}
 
 	public ProcessTopPanel(Session session) throws Exception {
-		setSession(session);
-		setWindowPanel(new WindowPanel());
-		
-		MetaworksContext metaworksContext = new MetaworksContext();
-		metaworksContext.setWhere("topPanel");
+		super(session);
 		
 		tray = new Tray();
 		tray.session = session;
 		tray.load();
-		
-		notificationBadge = new NotificationBadge();
-		
-		todoBadge = new TodoBadge();
-		
-		IUser loginUser = new User();
-		loginUser.setUserId(session.getUser().getUserId());
-		loginUser.setName(session.getUser().getName());
-		loginUser.setMetaworksContext(metaworksContext);
-
-		
-		setLoginUser(loginUser);
-		
-		if("oce".equals(session.getUx())){
-			InstanceSearchBox searchBox = new InstanceSearchBox();
-			searchBox.setMetaworksContext(metaworksContext);
-			searchBox.setKeyUpSearch(true);
-			searchBox.setKeyEntetSearch(true);
-			setSearchBox(searchBox);
-		}
 	}
 	
 	WindowPanel windowPanel;
@@ -63,72 +42,11 @@ public class ProcessTopPanel {
 		public void setTray(Tray tray) {
 			this.tray = tray;
 		}
-		
-	NotificationBadge notificationBadge;
-			
-		public NotificationBadge getNotificationBadge() {
-			return notificationBadge;
-		}
-		public void setNotificationBadge(NotificationBadge notificationBadge) {
-			this.notificationBadge = notificationBadge;
-		}
-		
-	TodoBadge todoBadge;
-		public TodoBadge getTodoBadge(){
-			return todoBadge;
-		}
-		public void setTodoBadge(TodoBadge todoBadge){
-			this.todoBadge = todoBadge;
-		}
-		
-	String pageType;
-		public String getPageType() {
-			return pageType;
-		}
-		public void setPageType(String pageType) {
-			this.pageType = pageType;
-		}
-
-	Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
-		
-	IUser loginUser;
-		public IUser getLoginUser() {
-			return loginUser;
-		}
-		public void setLoginUser(IUser loginUser) {
-			this.loginUser = loginUser;
-		}
-	SearchBox searchBox;
-		@Face(options={"keyupSearch"}, values={"true"})
-		public SearchBox getSearchBox() {
-			return searchBox;
-		}
-		public void setSearchBox(SearchBox searchBox) {
-			this.searchBox = searchBox;
-		}
-
-	String mode;
-		public String getMode() {
-			return mode;
-		}
-		public void setMode(String mode) {
-			this.mode = mode;
-		}
-	
-	public ProcessTopPanel(){
-			
-	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow  companyRepInfo() throws Exception{
 		Company company = new Company();
-		company.setComCode(session.getEmployee().getGlobalCom());
+		company.setComCode(this.getSession().getEmployee().getGlobalCom());
 		ICompany findCompany = company.findByCode();
 		if(findCompany!=null){
 			ModalWindow modalWindow = new ModalWindow();
@@ -149,7 +67,7 @@ public class ProcessTopPanel {
 		ModalWindow modalWindow = new ModalWindow();
 		
 		ContactUs contactUs = new ContactUs();
-		contactUs.session = session;
+		contactUs.session = this.getSession();
 		modalWindow.setPanel(contactUs);
 		modalWindow.setTitle("Contact Us");
 		modalWindow.setWidth(700);
@@ -165,7 +83,7 @@ public class ProcessTopPanel {
 		
 		Employee employee = new Employee();
 		
-		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.setEmpCode(this.getSession().getEmployee().getEmpCode());
 		
 		employee.setMetaworksContext(new MetaworksContext());
 		employee.getMetaworksContext().setWhere("user_menu_option");
