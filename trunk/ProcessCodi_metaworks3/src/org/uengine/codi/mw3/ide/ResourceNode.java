@@ -16,14 +16,13 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.editor.form.FormEditor;
+import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
-import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -235,7 +234,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			this.setType(type);
 
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-				editor = new FormEditor(this);
+				editor = new JavaCodeEditor(this);
 				editor.workspace = workspace;
 				editor.load();
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
