@@ -8,12 +8,11 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.admin.IDETopPanel;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Locale;
-import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
 public class CloudIDE {
@@ -160,12 +159,17 @@ public class CloudIDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(centerLayout);
+		outerLayout.setNorth(new IDETopPanel(session));
+		
+		/*
 		if(false && "oce".equals(session.getUx())){
 			outerLayout.setNorth(new ProcessTopPanel(session));
 			
 		}else{
 			outerLayout.setNorth(new TopPanel(session));
 		}
+		*/
+		
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
 
 		this.setLayout(outerLayout);
