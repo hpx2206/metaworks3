@@ -900,6 +900,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 			}
 			
+			if(this instanceof RemoteConferenceWorkItem){
+				ArrayList<String> initialFollowers = ((RemoteConferenceWorkItem)this).initialFollowers;
+				if(initialFollowers!=null){
+					for(String userId : initialFollowers){
+						
+						RoleMapping follower = RoleMapping.create();
+						follower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + userId);
+						follower.setEndpoint(userId);						
+
+						processManager.putRoleMapping(this.getInstId().toString() , follower);
+						processManager.applyChanges();
+					}
+				}
+			}
+			
 			if(!newInstance){
 				//마지막 워크아이템의 제목을 인스턴스의 적용
 				String lastCmnt = instanceRef.getLastCmnt();
@@ -1065,7 +1080,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
 //						}
 //						else
-							returnObjects = new Object[]{new Refresh(this, false, true)};	
+						returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(instanceFollowers)};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					InstanceViewThreadPanel genericWorkItem = new InstanceViewThreadPanel();
