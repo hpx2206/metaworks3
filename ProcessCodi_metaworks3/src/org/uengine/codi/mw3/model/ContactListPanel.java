@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -125,4 +126,14 @@ public class ContactListPanel implements ContextAware {
 
 	@AutowiredFromClient
 	public Session session;
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Object addContact() throws Exception{
+		Popup popup = new Popup();
+		
+		popup.setPanel(new UnifiedAddContactPanel(session));
+		
+		return popup;
+	}
+
 }
