@@ -160,7 +160,7 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(s
 };
 
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addEvent = function(event){
-	
+
 	this.removeEvent(event);
 	
 	var calendar = $('#scheduleCalendar_' + this.objectId);
