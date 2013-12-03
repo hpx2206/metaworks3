@@ -186,7 +186,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
 			getIconFile().upload();
 		else
-			getIconFile().setUploadedPath("");
+			getIconFile().setUploadedPath(null);
 		
 		
 		setComCode(session.getCompany().getComCode());
