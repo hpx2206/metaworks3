@@ -478,7 +478,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 
 		// OCE 모드에서 codi제거
 		Project main = new Project();
-		main.setId(projectId);
+		main.setId(projectName);
 		main.setPath(mainPath);
 		main.load();
 

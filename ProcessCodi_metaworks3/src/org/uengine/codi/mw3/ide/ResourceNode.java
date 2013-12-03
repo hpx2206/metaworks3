@@ -220,6 +220,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		Popup popup = new Popup();
 		popup.setPanel(navigator);
+		popup.setName("Project Resource");
 
 		return popup;	
 	}
