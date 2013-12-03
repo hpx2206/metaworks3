@@ -72,6 +72,8 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 
 		if(!faceHelper.object.loaded){
 			faceHelper.object.content = mw3.call(objectId, 'load');
+			
+			console.log(faceHelper.object.content);
 		}
 		
 		faceHelper.editor.getSession().setValue(faceHelper.object.content);
@@ -86,7 +88,8 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		/*
 		 * key event handler
 		 */
-		faceHelper.event = require("pilot/event");
+		 
+		faceHelper.event = ace.require("ace/lib/event");
 		
 		faceHelper.event.addMouseWheelListener(faceHelper.editor.container, function(e){
 			mw3.getFaceHelper(objectId).closeAssist(e);
@@ -95,7 +98,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	    faceHelper.editor.setKeyboardHandler(    		   
 	    	{
 	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
-	    			switch (e.keyCode) {
+	    			switch (keyCode) {
 	    				case 13 :	// enter	
 			    			mw3.getFaceHelper(objectId).selectAssist(e);
 			    	    	
@@ -163,26 +166,25 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	   	    }
 	    );
 	    
-	    var canon = require("pilot/canon"); 
-		canon.addCommand({
+		faceHelper.editor.commands.addCommand({
 		    name: "gotoleft",
 		    bindKey: this.bindKey("Left", "Left|Ctrl-B"),
 		    exec: function(env, args, request) {
 		    	faceHelper.closeAssist();
 		    	
-		    	env.editor.navigateLeft(args.times);
+		    	env.navigateLeft(args.times);
 		    }
 		});
-		canon.addCommand({
+		faceHelper.editor.commands.addCommand({
 		    name: "gotoleft",
 		    bindKey: this.bindKey("Right", "Right|Ctrl-F"),
 		    exec: function(env, args, request) {
 		    	faceHelper.closeAssist();
 		    	
-		    	env.editor.navigateRight(args.times);
+		    	env.navigateRight(args.times);
 		    }
 		});
-		canon.addCommand({
+		faceHelper.editor.commands.addCommand({
 		    name: "golineup",
 		    bindKey: this.bindKey("Up", "Up|Ctrl-P"),
 		    exec: function(env, args, request) {
@@ -191,10 +193,10 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		    	if(assist != null)
 					mw3.getFaceHelper(assist.__objectId).up();
 				else  	
-					env.editor.navigateUp(args.times);
+					env.navigateUp(args.times);
 		    }
 		});
-		canon.addCommand({
+		faceHelper.editor.commands.addCommand({
 		    name: "golinedown",
 		    bindKey: this.bindKey("Down", "Down|Ctrl-N"),
 		    exec: function(env, args, request) {
@@ -203,10 +205,10 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 				if(assist != null)
 					mw3.getFaceHelper(assist.__objectId).down();
 				else  	
-					env.editor.navigateDown(args.times);
+					env.navigateDown(args.times);
 		    }
 		});
-		canon.addCommand({
+		faceHelper.editor.commands.addCommand({
 		    name: "esckey",
 		    bindKey: this.bindKey("Esc", "Esc"),
 		    exec: function(env, args, request) {
