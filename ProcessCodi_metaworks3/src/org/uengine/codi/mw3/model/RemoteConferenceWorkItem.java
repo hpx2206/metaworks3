@@ -8,22 +8,19 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
-import org.metaworks.Refresh;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.Login;
 import org.uengine.kernel.GlobalContext;
 
 public class RemoteConferenceWorkItem extends WorkItem{
@@ -271,5 +268,13 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	         
 	        return sb.toString();
 	}
+	
+	ArrayList<String> initialFollowers;
+		public ArrayList<String> getInitialFollowers() {
+			return initialFollowers;
+		}
+		public void setInitialFollowers(ArrayList<String> initialFollowers) {
+			this.initialFollowers = initialFollowers;
+		}
 	
 }
