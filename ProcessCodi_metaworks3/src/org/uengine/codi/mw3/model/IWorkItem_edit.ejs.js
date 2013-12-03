@@ -79,7 +79,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 				}
 			});
 		}, 1000);
-	}else if(value.type == 'comment'){
+	}else if(value.type == 'comment' || value.type == 'remoteConf'){
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
 		if( session.ux != 'phone' &&  session.ux != 'pad' ){
 			$("#post_" + this.objectId).bind("keydown", {instanceFirst: this.instanceFirst}, function(event){
