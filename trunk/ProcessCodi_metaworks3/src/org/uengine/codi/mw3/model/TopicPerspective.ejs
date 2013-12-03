@@ -9,9 +9,13 @@
 	
 
 	<div class="depth2">
-		<%=fields.topicMap.here()%>
-		<a id="wBtn" href="#" onClick="<%=methods.addTopic.caller()%>" style="margin-left: 12px;"><span class="icon-plus"></span></a>
-		<div class="clear"></div>
+		<%=fields.topicMap.here()%>		
+		<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+			<li>
+				<a href="#" onClick="<%=methods.addTopic.caller()%>"><span class="icon-plus"></span><b>새주제 만들기</b></a>
+				<div class="clear"></div>
+			</li>
+		</ul>
 	</div>
 	
 	

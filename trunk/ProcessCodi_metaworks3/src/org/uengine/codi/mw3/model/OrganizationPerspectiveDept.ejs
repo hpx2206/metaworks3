@@ -7,8 +7,13 @@
 %>
 	<div class="depth2">		
 		<%=fields.deptList.here()%>
-		<a id="wBtn" href="#" onClick="<%=methods.addDept.caller()%>" style="margin-left: 12px;"><span class="icon-plus"></span></a>
-		<div class="clear"></div>
+		<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+			<li>
+				<a href="#" onClick="<%=methods.addDept.caller()%>"><span class="icon-plus"></span><b>새그룹 만들기</b></a>
+				<div class="clear"></div>
+			</li>
+		</ul>
+
 	</div>	
 <%
 		}

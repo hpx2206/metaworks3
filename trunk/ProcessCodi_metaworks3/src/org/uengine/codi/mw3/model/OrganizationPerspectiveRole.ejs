@@ -8,10 +8,13 @@
 %>
 	<div class="depth2">		
 		<div><%=fields.roleList.here()%></div>
-		<div>
-			<a id="wBtn" href="#" onClick="<%=methods.addRole.caller()%>" style="margin-left: 12px;"><span class="icon-plus"></span></a>
-			<div class="clear"></div>
-		</div>
+		<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+			<li>
+				<a href="#" onClick="<%=methods.addRole.caller()%>"><span class="icon-plus"></span><b>새역할 만들기</b></a>
+				<div class="clear"></div>
+			</li>
+		</ul>
+
 	</div>
 	
 <%
