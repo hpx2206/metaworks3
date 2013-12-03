@@ -3932,7 +3932,7 @@ window.Raphael.svg && function (R) {
         var bbox = o.getBBox(1);
         $(o.pattern, {patternTransform: o.matrix.invert() + " translate(" + bbox.x + "," + bbox.y + ")"});
     },
-    addArrow = function (o, value, isEnd) {/*
+    addArrow = function (o, value, isEnd) {
         if (o.type == "path") {
             var values = Str(value).toLowerCase().split("-"),
                 p = o.paper,
@@ -4088,7 +4088,7 @@ window.Raphael.svg && function (R) {
                 var item = R._g.doc.getElementById(attr);
                 item && item.parentNode.removeChild(item);
             }
-        }*/
+        }
     },
     dasharray = {
         "": [0],
@@ -10865,7 +10865,7 @@ OG.shape.bpmn.C_Sequence.prototype.createShape = function () {
 	this.geom.style = new OG.geometry.Style({
 		"edge-type"  : "plain",
 		"arrow-start": "none",
-		"arrow-end"  : "none"
+		"arrow-end"  : "classic-wide-long"
 	});
 
 	return this.geom;
@@ -15790,43 +15790,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		if (_style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER) {
 			edge = new OG.BezierCurve(points);
 		} else {
-			var geom1, geom2, geomCollection = [];
-            geom1 = new OG.PolyLine(points);
-            switch (edge_direction[1]) {
-                case "e":
-                    geom2 = new OG.PolyLine([
-                        [to.x + 10, to.y - 5],
-                        [to.x, to.y],
-                        [to.x + 10, to.y + 5]
-                    ]);
-                    break;
-                case "w":
-                    geom2 = new OG.PolyLine([
-                        [to.x - 10, to.y - 5],
-                        [to.x, to.y],
-                        [to.x - 10, to.y + 5]
-                    ]);
-                    break;
-                case "s":
-                    geom2 = new OG.PolyLine([
-                        [to.x - 5, to.y + 10],
-                        [to.x, to.y],
-                        [to.x + 5, to.y + 10]
-                    ]);
-                    break;
-                case "n":
-                    geom2 = new OG.PolyLine([
-                        [to.x - 5, to.y - 10],
-                        [to.x, to.y],
-                        [to.x + 5, to.y - 10]
-                    ]);
-                    break;
-            }
-
-            geomCollection.push(geom1);
-            geomCollection.push(geom2);
-
-            edge = new OG.geometry.GeometryCollection(geomCollection);
+			edge = new OG.PolyLine(points);
 		}
 	}
 	// draw hidden edge
@@ -16507,7 +16471,7 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 	}
 	// 라인 드로잉
 	edge = this.drawEdge(new OG.Line(fromXY, toXY),
-		OG.Util.apply(_style, {"edge-direction": fromDrct + " " + toDrct, "edge-type": "plain", "arrow-end":"none"}), edge ? edge.id : null, isSelf);
+		OG.Util.apply(_style, {"edge-direction": fromDrct + " " + toDrct, "edge-type": "plain"}), edge ? edge.id : null, isSelf);
 
 	// Draw Label
 	this.drawLabel(edge, label);

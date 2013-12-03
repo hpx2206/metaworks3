@@ -32,8 +32,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			var object = mw3.objects[this.objectId];
 			var element = null;
 			var canvas = this.canvas;
-			var canvasObjectId = this.canvasObjectId;
-			var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObjectId);
 			if( object && !object.drawByCanvas){
 				var initText;
 				if( object.activity ){
