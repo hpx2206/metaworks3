@@ -160,8 +160,9 @@ public class CloudIDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(centerLayout);
-		if("oce".equals(session.getUx())){
+		if(false && "oce".equals(session.getUx())){
 			outerLayout.setNorth(new ProcessTopPanel(session));
+			
 		}else{
 			outerLayout.setNorth(new TopPanel(session));
 		}
