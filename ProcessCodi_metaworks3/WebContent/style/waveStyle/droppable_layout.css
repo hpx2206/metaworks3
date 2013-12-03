@@ -640,7 +640,7 @@ cursor:pointer;
     background-repeat: no-repeat;
     position:relative;
 }
-.contact_list .user_focus{margin:7px;}
+.contact_list .user_focus{margin:4px;}
 .user .user_focus .followers_name{
 	position:absolute;
 	bottom:0px;

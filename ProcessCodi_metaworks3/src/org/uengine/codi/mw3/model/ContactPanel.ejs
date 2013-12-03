@@ -44,8 +44,14 @@
 <%
 		if (value.contactListPanel.metaworksContext.how == null || value.contactListPanel.metaworksContext.how != 'follower') {
 %>		
-			<a id="wBtn" href="#" onClick="<%=methods.addContact.caller()%>" style="margin-left: 7px;color: #7A8794"><span class="icon-plus"></span></a>
-			<div class="clear"></div>
+
+		<!--ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+			<li>
+				<a href="#" onClick="<%=methods.addContact.caller()%>"><span class="icon-plus"></span><b>친구추가</b></a>
+				<div class="clear"></div>
+			</li>
+		</ul-->
+
 <%
 		}
 %>
