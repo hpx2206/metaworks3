@@ -182,9 +182,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
 			getIconFile().upload();
-		else
-			getIconFile().setUploadedPath(null);
-		
 		
 		setComCode(session.getCompany().getComCode());
 		
@@ -274,6 +271,21 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	}
 	
 	public Object[] initiate() throws Exception{
+		
+		roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
+		ArrayList<IRoleMappingDefinition> roleDefList = roleMappingPanel.getRoleMappingDefinitions();
+		for(IRoleMappingDefinition roleDef : roleDefList){
+			if( "Initiator".equals(roleDef.getRoleName())){
+				continue;
+			}
+			if( roleDef.getMappedUser().getUserId() == null ){
+				this.getMetaworksContext().setHow("run");
+				
+				return new Object[]{this.modify()};
+			}
+		}
+		
+				
 		// InstanceViewContent instanceView// = new InstanceViewContent();
 		// 프로세스 실행
 		String instId = this.initializeProcess();
@@ -361,6 +373,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			String[] executedTaskIds = WorkItemHandler.executedActivityTaskIds(instanceObject);
 			
 			processManager.applyChanges();
+			
+			afterInstantiation(instanceRef);
 
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -399,6 +413,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		//set the role mappings the administrator set.
 		
+		/*
 		roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
 		ArrayList<IRoleMappingDefinition> roleDefList = roleMappingPanel.getRoleMappingDefinitions();
 		for(IRoleMappingDefinition roleDef : roleDefList){
@@ -409,6 +424,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				this.getMetaworksContext().setHow("run");
 				
 				return new Object[]{this.modify()};
+				*/
+		
 				/*
 				// user가 매핑이 안되어 있다면 유저를 매핑하라고 메시지를 띄우고 프로세스가 진행이 안됨
 				String systemAdmin = GlobalContext.getPropertyString("codi.user.id");
@@ -447,8 +464,11 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				
 //				throw new MetaworksException("역할 매핑이 안되어 있어요. 관리자에게 문의해 주세요.");
 				*/
+		
+		/*
 			}
 		}
+		*/
 		
 		
 		
@@ -457,21 +477,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		processManager.applyChanges();
 		//end
 		
-		if( session != null && session.getEmployee() != null ){
-			((Instance)instanceRef).databaseMe().setInitiator(session.user);
-			((Instance)instanceRef).databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
-		}
-		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
-			((Instance)instanceRef).databaseMe().setTopicId(session.getLastSelectedItem());
-		}
-		if(newInstancePanel!=null){
-			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel().getSelected());
-			//((Instance)instanceRef).flushDatabaseMe();
-		}
-		if(newInstancePanel.dueDate != null){
-			((Instance)instanceRef).databaseMe().setDueDate(newInstancePanel.getDueDate());
-		}
-		((Instance)instanceRef).flushDatabaseMe();
+		afterInstantiation(instanceRef);
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
@@ -504,6 +510,30 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		Perspective perspective = new Perspective();
 		
 		return perspective.loadInstanceListPanel(session, PROCESS, this.getDefId(), "프로세스 : " + this.getDefId());
+	}
+	
+	protected void afterInstantiation(Instance instanceRef) throws Exception {
+		if( session != null && session.getEmployee() != null ){
+			((Instance)instanceRef).databaseMe().setInitiator(session.user);
+			((Instance)instanceRef).databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
+		}
+		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
+			((Instance)instanceRef).databaseMe().setTopicId(session.getLastSelectedItem());
+		}
+		if(newInstancePanel!=null){
+			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel().getSelected());
+			//((Instance)instanceRef).flushDatabaseMe();
+		}
+		
+		/*
+		if(newInstancePanel.dueDate != null){
+			((Instance)instanceRef).databaseMe().setDueDate(newInstancePanel.getDueDate());
+		}
+		*/
+		
+		((Instance)instanceRef).databaseMe().setName(this.getName() + " " + instanceRef.getInstId().toString());
+		
+		((Instance)instanceRef).flushDatabaseMe();
 	}
 }
 
