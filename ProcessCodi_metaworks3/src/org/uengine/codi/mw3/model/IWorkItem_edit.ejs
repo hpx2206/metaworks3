@@ -212,7 +212,12 @@
 			<td height="30" colspan="2" style="padding-left:15px;">
 				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a>
 			</td>
-			
+		</tr>
+		<tr>
+			<td></td>
+			<td colspan="3">
+				<div id="commandFollowerDiv_<%=objectId%>"></div>
+			</td>
 		</tr>			
 <%		
 		}
