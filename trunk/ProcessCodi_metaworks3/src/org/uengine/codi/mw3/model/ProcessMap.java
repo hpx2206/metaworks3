@@ -151,7 +151,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
 			getIconFile().upload();
 		else
-			getIconFile().setUploadedPath("");
+			//getIconFile().setUploadedPath("");
 		
 		createDatabaseMe();
 		flushDatabaseMe();
@@ -235,6 +235,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		IProcessMap processMap = (IProcessMap)sql(ProcessMap.class, sb.toString());
 		processMap.setComCode(session.getCompany().getComCode());
 		processMap.select();
+		
+		while(processMap.next())
+			System.out.println(processMap.getName() + " = " + processMap.getIconFile().getUploadedPath());
 		
 		return processMap;
 		
