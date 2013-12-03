@@ -34,17 +34,6 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		
 		var left = x;
 		var top = y;
-		
-
-		console.log('mouse.x = ' + x);
-		console.log('mouse.y = ' + y);
-
-		console.log('popLayer.width = ' + popLayerWidth);
-		console.log('popLayer.height = ' + popLayerHeight);
-
-		console.log('body.width = ' + bodyWidth);
-		console.log('body.height = ' + bodyHeight);
-
 
 		if(this.divObj.hasClass('target_stick')){
 			console.log('stick');
@@ -90,7 +79,6 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 			
 			this.divObj.css({left: left + 'px',top: top + 'px'});
 	
-			console.log('position : ' + position);
 			if(position == 'right' || position == 'left'){
 				if(position == 'left')
 					this.divObj.removeClass('clue-right-rounded').addClass('clue-left-rounded');
@@ -105,7 +93,6 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 					this.divObj.removeClass('clue-right-rounded').addClass('clue-top-rounded');
 			}
 		}else{
-			console.log('popup');
 			showTitle = true;
 			left = (bodyWidth - popLayerWidth)/2;
 			top = (bodyHeight - popLayerHeight)/2;
