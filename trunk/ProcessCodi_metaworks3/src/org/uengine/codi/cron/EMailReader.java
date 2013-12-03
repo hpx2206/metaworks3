@@ -175,7 +175,7 @@ public class EMailReader {
 					for(Address theFrom : from){
 						IEmployee fromUserIsEmployee = new Employee().auto();
 						String theFromString = theFrom.toString();
-						String theFromName = theFromString;
+						String theFromName = repMailEmp.getEmpName();
 						
 						int whereMailAddress = theFromString.indexOf("<");
 						if(whereMailAddress>-1){

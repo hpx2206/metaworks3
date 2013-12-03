@@ -133,8 +133,8 @@
 
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="cronQuartzJob"/>
-		<property name="startDelay" value="60000"/>
-		<property name="repeatInterval" value="120000"/>
+		<property name="startDelay" value="5000"/>
+		<property name="repeatInterval" value="20000"/>
 	</bean>
 	<!-- 매일 오전 8시 일정 시그널링 -->
 	<bean id="scheduleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
