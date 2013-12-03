@@ -68,9 +68,9 @@
 				
 	%>
 				<a class="<%= (value.type=='file' || value.type=='document')?'file_btn_on':'file_btn_off' %>" onclick="<%=methods.newDocument.caller()%>"><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span><div class="comment_select"></div></a>
-			<!--
+			
 				<a class="<%= value.type=='src'?'code_btn_on':'code_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%><div class="comment_select"></div></span></a>
-				-->
+				
 	<%		
 				if(session && session.employee && session.employee.approved && !session.employee.guest){
 	%>
