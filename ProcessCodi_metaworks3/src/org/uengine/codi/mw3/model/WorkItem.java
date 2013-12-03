@@ -1239,13 +1239,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		scEvent.setId(instanceRef.getInstId().toString());
 		scEvent.setStart(instanceRef.getDueDate());
 		
-		Calendar c = Calendar.getInstance();
-		c.setTime(instanceRef.getDueDate());
-
-		if(c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)
-			scEvent.setAllDay(true);
-		else
-			scEvent.setAllDay(false);
+		if(instanceRef.getDueDate() != null){
+			Calendar c = Calendar.getInstance();
+			c.setTime(instanceRef.getDueDate());
+	
+			if(c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)
+				scEvent.setAllDay(true);
+			else
+				scEvent.setAllDay(false);
+		}
 		
 		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 		scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
