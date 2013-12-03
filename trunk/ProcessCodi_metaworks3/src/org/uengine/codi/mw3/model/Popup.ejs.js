@@ -51,15 +51,24 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 	
 				position = 'top'			
 			}else if(bodyHeight < top + popLayerHeight + 30){
-				top -= (popLayerHeight - 20);			
-				where = 'down'
+				var tempTop = top - (popLayerHeight - 20);
 				
-				if(bodyHeight < top + popLayerHeight + 30){
-					// change top position
-					top = y - popLayerHeight - 30;
-					left -= (popLayerWidth/2);
+				if(tempTop < -10){
+					this.divObj.find('.cluetip-arrows').css({'top': top - 10});
 					
-					position = 'bottom';
+					top = 10;
+				}else{			
+					top = tempTop;
+					
+					where = 'down'
+					
+					if(bodyHeight < top + popLayerHeight + 30){
+						// change top position
+						top = y - popLayerHeight - 30;
+						left -= (popLayerWidth/2);
+						
+						position = 'bottom';
+					}
 				}
 			}
 			
