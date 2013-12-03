@@ -2,24 +2,24 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.CodiProcessDefinitionFactory;
-import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -163,7 +163,11 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		ProcessMapList processMapList = new ProcessMapList();
 		processMapList.load(session);
 		
-		return new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
+		if("run".equals(this.getMetaworksContext().getHow())){
+			
+			return this.initiate(); //new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
+		}else
+			return new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
 	}
 	
 	public Object[] remove() throws Exception {
@@ -197,7 +201,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		this.setRoleMappingPanel(new RoleMappingPanel(processManager, this.getDefId(), session));
-		
 		
 		Popup popup = new Popup(580, 500);
 		popup.setPanel(this);
@@ -234,6 +237,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		processMap.select();
 		
 		return processMap;
+		
 	}
 	
 	@Autowired
@@ -268,7 +272,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	}
 	
 	public Object[] initiate() throws Exception{
-//		InstanceViewContent instanceView// = new InstanceViewContent();
+		// InstanceViewContent instanceView// = new InstanceViewContent();
 		// 프로세스 실행
 		String instId = this.initializeProcess();
 		
@@ -283,7 +287,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 //			instanceRef.databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
 			
 			if(newInstancePanel.getKnowledgeNodeId() != null){
-			
 				processManager.executeProcess(instId);
 				processManager.applyChanges();
 
@@ -352,6 +355,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
 			roleMappingPanel.putRoleMappings(processManager, instId);
 			processManager.executeProcess(instId);
+			
+			String[] executedTaskIds = WorkItemHandler.executedActivityTaskIds(instanceObject);
+			
 			processManager.applyChanges();
 
 			if("sns".equals(session.getEmployee().getPreferUX())){
@@ -362,10 +368,28 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				panel.load(processMapList.getParentInstanceId().toString());
 				return new Object[]{panel, new Remover(new Popup() , true)};
 			}else{
-				instanceView.load(rootInstanceRef);
+				/*
+				 * 2013/12/03 cjw
+				 * 서브로 프로세스 실행시에 실행된 워크아이템만 부분 갱신되게 수정
+				 */
+				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+				instanceViewThreadPanel.setInstanceId(instId);
+
+				ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
+				
+				for(String taskId : executedTaskIds){
+					WorkItem newlyAppendedWorkItem = new WorkItem();
+					newlyAppendedWorkItem.setTaskId(new Long(taskId));
+					newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
+					
+					newlyAddedWorkItems.add(newlyAppendedWorkItem);
+				}
+				
+				return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems)};
+				//instanceView.load(rootInstanceRef);
 				//InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
 				//rootInstanceView.load(rootInstanceRef);
-				return new Object[]{new Remover(new Popup() , true), new Refresh(instanceView)};
+				//return new Object[]{new Remover(new Popup() , true), new Refresh(instanceView)};
 			}
 		}
 		
@@ -380,6 +404,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				continue;
 			}
 			if( roleDef.getMappedUser().getUserId() == null ){
+				this.getMetaworksContext().setHow("run");
+				
+				return new Object[]{this.modify()};
+				/*
 				// user가 매핑이 안되어 있다면 유저를 매핑하라고 메시지를 띄우고 프로세스가 진행이 안됨
 				String systemAdmin = GlobalContext.getPropertyString("codi.user.id");
 				IEmployee correntUser = session.getEmployee();
@@ -416,6 +444,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				return new Object[]{errorMessage};
 				
 //				throw new MetaworksException("역할 매핑이 안되어 있어요. 관리자에게 문의해 주세요.");
+				*/
 			}
 		}
 		
@@ -455,10 +484,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(title);
 				instanceView.getInstanceView().getInstanceNameChanger().change();
 				instanceView.getInstanceView().setInstanceName(title);
-
 			}
 			
-			return new Object[]{new Remover(new Popup() , true), new Refresh(instanceListPanel), new Refresh(instanceView)};
+			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new Refresh(instanceListPanel), new Refresh(instanceView)};
 		}
 
 		

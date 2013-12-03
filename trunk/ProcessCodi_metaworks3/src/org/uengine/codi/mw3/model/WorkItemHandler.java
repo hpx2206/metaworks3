@@ -1,7 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +12,10 @@ import javax.validation.Valid;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -25,6 +29,7 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.ActivityInstanceContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -341,7 +346,7 @@ public class WorkItemHandler implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 		
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true, target=ServiceMethodContext.TARGET_APPEND)
 //	@Available(when={"NEW"})
 	public Object[] complete() throws RemoteException, ClassNotFoundException, Exception{
 						
@@ -389,7 +394,11 @@ public class WorkItemHandler implements ContextAware{
 			rp.setProcessVariableChange(new KeyedParameter(pv.getVariableName(), processVariableValue));
 		}
 		
-		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
+		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp);
+		
+		// 변경된 액티비티 들만 찾기
+		String[] executedTaskIds = executedActivityTaskIds(instance);
+        
 		processManager.applyChanges();
 		
 		if(parameters!=null){
@@ -404,6 +413,17 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		releaseMapForITool();
+		
+		ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
+		
+		for(String taskId : executedTaskIds){
+			WorkItem newlyAppendedWorkItem = new WorkItem();
+			newlyAppendedWorkItem.setTaskId(new Long(taskId));
+			newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
+			
+			newlyAddedWorkItems.add(newlyAppendedWorkItem);
+		}
+		
 		// lastCmn 저장
 		IInstance copyOfInstance = saveLastComent(instance);
 		
@@ -417,6 +437,7 @@ public class WorkItemHandler implements ContextAware{
 				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 				new Object[]{new InstanceListener(inst)});			
 		
+		
 		//refreshes the instanceview so that the next workitem can be show up
 		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -427,10 +448,26 @@ public class WorkItemHandler implements ContextAware{
 			
 			return new Object[]{panel, new Remover(new ModalWindow() , true )};
 		}else{
+			/*
+			 * 2013/12/03 cjw
+			 * 프로세스 완료시에 수정된 워크아이템만 부분 갱신되게 수정
+			 */
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			instanceViewThreadPanel.setInstanceId(this.getInstanceId());
+
+			WorkItem workItemMe = new WorkItem();
+			workItemMe.setTaskId(this.getTaskId());
+			workItemMe.copyFrom(workItemMe.databaseMe());
+			
+			return new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(workItemMe)};
+
+			
+			/*
 			instanceViewContent.session = session;
 			instanceViewContent.load(copyOfInstance);
 			
 			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
+			*/
 		}
 	}
 	
@@ -616,4 +653,35 @@ public class WorkItemHandler implements ContextAware{
 		TransactionContext.getThreadLocalInstance().setSharedContext(
 				ITool.ITOOL_MAP_KEY, null);
 	}		
+	
+	
+	
+	public static String[] executedActivityTaskIds(ProcessManagerRemote processManager, String instanceId) throws Exception {
+		ProcessInstance instance = processManager.getProcessInstance(instanceId);
+		
+		return executedActivityTaskIds(instance);
+	}
+	
+	public static String[] executedActivityTaskIds(ProcessInstance instance) throws Exception {
+        List executedActivityCtxs = instance.getProcessTransactionContext().getExecutedActivityInstanceContextsInTransaction();
+        
+		List<String> newlyAddedWorkItems = new ArrayList<String>();
+        if(executedActivityCtxs!=null && executedActivityCtxs.size() > 0){
+            for(int i=executedActivityCtxs.size()-1; i>-1; i--){
+                    ActivityInstanceContext lastActCtx = (ActivityInstanceContext)executedActivityCtxs.get(i);
+                    Activity lastAct = lastActCtx.getActivity();
+                    
+                    if(lastAct instanceof HumanActivity && lastActCtx.getInstance().isRunning(lastAct.getTracingTag())){
+                        HumanActivity newlyStartedAct = (HumanActivity)lastAct;
+						String[] taskIds = newlyStartedAct.getTaskIds(instance);
+                        
+						for(String taskId : taskIds){
+                            newlyAddedWorkItems.add(taskId);
+						}							
+                    }
+            }
+        }		
+        
+        return newlyAddedWorkItems.toArray(new String[newlyAddedWorkItems.size()]);
+	}
 }
