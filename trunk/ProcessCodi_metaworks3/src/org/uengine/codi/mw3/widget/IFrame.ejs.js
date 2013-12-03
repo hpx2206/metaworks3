@@ -9,5 +9,6 @@ var org_uengine_codi_mw3_widget_IFrame = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv.css('height', '100%');
+	if(!this.object.height)
+		this.objectDiv.css('height', '100%');
 };

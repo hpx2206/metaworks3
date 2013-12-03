@@ -1243,6 +1243,13 @@ public class JavaCodeEditor extends Editor {
 		
 		fullClassName += className;
 		
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(fullClassName);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		Object o = null;
 		try {
 			o = Thread.currentThread().getContextClassLoader().loadClass(fullClassName).newInstance();
