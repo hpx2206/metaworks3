@@ -186,7 +186,7 @@ legend {display:none;}
 
 .process_map2 li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1; height:50px;}
 .process_map2 li a:hover{text-decoration:underline}
-.process_map2 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
+.process_map2 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;width:40px; max-height:40px;}
 .myapp_panel img{width:40px; max-height:40px;}
 
 
