@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,7 @@ import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
@@ -612,9 +614,44 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	public void addBasicProcess() throws Exception{
 		
-		String[] defId={"buisinesstrip/process/buisinesstrip.process", "contact/process/contactregistration.process", "holiday/process/applholiday.process", "purchasing/process/purchasingreq.process", "sales/process/sales.process", "troubleticket/process/troubleticket.process"};
-		String[] name={"출장", "연락처", "휴가", "구매", "영업", "클레임"};
+		 String[] defId={
+				    "buisinesstrip"+ File.separatorChar + "process" + File.separatorChar + "buisinesstrip.process", 
+				    "contact"+File.separatorChar+"process" + File.separatorChar + "contactregistration.process", 
+				    "holiday" + File.separatorChar + "process" + File.separatorChar + "applholiday.process", 
+				    "purchasing" + File.separatorChar + "process" + File.separatorChar + "purchasingreq.process", 
+				    "sales" + File.separatorChar + "process" + File.separatorChar + "sales.process", 
+				    "troubleticket" + File.separatorChar + "process" + File.separatorChar + "troubleticket.process",
+				    "spreadSheet" + File.separatorChar + "SpreadSheet.process",
+				    "mindmap" + File.separatorChar + "MindMap.process",
+				    "ganttchart" + File.separatorChar + "GanttChart.process",
+				    "devgoods" + File.separatorChar + "process" + File.separatorChar + "devgoods.process"};
+				  
+		String[] name={
+				    "출장", 
+				    "연락처", 
+				    "휴가", 
+				    "구매", 
+				    "영업", 
+				    "클레임",
+				    "스프레드시트",
+				    "마인드맵",
+				    "간트차트",
+				    "문서"};
 		
+		String basePath = "default" + File.separatorChar + "process" + File.separatorChar;
+		String[] upLoadedPath={
+				basePath + "buisinesstrip.png",
+				basePath + "contact.png",
+				basePath + "holiday.png",
+				basePath + "purchasing.png",
+				basePath + "sales.png",
+				basePath + "troubleticket.png",
+				basePath + "spreadSheet.png",
+				basePath + "mindmap.png",
+				basePath + "ganttchart.png",
+				basePath + "devgoods.png",
+		};
+				  
 		for(int i=0; i<defId.length; i++){
 			IProcessMap processMap = new ProcessMap();
 			processMap.setMapId(this.getGlobalCom()+"."+defId[i]);
@@ -622,6 +659,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			processMap.setName(name[i]);
 			processMap.setComCode(this.getGlobalCom());
 			processMap.setNo(i);
+			processMap.setIconFile(new MetaworksFile());
+			processMap.getIconFile().setUploadedPath(upLoadedPath[i]);
 			
 			processMap.createMe();
 			
