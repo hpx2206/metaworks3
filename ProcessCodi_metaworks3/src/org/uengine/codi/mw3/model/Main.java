@@ -191,7 +191,7 @@ public class Main {
 			eastLayout.setUseHideBar(false);
 			
 			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
+			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 168");
 			outerLayout.setNorth(processTopPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
@@ -205,10 +205,16 @@ public class Main {
 			setLayout(outerLayout);
 		
 			//향후 변경해야 할것 으로 보입니다.
+			/*
 			if("oce".equals(session.getUx()))
 				setPageNavigator(new OcePageNavigator());
 			else if("sns".equals(session.getUx()))
 				setPageNavigator(new OcePageNavigator());
+			else
+				setPageNavigator(new PageNavigator());
+			*/
+			
+			setPageNavigator(new OcePageNavigator());
 		}
 
 	}
