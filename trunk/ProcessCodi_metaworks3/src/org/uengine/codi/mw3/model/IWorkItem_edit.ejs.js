@@ -84,6 +84,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		if( session.ux != 'phone' &&  session.ux != 'pad' ){
 			$("#post_" + this.objectId).bind("keydown", {instanceFirst: this.instanceFirst}, function(event){
 				if (event.keyCode == 13 && !event.shiftKey) {
+					event.preventDefault();
 					if(  !event.data.instanceFirst ){
 						window.event.cancelBubble = true;
 						window.event.returnValue = false;
