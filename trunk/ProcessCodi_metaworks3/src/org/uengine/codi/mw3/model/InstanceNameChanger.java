@@ -18,6 +18,7 @@ public class InstanceNameChanger implements ContextAware{
 	
 	public InstanceNameChanger() {
 		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(metaworksContext.WHEN_EDIT);
 	}
 	
 	public MetaworksContext metaworksContext;
