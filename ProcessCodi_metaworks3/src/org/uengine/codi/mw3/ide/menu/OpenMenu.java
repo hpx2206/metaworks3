@@ -84,7 +84,8 @@ public class OpenMenu extends CloudMenu{
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object openWithJnlp() throws Exception{
-		String type = findType();
+		String type = this.getResourceNode().findNodeType(this.getResourceNode().getName());
+		
 		if( this.getProcessNode() != null && type.equals(TreeNode.TYPE_FILE_PROCESS)){
 			String projectId = this.getProcessNode().getProjectId();
 			String nadePath =  this.getProcessNode().getId();
@@ -97,7 +98,9 @@ public class OpenMenu extends CloudMenu{
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object code() throws Exception{
-		String type = findType();
+		
+		String type = this.getResourceNode().findNodeType(this.getResourceNode().getName());
+		
 		if(type.equals(TreeNode.TYPE_FILE_JAVA)){
 			return new ToAppend(new CloudWindow("java"), new JavaCodeEditor(this.getResourceNode()));
 		}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
@@ -110,15 +113,5 @@ public class OpenMenu extends CloudMenu{
 			throw new MetaworksException("열수 없는 형식입니다.");
 		}
 	}
-	
-	public String findType(){
-		String type = null;
-		if( this.getProcessNode() != null ){
-			type = ResourceNode.findNodeType(this.getProcessNode().getName());
-		}else if( this.getResourceNode() != null ){
-			type = ResourceNode.findNodeType(this.getResourceNode().getName());
-		}
-		return type;
-	}	
 	
 }
