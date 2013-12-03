@@ -2555,8 +2555,8 @@ select.select[class] {
 .fixed_img_row2 a:focus strong{text-decoration:underline}
 
 .oce_navi{margin-right:15px;}
-.oce_navi .depth1{-webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px; border:none !important; padding:5px 10px !important;}
-.oce_navi .depth1 .dashboard_icon{font-size:16px; margin-right:7px;}
+.oce_navi .depth1{-webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px; border:none !important; padding:3px 10px !important;}
+.oce_navi .depth1 .dashboard_icon{font-size:14px; margin-right:7px;}
 .oce_navi .depth1 span{float:left}
 .oce_navi .depth1.selected{ background:#5a9be1; color:#fff;}
 .oce_navi .depth1.selected a{ color:#fff;}
