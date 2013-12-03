@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.menu;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.Remover;
+import org.metaworks.ScriptRunner;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -25,6 +26,12 @@ public class SubMenuRun extends SubMenu {
 	@Face(displayName="Run (Normal)")
 	public Object[] run() throws Exception{
 				
+		if(true){
+			String script = "mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudIDE').run();";
+			
+			return new Object[]{new Remover(this), new ScriptRunner(script)};	
+		}
+		
 		try{
 			try{
 				classDefinition.compile();
