@@ -333,13 +333,19 @@ if(value){
 	
 	<%
 	} else if(mw3.where == 'user_menu_option') {
-	
 	%>
 		<div class="info_top_show_detail" onClick="<%=methods.showDetail.caller() %>" style="cursor:pointer;"><span class="icon-profile" style="margin-right:8px;"></span><%=mw3.localize('$Profile')%></div>
 		<!-- 노티 기능 완벽하지 않아 주석 처리 합니다. 2013.11.22 민수환
 		<div class="info_top_show_detail" onClick="<%=methods.showNotiSetting.caller() %>" style="cursor:pointer;"><span class="icon-cog2" style="margin-right:8px;"></span><%=mw3.localize('$NotiSetting')%></div>
 		-->
-		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><span class="icon-unlocked" style="margin-right:8px;"></span><%=mw3.localize('$Logout')%></div>
+	<%
+		if(value.isAdmin){
+	%>
+		<div class="info_top_show_detail" onClick="<%=methods.showAdmin.caller() %>" style="border:none; cursor:pointer;"><span class="icon-unlocked" style="margin-right:8px;"></span>관리자</div>
+	<%
+		}
+	%>
+		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><img src="images/waveStyle/i_logout.png"><%=mw3.localize('$Logout')%></div>
 	<%
 	} else {
 	%>

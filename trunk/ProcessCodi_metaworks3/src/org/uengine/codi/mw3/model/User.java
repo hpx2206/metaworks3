@@ -7,9 +7,12 @@ import javax.sql.RowSet;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -936,15 +939,17 @@ public class User extends Database<IUser> implements IUser {
 		return instance;
 	}
 
-	public Popup showMenu() throws Exception {
+	public Object[] showMenu() throws Exception {
 		
-		Employee employee = new Employee();
-		
-		employee.setEmpCode(session.getEmployee().getEmpCode());
+		IEmployee employee = session.getEmployee();
 		
 		employee.setMetaworksContext(new MetaworksContext());
 		employee.getMetaworksContext().setWhere("user_menu_option");
 		
-		return new Popup(200, 89, employee);
+		int height = 59;
+		if(employee.getIsAdmin())
+			height = 89;
+				
+		return new Object[]{new Popup(200, height, employee)};
 	}
 }

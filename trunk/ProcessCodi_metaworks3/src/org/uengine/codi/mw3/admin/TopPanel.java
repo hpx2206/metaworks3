@@ -2,13 +2,12 @@ package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
+import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.InstanceSearchBox;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.SearchBox;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TodoBadge;
-import org.uengine.codi.mw3.model.User;
 
 public class TopPanel {
 
@@ -27,12 +26,10 @@ public class TopPanel {
 		
 		todoBadge = new TodoBadge();
 		
-		IUser loginUser = new User();
-		loginUser.setUserId(session.getUser().getUserId());
-		loginUser.setName(session.getUser().getName());
-		loginUser.setMetaworksContext(metaworksContext);
-
-		setLoginUser(loginUser);
+		setLoginUser(session.getUser());
+		this.getLoginUser().setMetaworksContext(metaworksContext);
+		
+		setCompany(session.getCompany());
 		
 		/*
 		if("oce".equals(session.getUx())){
@@ -109,4 +106,13 @@ public class TopPanel {
 		public void setWindowPanel(WindowPanel windowPanel) {
 			this.windowPanel = windowPanel;
 		}
+		
+	ICompany company;
+		public ICompany getCompany() {
+			return company;
+		}
+		public void setCompany(ICompany company) {
+			this.company = company;
+		}
+	
 }

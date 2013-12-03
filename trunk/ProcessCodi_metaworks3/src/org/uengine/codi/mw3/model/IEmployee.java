@@ -271,4 +271,7 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public Object facebookSSO() throws Exception;
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Object[] showAdmin() throws Exception;
 }

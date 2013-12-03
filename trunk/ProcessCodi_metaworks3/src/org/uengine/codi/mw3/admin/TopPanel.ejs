@@ -38,14 +38,10 @@
 		 	<%=value.tray?fields.tray.here():''%>
 		 	<%=value.mainMenu?fields.mainMenu.here():''%>
 		 	
-		 	
 			<div class="info">
-		 	<% if(value.session.ux == 'oce'){ %>
-				
-			 		<img src="images/waveStyle/garuda_logo.png"/>
-		 	<% } else{%>
-			 		<img src="images/signIn/codi_logo.png"/>
-			<% } %>
+				<div style="float:left;padding-top:5px; margin-right:5px; width:130px">
+					<%=fields.company.here({when: 'logo'})%>
+				</div>
 			</div>
 			
 			

@@ -3,12 +3,13 @@ package org.uengine.codi.mw3.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.annotation.Face;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 
 public class Company extends Database<ICompany> implements ICompany {
@@ -84,7 +85,15 @@ public class Company extends Database<ICompany> implements ICompany {
 	public void setIsDeleted(String isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-
+	
+	MetaworksFile logo;
+		public MetaworksFile getLogo() {
+			return logo;
+		}
+		public void setLogo(MetaworksFile logo) {
+			this.logo = logo;
+		}
+	
 	public ICompany load() throws Exception {
 		if (getComCode() != null) {
 			ICompany company = (ICompany) databaseMe();
@@ -94,11 +103,20 @@ public class Company extends Database<ICompany> implements ICompany {
 	}
 
 	@Override
-	public Remover save() throws Exception {
+	public Object[] save() throws Exception {
+
+		if(getLogo().getDeletedPath() != null)
+			getLogo().remove();
+		
+		if(getLogo().getFileTransfer() != null && !getLogo().getFileTransfer().getFilename().isEmpty())
+			getLogo().upload();
+		else
+			getLogo().setUploadedPath(null);
 		
 		setRepMlHst("imap.gmail.com");
 		syncToDatabaseMe();
-		return new Remover(new ModalWindow());
+		
+		return new Object[]{new Remover(new ModalWindow())};
 	}
 
 	public ICompany findByName() throws Exception {
