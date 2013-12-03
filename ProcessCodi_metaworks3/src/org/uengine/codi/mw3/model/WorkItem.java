@@ -1025,13 +1025,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					newInstancePanel.load(session);
 					
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
-				}else if("oce".equals(session.getUx())){
+				}/*else if("oce".equals(session.getUx())){
 					newInstancePanel = new NewInstancePanel();
 					newInstancePanel.getMetaworksContext().setHow("sns");
 					newInstancePanel.load(session);
 					
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
-				}else
+				}*/
+				else
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail)};								
 			// 덧글
 			}else{
@@ -1237,8 +1238,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		scEvent.setTitle(instanceRef.getName());
 		scEvent.setId(instanceRef.getInstId().toString());
 		scEvent.setStart(instanceRef.getDueDate());
-		scEvent.setEnd(instanceRef.getDueDate());
-		scEvent.setAllDay(true);
+		
+		Calendar c = Calendar.getInstance();
+		c.setTime(instanceRef.getDueDate());
+
+		if(c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)
+			scEvent.setAllDay(true);
+		else
+			scEvent.setAllDay(false);
+		
 		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 		scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
 		

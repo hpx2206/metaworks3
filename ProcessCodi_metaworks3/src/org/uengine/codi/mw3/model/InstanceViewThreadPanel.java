@@ -88,8 +88,8 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		if(session.getEmployee() != null && "sns".equals(session.getEmployee().getPreferUX()))
 			how = "sns";
-		else if("oce".equals(session.getUx()))	
-			how = "sns";
+		/*else if("oce".equals(session.getUx()))	
+			how = "sns";*/
 		else if("document".equals(session.getLastPerspecteType()) || "UnlabeledDocument".equals(session.getLastPerspecteType()))
 			how = "document";
 		else
