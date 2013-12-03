@@ -824,7 +824,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setInstanceViewThreadPanel(panel);
 			
 			return this;
-		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
+		}/*else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
 			getMetaworksContext().setHow("sns");
 			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -842,7 +842,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setInstanceViewThreadPanel(panel);
 			
 			return this;
-		}else{
+		}*/
+		else{
 			getMetaworksContext().setHow("");
 			getMetaworksContext().setWhere("");
 			TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);

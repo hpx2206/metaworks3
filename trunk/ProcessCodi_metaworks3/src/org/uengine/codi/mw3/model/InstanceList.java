@@ -163,12 +163,8 @@ public class InstanceList implements ContextAware{
 			
 		}
 		if( session != null ){
-			String preferUX = session.getEmployee().getPreferUX();
-			
-			if("oce".equals(session.getUx()) ){
-				if("dashboard".equals(session.getLastPerspecteType())){
-					instanceContents.getMetaworksContext().setWhere("dashboard");
-				}
+			if("dashboard".equals(session.getLastPerspecteType())){
+				instanceContents.getMetaworksContext().setWhere("dashboard");
 			}
 		}
 		

@@ -13,10 +13,12 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.CodiProcessDefinitionFactory;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
@@ -148,11 +150,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 	}
 	public void createMe() throws Exception {
-		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
-			getIconFile().upload();
-		else
-			//getIconFile().setUploadedPath("");
-		
 		createDatabaseMe();
 		flushDatabaseMe();
 	}
@@ -206,6 +203,11 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		popup.setPanel(this);
 		popup.setName("프로세스 정보");
 		
+		if("run".equals(this.getMetaworksContext().getHow())){
+			popup.setHeight(210);
+			popup.setName("담당자 지정");
+		}
+		
 		return popup;		
 	}
 
@@ -235,9 +237,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		IProcessMap processMap = (IProcessMap)sql(ProcessMap.class, sb.toString());
 		processMap.setComCode(session.getCompany().getComCode());
 		processMap.select();
-		
-		while(processMap.next())
-			System.out.println(processMap.getName() + " = " + processMap.getIconFile().getUploadedPath());
 		
 		return processMap;
 		
@@ -474,22 +473,26 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		((Instance)instanceRef).flushDatabaseMe();
 
-		instanceView.session = session;
-		instanceView.load(instanceRef);
-		
-		InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
-		instanceListPanel.getInstanceList().load();
-
 		if("sns".equals(session.getEmployee().getPreferUX())){
+			InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+			instanceListPanel.getInstanceList().load();
+
 			return new Object[]{new Refresh(instanceListPanel), new Remover(new Popup())};
 		}else{
+			instanceView.session = session;
+			instanceView.load(instanceRef);
+
 			if(processMapList!=null && processMapList.getTitle()!=null){
 				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(title);
 				instanceView.getInstanceView().getInstanceNameChanger().change();
 				instanceView.getInstanceView().setInstanceName(title);
 			}
 			
-			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new Refresh(instanceListPanel), new Refresh(instanceView)};
+			IInstance copyOfInstance = ((Instance)instanceRef).databaseMe();
+			copyOfInstance.getMetaworksContext().setWhen("blinking");
+			
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
+			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new Refresh(instanceView)};
 		}
 
 		
