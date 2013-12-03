@@ -2,6 +2,7 @@ package org.uengine.oce;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.codi.mw3.model.AppAlfresco;
@@ -16,6 +17,7 @@ import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardWindow;
+import org.uengine.oce.dashboard.DashboardWindowLayout;
 
 public class OcePerspectivePanel extends Perspective{
 	
@@ -100,6 +102,7 @@ public class OcePerspectivePanel extends Perspective{
 	public MainPanel goSNS() throws Exception {
 		if(session != null){
 			session.setLastSelectedItem("goSns");
+			session.setLastPerspecteType("allICanSee");
 			session.setUx("sns");
 		}
 		
@@ -114,10 +117,14 @@ public class OcePerspectivePanel extends Perspective{
 	}
 	
 	@ServiceMethod
-	public ContentWindow goCalendar() throws Exception {
+	public Object[] goCalendar() throws Exception {
+
+		DashboardWindowLayout windowLayout = new DashboardWindowLayout();
+		windowLayout.setContent(new AppCalendar(session));
 		
-		// TODO : locale 처리
-		return new ContentWindow(new AppCalendar(session), "일정관리");
+		session.setLastPerspecteType("allICanSee");
+		
+		return new Object[]{session, windowLayout};
 	}
 
 	

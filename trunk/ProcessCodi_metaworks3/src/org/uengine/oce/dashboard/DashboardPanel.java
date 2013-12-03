@@ -92,6 +92,7 @@ public class DashboardPanel {
 		
 		calendar= new ScheduleCalendar();
 		calendar.session = session;
+		calendar.getMetaworksContext().setHow("small");
 		calendar.getMetaworksContext().setWhere(OceMain.WHERE_DASHBOARD);
 		calendar.load();
 

@@ -27,6 +27,7 @@ public class MyServicePanel{
 
 		if(session != null){
 			session.setLastSelectedItem("goSns");
+			session.setLastPerspecteType("allICanSee");
 			session.setUx("sns");
 		}
 		

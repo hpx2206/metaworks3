@@ -6,15 +6,15 @@ import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Session;
 
 public class DashboardWindowLayout {
-	
-	Layout layout;
-		public Layout getLayout() {
-			return layout;
+
+	Object content;
+		public Object getContent() {
+			return content;
 		}
-		public void setLayout(Layout layout) {
-			this.layout = layout;
+		public void setContent(Object content) {
+			this.content = content;
 		}
-		
+
 	DashboardWindow dashboardWindow;
 		public DashboardWindow getDashboardWindow() {
 			return dashboardWindow;
@@ -46,7 +46,7 @@ public class DashboardWindowLayout {
 //		dashboardWindow = OceMain.createInstanceListOnDashboardWindow(session);
 
 		innerLayout.setCenter(dashboardWindow);
-		setLayout(innerLayout);
+		setContent(innerLayout);
 	}
 
 }
