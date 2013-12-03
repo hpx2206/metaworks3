@@ -101,7 +101,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8");
 				
-		if(session.getEmployee().getEmail().equals(endPoint))
+		if(session.getEmployee().getEmpCode().equals(endPoint))
 			joinParam += "&password=" + moderatorPW;
 		else
 			joinParam += "&password=" + attendeePW;
