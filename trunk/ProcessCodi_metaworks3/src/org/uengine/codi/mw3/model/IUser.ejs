@@ -2,7 +2,9 @@
 	if(value && value.userId){
 		var clickAction = '';
 		
-		if(mw3.when == 'addContact'){
+		if(mw3.when == 'self_small'){
+			clickAction = methods.showMenu.caller();
+		}else if(mw3.when == 'addContact'){
 			clickAction = methods.addContact.caller();
 		}else if(mw3.when == 'addTopicFollower' || mw3.when == 'addDocumentFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower'  || mw3.when == 'addRoleFollower' || mw3.when == 'addDeptFollower' || mw3.when == 'addPicker'){
 			clickAction = methods.addFollower.caller();
@@ -163,7 +165,7 @@
 <%		
 		}else if(mw3.where == 'topPanel'){
 %>
-		<div class="user">		
+		<div class="user" onclick="<%=clickAction%>">		
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 				<%if(value.size!='small'){%><div class="followers_name" title="<%=value.name%>"><%=value.name%></div><%}%>
