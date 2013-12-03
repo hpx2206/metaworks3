@@ -74,7 +74,7 @@
 	<%		
 				if(session && session.employee && session.employee.approved && !session.employee.guest){
 	%>
-			<a class="<%= value.type=='etc'?'etc_btn_on':'etc_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%><div class="comment_select"></div></span></a>
+			<a class="<%= value.type=='etc'?'etc_btn_on':'etc_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity">앱<div class="comment_select"></div></span></a>
 	<%
 				}		
 			}else{
