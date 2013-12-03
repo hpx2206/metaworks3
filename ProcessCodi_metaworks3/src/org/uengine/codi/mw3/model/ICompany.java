@@ -1,20 +1,27 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 
 @Table(name = "COMTABLE")
-@Face(displayName="$Company", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-options={"fieldOrder"}, values={"repMail,repMlPwd"})
+@Face(displayName="$Company", 
+	  ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+	  ejsPathMappingByContext=
+			{
+				"{when: 'logo', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ICompany.ejs'}",
+			},		
+	  options={"fieldOrder"}, values={"logo,repMail,repMlPwd"})
 public interface ICompany extends IDAO {
 	@Id
 	@Hidden
@@ -40,12 +47,13 @@ public interface ICompany extends IDAO {
 	public void setIsDeleted(String deleted);
 
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이메일을 입력하세요."),
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, condition="repMail", options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
 	})
+	
 	@Face(options={"width"}, values={"300"})
 	public String getRepMail();
 	public void setRepMail(String repMail);
+	
 	@Hidden
 	public String getRepMlHst();
 	public void setRepMlHst(String repMlHst);
@@ -54,11 +62,17 @@ public interface ICompany extends IDAO {
 	public String getRepMlPwd();
 	public void setRepMlPwd(String repMlPwd);
 	
+	@Face(displayName="회사로고")
+	@ORMapping(objectFields={"uploadedPath"}, databaseFields={"logoPath"})
+	public MetaworksFile getLogo();
+	public void setLogo(MetaworksFile logo);
+
 	//@ServiceMethod
 	public ICompany load() throws Exception;
 	
-	@ServiceMethod(callByContent=true, validate=true)
-	public Remover save() throws Exception;
+	@Face(displayName="설정")
+	@ServiceMethod(callByContent=true, validate=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] save() throws Exception;
 	
 	public ICompany findByAlias() throws Exception;
 }

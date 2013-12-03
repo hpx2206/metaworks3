@@ -31,7 +31,6 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
@@ -613,8 +612,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	public void addBasicProcess() throws Exception{
-		
-		 String[] defId={
+	
+		String[] defId={
 				    "buisinesstrip"+ File.separatorChar + "process" + File.separatorChar + "buisinesstrip.process", 
 				    "contact"+File.separatorChar+"process" + File.separatorChar + "contactregistration.process", 
 				    "holiday" + File.separatorChar + "process" + File.separatorChar + "applholiday.process", 
@@ -1118,7 +1117,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] showDetail() throws Exception {
-		return new Object[]{new Remover(new Popup(), true), new ModalWindow(this.editEmployeeInfo(), 700, 560, "$EditProfile")};
+		return new Object[]{new Remover(new Popup(), true), new ModalWindow(this.editEmployeeInfo(), 700, 580, "$EditProfile")};
 	}
 	
 	@Override
@@ -1488,5 +1487,27 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session.fillUserInfoToHttpSession();
 		
 		return new StartCodi(session);
+	}
+	
+	public Object[] showAdmin() throws Exception {
+		Company company = new Company();
+		company.setComCode(session.getEmployee().getGlobalCom());
+		company.copyFrom(company.findByCode());
+		company.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		company.setLogo(new MetaworksFile());
+
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setPanel(company);
+		modalWindow.setWidth(400);
+		modalWindow.setHeight(220);
+		modalWindow.setTitle("관리자");
+
+		return new Object[]{ modalWindow, new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE)};
+		
+		/*
+		modalWindow.setMetaworksContext(new MetaworksContext());
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		return modalWindow;
+		*/
 	}
 }
