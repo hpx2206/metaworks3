@@ -4,10 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 
 @Face(displayName="ModalWindow")
 public class ModalWindow implements ContextAware {
@@ -130,5 +134,11 @@ public class ModalWindow implements ContextAware {
 		public void setCallback(Map<String, Object> callback) {
 			this.callback = callback;
 		}
-	
+
+	@Hidden
+	@ServiceMethod(eventBinding=EventContext.EVENT_CLOSE, bindingHidden=true)
+	public Object close() {
+		return new Remover(ServiceMethodContext.TARGET_SELF);
+	}
+
 }
