@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.ScriptRunner;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -78,9 +79,16 @@ public class SubMenuFile extends SubMenu {
 		return new Object[]{new ContentWindow(), new Remover(this)};
 	}
 
-	@ServiceMethod
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="Save")
 	public Object save() throws Exception {
+		
+		if(true){
+			String script = "mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudIDE').save();";
+			
+			return new Object[]{new Remover(this), new ScriptRunner(script)};	
+		}
+
 		classDefinition.processManager = processManager;
 		classDefinition.save();
 		
