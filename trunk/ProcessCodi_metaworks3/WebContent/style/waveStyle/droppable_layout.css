@@ -2555,8 +2555,10 @@ select.select[class] {
 .fixed_img_row2 a:focus strong{text-decoration:underline}
 
 .oce_navi{margin-right:15px;}
-.oce_navi .depth1{ padding-left:10px; -webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px;}
-.oce_navi .depth1.selected{ background:#5a9be1;}
+.oce_navi .depth1{-webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px; border:none !important; padding:5px 10px !important;}
+.oce_navi .depth1 .dashboard_icon{font-size:16px; margin-right:7px;}
+.oce_navi .depth1 span{float:left}
+.oce_navi .depth1.selected{ background:#5a9be1; color:#fff;}
 .oce_navi .depth1.selected a{ color:#fff;}
 
 .oce_h1{ font-size:16px; margin:10px; margin-top:6px;margin-bottom:6px;font-weight:bold;float:left; margin-left:15px; padding-left:30px; background:url(../../images/waveStyle/control_play_blue.png) 5px 4px no-repeat;}
