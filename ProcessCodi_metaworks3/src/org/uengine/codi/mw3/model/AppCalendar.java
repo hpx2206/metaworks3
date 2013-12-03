@@ -26,8 +26,8 @@ public class AppCalendar {
 			e.printStackTrace();
 		}
 		
-		ContentWindow contentWindow = new ContentWindow();
-		contentWindow.setTitle("$New");
+		InstanceListWindow instanceListWindow = new InstanceListWindow();
+		instanceListWindow.setPanel(instanceListPanel);
 		
 		NewInstancePanel instancePanel = new NewInstancePanel();
 		instancePanel.session = session;
@@ -37,10 +37,14 @@ public class AppCalendar {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		layout.setWest(instanceListPanel);
+
+		ContentWindow contentWindow = new ContentWindow();
+		contentWindow.setTitle("$New");
+		contentWindow.setPanel(instancePanel);
+
+		layout.setWest(instanceListWindow);
 		layout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
-		layout.setCenter(instancePanel);
+		layout.setCenter(contentWindow);
 		
 		this.setContent(layout);
 	}
