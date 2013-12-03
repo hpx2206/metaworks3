@@ -1005,3 +1005,6 @@ create table bpm_noti(
 
 alter table filepathinfo add column warFileName varchar(30);
 alter table filepathinfo add column sqlFileName varchar(30);
+
+-- 2013.12.03 회사 로고 경로 컬럼 추가
+alter table comtable add column logoPath varchar(100);
