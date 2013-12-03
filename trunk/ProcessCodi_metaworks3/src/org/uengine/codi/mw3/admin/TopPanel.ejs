@@ -38,6 +38,17 @@
 		 	<%=value.tray?fields.tray.here():''%>
 		 	<%=value.mainMenu?fields.mainMenu.here():''%>
 		 	
+		 	
+			<div class="info">
+		 	<% if(value.session.ux == 'oce'){ %>
+				
+			 		<img src="images/waveStyle/garuda_logo.png"/>
+		 	<% } else{%>
+			 		<img src="images/signIn/codi_logo.png"/>
+			<% } %>
+			</div>
+			
+			
 		 	<!--
 			<div class="info">
 				<div class="user">
