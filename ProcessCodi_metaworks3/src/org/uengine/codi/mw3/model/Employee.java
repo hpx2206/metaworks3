@@ -614,16 +614,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public void addBasicProcess() throws Exception{
 	
 		String[] defId={
-				    "buisinesstrip"+ File.separatorChar + "process" + File.separatorChar + "buisinesstrip.process", 
-				    "contact"+File.separatorChar+"process" + File.separatorChar + "contactregistration.process", 
-				    "holiday" + File.separatorChar + "process" + File.separatorChar + "applholiday.process", 
-				    "purchasing" + File.separatorChar + "process" + File.separatorChar + "purchasingreq.process", 
-				    "sales" + File.separatorChar + "process" + File.separatorChar + "sales.process", 
-				    "troubleticket" + File.separatorChar + "process" + File.separatorChar + "troubleticket.process",
-				    "spreadSheet" + File.separatorChar + "SpreadSheet.process",
-				    "mindmap" + File.separatorChar + "MindMap.process",
-				    "ganttchart" + File.separatorChar + "GanttChart.process",
-				    "devgoods" + File.separatorChar + "process" + File.separatorChar + "devgoods.process"};
+				    "buisinesstrip/process/buisinesstrip.process", 
+				    "contact/process/contactregistration.process", 
+				    "holiday/process/applholiday.process", 
+				    "purchasing/process/purchasingreq.process", 
+				    "sales/process/sales.process", 
+				    "troubleticket/process/troubleticket.process",
+				    "spreadSheet/SpreadSheet.process",
+				    "mindmap/MindMap.process",
+				    "ganttchart/GanttChart.process",
+				    "devgoods/process/devgoods.process"};
 				  
 		String[] name={
 				    "출장", 
@@ -637,7 +637,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				    "간트차트",
 				    "문서"};
 		
-		String basePath = "default" + File.separatorChar + "process" + File.separatorChar;
+		String basePath = "default/process/";
 		String[] upLoadedPath={
 				basePath + "buisinesstrip.png",
 				basePath + "contact.png",
