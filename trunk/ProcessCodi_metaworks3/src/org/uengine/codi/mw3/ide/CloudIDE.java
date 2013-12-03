@@ -11,6 +11,7 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.IDETopPanel;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
@@ -331,4 +332,21 @@ public class CloudIDE {
 
 		return new ModalWindow(openResource, 600, 450, "Open Resource");
 	}
+	
+	@ServiceMethod(payload={"currentEditorId", "workspace"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_POPUP)
+	public Object run() throws Exception{
+		
+		editor.workspace = this.getWorkspace();
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(0);
+		modalWindow.setHeight(0);
+						
+		modalWindow.setTitle("실행");
+		modalWindow.setPanel(editor.run());
+		
+		return modalWindow;
+	}
+
 }

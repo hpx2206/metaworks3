@@ -11,13 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.metaworks.FieldDescriptor;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.WebFieldDescriptor;
-import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CodeAssist;
 import org.metaworks.widget.Window;
@@ -627,7 +625,6 @@ public class JavaCodeEditor extends Editor {
 	public ArrayList<String> findThisClass(){
 		ArrayList<String> classInfo = new ArrayList<String>();
 		
-		
 		JavaParser parser = new JavaParser();
 		parser.setContent(this.getContent());
 		parser.create();
@@ -1226,5 +1223,85 @@ public class JavaCodeEditor extends Editor {
 		*/	
 		
 		return codeAssist;
+	}
+	 
+	@Override
+	public Object run() {
+		//complie();
+		
+		JavaParser parser = new JavaParser();
+		parser.setContent(this.getContent());
+		parser.create();
+
+		
+		String packageName = parser.getPackageName();
+		String className = this.getResourceNode().getName().substring(0, this.getResourceNode().getName().indexOf("."));
+		String fullClassName = "";
+		
+		if(packageName != null)
+			fullClassName += packageName + ".";
+		
+		fullClassName += className;
+		
+		Object o = null;
+		try {
+			o = Thread.currentThread().getContextClassLoader().loadClass(fullClassName).newInstance();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return o;
+		/*
+		this.get
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		*/
+	}
+	
+	public void complie(){
+		Project project = workspace.findProject(this.getResourceNode().getProjectId());
+		
+		ArrayList<JavaCodeError> errorList = new ArrayList<JavaCodeError>();
+
+		CloudClassLoader ccl = new CloudClassLoader();
+
+		List<String> buildClass = new ArrayList<String>();
+		List<String> classPath = ccl.makeClassPath(project.getBuildPath());
+
+		buildClass.add(this.getResourceNode().getPath());
+
+		JavaBatchBuilder jBatchBuilder = new JavaBatchBuilder();
+		jBatchBuilder.setClassPath(classPath);
+		jBatchBuilder.setSourcePath(project.getBuildPath().getSources().get(0)
+				.getPath());
+		jBatchBuilder.setOutputPath(project.getBuildPath()
+				.getDefaultBuildOutputPath().getPath());
+		jBatchBuilder.setBuildClass(buildClass);
+
+		System.out.println("build : " + jBatchBuilder.build(errorList));
+
+		for (JavaCodeError error : errorList) {
+			System.out.println("[ERROR] " + error.getLineNumber() + ":"
+					+ error.getMessage());
+
+			/*
+			 * if(!error.) error.setType(JavaCodeError.TYPE_WARNING);
+			 */
+
+//			errorList.add(error);
+		}
 	}
 }

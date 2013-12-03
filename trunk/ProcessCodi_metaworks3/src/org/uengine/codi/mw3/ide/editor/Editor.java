@@ -298,4 +298,9 @@ public class Editor {
 		
 		return javaParser;
 	}
+	
+	@ServiceMethod(payload={"resourceNode"})
+	public Object run(){
+		return null;
+	}
 }
