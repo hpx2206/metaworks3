@@ -129,6 +129,7 @@ public class OcePageNavigator extends PageNavigator {
 	public MainPanel goSns() throws Exception {
 		
 		if(session != null){
+			session.setLastPerspecteType("allICanSee");
 			session.setLastSelectedItem("goSns");
 			session.setUx("sns");
 		}
