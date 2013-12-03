@@ -15,6 +15,7 @@ var org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor = function(objectId, cla
 	this.lastCommandString = "";
 	this.assistType = "";
 	
+	/*
 	if(mw3.importScript('scripts/ace/build/src/ace.js')){
 		mw3.importScript('scripts/ace/build/src/theme-eclipse.js');
 		mw3.importScript('scripts/ace/build/src/mode-javascript.js');
@@ -23,10 +24,11 @@ var org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor = function(objectId, cla
 		mw3.importScript('scripts/ace/build/src/mode-html.js', function(){mw3.getFaceHelper(objectId).load();});
 		
 	}else{
+	*/
+	
 		var faceHelper = this;
-		
 		faceHelper.load();
-	}
+	//}
 };
 
 org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
@@ -65,8 +67,8 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		faceHelper.editor = ace.edit(faceHelper.objectDivId);
 		faceHelper.editor.setTheme("ace/theme/eclipse");
 
-		var JavaMode = require("ace/mode/java").Mode;
-		faceHelper.editor.getSession().setMode(new JavaMode());
+		faceHelper.editor.setTheme("ace/theme/textmate");
+		faceHelper.editor.getSession().setMode("ace/mode/java");		
 
 		if(!faceHelper.object.loaded){
 			faceHelper.object.content = mw3.call(objectId, 'load');

@@ -96,8 +96,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		var objectId = this.objectId;
 		var object = this.object;
 		
-		console.log(this.when);
-		
 		var pre = this.objectDiv.children('pre');
 		
 		if(this.when == mw3.WHEN_NEW || this.when == mw3.WHEN_EDIT)	// editable
