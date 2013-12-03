@@ -481,6 +481,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		main.setId(projectName);
 		main.setPath(mainPath);
 		main.load();
+		main.changeProject(tenantId);
 
 		// 아래에서 this 는 위에 project 값
 
