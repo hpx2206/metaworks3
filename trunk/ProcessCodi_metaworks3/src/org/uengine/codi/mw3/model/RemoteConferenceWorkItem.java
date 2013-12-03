@@ -95,9 +95,21 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		String meetingID = databaseMe().getExt1();
 		String attendeePW = databaseMe().getExt2();
+		String moderatorPW = databaseMe().getExt3();
 		String title = databaseMe().getTitle();
+		String endPoint = databaseMe().getEndpoint();
+		String joinParam=null;
 		
-		String joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8") + "&password=" + attendeePW;
+		System.out.println(session.getEmployee().getEmail());
+		
+		joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8");
+				
+		if(session.getEmployee().getEmail().equals(endPoint))
+			joinParam += "&password=" + moderatorPW;
+		else
+			joinParam += "&password=" + attendeePW;
+		
+		
 		String joinCheckSum = hex_sha1("join" + joinParam + salt);
 		String joinURI = "join?" + joinParam + "&checksum=" + joinCheckSum;
 		
@@ -237,7 +249,8 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		is.close();
 		
-		url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordID;
+		//url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordID;
+		url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/presentation/playback.html?meetingId=" + recordID;
 		
 		IFrame iframe = new IFrame();
 		iframe.setSrc(url);
