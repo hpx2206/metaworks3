@@ -56,8 +56,8 @@ public class PortraitServlet extends HttpServlet {
 			String empCode = portraitName.substring(0, pos);
 			String thumnailName = portraitPath + File.separatorChar + empCode + ".thumnail.jpg";
 			String srcName = portraitPath + File.separatorChar + empCode + ".jpg";
-			String unknownName = portraitPath + File.separatorChar + "unknown_user.gif";
-			//String unknownName = this.getServletContext().getRealPath("/") +  "images/portrait/unknown_user.gif";
+			//String unknownName = portraitPath + File.separatorChar + "unknown_user.gif";
+			String unknownName = this.getServletContext().getRealPath("/") +  "images" + File.separatorChar +"portrait" + File.separatorChar +"unknown_user.gif";
 			
 			// 쎔네일 파일 존재 확인
 			File thumnailFile = new File(thumnailName);
