@@ -626,6 +626,7 @@ public class WorkItemHandler implements ContextAware{
 
 		mapForITool.put(ITool.ITOOL_INSTANCEID_KEY, getInstanceId());
 		mapForITool.put(ITool.ITOOL_TRACINGTAG_KEY, getTracingTag());
+		mapForITool.put(ITool.ITOOL_TASKID_KEY, getTaskId().toString());
 		mapForITool.put(ITool.ITOOL_SESSION_KEY, session);
 		mapForITool.put(ITool.ITOOL_PROCESS_MANAGER_KEY, processManager);
 		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT1_KEY, humanActivity.getExtValue1());
