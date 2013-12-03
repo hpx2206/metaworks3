@@ -936,4 +936,15 @@ public class User extends Database<IUser> implements IUser {
 		return instance;
 	}
 
+	public Popup showMenu() throws Exception {
+		
+		Employee employee = new Employee();
+		
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		
+		employee.setMetaworksContext(new MetaworksContext());
+		employee.getMetaworksContext().setWhere("user_menu_option");
+		
+		return new Popup(200, 89, employee);
+	}
 }

@@ -121,4 +121,7 @@ public interface IUser extends IDAO{
 	public void approvedSubscribe() throws Exception;
 	
 	public IUser findByDept(Dept dept) throws Exception;
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Popup showMenu() throws Exception;
 }
