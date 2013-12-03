@@ -53,15 +53,17 @@ public class Workspace {
 		
 		// TODO codi 관리자는 root가 보인다.
 		// 앱의 루트 불러오기 - codebase + projectId + "root"
-		String projectId = MetadataBundle.getProjectId();
+		//String projectId = MetadataBundle.getProjectId();
+		String projectId = "codi";
 		
-		String mainPath = MetadataBundle.getProjectBasePath(projectId, tenantId);
+		String mainPath = MetadataBundle.getProjectBasePath(null, tenantId);
 		CodiFileUtil.mkdirs(mainPath);
 		
-		if(!"1".equals(StartCodi.USE_OCE)){
+		if(true || !"1".equals(StartCodi.USE_OCE)){
 			// OCE 모드에서 codi제거
 			Project main = new Project();
 			main.setId(projectId);
+			main.setName(projectId);
 			main.setPath(mainPath);
 			main.load();
 			projects.add(main);		
