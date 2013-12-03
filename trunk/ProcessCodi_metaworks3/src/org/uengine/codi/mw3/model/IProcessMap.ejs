@@ -11,6 +11,7 @@ if(mw3.when == 'filter'){
 <%
 	if(value){
 		if(mw3.when == 'new' || mw3.when == 'edit'){
+			if(mw3.how != 'run'){
 %>
 	<div class="form_table2"> 
 		<table style="width: 100%;" border="1" cellspacing="0" >	
@@ -36,7 +37,9 @@ if(mw3.when == 'filter'){
 		<%=fields.iconColor.here()%>
 		<div></div>
 	</div>
-	
+<%
+			}
+%>
 	<%=fields.roleMappingPanel.here()%>
 	
 	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
