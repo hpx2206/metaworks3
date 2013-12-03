@@ -65,6 +65,8 @@ org_metaworks_component_TreeNode.prototype = {
 			this.nodeDiv.children().children('span').unbind();
 		}
 	},
+	
+	/*
 	startLoading : function(){
 		
 	},
@@ -72,6 +74,7 @@ org_metaworks_component_TreeNode.prototype = {
 	endLoading : function(){
 		this.nodeDiv.removeClass('loading');		
 	},
+	*/
 	
 	showStatus : function(message){
 		if('expand DONE.' == message){
