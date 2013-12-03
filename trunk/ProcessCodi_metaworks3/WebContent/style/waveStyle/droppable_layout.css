@@ -2162,7 +2162,7 @@ vertical-align: middle;}
 #tabIcon_LinkedIn{background: url(../../images/waveStyle/tab_in.png) 2px no-repeat; padding-left:22px;}
 #tabIcon_Metoday{background: url(../../images/waveStyle/tab_metoday.png) 2px no-repeat; padding-left:22px;}
 
-.leftMenuPanel_ide{height:100%;float:left;width:90px; border-right:1px solid #B4B3B5; background:#F6F6F6;}
+.leftMenuPanel_ide{height:100%;float:left;width:90px; border-right:1px solid #B4B3B5; background:#eeeeee;}
 .leftMenuTab_ide{padding:3px 8px; border:1px solid #B4B3B5; border-left:none; border-right:none; background:url(../../images/waveStyle/bottomShadowOpen.png) 100% 50% repeat-x; cursor: pointer}
 .leftMenuPanel_ide .closed{background:url(../../images/waveStyle/bottomShadowClose.png) 100% 50% repeat-x !important;}
 .leftMenuTabInner_ide{padding:8px;}
