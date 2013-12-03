@@ -74,6 +74,11 @@
 		<!-- user css -->
 		<link rel="stylesheet" type="text/css" href="style/waveStyle/droppable_layout.css" />
 
+		<!-- smart tab -->
+		<link rel="stylesheet" type="text/css" href="style/smartTab.css">				
+		<script type="text/javascript" src="scripts/jquery/jquery.smartTab.js"></script>
+
+
 		<!-- for open graph -->
 		<!-- 
 		<script type="text/javascript" src="scripts/jquery/jquery.contextMenu.js"></script>
@@ -379,6 +384,11 @@
 					});
 		 		}
 		 		
+		 		mw3.showValidation = function(objId, inputObjectId, isValid, message){
+		 			if(!isValid)
+		 				mw3.alert(message);
+				};
+				
 		 		mw3.localize = function(){		 		
 		 			var message = arguments[0];
 					
@@ -410,7 +420,6 @@
 						message = message.replace("%s", argument);
 					}
 					
-					//console.log(message);
 					return message;
 		 		}
 		 		
@@ -448,64 +457,13 @@
                     
                     return key;     
                 }
- 				
- 				/*
- 				var metadataPage = new MetaworksObject({
-                    __className : "org.metaworks.metadata.MetadataBundle"
-                }, 'body').loadProperty();
- 				*/ 				
+
  				var startcodi = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.StartCodi",
-             		key : 'loader'
+					key : 'loader'             
                 }, 'body');
- 				
-//  				var object = null;
-//  				var instanceId = request.getParameter("instanceId");
-
-//  				if(instanceId == null || typeof instanceId == 'undefined' || instanceId.length == 0){
-//  					var object = {
-// 						fullClassName: 'org.uengine.codi.mw3.StartCodi', 								
-// 						__className: 'org.uengine.codi.mw3.common.GatewayRunner'
-// 					};
- 					
-//  					mw3.locateObject(object, null, 'body').call('run');
-//  				}else{
-//  					object = {
-// 	 					__className:"org.uengine.codi.mw3.model.InstanceViewPublic"			,
-// 	 					instanceId : instanceId
-//  					}
- 					
-//  					var mainPage = new MetaworksObject(object, 'body');
-//  				}
- 				
-				
+                
 				mw3.onLoadFaceHelperScript();
-				
-// 				document.oncontextmenu = function() { return false; };
-// 				window.onbeforeunload= function(){
-// 				    return 'You are about to leave this page, OK?';
-// 				};
-				
-				/*
-				sso test
-				$.ajax('http://192.168.212.76/uengine-web/oauth/checkToken.jsp?access_token=541b7995ec557ed2396a4a91eb3ed576&user_id=paasManager', 							
-						{
-							async: false, 
-							success:function(data, textStatus, jqXHR) {
-								console.log('success');
-								console.log(jqXHR);
-								console.log(textStatus);
-								console.log(data);								
-							},
-							error:function(jqXHR, textStatus, errorThrown){
-								console.log('error');
-								console.log(jqXHR);
-								console.log(textStatus);
-								console.log(errorThrown);
-							}
-						}
-					);
-				*/
 			});
 		</script>
 	</head>
