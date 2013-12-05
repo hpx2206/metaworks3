@@ -1,0 +1,29 @@
+<%
+    if(value){
+        if(value.regionNode){
+%>
+    <ul>
+<%
+            for (var i=0; i<value.regionNode.length; i++){
+                if(typeof options == 'undefined') 
+                    options = objectMetadata;
+                    
+                options['index'] = i;
+                options['htmlTag'] =  'li';
+%>
+                <%=mw3.locateObject(value.regionNode[i], value.regionNode[i].__className, null, options)%>    
+<%
+                mw3.addBeanProperty(value.__objectId, '.regionNode[' + i + ']');
+            }
+%>
+        </ul>
+        
+            <%
+            if(!value.selectedMore) {
+            %>
+                <span class="west_more_btn" style="display:none"><a onClick="<%=methods.moreView.caller()%>" href="#"><%=mw3.localize('$More')%></a></span>
+<%
+            }
+        }
+    }
+%>  

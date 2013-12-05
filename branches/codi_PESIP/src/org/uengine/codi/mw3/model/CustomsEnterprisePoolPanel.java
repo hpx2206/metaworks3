@@ -1,0 +1,18 @@
+package org.uengine.codi.mw3.model;
+
+public class CustomsEnterprisePoolPanel {
+	WorldMap worldMap;
+		public WorldMap getWorldMap() {
+			return worldMap;
+		}
+	
+		public void setWorldMap(WorldMap worldMap) {
+			this.worldMap = worldMap;
+		}
+
+	public void loadWorldMap() throws Exception {
+		worldMap = new WorldMap();
+		worldMap.loadMapInfo();
+
+	}
+}
