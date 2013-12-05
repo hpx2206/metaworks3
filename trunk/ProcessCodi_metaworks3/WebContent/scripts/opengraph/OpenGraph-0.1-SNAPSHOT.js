@@ -337,6 +337,9 @@ paper.foreignObject('<div>test</div>', 100, 100, 50, 50);
             cursor: "default",
             cx: 0,
             cy: 0,
+            "fill-r": .5,
+            "fill-cx": .5,
+            "fill-cy": .5,
             fill: "#fff",
             "fill-opacity": 1,
             font: '10px "Arial"',
@@ -3163,6 +3166,7 @@ paper.foreignObject('<div>test</div>', 100, 100, 50, 50);
                 if (availableAnimAttrs[has](attr) || element.paper.customAttributes[has](attr)) {
                     from[attr] = element.attr(attr);
                     (from[attr] == null) && (from[attr] = availableAttrs[attr]);
+
                     to[attr] = params[attr];
                     switch (availableAnimAttrs[attr]) {
                         case nu:
@@ -3853,8 +3857,9 @@ window.Raphael.svg && function (R) {
 
         if (!el) {
             gradient = Str(gradient).replace(R._radial_gradient, function (all, _fx, _fy) {
-                //type = "radial";
-                if (_fx && _fy) {
+                type = "radial";
+
+                /*
                     fx = toFloat(_fx);
                     fy = toFloat(_fy);
                     var dir = ((fy > .5) * 2 - 1);
@@ -3863,8 +3868,13 @@ window.Raphael.svg && function (R) {
                         fy != .5 &&
                         (fy = fy.toFixed(5) - 1e-5 * dir);
                 }
+                */
+                fx = _fx;
+                fy = _fy;
+
                 return E;
             });
+
             gradient = gradient.split(/\s*\-\s*/);
             if (type == "linear") {
                 var angle = 0;
@@ -3886,7 +3896,11 @@ window.Raphael.svg && function (R) {
                     vector[3] = 0;
                 }
             }
+
+
+
             var dots = R._parseDots(gradient);
+
             if (!dots) {
                 return null;
             }
@@ -3898,6 +3912,7 @@ window.Raphael.svg && function (R) {
 
             if (!element.gradient) {
                 el = $(type + "Gradient", {id: id});
+
                 element.gradient = el;
                 $(el, type == "radial" ? {
                     fx: fx,
@@ -3916,6 +3931,17 @@ window.Raphael.svg && function (R) {
                         "stop-color": dots[i].color || "#fff"
                     }));
                 }
+            }
+
+            if(element.attrs['fill-r']){
+                el.setAttribute('r', element.attrs['fill-r']);
+            }
+            if(element.attrs['fill-cx']){
+                el.setAttribute('cx', element.attrs['fill-cx']);
+            }
+
+            if(element.attrs['fill-cy']){
+                el.setAttribute('cy', element.attrs['fill-cy']);
             }
         }
         $(o, {
@@ -4122,6 +4148,7 @@ window.Raphael.svg && function (R) {
             attrs = o.attrs,
             vis = node.style.visibility;
         node.style.visibility = "hidden";
+
         for (var att in params) {
             if (params[has](att)) {
                 if (!R._availableAttrs[has](att)) {
@@ -5376,6 +5403,8 @@ window.Raphael.vml && function (R) {
         // res.paper.canvas.style.display = E;
     },
     addGradientFill = function (o, gradient, fill) {
+        console.log('addGradientFill 3');
+
         o.attrs = o.attrs || {};
         var attrs = o.attrs,
             pow = Math.pow,
@@ -10449,11 +10478,13 @@ OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		'stroke': '#62a716',
-		"stroke-width" : 1.5,
-		'r'     : 6,
-        fill: '#62a716',
-        'fill-opacity': 0.2
+		'fill-r' : 1,
+	    'fill-cx' : .1,
+	    'fill-cy' : .1,
+		"stroke-width" : 1.2,
+		'r'     : 10,
+        fill: 'r(.1, .1)#FFFFFF-#FFFFCC',
+        'fill-opacity': 1
 	});
 
 	return this.geom;
@@ -10498,11 +10529,14 @@ OG.shape.bpmn.A_Task.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		"r": 10,
-		"stroke-width" : 2,
-		"stroke" : "#03689A",
-		fill: '#03689A',
-        'fill-opacity': 0.2
+	//fill: 'r[(10, 10)]#FFFFFF-#FFFFCC',
+	    'fill-r' : 1,
+	    'fill-cx' : .1,
+	    'fill-cy' : .1,
+		"stroke-width" : 1.2,
+		fill: 'r(.1, .1)#FFFFFF-#FFFFCC',
+        'fill-opacity': 1,
+        r : '10'
 	});
 
 	return this.geom;
@@ -11010,11 +11044,8 @@ OG.shape.bpmn.E_End.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Circle([50, 50], 50);
 	this.geom.style = new OG.geometry.Style({
-		"stroke" : "#AA0000",
-		"stroke-width"  : 2,
-		'label-position': 'bottom',
-		fill : "#AA0000",
-		"fill-opacity" : 0.2
+		"stroke-width"  : 3,
+		'label-position': 'bottom'
 	});
 
 	return this.geom;
@@ -12146,10 +12177,7 @@ OG.shape.bpmn.E_Start.prototype.createShape = function () {
 	this.geom = new OG.geometry.Circle([50, 50], 50);
 	this.geom.style = new OG.geometry.Style({
 		'label-position': 'bottom',
-		fill:'green',
-		"fill-opacity": 0.2,
-		"stroke":"green",
-		"stroke-width" : 2
+		"stroke-width" : 1.5
 	});
 
 	return this.geom;
@@ -17251,10 +17279,9 @@ OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
 
         _rect1.attr({
             "stroke" : element.shape.geom.style.map.stroke,
-            "stroke-width" : 2,
+            "stroke-width" : 1.2,
             fill: "white",
             "fill-opacity": 0,
-            cursor: "pointer",
             "shape-rendering": "crispEdges"
         })
 
@@ -22515,7 +22542,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		 */
 		DEFAULT_STYLE: {
 			SHAPE         : { cursor: "default" },
-			GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center"  },
+			GEOM          : { stroke: "black", "fill-r": ".5", "fill-cx": ".5", "fill-cy": ".5", fill: "white", "fill-opacity": 0, "label-position": "center"  },
 			TEXT          : { stroke: "none", "text-anchor": "middle" },
 			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
