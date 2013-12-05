@@ -1,0 +1,121 @@
+<%
+	if(value!=null){
+		if(mw3.how == 'action'){
+%>
+			<div class="toolbar">
+			    <ul>
+			      <!-- 나중에 이미지 작업 손가락 좋아요로 수정해야함 -->
+                    <li id="wih_btn_item_like">
+                        <a href="#" onClick="<%=methods.addLikeInstance.caller()%>">
+                            <span style="color: orange; "><img src="images/waveStyle/like.png" border="0" valign=center></span>
+                            <span style="color: orange; "><%=mw3.localize("$like")%></span>
+                        </a>
+                    </li>
+			    
+			        <!-- PSEIP 에서는 이 란이 제대로 기능이 동작할 때 여는 것으로 합니다. 때문에 주석
+			        <li id="wih_btn_item_Information">
+			        	<a href="#" onClick="<%=methods.monitor.caller()%>">
+			        		<span id="method_<%=objectId%>_monitor" class="toolbarIcon"><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
+			        		<span><%=mw3.localize("$process")%></span>
+			        	</a>
+			        </li>
+			        -->
+			        <li id="wih_btn_item_GanttChart">
+			        	<a href="#" onClick="<%=methods.schedule.caller()%>">
+			        		<span style="color: black; " class="toolbarIcon"><img src="images/waveStyle/i_gantt.png" border="0" valign=center></span>
+			        		<span style="color: black; "><%=mw3.localize("$chatInformation")%></span>
+			        	</a>
+			        </li>
+			        <li id="wih_btn_sendMail" style="display: none; ">
+			        	<a href="#" onClick="sendMail()">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_mail.png" border="0"></span>
+			        		<span><%=mw3.localize("$Mail")%></span>
+			        	</a>
+			        </li>
+			        <li id="wih_btn_reply" style="display: block; ">
+			        	<a href="#" onClick="<%=methods.newSubInstance.caller()%>">
+			        		<span style="color: black; cursor:hand " class="toolbarIcon"><img src="images/waveStyle/i_reply.png" border="0"></span>
+			        		<span><%=mw3.localize("$activity")%></span>
+			        	</a>
+			        </li>
+			        <li id="wih_btn_edit" style="display: none; ">
+			        	<a href="">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_edit.png" border="0"></span>
+			        		<span><%=mw3.localize("$Edit")%></span>
+			        	</a>
+			        </li>
+			        <li id="wih_btn_delete" style="display: none; ">
+			        	<a href="#" onClick="deleteMail()">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_delete.png" border="0"></span>
+			        		<span><%=mw3.localize("$Deletemail")%></span>
+			        	</a>
+			        </li>
+			        <li id="wih_btn_item_delete" style="display: block; ">
+			        	<a href="#" onClick="<%=methods.remove.caller()%>">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_delete.png" border="0"></span>
+			        		<span><%=mw3.localize("$Delete")%></span>
+			        	</a>
+			        </li>
+			        <li id="wih_btn_toInstance" style="display: none; ">
+			        	<a href="#" onClick="getRecommandProcessList();">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_toinst.png" border="0"></span>
+			        		<span><%=mw3.localize("$processchange")%></span>
+			        	</a>
+			        </li>		
+			       	       
+<%
+			if(value.secuopt == null || value.secuopt == '0'){
+%>						        
+			        <li id="wih_btn_sec">
+			        	<a href="#" onClick="<%=methods.toggleSecurityConversation.caller()%>">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_unsecuopt.png" border="0"></span>
+			        		<span><%=mw3.localize("$Privacy")%></span>
+			        	</a>
+			        </li>
+<%
+			}else{
+%>						        
+			        <li id="wih_btn_sec" class="toolbar_current">
+			        	<a href="#" onClick="<%=methods.toggleSecurityConversation.caller()%>">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_secuopt.png" border="0"></span>
+			        		<span><%=mw3.localize("$MakeItPrivacy")%></span>
+			        	</a>
+			        </li>
+<%
+			}
+
+			if(value.status != 'Stopped' && value.status != 'Completed'){
+%>						        
+			        <li id="wih_btn_complete">
+			        	<a href="#" onClick="<%=methods.complete.caller()%>">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_complete.png" border="0"></span>
+			        		<span><%=mw3.localize("$Completing")%></span>
+			        	</a>
+			        </li>
+
+<%
+			}else{
+%>						        
+			        <li id="wih_btn_complete" class="toolbar_current">
+			        	<a href="#" onClick="<%=methods.complete.caller()%>">
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_complete.png" border="0"></span>
+			        		<span><%=mw3.localize("$Complete")%></span>
+			        	</a>
+			        </li>
+<%
+			}
+%>
+			        <!-- 2011.09.05 -->
+			        <!-- li id="wih_btn_reply"><a href="#" onClick="openEventHandler()"><span><img src="images/waveStyle/i_reply.png" border="0" /></img></span><span><%=mw3.localize("$EventHandler")%></span></a></li-->
+			    </ul>
+			</div>
+<%		
+		}else{
+%>
+	<span onClick="<%=methods.schedule.caller()%>"><img src="images/waveStyle/i_gantt.png" title="schedule" /></span>
+	<span onClick="<%=methods.remove.caller()%>"><img src="images/waveStyle/i_delete.png" title="remove" /></span>
+	<span onClick="<%=methods.complete.caller()%>"><img src="images/waveStyle/i_complete.png" title="complete" /></span>
+<%		
+		}
+	}
+%>
