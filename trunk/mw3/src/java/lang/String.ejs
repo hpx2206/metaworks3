@@ -17,7 +17,7 @@
 	
 	
 %>
-	 <input id="<%=mw3.createInputId(objectId)%>" <%=type ? "type='" + type + "'" : "" %> value="<%=value%>" <%=size ? " size=" + size : ""%> style="border:1px solid #ccd; none;background:transparent"<%=placeholder ? " placeholder='" + mw3.localize(placeholder) + "'" : ""%>>
+	 <input id="<%=mw3.createInputId(objectId)%>" class="form-control input-sm" <%=type ? "type='" + type + "'" : "" %> value="<%=value%>" <%=size ? " size=" + size : ""%> <%=placeholder ? " placeholder='" + mw3.localize(placeholder) + "'" : ""%>>
 <%
 	}else{
 %>
