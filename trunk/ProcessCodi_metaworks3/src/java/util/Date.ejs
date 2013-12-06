@@ -8,8 +8,9 @@
 					
 	if(mw3.when == 'new' || mw3.when == 'edit'){
 %>	
-		<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" format="<%=format%>" readonly />&nbsp;
-		<input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).clear()" value="clear" />
+		<input type="text" class="form-control input-sm" id="<%=mw3.createInputId(objectId)%>" style="width:100px; color:#666; float:left" when="<%=mw3.when%>" format="<%=format%>" />&nbsp;
+		<span class="glyphicon glyphicon-remove-circle" style="font-size:18px; line-height:30px;" onclick="mw3.getFaceHelper(<%=objectId%>).clear()" value="clear"></span>
+		
 <%			
 	}else if(mw3.when == 'timeago'){
 		if(value){	

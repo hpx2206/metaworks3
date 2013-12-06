@@ -96,11 +96,12 @@ if(value){
 											if(value.status=='Completed'){
 											%>
 										<!--float:right; margin-bottom:4px-->
-										<div class="badge" style="float:right;margin-top:2px;background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
+										<span class="label label-default" style="float:right"><%=mw3.localize('$Complete')%></span>
+										
 											<%
 											}else if(value.dueDate < new Date()){
 											%>
-										<div class="badge" style="float:right;margin-top:2px;background:#F52020;">&nbsp;&nbsp;<%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
+										<span class="label label-danger" style="float:right"><%=mw3.localize('$Delay')%></span>
 											<%
 											}else{
 											%>
