@@ -29,9 +29,9 @@
 @media all and (max-width: 480px) {
 	.lst_type2 .infoSub span{display:block; padding-left:17px;}	
 	}
-.lst_type2 .infoSub span.infoSubFirstSpan{width:125px; margin-top:11px; color:#000 !important;  padding-left:17px; background:url('../../images/waveStyle/navi_icon.png') no-repeat 0px 2px; line-height:20px;}
+.lst_type2 .infoSub span.infoSubFirstSpan{width:125px; margin-top:11px; color:#000 !important; line-height:20px;}
 .lst_type2 dd{line-height:20px}
-.lst_type2 dd span{color:#808080; margin-right:15px;}
+.lst_type2 dd span{ margin-right:15px;}
 .lst_type2 dd img{border:none}
 .lst_type2 a{color:#2d2c2d;text-decoration:none}
 .lst_type2 a:hover{text-decoration:underline}

@@ -301,12 +301,13 @@ legend {display:none;}
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-  transition: border linear 0.2s, box-shadow linear 0.2s;height: 20px;
+  transition: border linear 0.2s, box-shadow linear 0.2s;height: 30px;
   padding: 4px 6px;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 25px;
   color: #555555;
   vertical-align: middle;
+  overflow:hidden !important;
 }
 .view_box3 {
     background: #ffffff;
