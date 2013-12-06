@@ -1,7 +1,7 @@
 <%
 	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
 %>
-		<select name="selectbox_<%=objectId%>">
+		<select class="form-control" name="selectbox_<%=objectId%>">
 <%
 	for(var i=0; i<descriptor.options.length; i++){
 		var inputOption = '';
