@@ -10458,8 +10458,8 @@ OG.shape.bpmn.A_Subprocess = function (label) {
 	this.GROUP_COLLAPSIBLE = false;
 	this.HaveButton = true;
 };
-OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GroupShape();
-OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GroupShape;
+OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.A_Subprocess.prototype.constructor = OG.shape.bpmn.A_Subprocess;
 OG.A_Subprocess = OG.shape.bpmn.A_Subprocess;
 
@@ -10478,12 +10478,9 @@ OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		'fill-r' : 1,
-	    'fill-cx' : .1,
-	    'fill-cy' : .1,
 		"stroke-width" : 1.2,
-		'r'     : 10,
-        fill: 'r(.1, .1)#FFFFFF-#FFFFCC',
+		'r'     : 6,
+        fill: '#FFFFFF - #FFFFCC',
         'fill-opacity': 1
 	});
 
@@ -14855,9 +14852,9 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
         elements = me.getElementsByBBox(element.shape.geom.getBoundary());
         for(i=0; i<elements.length; i++){
             if(element.id != elements[i].id){
-                if($(elements[i]).parent().get(0).shape){
-                }
-                else{
+                if(!$(elements[i]).parent().get(0).shape){
+                    console.log(element);
+
                     element.appendChild(elements[i]);
                 }
             }
@@ -16106,7 +16103,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 
     root = me.getRootGroup();
     eleArray.push(element);
-   // me.addToGroup(root, eleArray);
+//    me.addToGroup(root, eleArray);
 
 	redrawChildConnectedEdge = function (_collapseRootElement, _element) {
 
@@ -16215,17 +16212,16 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 			break;
 		}
 
-		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
-        if(element.shape.HaveButton){
-            var me = this, collapseObj, clickHandle;
-            collapseObj = this.drawButton(element);
-        }
-
         if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){ // LoopType 에 따라서 도형을 그리기 위해서
             this.drawLoopType(element);
             this.drawTaskType(element);
         }
 
+		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
+        if(element.shape.HaveButton){
+            var me = this, collapseObj, clickHandle;
+            collapseObj = this.drawButton(element);
+        }
 	}
 
 	// redrawShape event fire
@@ -17279,7 +17275,7 @@ OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
 
         _rect1.attr({
             "stroke" : element.shape.geom.style.map.stroke,
-            "stroke-width" : 1.2,
+            "stroke-width" : 1,
             fill: "white",
             "fill-opacity": 0,
             "shape-rendering": "crispEdges"
@@ -17288,8 +17284,8 @@ OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
 		this._add(_rect1, rElement.id + OG.Constants.COLLAPSE_SUFFIX);
 
 		// layer 위치 조정
-		_bBoxRect.insertBefore(rElement);
-		_rect1.insertAfter(rElement);
+		rElement.appendChild(_bBoxRect);
+		rElement.appendChild(_rect1);
 
         return {
 			bBox    : _bBoxRect.node,
@@ -18866,14 +18862,6 @@ OG.handler.EventHandler.prototype = {
             				});
             			}
         };
-    	$(element).bind({
-            mouseover: function () {
-                  collapseObj = me._RENDERER.drawButton(this);
-                    if (collapseObj && collapseObj.bBox && collapseObj.collapse) {
-                        clickHandle(element, collapseObj);
-                    }
-            }
-        });
     },
 
 	/**
@@ -18973,9 +18961,9 @@ OG.handler.EventHandler.prototype = {
                             elements = me._RENDERER.getElementsByBBox(ele.shape.geom.getBoundary());
                             for(i=0; i<elements.length; i++){
                                 if(ele.id != elements[i].id){
-                                    if($(elements[i]).parent().get(0).shape){
-                                    }
-                                    else{
+                                    if(!$(elements[i]).parent().get(0).shape){
+                                        console.log(ele);
+
                                         ele.appendChild(elements[i]);
                                     }
                                 }
