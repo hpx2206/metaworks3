@@ -2534,13 +2534,13 @@ select.select[class] {
 
 .oce_navi{margin-right:15px;}
 .oce_navi .depth1{-webkit-border-radius: 5px;    -moz-border-radius: 5px;    border-radius: 5px; border:none !important; padding:3px 10px !important;}
-.oce_navi .depth1 .dashboard_icon{font-size:14px; margin-right:7px;}
+.oce_navi .depth1 .dashboard_icon{font-size:14px; margin-right:7px; padding-top:2px;}
 .oce_navi .depth1 span{float:left}
 .oce_navi .depth1.selected{ background:#5a9be1; color:#fff;}
 .oce_navi .depth1.selected a{ color:#fff;}
 
 .oce_h1{ font-size:16px; margin:10px; margin-top:6px;margin-bottom:6px;font-weight:bold;float:left; margin-left:15px; padding-left:30px; background:url(../../images/waveStyle/control_play_blue.png) 5px 4px no-repeat;}
-.oce_more{float:right; margin-right:20px; margin-top:10px;}
+.oce_more{float:right; margin-right:20px; margin-top:6px;}
 .oce_more a {display:block; padding:0px 5px 3px 5px; background:#f0f0f0; -webkit-border-radius: 15px;    -moz-border-radius: 15px;    border-radius: 15px;}
 .oce_more a span{font-size:11px; color:#a7a7a7 !important;}
 .oce_more a span img {width:12px; height:12px; position:relative; top:2px;}
