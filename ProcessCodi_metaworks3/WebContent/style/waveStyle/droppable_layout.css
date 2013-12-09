@@ -2636,8 +2636,8 @@ select.select[class] {
 .banner_img_div_disc span.sf{font-size:14px; display:block; margin-bottom:15px;}
 .index_signup { background:#1f1f1f; height:60px; }
 .index_signup .index_signup_inner {padding-top:7px; width: 547px; margin: 0 auto; }
-.index_signup .index_signup_inner span{ float:left; padding-top:9px; color:#fff;}
-.index_signup .index_signup_inner input { height:26px; line-height:26px; width:315px; border:none; padding-left:20px; color:#666; background:#fff !important; border:none !important; }
+.index_signup .index_signup_inner span{ float:left; padding-top:8px; color:#fff;}
+.index_signup .index_signup_inner input { height:31px; line-height:31px; width:425px; border:none; margin-left:15px;padding-left:20px; color:#666; background:#fff !important; border:none !important; }
 .index_signup .index_signup_inner .ebutton {position:relative; top:8px; margin-left:5px; cursor:pointer; background:#2485e8;padding:7px 20px;; color:#FFF; font-weight:bold; text-align:center; display:inline-block}
 .index_content { text-align:left}
 .index_content .line1 { background:#f3f3f3;  border-bottom:1px solid #d9d9d9 }
@@ -2698,7 +2698,7 @@ select.select[class] {
 	.banner_img_div_disc_box{width:100%}
 	.banner_img_div_disc{width:90%}
 	.banner_img_div_disc span.sf{display:none}
-		.index_signup .index_signup_inner input {width:250px;}
+	.index_signup .index_signup_inner input {width:370px;}
 	
 	}
 	
@@ -2706,7 +2706,7 @@ select.select[class] {
 	.banner_img_div_disc_box{height:110px}
 	.banner_img_div_disc span.bf{display:none}
 	.index_signup .index_signup_inner { width:370px;  }
-	.index_signup .index_signup_inner input {width:130px;}
+	.index_signup .index_signup_inner input {width:240px;}
     .row .col3{display:none}
     .row .col7 { width:100%; }
     
