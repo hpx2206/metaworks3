@@ -9,7 +9,10 @@ if(value){
 			<%=mw3.localize("$MyProject")%>
 		</div>
 		
-		<span class="oce_more"><a href="#" onClick="<%=methods.addProject.caller()%>"><span><img src="images/waveStyle/i_reply.png" /><%=mw3.localize('$CreateProject')%></span></a></span>
+		<span class="oce_more">
+				<button type="button" class="btn btn-default btn-xs" onClick="<%=methods.addProject.caller()%>"><span class="glyphicon glyphicon-plus-sign"></span> <%=mw3.localize("$CreateProject")%></button>
+			
+		</span>
 		
 		<div class="clear"></div>
 	
