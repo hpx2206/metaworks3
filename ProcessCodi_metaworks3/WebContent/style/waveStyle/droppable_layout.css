@@ -845,7 +845,7 @@ margin-top:8px;
 #contactsearchbox ul li input {
     width: 100%;
     background: #ffffff;
-    /* height: 17px; */
+    height: 21px;
     padding-top: 1px;
     border: none;
     border-top: 1px solid #8b9fbd;
@@ -1020,7 +1020,8 @@ margin-top:8px;
 /*     background: url(../../images/waveStyle/toolbar_bg.gif) left no-repeat;
  */    font-size: 9pt;
     text-align: center;
-    line-height: 20px;
+    line-height: 19px;
+    height: 19px;
     color: #000;
     letter-spacing: -1px;
     border-right: 1px solid #b5b9bf;
@@ -2687,7 +2688,7 @@ select.select[class] {
 .signup_textbox{padding:10px; line-height:20px; border:1px solid #ccc;}
 .singnup_mutiline {margin-bottom:10px;}
 @media all and (max-width: 900px) {
-	.index_banner_r_btn, .index_banner_l_btn{display:none}
+	.index_banner_r_btn, .index_banner_l_btn{display:none}0
 	.banner_img_div_disc span.bf{font-size:20px;}
 	.banner_img_div_disc_box{height:195px}
 	}
