@@ -167,7 +167,7 @@ public class ProcessDesignerContainer {
 				tagCnt = Integer.parseInt(activity.getTracingTag());
 			
 			if( activity.getDocumentation() != null && activity.getDocumentation().getActivityDetail() != null 
-					&& activity.getDocumentation().getActivityDetail().getContents() != null ){
+					&& !"".equals(activity.getDocumentation().getActivityDetail()) ){
 				processSummaryPanel.addDetailList(activity);
 			}
 			

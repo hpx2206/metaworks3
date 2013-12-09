@@ -263,6 +263,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 							.substring(pos + 2, pos + 6), 16);
 					tmp.append(ch);
 					lastPos = pos + 6;
+				}else if(src.charAt(pos + 1) == '"'){
+					tmp.append(src.substring(lastPos, pos));
+					lastPos = pos+1;
 				} else {
 					ch = (char) Integer.parseInt(src
 							.substring(pos + 1, pos + 3), 16);

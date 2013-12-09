@@ -8,7 +8,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.admin.WebEditor;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/Documentation.ejs",
 		ejsPathMappingByContext = {
@@ -26,87 +25,87 @@ public class Documentation implements Serializable , ContextAware{
 			this.metaworksContext = metaworksContext;
 		}
 		
-	WebEditor purpose;
-	WebEditor reference;
-	WebEditor responsibility;
-	WebEditor equipment;
-	WebEditor requirement;
-	WebEditor indicationStandard;
-	WebEditor initialCondition;
-	WebEditor notandum;
+	String purpose;
+	String reference;
+	String responsibility;
+	String equipment;
+	String requirement;
+	String indicationStandard;
+	String initialCondition;
+	String notandum;
 	
-	WebEditor activityDetail;
+	String activityDetail;
 	
-	@Face(displayName="목적")
+	@Face(displayName="목적", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getPurpose() {
+	public String getPurpose() {
 		return purpose;
 	}
-	public void setPurpose(WebEditor purpose) {
+	public void setPurpose(String purpose) {
 		this.purpose = purpose;
 	}
-	@Face(displayName="참조")
+	@Face(displayName="참조", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getReference() {
+	public String getReference() {
 		return reference;
 	}
-	public void setReference(WebEditor reference) {
+	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	@Face(displayName="책임")
+	@Face(displayName="책임", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getResponsibility() {
+	public String getResponsibility() {
 		return responsibility;
 	}
-	public void setResponsibility(WebEditor responsibility) {
+	public void setResponsibility(String responsibility) {
 		this.responsibility = responsibility;
 	}
-	@Face(displayName="장비")
+	@Face(displayName="장비", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getEquipment() {
+	public String getEquipment() {
 		return equipment;
 	}
-	public void setEquipment(WebEditor equipment) {
+	public void setEquipment(String equipment) {
 		this.equipment = equipment;
 	}
-	@Face(displayName="자격요건")
+	@Face(displayName="자격요건", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getRequirement() {
+	public String getRequirement() {
 		return requirement;
 	}
-	public void setRequirement(WebEditor requirement) {
+	public void setRequirement(String requirement) {
 		this.requirement = requirement;
 	}
-	@Face(displayName="판정기준")
+	@Face(displayName="판정기준", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getIndicationStandard() {
+	public String getIndicationStandard() {
 		return indicationStandard;
 	}
-	public void setIndicationStandard(WebEditor indicationStandard) {
+	public void setIndicationStandard(String indicationStandard) {
 		this.indicationStandard = indicationStandard;
 	}
-	@Face(displayName="초기조건")
+	@Face(displayName="초기조건", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getInitialCondition() {
+	public String getInitialCondition() {
 		return initialCondition;
 	}
-	public void setInitialCondition(WebEditor initialCondition) {
+	public void setInitialCondition(String initialCondition) {
 		this.initialCondition = initialCondition;
 	}
-	@Face(displayName="주의사항")
+	@Face(displayName="주의사항", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
 	@Available(how={"process"})
-	public WebEditor getNotandum() {
+	public String getNotandum() {
 		return notandum;
 	}
-	public void setNotandum(WebEditor notandum) {
+	public void setNotandum(String notandum) {
 		this.notandum = notandum;
 	}
 	
-	@Face(displayName="요약내용")
-	public WebEditor getActivityDetail() {
+	@Face(displayName="요약내용", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	public String getActivityDetail() {
 		return activityDetail;
 	}
-	public void setActivityDetail(WebEditor activityDetail) {
+	public void setActivityDetail(String activityDetail) {
 		this.activityDetail = activityDetail;
 	}
 	
@@ -117,17 +116,17 @@ public class Documentation implements Serializable , ContextAware{
 	}
 	
 	public void init(){
-		if( "process".equals(this.getMetaworksContext().getHow()) ){
-			setPurpose(new WebEditor());
-			setReference(new WebEditor());
-			setResponsibility(new WebEditor());
-			setEquipment(new WebEditor());
-			setRequirement(new WebEditor());
-			setIndicationStandard(new WebEditor());
-			setInitialCondition(new WebEditor());
-			setNotandum(new WebEditor());
-		}
-		setActivityDetail(new WebEditor());
+//		if( "process".equals(this.getMetaworksContext().getHow()) ){
+//			setPurpose(new String());
+//			setReference(new String());
+//			setResponsibility(new String());
+//			setEquipment(new String());
+//			setRequirement(new String());
+//			setIndicationStandard(new String());
+//			setInitialCondition(new String());
+//			setNotandum(new String());
+//		}
+//		setActivityDetail(new String());
 		
 	}
 		
