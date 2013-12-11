@@ -12,11 +12,12 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
-import org.metaworks.metadata.MetadataFile;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.hudson.HudsonJobApi;
 import org.uengine.codi.hudson.HudsonJobDDTO;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
@@ -103,7 +104,7 @@ public class ReflectPanel {
 		}
 		
 		
-	@Face(displayName = "$devreflect")
+	@Face(displayName = "$reflect")
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Remover reflect() throws Exception {
 		// 배포 할ㄸㅐ 할일들
@@ -122,44 +123,48 @@ public class ReflectPanel {
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
-		if (this.getSqlFile().getFileTransfer() != null
-				&& this.getSqlFile().getFilename() != null
-				&& this.getSqlFile().getFilename().length() > 0)
-				this.getSqlFile().upload();
-		
-		if ("war".equals(wfNode.getVisType())) {
-			if(!check){
-				if (this.getWarFile().getFileTransfer() != null
-						&& this.getWarFile().getFilename() != null
-						&& this.getWarFile().getFilename().length() > 0)
-						this.getWarFile().upload();
-					
-				reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
-				if (reflectVer == 0) {
-					reflectVer = 1;
-				} else {
-					reflectVer++;
-				}
-	
-				filepathinfo.setSqlPath(this.getSqlFile().getUploadedPath());
-				filepathinfo.setWarPath(this.getWarFile().getUploadedPath());
-				filepathinfo.setReflectVer(reflectVer);
-				filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
-				filepathinfo.setFileType(wfNode.getVisType());
-				filepathinfo.setId(filepathinfo.createNewId());
-				filepathinfo.setComment(this.getComment());
-				filepathinfo.setModdate(new Date());
-				filepathinfo.setDistributor(session.getEmployee().getEmpName());
-				filepathinfo.setWarFileName(this.getWarFile().getFilename());
-				filepathinfo.setSqlFileName(this.getSqlFile().getFilename());
+		if(!check){
+			if (this.getWarFile()!= null && this.getWarFile().getFileTransfer() != null
+					&& this.getWarFile().getFilename() != null
+					&& this.getWarFile().getFilename().length() > 0){
 				
-				filepathinfo.createDatabaseMe();
-				filepathinfo.flushDatabaseMe();
-			}else{
-				filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
-				filepathinfo.copyFrom(filepathinfo.databaseMe());
+				this.getWarFile().upload();
+				filepathinfo.setWarPath(this.getWarFile().getUploadedPath());
+				filepathinfo.setWarFileName(this.getWarFile().getFilename());
 			}
 			
+			if (this.getSqlFile()!= null && this.getSqlFile().getFileTransfer() != null
+					&& this.getSqlFile().getFilename() != null
+					&& this.getSqlFile().getFilename().length() > 0){
+				this.getSqlFile().upload();
+				filepathinfo.setSqlPath(this.getSqlFile().getUploadedPath());
+				filepathinfo.setSqlFileName(this.getSqlFile().getFilename());
+				
+			}
+			
+			reflectVer = filepathinfo.findReflectVersion(filepathinfo.getProjectId());
+			if (reflectVer == 0) {
+				reflectVer = 1;
+			} else {
+				reflectVer++;
+			}
+			
+			filepathinfo.setReflectVer(reflectVer);
+			filepathinfo.setReleaseVer(filepathinfo.findReleaseVersion(filepathinfo.getProjectId()));
+			filepathinfo.setFileType(wfNode.getVisType());
+			filepathinfo.setId(filepathinfo.createNewId());
+			filepathinfo.setComment(this.getComment());
+			filepathinfo.setModdate(new Date());
+			filepathinfo.setDistributor(session.getEmployee().getEmpName());
+			
+			filepathinfo.createDatabaseMe();
+			filepathinfo.flushDatabaseMe();
+		}else{
+			filepathinfo.setId(Integer.parseInt(this.getReflectVersion().getSelected()));
+			filepathinfo.copyFrom(filepathinfo.databaseMe());
+		}
+		
+		if ("war".equals(wfNode.getVisType())) {
 			// IaaS 연동 시("war"파일 첨부)
 			if("1".equals(StartCodi.USE_IAAS)){
 				
@@ -221,7 +226,7 @@ public class ReflectPanel {
 				 * "sqlFilePath"  = sql이 저장된 파일 경로를 불러온다.
 				 * 
 				 */
-				String sqlFilePath = this.getSqlFile().getUploadedPath();
+				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + this.getSqlFile().getUploadedPath();
 				
 				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
@@ -369,15 +374,6 @@ public class ReflectPanel {
 			//IaaS 미 연동시("svn" 빌드)
 			}else{
 				
-				String nextBuilderNumber = null;
-				String builderResult = null;
-				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
-				HudsonJobApi hudsonJobApi = new HudsonJobApi();
-				
-				long timeoutTime = 200000;
-				long sleepTime = 5000;
-				long tryTime = 0;
-				
 				/**
 				 * 작성:cjs
 				 * 
@@ -386,8 +382,8 @@ public class ReflectPanel {
 				 * 1. mysql(port:3307)에 데이터베이스를 생성한다.
 				 * 2. 생성한 데이터베이스에 첨부한 **.sql 파일을 실행한다.
 				 * 3. tomcat_dev 를 shutdown 한다.
-				 * 4. hudsonSetting.sh를 실행시켜 hudson job을 복사한다.
-				 * 5. hudsonBuild.sh를 실행시켜 jobs 경로 아래 projectAlias와 동일한 이름의 job을 생성한다.
+				 * 4. hudsonSetting.sh를 실행시켜 실행시켜 환경을 설정한다
+				 * 5. hudsonBuild.sh를 실행시켜 프로젝트를 빌드한다.
 				 * 6. svnVersion을 체크하여 반영시 svn의 커밋버전을 기록한다.
 				 * 7. tomcat_dev/webapps에 build된 war 파일을 복사한다.
 				 * 8. tomcat_deb 를 start 시킨다. 
@@ -431,19 +427,29 @@ public class ReflectPanel {
 				jschServerBehaviour.runCommand(command);
 				
 				/*
-				 * 4. hudsonSetting.sh를 실행시켜 hudson job을 복사한다.
+				 * 4. hudsonSetting.sh를 실행시켜 환경을 설정한다.
 				 * sell 명령어 = {path}/hudsonSetting.sh "projectAlias" 
 				 * 
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + wfNode.getProjectAlias() + "dev";
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + wfNode.getProjectAlias() + "\"" + " \"dev\"";
 				jschServerBehaviour.runCommand(command);
+				
+				String nextBuilderNumber = null;
+				String builderResult = null;
+				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+				HudsonJobApi hudsonJobApi = new HudsonJobApi();
+				
+				long timeoutTime = 200000;
+				long sleepTime = 5000;
+				long tryTime = 0;
 				
 				while(nextBuilderNumber == null){
 					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
 					
 					nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
+					
 					try {
 						tryTime += sleepTime;
 						Thread.sleep(sleepTime);
@@ -452,17 +458,24 @@ public class ReflectPanel {
 					
 					if(tryTime > timeoutTime)
 						break;
+									
 				}
 				
 				/*
-				 * 5. hudsonBuild.sh를 실행시켜 jobs 경로 아래 projectAlias와 동일한 이름의 job을 생성한다.
+				 * 5. hudsonBuild.sh를 프로젝트를 빌드한다.
 				 * sell 명령어 = {path}/hudsonMakeJob.sh "projectAlias" 
 				 * 
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.hudson.build") + " \"" + wfNode.getProjectAlias() + "\"";
+				
+				command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
 				jschServerBehaviour.runCommand(command);
+				
+				//hudson build monitering popup
+				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.ProjectInfo')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.ProjectInfo').__getFaceHelper().callHudsonConsole",
+						new Object[]{});
 				
 				while(builderResult == null){
 					HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, wfNode.getProjectAlias());
@@ -474,9 +487,11 @@ public class ReflectPanel {
 					else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
 						builderResult = "FAILED";
 					
+					
 					try {
 						Thread.sleep(5000);
 					} catch (Exception e) {
+						throw new Exception(e);
 					}
 				}
 				
