@@ -54,24 +54,24 @@ legend {display:none;}
 .good_up .cb_activate_up a em,.good_up .cb_activate_down a em,.good_up .cb_activate_cancel a em{color:#aaa}
 
 
-.form_table{margin:15px auto; width:95%; font-size:12px;}
+.form_table{padding:1em 0;font-size:12px;width:100%;}
 .form_table input,
 .form_table textarea,
 .form_table select,
 .form_table table,
 .form_table button{font-size:12px}
-.form_table table{width:100%;border:0;border-top:2px solid #999}
+.form_table table{width:100%;border:0;}
 .form_table caption{padding:8px 0;font-weight:bold;text-align:left}
 .form_table th,
 .form_table td{padding:8px;border:0;vertical-align:top}
 .cke_editor td{padding:0px;}
 .form_table th{color:#333}
 .form_table td{color:#666}
-.form_table thead th{border-bottom:1px solid #ccc;background:#f8f8f8}
-.form_table tbody th{border-bottom:1px solid #ddd;background:#F9F9F9;text-align:left;width:120px;}
-.form_table tfoot th{border-bottom:1px solid #ddd}
-.form_table tbody td{border-bottom:1px solid #ddd}
-.form_table tfoot td{border-bottom:1px solid #ddd;font-weight:bold;color:#333}
+.form_table thead th{}
+.form_table tbody th{text-align:right;width:120px;}
+.form_table tfoot th{}
+.form_table tbody td{}
+.form_table tfoot td{font-weight:bold;color:#333}
 .form_table .item{position:relative;margin:-4px 0}
 .form_table .item .i_help{position:absolute;top:4px;right:0}
 .form_table .item .i_label{ top:6px; left:10px}
@@ -236,6 +236,7 @@ legend {display:none;}
     margin-left:65px;    
 	position:relative;
 	z-index:99;
+	overflow:hidden
 }
 #wih_button a {
 	margin-top: 5px;

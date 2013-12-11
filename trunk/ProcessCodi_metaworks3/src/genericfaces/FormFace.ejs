@@ -3,7 +3,7 @@
 		var title = objectMetadata.getOptionValue('title', null);
 	
 		var methodVAlign = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodVAlign']?objectMetadata.faceOptions['methodVAlign']:'bottom') : 'bottom');
-		var showViewBox = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideViewBox']);
+		var showViewBox =  false; 
 
 		var methodOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodOrder']?objectMetadata.faceOptions['methodOrder']:'') : '');
 		var methodOrder = [];
@@ -105,7 +105,7 @@
 %>
 
 
-	<div <%=showViewBox?'class=\"form_table2\"':''%>> 
+	<div <%=showViewBox?'class=\"form_table2\"':'class=\"form_table\"'%>> 
 <%
 		if(title){
 %>
