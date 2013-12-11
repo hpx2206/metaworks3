@@ -256,11 +256,10 @@ if(value){
 			<dl class="lst_type2">
 				<dd class="photo2">
 					<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" src="<%=portrait %>" width="104" height="104"></div>
-										
+					<div id="popupInfoNameWih"><b><%=value.empName %></b></div>
 					
 				</dd>
 				<dd class="tit">
-					<div id="popupInfoNameWih"><b><%=value.empName %></b></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Id")%> :</span><span><%=value.empCode %></span></div>
 <%
 		if(mw3.when == 'edit'){

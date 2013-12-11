@@ -94,8 +94,8 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				$("#dialog:ui-dialog").dialog("destroy");
 				$(this.divId).dialog(options);
 				$(this.divId).css({
-					'border-top' : '1px solid #e1e1e1',
-					'margin-top' : '2px'
+					/*'border-top' : '1px solid #e1e1e1',
+					'margin-top' : '2px'*/
 					})
 					.parent().css({
 					'border' : '1px solid #ccc',
