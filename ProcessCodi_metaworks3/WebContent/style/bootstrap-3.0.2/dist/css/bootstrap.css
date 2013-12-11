@@ -40,7 +40,6 @@ template {
 }
 
 html {
-  font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
 }
@@ -94,7 +93,6 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, serif;
   font-size: 1em;
 }
 
@@ -154,7 +152,6 @@ input,
 select,
 textarea {
   margin: 0;
-  font-family: inherit;
   font-size: 100%;
 }
 
@@ -304,7 +301,6 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.428571429;
   color: #333333;
@@ -315,7 +311,6 @@ input,
 button,
 select,
 textarea {
-  font-family: inherit;
   font-size: inherit;
   line-height: inherit;
 }
@@ -737,7 +732,6 @@ code,
 kbd,
 pre,
 samp {
-  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 }
 
 code {
@@ -1891,7 +1885,6 @@ select[size] {
 }
 
 select optgroup {
-  font-family: inherit;
   font-size: inherit;
   font-style: inherit;
 }

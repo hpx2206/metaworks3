@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_ContactListPanel = function(objectId, className){
 	this.objectDiv = $('#' + this.objectDivId);
 	this.object = mw3.objects[this.objectId];
 	
-	$('#objDiv_' + this.objectId).css({'height':'100%','overflow':'hidden'}).addClass('mw3_resize').attr('objectId', this.objectId);
+	$('#objDiv_' + this.objectId).css({'height':'100%'}).addClass('mw3_resize').attr('objectId', this.objectId);
 	$('#accordion_' + this.objectId).accordion({ fillSpace:	true });
 	
 		
