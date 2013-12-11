@@ -144,7 +144,9 @@
 <%
 				}		
 %>	
-				<div class="btnbadge" style="float:none"><a onClick="<%=methods.serverManage.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>	
+				<% if(value.useIaas){ %>
+					<div class="btnbadge" style="float:none"><a onClick="<%=methods.serverManage.caller()%>"> <%=mw3.localize("$project.servers.prod.manage")%> </a></div>	
+				<% } %>
 				<div class="btnbadge" style="float:none"><a onClick="<%=methods.edit.caller()%>"> <%=mw3.localize("$Edit")%> </a></div>						
 
 <%
