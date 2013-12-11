@@ -150,6 +150,10 @@ public interface IApp extends IDAO{
 	public void setSubDomain(String subDomain);
 	
 	
+	@NonLoadable
+	@NonSavable
+	public boolean isUseIaas();
+	public void setUseIaas(boolean useIaas);
 	
 	
 	public IApp findMe() throws Exception;
