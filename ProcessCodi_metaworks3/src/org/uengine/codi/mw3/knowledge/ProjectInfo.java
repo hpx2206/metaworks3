@@ -94,7 +94,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		}
 		
 	MetaworksFile logoFile;
-		@Face(displayName="로고파일")
+		@Face(displayName="$LogoFile")
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
@@ -276,7 +276,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		setType(wfNode.getVisType());
 		if("svn".equals(this.getType())){
 			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + wfNode.getProjectAlias());
-			this.setSvn(GlobalContext.getPropertyString("vm.manager.url") + "/" + wfNode.getProjectAlias());
+			this.setSvn(GlobalContext.getPropertyString("vm.svn.url") + "/" + wfNode.getProjectAlias());
 		}
 		this.description = wfNode.getDescription();
 			
@@ -357,7 +357,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			releasePanel.setReflectVersion(reflectVersion);
 			releasePanel.setCheck(false);
 			
-			modalWindow.setHeight(360);
+			modalWindow.setHeight(400);
 			modalWindow.setWidth(540);
 		}
 		else if("svn".equals(this.getType())){
@@ -365,7 +365,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			releasePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			
 			releasePanel.setReflectVersion(reflectVersion);
-			modalWindow.setHeight(250);
+			modalWindow.setHeight(280);
 			modalWindow.setWidth(540);
 		}
 		
@@ -419,14 +419,13 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			reflectPanel.setCheck(false);
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			modalWindow.setHeight(370);
+			modalWindow.setHeight(400);
 			
 		}
 		else if("svn".equals(this.getType())){
-
 			reflectPanel.setMetaworksContext(new MetaworksContext());
 			reflectPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			modalWindow.setHeight(350);
+			modalWindow.setHeight(360);
 			
 		}
 		
@@ -442,9 +441,16 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	public Object hudson() {
 		IFrame iframe = new IFrame();
 		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url") + "job/" + this.getProjectAlias());
+		return new ModalWindow(iframe, 0, 0, "$hudson");
+	}
+	
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow showHudsonConsole() {
+		IFrame iframe = new IFrame();
+		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url") + "job/" + this.getProjectAlias() + "/lastBuild/console");
 		iframe.setHeight(1000);
 		iframe.setWidth(1000);
-		return new ModalWindow(iframe, 0, 0, "$hudson");
+		return new ModalWindow(iframe, 0, 0, this.getProjectAlias() + " Console");
 	}
 
 	@Face(displayName = "$devmanage")

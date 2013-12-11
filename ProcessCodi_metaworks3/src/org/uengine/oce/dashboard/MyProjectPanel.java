@@ -31,7 +31,7 @@ public class MyProjectPanel {
 		projectTitle.session = session;
 		projectTitle.setLogoFile(new MetaworksFile());
 		
-		return new ModalWindow(projectTitle , 500, 500, "$CreateProject");
+		return new ModalWindow(projectTitle , 500, 530, "$CreateProject");
 	}
 	
 	
