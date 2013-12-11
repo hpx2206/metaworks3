@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.marketplace;
 
 import org.metaworks.annotation.Face;
 
-@Face(displayName="$Marketplace", ejsPath="dwr/metaworks/genericfaces/Window.ejs", options={"hideLabels"}, values={"true"})
+@Face(displayName="$AppStore", ejsPath="dwr/metaworks/genericfaces/Window.ejs", options={"hideLabels"}, values={"true"})
 public class MarketplaceWindow {
 
 	MarketplacePanel marketplace;
