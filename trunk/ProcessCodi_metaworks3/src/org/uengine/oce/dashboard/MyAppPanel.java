@@ -8,9 +8,13 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
+import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.marketplace.MyVendor;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Session;
@@ -79,15 +83,27 @@ public class MyAppPanel {
 		return new ModalWindow(new ModalPanel(myVendor), 0, 0, GlobalContext.getLocalizedMessage("$MyApps.all"));
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object addApp() throws Exception {
+//	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel addApp() throws Exception {
 		
-		App app = new App();
-		app.session = session;
-		app.load();
-		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//		App app = new App();
+//		app.session = session;
+//		app.load();
+//		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//		
+//		return new ModalWindow(new ModalPanel(app), 900, 530, GlobalContext.getLocalizedMessage("$MyApps.add"));
 		
-		return new ModalWindow(new ModalPanel(app), 900, 530, GlobalContext.getLocalizedMessage("$MyApps.add"));
+		session.setUx("oce");
+		
+		Marketplace marketplace = new Marketplace();
+		marketplace.session = session;
+		marketplace.setPageNavigator(new OcePageNavigator());
+		marketplace.load();
+		
+		return new MainPanel(marketplace);
+		
+		
 	}
 	
 	
