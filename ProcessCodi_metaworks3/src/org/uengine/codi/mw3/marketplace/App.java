@@ -521,22 +521,27 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public Object save() throws Exception {
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
-
-		this.setCategory(category);
+		
+		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFilename() != null && 
+				this.getLogoFile().getFilename().length() > 0)			
+			this.getLogoFile().upload();
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			WfNode project = new WfNode();
 			project.setId(this.getAttachProject().getSelected());
 			project.copyFrom(project.databaseMe());
-			setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
-			setCreateDate(Calendar.getInstance().getTime());
-			setComcode(session.getCompany().getComCode());
-			setComName(session.getCompany().getComName());
 			
+			this.setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
+			this.setCreateDate(Calendar.getInstance().getTime());
+			this.setComcode(session.getCompany().getComCode());
+			this.setComName(session.getCompany().getComName());
 			this.setSubDomain(this.getSubDomain());
 //			this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
 			this.setProject(project);
 			this.setStatus(STATUS_REQUEST);
+			this.setCategory(category);
+			this.setLogoFile(logoFile);
 			
 			createDatabaseMe();
 			flushDatabaseMe();
