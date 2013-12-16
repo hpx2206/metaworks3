@@ -164,6 +164,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		criteria.put("endpoint", navigation.getEmployee().getEmpCode());
 		criteria.put("partcode", navigation.getEmployee().getPartCode());
 		
+		
 		// TODO add criteria
 		Set<String> keys = criteria.keySet();
 		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
@@ -171,11 +172,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
-				//System.out.println(key + " : " + criteria.get(key) );
+				System.out.println(key + " : " + criteria.get(key) );
 				instanceContents.set(key, criteria.get(key));
 			}
 		}
-
+		System.out.println(worklistSql);
+		System.out.println("");
+		System.out.println(bottomList.toString());
 		instanceContents.select();
 		
 //		instanceContents.getCurrentUser().getMetaworksContext().setHow("small");
@@ -290,7 +293,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
-				//System.out.println(key + " : " + criteria.get(key) );
+				System.out.println(key + " : " + criteria.get(key) );
 				instanceContents.set(key, criteria.get(key));
 			}
 		}
@@ -752,6 +755,46 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
 //			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
+		}else if("showWall".equals(navigation.getPerspectiveType()) ) {
+			instanceSql.append(" and inst.initep=?instInitep ");
+			criteria.put("instInitep", navigation.getPerspectiveValue());
+			instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
+			criteria.put("instIsdelete", "1");
+			instanceSql.append("and inst.isDocument =?isDocument ");
+			criteria.put("isDocument", "0");
+			
+			// secureopt
+			if(navigation.getEmployee().isApproved() && !navigation.getEmployee().isGuest()){
+				instanceSql
+				.append(" and	exists ( ")
+				.append("			select 1 from bpm_procinst	 ")
+				.append("			where inst.instid = instid	 ")
+				.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
+				.append("			union all	 ")
+				.append("			select 1 from bpm_rolemapping rm	 ")
+				.append("			where inst.instid = rm.rootinstid	 ")
+				.append("			and inst.secuopt <= 1	 ")
+				.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+				.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
+				.append("			union all 	 ")
+				.append("			select 1 from bpm_topicmapping tm	 ")
+				.append("			where inst.topicId = tm.topicId	 ")
+				.append("			and inst.secuopt = 3	 ")
+				.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
+				.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
+				.append("			)	 ");
+										
+				
+			}else{
+				instanceSql
+				.append(" and	exists ( ")
+				.append("			select 1 from bpm_rolemapping rm	 ")
+				.append("			where inst.instid = rm.rootinstid	 ")
+				.append("			and assigntype = 0 and rm.endpoint = ?endpoint")
+				.append("			)	 ");
+			}
+			
+
 		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "app".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
@@ -1635,11 +1678,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		todoBadge.refresh();
 		
 		CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
-		commingTodoPerspective.setSelected(true);
-		commingTodoPerspective.loadChildren();
+//		commingTodoPerspective.setSelected(true);
+//		commingTodoPerspective.loadChildren();
 
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem)});			
+				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(commingTodoPerspective)});			
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
 		int businessValue = instanceRef.getBenefit() + instanceRef.getPenalty();
@@ -1687,7 +1730,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	}
-	public static IInstance loadDocument(String folderId) throws Exception {
+	public IInstance loadDocument(String folderId) throws Exception {
 		// TODO Auto-generated method stub
 			
 			StringBuffer sql = new StringBuffer();
@@ -1695,11 +1738,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 //select * from bpm_procinst where isdocument ='1' and topicid='324' order by instid desc;
 			sql.append("select * from bpm_procinst ");
 			sql.append("where isdocument =?isdocument and topicId=?topicId ");
+			sql.append(" and initcomcd=?initcomcde ");
 			sql.append("order by InstId desc");
 			IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
 			
 			instance.set("isdocument", 1);
 			instance.set("topicId",folderId);
+			instance.set("initcomcd", session.getEmployee().getGlobalCom());
 			instance.select();
 			
 			while(instance.next()){
@@ -1711,14 +1756,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 			return instance;
 			
 	}
-	public static IInstance loadDocument() throws Exception{
+	public IInstance loadDocument() throws Exception{
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select * from bpm_procinst ");
 		sql.append("where isdocument =?isdocument and topicId is null ");
+		sql.append(" and initcomcd=?initcomcd ");
 		sql.append("order by InstId desc");
 		IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
 		
+		instance.set("initcomcd", session.getEmployee().getGlobalCom());
 		instance.set("isdocument", 1);
 		instance.select();
 		
