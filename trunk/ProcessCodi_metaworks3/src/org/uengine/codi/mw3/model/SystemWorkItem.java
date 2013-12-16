@@ -25,7 +25,10 @@ public Object[] add() throws Exception {
 	emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id"));
 	emp = emp.findMe();
 	emp.setGlobalCom(session.getEmployee().getGlobalCom());
-
+	if( !emp.next() ){
+		emp.createCodi();
+	}
+	emp.beforeFirst();
 	IUser writer = new User();
 	writer.setUserId(emp.getEmpCode());
 	writer.setName(emp.getEmpName());
