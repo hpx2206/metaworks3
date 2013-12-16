@@ -1047,8 +1047,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
 				}*/
-				else
-					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail)};								
+				else{
+				     CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
+				     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail), new Refresh(commingTodoPerspective)};
+				    }							
 			// 덧글
 			}else{
 				if("oce".equals(session.getUx())){
