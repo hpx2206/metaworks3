@@ -109,26 +109,31 @@
 				}
 %>
 <%		
+    if(false){
 		if((value.userId).indexOf('.'+session.employee.globalCom) < 0 &&
 			(session.employee.isAdmin || (value.inviteUser != null && value.inviteUser==session.user.userId))) {
 %>		
      			<!-- 탈퇴하기-->
 				<li><a id="wBtn" href="#" onClick="<%=methods.unsubscribe.caller()%>"><span><%=mw3.localize("$Unsubscribe")%></span></a></li>
+				
 <%
 		}
+	}	
 %>
 <%		
-		if((value.userId).indexOf('.'+session.employee.globalCom) < 0 &&
-			(session.employee.isAdmin || (value.inviteUser != null && value.inviteUser==session.user.userId))) {
-			if(value.guest) {
+		if(false){
+			if((value.userId).indexOf('.'+session.employee.globalCom) < 0 &&
+				(session.employee.isAdmin || (value.inviteUser != null && value.inviteUser==session.user.userId))) {
+				if(value.guest) {
 %>	
-				<!-- 사용자 전환 -->
-				<li><a id="wBtn" href="#" onClick="<%=methods.guestToUser.caller()%>"><span><%=mw3.localize("$GuestToUser")%></span></a></li>
-<%		}else{
+						<!-- 사용자 전환 -->
+						<li><a id="wBtn" href="#" onClick="<%=methods.guestToUser.caller()%>"><span><%=mw3.localize("$GuestToUser")%></span></a></li>
+<%	 			}else{
 %>
-				<!-- Guest 전환 -->
-				<li><a id="wBtn" href="#" onClick="<%=methods.userToGuest.caller()%>"><span><%=mw3.localize("$UserToGuest")%></span></a></li>
+						<!-- Guest 전환 -->
+						<li><a id="wBtn" href="#" onClick="<%=methods.userToGuest.caller()%>"><span><%=mw3.localize("$UserToGuest")%></span></a></li>
 <%
+				}
 			}
 		}
 %> 								
