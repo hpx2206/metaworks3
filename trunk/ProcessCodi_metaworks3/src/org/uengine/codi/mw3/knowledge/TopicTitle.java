@@ -33,6 +33,7 @@ import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.SystemWorkItem;
+import org.uengine.codi.mw3.model.TopicPerspective;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -224,7 +225,8 @@ public class TopicTitle  implements ContextAware{
 		
 		TopicNode topicList = new TopicNode();
 		topicList.copyFrom(topicNodeList);
-		returnObject[returnObj.length ] = new ToAppend(topicList, topicNode);
+		TopicPerspective topicPerspective = new TopicPerspective();
+		returnObject[returnObj.length ] = new Refresh(topicPerspective);
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow());
 		return returnObject;
 
