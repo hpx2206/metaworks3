@@ -50,9 +50,10 @@ public class TopicInfo extends GroupInfo{
 		deletedNode.setId(this.getId());
 		deletedNode.copyFrom(deletedNode.databaseMe());
 		deletedNode.deleteDatabaseMe();
+		TopicPerspective topicPerspective = new TopicPerspective();
 		
 		//this가 아닌 Node지우기.
-		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(deletedNode)};
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(deletedNode), new Refresh(topicPerspective)};
 	}
 	
 	@Override
