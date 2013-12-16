@@ -759,21 +759,21 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	public Instance createWorkItem(String type) throws Exception{
-		Employee representiveMailEmp = new Employee();
-		representiveMailEmp.setEmpCode("0");
-		
-		
-		IEmployee repMailEmp = representiveMailEmp.findMe();
-		
-		User theFirstWriter;
-		theFirstWriter = new User();
-		theFirstWriter.setName(repMailEmp.getEmpName());
+//		Employee representiveMailEmp = new Employee();
+//		representiveMailEmp.setEmpCode("0");
+//		
+//		
+//		IEmployee repMailEmp = representiveMailEmp.findMe();
+//		
+//		User theFirstWriter;
+//		theFirstWriter = new User();
+//		theFirstWriter.setName(repMailEmp.getEmpName());
 		
 		SystemWorkItem comment = new SystemWorkItem();
 		comment.processManager = processManager;
 		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		comment.setWriter(theFirstWriter);
+//		comment.setWriter(theFirstWriter);
 		if("join".equals(type)){
 			comment.setSystemMessage(this.getEmpName() + "님이 가입 하셨습니다.");
 		}
@@ -843,24 +843,24 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public boolean createCodi() throws Exception {
 		
-		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
+//		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			
 			Employee emp = new Employee();
-			emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id") + "." + this.globalCom);
+			emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id"));
 			emp.setEmpName(GlobalContext.getPropertyString("codi.user.name"));
 			emp.setGlobalCom(this.globalCom);
 			emp.setLocale(this.getLocale());
 			emp.setApproved(true);
 			
-			if(emp.findMe().getEmpCode() != null && emp.findMe().getEmpCode().equals(GlobalContext.getPropertyString("codi.user.id") + "." + this.globalCom))
+			if(emp.findMe().getEmpCode() != null && emp.findMe().getEmpCode().equals(GlobalContext.getPropertyString("codi.user.id")))
 				return false;
 			
 			emp.createDatabaseMe();
 			
 			this.createCodiThumNail(emp.getEmpCode());
-		}
+//		}
 		
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		
 		return true;
@@ -1147,7 +1147,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		this.notiToFriend();
 		
-		return new Object[] {new Refresh(cp), new Remover(this)};
+		return new Object[] {new Refresh(cp , true), new Remover(this)};
 	}
 	@Override
 	public void addTopicUser() throws Exception {
