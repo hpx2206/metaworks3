@@ -179,13 +179,46 @@ public class ScheduleCalendar implements ContextAware {
 						" where inst.duedate is not null " +
 						" and inst.isdeleted != 1  "+
 						" and inst.instId = follower.instId "+
-						" and follower.endpoint in ( ?initep )" + 
-						" order by inst.duedate";
+						" and follower.endpoint in ( ?initep )";
+						
 						//" and inst.defverId = 'Unstructured.process'";
 		
+		if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
+				sql+=
+				" and	exists ( "
+				+"			select 1 from bpm_procinst	 "
+				+"			where inst.instid = instid	 "
+				+"			and secuopt = 0	and inst.initcomcd = ?initComCd "
+				+"			union all	 "
+				+"			select 1 from bpm_rolemapping rm	 "
+				+"			where inst.instid = rm.rootinstid	 "
+				+"			and inst.secuopt <= 1	 "
+				+"			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 "
+				+"					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) "
+				+"			union all 	 "
+				+"			select 1 from bpm_topicmapping tm	 "
+				+"			where inst.topicId = tm.topicId	 "
+				+"			and inst.secuopt = 3	 "
+				+"			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 "
+				+"					or ( assigntype = 2 and tm.userid = ?partcode ) ) "
+				+"			)	 ";
+			}else{
+				sql+=
+				" and	exists ( "
+				+"			select 1 from bpm_rolemapping rm	 "
+				+"			where inst.instid = rm.rootinstid	 "
+				+"			and assigntype = 0 and rm.endpoint = ?endpoint"
+				+"			)	 ";
+		}
+		
+		sql +=" order by inst.duedate";
+		
 		Instance instance = new Instance();
-		IInstance iInstance = instance.sql(sql);
+		IInstance iInstance = (IInstance) instance.sql(Instance.class, sql);
 		iInstance.setInitEp(userId);
+		iInstance.set("initComCd", session.getEmployee().getGlobalCom());
+		iInstance.set("endpoint", session.getEmployee().getEmpCode());
+		iInstance.set("partcode", session.getEmployee().getPartCode());
 		iInstance.select();		
 		
 		DataConvert(arrListData, iInstance, userId);

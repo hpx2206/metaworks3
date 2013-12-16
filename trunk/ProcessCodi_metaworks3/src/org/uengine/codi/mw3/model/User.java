@@ -830,18 +830,19 @@ public class User extends Database<IUser> implements IUser {
 		Employee employee = new Employee();
 		employee.setEmpCode(getUserId());
 		employee.copyFrom(employee.databaseMe());
-		employee.session = session;
+		//employee.session = session;
 		
 		// "organization" 팔로워기준 - 자기가 추가되어있으면 다보임
 //		Object[] employeeList = employee.loadOrganization();
 		
 		// "request"  시작자기준 
-		employee.session.setEmployee(employee);
-		Object[] employeeList = Perspective.loadInstanceListPanel(session, "request", employee.getEmpCode(), "사원 : " + employee.getEmpName() + "(" + employee.getJikName() +")");
+		//employee.session.setEmployee(employee);
+		Object[] employeeList = Perspective.loadInstanceListPanel(session, "showWall", employee.getEmpCode(), "사원 : " + employee.getEmpName());
 		
 		return new Object[]{(InstanceListPanel) employeeList[1], new Remover(new Popup())};
 	}
 	
+		
 	@Override
 	public Object[] showSchedule() throws Exception{
 		InstanceListPanel instListPanel = new InstanceListPanel();

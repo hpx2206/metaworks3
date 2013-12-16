@@ -149,6 +149,7 @@ public class InstanceList implements ContextAware{
 		}else{
 			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
 		}
+		tempInstanceContent.session = this.session;
 		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		
@@ -192,11 +193,12 @@ public class InstanceList implements ContextAware{
 	}
 	public InstanceList loadDocument(Navigation navigation) throws Exception{
 		IInstance instance = null;
-		
+		Instance loadInst = new Instance();
+		loadInst.session = this.session;
 		if("UnlabeledDocument".equals(this.getMetaworksContext().getHow())){
-			instance = Instance.loadDocument();
+			instance = loadInst.loadDocument();
 		}else{
-			instance = Instance.loadDocument(getFolderId());
+			instance = loadInst.loadDocument(getFolderId());
 		}
 		
 		instance.getMetaworksContext().setHow("document");
