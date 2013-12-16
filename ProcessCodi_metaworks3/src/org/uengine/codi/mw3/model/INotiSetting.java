@@ -68,7 +68,7 @@ public interface INotiSetting extends IDAO{
 	public boolean isInviteOrgan();
 	public void setInviteOrgan(boolean inviteOrgan);
 	
-	@Face(displayName = "$AddFriend")
+	@Face(displayName = "$IsAddFriend")
 	public boolean isAddFriend();
 	public void setAddFriend(boolean addFriend);
 	
