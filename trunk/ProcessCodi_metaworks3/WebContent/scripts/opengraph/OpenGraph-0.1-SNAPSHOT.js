@@ -19757,11 +19757,12 @@ OG.handler.EventHandler.prototype = {
                         me._RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-					    var eventOffset = me._getOffset(event), shape, newElement,
+					    var eventOffset = me._getOffset(event), shape, newElement, boundary,
 					    bBoxArray = $(root).data("bBoxArray");
+					    boundary = element.shape.geom.getBoundary();
                         shape = new OG.shape.bpmn.A_Task();
                         $(shape).attr('auto_draw', 'yes');
-                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [70, 50]);
+                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [boundary.getWidth(), boundary.getHeight()]);
                         me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
                             me._RENDERER.remove(item.box);
