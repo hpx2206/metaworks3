@@ -16,7 +16,7 @@ if (value!=null){
 	<% } %>
 	
 <%
-if(value.moreInstanceList!=null){
+if(value.moreInstanceList==null){
 %>
 <%
 	if(mw3.where  != 'dashboard'){
@@ -30,11 +30,11 @@ if(value.moreInstanceList!=null){
 	}
 %>
 
-		<%=fields.moreInstanceList.here()%>
 
 <%}
 %>
 
+		<%=fields.moreInstanceList.here()%>
 
 <%
 }%>
