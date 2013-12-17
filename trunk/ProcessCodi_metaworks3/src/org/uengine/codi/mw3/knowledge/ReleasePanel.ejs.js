@@ -5,10 +5,6 @@ var org_uengine_codi_mw3_knowledge_ReleasePanel = function(objectId, className) 
 	this.objectDiv = $('#' + this.objectDivId);
 	
 	this.object = mw3.objects[this.objectId];
-
-	console.log(this);	
-	
-	
 };
 
 org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
