@@ -4,8 +4,7 @@ function loadVideoApis(){
 	try{
 		google.load('search', '1', {"callback" : videoApisLoaded});
 	}catch(e){
-		if (console) 
-			console.log(e);
+		if (console) console.log(e);
 	}
 }
 

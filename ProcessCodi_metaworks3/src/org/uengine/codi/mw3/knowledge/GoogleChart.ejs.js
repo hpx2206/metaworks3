@@ -2,8 +2,7 @@ function loadChartApis(){
 	try{
 		google.load("visualization", "1", {packages:["corechart", "gauge", "table", "treemap", "geochart"], callback:chartApisLoaded});
 	}catch(e){
-		if (console) 
-			console.log(e);
+		if (console) console.log(e);
 	}
 }
 
@@ -34,8 +33,6 @@ org_uengine_codi_mw3_knowledge_GoogleChart.prototype = {
 		var object = mw3.objects[this.objectId];
 		
 		if(object.data != null){
-			//console.log(object.data);
-			
 			var data = google.visualization.arrayToDataTable(object.data);
 			
 			var options = {width: 450, height: 400, title: object.title};

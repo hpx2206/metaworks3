@@ -4,8 +4,7 @@ function loadImageApis(){
 	try{
 		google.load('search', '1', {"callback" : imageApisLoaded});
 	}catch(e){
-		if (console) 
-			console.log(e);
+		if (console) console.log(e);
 	}
 }
 
