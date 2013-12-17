@@ -117,7 +117,6 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
     leftTreeObj.bind('loaded', {align : 'left'}, function(event){
     	leftTreeHeight = $(this).find('div .filemgr-tree').height();
     	if( leftTreeHeight > rightTreeHeight){
-    		console.log( "leftTree set");
     		canvas.setCanvasSize([canvasWidth, leftTreeHeight]);	
     	}
 		faceHelper.drawTerminals(this.id, true, canvas , null , false);
@@ -145,14 +144,12 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
     });
     
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
-//        if (console && console.log) console.log('connected!', fromElement.id, '--->', toElement.id);
         var linkedInfoStr = fromElement.id + "," + toElement.id;
         linekedInfo.add(linkedInfoStr);
         faceHelper.linekedInfo = linekedInfo;
     });
 
     canvas.onDisconnectShape(function (event, edgeElement, fromElement, toElement) {
-//        if (console && console.log) console.log('disconnected!', fromElement.id, '-/->', toElement.id);
         var linkedInfoStr = fromElement.id + "," + toElement.id;
         for(var i = 0; i < linekedInfo.size(); i++){
         	if( linekedInfo.get(i) == linkedInfoStr){
@@ -282,9 +279,6 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					// "." 을 "-" 로 변경
 					toId = toId.replace(/\./gi, "-");
 					fromId = fromId.replace(/\./gi, "-");
-					
-//					console.log('fromId = ' + fromId);
-//					console.log('toId = ' + toId);
 					
 					var fromShape = this.icanvas.getElementById(fromId);
 					var toShape = this.icanvas.getElementById(toId);

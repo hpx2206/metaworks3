@@ -271,7 +271,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    	}
         });
 	    canvas.onRemoveShape(function (shapeElement) {
-//	    	console.log($(shapeElement));
 	    });
 	    canvas.onLabelChanged(function (event, shapeElement, afterText, beforeText) {
 	    	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성
