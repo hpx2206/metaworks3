@@ -10,7 +10,6 @@ org_uengine_codi_mw3_model_DeptList.prototype = {
 		
 		var ul = $('#' + this.divId + ' ul');
 		$('<li>').appendTo(ul).html(mw3.locateObject(appendobject, null));
-		console.log($('<li>').appendTo(ul).html());		
 		
 		//html = html.replace('<div', '<li');
 		//html = html.replace('div>', 'li>');	
