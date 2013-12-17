@@ -9,9 +9,6 @@ var org_metaworks_Forward = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	console.log('org_metaworks_Forward');
-	console.log(this.object);
-	
 	if(this.object.url)
 		document.location.href = this.object.url;
 };

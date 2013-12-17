@@ -28,8 +28,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.where == 'index')
 		return true;
 
-	console.log(this.object.metaworksContext.where );
-	
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.where == 'popup'){
 		var popupObj = $("#objDiv_" + this.objectId).closest('.target_popup,.target_stick');
 
@@ -56,8 +54,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		var input_email = mw3.getInputElement(objectId, "email");
 		var input_password = mw3.getInputElement(objectId, "password");
 		
-		
-		console.log(input_rememberMe);
 		
 		if(input_email)
 			input_email.value = id;			
@@ -123,7 +119,6 @@ org_uengine_codi_mw3_Login.prototype = {
 	keydown : function(e){
 		if(e.keyCode == 13){
 			window.event.returnValue = false;
-			console.log(this.object);
 			if( this.object && this.object.status == 'forgotpassword'){
 				mw3.call(this.objectId, 'forgotPassword');
 			}else if(this.object && this.object.status == 'signup'){
