@@ -3,11 +3,11 @@ package org.uengine.codi.mw3.admin;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.model.ICompany;
-import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.SearchBox;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TodoBadge;
+import org.uengine.codi.mw3.model.TopPanelUser;
 
 public class TopPanel {
 
@@ -26,7 +26,14 @@ public class TopPanel {
 		
 		todoBadge = new TodoBadge();
 		
-		setLoginUser(session.getUser());
+		TopPanelUser topPanelUser = new TopPanelUser();
+		try {
+			topPanelUser.copyFrom(session.getUser());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		setLoginUser(topPanelUser);
 		this.getLoginUser().setMetaworksContext(metaworksContext);
 		
 		setCompany(session.getCompany());
@@ -74,11 +81,11 @@ public class TopPanel {
 			this.session = session;
 		}
 		
-	IUser loginUser;
-		public IUser getLoginUser() {
+	TopPanelUser loginUser;
+		public TopPanelUser getLoginUser() {
 			return loginUser;
 		}
-		public void setLoginUser(IUser loginUser) {
+		public void setLoginUser(TopPanelUser loginUser) {
 			this.loginUser = loginUser;
 		}
 		
