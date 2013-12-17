@@ -36,7 +36,7 @@
 %>
 		</ul>
 <%          
-			if(true){
+			if(admin){
 %>					
 		<div id="btnline" style="padding-top:8px;">
 			<ul>
@@ -46,7 +46,10 @@
 <%
 			 }
 %>					
-		<div class="clear"></div>		
+		<div class="clear"></div>
+		<% if( value.dueDateSetting ){ %>
+		<div><span style="color: red">* <%=mw3.localize("$existingSchedule")%></span></div>
+		<% } %>
 	</div>
 
 	<div class="guide">

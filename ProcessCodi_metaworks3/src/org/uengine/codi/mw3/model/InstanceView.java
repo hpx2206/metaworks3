@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.sql.RowSet;
 
@@ -55,7 +56,7 @@ public class InstanceView {
 		
 		// 2013-08-19 performance tuning
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT instid, name, defid, status, secuopt");
+		sb.append("SELECT instid, name, defid, status, secuopt, dueDate");
 		sb.append("  FROM bpm_procinst");
 		sb.append(" WHERE instid = ?instid");
 		
@@ -89,6 +90,7 @@ public class InstanceView {
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.getStatus());
 		setSecuopt(inst.getSecuopt());
+		setDueDate(inst.getDueDate());
 		
 		InstanceFollowers followers = new InstanceFollowers();
 		followers.setInstanceId(inst.getInstId().toString());
@@ -246,7 +248,14 @@ public class InstanceView {
 		public void setSecuopt(String secuopt) {
 			this.secuopt = secuopt;
 		}
-
+	Date dueDate;
+		public Date getDueDate() {
+			return dueDate;
+		}
+		public void setDueDate(Date dueDate) {
+			this.dueDate = dueDate;
+		}
+		
 	@AutowiredFromClient
 	public Session session;
 
