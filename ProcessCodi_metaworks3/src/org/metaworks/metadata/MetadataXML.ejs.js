@@ -28,8 +28,6 @@ org_metaworks_metadata_MetadataXML.prototype = {
 			
 			newMetadataProperty.file.upload();
 			
-			console.log(object);
-			
 		}else if(type == 'file'){
 			var filePath = object.filePath;
 			value = filePath.substring(0, filePath.lastIndexOf('\\'));
