@@ -153,8 +153,6 @@ public class InstanceDueSetter implements ContextAware{
 		
 		
 		if(databaseDueTime != dueTime){
-			instanceRef.setDueDate(new Date(dueTime));
-			
 			//if schedule changed
 			CommentWorkItem workItem = new CommentWorkItem();
 			workItem.getMetaworksContext().setHow("changeSchedule");
@@ -164,8 +162,10 @@ public class InstanceDueSetter implements ContextAware{
 			String title = null;
 			
 			if(dueTime == 0){
+				instanceRef.setDueDate(null);
 				title = localeManager.getString("$CancelDate");
 			}else{				
+				instanceRef.setDueDate(new Date(dueTime));
 				title = localeManager.getString("$ChangedDate");			
 				title += ": " + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate());
 			}

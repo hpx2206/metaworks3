@@ -23,11 +23,7 @@ public class ProcessMapList implements ContextAware {
 		setProcessMapList(processMap);		
 	}
 	
-	@AutowiredToClient
-	ScheduleCalendar scheduleCalendar;
-	
 	String title;
-		
 		public String getTitle() {
 			return title;
 		}
@@ -51,8 +47,15 @@ public class ProcessMapList implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-
 		
+	boolean dueDateSetting;
+		public boolean isDueDateSetting() {
+			return dueDateSetting;
+		}
+		public void setDueDateSetting(boolean dueDateSetting) {
+			this.dueDateSetting = dueDateSetting;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 		

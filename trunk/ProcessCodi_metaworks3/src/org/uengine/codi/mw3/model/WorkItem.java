@@ -1421,13 +1421,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		//Good example :   customizing for specific usage - removing some parts
 		//newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
-
 		
 		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.scheduleCalendar = this.scheduleCalendar;
 		processMapList.load(session);
 		processMapList.setParentInstanceId(getInstId());
 		processMapList.setTitle(getTitle());
+		
+		if( newInstancePanel != null && newInstancePanel.getDueDate() != null){
+			processMapList.setDueDateSetting(true);
+			// 새글을 쓰려는데 dueDate 가 이미 있는 경우
+		}else if( newInstancePanel == null && instanceViewContent != null && instanceViewContent.getInstanceView() != null && instanceViewContent.getInstanceView().getDueDate() != null ){
+			// 기존 글에서 프로세스를 실행시키려는데, 인스턴스에 이미 dueDate가 들어가 있는 경우
+			processMapList.setDueDateSetting(true);
+		}
 		
 		Popup popup = new Popup();
 		popup.setPanel(processMapList);

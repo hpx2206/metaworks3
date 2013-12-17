@@ -7,12 +7,9 @@ import javax.sql.RowSet;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
