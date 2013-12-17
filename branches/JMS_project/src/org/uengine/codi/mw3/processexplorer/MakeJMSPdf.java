@@ -376,10 +376,9 @@ public class MakeJMSPdf {
 			    		contentsParagraph.setIndentationLeft(30);
 			    		paragraph.add(contentsParagraph);
 	    			}
-	    			addEmptyLine(paragraph, 1);
-	    		
-	    			contentParagraph.add(paragraph);
 	    		}
+//	    		addEmptyLine(paragraph, 1);
+	    		contentParagraph.add(paragraph);
 	    		// 부록이 나온 후에 프로세스를 그린다.
 	    		Image processImage = Image.getInstance(convertedFilepath + ".png");
 	    		contentParagraph.add(processImage);
