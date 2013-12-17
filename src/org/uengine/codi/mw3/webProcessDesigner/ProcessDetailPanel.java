@@ -36,13 +36,47 @@ public class ProcessDetailPanel implements ContextAware {
 	public ProcessDetailPanel(){
 		setMetaworksContext(new MetaworksContext());
 		documentation = new Documentation();
+		documentation.getMetaworksContext().setHow("process");
+		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		documentation.init();
 	}
 	
 	public void load(Documentation doc){
-		documentation = doc;
-		documentation.getMetaworksContext().setHow("process");
-		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		if( !"".equals(doc.getPurpose()) ){
+			documentation.setPurpose(doc.getPurpose());
+		}
+		if( !"".equals(doc.getRange()) ){
+			documentation.setRange(doc.getRange());
+		}
+		if( !"".equals(doc.getReference()) ){
+			documentation.setReference(doc.getReference());
+		}
+		if( !"".equals(doc.getDefine()) ){
+			documentation.setDefine(doc.getDefine());
+		}
+		if( !"".equals(doc.getResponsibility()) ){
+			documentation.setResponsibility(doc.getResponsibility());
+		}
+		if( !"".equals(doc.getEquipment()) ){
+			documentation.setEquipment(doc.getEquipment());
+		}
+		if( !"".equals(doc.getInitialCondition()) ){
+			documentation.setInitialCondition(doc.getInitialCondition());
+		}
+		if( !"".equals(doc.getNotandum()) ){
+			documentation.setNotandum(doc.getNotandum());
+		}
+		if( !"".equals(doc.getStep()) ){
+			documentation.setStep(doc.getStep());
+		}
+		if( !"".equals(doc.getIndicationStandard()) ){
+			documentation.setIndicationStandard(doc.getIndicationStandard());
+		}
+		if( !"".equals(doc.getActivityDetail()) ){
+			documentation.setActivityDetail(doc.getActivityDetail());
+		}
+		
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
