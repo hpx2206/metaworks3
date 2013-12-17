@@ -23,8 +23,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		try{
 			container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
 		}catch(e){
-			if(window.console)
-				console.log(e);
+			if(window.console) console.log(e);
 		}
 	}
 	

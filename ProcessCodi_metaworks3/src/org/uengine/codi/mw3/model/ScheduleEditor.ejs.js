@@ -15,15 +15,13 @@ var org_uengine_codi_mw3_model_ScheduleEditor = function(objectId, className) {
 org_uengine_codi_mw3_model_ScheduleEditor.prototype.init = function() {
 
 	if (!Ext || typeof Ext != "object") {
-		if (window.console)
-			console.log("Not find object.!! extJS. ");	
+		if (window.console) console.log("Not find object.!! extJS. ");	
 
 		return;
 	}
 
 	if (!Ext.ux.gantt.GanttChartPanel || typeof Ext.ux.gantt.GanttChartPanel != "function") {
-		if (window.console)
-			console.log("Not find object.!! GanttChart.. ");	
+		if (window.console) console.log("Not find object.!! GanttChart.. ");	
 
 		return;
 	}
