@@ -12,7 +12,11 @@
 	var isApp = (mw3.how == "app");
 	var height = 0;
 	if(value.perspectiveInfo){
-		height = 300;
+		if(isProject){
+			height = 251;
+		}else{
+			height = 300;
+		}
 	}else if(isDashboard){
 		height = 38;
 	}else{
