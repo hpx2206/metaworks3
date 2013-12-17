@@ -10,12 +10,10 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 		this.instanceName = object.instanceName;
 		
 		$('#instanceName_' + this.objectId).focus(function(){
-			console.log('focus');
 			$(this).css("border","solid 1px #ccc");
 		});
 		
 		$('#instanceName_' + this.objectId).bind('blur', function(){
-			console.log('blur');
 			mw3.getFaceHelper(objectId).change();
 			$(this).css("border","none");
 	

@@ -36,8 +36,6 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		var top = y;
 
 		if(this.divObj.hasClass('target_stick')){
-			console.log('stick');
-		
 			var position = 'right';
 			var where = 'up';
 			

@@ -49,7 +49,6 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		var scrollDiv = $('#objDiv_' + this.objectId + " .bottom");
 		
 		scrollDiv.scroll(function(e) {
-			//console.log(scrollDiv.scrollTop() + "," +scrollDiv.find('div').eq(0).height()+ "," +scrollDiv.height())
 			if(scrollDiv.scrollTop() > scrollDiv.find('div').eq(0).height() - scrollDiv.height()-200){
 				mw3.objects[lastMore].more();
 			}

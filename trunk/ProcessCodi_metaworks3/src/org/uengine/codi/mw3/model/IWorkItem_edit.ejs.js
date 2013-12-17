@@ -155,8 +155,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 	},
 	
 	showStatus : function(message){
-		if(window.console)
-			console.log(message);
+		if(window.console) console.log(message);
 	},
 	
 	sendComment : function(){
