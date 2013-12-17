@@ -33,7 +33,7 @@ public class TodoBadge{
 	
 	@ServiceMethod
 	public void refresh() throws Exception{
-		this.setLoader(false);
+		
 		
 		/*PersonalPerspective personalPerspective = new PersonalPerspective();
 
@@ -42,7 +42,11 @@ public class TodoBadge{
 		personalPerspective.loadInbox();
 		personalPerspective.session.getMetaworksContext().setWhen(null);*/
 		
-		setNewItemCount(Instance.countTodo(session));
+		if(session != null){
+			this.setLoader(false);
+			
+			setNewItemCount(Instance.countTodo(session));
+		}
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, loader="org.uengine.codi.mw3.model.Popup")
