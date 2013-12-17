@@ -102,7 +102,6 @@
                         var serviceMethod = objectMetadata.serviceMethodContexts[key];
                     
                         if(buttons[i] == serviceMethod.methodName){
-                            console.log(buttons[i]);
 %>
 <a id="wBtn" style="cursor: pointer" onClick="mw3.call(<%=editObject.__objectId%>, '<%=serviceMethod.methodName%>');"><span><%=mw3.localize(serviceMethod.displayName)%></span></a>
 <%                      
