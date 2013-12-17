@@ -335,7 +335,7 @@ public class MakeJMSPdf {
 //        		Chunk sub13 = new Chunk("2" , catFont);
         		Paragraph subTitle1 = new Paragraph(35);
         		subTitle1.add(sub11);
-        		addEmptySpace(subTitle1, contentOrder < 9 ? 20 : 17);
+        		addEmptySpace(subTitle1, contentOrder < 10 ? 20 : 17);
         		subTitle1.add(sub12);
         		addEmptySpace(subTitle1, 82);
 //        		subTitle1.add(sub13);
@@ -352,7 +352,7 @@ public class MakeJMSPdf {
 	//    		Chunk sub13 = new Chunk("2" , catFont);
 	    		Paragraph subTitle1 = new Paragraph(35);
 	    		subTitle1.add(sub11);
-	    		addEmptySpace(subTitle1, contentOrder < 9 ? 20 : 17);
+	    		addEmptySpace(subTitle1, contentOrder < 10 ? 20 : 17);
 	    		subTitle1.add(sub12);
 	    		addEmptySpace(subTitle1, 82);
 	//    		subTitle1.add(sub13);
