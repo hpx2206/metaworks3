@@ -89,8 +89,6 @@ org_uengine_codi_mw3_ide_editor_metadata_ProcessXmlEditor.prototype = {
 			
 			if(!faceHelper.object.loaded){
 				faceHelper.object.content = mw3.call(objectId, 'load');
-				
-				console.log(faceHelper.object.content);
 			}
 
 			faceHelper.editor.getSession().setValue(faceHelper.object.content);
