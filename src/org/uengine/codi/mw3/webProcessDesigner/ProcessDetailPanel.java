@@ -36,40 +36,13 @@ public class ProcessDetailPanel implements ContextAware {
 	public ProcessDetailPanel(){
 		setMetaworksContext(new MetaworksContext());
 		documentation = new Documentation();
-		documentation.getMetaworksContext().setHow("process");
-		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		documentation.init();
 	}
 	
 	public void load(Documentation doc){
-		
-		if( doc.getPurpose() != null ){
-			documentation.setPurpose(doc.getPurpose());
-		}
-		if( doc.getReference() != null ){
-			documentation.setReference(doc.getReference());
-		}
-		if( doc.getResponsibility() != null ){
-			documentation.setResponsibility(doc.getResponsibility());
-		}
-		if( doc.getEquipment() != null ){
-			documentation.setEquipment(doc.getEquipment());
-		}
-		if( doc.getRequirement() != null ){
-			documentation.setRequirement(doc.getRequirement());
-		}
-		if( doc.getIndicationStandard() != null ){
-			documentation.setIndicationStandard(doc.getIndicationStandard());
-		}
-		if( doc.getInitialCondition() != null ){
-			documentation.setInitialCondition(doc.getInitialCondition());
-		}
-		if( doc.getNotandum() != null ){
-			documentation.setNotandum(doc.getNotandum());
-		}
-		if( doc.getActivityDetail() != null ){
-			documentation.setActivityDetail(doc.getActivityDetail());
-		}
+		documentation = doc;
+		documentation.getMetaworksContext().setHow("process");
+		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
