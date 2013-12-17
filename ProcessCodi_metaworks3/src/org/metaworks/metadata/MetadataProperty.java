@@ -29,6 +29,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Project;
@@ -830,7 +831,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 
 
-			MetadataFile previewFile = new MetadataFile();
+			MetaworksFile previewFile = new MetaworksFile();
 			previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			previewFile.setUploadedPath(this.getValue());
 			previewFile.setMimeType(ResourceNode.findNodeType(this.getValue()));

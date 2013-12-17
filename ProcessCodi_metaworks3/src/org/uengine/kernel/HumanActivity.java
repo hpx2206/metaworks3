@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.contexts.TextContext;
@@ -361,6 +362,7 @@ public class HumanActivity extends ReceiveActivity{
 	}
 */
 	TextContext instruction = TextContext.createInstance();
+	@Face(displayName="$instruction")
 		public TextContext getInstruction() {
 			return instruction;
 		}
@@ -369,6 +371,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	TextContext keyword = TextContext.createInstance();
+	@Face(displayName="$keyword")
 		public TextContext getKeyword() {
 			return keyword;
 		}

@@ -86,6 +86,9 @@ public class WorkItemHandler implements ContextAware{
 					
 					Serializable processVariableValue = pc.getVariable().get(instance, "");
 					Class variableType = pc.getVariable().getType();
+					if( variableType == null && pc.getVariable().getTypeInputter() != null ){
+						variableType = Class.forName(pc.getVariable().getTypeInputter());
+					}
 //				
 //					if(variableType == String.class){
 //						parameters[i].setValueString((String) processVariableValue);
@@ -98,6 +101,7 @@ public class WorkItemHandler implements ContextAware{
 					if(variableType == ComplexType.class){
 						if(processVariableValue instanceof ComplexType){
 							ComplexType complexType = (ComplexType) processVariableValue;
+							complexType.setDesignerMode(false);
 							processVariableValue = (Serializable) complexType.getTypeClass().newInstance();
 							
 							if(processVariableValue instanceof ContextAware){
