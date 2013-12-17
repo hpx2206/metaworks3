@@ -76,7 +76,6 @@ org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
 	openAppBrowser : function(){
 		/*
 		var object = mw3.objects[this.objectId];
-		console.log(object);
 		window.open(object.url);
 		this.object.empCode = this.session.employee.empCode;
 		
