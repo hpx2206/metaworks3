@@ -40,11 +40,8 @@ org_metaworks_metadata_MetadataProperty.prototype = {
 		
 		metadataXML.properties = array;*/
 		
-			console.log(metadataXML);
-			
 			var xmlData = mw3.call(metadataXML.__objectId, 'toXmlXStream');
 			
-//			console.log(xmlData);
 			/*xmlObjectId = autowiredXml.__objectId;
 			xmlFaceHelper = mw3.getFaceHelper(xmlObjectId);
 			xmlFaceHelper.removeProperty(xml, object.name);*/

@@ -56,7 +56,7 @@ return true;
 			} ]
 		});
 	}catch(e){
-		console.log(e);
+		if(console) console.log(e);
 	}
 
 }
