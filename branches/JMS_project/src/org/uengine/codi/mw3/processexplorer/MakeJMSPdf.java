@@ -263,7 +263,7 @@ public class MakeJMSPdf {
         
 		Paragraph preface = new Paragraph();
 		preface.setFont(subFont);
-		addEmptyLine(preface, 2);
+		addEmptyLine(preface, 1);
 		menuParagraph.add(preface);
 		
 		// 목차
