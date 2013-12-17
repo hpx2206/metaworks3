@@ -37,6 +37,7 @@ public class ValueChainView extends ActivityView{
 		Popup modalWindow = new Popup(valueChainViewerPanel);
 		modalWindow.setWidth(300);
 		modalWindow.setHeight(350);
+		modalWindow.setName("");
 		
 		return modalWindow;  
 	 }

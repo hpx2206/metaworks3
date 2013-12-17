@@ -72,70 +72,69 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 					// System.out.println(path);
 				}
 				
-				
-				
-				String parentId=null;
-				
-			
-				
-				WfNode wfNode = new WfNode();
-				wfNode.setName(name);
-				wfNode.setType(type);
-				wfNode.setParentId(session.getCompany().getComCode());
-				wfNode.setAuthorId(session.getUser().getUserId());		
-				wfNode.setCompanyId(session.getCompany().getComCode());
-				wfNode.createMe();
-				parentId = wfNode.getId();
-				
-	
-					
 				ProcessTopicMapping processTopicMapping = new ProcessTopicMapping();
-				processTopicMapping.setTopicId(parentId);
 				processTopicMapping.setProcessPath(path);
-				processTopicMapping.setProcessName(name);
-				processTopicMapping.setType(type);
-				processTopicMapping.createDatabaseMe();
-				processTopicMapping.flushDatabaseMe();
+				IProcessTopicMapping iptm = processTopicMapping.findByProcessPath();
+				
+				if( iptm == null ){
+					// create
+					String parentId=null;
 					
+					WfNode wfNode = new WfNode();
+					wfNode.setName(name);
+					wfNode.setType(type);
+					wfNode.setParentId(session.getCompany().getComCode());
+					wfNode.setAuthorId(session.getUser().getUserId());		
+					wfNode.setCompanyId(session.getCompany().getComCode());
+					wfNode.createMe();
+					parentId = wfNode.getId();
+					
+					processTopicMapping.setTopicId(parentId);
+					processTopicMapping.setProcessPath(path);
+					processTopicMapping.setProcessName(name);
+					processTopicMapping.setType(type);
+					processTopicMapping.createDatabaseMe();
+					processTopicMapping.flushDatabaseMe();
 						
-				ArrayList<Activity> activityList = processDesignerContentPanel.processDesignerContainer.getActivityList();
-				for(Activity activity : activityList){
-					if( activity instanceof HumanActivity){
-						name = null;
-						name = activity.getDescription().getText();
-						type = "activity";
-						
-						String activitytId=null;
-						wfNode = null;
-						
-						wfNode = new WfNode();
-						wfNode.setName(name);
-						wfNode.setType(type);
-						wfNode.setParentId(parentId);	
-						wfNode.setAuthorId(session.getUser().getUserId());		
-						wfNode.setCompanyId(session.getCompany().getComCode());
-						wfNode.createMe();
-						activitytId = wfNode.getId();
-						
-						wfNode.flushDatabaseMe();
-						
-						
-						processTopicMapping = null;
-						processTopicMapping = new ProcessTopicMapping();
-						processTopicMapping.setProcessPath(path);
-						processTopicMapping.setProcessName(name);
-						processTopicMapping.setType(type);
-						processTopicMapping.setTopicId(activitytId);
-						processTopicMapping.createDatabaseMe();
-						
-						processTopicMapping.flushDatabaseMe();
-						
-						
+							
+					ArrayList<Activity> activityList = processDesignerContentPanel.processDesignerContainer.getActivityList();
+					for(Activity activity : activityList){
+						if( activity instanceof HumanActivity){
+							addActivityToDatabase(activity, parentId, path);
+						}
+					}
+				}else{
+					// update
+					String parentId = null;
+					iptm.beforeFirst();
+					while(iptm.next()){
+						if( "process".equals(iptm.getType()) ){
+							parentId = iptm.getTopicId();
+							WfNode wfNode = new WfNode();
+							wfNode.setId(parentId);
+							wfNode.databaseMe().setName(name);
+							processTopicMapping.copyFrom(iptm);
+							processTopicMapping.databaseMe().setProcessName(name);
+						}
+					}
+					iptm.beforeFirst();
+					
+					ArrayList<Activity> activityList = processDesignerContentPanel.processDesignerContainer.getActivityList();
+					for(Activity activity : activityList){
+						boolean updataFlag = true;
+						while(iptm.next()){
+							if(  iptm.getProcessName().equals(activity.getDescription().getText())){
+								updataFlag = false;
+								break;
+							}
+						}
+						if( updataFlag ){
+							//  processTopicMapping 테이블에 현재 엑티비티와 같은 이름으로된 data가 없는 경우 activity를 넣어준다.
+							addActivityToDatabase(activity, parentId, path);
+						}
 					}
 					
 				}
-
-					
 									
 			}
 		}
@@ -159,6 +158,34 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 			if(fos!=null)
 				fos.close();
 		}
+	}
+	
+	public void addActivityToDatabase(Activity activity, String parentId,  String processPath) throws Exception{
+		String name = activity.getDescription().getText();
+		String type = "activity";
+		
+		String activitytId=null;
+		
+		WfNode wfNode = new WfNode();
+		wfNode.setName(name);
+		wfNode.setType(type);
+		wfNode.setParentId(parentId);	
+		wfNode.setAuthorId(session.getUser().getUserId());		
+		wfNode.setCompanyId(session.getCompany().getComCode());
+		wfNode.createMe();
+		activitytId = wfNode.getId();
+		
+		wfNode.flushDatabaseMe();
+		
+		
+		ProcessTopicMapping processTopicMapping = new ProcessTopicMapping();
+		processTopicMapping.setProcessPath(processPath);
+		processTopicMapping.setProcessName(name);
+		processTopicMapping.setType(type);
+		processTopicMapping.setTopicId(activitytId);
+		processTopicMapping.createDatabaseMe();
+		processTopicMapping.flushDatabaseMe();
+		
 	}
 	
 	public void saveTopic(String type, String path, String name) throws Exception{

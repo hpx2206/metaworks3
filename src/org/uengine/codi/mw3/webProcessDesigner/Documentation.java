@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/Documentation.ejs",
 		ejsPathMappingByContext = {
@@ -15,7 +13,7 @@ import org.metaworks.annotation.ServiceMethod;
 			"{when:'view', face : 'dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/Documentation.ejs'}"
 		}
 		, options={"fieldOrder"}
-		,values={"purpose,reference,responsibility,equipment,requirement,indicationStandard,initialCondition,notandum,activityDetail"})
+		,values={"purpose,range,reference,define,responsibility,equipment,requirement,initialCondition,notandum,step,indicationStandard,activityDetail"})
 public class Documentation implements Serializable , ContextAware{
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -26,17 +24,20 @@ public class Documentation implements Serializable , ContextAware{
 		}
 		
 	String purpose;
+	String range;
 	String reference;
+	String define;
 	String responsibility;
 	String equipment;
 	String requirement;
-	String indicationStandard;
 	String initialCondition;
 	String notandum;
+	String step;
+	String indicationStandard;
 	
 	String activityDetail;
 	
-	@Face(displayName="목적", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	@Face(displayName="목적", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getPurpose() {
 		return purpose;
@@ -44,7 +45,17 @@ public class Documentation implements Serializable , ContextAware{
 	public void setPurpose(String purpose) {
 		this.purpose = purpose;
 	}
-	@Face(displayName="참조", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	
+	@Face(displayName="적용범위", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
+	@Available(how={"process"})
+	public String getRange() {
+		return range;
+	}
+	public void setRange(String range) {
+		this.range = range;
+	}
+	
+	@Face(displayName="참조", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getReference() {
 		return reference;
@@ -52,7 +63,17 @@ public class Documentation implements Serializable , ContextAware{
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	@Face(displayName="책임", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	
+	@Face(displayName="정의", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
+	@Available(how={"process"})
+	public String getDefine() {
+		return define;
+	}
+	public void setDefine(String define) {
+		this.define = define;
+	}
+
+	@Face(displayName="책임", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getResponsibility() {
 		return responsibility;
@@ -60,7 +81,7 @@ public class Documentation implements Serializable , ContextAware{
 	public void setResponsibility(String responsibility) {
 		this.responsibility = responsibility;
 	}
-	@Face(displayName="장비", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	@Face(displayName="장비", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getEquipment() {
 		return equipment;
@@ -68,7 +89,7 @@ public class Documentation implements Serializable , ContextAware{
 	public void setEquipment(String equipment) {
 		this.equipment = equipment;
 	}
-	@Face(displayName="자격요건", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	@Face(displayName="자격요건", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getRequirement() {
 		return requirement;
@@ -76,15 +97,7 @@ public class Documentation implements Serializable , ContextAware{
 	public void setRequirement(String requirement) {
 		this.requirement = requirement;
 	}
-	@Face(displayName="판정기준", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
-	@Available(how={"process"})
-	public String getIndicationStandard() {
-		return indicationStandard;
-	}
-	public void setIndicationStandard(String indicationStandard) {
-		this.indicationStandard = indicationStandard;
-	}
-	@Face(displayName="초기조건", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	@Face(displayName="초기조건", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getInitialCondition() {
 		return initialCondition;
@@ -92,7 +105,7 @@ public class Documentation implements Serializable , ContextAware{
 	public void setInitialCondition(String initialCondition) {
 		this.initialCondition = initialCondition;
 	}
-	@Face(displayName="주의사항", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	@Face(displayName="주의사항", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	@Available(how={"process"})
 	public String getNotandum() {
 		return notandum;
@@ -101,7 +114,25 @@ public class Documentation implements Serializable , ContextAware{
 		this.notandum = notandum;
 	}
 	
-	@Face(displayName="요약내용", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "80" })
+	@Face(displayName="절차", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
+	@Available(how={"process"})
+	public String getStep() {
+		return step;
+	}
+	public void setStep(String step) {
+		this.step = step;
+	}
+	
+	@Face(displayName="판정기준", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
+	@Available(how={"process"})
+	public String getIndicationStandard() {
+		return indicationStandard;
+	}
+	public void setIndicationStandard(String indicationStandard) {
+		this.indicationStandard = indicationStandard;
+	}
+	
+	@Face(displayName="요약내용", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "60" })
 	public String getActivityDetail() {
 		return activityDetail;
 	}
