@@ -74,7 +74,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 	        	
 			}else{
 				element = object.element;
-//				console.log(element);
 				
 				var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);
@@ -125,10 +124,8 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         		greedy: true,		
         		tolerance: 'geom',
             	over: function(event, ui){
-            		console.log('over');
             	},
             	out: function(event, ui){
-            		console.log('out');
             	},
         		drop: function(event, ui){
         			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
