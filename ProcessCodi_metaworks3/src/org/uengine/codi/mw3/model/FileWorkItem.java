@@ -21,8 +21,6 @@ import org.directwebremoting.io.FileTransfer;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
-import org.metaworks.Remover;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
@@ -31,6 +29,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.util.CodiStatusUtil;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.util.UEngineUtil;
@@ -263,8 +262,15 @@ public class FileWorkItem extends WorkItem{
 		File inputFile = new File(inputFilePath);
 		File outputFile = new File(outputFilePath);
 
+		int port = Integer.parseInt(GlobalContext.getPropertyString("ooo.port", "8100"));
+		
 		// connect to an OpenOffice.org instance running on port 8100
-		OpenOfficeConnection connection = new SocketOpenOfficeConnection(8100);
+		OpenOfficeConnection connection;
+		
+		if("0".equals(GlobalContext.getPropertyString("ooo.remote", "0")))
+			connection = new SocketOpenOfficeConnection(port);
+		else
+			connection = new SocketOpenOfficeConnection(GlobalContext.getPropertyString("ooo.host", "127.0.0.1"), port);
 
 		try {
 			connection.connect();

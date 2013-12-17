@@ -30,10 +30,12 @@ public class NotificationBadge{
 	
 	@ServiceMethod
 	public void refresh() throws Exception{
-		this.setLoader(false);
-		
-		Notification notiList = new Notification();
-		setNewItemCount(notiList.count(session));
+		if(session != null){
+			this.setLoader(false);
+			
+			Notification notiList = new Notification();
+			setNewItemCount(notiList.count(session));
+		}
 	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, loader="org.uengine.codi.mw3.model.Popup")
