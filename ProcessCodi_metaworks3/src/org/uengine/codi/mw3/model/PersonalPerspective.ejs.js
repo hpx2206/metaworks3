@@ -9,3 +9,9 @@ var org_uengine_codi_mw3_model_PersonalPerspective = function(objectId, classNam
 	if(this.object == null)
 		return true;	
 };
+Metaworks3.prototype.endLoading = function(objId){
+	$('#navigator .depth2 a').click(function(){
+		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+		$(this).parent().addClass('selected_navi');
+	});
+};
