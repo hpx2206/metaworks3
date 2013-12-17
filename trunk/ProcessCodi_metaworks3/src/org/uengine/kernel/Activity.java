@@ -7,7 +7,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,13 +29,10 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
-import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.contexts.TextContext;
@@ -128,7 +124,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	
 
 	TextContext name;
-	@Face(displayName="엑티비티 이름")
+	@Face(displayName="$activityName")
 		public TextContext getName() {
 			return name;
 		}
@@ -149,7 +145,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 		
 	TextContext description = TextContext.createInstance();
-	@Face(displayName="엑티비티 설명")
+	@Face(displayName="$activityDisplayName")
 		public TextContext getDescription() {
 			return description;
 		}

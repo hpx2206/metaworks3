@@ -96,11 +96,13 @@ public class ImageProperty extends MetadataProperty{
 	}
 
 
-	@ServiceMethod(callByContent=true, bindingHidden=true, bindingFor="file", eventBinding={"uploaded"})
-	public void changeFile(){
+	@ServiceMethod(callByContent=true, bindingHidden=true, bindingFor="file", eventBinding={"uploaded"} ,target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] changeFile(){
 		// TODO 여기를 안타서.. 셀프 서비스 포탈에서 이미지가 변경이 안됨
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		setFilePreview(this.getFile());
+		
+		return new Object[]{new Refresh(this.getFile() , true) ,  new Refresh(this.getFilePreview() , true)};
 		
 	}
 	

@@ -63,11 +63,10 @@ public class ComplexType implements Serializable, PropertyListable{
 		return getTypeClass(null);
 	}
 	public Class getTypeClass(ProcessManagerRemote pm) throws Exception{
-		if(typeClass!=null) return typeClass;
-		
 		if( designerMode ){
 			return null;
 		}
+		if(typeClass!=null) return typeClass;
 		
 		String typeId = getTypeId();
 		String className = null;
