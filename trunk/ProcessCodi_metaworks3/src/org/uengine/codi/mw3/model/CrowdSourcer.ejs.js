@@ -53,8 +53,6 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 								if (!response || response.error) {
 									
 									mw3.showError(null, response.error.message, null);
-//									if(window.console)
-//										console.log("error : " + response.error.message);
 								} else {
 									postIds.push(response.id);
 								}

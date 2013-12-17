@@ -10,6 +10,7 @@ var org_uengine_codi_mw3_model_ContactPerspective = function(objectId, className
 	if(this.object.loader)
 		mw3.call(this.objectId, 'select');
 	else{
+		console.log('1');
 		this.div.hover(
 			function(){
 				$(this).find('.west_more_btn').show();
@@ -18,5 +19,6 @@ var org_uengine_codi_mw3_model_ContactPerspective = function(objectId, className
 				$(this).find('.west_more_btn').hide();
 			}
 		)
+		console.log('2');
 	}	
 };

@@ -16,7 +16,6 @@ var org_uengine_codi_mw3_model_AddContactPanel = function(objectId, className) {
 		
 		FB.getLoginStatus(function(response) { //is facebook logged?
 			if (response.status === 'connected') { 
-				console.log(response.status);
 				faceHelper.readComment(friendsObjId);
 			}else{
 				FB.login(function(response) {
@@ -45,8 +44,6 @@ org_uengine_codi_mw3_model_AddContactPanel.prototype = {
 				}, 
 				
 				function(response) {
-					console.log(response);
-					
 					if(!response || response.error){
 						alert('Error!');
 
