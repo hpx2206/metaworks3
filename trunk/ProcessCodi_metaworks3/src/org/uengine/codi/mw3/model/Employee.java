@@ -556,7 +556,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			}
 		}
 		this.setApproved(true);
-		this.setLocale(localeManager.getLanguage());
+		if( localeManager.getLanguage() != null ){
+			this.setLocale(localeManager.getLanguage());
+		}
 		
 		// TODO: 부서 딕셔너리 처리 필		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){

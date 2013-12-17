@@ -25,6 +25,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -46,7 +47,6 @@ import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.util.UEngineUtil;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 
@@ -130,7 +130,9 @@ public class Login implements ContextAware {
 		public void setLastVisitPage(String lastVisitPage) {
 			this.lastVisitPage = lastVisitPage;
 		}
-
+	@AutowiredFromClient
+	public Locale localeManager;
+	
 	public Session loginService() throws Exception {
 		
 		Session session = new Session();
@@ -447,6 +449,7 @@ public class Login implements ContextAware {
 		employee.setPreferUX(defaultUX);
 		employee.setPreferMob(defaultMob);
 		employee.setEmpCode(employee.createNewId());
+		employee.setLocale(localeManager.getLanguage());
 		
 		try {
 			employee.createDatabaseMe();
