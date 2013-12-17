@@ -321,7 +321,17 @@ if(value){
 	<%
 	} else if(mw3.where == 'addContact') {
 	%>
-	<a onClick="<%=methods.addContact.caller() %>" class="iemployee" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
+	
+	<div class="user" onclick="<%=methods.addContact.caller()%>">		
+			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.empName%>">	
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
+				
+				     <div class="followers_name" title="<%=value.empName%>"><%=value.empName%>
+				  
+			</div>
+	</div><%=value.empName%>
+	<div style="clear:both"></div>
+				
 	
 	<%
 	} else if(mw3.where == 'addTopic') {

@@ -295,7 +295,8 @@ public class Dept extends Database<IDept> implements IDept {
 
 	@Override
 	public void drillDown() throws Exception {
-		/*setSelected(!getSelected());
+		setSelected(!getSelected());
+		
 		if (!selected) {
 			DeptList deptList = new DeptList();
 			deptList.setId(this.getPartCode());
@@ -331,7 +332,7 @@ public class Dept extends Database<IDept> implements IDept {
 				
 				setDeptEmployee(employeeList);
 			}
-		}*/
+		}
 	}
 		
 	public Object[] loadDeptList() throws Exception {
