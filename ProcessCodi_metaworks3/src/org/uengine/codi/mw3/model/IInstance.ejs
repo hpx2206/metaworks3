@@ -55,16 +55,6 @@ if(value){
 			</div>				
 		</td> 
 		<td id="td_<%=objectId%>">
-										<!--oce 버전 기능 잠시 죽입니다:cjs -->
-										<!--
-										<% if(mw3.how == 'sns'){ %>
-												<div class="instanceBtn instanceBtn_sns">
-													<span style="float:left"><%=fields.instanceTooltip.here()%></span>
-													<span style="float:left"><%=fields.instanceDrag.here()%></span>
-													<div class="clear"></div>
-												</div>
-											<%}%>									
-										-->
 			<ul class="lst_type">										
 				<li class="trigger">					
 					<div class="instanceTitle">
@@ -79,16 +69,15 @@ if(value){
 									<div>
 										<div  class="instanceType">
 											<% if(isChat){ %>
-												<!--span class="type_ping"></span--><span class="instanceLock"></span>
+												<span class="instanceLock"></span>
 											<% }else if(isOpenCollab){ %>
-												<!--span class="type_ping"></span--><span class="instanceUnLock"></span>
+												<span class="instanceUnLock"></span>
 											<% }else if(isProcess){ %>
 												<span class="type_process"></span><span class="instanceUnLock"></span>
 											<% }else if(isSecureProcess){ %>
 												<span class="type_process"></span><span class="instanceLock"></span>
 											<% } %>
 											<% if(topicName != null){ %>
-												<!--<span class="type_topic"></span>-->
 											<% }%>
 										</div>										
 										<span style="float:left; font-size:11px;  margin:3px 5px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%>    </span>
@@ -98,7 +87,6 @@ if(value){
 										<%if(value.dueDate){ 
 											if(value.status=='Completed'){
 											%>
-										<!--float:right; margin-bottom:4px-->
 										<span class="label label-default" style="float:right"><%=mw3.localize('$Complete')%></span>
 										
 											<%
@@ -166,7 +154,6 @@ if(value){
 				    
 			   		<% if(!isDashboard){%>
 					    <li>
-					    	<!--style="margin-left:38px;"-->
 					   		<table><td style="vertical-align:top"><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
 					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
 					 	</li>
@@ -174,7 +161,6 @@ if(value){
 
 			   		<%if(value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
-					    	<!--style="margin-left:38px;"-->
 					   		<table><td  style="vertical-align:top"><%value.lastCmnt2User['size']='small';%><%=fields.lastCmnt2User.here()%></td>
 					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt2%></font></td></table>
 					 	</li>
