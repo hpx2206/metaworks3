@@ -12,11 +12,17 @@
 			<div id="navigator">
 				<!-- <div class="depth1">친구</div> -->
 				<div class="depth2 contact_list"><%=fields.contactList.here()%></div>
+	
+<%
+	if(mw3.when == "contacts"){
+%>			
 				<div class="user" >
 					<div onClick="<%=methods.addContact.caller()%>" style="float:left; width:33px; height:33px; font-size:24px; font-weight:bold; line-height:31px; text-align:center; margin-top:7px;margin-bottom:1px" class="user_focus">+</div>
 					<div class="clear"></div>
 				</div>
-				
+<%
+	}
+%>				
 			</div>
 	<!--/div-->
 		
