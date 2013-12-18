@@ -3,18 +3,6 @@
 		 	
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 %>
-<!--
-		 	<% if(value.session.ux == 'oce'){ %>
-				<div style="float:left;padding-top:10px; margin-right:5px;">
-			 		<img src="images/waveStyle/garuda_logo.png"/>
-			 	</div>
-		 	<% } else{%>
-		 		<div style="float:left;padding-top:10px; margin-right:5px;">
-			 		<img src="images/signIn/codi_logo.png"/>
-			 	</div>
-			<% } %>
--->
-		
 			<div style="float:left;margin-top:6px;"><%=fields.loginUser.here({when: 'self_small'})%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
@@ -44,29 +32,8 @@
 				</div>
 			</div>
 			
-			
-		 	<!--
-			<div class="info">
-				<div class="user">
-		 			<div style="float: left; padding-top: 10px;" onClick=""><b><%=value.loginUser.name%></b> ▼ </div>
-				</div>
-				-->	
-			 	<!--
-		    	<%=fields.searchBox.here()%>
-		    	-->
-		    	<%=fields.session.here({when:'view'})%>
-		    <!--
-			</div>	
-			-->
-			<!--
-		    <div class="info" <% if(value.session && value.session.ux == 'phone') { %> style="right:0px;" <%}%>>
+		    <%=fields.session.here({when:'view'})%>
 		    
-		        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
-		        <%}else{%>
-		        	session here.
-		        <%}%>	
-			</div>	
-			-->
 			<div class="clear"></div>
 <%
 	}

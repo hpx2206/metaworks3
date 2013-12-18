@@ -12,9 +12,6 @@
 		
 						<th width="70"  align="center">Allow Null</td>
 						<th width="200">Default</td>
-						<!--
-						<th width="200">Comment</td>
-						-->
 						<th width="300">&nbsp;</td>
 						<th width="30">&nbsp;</td>
 					</tr>
@@ -31,9 +28,8 @@
 				options['index'] = i;
 				options['htmlTag'] =  'tr';
 %>
-					<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className, null, options)%>	
+					<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className, null, options, {objectId: value.__objectId, name: 'entityFields[' + i + ']'})%>	
 <%
-				mw3.addBeanProperty(value.__objectId, '.entityFields[' + i + ']');
 			}
 		}
 %>				
