@@ -117,7 +117,7 @@
 				<tbody>
 					<tr>	
 						<td>
-							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal; border:none;"<% }%>>
+							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment' || value.type='system'){%>style="font-weight:normal; border:none;"<% }%>>
 								<% if(value.type!='comment' && value.type!='system'){%>	
 										<span style="position:relative; height:38px; float:left; margin-right:10px;">										
 										<img src="images/waveStyle/wih<%=(typeof value.type != 'undefined')?value.type:''%>.png">
@@ -179,8 +179,9 @@
 <%
 	}else{
 %>
-				<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
-									<tr>	
+					
+					<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>	
 <%
 	}
 %>
@@ -196,10 +197,10 @@
 								<%if(value.type=='file' && value.file.mimeType.indexOf("image") != 0){%>		
 									<a href="#" onClick="<%=methods.workItemPopup.caller()%>"> <img src="images/waveStyle/newWindow.png" style="position:relative; top:5px;" title="Open new window"></a>
 								<% }%>
-						<% } %>		
+							<% } %>		
 							</span>
 							
-						<div class="clear"></div>
+							<div class="clear"></div>
 						
 						<%if(value.file.mimeType.indexOf("ms")>=1   || value.file.mimeType.indexOf("officedocument")>=1  || value.file.mimeType.indexOf("plain")>=1 || value.file.mimeType.indexOf("pdf")>=1){%>
 							<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
@@ -225,14 +226,13 @@
 								<%}%>
 							<%}%>
 						<%}%>	
-																<%if(value.type == 'src' && (value.extFile==null || value.contentLoaded)){%>
+						<%if(value.type == 'src' && (value.extFile==null || value.contentLoaded)){%>
 						<td>	
 							<div style="position:relative; height:350px;">					
 								<%=fields.sourceCode.here()%>						
 							</div>
 						</td>
-					<%}else if(value.workItemHandler != null && value.workItemHandler.instanceId != null ){
-					%>
+						<%}else if(value.workItemHandler != null && value.workItemHandler.instanceId != null ){%>
 						<td>	
 <%
 						if(value.dispatchOption == 1){
@@ -245,10 +245,9 @@
 								<%=fields.workItemHandler.here()%>						
 						</td>
 					
-					<%}else if(value.type == 'generic' ){
-					%>
+					<%}else if(value.type == 'generic' ){%>
 						<td>	
-								<%=fields.genericWorkItemHandler.here()%>						
+							<%=fields.genericWorkItemHandler.here()%>						
 						</td>
 					
 					<%}%>
