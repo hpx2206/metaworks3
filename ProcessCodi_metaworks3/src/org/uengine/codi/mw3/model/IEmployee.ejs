@@ -41,11 +41,6 @@ if(value){
 				<ul id="green_and_orange_step_menu">
 					<li class="frist inprogress">STEP1<em>Choose language</em></li>
 					<li class="last">STEP2<em>Basic Informationy</em><span></span></li>
-				    
-				    <!--
-				    <li>STEP2<em>Basic Informationy</em><span></span></li>
-				    <li class="last">STEP3<em>Preferences</em><span></span></li>
-				    -->
 				</ul>		
 				<ul>
 					<li class="checkStyle">							
@@ -67,10 +62,6 @@ if(value){
 					<li class="frist fdone">STEP1<em>Choose language</em></li>
 					<li  class="lastinprogress last">STEP2<em>Basic Informationy</em><span></span></li>
 				    
-				    <!--
-				    <li class="inprogress">STEP2<em>Basic Informationy</em><span></span></li>
-				    <li class="last">STEP3<em>Preferences</em><span></span></li>
-				    -->
 				</ul>
 				<div class="form_table">
 					<table border="1" cellspacing="0" summary="">
@@ -142,29 +133,15 @@ if(value){
 				<ul id="green_and_orange_step_menu">
 					<li class="frist fdone">STEP1<em>Choose language</em></li>
 					<li class="last lastinprogress">STEP2<em>Basic Informationy</em><span></span></li>
-				    				    
-				    <!--
-				    <li class="done">STEP2<em>Basic Informationy</em><span></span></li>
-				    <li class="last lastinprogress">STEP3<em>Preferences</em><span></span></li>
-				    
-				    -->
 				</ul>		
 				<ul>
 					<li class="checkStyle">
 							<div class="infoSub"><%=mw3.localize("$PreferUX")%></div>
 							
-							<!--span>	
-								<img src="images/signIn/twitter_com.png" width="150">
-								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="tw">I love Twitter <br><b>(Super Simple)</b>
-							</span-->
 							<span>
 								<img src="images/signIn/facebook_com.png" width="150">
 								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="sns" checked><h1><%=mw3.localize("$Simple")%></h1> <br>
 							</span>
-							<!--span>
-								<img src="images/signIn/asana_com.png" width="150">
-								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="asana">I love Asana <br><b>(Social Project Management)</b>
-							</span-->
 							<span>
 								<img src="images/signIn/wave_com.png" width="150">
 								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="wave"><h1><%=mw3.localize("$Powerful")%></h1> <br>
@@ -231,13 +208,7 @@ if(value){
 	<%
 	} else if(mw3.where == 'inSession') {
 	%>
-	<!--
-	<a onClick="<%=methods.showDetail.caller() %>" >
-	-->
 		<b><%=value.empName %></b> (<%=value.empCode %>)
-	<!--
-	</a>
-	-->
 	<%
 	} else if(mw3.where == 'inSessionInfo') {
 	%>
@@ -286,10 +257,6 @@ if(value){
 
 	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 		<ul>	
-			<!--
-			<li><a id="wBtn" href="#" onClick="<%=methods.logout.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Logout")%></span></a></li>	
-			-->
-			
 			<% if(mw3.when == 'view') {%>
 			<li><a id="wBtn" href="#" onClick="<%=methods.editEmployeeInfo.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Edit")%></span></a></li>	
 			<% }else if(mw3.when == 'edit') {%>
@@ -343,9 +310,6 @@ if(value){
 	} else if(mw3.where == 'user_menu_option') {
 	%>
 		<div class="info_top_show_detail" onClick="<%=methods.showDetail.caller() %>" style="cursor:pointer;"><span class="icon-profile" style="margin-right:8px;"></span><%=mw3.localize('$Profile')%></div>
-		<!-- 노티 기능 완벽하지 않아 주석 처리 합니다. 2013.11.22 민수환
-		<div class="info_top_show_detail" onClick="<%=methods.showNotiSetting.caller() %>" style="cursor:pointer;"><span class="icon-cog2" style="margin-right:8px;"></span><%=mw3.localize('$NotiSetting')%></div>
-		-->
 	<%
 		if(value.isAdmin){
 	%>
