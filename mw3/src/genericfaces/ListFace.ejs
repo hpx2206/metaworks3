@@ -10,9 +10,8 @@
 							
 			for(var i=0; i<value.length; i++){
 %>
-	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
+	<%=mw3.locateObject(value[i], value[i].__className, null, options, {objectId: objectId, name: '[' + i + ']'})%>
 <%
-				mw3.addBeanProperty(objectId, '[' + i + ']');				
 			}
 			
 			mw3.onLoadFaceHelperScript();

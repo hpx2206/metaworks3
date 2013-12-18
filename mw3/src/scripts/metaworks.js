@@ -40,12 +40,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.SCROLL_OPTION_1 = "1";
 				this.SCROLL_OPTION_N = "n";
 				this.scrollOption= this.SCROLL_OPTION_1;  //N...
+				this.MESSAGE_LOADING = '...  LOADING PROPERTY ...';
 				
 				this.needToConfirmMessage = null;
 						
 				this.base = "";
 				
 				this.objects = {};
+				this.metaworksContexts = {};
 				this.beanExpressions = {};
 				
 				this.objectId_KeyMapping = {};
@@ -294,6 +296,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId, actualface){
+				console.log('loadFaceHelper : ' + actualface);
 				
 //				if(!mw3.objects[objectId]){
 //					return null;
@@ -389,6 +392,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 
 			Metaworks3.prototype.onLoadFaceHelperScript = function(){
+				console.log('onLoadFaceHelperScript');
+				
 //				if(!target)
 //					target = this.face_ObjectIdMapping;
 				/*
@@ -414,6 +419,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    		objectIds = mw3.objectIds_FaceMapping[face];								    		
 						
 						for(var objectId in objectIds){
+							if(document.getElementById(mw3._getObjectDivId(objectId)) == null || document.getElementById(mw3._getObjectDivId(objectId)).innerHTML == mw3.MESSAGE_LOADING)
+								break;
+							
 							if(mw3.loadFaceHelper(objectId, face)){
 								mw3.afterLoadFaceHelper[i] = null;
 								mw3.objectIds_FaceMapping[face] = null;
@@ -716,10 +724,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			
-			Metaworks3.prototype.showObjectWithObjectId = function (objectId, objectTypeName, targetDiv){
+			Metaworks3.prototype.showObjectWithObjectId = function (objectId, objectTypeName, targetDiv, options){
 				var object = this.getObject(objectId);
 				
-				this.showObject(object, objectTypeName, {targetDiv: targetDiv, objectId: objectId, options: arguments[3]});
+				return this.showObject(object, objectTypeName, {targetDiv: targetDiv, objectId: objectId, options: options});
 			};
 				
 			
@@ -767,8 +775,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					var objectId;
 					var targetDiv;
 					var options;
-				
-					if(target.targetDiv){
+					
+					if(target.objectId){
 						objectId = target.objectId;
 						targetDiv = target.targetDiv;
 						options = target.options;
@@ -825,9 +833,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							object.metaworksContext.how = this.how;
 					}
 					*/
-					
-					if(targetDiv)
-						$(targetDiv).data('metaworksContext', {when:mw3.when, how:mw3.how, where:mw3.where});
+
+					this.metaworksContexts[objectId] = {when:mw3.when, how:mw3.how, where:mw3.where};
 
 					if(!actualFace && options && options['ejsPath']){
 						metadata = this.getMetadata(objectTypeName);
@@ -1012,7 +1019,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   		
 				   		
 						var html = mw3._template(url, contextValues);
-						//$(targetDiv).jqote(templateEngine, contextValues);
+						
+						if(targetDiv == null){
+							return html;
+						}
+						
 						//#DEBUG POINT
 						$(targetDiv).html(html);
 						
@@ -1368,8 +1379,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					//TODO: may cause unnecessary javascript object creation - performance & memory waste
 					//mw3.onLoadFaceHelperScript(actualFace);
 					
-					mw3.onLoadFaceHelperScript();					
-					mw3.loaded = true;
+					//mw3.onLoadFaceHelperScript();					
+					//mw3.loaded = true;
 				};
 
 				var byClassLoader = actualFace.indexOf('dwr') == 0;
@@ -1578,16 +1589,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return value;
 			};
 			
-			Metaworks3.prototype.locateObject = function(value/*, className, divName*/){
+			Metaworks3.prototype.locateObject = function(value, className, divName, options, beanPropertyOption){
 				var objectId = ++ this.objectId;
 				var divId =  this._getObjectDivId(objectId);
 				var infoDivId = this._getInfoDivId(objectId);
 				var html; 
-
+				
 				var className;
 				
-				if(arguments.length > 1 && arguments[1]){
-					className = arguments[1];
+				if(className){
 				}else if(value.__className){
 					className = value.__className;
 				}else
@@ -1623,8 +1633,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				
 				this._wireObject(value, objectId);
-
-				var options = arguments[3];
+				
+				if(beanPropertyOption)
+					this.addBeanProperty(beanPropertyOption.objectId, ((beanPropertyOption.name.indexOf('[') != 0)?'.':'') + beanPropertyOption.name);
 				
 				var metadata = this.getMetadata(className);
 				
@@ -1680,19 +1691,28 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					mainDOM.attr('tabindex', objectId).css('outline-style', 'none');
 				
 				if(elementSubTag)
-					$('<' + elementSubTag + '>').text('...  LOADING PROPERTY ...').appendTo(mainDOM);
+					$('<' + elementSubTag + '>').text(mw3.MESSAGE_LOADING).appendTo(mainDOM);
 				else
-					mainDOM.text('...  LOADING PROPERTY ...');
+					mainDOM.text(mw3.MESSAGE_LOADING);
 				
-				var scriptHTML = '<script>mw3.showObjectWithObjectId('+this.objectId+',\"'+className+'\", \"#'+divId+'\"' + (options ? ',' + JSON.stringify(options) : '') + ');</script>';
+				var scriptHTML = '';
 				
+				if(true || mw3.usingTemplateEngine == 'jQote'){
+					var batchHTML = mw3.showObjectWithObjectId(this.objectId, className, null, options);
+					
+					mainDOM.html(batchHTML);
+				}else{
+					scriptHTML = '<script>mw3.showObjectWithObjectId('+this.objectId+',\"'+className+'\", \"#'+divId+'\"' + (options ? ',' + JSON.stringify(options) : '') + ');</script>';	
+				}
+
+
 				locateObjectDOM.append(mainDOM);
 				locateObjectDOM.append($('<div>').attr('id', infoDivId))
 				
 				var html = locateObjectDOM.html() + scriptHTML;
-				
-				if(arguments.length > 2 && arguments[2]){ //when locateObject method has been called for just positioning purpose not the html generation.
-					var divId = arguments[2];
+								
+				if(divName){ //when locateObject method has been called for just positioning purpose not the html generation.
+					var divId = divName;
 					
 					if(options && options['prepend'])
 						$(divId).prepend(html);
@@ -1885,6 +1905,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			Metaworks3.prototype.addBeanProperty = function(parentObjectId, fieldName){
+				console.log('addBeanProperty : ' + parentObjectId + ' , ' + fieldName);
 				
 				var beanExpression = this.beanExpressions[parentObjectId];
 				
@@ -1903,7 +1924,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				
 				this.beanExpressions[parentObjectId]=beanExpression;
-			
 			};
 				
 			Metaworks3.prototype.template_error = function(e, actualFace) {
@@ -3164,19 +3184,20 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return false;				
 			}
 			
-			Metaworks3.prototype.isHiddenMethodForDiv = function(div, methodContext){
+			Metaworks3.prototype.isHiddenMethodForCache = function(cacheContext, methodContext){
+				
 				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
-					if(methodContext.when.indexOf(div.when + '|') == -1)
+					if(methodContext.when.indexOf(cacheContext.when + '|') == -1)
 						return true;						
 				}
 				
 				if(methodContext.where != null && methodContext.where.indexOf('wherever|') == -1){
-					if(methodContext.where.indexOf(div.where + '|') == -1)
+					if(methodContext.where.indexOf(cacheContext.where + '|') == -1)
 						return true;						
 				}
 
 				if(methodContext.how != null){
-					if(methodContext.how.indexOf(div.how + '|') == -1)
+					if(methodContext.how.indexOf(cacheContext.how + '|') == -1)
 						return true;						
 				}
 								
@@ -3588,7 +3609,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   		var methodContext = metadata.serviceMethodContextMap[methodName];
 			   	
 			   		//console.log('try : ' + methodName);
-				    if(mw3.isHiddenMethodForDiv(theDiv.data('metaworksContext'), methodContext) && !methodContext.bindingHidden)
+				    if(mw3.isHiddenMethodForCache(mw3.metaworksContexts[objectId], methodContext) && !methodContext.bindingHidden)
 					   continue;
 
 				    //console.log('pass : ' + methodName);
@@ -3986,22 +4007,26 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(context['ejsPath']) options['ejsPath'] = context['ejsPath'];
 				}
 							
+				var beanPropertyOption = {objectId: this.objectId, name: this.fieldDescriptor.name};
+							
 				if(!designMode){ //means general mode
 					if(when && context && context.when) // && parentWhen && when != parentWhen)
 						options['when'] = when;
-					
-					html = mw3.locateObject(value, face, null, options);
+
+					html = mw3.locateObject(value, face, null, options, beanPropertyOption);
 				}else if(!designModeDepth2){ //means just design mode
 					options['when'] = '__design-depth2';
 					
-					html = mw3.locateObject(value, face, null, options);
+					html = mw3.locateObject(value, face, null, options, beanPropertyOption);
 				}else // means this fields is within the designee 
 					html = this.fieldDescriptor.displayName + " Here.";
 				
 //				mw3.setContext(oldContext);
 				
 				
-				mw3.addBeanProperty(this.objectId, "." + this.fieldDescriptor.name);
+				//mw3.addBeanProperty(this.objectId, "." + this.fieldDescriptor.name);
+				
+				
 				
 				return html;
 			};
