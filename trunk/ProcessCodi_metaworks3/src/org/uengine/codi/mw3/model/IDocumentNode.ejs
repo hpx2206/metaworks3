@@ -6,16 +6,9 @@
 		if( mw3.how == 'perspectivePanel' ){
 		
 	%>
-				<!--
-				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
-				-->
-					
 					<a onClick="<%=methods.loadDocument.caller()%>" href="#">
 						<span class="icon-folder"></span><%=value.name%>
 					</a>
-				<!--
-				</div>
-				-->
 				<div style="padding-left:15px;">
 					<%=fields.childNode.here()%>
 				</div>
