@@ -29,7 +29,7 @@
 @media all and (max-width: 480px) {
 	.lst_type2 .infoSub span{display:block; padding-left:17px;}	
 	}
-.lst_type2 .infoSub span.infoSubFirstSpan{width:125px; margin-top:11px; color:#000 !important; line-height:20px; text-align:right}
+.lst_type2 .infoSub span.infoSubFirstSpan{width:125px; margin-top:11px; color:#000 !important; line-height:20px; text-align:right; padding-right:10px;}
 .lst_type2 dd{line-height:20px}
 .lst_type2 dd span{ margin-right:15px;}
 .lst_type2 dd img{border:none}
