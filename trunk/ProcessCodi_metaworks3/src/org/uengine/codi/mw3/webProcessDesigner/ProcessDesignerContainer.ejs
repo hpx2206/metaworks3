@@ -4,18 +4,16 @@
         for(var i in value.activityList){
             var activity = value.activityList[i];
            %>
-           <%=mw3.locateObject(activity.activityView , activity.activityView.__className)%>
+           <%=mw3.locateObject(activity.activityView , activity.activityView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
            <%
-           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
     if( value && value.valueChainList ){
         for(var i in value.valueChainList){
             var valueChain = value.valueChainList[i];
            %>
-           <%=mw3.locateObject(valueChain.valueChainView , valueChain.valueChainView.__className)%>
+           <%=mw3.locateObject(valueChain.valueChainView , valueChain.valueChainView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
            <%
-           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
     if( value && value.roleList ){
@@ -23,18 +21,16 @@
         for(var i in value.roleList){
             var role = value.roleList[i];
            %>
-           <%=mw3.locateObject(role.roleView , role.roleView.__className)%>
+           <%=mw3.locateObject(role.roleView , role.roleView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
            <%
-           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
     if( value && value.transitionList ){
         for(var i in value.transitionList){
             var transition = value.transitionList[i];
            %>
-           <%=mw3.locateObject(transition.transitionView , transition.transitionView.__className)%>
+           <%=mw3.locateObject(transition.transitionView , transition.transitionView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
            <%
-           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
 %>
