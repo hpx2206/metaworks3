@@ -31,32 +31,6 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		}
 	}
 	
-	
-	var window = mw3.getAutowiredObject('org.uengine.oce.dashboard.DashboardWindow');
-	if(window){
-		$("#post_" + this.objectId).bind('blur', {workitemId: this.objectId}, function(event, ui){
-			var layout = $(this).closest('.mw3_layout');
-			
-			if(layout.length && layout.attr('objectId')){
-				var objectId = layout.attr('objectId');
-				
-				mw3.getFaceHelper(objectId).hide('east');
-				
-				mw3.getFaceHelper(objectId).list['center'].find('.show_east_btn').one('mouseover', {objectId : objectId, workitemId: event.data.workitemId}, function(event, ui){
-					mw3.getFaceHelper(event.data.objectId).show('east');
-					
-					var workitemId = event.data.workitemId;
-					
-					setTimeout(function(){
-						$("#post_" + workitemId).focus();
-					},1000);
-				});
-			}
-		});
-	}
-	
-	
-	
 	//$("#post_" + this.objectId).keydown()
 	
 	$("#commandDiv_" + this.objectId + " textarea").bind("keyup", function(event){
@@ -115,7 +89,6 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 	getValue : function(){
 		var object = mw3.objects[this.objectId];
 		
-		
 		if(this.commandTrigger!=null){
 			object.title = this.commandTrigger;
 			object.activityAppAlias = this.commandActivityAppAlias;
@@ -147,9 +120,9 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 		if( this.dueDate != null){
 			object.dueDate = this.dueDate; 
 		}
+		
 		return object;		
 	},
-	
 	destroy : function(){
 		$("#post_" + this.objectId).unbind();
 	},
