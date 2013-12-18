@@ -9,13 +9,13 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 	
 		
 	$('.overlay_comment').hover(
-			function(){$(this).css("z-index","101")},
-			function(){$(this).css("z-index","100")}
-	)
+			function(){$(this).css({"z-index":"101",'opacity':'1'})},
+			function(){$(this).css({"z-index":"100",'opacity':'0.5'})}
+	);
 	$('.overlay_comment_line').hover(
 			function(){$(this).parent().find('.overlay_comment').css({'z-index':'101','opacity':'1'})},
 			function(){$(this).parent().find('.overlay_comment').css({'z-index':'100','opacity':'0.5'})}
-	)
+	);
 	
 	if(workItem.metaworksContext && (workItem.metaworksContext.when == mw3.WHEN_NEW || workItem.metaworksContext.when == mw3.WHEN_EDIT)){
 	//	workItem.overlayCommentOption.x = mw3.mouseX - div.offset().left - 30; /*  (mw3.mouseX - div.offset().left - 30) / (div.parent().width()/100) = 백분율 좌표 */
