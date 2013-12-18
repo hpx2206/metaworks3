@@ -20,9 +20,8 @@
 				options['index'] = i;
 				options['htmlTag'] =  'li';
 %>
-						<%=mw3.locateObject(value.appMapping[i], value.appMapping[i].__className, null, options)%>	
+						<%=mw3.locateObject(value.appMapping[i], value.appMapping[i].__className, null, options, {objectId: value.__objectId, name: 'appMapping[' + i + ']'})%>	
 <%
-				mw3.addBeanProperty(value.__objectId, '.appMapping[' + i + ']');
 			}
 %>
 		<li class="clear" style="display:block;width:100%; height:auto;">

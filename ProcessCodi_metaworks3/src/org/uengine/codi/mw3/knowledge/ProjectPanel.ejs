@@ -1,10 +1,6 @@
 <%
 	if(value){
 %>
-	<!--	
-		<a id="wBtn" href="#" onClick="<%=methods.addProject.caller()%>"><span><%=mw3.localize('$CreateProject')%></span></a><div class="clear"></div><br>
-	-->	
-	
 	<%if(value.projectNode){%>
 		<ul class="fist_menu">
 			<% 
@@ -19,9 +15,8 @@
 					
 			%>		
 				
-				<%=mw3.locateObject(value.projectNode[i], value.projectNode[i].__className, null, options)%>	
+				<%=mw3.locateObject(value.projectNode[i], value.projectNode[i].__className, null, options, {objectId: value.__objectId, name: 'projectNode[' + i + ']'})%>	
 			<% 
-				mw3.addBeanProperty(value.__objectId, '.projectNode[' + i + ']');
 			}
 			%>
 			
