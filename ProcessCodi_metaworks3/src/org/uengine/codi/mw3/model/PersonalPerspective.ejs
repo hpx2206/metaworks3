@@ -2,7 +2,6 @@
 	if(value != null && typeof value != 'undefined'){
 %>
 
-<!-- <div class="depth1" onClick="<%=methods.select.caller() %>" ><%=mw3.localize("$Personal")%></div> -->
 	<div class="depth1" style="border:none;"><%=mw3.localize("$Personal")%></div>
 <%if(value.selected){%>
 	<div class="depth2">
@@ -11,7 +10,6 @@
 			<li><a onClick="<%=methods.loadAll.caller()%>" href="#"><span class="icon-users"></span><%=mw3.localize("$Following")%></a></li>
 			<li><a onClick="<%=methods.loadInbox.caller()%>" href="#" ><span class="icon-signup"></span><%=mw3.localize("$MyToDo")%></a></li>
 			<li><a onClick="<%=methods.loadRequest.caller()%>" href="#"><span class="icon-pencil"></span><%=mw3.localize("$StartedbyMe")%></a></li>
-			<!-- <li><a onClick="<%=methods.loadStopped.caller()%>" href="#"><span class="icon-remove"></span><%=mw3.localize("$Trash")%></a></li> -->
 			<li><a onClick="<%=methods.calendar.caller()%>" href="#"><span class="icon-calendar2"></span><%=mw3.localize("$Calendar")%></a></li>
 		</ul>
 	</div>
