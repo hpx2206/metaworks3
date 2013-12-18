@@ -15,12 +15,10 @@
     
   %>
 
-<%=mw3.locateObject(value.component, value.component.__className + ":genericfaces/ObjectFace.ejs")%>
+<%=mw3.locateObject(value.component, value.component.__className + ":genericfaces/ObjectFace.ejs", null, null, {objectId: objectId, name: 'component'})%>
   
   
 <%
-	mw3.addBeanProperty(objectId, ".component");
-
 
   }else{%>
 

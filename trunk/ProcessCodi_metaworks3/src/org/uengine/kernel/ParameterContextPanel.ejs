@@ -24,10 +24,9 @@
                             options['htmlTag'] =  'tr';
                 %>
                             <div onclick="mw3.getFaceHelper(<%=objectId%>).clickedItem('<%= i %>');">
-                                    <%=mw3.locateObject(context, context.__className, null , options) %>
+                                    <%=mw3.locateObject(context, context.__className, null , options, {objectId: objectId, name: '[' + i + ']'}) %>
                             </div>
                 <%
-                            mw3.addBeanProperty(objectId, '[' + i + ']');
                         }
                         mw3.onLoadFaceHelperScript();
                     }else{

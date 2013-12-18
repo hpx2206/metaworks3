@@ -13,9 +13,8 @@
 			options['index'] = i;
 			options['htmlTag'] =  'tr';
 %>
-	<%=mw3.locateObject(value.boardList[i], value.boardList[i].__className, null, options)%>	
+	<%=mw3.locateObject(value.boardList[i], value.boardList[i].__className, null, options, {objectId: value.__objectId, name: 'boardList[' + i + ']'})%>	
 <%
-			mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');
 		}
 		
 		if(value.boardList.length == 0) {
