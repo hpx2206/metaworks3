@@ -245,7 +245,7 @@ public class ProjectTitle implements ContextAware {
 				jschServerBehaviour.runCommand(command);
 				
 				//Setting Hudson
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias() + "dev";
+				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectNode.getProjectAlias() + "\"" + " \"dev\"";
 				jschServerBehaviour.runCommand(command);
 				
 				//Create Database
