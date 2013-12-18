@@ -4,12 +4,6 @@
 		if(mw3.how == 'inList'){
 %>
 
-<!--
-<div class="best_process">
-	<img src="images/marketPlace/icon_best.png" />
-</div>
--->
-
 <dl class="mp_lst_type2">
 	<dt class="tit">
 		<a href="#" onClick="<%=methods.detail.caller()%>">
@@ -36,7 +30,6 @@
 %>
 
         <div> 
-            <!--ui object -->
             <ul class="mp_sub_lst_type">
                 <li>
                     <div class="mp_sub_pic">
@@ -49,7 +42,6 @@
                     	<dl class="mp_sub_dsc1">
                         	<dt><%=value.appName%></dt>
                             <dd><span class="mp_sub_tit">vendor : </span><span class="mp_sub_rst"><%=value.company.comName%></span></dd>
-                            <!--<dd><span class="mp_sub_tit">Staus :</span><span class="mp_sub_rst">4444444</span></dd>-->
                         </dl>                    
                     </div>
                     <div style="clear:both;"></div>
@@ -63,36 +55,9 @@
 					<li class="current">
 						<a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').showDescription()"><span>Description</span></a>
 					</li>
-					<!--	
-				 	<li>
-				 		<a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').showVendor()"><span>Vendor</span></a>
-				 	</li>
-				 	-->
 				 </ul>
 			</div>
 			<div class="clear"></div>
-			
-			<!--
-			<div id="tab_Vendor" style="display:none">
-			
-				<div class="fixed_img_row">
-			   	  <ul>	
-				     <li> 
-			        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-			                <tr>
-			                    <td class="appFirstTd"><span class="thumb"> logo </span> </td>
-			                    <td class="appTitleTd">
-			                    	<div class="titleLine"> <strong><%=value.company.comName?value.company.comName:''%></strong></div>
-			                    	<div class="fullOverview"><%=value.company.description?value.company.description:''%></div> 
-			                    	<div class="simpleOverview"><%=value.company.repMail?value.company.repMail:''%></div>
-			                    </td>
-			                </tr>
-			            </table>
-					 </li>
-					</ul>
-				</div>
-			</div>
-			-->
 			
 			<div id="tab_Description">
 				<%=value.fullOverview%>
@@ -112,7 +77,6 @@
 		                    <td class="appTitleTd">
 		                    	<div class="titleLine"><%=mw3.localize("$App.Name") %> : <strong><%=value.appName%></strong></div>
 		                    	<div class="simpleOverview"><%=mw3.localize("$App.Overview.Simple") %> : <%=value.simpleOverview%></div>
-		                    	<!--div class="fullOverview"><%=value.fullOverview%></div--> 
 								<div class="clear"></div>
 		                        <div class="vendor"> product by <%=value.company.comName%></div>
 		                    </td>
