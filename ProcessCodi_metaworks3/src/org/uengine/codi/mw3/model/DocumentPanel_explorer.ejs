@@ -9,9 +9,8 @@
 				options['index'] = i;
 				options['htmlTag'] =  'li';
 %>
-	<%=mw3.locateObject(value.documentNode[i], value.documentNode[i].__className, null, options)%>	
+	<%=mw3.locateObject(value.documentNode[i], value.documentNode[i].__className, null, options, {objectId: value.__objectId, name:'documentNode[' + i + ']'})%>	
 <%
-			mw3.addBeanProperty(value.__objectId, '.documentNode[' + i + ']');
 		}
 %>
 		</ul>	

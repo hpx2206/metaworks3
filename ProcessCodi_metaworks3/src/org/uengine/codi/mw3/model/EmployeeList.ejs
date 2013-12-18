@@ -72,9 +72,8 @@
 				options['index'] = i;
 				options['htmlTag'] =  'li';
 %>
-	<%=mw3.locateObject(value.employee[i], value.employee[i].__className, null, options)%>	
+	<%=mw3.locateObject(value.employee[i], value.employee[i].__className, null, options, {objectId: value.__objectId, name: 'employee[' + i + ']'})%>	
 <%
-				mw3.addBeanProperty(value.__objectId, '.employee[' + i + ']');
 			}
 		}
 %>

@@ -16,7 +16,6 @@
 		<span class="tr"></span>
 	</div>
 	<div class="cont" style="padding:10px;">
-	<!-- <%=mw3.localize("$ActivityProcesses")%> -->
 		<p class="title" style="font-size: 14px;font-weight: bold;padding-left: 20px;">앱과 함께 시작</p>
 	
 		<ul class="process_map2">		
@@ -29,14 +28,13 @@
 				options['index'] = i;
 				options['htmlTag'] =  'li';
 %>
-						<%=mw3.locateObject(value.processMapList[i], value.processMapList[i].__className, null, options)%>	
+						<%=mw3.locateObject(value.processMapList[i], value.processMapList[i].__className, null, options, {objectId: value.__objectId, name: 'processMapList[' + i + ']'})%>	
 <%
-				mw3.addBeanProperty(value.__objectId, '.processMapList[' + i + ']');
 			}
 %>
 		</ul>
 <%          
-			if(admin){
+			if(true){
 %>					
 		<div id="btnline" style="padding-top:8px;">
 			<ul>
