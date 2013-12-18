@@ -658,9 +658,12 @@ dd {
   }
 }
 
+abbr{
+	border:none
+}
 abbr[title],
 abbr[data-original-title] {
-  
+  border:none
 }
 
 abbr.initialism {
