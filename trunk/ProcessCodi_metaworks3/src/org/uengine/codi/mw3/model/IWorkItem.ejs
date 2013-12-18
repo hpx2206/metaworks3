@@ -117,7 +117,7 @@
 				<tbody>
 					<tr>	
 						<td>
-							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal; border:none;"<% }%>>
+							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment' || value.type=='system'){%>style="font-weight:normal; border:none;"<% }%>>
 								<% if(value.type!='comment' && value.type!='system'){%>	
 										<span style="position:relative; height:38px; float:left; margin-right:10px;">										
 										<img src="images/waveStyle/wih<%=(typeof value.type != 'undefined')?value.type:''%>.png">
