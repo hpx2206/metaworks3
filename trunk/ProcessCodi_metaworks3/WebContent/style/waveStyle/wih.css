@@ -297,7 +297,7 @@ legend {display:none;}
     display:none;
 }
 .wih_comment_input{
-	font-size:10pt !important; width:97%; height:18px; line-height:18px; -webkit-border-radius:4px; outline:none;  webkit-border-radius:4px; border:1px solid #ccd;   background-color: #ffffff;
+	font-size:10pt !important; width:97%; height:18px; line-height:18px; -webkit-border-radius:4px; outline:none;  webkit-border-radius:4px; border-radius:4px; border:1px solid #ccd;   background-color: #ffffff;
   border: 1px solid #cccccc;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -323,6 +323,8 @@ legend {display:none;}
     -webkit-box-shadow:0 3px 4px #ccc;
     -webkit-border-radius:14px;
     -moz-border-radius:14px;
+    border-radius:14px;
+    box-shadow:0 3px 4px #ccc;
 }
 
 .view_box3 .innerBox {
@@ -398,6 +400,8 @@ legend {display:none;}
     -webkit-box-shadow:0 3px 4px #ccc;
     -webkit-border-radius:14px;
     -moz-border-radius:14px;
+    border-radius:14px;
+    box-shadow:0 3px 4px #ccc;
 }
 
 .view_box4 .innerBox {

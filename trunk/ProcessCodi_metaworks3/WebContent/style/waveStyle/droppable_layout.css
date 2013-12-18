@@ -853,6 +853,8 @@ margin-top:8px;
     border-top: 1px solid #8b9fbd;
     border-bottom: 1px solid #8b9fbd;
 }
+@-moz-document url-prefix() { #contactsearchbox ul li input {margin-top: 1px;} }
+
 
 #searchbox {
     display: block;
@@ -888,7 +890,7 @@ margin-top:8px;
 #searchbox ul li input {
     width: 98%;
     background: #ffffff;
-    /* height: 17px; */
+    height: 21px;
     padding-top: 1px;
     border: none;
     border-top: 1px solid #8b9fbd;
@@ -896,6 +898,7 @@ margin-top:8px;
 }
 *:first-child+html #searchbox ul li input { margin-top:-1px}
 * html #searchbox ul li input { margin-top:-1px}
+@-moz-document url-prefix() { #searchbox ul li input {margin-top: 1px;} }
 .adduserline {
     height: 46px;
 }
