@@ -371,7 +371,11 @@ CREATE TABLE `emptable` (
 
 LOCK TABLES `emptable` WRITE;
 /*!40000 ALTER TABLE `emptable` DISABLE KEYS */;
-INSERT INTO `emptable` VALUES ('1401720840','1401720840','test',1,NULL,'jyjang@uengine.org','1401720840','1401720840','0','ko',NULL,NULL,NULL,NULL,'',NULL),('CJK','Jaekil Choi','test',0,'과장',NULL,'PM','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('CJS','Jisun Choi','test',0,'사원',NULL,'QA','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('CWS','Wooseok Choi','test',0,'사원',NULL,'PM','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('HJR','Jeongryeon Ha','test',0,'과장',NULL,'PI','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('JSY','Sungyeol Jung','test',0,'과장',NULL,'CON2','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('KEM','Eunmi Kim','test',0,'사원',NULL,'MANAGEMENT','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('KHK','Hyungkook Kim','test',0,'사원',NULL,'SOLUTION','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('KHN','Hannah Kim','test',0,'대리',NULL,'MAR','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('KSG','Seogu Kang','test',0,'대리',NULL,'SALES','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('KTW','Taiwook Kang','test',0,'과장',NULL,'PI','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('KYT','Youngtak Kim','test',0,'과장',NULL,'SOLUTION','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('LDH','Donghyun Lee','test',0,'과장',NULL,'QA','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('LHS','Hyeseon Lee','test',0,'대리',NULL,'MANAGEMENT','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('LJW','Jinwon Lee','test',0,'사원',NULL,'SOLUTION','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('MasterSystemAdmin','Master System Admin User','test',-1,NULL,NULL,'MasterSystemPart','MasterSystemCompany','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('PDJ','DongJo Park','test',0,'차장',NULL,'PI','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('PJJ','Jongjun Park','test',0,'대리',NULL,'CON1','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('PMK','Myeongkyun Bok','test',0,'차장',NULL,'QA','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('RSH','Suengho Ryu','test',0,'사원',NULL,'CON2','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('SHJ','Hojoon sung','test',0,'과장',NULL,'MAR','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('SSH','Sanghyo Song','test',0,'이사',NULL,'MARKETING','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('test','Tester','test',1,'Tester',NULL,'','uEngine','0','en',NULL,NULL,NULL,NULL,'100002969720934',NULL),('test_kp','Tester_ko','test',1,'Tester',NULL,'','uEngine','0','ko',NULL,NULL,NULL,NULL,NULL,NULL),('uEngineAdmin','uEngine Admin','test',1,'Tenant Admin',NULL,'uEngineTenantAdmin','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('YBS','ByeoungSun Yun','test',0,'사원',NULL,'CON1','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('YJY','Jooyong Yook','test',0,'차장',NULL,'CON1','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),('ZSZ','Shuzhu Zhang','test',0,'대리',NULL,'MAR','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `emptable` VALUES 
+('MasterSystemAdmin','Master System Admin User','test',-1,NULL,NULL,'MasterSystemPart','MasterSystemCompany','0','en',NULL,NULL,NULL,NULL,NULL,NULL),
+('test','Tester','test',1,'Tester','test@uengine.org','','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL),
+('test_kp','Tester_ko','test',1,'Tester','test_kp@uengine.org','','uEngine','0','ko',NULL,NULL,NULL,NULL,NULL,NULL),
+('uEngineAdmin','uEngine Admin','test',1,'Tenant Admin',NULL,'uEngineTenantAdmin','uEngine','0','en',NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `emptable` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -457,7 +461,7 @@ CREATE TABLE `roletable` (
 
 LOCK TABLES `roletable` WRITE;
 /*!40000 ALTER TABLE `roletable` DISABLE KEYS */;
-INSERT INTO `roletable` VALUES ('1401720840','1401720840','1401720840','0'),('DepartmentReader','uEngine','DepartmentReader','0'),('MasterSystemAdmin','MasterSystemCompany','Master System Admin Role for SaaSable ProcessCodi','0'),('TeamReader','uEngine','TeamReader','0');
+INSERT INTO `roletable` VALUES ('MasterSystemAdmin','MasterSystemCompany','Master System Admin Role for SaaSable ProcessCodi','0');
 /*!40000 ALTER TABLE `roletable` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -483,7 +487,7 @@ CREATE TABLE `roleusertable` (
 
 LOCK TABLES `roleusertable` WRITE;
 /*!40000 ALTER TABLE `roleusertable` DISABLE KEYS */;
-INSERT INTO `roleusertable` VALUES ('1401720840','1401720840'),('DepartmentReader','KBS'),('DepartmentReader','KSH'),('DepartmentReader','SSH'),('MasterSystemAdmin','MasterSystemAdmin'),('TeamReader','CJK'),('TeamReader','JSY'),('TeamReader','KSG'),('TeamReader','KYT'),('TeamReader','LHS'),('TeamReader','PDJ'),('TeamReader','PMK'),('TeamReader','SHJ'),('TeamReader','YJY');
+INSERT INTO `roleusertable` VALUES ('MasterSystemAdmin','MasterSystemAdmin');
 /*!40000 ALTER TABLE `roleusertable` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -758,7 +762,7 @@ alter table app change vendorid comcode varchar(20);
 
 -- 2013.05.14 paasManager user 추가
 INSERT INTO `comtable` (`COMCODE`, `COMNAME`) VALUES ('CloudManager', 'cloud manager');
-INSERT INTO `emptable` (`empcode`, `EMPNAME`, `PASSWORD`, `ISADMIN`, `GLOBALCOM`, `ISDELETED`, `LOCALE`, `approved`) VALUES ('paasManager', 'paasManager', 'admin', '1', 'CloudManager', '0', 'ko', '1');
+INSERT INTO `emptable` (`empcode`, `EMPNAME`, `PASSWORD`, `ISADMIN`, `EMAIL`,`GLOBALCOM`, `ISDELETED`, `LOCALE`, `approved`) VALUES ('paasManager', 'paasManager', 'admin', '1', 'paasManager@system.com', 'CloudManager', '0', 'ko', '1');
 INSERT INTO `roletable` (`ROLECODE`, `COMCODE`, `DESCR`, `ISDELETED`) VALUES ('paasManager', 'CloudManager', 'paasManager', '0');
 INSERT INTO `roleusertable` (`ROLECODE`, `EMPCODE`) VALUES ('paasManager', 'paasManager');
 
@@ -842,7 +846,13 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (0,'재무/회계',-1,NULL,0),(1,'인사/급여',-1,NULL,0),(2,'영업 관리',-1,NULL,0),(3,'생산 관리',-1,NULL,0),(4,'설비 관리',-1,NULL,0),(5,'구매 관리',-1,NULL,0),(6,'수출입 관리',-1,NULL,0),(7,'재고 관리',-1,NULL,0),(8,'품질 관리',-1,NULL,0),(9,'기술 정보 관리',-1,NULL,0);
+INSERT INTO `category` VALUES 
+	(1,'전체',-1,NULL,0),
+	(2,'인사/급여',-1,NULL,0),
+	(3,'영업 관리',-1,NULL,0),
+	(4,'생산 관리',-1,NULL,0),
+	(5,'설비 관리',-1,NULL,0),
+	(6,'구매 관리',-1,NULL,0);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 update emptable set guest = 0;
@@ -1008,3 +1018,14 @@ alter table filepathinfo add column sqlFileName varchar(30);
 
 -- 2013.12.03 회사 로고 경로 컬럼 추가
 alter table comtable add column logoPath varchar(100);
+
+-- 2013.12.18
+DROP TABLE IF EXISTS `schedule_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+create table schedule_table(
+	SCHE_IDX int(11),
+	INSTID int(11),
+	TRCTAG varchar(100),
+	STARTDATE datetime
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
