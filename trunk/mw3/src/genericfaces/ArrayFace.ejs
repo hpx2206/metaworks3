@@ -26,7 +26,7 @@
 <%	
  			}
 %>
-		<%=mw3.locateObject(value[i], objectTypeName)%>
+		<%=mw3.locateObject(value[i], objectTypeName, null, null, {objectId: objectId, name: '[' + i + ']'})%>
 <%
 			if(horizontal){
 %>
@@ -37,8 +37,6 @@
 			 </div>
 <%	
  			}
- 		
-			mw3.addBeanProperty(objectId, "[" + i + "]");
 		}
 		
 		if(horizontal){

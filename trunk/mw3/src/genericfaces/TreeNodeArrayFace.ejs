@@ -9,8 +9,7 @@
 		
 	for(var i=0; i<value.length; i++){
 %>
-	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
+	<%=mw3.locateObject(value[i], value[i].__className, null, options, {objectId: value.__objectId, name: '[' + i + ']'})%>
 <%
-		mw3.addBeanProperty(value.__objectId, '[' + i + ']');		
 	}	
 %>				
