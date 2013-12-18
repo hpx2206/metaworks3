@@ -12,9 +12,6 @@
 		  	if(mw3.isHidden(fd)) continue;
 		  	if(fd.name == 'metaworksContext') continue;		
 %>			
-<!--
-			<li id="icon_<%=fd.displayName%>">
--->
 			<li>
 				<a<%if(fd.displayName != 'null'){%> id="tabIcon_<%=fd.displayName%>" <%}%>  href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=mw3.localize(fd.displayName)%></a>
 			</li>
