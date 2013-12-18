@@ -15,11 +15,7 @@
 		<%
 			mw3.setWhen("__design");
 		%>	
-			<%=mw3.locateObject(value.designee, value.designee.__className + ":genericfaces/DesignerFace.ejs")%>
-		<%
-			mw3.addBeanProperty(objectId, ".designee");
-			
-		%>
+			<%=mw3.locateObject(value.designee, value.designee.__className + ":genericfaces/DesignerFace.ejs", null, null, {objectId: objectId, name: 'designee'})%>
 		</td>
 	</tr>
 
