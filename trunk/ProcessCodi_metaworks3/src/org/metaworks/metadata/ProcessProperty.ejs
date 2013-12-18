@@ -12,12 +12,6 @@ if(mw3.where == 'ssp'){
 				<%=fields.filePreview.here()%>
 			</div>
 		</div>
-
-		<!--
-		<div class="sp_form_block">
-			<%=fields.resourceNode.here()%>
-		</div>
-		-->
 		
 		<div class="sp_form_block">
 			<div><a id="wBtn" onClick="<%=methods.modify.caller()%>"><span><%=mw3.localize('$metadata.edit')%></span></a></div>
@@ -51,9 +45,6 @@ if(mw3.where == 'ssp'){
     <label class="fb_box_desc" id="">화면출력정보</label>
     <div class=""><%= fields.description.here()%>
     </div>
-<!--    <label class="fb_box_desc" id="">파일첨부</label>
-    <div class=""><%= fields.file.here()%>
-    </div> -->
     <div class="clear"></div>
     <label class="fb_box_desc" id="">메타데이타 찾아보기</label>
     <div class=""><%= fields.resourceNode.here()%>

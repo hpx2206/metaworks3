@@ -4,11 +4,6 @@ if(mw3.where == 'ssp'){
 		
 	%>
 		<span class="form_tit"><br /><br /><%=value.description%></span>
-		<!--
-		<div class="sp_form_block">
-			<div><%=fields.resourceNode.here()%></div>
-		</div>
-		-->
 		<div class="sp_form_block">
 			<%=fields.file.here()%>
 		</div>
@@ -29,20 +24,7 @@ if(mw3.where == 'ssp'){
 			</div>
 		
 		<%
-		}else {
-		%>
-		
-		<!--
-		
-			<div class="sp_form_block">
-				<div id="sp_editBtn_<%=objectId%>" class="sp_position_right" onClick="<%=methods.edit.caller()%>"><%=mw3.localize('$Edit')%></div>
-			</div>
-		-->
-		
-		<%	
 		}
-
-
 	}else {
 	%>
 	
