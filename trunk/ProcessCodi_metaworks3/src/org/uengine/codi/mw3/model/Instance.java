@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,10 +13,8 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -29,7 +26,6 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
-import org.uengine.codi.mw3.knowledge.BrainstormPanel;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
@@ -795,7 +791,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}
 			
 
-		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "app".equals(navigation.getPerspectiveType())) {
+		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "oce_app".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
@@ -867,25 +863,25 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setInstanceViewThreadPanel(panel);
 			
 			return this;
-		}/*else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
-			getMetaworksContext().setHow("sns");
-			
-			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-			panel.getMetaworksContext().setHow("sns");
-			
-			
-			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
-				panel.session = session;
-				panel.load(this.getInstId().toString());
-				
-				this.fillFollower();
-					
-			}
-
-			setInstanceViewThreadPanel(panel);
+		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
+//			getMetaworksContext().setHow("sns");
+//			
+//			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+//			panel.getMetaworksContext().setHow("sns");
+//			
+//			
+//			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+//				panel.session = session;
+//				panel.load(this.getInstId().toString());
+//				
+//				this.fillFollower();
+//					
+//			}
+//
+//			setInstanceViewThreadPanel(panel);
 			
 			return this;
-		}*/
+		}
 		else{
 			getMetaworksContext().setHow("");
 			getMetaworksContext().setWhere("");

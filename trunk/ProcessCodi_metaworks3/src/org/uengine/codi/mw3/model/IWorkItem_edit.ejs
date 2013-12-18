@@ -54,9 +54,12 @@
                    newActivityFlag = false;
                }
                     if( (session && session.employee.preferUX != 'sns') || session.ux == 'oce'){
+			
+			var hideButton = (mw3.how == 'sns' && mw3.where == 'oce');
+			
 %>			
-    				<div id="wih_button">		
-    				<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span><div class="comment_select"></div></a>
+				<div id="wih_button" style="<%=hideButton ? "display:none;" : ""%>">		
+				<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span><div class="comment_select"></div></a>
 	<%
 				        if( session && session.ux != 'pad'){
 	%>			
@@ -79,20 +82,7 @@
 	%>
 			<a class="<%= value.type=='etc'?'etc_btn_on':'etc_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity">앱<div class="comment_select"></div></span></a>
 	<%
-				}		
-			}else{
-				if(mw3.where == 'oce'){
-	%>
-					<div id="wih_button">		
-						<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><div class="comment_select"></div></a>
-						<a class="<%= value.type=='memo'?'memo_btn_on':'memo_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"></a>
-						<a class="<%= value.type=='file'?'file_btn_on':'file_btn_off' %>" onclick="<%=methods.newFile.caller()%>"></a>
-						<a class="<%= value.type=='src'?'code_btn_on':'code_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"></a>
-						<% if( newActivityFlag) { %>
-						<a class="<%= value.type=='etc'?'etc_btn_on':'etc_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"></a>
-						<% } %>
-	<%
-				}
+				}					
 			}
 		} /*if(mw3.when == 'new') 끝*/
 		

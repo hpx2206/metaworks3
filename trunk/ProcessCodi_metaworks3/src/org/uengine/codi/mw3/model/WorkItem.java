@@ -1040,13 +1040,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					newInstancePanel.load(session);
 					
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
-				}/*else if("oce".equals(session.getUx())){
+				}else if("oce".equals(session.getUx())){
 					newInstancePanel = new NewInstancePanel();
 					newInstancePanel.getMetaworksContext().setHow("sns");
 					newInstancePanel.load(session);
 					
-					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
-				}*/
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),new Refresh(newInstancePanel)};
+				}
 				else{
 				     CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
 				     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail), new Refresh(commingTodoPerspective)};
