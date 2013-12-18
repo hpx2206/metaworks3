@@ -296,7 +296,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId, actualface){
-				console.log('loadFaceHelper : ' + actualface);
+				//console.log('loadFaceHelper : ' + actualface);
 				
 //				if(!mw3.objects[objectId]){
 //					return null;
@@ -365,6 +365,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								return true;
 							}
 						}catch(faceHelperLoadException){
+						
+						console.log(faceHelperLoadException);
+						
 							//TODO:
 							//mw3.showError(objectId, faceHelperLoadException.message, 'init');
 							if(console){
@@ -392,14 +395,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 
 			Metaworks3.prototype.onLoadFaceHelperScript = function(){
-				console.log('onLoadFaceHelperScript');
-				
 //				if(!target)
 //					target = this.face_ObjectIdMapping;
 				/*
 				//console.debug('onLoadFaceHelperScript');
 				
-				if(this.afterLoadFaceHelper[face]){
+				if(this.`aceHelper[face]){
 					objectIds = this.objectIds_FaceMapping[face];
 									
 					for(var objectId in objectIds){
@@ -419,15 +420,27 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    		objectIds = mw3.objectIds_FaceMapping[face];								    		
 						
 						for(var objectId in objectIds){
-							if(document.getElementById(mw3._getObjectDivId(objectId)) == null || document.getElementById(mw3._getObjectDivId(objectId)).innerHTML == mw3.MESSAGE_LOADING)
+							var targetElement = document.getElementById(mw3._getObjectDivId(objectId));
+							
+							if(targetElement == null || targetElement.innerHTML == mw3.MESSAGE_LOADING)
 								break;
+							
+							var object = mw3.objects[objectId];
+							
+							// object attr apply
+							var htmlAttr = (object && object.__options && object.__options['htmlAttr'] ? object.__options['htmlAttr'] : null);
+							
+							if(htmlAttr)
+								$(targetElement).attr(htmlAttr);
+							
+							var htmlAttrChild = (object && object.__options && object.__options['htmlAttrChild'] ? object.__options['htmlAttrChild'] : null);
+							if(htmlAttrChild)
+								$(targetElement).children(':first').attr(htmlAttrChild);
 							
 							if(mw3.loadFaceHelper(objectId, face)){
 								mw3.afterLoadFaceHelper[i] = null;
 								mw3.objectIds_FaceMapping[face] = null;
 
-								var object = mw3.objects[objectId];
-								
 								if(object!=null && object.__className){
 									var metadata = mw3.getMetadata(object.__className);
 									
@@ -836,6 +849,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 					this.metaworksContexts[objectId] = {when:mw3.when, how:mw3.how, where:mw3.where};
 
+					/*
+					 * 2013/12/18 cjw
+					 * object 에 view 당시의 metaworksContext 와 option 을 저장한다.
+					 */
+					if(this.objects[objectId]){
+						this.objects[objectId]['__metaworksContexts'] = {when:mw3.when, how:mw3.how, where:mw3.where};
+						this.objects[objectId]['__options'] = options;
+					}
+					
+					
 					if(!actualFace && options && options['ejsPath']){
 						metadata = this.getMetadata(objectTypeName);
 					
@@ -1020,22 +1043,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   		
 						var html = mw3._template(url, contextValues);
 						
-						if(targetDiv == null){
+						if(targetDiv == null)							
 							return html;
-						}
 						
 						//#DEBUG POINT
 						$(targetDiv).html(html);
 						
-						// object attr apply
-						var htmlAttr = (options && options['htmlAttr'] ? options['htmlAttr'] : null);
-						
-						if(htmlAttr)
-							$(targetDiv).attr(htmlAttr);
-						
-						var htmlAttrChild = (options && options['htmlAttrChild'] ? options['htmlAttrChild'] : null);
-						if(htmlAttrChild)
-							$(targetDiv).children(':first').attr(htmlAttrChild);
 						
 						
 						// optimizing the object size : moved to onLoadFaceHelper()
@@ -1676,7 +1689,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				else if(elementTag == 'dl')
 					elementSubTag = 'dd';
 				
-				
 				// 2013-07-31 DOM 생성방법 수정 및 DOM 객체에 name 설정 추가
 				var locateObjectDOM = $('<div>');
 				var mainDOM = $('<' + elementTag + '>').attr({'id': divId, 'className': className, 'objectId': objectId});
@@ -1697,7 +1709,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				var scriptHTML = '';
 				
-				if(true || mw3.usingTemplateEngine == 'jQote'){
+				if(mw3.usingTemplateEngine == 'jQote'){
 					var batchHTML = mw3.showObjectWithObjectId(this.objectId, className, null, options);
 					
 					mainDOM.html(batchHTML);
@@ -1905,7 +1917,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			Metaworks3.prototype.addBeanProperty = function(parentObjectId, fieldName){
-				console.log('addBeanProperty : ' + parentObjectId + ' , ' + fieldName);
+				//console.log('addBeanProperty : ' + parentObjectId + ' , ' + fieldName);
 				
 				var beanExpression = this.beanExpressions[parentObjectId];
 				
