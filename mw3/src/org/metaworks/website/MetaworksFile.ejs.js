@@ -23,6 +23,10 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 			$("#convertProgress_" + objectId).show();
 			try {
 				var image = object.downloadImage(false);
+				
+				if(image == null)
+					if(console) console.log('org_metaworks_website_MetaworksFile : not found image(' + object.uploadedPath + ')');
+				
 				var width = 0;
 				var height = 0;
 				var parentwidth = $("#image_" + this.objectId).parent().width();
