@@ -77,23 +77,6 @@ if(value!=null){
 	</div>
 	<%}%>
 	
-<!--	
-	<table>
-	<td>
-		<b><a onclick="<%=methods.detail.caller()%>"><%=fields.logoImageFile.here({when:'image'})%> <%=value.itemName%> (ver <%=value.version%>)</a></b>
-		
-	</td>
-	<td>
-		<div>제조사: <%=value.comCode%></div>
-	</td>
-	<td>
-		<p>설명: <%=value.description%></p>
-	</td>
-	<td>
-		<div style="float:left" class="badge" onclick="<%=methods.purchase.caller()%>"><%=value.price > 0 ? ' '+value.price + '원 ' : ' 무료 '%></div>
-	</td>
-	</table>
--->
 	<%} else if (mw3.when=='detail') {%>
 		detail
 	<%}
