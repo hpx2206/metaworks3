@@ -2,21 +2,6 @@
     if(value != null && typeof value != 'undefined'){
         if(!value.hidden){
 %>
-    <!--div class="item-fix <%=value.root?'root':''%>" objectId="<%=objectId%>" id="<%=value.id%>" name="<%=value.name%>">
-        <div class="item">
-            <span>&nbsp;</span>
-            <div class="label-content">
-                <div class="tree-checkbox" onClick="if(event.stopPropagation)    event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;" style="display:none;position:relative;top:2px;left:3px"><input type="checkbox" nodeId="<%=value.id%>" objectId="<%=objectId%>" style="width:15px"></div>
-                
-                <label style="display:inline-block; background-image: url(images/<%=value.type%>.png)">
-                    <u class="caption"><%=value.name%></u>
-                </label>
-            </div>
-        </div>
-    </div-->    
-    
-    
-    
     <div class="item-fix <% if(value.align == 'right'){ %> item-fix-right<%}%> <%=value.root?'root':''%>" objectId="<%=objectId%>" id="<%=value.id%>" name="<%=value.name%>">
         <div class="item">
             <span>&nbsp;</span>

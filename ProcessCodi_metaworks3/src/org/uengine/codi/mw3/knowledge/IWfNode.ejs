@@ -68,7 +68,6 @@
 			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
 				<div id="wfnode_current_<%=objectId%>" class="wfnode_current" objectId="<%=objectId%>" style="display:none"><img src="images/waveStyle/navi_icon.png" ></div>
 				
-				<!-- opened, closed -->
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
@@ -151,8 +150,6 @@
 							</span>
 						</td>
 						
-													<%  if(value.linkedInstId){%><!-- <td><span class="wfLink" onclick="<%=methods.linkInstance.caller()%>"></span></td> --><%}%>
-						
 					</tr>
 				</table>
 					
@@ -163,7 +160,6 @@
 				}else{						
 %>
 			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0">
-				<!-- opened, closed -->
 				
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
