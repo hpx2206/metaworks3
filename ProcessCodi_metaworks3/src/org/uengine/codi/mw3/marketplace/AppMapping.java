@@ -218,7 +218,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel();
 		
-		Object[] returnObject = Perspective.loadInstanceListPanel(session, "app", session.getLastSelectedItem(), appDashboard.getTitle());
+		Object[] returnObject = Perspective.loadInstanceListPanel(session, "oce_app", session.getLastSelectedItem(), appDashboard.getTitle());
 		
 		instanceListPanel = (InstanceListPanel) returnObject[1];
 		instanceListPanel.session = session;

@@ -528,9 +528,29 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.getLogoFile().upload();
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			WfNode project = new WfNode();
-			project.setId(this.getAttachProject().getSelected());
-			project.copyFrom(project.databaseMe());
+			WfNode appProject = new WfNode();
+//			project.setId(this.getAttachProject().getSelected());
+//			project.copyFrom(project.databaseMe());
+			
+			appProject.setName(this.getAppName());
+			appProject.setProjectAlias(this.getSubDomain());
+			appProject.setType("app");
+			appProject.setIsDistributed(false);
+			appProject.setIsReleased(false);
+			//앱에서 쓰는 글의 경우는 소셜네트워크에서 비공개 처리하기 위함입니다. 차후 수정
+			appProject.setSecuopt("1");
+			appProject.setParentId(session.getCompany().getComCode());	
+			appProject.setAuthorId(session.getUser().getUserId());
+			
+			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
+				appProject.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
+			else
+				appProject.setCompanyId(session.getCompany().getComCode());
+				
+			appProject.setDescription(this.getSimpleOverview());
+			appProject.setStartDate(new Date());
+			appProject.createMe();
+			
 			
 			this.setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
 			this.setCreateDate(Calendar.getInstance().getTime());
@@ -546,7 +566,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			createDatabaseMe();
 			flushDatabaseMe();
 
-			WfNode wfNode = new WfNode();
 			
 			// 앱 등록일 경우 프로세스 발행
 			String defId = "AppRegister.process";

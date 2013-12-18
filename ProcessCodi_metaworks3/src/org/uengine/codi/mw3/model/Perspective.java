@@ -223,13 +223,12 @@ public class Perspective {
 		instListPanel.session = session;
 		instListPanel.setInstanceList(instList);
 
-		if(false){
+		if("oce_app".equals(perspectiveType)){
 			NewInstancePanel newInstancePanel =  new NewInstancePanel();
 			newInstancePanel.session = session;
 			newInstancePanel.load(session);
 			instListPanel.setNewInstancePanel(newInstancePanel);
 		}
-		
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){
