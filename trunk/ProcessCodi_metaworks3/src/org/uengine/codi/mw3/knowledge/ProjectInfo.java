@@ -448,8 +448,6 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	public ModalWindow showHudsonConsole() {
 		IFrame iframe = new IFrame();
 		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url") + "job/" + this.getProjectAlias() + "/lastBuild/console");
-		iframe.setHeight(1000);
-		iframe.setWidth(1000);
 		return new ModalWindow(iframe, 0, 0, this.getProjectAlias() + " Console");
 	}
 
