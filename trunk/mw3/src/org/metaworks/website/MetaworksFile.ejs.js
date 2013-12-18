@@ -93,8 +93,6 @@ org_metaworks_website_MetaworksFile.prototype.addFileChangeListener = function(l
 };
 
 org_metaworks_website_MetaworksFile.prototype.showStatus = function(message){
-	console.log('metaworksfile : ' + message);
-	
 	if('upload DONE.' == message){
 		$("#objDiv_" + this.objectId).triggerHandler('uploaded');
 	}
