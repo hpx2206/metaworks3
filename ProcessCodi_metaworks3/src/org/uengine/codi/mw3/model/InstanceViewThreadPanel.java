@@ -116,7 +116,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 			thread.moveToInsertRow();
 			thread.getImplementationObject().copyFrom(result);
 		}
-		
+		thread.getWriter().getMetaworksContext().setWhere("workItemList");
 		setThread(thread);
 		
 		if("document".equals(session.getLastPerspecteType())|| "UnlabeledDocument".equals(session.getLastPerspecteType())){
