@@ -168,22 +168,18 @@
 			<div style="clear:both"></div>
 		</div>
 <%		
-		}else if(mw3.where == 'topPanel'){
-%>
-		<div class="user" onclick="<%=clickAction%>">		
-			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
-				<%if(value.size!='small'){%><div class="followers_name" title="<%=value.name%>"><%=value.name%></div><%}%>
-			</div>
-		</div>
-		
-<%		
 		}else{			
 %>
 		<div class="user" onclick="<%=clickAction%>">		
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
-				<%if(value.size!='small'){%><div class="followers_name" title="<%=value.name%>"><%=value.name%></div><%}%>
+<%	
+			if(mw3.when == 'followers' || mw3.when == 'topicFollowers' || mw3.when == 'deptFollowers' || mw3.when == 'roleFollowers' || mw3.when == 'contacts'  || mw3.when == 'documentFollowers' || mw3.where == 'local' || mw3.where == 'workItemList' || mw3.where == 'topPanel'){
+%>
+				<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
+<%
+			}
+%>
 			</div>
 			
 <%	
@@ -203,8 +199,6 @@
 <%			
 			}
 %>		
-			<!--div style="clear:both"></div-->
-
 		</div>
 <%		 
 		}
