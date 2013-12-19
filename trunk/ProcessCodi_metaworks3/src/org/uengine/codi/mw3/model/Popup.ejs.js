@@ -20,6 +20,15 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	var faceHelper = this;
 	
 	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);
+	
+	var scrollDiv = $('#objDiv_' + this.objectId + " #addcontact-con");
+	
+	scrollDiv.scroll(function(e) {
+		if(scrollDiv.scrollTop() > 1){
+			scrollDiv.height($('body').height()-50);
+		}
+	});
+	
 };
 
 org_uengine_codi_mw3_model_Popup.prototype = {
