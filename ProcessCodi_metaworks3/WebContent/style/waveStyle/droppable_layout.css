@@ -276,7 +276,9 @@ cursor:pointer;
 }
 
 .ssesionLine{float:left;line-height:37px; height:37px;cursor:pointer;padding:0 2px}
-
+.top_iconmenu{margin-right:45px;}
+.top_iconmenu span{font-size:20px; margin-right:15px; color:#A7B3B8; cursor:pointer;}
+.top_iconmenu span:hover{color:#65777E}
 .boxtopleft {
     background: #060;
     width: 100%;

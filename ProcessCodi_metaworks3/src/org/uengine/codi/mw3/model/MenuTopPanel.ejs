@@ -1,7 +1,11 @@
 <%
 	if(value){
 %>
-		<div><%=methods.showApps.here()%><%=methods.showChat.here()%><%=methods.showSelfService.here()%></div>
+		<div class="top_iconmenu">
+			<span class="icon-cog2"  onClick="<%=methods.showSelfService.caller()%>"></span>
+			<span class="icon-bubbles3"  onClick="<%=methods.showChat.caller()%>"></span>
+			<span class="glyphicon glyphicon-th" onClick="<%=methods.showApps.caller()%>"></span>
+		</div>
 <%
 	}
 %>
