@@ -6,6 +6,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.admin.WindowPanel;
+import org.uengine.oce.dashboard.MyAppPanel;
 
 public class ProcessTopPanel extends TopPanel {
 
@@ -18,6 +19,8 @@ public class ProcessTopPanel extends TopPanel {
 		tray = new Tray();
 		tray.session = session;
 		tray.load();
+		menuTopPanel = new MenuTopPanel(session);
+		this.setMenuTopPanel(menuTopPanel);
 	}
 	
 	WindowPanel windowPanel;
@@ -43,6 +46,14 @@ public class ProcessTopPanel extends TopPanel {
 			this.tray = tray;
 		}
 	
+	MenuTopPanel menuTopPanel;
+		public MenuTopPanel getMenuTopPanel() {
+			return menuTopPanel;
+		}
+		public void setMenuTopPanel(MenuTopPanel menuTopPanel) {
+			this.menuTopPanel = menuTopPanel;
+		}
+
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow  companyRepInfo() throws Exception{
 		Company company = new Company();
