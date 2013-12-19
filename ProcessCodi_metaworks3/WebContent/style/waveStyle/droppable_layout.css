@@ -1093,6 +1093,18 @@ margin-top:8px;
 #navigator .depth2 .fist_menu {
     margin: 5px;
 }
+.AddLocalContactPanel .fist_menu{
+	margin:0px !important;
+}
+.AddLocalContactPanel .fist_menu .ui-droppable a{
+	border-bottom: 1px solid #E7EAEF;
+	height: 30px;
+	cursor: pointer;
+	background: #FBFBFD;
+	padding: 5px;
+	width: 100%;
+	display: block;
+}
 #navigator .depth2 a {
     /*padding:0 5px;*/
     display:block;
