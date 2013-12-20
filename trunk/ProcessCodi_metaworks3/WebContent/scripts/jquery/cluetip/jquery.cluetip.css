@@ -1,4 +1,5 @@
 /* global */
+#addcontact-con{overflow:auto !important}
 #cluetip-close img {
   border: 0;
 }
@@ -83,7 +84,7 @@
 #wih_userinfo-con{right: 213px; top: 120px; width: 400px; display: block; position: absolute; z-index: 97; display:none;}
 #userinfo-con{left: 213px; bottom: 90px; width: 400px; display: block; position: absolute; z-index: 97; display:none;}
 #adduser-con {right: 213px; top: 120px; width: 275px; display: block; position: absolute; z-index: 97; display:none;}
-#addContact-con {left: 213px; bottom: 30px; width: 275px; display: block; position: absolute; z-index: 97; display:none;}
+#addContact-con {left: 213px; bottom: 30px; width: 275px; display: block; position: absolute; z-index: 97; display:none;overflow:auto !important;}
 #editicon-con {right: 213px; top: 190px; width: 560px; display: block; position: absolute; z-index: 97; display:none;}
 #clickhelp {right: 45px; top: 50px; width: 200px; display: none; position: absolute; z-index: 97;}
 #cluetip-outer {height: auto; overflow: visible; position: relative;}
