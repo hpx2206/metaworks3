@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -227,7 +228,8 @@ public class TopicTitle  implements ContextAware{
 		topicList.copyFrom(topicNodeList);
 		TopicPerspective topicPerspective = new TopicPerspective();
 		returnObject[returnObj.length ] = new Refresh(topicPerspective);
-		returnObject[returnObj.length + 1] = new Remover(new ModalWindow());
+		returnObject[returnObj.length + 1] = new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE);
+		
 		return returnObject;
 
 	}
