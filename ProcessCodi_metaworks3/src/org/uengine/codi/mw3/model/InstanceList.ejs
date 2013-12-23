@@ -16,25 +16,26 @@ if (value!=null){
 	<% } %>
 	
 <%
-if(value.moreInstanceList==null){
+	if(value.moreInstanceList!=null){
 %>
 <%
-	if(mw3.where  != 'dashboard'){
+		if(mw3.where  != 'dashboard'){
 %>
-	<div id="moreWorkDiv">
-		<div class="morePointL"></div>
-		<a class="moreBtn5" href="#" onClick="<%=methods.more.caller()%>"><%=mw3.localize("$more")%></a>
-		<div class="morePointR"></div>
-	</div>
+			<div id="moreWorkDiv">
+				<div class="morePointL"></div>
+				<a class="moreBtn5" href="#" onClick="<%=methods.more.caller()%>"><%=mw3.localize("$more")%></a>
+				<div class="morePointR"></div>
+			</div>
+<%
+		}
+%>
+
+
 <%
 	}
 %>
 
-
-<%}
-%>
-
-		<%=fields.moreInstanceList.here()%>
+	<%=fields.moreInstanceList.here()%>
 
 <%
 }%>
