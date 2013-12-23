@@ -1030,6 +1030,7 @@ create table schedule_table(
 	STARTDATE datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 서버 설정떄문에 만들어진 클레스 ( 나중에 cloudInfo 테이블이 제거되고 이 테이블을 사용할 예정 -김형국)
 DROP TABLE IF EXISTS ServerInfo;
 create table ServerInfo(
  vmName     varchar(100),
