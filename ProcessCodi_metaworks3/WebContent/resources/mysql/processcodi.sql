@@ -1029,3 +1029,18 @@ create table schedule_table(
 	TRCTAG varchar(100),
 	STARTDATE datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS ServerInfo;
+create table ServerInfo(
+ vmName     varchar(100),
+ iaasServerType varchar(100),
+ jobId  varchar(200),
+ tempId varchar(200),
+ command    varchar(100),
+ vmIp       varchar(100),
+ vmOutsideIp    varchar(100),
+ vmId   varchar(200),
+ vmPassword varchar(100),
+ status varchar(100),
+primary key(vmName)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
