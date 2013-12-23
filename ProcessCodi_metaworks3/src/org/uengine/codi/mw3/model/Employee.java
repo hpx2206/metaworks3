@@ -38,6 +38,7 @@ import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.tadpole.Tadpole;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -1043,6 +1044,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
+		
+		if( !CodiStringUtil.isValidEmail(this.getEmail()) ){
+			throw new MetaworksException("$checkEmail");
+		}
 		
 		this.saveMe();
 		
