@@ -1,6 +1,6 @@
 var org_uengine_codi_mw3_model_SecurityLevelRadioButton = function(objectId, className) {
 	
-	var object = mw3.objects[objectId];	
+	
 	
 	this.objectId = objectId;
 	this.className = className;
@@ -8,6 +8,14 @@ var org_uengine_codi_mw3_model_SecurityLevelRadioButton = function(objectId, cla
 	
 	
 
+};
+
+org_uengine_codi_mw3_model_SecurityLevelRadioButton.prototype = {
+		checkSecuopt : function(a, b){
+			check_img(a,b);
+			var object = mw3.objects[this.objectId];	
+			object.selected = a;
+		}
 };
 
 function check_img(a,b){
