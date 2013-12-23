@@ -1044,3 +1044,5 @@ create table ServerInfo(
  status varchar(100),
 primary key(vmName)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table emptable modify column locale varchar(10);
