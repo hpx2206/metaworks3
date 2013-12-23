@@ -38,6 +38,9 @@ public class ContactList implements ContextAware {
 		friend.setName(friendName);
 		friend.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		contact.setFriend(friend);
+		if("follower".equals(this.getMetaworksContext().getHow()))
+			this.setSelectedMore(true);
+		
 		setContacts(contact.loadContacts(this.isSelectedMore()));
 		if(getContacts().size()==0){
 			invitation = new Invitation();
