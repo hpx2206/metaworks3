@@ -63,6 +63,8 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 		// tree 는 새롭게 그린다.
 		if( invocationContextIn != null && classResourceMethod != null && invocationContextOut != null ){
 			drawTree();
+			invocationContextIn.getMappingTree().setParentEditorId(this.getParentEditorId());
+			invocationContextOut.getMappingTree().setParentEditorId(this.getParentEditorId());
 		}else{
 			invocationContextIn = new InvocationContext();
 			invocationContextOut = new InvocationContext();
@@ -160,11 +162,6 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 				String fieldName = targetFieldName.substring(targetFieldName.lastIndexOf(".") + 1);
 				// 첫글자는 대문자로
 				String output = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1); 
-				
-				System.out.println("111 =========>> " + srcVariableName);
-				System.out.println("111 =========>> " + targetFieldName);
-				System.out.println("111 =========>> " + output);
-				System.out.println("111 =========>> " + value);
 				
 				Method m = resourceClass.getMethod("set"+output, new Class[]{String.class});
 				m.invoke(object, new Object[]{value});
