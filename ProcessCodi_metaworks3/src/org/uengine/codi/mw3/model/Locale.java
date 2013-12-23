@@ -35,6 +35,8 @@ public class Locale{
 		if(this.getLanguage() != null)
 			language = this.getLanguage();
 		
+		if("en-US".equals(language))	language = "en"; 
+		
 		if (!webMessageBundles.containsKey(language)) {
 			java.util.Locale locale = new java.util.Locale(language);
 			PropertyResourceBundle propertyResourceBundle = (PropertyResourceBundle) PropertyResourceBundle.getBundle("org.uengine.messages", locale, getClass().getClassLoader());
