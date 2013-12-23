@@ -6,16 +6,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
-import java.net.URL;
 import java.security.SecureRandom;
-import java.util.Calendar;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.validation.constraints.Pattern;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
@@ -24,15 +19,11 @@ import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.SignUpConfirm;
-import org.uengine.codi.mw3.StartCodi;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.util.UEngineUtil;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 
@@ -94,6 +85,10 @@ public class Invitation implements ContextAware{
 	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$Invite")
 	public Object[] invite() throws Exception{
+		
+		if( !CodiStringUtil.isValidEmail(this.getEmail()) ){
+			throw new MetaworksException("$checkEmail");
+		}
 		
 		// 1. The invited person is already one of my friends
 		Employee emp = new Employee();
