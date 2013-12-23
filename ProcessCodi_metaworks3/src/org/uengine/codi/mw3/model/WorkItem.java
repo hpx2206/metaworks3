@@ -31,6 +31,7 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.GlobalContext;
@@ -1028,7 +1029,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			final IInstance copyOfInstance = instance;
 			copyOfInstance.fillFollower();
 			InstanceFollowers instanceFollowers = copyOfInstance.getFollowers();
-					
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
 			
 			// 인스턴스 발행
@@ -1165,24 +1165,40 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //					notiUsers.put(deptEmployee.getUserId() , Login.getSessionIdWithUserId(deptEmployee.getUserId()) );
 //				}
 //			}
-//				
-//			//주제에 추가된 팔로워 알림 처리		
-//			IUser topicFollower = topicFollowers.getFollowers();
-//			if(topicFollower != null){
-//				topicFollower.beforeFirst();
-//				
-//				while(topicFollower.next()){
-//					if(session.getUser().getUserId().equals(topicFollower.getUserId()))
-//						continue;
-//					
-//					notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()));
-//					if(notiUsers.containsKey(topicFollower.getUserId().toUpperCase())){
-//						notiUsers.remove(topicFollower.getUserId().toUpperCase());
-//					}
-//					notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()) );
-//				}
-//			}
 			
+			//주제에 추가된 팔로워 알림 처리		
+			if(copyOfInstance.getTopicId() != null){
+				TopicMapping tm = new TopicMapping();
+				tm.setTopicId(copyOfInstance.getTopicId());
+				IUser topicFollower = tm.findUser();
+				if(topicFollower != null){
+					topicFollower.beforeFirst();
+					
+					while(topicFollower.next()){
+						if(session.getUser().getUserId().equals(topicFollower.getUserId()))
+							continue;
+						
+						notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()));
+						if(notiUsers.containsKey(topicFollower.getUserId().toUpperCase())){
+							notiUsers.remove(topicFollower.getUserId().toUpperCase());
+						}
+						notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()) );
+					}
+				}
+				
+				// 부서로 주제에 추가된 팔로워들의 userId 를 가져온다.
+				IDept deptTopicFollower = tm.findDept();
+				HashMap<String, String> notiTopicUsers = new HashMap<String, String>();
+				if(deptTopicFollower != null){
+					deptTopicFollower.beforeFirst();
+					while(deptTopicFollower.next()){
+						HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptTopicFollower.getPartCode());
+						
+						if(deptSessionList != null)
+							notiTopicUsers.putAll(deptSessionList);
+					}
+				}
+			}
 			// noti 저장
 			Iterator<String> iterator = notiUsers.keySet().iterator();
 			while(iterator.hasNext()){
