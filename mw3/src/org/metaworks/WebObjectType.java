@@ -1073,7 +1073,6 @@ public class WebObjectType{
 					smc.setHow(hows.toString());
 				}
 				
-				
 				if(hidden != null){
 					smc.setAttributes(new HashMap());
 					
@@ -1104,11 +1103,28 @@ public class WebObjectType{
 						smc.attributes.put("hidden.how", hows);
 					}
 				}
-				
+
 				if(hidden!=null){
 					if(hidden.on())
 						smc.setWhen("___hidden___");					
 				}
+
+				if(available!=null && available.condition().length > 0){
+					if(smc.getAttributes()==null){
+						smc.setAttributes(new HashMap<String, Object>());
+					}
+					
+					Map conditions = new HashMap();
+					int conditionSeq=0;
+					
+					for(String condition : available.condition()){
+						conditions.put(conditionSeq, condition);
+						conditionSeq++;
+					}
+					
+					smc.attributes.put("available.condition", conditions);					
+				}
+
 				
 				Test[] tests = null;
 				if(testSet!=null){
