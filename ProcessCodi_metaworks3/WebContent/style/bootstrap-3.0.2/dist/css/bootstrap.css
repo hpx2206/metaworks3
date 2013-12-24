@@ -7056,7 +7056,7 @@ td.hidden-lg {
 }
 
 @media (min-width: 1200px) {
-  .hidden-lg,
+  .hidden-lg, 
   tr.hidden-lg,
   th.hidden-lg,
   td.hidden-lg {
