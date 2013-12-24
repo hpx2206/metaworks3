@@ -1077,7 +1077,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					    for(var methodName in metadata.serviceMethodContextMap){
 					   		var methodContext = metadata.serviceMethodContextMap[methodName];
 
-						    if(this.isHiddenMethodContext(methodContext) && !methodContext.bindingHidden)
+						    if(this.isHiddenMethodContext(methodContext, object) && !methodContext.bindingHidden)
 							   continue;
 
 						    // make call method
@@ -3159,10 +3159,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				*/
 				
-				return this.isHiddenMethodContext(method.methodContext);
+				return this.isHiddenMethodContext(method.methodContext, method.object);
 			};
 			
-			Metaworks3.prototype.isHiddenMethodContext = function(methodContext){
+			Metaworks3.prototype.isHiddenMethodContext = function(methodContext, object){
 				
 				if(methodContext.attributes){
 					if(methodContext.attributes['hidden.when']){
@@ -3192,8 +3192,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(methodContext.how.indexOf(mw3.how + '|') == -1)
 						return true;						
 				}
-				
-				var object = this.objects[this.objectId];
 				
 				if(methodContext.attributes && methodContext.attributes['available.condition'] && object){
 					for(var key in methodContext.attributes['available.condition']){
