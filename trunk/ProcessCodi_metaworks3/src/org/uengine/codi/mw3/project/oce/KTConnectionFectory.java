@@ -14,18 +14,17 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import net.sf.json.JSONObject;
-import net.sf.json.xml.XMLSerializer;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.util.Base64;
 import org.uengine.kernel.GlobalContext;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -67,27 +66,6 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 	@Override
 	public void createServer() throws Exception {
 		/*
-		String findAvailableList = "listAvailableProductTypes";
-		String reponses = this.cmdRequest(findAvailableList);
-		
-		InputSource is = new InputSource(new StringReader(reponses));
-        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
-		
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        
-        NodeList cols = (NodeList)xpath.evaluate("//producttypes", document, XPathConstants.NODESET);
-        for( int idx=0; idx<cols.getLength(); idx++ ){
-            System.out.println(cols.item(idx).getTextContent());
-        	NodeList childs = cols.item(idx).getChildNodes();
-        	if( idx == 3 ){
-	        	for( int j=0; j<childs.getLength(); j++ ){
-	        		System.out.println("nodeName : " + childs.item(j).getNodeName() );
-	        		System.out.println("Text : " + childs.item(j).getTextContent() );
-	        	}
-        	}
-        }
-		*/
-		/*
 			serviceofferingid	서비스 제공 ID [ CPU, Memory 조합 : 2 core 1GB Mem ]
 			templateid			템플릿 ID [ OS : WIN2003 KOR ENT SP2 32bit ]
 			diskofferingid		디스크 제공 ID
@@ -99,31 +77,34 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 				+ "&templateid=d02bd7e0-a831-45fa-a5da-a187a4fe3e2c"			// Centos 5.4 32bit
 				+ "&diskofferingid=87c0a6f6-c684-4fbe-a393-d8412bcf788d"		// 100GB
 				+ "&zoneid=9845bd17-d438-4bde-816d-1b12f37d5080"				// KOR-Central B
-				+ "&displayname=" + getVmName();
+				+ "&displayname=" + serverInfo.getVmName();
 				
 		String reponse = this.cmdRequest(command);
 		
 		String[] temp = reponse.split("jobid");
 		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
 		
 		this.getServerInfo().databaseMe().setJobId(jobid);
 		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_DEPLOYING);
-		
-		
 	}
 	
 	@Override
 	public void startServer() throws Exception {
+		String command = "startVirtualMachine&id=" + serverInfo.getVmId();
 		
+		String reponse = this.cmdRequest(command);
+		
+		String[] temp = reponse.split("jobid");
+		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
+		
+		this.getServerInfo().databaseMe().setJobId(jobid);
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_START_REQUEST);
 	}
 	
 	@Override
 	public void stopServer() throws Exception {
-		
-	}
-
-	@Override
-	public void deleteServer() throws Exception {
 		String command = "stopVirtualMachine&id=" + serverInfo.getVmId();
 		
 		String reponse = this.cmdRequest(command);
@@ -133,10 +114,22 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 		this.setJobId(jobid);
 		
 		this.getServerInfo().databaseMe().setJobId(jobid);
-		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_DEPLOYING);
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_STOP_REQUEST);
+	}
+
+	@Override
+	public void deleteServer() throws Exception {
+		String command = "destroyVirtualMachine&id="+serverInfo.getVmId();	
 		
-		// vm delete
-		command = "destroyVirtualMachine&id="+serverInfo.getVmId();	
+		String reponse = this.cmdRequest(command);
+		
+		String[] temp = reponse.split("jobid");
+		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
+		
+		this.getServerInfo().databaseMe().setJobId(jobid);
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_DELETE_REQUEST);
+		
 	}
 
 	@Override
@@ -164,7 +157,6 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 		
 		if( "com.cloud.api.commands.DeployVMCmd".equals(cmd)){		// 서버 생성
 			if(jobstatus.equals("0")){
-				return IaaSConnectionFectory.SERVER_STATUS_CREATING;
 			}else if(jobstatus.equals("1")){
 				
 				InputSource is = new InputSource(new StringReader(reponse));
@@ -187,19 +179,13 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 				this.getServerInfo().databaseMe().setVmId(node1.getTextContent());
 				this.getServerInfo().databaseMe().setVmPassword(node2.getTextContent());
 				
-				return IaaSConnectionFectory.SERVER_STATUS_RUNNING;
 			}else if(jobstatus.equals("2")){
-				
 				this.getServerInfo().databaseMe().setJobId(null);
 				this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_DEPLOYFAIL);
-				
-				return IaaSConnectionFectory.SERVER_STATUS_DEPLOYFAIL;
 			}
 		}else if ("com.cloud.api.commands.StartVMCmd".equals(cmd)){			// 서버 시작
-			return null;
 		}else if ("com.cloud.api.commands.AssociateIPAddrCmd".equals(cmd)){	// 공인 IP 생성
 			if(jobstatus.equals("0")){
-				return IaaSConnectionFectory.SERVER_STATUS_REQUEST;
 			}else if(jobstatus.equals("1")){
 				String[] temp = reponse.split("<ipaddress>");
 				temp = temp[2].split("</ipaddress>");
@@ -214,18 +200,35 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 				this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_RUNNING);
 			}else if(jobstatus.equals("2")){
 				this.getServerInfo().databaseMe().setJobId(null);
-				this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_IPREQUSETFAIL);
-				
-				return IaaSConnectionFectory.SERVER_STATUS_DEPLOYFAIL;
+				this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_IP_REQUESTFAIL);
 			}
-			return null;
 		}
-		return null;
+		return jobstatus;
+	}
+	
+	public String serverStatusWithThread() throws Exception {
+		String returnResult = null;
+		while(true){
+			String result = this.serverStatus();
+			if( "1".equals(result)){
+				returnResult = result;
+				break;
+			}else if( "2".equals(result)){
+				returnResult = result;
+				break;
+			}
+			try {
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return returnResult;
 	}
 
 	@Override
 	public void createOutsideIP() throws Exception {
-		// TODO Auto-generated method stub
 		String command = "associateIpAddress" +
 				"&zoneid=9845bd17-d438-4bde-816d-1b12f37d5080";
 		
@@ -233,47 +236,120 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 		
 		String[] temp = reponse.split("jobid");
 		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
 		
 		this.getServerInfo().databaseMe().setJobId(jobid);
-		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_REQUEST);	 // request 
-	}
-
-	@Override
-	public int getCreatedOutsideIPStatus() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_IP_REQUEST);	 // request 
 	}
 
 	@Override
 	public void deleteOutsideIP() throws Exception {
-		// TODO Auto-generated method stub
+		String command = "disassociateIpAddress&id="+serverInfo.getVmId();
+		
+		String reponse = this.cmdRequest(command);
+		
+		String[] temp = reponse.split("jobid");
+		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
+		
+		this.getServerInfo().databaseMe().setJobId(jobid);
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_IPDELETE_REQUEST);	 // request 
 		
 	}
 
 	@Override
-	public int getDeletedOutsideIPStatus() throws Exception {
-		// TODO Auto-generated method stub
+	public Object getServerTypeList() throws Exception {
+		String findAvailableList = "listAvailableProductTypes";
+		String reponses = this.cmdRequest(findAvailableList);
+		
+		InputSource is = new InputSource(new StringReader(reponses));
+		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+		
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		
+		NodeList cols = (NodeList)xpath.evaluate("/listavailableproducttypesresponse/producttypes", document, XPathConstants.NODESET);
+		for( int idx=0; idx<cols.getLength(); idx++ ){
+			Element el = (Element)cols.item(idx);
+    		String serviceofferingdesc = xpath.evaluate("serviceofferingdesc" , el );
+    		String templatedesc = xpath.evaluate("templatedesc" , el );
+    		System.out.println("serviceofferingdesc = " + serviceofferingdesc);
+    		System.out.println("templatedesc = " + templatedesc);
+		}
 		return 0;
 	}
-
 	@Override
-	public int getPortForwardingList() throws Exception {
-		// TODO Auto-generated method stub
+	public Object getPortForwardingList(String vmId) throws Exception {
+		String findAvailableList = "listPortForwardingRules";
+		String reponses = this.cmdRequest(findAvailableList);
+		
+		InputSource is = new InputSource(new StringReader(reponses));
+        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
+		
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        // TODO 해당 부분을 객체로 만들어서 xstream 으로 만들어서 쓰면 편할듯 한데.. 조금더 나중에 여러개를 붙일때 고민해 봐야할듯
+        
+        // vmId가 있어서 해당 ID에 대한 정보를 가져오고 싶을경우
+        if( vmId != null ){
+        	Node node = (Node)xpath.evaluate("/listportforwardingrulesresponse/portforwardingrule[virtualmachineid=" +vmId+"]", document, XPathConstants.NODE);
+        	NodeList childs = node.getChildNodes();
+        	for( int idx=0; idx<childs.getLength(); idx++ ){
+        		Element el = (Element)childs.item(idx);
+        		
+        		String privateport = xpath.evaluate("publicport" , el );
+        	}
+        }else{
+	        NodeList cols = (NodeList)xpath.evaluate("//portforwardingrule", document, XPathConstants.NODESET);
+	        for( int idx=0; idx<cols.getLength(); idx++ ){
+	            System.out.println(cols.item(idx).getTextContent());
+	        	NodeList childs = cols.item(idx).getChildNodes();
+	        	for( int j=0; j<childs.getLength(); j++ ){
+	        		Element el = (Element)childs.item(j);
+	        		String privateport = xpath.evaluate("publicport" , el );
+	        		System.out.println("nodeName : " + childs.item(j).getNodeName() );
+	        		System.out.println("Text : " + childs.item(j).getTextContent() );
+	        	}
+	        }
+        }
 		return 0;
 	}
 
 	@Override
 	public void setPortForwarding() throws Exception {
-		// TODO Auto-generated method stub
+		
+		String command = "createPortForwardingRule" +
+				"&ipaddressid="+serverInfo.getVmOutsideIp()+
+				"&virtualmachineid="+serverInfo.getVmId()+
+				"&protocol=TCP" +
+				"&privateport=1" +
+				"&privateendport=8080" +
+				"&publicport=1" +
+				"&publicendport=8080";
+		
+		String reponse = this.cmdRequest(command);
+		
+		String[] temp = reponse.split("jobid");
+		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
+		
+		this.getServerInfo().databaseMe().setJobId(jobid);
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_PORTFOWARDING_REQUEST);	 // request 
+		
+	}
+	@Override
+	public void deletePortForwarding() throws Exception {
+		String command = "deletePortForwardingRule&id=" + serverInfo.getVmId();
+		
+		String reponse = this.cmdRequest(command);
+		
+		String[] temp = reponse.split("jobid");
+		String jobid = temp[1].substring(1, temp[1].length()-2);
+		this.setJobId(jobid);
+		
+		this.getServerInfo().databaseMe().setJobId(jobid);
+		this.getServerInfo().databaseMe().setStatus(SERVER_STATUS_PORTFOWARDING_REQUEST);	 // request 
 		
 	}
 
-	@Override
-	public int getPortForwardingStatus() throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
 	public String cmdRequest(String command){
 		String result = null;
 		try {
@@ -406,5 +482,52 @@ public class KTConnectionFectory implements IaaSConnectionFectory{
 		} catch (Exception e) {
 		}
 		return retStr;
+	}
+	
+	// test case
+	@ServiceMethod
+	public void testCall() throws Exception {
+		String vmName = "test";
+		
+		ServerInfo serverInfo = new ServerInfo();
+		serverInfo.setVmName(vmName);
+		serverInfo.setIaasServerType(ServerInfo.SERVER_TYPE_KT);
+//		serverInfo.createDatabaseMe();
+		
+		IaaSConnectionFectory iaaSConnectionFectory = serverInfo.connectServer();
+		
+//		iaaSConnectionFectory.createServer();
+//		iaaSConnectionFectory.getServerInfo().syncToDatabaseMe();
+//		iaaSConnectionFectory.getServerInfo().flushDatabaseMe();
+//		
+//		String result = iaaSConnectionFectory.serverStatusWithThread();
+//		iaaSConnectionFectory.getServerInfo().syncToDatabaseMe();
+//		iaaSConnectionFectory.getServerInfo().flushDatabaseMe();
+//		System.out.println("createServer ====== result ==== " + result);
+//		
+//		iaaSConnectionFectory.createOutsideIP();
+//		iaaSConnectionFectory.getServerInfo().syncToDatabaseMe();
+//		iaaSConnectionFectory.getServerInfo().flushDatabaseMe();
+//		
+//		result = iaaSConnectionFectory.serverStatusWithThread();
+//		iaaSConnectionFectory.getServerInfo().syncToDatabaseMe();
+//		iaaSConnectionFectory.getServerInfo().flushDatabaseMe();
+//		System.out.println("createOutsideIP ====== result ==== " + result);
+//		
+//		iaaSConnectionFectory = serverInfo.connectServer();
+//		iaaSConnectionFectory.setPortForwarding();
+//		iaaSConnectionFectory.getServerInfo().syncToDatabaseMe();
+//		iaaSConnectionFectory.getServerInfo().flushDatabaseMe();
+//		
+//		result = iaaSConnectionFectory.serverStatusWithThread();
+//		iaaSConnectionFectory.getServerInfo().syncToDatabaseMe();
+//		iaaSConnectionFectory.getServerInfo().flushDatabaseMe();
+//		System.out.println("setPortForwarding ====== result ==== " + result);
+		
+		// 서버 타입 리스트 확인
+		// TODO 너무 많다... 1000개가 넘음..
+//		iaaSConnectionFectory.getServerTypeList();
+		
+//		iaaSConnectionFectory.serverStatusWithThread();
 	}
 }

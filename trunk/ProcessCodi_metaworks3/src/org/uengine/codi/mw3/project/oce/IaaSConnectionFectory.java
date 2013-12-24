@@ -12,7 +12,19 @@ public interface IaaSConnectionFectory {
 	public final static String SERVER_STATUS_RUNNING 		= "Running";
 	public final static String SERVER_STATUS_DEPLOYING 		= "Deploying";
 	public final static String SERVER_STATUS_DEPLOYFAIL		= "DeployFail";
-	public final static String SERVER_STATUS_IPREQUSETFAIL		= "IpRequsetFail";
+	
+	public final static String SERVER_STATUS_IP_REQUEST					= "IpRequest";
+	public final static String SERVER_STATUS_IP_REQUESTFAIL			= "IpRequestFail";
+	public final static String SERVER_STATUS_IPDELETE_REQUEST			= "IpDeleteRequest";
+	public final static String SERVER_STATUS_IPDELETE_REQUESTFAIL	= "IpDeleteRequestFail";
+	public final static String SERVER_STATUS_START_REQUEST			= "StartRequest";
+	public final static String SERVER_STATUS_START_REQUESTFAIL		= "StartRequestFail";
+	public final static String SERVER_STATUS_DELETE_REQUEST			= "DeleteRequest";
+	public final static String SERVER_STATUS_DELETE_REQUESTFAIL		= "DeleteRequestFail";
+	public final static String SERVER_STATUS_STOP_REQUEST				= "StopRequest";
+	public final static String SERVER_STATUS_STOP_REQUESTFAIL		= "StopRequestFail";
+	public final static String SERVER_STATUS_PORTFOWARDING_REQUEST				= "PortFowardingRequest";
+	public final static String SERVER_STATUS_PORTFOWARDING_REQUESTFAIL		= "PortFowardingRequestFail";
 
 	public ServerInfo getServerInfo();
 	public void setServerInfo(ServerInfo serverInfo);
@@ -40,34 +52,30 @@ public interface IaaSConnectionFectory {
 	 * 서버 상태확인(생성중, 실행중, 삭제중, 실행하는중, 실행중, 중지하는중, 중지중 등)
 	 */
 	public String serverStatus() throws Exception;
-	
+	public String serverStatusWithThread() throws Exception;
 	/**
 	 * 외부 아이피 생성 
 	 */
 	public void createOutsideIP() throws Exception;
 	/**
-	 * 외부 아이피 생성 상태값
-	 */
-	public int getCreatedOutsideIPStatus() throws Exception;
-	/**
 	 * 외부 아이피 삭제 
 	 */
 	public void deleteOutsideIP() throws Exception;
-	/**
-	 * 외부 아이피 삭제 상태값
-	 */
-	public int getDeletedOutsideIPStatus() throws Exception;
 	
+	/**
+	 * ServerTypeList
+	 */
+	public Object getServerTypeList() throws Exception;
 	/**
 	 * 포트포워딩 목록
 	 */
-	public int getPortForwardingList() throws Exception;
+	public Object getPortForwardingList(String vmId) throws Exception;
 	/**
 	 * 포트포워딩 설정
 	 */
 	public void setPortForwarding() throws Exception;
 	/**
-	 * 포트포워딩 설정 상태 확인
+	 * 포트포워딩 제거
 	 */
-	public int getPortForwardingStatus() throws Exception;
+	public void deletePortForwarding() throws Exception;
 }
