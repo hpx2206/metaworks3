@@ -11,13 +11,10 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
-import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 
@@ -46,7 +43,14 @@ public class StartCodi {
 		public void setSession(Session session) {
 			this.session = session;
 		}
-		
+	String lastVisitPage;
+		@Hidden
+		public String getLastVisitPage() {
+			return lastVisitPage;
+		}
+		public void setLastVisitPage(String lastVisitPage) {
+			this.lastVisitPage = lastVisitPage;
+		}	
 	public StartCodi(){
 		this(null);
 	}
@@ -60,7 +64,7 @@ public class StartCodi {
 		this.setKey(key);
 	}
 	
-	@ServiceMethod(payload={"key"}, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"key","lastVisitPage"}, target=ServiceMethodContext.TARGET_SELF)
 	public Object load() throws Exception{
 		
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
@@ -133,6 +137,7 @@ public class StartCodi {
 		session.setEmployee(findEmp);
 		
 		Login login = new Login();
+		login.lastVisitPage = this.getLastVisitPage();
 		
 		return login.login(session);
 	}

@@ -31,7 +31,9 @@ public class AllAppList {
 			this.myAppsList = myAppsList;
 		}
 		
-		
+	public AllAppList(){
+		myAppsList = new ArrayList<AppMapping>();
+	}
 	public void load() throws Exception{
 		AppMapping myapps = new AppMapping();
 		

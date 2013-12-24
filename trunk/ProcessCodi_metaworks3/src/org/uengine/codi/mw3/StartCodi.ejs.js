@@ -9,6 +9,10 @@ var org_uengine_codi_mw3_StartCodi = function(objectId, className){
 	if(this.object == null)
 		return true;	
 	
+	var lastVisitPage = getCookie("codi.lastVisit");
+	if(lastVisitPage) 
+		this.object.lastVisitPage = lastVisitPage;
+	
 	if(this.object.key == 'loader'){
 		var id = getCookie("codi.id");
 	
