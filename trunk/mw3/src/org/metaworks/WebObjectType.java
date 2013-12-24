@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
+import org.metaworks.annotation.Order;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
@@ -199,7 +202,7 @@ public class WebObjectType{
 		setName(objectType.getName());
 		setInterface(actCls.isInterface());
 		
-		ArrayList<Class> tryingClasses = new ArrayList<Class>();
+		final ArrayList<Class> tryingClasses = new ArrayList<Class>();
 		superClasses = new ArrayList<String>();
 		Class superCls = actCls;
 		while(superCls!=Object.class && superCls!=null && Database.class!=superCls){
@@ -344,10 +347,44 @@ public class WebObjectType{
 		//Test testerBeginner = null;
 		//Map<String, Test> tests = new HashMap<String, Test>();
 	
+		//Field Ordering if there's some Order annotation
+		FieldDescriptor[] fieldDescriptors = objectType.getFieldDescriptors();
+		Arrays.sort(fieldDescriptors, new Comparator<FieldDescriptor>() {
+            @Override
+            public int compare(FieldDescriptor o1, FieldDescriptor o2) {
+                Order or1 = null;
+				try {
+					or1 = (Order) getAnnotationDeeply( tryingClasses, o1.getName(), Order.class);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                Order or2 = null;
+				try {
+					or2 = (Order) getAnnotationDeeply( tryingClasses, o2.getName(), Order.class);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                // nulls last
+                if (or1 != null && or2 != null) {
+                    return or1.value() - or2.value();
+                } else
+                if (or1 != null && or2 == null) {
+                    return -1;
+                } else
+                if (or1 == null && or2 != null) {
+                    return 1;
+                }
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
+		
 		FieldDescriptor keyField = null;
-		for(int i=0; i<objectType.getFieldDescriptors().length; i++){
+		for(int i=0; i<fieldDescriptors.length; i++){
 			
-			FieldDescriptor fd = objectType.getFieldDescriptors()[i];
+			FieldDescriptor fd = fieldDescriptors[i];
 			
 			//TODO: change to vector or hashmap the fieldDescriptor. will need to study the field order differences
 			//ignores meta-meta data  
@@ -856,6 +893,7 @@ public class WebObjectType{
 			if(isKeyField)
 				setKeyFieldDescriptor(webFieldDescriptors[i]);
 		}
+		
 		
 		
 		if(iDAOClass != null){
