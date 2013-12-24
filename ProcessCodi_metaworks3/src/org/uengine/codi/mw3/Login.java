@@ -769,9 +769,26 @@ public class Login implements ContextAware {
 		pageNavigator.session = session;
 		
 		if("1".equals(StartCodi.USE_OCE)){
-			mainPanel =  pageNavigator.goDashBoard();
+				mainPanel =  pageNavigator.goDashBoard();
 		}else{
-			mainPanel = pageNavigator.goProcess();
+			if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+				mainPanel = pageNavigator.goKnowledge();
+			}else if("pinterest".equals(lastVisitPage)){
+				mainPanel = pageNavigator.goPinterest();
+			}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
+				mainPanel = pageNavigator.goIDE();
+			}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
+				mainPanel = pageNavigator.goMarketplace();
+			}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "1"))){
+				mainPanel = pageNavigator.goSelfServicePortal();
+			}else{
+				String preferUX = session.getEmployee().getPreferUX();
+				if("sns".equals(preferUX) || "".equals(preferUX)){
+					mainPanel = pageNavigator.goSns();
+				}else{
+					mainPanel = pageNavigator.goProcess();
+				}
+			}
 		}
 		
 		Locale locale = new Locale();
