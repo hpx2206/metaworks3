@@ -3193,6 +3193,24 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						return true;						
 				}
 				
+				var object = this.objects[this.objectId];
+				
+				if(methodContext.attributes && methodContext.attributes['available.condition'] && object){
+					for(var key in methodContext.attributes['available.condition']){
+						var condition = methodContext.attributes['available.condition'][key]; 
+						var validateCondition = true;
+		    			if(condition != null){
+		    				with(object)
+		    					validateCondition = !eval(condition);
+		    			}			
+		    			
+		    			if(!validateCondition)
+		    				return validateCondition;
+					}
+					
+					return true;
+				}
+				
 				return false;				
 			}
 			
