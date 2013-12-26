@@ -75,7 +75,7 @@ public class NewForm extends Templete {
 			
 			editor.save();
 			
-			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor)};
+			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow())};
 		}else{
 			throw new MetaworksException("finish error");
 		}

@@ -228,7 +228,7 @@ public class ProcessViewerPanel implements ContextAware {
 				node.setType(TreeNode.TYPE_FILE_PROCESS);
 				node.setFolder(false);
 				
-				return new Object[]{new Remover(new ModalWindow() , true), new ToAppend(targetNode, node)};
+				return new Object[]{new ToAppend(targetNode, node), new Remover(new ModalWindow() , true)};
 			}else{
 				throw new MetaworksException("save error");
 			}
