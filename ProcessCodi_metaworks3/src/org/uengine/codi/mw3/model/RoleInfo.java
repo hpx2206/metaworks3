@@ -97,17 +97,15 @@ public class RoleInfo extends PerspectiveInfo{
 	@Override
 	public Object[] subscribe() throws Exception {
 		
-		RoleUser roleUser = new RoleUser();
-		roleUser.setRoleCode(this.getId());
-		roleUser.setEmpCode(session.getEmployee().getEmpCode());
-		IRoleUser findRoleUser = roleUser.findMe();
+		User user = new User();
+		user.setUserId(session.getEmployee().getEmpCode());
+		user.setName(session.getEmployee().getEmpName());
+		user.session = this.session;
+		user.setMetaworksContext(new MetaworksContext());
+		user.getMetaworksContext().setHow("follower");
+		user.getMetaworksContext().setWhen(Followers.ADD_ROLEFOLLOWERS);
 		
-		if(findRoleUser != null){
-			throw new Exception("$AlreadyExistingRole");
-		}
-		
-		roleUser.createDatabaseMe();
-		roleUser.flushDatabaseMe();
+		followers.addFollower(user);
 		
 		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 	
@@ -116,12 +114,15 @@ public class RoleInfo extends PerspectiveInfo{
 	
 	@Override
 	public Object[] unSubscribe() throws Exception {
-		RoleUser roleUser = new RoleUser();
-		roleUser.setRoleCode(this.getId());
-		roleUser.setEmpCode(session.getEmployee().getEmpCode());
-
-		roleUser.removeUser();
+		User user = new User();
+		user.setUserId(session.getEmployee().getEmpCode());
+		user.setName(session.getEmployee().getEmpName());
+		user.session = this.session;
+		user.setMetaworksContext(new MetaworksContext());
+		user.getMetaworksContext().setWhen("roleFollowers");
 		
+		followers.removeFollower(user);
+
 		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 	}
 	@Override

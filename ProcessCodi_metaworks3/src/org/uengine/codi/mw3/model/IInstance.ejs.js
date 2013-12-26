@@ -63,7 +63,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 			var object = mw3.getObject(objectId);
 			object.goSns();
 		}else{
-			object.detail(true, function(){
+			object.view(true, function(){
 				var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 				
 				if(session && session.ux == 'phone'){

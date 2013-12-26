@@ -22,9 +22,7 @@ public class GroupInfo extends PerspectiveInfo{
 
 	@Override
 	public void load() throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println("group");
-		
+		super.load();
 	}
 	
 	
@@ -73,6 +71,7 @@ public class GroupInfo extends PerspectiveInfo{
 		user.setName(session.getEmployee().getEmpName());
 		user.session = this.session;
 		user.setMetaworksContext(new MetaworksContext());
+		user.getMetaworksContext().setWhen("topicFollowers");
 		
 		followers.removeFollower(user);
 
@@ -87,6 +86,7 @@ public class GroupInfo extends PerspectiveInfo{
 		user.session = this.session;
 		user.setMetaworksContext(new MetaworksContext());
 		user.getMetaworksContext().setHow("follower");
+		user.getMetaworksContext().setWhen(Followers.ADD_TOPICFOLLOWERS);
 		
 		followers.addFollower(user);
 		

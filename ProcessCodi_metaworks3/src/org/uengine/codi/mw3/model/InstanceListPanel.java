@@ -42,12 +42,12 @@ public class InstanceListPanel implements ContextAware{
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
-	public InstanceListPanel(){
+	public InstanceListPanel() throws Exception{
 		this(null);
 	}
 	
 	
-	public InstanceListPanel(Session session){		
+	public InstanceListPanel(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
 		
 		InstanceSearchBox searchBox = new InstanceSearchBox();

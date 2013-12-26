@@ -45,7 +45,7 @@ public class FollowerSelectCommand {
 		if( Followers.ADD_INSTANCEFOLLOWERS.equals(getFollowerType()) ){
 			String instId = instanceFollowers.getInstanceId();
 			// 현재 부서트리에서는 사용자를 체크 안하게 되어있지만 확장성을 위하여 employee쪽도 넣는 부분을 구현해 놓음
-			ArrayList<TreeNode> checkNodes = ((OrganizationTree)followerSelectTab.getDeptTreePanel().getTop()).getCheckNodes();
+			ArrayList<TreeNode> checkNodes = ((OrganizationTree)followerSelectTab.getDeptTree()).getCheckNodes();
 			for(int i=0; i<checkNodes.size(); i++){
 				TreeNode node = checkNodes.get(i);
 				RoleMapping roleMap = RoleMapping.create();
@@ -81,7 +81,7 @@ public class FollowerSelectCommand {
 			instanceFollowers.load();
 			return new Object[]{new Refresh(instanceFollowers) , new Remover(new Popup(), true)};
 		}else if( Followers.ADD_TOPICFOLLOWERS.equals(getFollowerType()) ){
-			ArrayList<TreeNode> checkNodes = ((OrganizationTree)followerSelectTab.getDeptTreePanel().getTop()).getCheckNodes();
+			ArrayList<TreeNode> checkNodes = ((OrganizationTree)followerSelectTab.getDeptTree()).getCheckNodes();
 			for(int i=0; i<checkNodes.size(); i++){
 				TreeNode node = checkNodes.get(i);
 				TopicMapping tm = new TopicMapping();

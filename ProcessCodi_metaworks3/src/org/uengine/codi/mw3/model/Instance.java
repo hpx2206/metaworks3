@@ -830,6 +830,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 	}
 	
+	public Object[] view() throws Exception{
+		session.setLastInstanceId(this.getInstId().toString());
+		
+		return new Object[]{ this.detail(), session};
+	}
+	
 	public Object detail() throws Exception{
 
 		if(getMetaworksContext()==null){
@@ -896,6 +902,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instanceViewContent.load(this);
 			
 			return instanceViewContent;
+			
 		}
 		
 	}
