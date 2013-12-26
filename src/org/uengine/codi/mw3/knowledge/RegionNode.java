@@ -103,7 +103,7 @@ public class RegionNode extends Database<IRegionNode> implements IRegionNode {
 			this.vistype = vistype;
 		}
 		
-	// 각 국가별 인스턴스 카운트가 필요함..ㅠ
+	// 각 국가별 인스턴스 카운트가 아마 필요할 수도 있음...
 	int instanceCount;
 		public int getInstanceCount() {
 			return instanceCount;
@@ -254,20 +254,5 @@ public class RegionNode extends Database<IRegionNode> implements IRegionNode {
 //	@AutowiredFromClient
 //	public ContentWindow contentWindow;
 	
-	
-	// select 될 때 db 정도 싹 다 가져와야 한다. select 문으로..지역별에 있는거 다 가져와서 매핑시켜야 한다..
-	// bpm_knol에서 일단 다 가져오는 것 부터... IRegionNode로 찾아야한다.
-	public IRegionNode findRegion() throws Exception {
-		StringBuffer sb = new StringBuffer();
-		sb.append("select * from ");
-		sb.append("bpm_knol ");
-		sb.append("where type=?type ");
-		
-		IRegionNode regionNode = (IRegionNode) sql(sb.toString());
-		regionNode.set("type", "region");
-		regionNode.select();
-		
-		return regionNode;
-	}
 	
 }
