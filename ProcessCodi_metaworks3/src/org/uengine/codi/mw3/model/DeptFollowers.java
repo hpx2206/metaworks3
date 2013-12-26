@@ -29,9 +29,10 @@ public class DeptFollowers extends Followers{
 		
 		
 		IUser user = new User();
+		user.setMetaworksContext(new MetaworksContext());
+		user.getMetaworksContext().setWhen(CONTEXT_WHERE_DEPTFOLLOWERS);
 		IUser users = user.findByDept(dept);
 		setFollowers(users);
-
 		
 	}
 
