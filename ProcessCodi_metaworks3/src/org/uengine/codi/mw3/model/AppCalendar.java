@@ -14,7 +14,7 @@ public class AppCalendar {
 		this.content = content;
 	}
 
-	public AppCalendar(Session session){
+	public AppCalendar(Session session) throws Exception{
 		Layout layout = new Layout();
 
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
