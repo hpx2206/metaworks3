@@ -1,9 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +73,15 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 			this.description = description;
 		}
 		
+	Boolean isJoined;
+		public Boolean getIsJoined() {
+			return isJoined;
+		}
+		public void setIsJoined(Boolean isJoined) {
+			this.isJoined = isJoined;
+		}
+		
+		
 	@Override
 	public void add() {
 		// TODO Auto-generated method stub
@@ -90,8 +102,7 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 
 	@Override
 	public void load() throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.setIsJoinME();
 	}
 
 	@Override
@@ -99,7 +110,31 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void setIsJoinME() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
+	@Override
+	@Available(condition="isJoined == true")
+	public Object[] unSubscribe() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	@Override
+	@Available(condition="isJoined == false")
+	public Object[] subscribe() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void refresh() throws Exception {
+		this.load();
+	}
 	
 
 }

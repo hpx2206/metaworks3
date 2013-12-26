@@ -1,9 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
@@ -17,11 +19,12 @@ public class RoleInfo extends PerspectiveInfo{
 	public RoleInfo(){
 		
 	}
-	public RoleInfo(Session session){
+	public RoleInfo(Session session) throws Exception{
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 	}
 	
 	@Override
@@ -79,7 +82,7 @@ public class RoleInfo extends PerspectiveInfo{
 		logoFile.setUploadedPath(role.getUrl());
 		logoFile.setFilename(role.getThumbnail());
 		this.setLogoFile(logoFile);
-		
+		this.setIsJoinME();
 		
 	}
 
@@ -91,9 +94,8 @@ public class RoleInfo extends PerspectiveInfo{
 	}
 	
 	
-	@Face(displayName="$role.Subscribe")
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object subscribe() throws Exception {
+	@Override
+	public Object[] subscribe() throws Exception {
 		
 		RoleUser roleUser = new RoleUser();
 		roleUser.setRoleCode(this.getId());
@@ -107,11 +109,36 @@ public class RoleInfo extends PerspectiveInfo{
 		roleUser.createDatabaseMe();
 		roleUser.flushDatabaseMe();
 		
-		this.getFollowers().session = session;
-		this.getFollowers().load();
-			
-		return new Refresh(this.followers);
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 	
+	}
+	
+	
+	@Override
+	public Object[] unSubscribe() throws Exception {
+		RoleUser roleUser = new RoleUser();
+		roleUser.setRoleCode(this.getId());
+		roleUser.setEmpCode(session.getEmployee().getEmpCode());
+
+		roleUser.removeUser();
+		
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
+	}
+	@Override
+	public void setIsJoinME() throws Exception {
+
+		RoleUser roleUser = new RoleUser();
+		roleUser.setRoleCode(this.getId());
+		roleUser.setEmpCode(session.getEmployee().getEmpCode());
+		IRoleUser findRoleUser = roleUser.findMe();
+		
+		if(findRoleUser != null)
+			this.setIsJoined(true);
+		else
+			this.setIsJoined(false);
+
+		
+				
 	}
 
 }

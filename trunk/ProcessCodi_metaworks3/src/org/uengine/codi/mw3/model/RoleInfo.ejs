@@ -24,7 +24,27 @@ if(value){
                 <div class="clear"></div>
                 <div id="searchbox" style="border-bottom:1px solid #9EBFC4;">
 	                <div class="positionRight" style="padding:5px 0">
-						<%=methods.subscribe.here()%>
+
+<%				
+				if(!mw3.isHiddenMethod(methods.subscribe)){
+%>					                
+	                <a id="wBtn" href="#" onClick="<%=methods.subscribe.caller()%>"><span><%=mw3.localize("$role.Subscribe")%></span></a>
+<%				
+				}
+%>					                
+	                
+	                
+	                
+<%
+				if(!mw3.isHiddenMethod(methods.unSubscribe)){
+
+%>
+				<a id="wBtn" href="#" onClick="<%=methods.unSubscribe.caller()%>"><span><%=mw3.localize("$role.UnSubscribe")%></span></a>	
+<%
+				}
+
+%>								
+						
 						<%=methods.modify.here()%>
 						<%=methods.delete.here()%>
 						

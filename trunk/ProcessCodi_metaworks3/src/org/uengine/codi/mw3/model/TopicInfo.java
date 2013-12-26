@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
+
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -8,6 +12,9 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.ITopicMapping;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.TopicTitle;
 import org.uengine.codi.mw3.knowledge.WfNode;
@@ -22,11 +29,12 @@ public class TopicInfo extends GroupInfo{
 	public TopicInfo(){
 	}
 	
-	public TopicInfo(Session session){
+	public TopicInfo(Session session) throws Exception{
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 	}
 	
 	
@@ -76,6 +84,7 @@ public class TopicInfo extends GroupInfo{
 		logoFile.setUploadedPath(wfNode.getUrl());
 		logoFile.setFilename(wfNode.getThumbnail());
 		this.setLogoFile(logoFile);
+		this.setIsJoinME();
 		
 	}
 	

@@ -17,7 +17,6 @@ if(value){
                 <div class="mp_sub_rightBox">
                 	<dl class="mp_sub_dsc1">
                     	<dt style="font-size:16px;"><%=fields.name.here()%></dt>
-                    	<dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.secuopt%></span></dd>
                     	<dd><span class="mp_sub_tit"><%=mw3.localize("$ProjectDescription")%> : </span><span class="mp_sub_rst"><%=value.description%></span></dd>
                                    
                         
@@ -29,8 +28,27 @@ if(value){
 						<%if(false){%>
 						<%=methods.addNewChildDept.here()%>
 						<%}  %>
-						<%=methods.subscribe.here()%>
-						<%=methods.unSubscribe.here()%>
+
+<%				
+				if(!mw3.isHiddenMethod(methods.subscribe)){
+%>					                
+	                <a id="wBtn" href="#" onClick="<%=methods.subscribe.caller()%>"><span><%=mw3.localize("$part.Subscribe")%></span></a>
+<%				
+				}
+%>					                
+	                
+	                
+	                
+<%
+				if(!mw3.isHiddenMethod(methods.unSubscribe)){
+
+%>
+				<a id="wBtn" href="#" onClick="<%=methods.unSubscribe.caller()%>"><span><%=mw3.localize("$part.UnSubscribe")%></span></a>	
+<%
+				}
+
+%>							
+						
 						<%=methods.modify.here()%>
 						<%=methods.delete.here()%>
 						
