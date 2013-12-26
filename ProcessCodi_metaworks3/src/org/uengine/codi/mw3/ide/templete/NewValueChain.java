@@ -41,6 +41,7 @@ public class NewValueChain extends Templete {
 			node.setName(this.getName() + ".valuechain");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
+			node.setProjectId(targetNode.getProjectId());
 			
 			ValueChainEditor editor = new ValueChainEditor(node);
 			editor.getValueChainDesigner().getProcessNameView().setAlias(this.getName());

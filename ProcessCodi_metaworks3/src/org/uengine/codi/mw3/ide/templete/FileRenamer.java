@@ -37,7 +37,7 @@ public class FileRenamer extends Templete {
 			if( this.getName() != null && !"".equals(this.getName().trim())){
 				MajorProcessDefinitionNode targetNode = (MajorProcessDefinitionNode)clipboard;
 				targetNode.setName(this.getName());
-				return new Object[]{new Remover(new ModalWindow()), new Refresh(targetNode)};
+				return new Object[]{new Refresh(targetNode) , new Remover(new ModalWindow())};
 			}else{
 				return new Object[]{new Remover(new ModalWindow())};
 			}
@@ -45,7 +45,7 @@ public class FileRenamer extends Templete {
 			if( this.getName() != null && !"".equals(this.getName().trim())){
 				MinorProcessDefinitionNode targetNode = (MinorProcessDefinitionNode)clipboard;
 				targetNode.setName(this.getName());
-				return new Object[]{new Remover(new ModalWindow()), new Refresh(targetNode)};
+				return new Object[]{new Refresh(targetNode), new Remover(new ModalWindow())};
 			}else{
 				return new Object[]{new Remover(new ModalWindow())};
 			}
