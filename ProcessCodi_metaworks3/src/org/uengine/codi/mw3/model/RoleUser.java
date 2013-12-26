@@ -88,4 +88,20 @@ public class RoleUser extends Database<IRoleUser> implements IRoleUser {
 		
 		return dao;
 	}
+	
+	public int removeUser() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("delete from roleUserTable ");
+		sb.append("  where roleCode=?roleCode ");	
+		sb.append("   AND empCode=?empCode ");
+		
+		IRoleUser dao = null;
+		
+		dao = sql(sb.toString());
+		dao.setRoleCode(this.getRoleCode());
+		dao.setEmpCode(this.getEmpCode());
+		
+		return dao.update();
+		
+	}
 }
