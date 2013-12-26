@@ -52,6 +52,7 @@ public class DocWorkItem extends WorkItem {
 			fileWorkItem.setMajorVer(1);
 			fileWorkItem.setFolderId(this.getFolderId());
 			fileWorkItem.setGrpTaskId(this.getTaskId());
+			fileWorkItem.setNotReturn(true);
 			fileWorkItem.add();
 
 			DocumentTool tool = new DocumentTool();

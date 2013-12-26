@@ -792,6 +792,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setUseBBB(boolean useBBB) {
 			this.useBBB = useBBB;
 		}
+		
+	boolean notReturn;
+		public boolean isNotReturn() {
+			return notReturn;
+		}
+		public void setNotReturn(boolean notReturn) {
+			this.notReturn = notReturn;
+		}
 
 	public IInstance save() throws Exception {
 		
@@ -1334,7 +1342,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		instance.copyFrom(this.save());
 		instance.flushDatabaseMe();
 		
-		return makeReturn(prevInstId, instance);
+		if( notReturn ){
+			return null;
+		}else{
+			return makeReturn(prevInstId, instance);
+		}
 	}
 	
 	public Object remove() throws Exception{
