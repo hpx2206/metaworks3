@@ -159,6 +159,16 @@ public class PerspectivePanel  implements ContextAware {
 				CustomsEnterprisePoolPerspective customsEnterprisePoolPerspective) {
 			this.customsEnterprisePoolPerspective = customsEnterprisePoolPerspective;
 		}
+	
+	// 한국형 공공서비스 소개
+	PublicServiceIntroducePerspective publicServiceIntroducePerspective;
+		public PublicServiceIntroducePerspective getPublicServiceIntroducePerspective() {
+			return publicServiceIntroducePerspective;
+		}
+		public void setPublicServiceIntroducePerspective(
+				PublicServiceIntroducePerspective publicServiceIntroducePerspective) {
+			this.publicServiceIntroducePerspective = publicServiceIntroducePerspective;
+		}
 
 	@AutowiredFromClient
 	public Session session;
@@ -240,6 +250,7 @@ public class PerspectivePanel  implements ContextAware {
 				// 발주정보 
 				if("1".equals(GlobalContext.getPropertyString("orderInfo.use", "1"))) {
 					orderInformationPerspective = new OrderInformationPerspective();
+					orderInformationPerspective.session = session;
 				}
 				
 				// 지식 마켓
@@ -257,15 +268,22 @@ public class PerspectivePanel  implements ContextAware {
 				}
 				
 				// 수출입 pool
-				
 				if("1".equals(GlobalContext.getPropertyString("customsPool","1"))) {
 					customsEnterprisePoolPerspective = new CustomsEnterprisePoolPerspective();
+					customsEnterprisePoolPerspective.session = session;
+				}
+				
+				// 한국형 공공서비스 소개
+				if("1".equals(GlobalContext.getPropertyString("publicServiceIntro","1"))) {
+					publicServiceIntroducePerspective = new PublicServiceIntroducePerspective();
+					publicServiceIntroducePerspective.session = session;
 				}
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
 			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
 				strategicPerspective = new StrategicPerspective();
+				strategicPerspective.session = session;
 			}
 		}//session
 	}

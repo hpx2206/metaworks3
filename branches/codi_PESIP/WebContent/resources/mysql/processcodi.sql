@@ -969,16 +969,71 @@ CREATE  TABLE `uengine`.`enterprise` (
   
 -- 2013_11_27 좋아요 테이블 추가
 
+
 CREATE TABLE `likeitem` (
-  `likeId` int(11) NOT NULL AUTO_INCREMENT,
   `instId` int(11) NOT NULL,
   `empcode` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `checked` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`likeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+  PRIMARY KEY (`instId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+
+
+-- 2013_12_10 pseip_country 테이블 추가 (임시)
+
+CREATE TABLE `pseip_country` (
+  `country_code` int(11) NOT NULL,
+  `name_ko` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `name_en` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `alpha2` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `continent` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `moddate` date NOT NULL,
+  `regdate` date NOT NULL,
+  `alpha3` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `ODA_cooperation` tinyint(1) NOT NULL,
+  `EDCF_cooperation` tinyint(1) NOT NULL,
+  `url` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `LAT` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `LNG` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`country_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+
+  
+  
+  -- 2013_12_10 pseip_code 테이블 추가 (임시)
+  
+CREATE TABLE `pseip_code` (
+  `code` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `code_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `class_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `class` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `isdeleted` tinyint(1) NOT NULL,
+  `sort` int(100) NOT NULL,
+  `info` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `moddate` date NOT NULL,
+  `regdate` date NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 
 
 
+-- 2013_12_13 pseip_bidding 테이블 추가 (임시)
 
+CREATE TABLE `pseip_bidding` (
+  `project_code` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `project_name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `industry_category` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `service_category` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `project_status` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `due_date` datetime NOT NULL,
+  `reg_date` datetime NOT NULL,
+  `moddate` datetime NOT NULL,
+  `fund_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `reg_empcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `country_code` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`project_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
+  

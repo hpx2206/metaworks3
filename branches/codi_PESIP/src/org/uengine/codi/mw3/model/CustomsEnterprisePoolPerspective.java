@@ -1,10 +1,16 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 
 public class CustomsEnterprisePoolPerspective {
+	
+	@AutowiredFromClient
+	public static Session session;
+	
+	
 	CustomsEnterprisePoolPanel customsEnterprisePoolPanel;
 		public CustomsEnterprisePoolPanel getCustomsEnterprisePoolPanel() {
 			return customsEnterprisePoolPanel;
@@ -20,7 +26,7 @@ public class CustomsEnterprisePoolPerspective {
 		if(customsEnterprisePoolPanel == null) {
 			customsEnterprisePoolPanel = new CustomsEnterprisePoolPanel();
 		}
-		customsEnterprisePoolPanel.loadWorldMap();
+		customsEnterprisePoolPanel.load();
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setWidth(1050);
