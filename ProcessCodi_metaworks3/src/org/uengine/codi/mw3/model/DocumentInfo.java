@@ -41,11 +41,12 @@ public class DocumentInfo extends GroupInfo{
 	public DocumentInfo(){
 		
 	}
-	public DocumentInfo(Session session){
+	public DocumentInfo(Session session) throws Exception{
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 	}
 	@Override
 	public void load() throws Exception {
@@ -72,6 +73,8 @@ public class DocumentInfo extends GroupInfo{
 		logoFile.setUploadedPath(wfNode.getUrl());
 		logoFile.setFilename(wfNode.getThumbnail());
 		this.setLogoFile(logoFile);
+		
+		super.load();
 	}
 	
 	@Override
@@ -89,7 +92,7 @@ public class DocumentInfo extends GroupInfo{
 		return new ModalWindow(documentTitle, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "문서제목수정");
 	}
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true, target="popup")
+	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$addSubDocument")
 	public ModalWindow addSubFolder() throws Exception {
 		DocumentTitle documentSubTitle = new DocumentTitle();

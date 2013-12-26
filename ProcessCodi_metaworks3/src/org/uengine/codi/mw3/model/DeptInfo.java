@@ -1,14 +1,18 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.knowledge.ITopicMapping;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 
 public class DeptInfo extends PerspectiveInfo{
 
@@ -18,11 +22,12 @@ public class DeptInfo extends PerspectiveInfo{
 	public DeptInfo(){
 		
 	}
-	public DeptInfo(Session session){
+	public DeptInfo(Session session) throws Exception{
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 	}
 	@Override
 	public void add() {
@@ -36,10 +41,6 @@ public class DeptInfo extends PerspectiveInfo{
 		dept.setPartCode(this.getId());		
 		dept.copyFrom(dept.databaseMe());
 		dept.setIsDeleted("1");
-		
-		
-/*		if( (this.getChildren() != null && this.getChildren().size() > 0) || (this.getDeptEmployee() != null && this.getDeptEmployee().size() > 0))
-			throw new Exception("�섏쐞 �몃뱶媛�議댁옱�섎㈃ ��젣�����놁뒿�덈떎.");*/
 				
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
@@ -98,6 +99,7 @@ public class DeptInfo extends PerspectiveInfo{
 		logoFile.setUploadedPath(dept.getUrl());
 		logoFile.setFilename(dept.getThumbnail());
 		this.setLogoFile(logoFile);
+		this.setIsJoinME();
 	}
 
 	@Override
@@ -108,8 +110,7 @@ public class DeptInfo extends PerspectiveInfo{
 	}
 	
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="$part.Subscribe")
+	@Override
 	public Object[] subscribe() throws Exception {
 		
 		Employee employee = new Employee();
@@ -124,16 +125,11 @@ public class DeptInfo extends PerspectiveInfo{
 		employee.syncToDatabaseMe();
 		employee.flushDatabaseMe();
 		
-		this.getFollowers().session = session;
-		this.getFollowers().load();
-			
-		return new Object[]{new Refresh(this.followers)};
-		
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 		
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="$part.UnSubscribe")
+	@Override
 	public Object[] unSubscribe() throws Exception {
 		
 		Employee employee = new Employee();
@@ -148,11 +144,24 @@ public class DeptInfo extends PerspectiveInfo{
 		employee.syncToDatabaseMe();
 		employee.flushDatabaseMe();
 		
-		this.getFollowers().session = session;
-		this.getFollowers().load();
-			
-		return new Object[]{new Refresh(this.followers)};
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 		
+	}
+	
+	
+	@Override
+	public void setIsJoinME() throws Exception {
+
+		Employee emp = new Employee();
+		emp.setEmpCode(session.getEmployee().getEmpCode());
+		emp.setPartCode(this.getId());
+		IEmployee findEmp = emp.findMe();
 		
+		if(this.getId().equals(findEmp.getPartCode()))
+			this.setIsJoined(true);
+		else
+			this.setIsJoined(false);
+		
+				
 	}
 }
