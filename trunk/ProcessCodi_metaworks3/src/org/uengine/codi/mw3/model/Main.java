@@ -211,7 +211,7 @@ public class Main {
 				setPageNavigator(new OcePageNavigator());
 			else if("sns".equals(session.getUx()))
 				setPageNavigator(new OcePageNavigator());
-			else if("codi_8080".equals(GlobalContext.getPropertyString("metadataKey", "0")))
+			else if("0".equals(GlobalContext.getPropertyString("navigator.use", "0")))
 				setPageNavigator(null);
 			else
 				setPageNavigator(new PageNavigator());
