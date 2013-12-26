@@ -113,17 +113,15 @@ public class DeptInfo extends PerspectiveInfo{
 	@Override
 	public Object[] subscribe() throws Exception {
 		
-		Employee employee = new Employee();
-		employee.setEmpCode(session.getEmployee().getEmpCode());
-		employee.copyFrom(employee.databaseMe());
+		User user = new User();
+		user.setUserId(session.getEmployee().getEmpCode());
+		user.setName(session.getEmployee().getEmpName());
+		user.session = this.session;
+		user.setMetaworksContext(new MetaworksContext());
+		user.getMetaworksContext().setHow("follower");
+		user.getMetaworksContext().setWhen(Followers.ADD_DEPTFOLLOWERS);
 		
-		if(employee.getPartCode()!=null && this.getId().equals(employee.getPartCode())){
-			throw new Exception("$part.already.subscribe");
-		}
-		
-		employee.setPartCode(this.getId());
-		employee.syncToDatabaseMe();
-		employee.flushDatabaseMe();
+		followers.addFollower(user);
 		
 		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 		
@@ -132,18 +130,15 @@ public class DeptInfo extends PerspectiveInfo{
 	@Override
 	public Object[] unSubscribe() throws Exception {
 		
-		Employee employee = new Employee();
-		employee.setEmpCode(session.getEmployee().getEmpCode());
-		employee.copyFrom(employee.databaseMe());
+		User user = new User();
+		user.setUserId(session.getEmployee().getEmpCode());
+		user.setName(session.getEmployee().getEmpName());
+		user.session = this.session;
+		user.setMetaworksContext(new MetaworksContext());
+		user.getMetaworksContext().setWhen("deptFollowers");
 		
-		if(!this.getId().equals(employee.getPartCode())){
-			throw new Exception("$part.still.UnSubscribe");
-		}
-		
-		employee.setPartCode("");
-		employee.syncToDatabaseMe();
-		employee.flushDatabaseMe();
-		
+		followers.removeFollower(user);
+
 		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 		
 	}

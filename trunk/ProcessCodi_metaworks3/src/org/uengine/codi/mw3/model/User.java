@@ -10,7 +10,6 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
@@ -18,10 +17,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
-import org.uengine.codi.mw3.knowledge.ITopicMapping;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {
@@ -184,7 +180,7 @@ public class User extends Database<IUser> implements IUser {
 		String when = this.getMetaworksContext().getWhen();
 		
 		if(when != null && when.equals(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			String instId = instanceFollowers.getInstanceId();
+			String instId = session.getLastInstanceId();
 			
 			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
 			if(!roleMapping.confirmFollower()){
@@ -254,381 +250,19 @@ public class User extends Database<IUser> implements IUser {
 	@Autowired
 	public ProcessManagerRemote processManager;
 
-	@AutowiredFromClient
-	public Followers etcFollowers;
-	
-	@AutowiredFromClient
-	public TopicFollowers topicFollowers;
-	
-	@AutowiredFromClient
-	public RoleFollowers roleFollowers;
-	
-	@AutowiredFromClient
-	public DeptFollowers deptFollowers;
-	
-	@AutowiredFromClient
-	public DocumentFollowers documentFollowers;
-	
-	@AutowiredFromClient
-	public InstanceFollowers instanceFollowers;
-	
-	@AutowiredFromClient
-	public AddFollowerPanel addFollowerPanel;
-	
-	@AutowiredFromClient
-	public InstanceListPanel instanceListPanel;
-	
 
 	public Object[] addFollower() throws Exception {
 		
-		if(addFollowerPanel!=null && "userPicker".equals(addFollowerPanel.getMetaworksContext().getWhen())){
-			getMetaworksContext().setWhen("edit");
-			getMetaworksContext().setHow("picker");
-			
-			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
-			
-		}else if("addDocumentFollower".equals(this.getMetaworksContext().getWhen())){
-			TopicMapping tm = new TopicMapping();
-			tm.setTopicId(session.getLastSelectedItem());
-			tm.setUserId(this.getUserId());
-			
-			if( !tm.findByUser().next() ){
-				tm.setUserName(this.getName());
-				tm.saveMe();
-				tm.flushDatabaseMe();
-			}
-			
-			DocumentFollowers documentFollowers = new DocumentFollowers();
-			documentFollowers.session = session;
-			documentFollowers.load();
-			
-			return new Object[]{new Refresh(documentFollowers)};
+		Followers followers = new Followers();
+		return followers.addFollower(this);
 		
-		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
-			
-			// TODO: add instance
-			
-			// TODO: send noti
-			Instance instance = new Instance();
-			instance.setInstId(new Long(session.getLastSelectedItem()));
-			
-			TopicMapping tm = new TopicMapping();
-			tm.setTopicId(session.getLastSelectedItem());
-			tm.setUserId(this.getUserId());
-
-			if( !tm.findByUser().next() ){
-				tm.setUserName(this.getName());
-				tm.saveMe();
-				tm.flushDatabaseMe();
-			
-				Notification noti = new Notification();
-				INotiSetting notiSetting = new NotiSetting();
-				noti.session = session;
-				
-				INotiSetting findNotiSetting;
-				Employee codi = new Employee();
-				codi.setEmpCode("0");
-				
-				findNotiSetting = notiSetting.findByUserId(this.getUserId());
-				if(findNotiSetting.next()){
-					if(findNotiSetting.isModiTopic()){
-						noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-						noti.setUserId(this.getUserId());
-						noti.setActorId(session.getEmployee().getEmpName());
-						noti.setConfirm(false);
-						noti.setInstId(instance.getInstId());
-						noti.setInputDate(Calendar.getInstance().getTime());
-						noti.setActAbstract(session.getUser().getName() + " 님이 " + this.getUserId() + "님을 주제에 초대 했습니다.");
-			
-						//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
-				//			noti.createDatabaseMe();
-				//			noti.flushDatabaseMe();
-						
-						noti.add(instance);
-					
-						String followerSessionId = Login.getSessionIdWithUserId(this.getUserId());
-						
-						try{
-							//NEW WAY IS GOOD
-							Browser.withSession(followerSessionId, new Runnable(){
-				
-								@Override
-								public void run() {
-									//refresh notification badge
-									ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-								}
-								
-							});
-						}catch(Exception e){
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-			
-			TopicFollowers topicFollowers = new TopicFollowers();
-			topicFollowers.session = session;
-			topicFollowers.load();
-			
-			ContactPanel contactPanel = new ContactPanel(session, Followers.ADD_TOPICFOLLOWERS);
-			
-			return new Object[]{new Refresh(topicFollowers), new Refresh(contactPanel)};
-//		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
-//			String instId = instanceFollowers.getInstanceId();
-//			
-//			Instance instance = new Instance();
-//			instance.setInstId(new Long(instId));
-//			
-//			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
-//			processManager.applyChanges();
-//			
-//			InstanceFollowers followers = new InstanceFollowers();
-//			followers.setInstanceId(instId);
-//			followers.load();
-//			
-//			/// send notification to the follower 
-//			
-//			final boolean postByMe = getUserId().equals(session.getUser().getUserId());
-//			if(!postByMe){ //ignore myself
-//				Notification noti = new Notification();
-//				
-//				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-//				noti.setUserId(getUserId());
-//				noti.setActorId(session.getUser().getUserId());
-//				noti.setConfirm(false);
-//				noti.setInputDate(Calendar.getInstance().getTime());
-//				//noti.setTaskId(getTaskId());
-//				noti.setInstId(new Long(instId));
-//				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");
-//	
-//				noti.createDatabaseMe();
-//				noti.flushDatabaseMe();
-//			
-//			
-//				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
-//				
-//				try{
-//					//NEW WAY IS GOOD
-//					Browser.withSession(followerSessionId, new Runnable(){
-//		
-//						@Override
-//						public void run() {
-//							//refresh notification badge
-//							if(!postByMe)
-//								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-//							
-//						}
-//						
-//					});
-//				}catch(Exception e){
-//					e.printStackTrace();
-//				}
-//			}
-//			////// end
-//			
-//			return new Object[]{new Refresh(followers)};
-			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
-		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){			
-			
-			String instId = instanceFollowers.getInstanceId();
-
-			Instance instance = new Instance();
-			instance.setInstId(new Long(instId));
-			instance.copyFrom(instance.databaseMe());
-			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getUserId(), getUserId());
-			processManager.applyChanges();
-			
-			InstanceFollowers followers = new InstanceFollowers();
-			followers.setInstanceId(instId);
-			followers.load();
-			
-			/// send notification to the follower 
-			
-			final boolean postByMe = getUserId().equals(session.getUser().getUserId());
-			if(!postByMe){ //ignore myself
-				Notification noti = new Notification();
-				
-				noti.session = session;
-				noti.setActor(this);
-				
-				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-				noti.setUserId(getUserId());
-				noti.setActorId(session.getUser().getUserId());
-				noti.setConfirm(false);
-				noti.setInputDate(Calendar.getInstance().getTime());
-				//noti.setTaskId(getTaskId());
-				noti.setInstId(new Long(instId));
-				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");
-	
-				//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
-//				noti.createDatabaseMe();
-//				noti.flushDatabaseMe();
-				noti.add(instance.databaseMe());
-			
-				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
-				
-				try{
-					//NEW WAY IS GOOD
-					Browser.withSession(followerSessionId, new Runnable(){
-		
-						@Override
-						public void run() {
-							//refresh notification badge
-							if(!postByMe){
-								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-							}
-						}
-						
-					});
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-//			////// end
-			
-			return new Object[]{new Refresh(followers)};
-			
-			//TODO: restored by jjy. 
-		}else if("addDeptFollower".equals(this.getMetaworksContext().getWhen())){
-			IEmployee findEmp = new Employee();
-			findEmp.setEmpCode(this.getUserId());
-			
-			Employee emp = new Employee();
-			emp.copyFrom(findEmp.findMe());
-			emp.setPartCode(session.getLastSelectedItem());
-			emp.syncToDatabaseMe();
-			emp.flushDatabaseMe();
-			
-			deptFollowers.session = session;
-			deptFollowers.load();
-			
-//			Instance instance = new Instance();
-//			instance.setInstId(new Long(session.getLastSelectedItem()));
-			
-			Notification noti = new Notification();
-			INotiSetting notiSetting = new NotiSetting();
-			noti.session = session;
-			
-			INotiSetting findNotiSetting;
-			Employee codi = new Employee();
-			codi.setEmpCode("0");
-			
-			findNotiSetting = notiSetting.findByUserId(this.getUserId());
-			if(findNotiSetting.next()){
-				if(findNotiSetting.isModiOrgan()){
-					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-					noti.setUserId(this.getUserId());
-					noti.setActorId(session.getEmployee().getEmpName());
-					noti.setConfirm(false);
-//					noti.setInstId(instance.getInstId());
-					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setActAbstract(session.getUser().getName() + " 님이 " + this.getUserId() + "님을 그룹에 초대 했습니다.");
-		
-					//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
-			//			noti.createDatabaseMe();
-			//			noti.flushDatabaseMe();
-					
-					noti.add(null);
-				
-					String followerSessionId = Login.getSessionIdWithUserId(this.getUserId());
-					
-					try{
-						//NEW WAY IS GOOD
-						Browser.withSession(followerSessionId, new Runnable(){
-			
-							@Override
-							public void run() {
-								//refresh notification badge
-								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-							}
-							
-						});
-					}catch(Exception e){
-						e.printStackTrace();
-					}
-				}
-			}
-			
-			return new Object[]{new Remover(this), new Refresh(deptFollowers)};
-//			deptFollowers.put(this);
-		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
-			etcFollowers.put(this);
-			
-			return new Object[]{new Refresh(etcFollowers)};
-		}else if("addPicker".equals(this.getMetaworksContext().getWhen())){
-			getMetaworksContext().setWhen("edit");
-			getMetaworksContext().setHow("picker");
-			
-			return new Object[]{new Remover(new Popup()), new ToOpener(this)};			
-		}
-		
-		return null;
 	}
 	@ServiceMethod(target=TARGET_APPEND)
 	public Object[] removeFollower() throws Exception {
-		if("topicFollowers".equals(this.getMetaworksContext().getWhen())){
-			TopicMapping tm = new TopicMapping();
-			tm.setTopicId(session.getLastSelectedItem());
-			tm.setUserId(this.getUserId());
-			
-			ITopicMapping rs = tm.findByUser();
-			if( rs.next() ){
-				tm.setTopicMappingId(rs.getTopicMappingId());
-				tm.remove();
-				
-				TopicFollowers topicFollowers = new TopicFollowers();
-				topicFollowers.session = session;
-				topicFollowers.load();
-				
-				return new Object[]{new Refresh(topicFollowers)};
-			}else{
-				throw new Exception("삭제 실패");
-			}
-			
-		}else{
-			String instId = instanceFollowers.getInstanceId();
-			
-	//		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-				// TODO: initEp 문제 해결후 권한 체크 활성화
-	/*			if(!session.getUser().getUserId().trim().equals(getUserId().trim())) {
-					Instance instanceObj = new Instance();
-					instanceObj.setInstId(new Long(instId));
-					String initEp = instanceObj.databaseMe().getInitEp();
-					if(!session.getUser().getUserId().trim().equals(initEp.trim())) {
-						System.out.println("팔로워를 삭제할 권한이 없습니다. : (current logged userId :" + session.getUser().getUserId() +", initEp : " + initEp +")");
-	//					Popup popup = new Popup("팔로워를 삭제할 권한이 없습니다.");
-	//					return new Object[] {popup};
-						throw new Exception("팔로워를 삭제할 권한이 없습니다.");
-					}
-				}
-	*///		} else {
-	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
-	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
-	//			return new Object[] {popup};
-	//			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
-			//}
-			
-			InstanceFollowers followers = new InstanceFollowers();
-				
-			//TODO delete rolemapping
-	//		processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
-	//		processManager.applyChanges();
-	
-			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getUserId(), getUserId());
-			if(roleMapping.deleteByInfo(session)) {
-				followers.setInstanceId(instId);
-				followers.load();
-	
-				System.out.println("delete follower done.");
-				return new Object[]{new Refresh(followers)};  // refresh로 새로 뿌려주기
-				
-			} else {
-	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
-	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
-	//			return new Object[] {popup};
-				throw new Exception("Author can not be removed from follower list.");
-			}
-		}
+		
+		Followers followers = new Followers();
+		return followers.removeFollower(this);
+		
 	}
 	
 	public Refresh addContact() throws Exception {
@@ -951,3 +585,23 @@ public class User extends Database<IUser> implements IUser {
 		return new Object[]{new Popup(200, height, employee)};
 	}
 }
+
+
+
+/*if(user.addFollowerPanel!=null && "userPicker".equals(user.addFollowerPanel.getMetaworksContext().getWhen())){
+	user.getMetaworksContext().setWhen("edit");
+	user.getMetaworksContext().setHow("picker");
+	
+	return new Object[]{new Remover(new Popup()), new ToOpener(user)};
+	
+}else
+else if("addPicker".equals(user.getMetaworksContext().getWhen())){
+			getMetaworksContext().setWhen("edit");
+			getMetaworksContext().setHow("picker");
+			
+			return new Object[]{new Remover(new Popup()), new ToOpener(this)};			
+		}
+ *
+ *
+ */
+

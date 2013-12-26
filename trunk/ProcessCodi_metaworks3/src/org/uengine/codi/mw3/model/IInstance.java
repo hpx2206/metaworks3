@@ -31,6 +31,8 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 public interface IInstance extends IDAO{
 
 	@ServiceMethod(callByContent=true)
+	public Object view() throws Exception;
+	
 	public Object detail() throws Exception;
 
 	@ServiceMethod(target="popup")

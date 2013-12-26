@@ -1,5 +1,5 @@
 	<%
-		if(value && ((value.followers &&  value.followers.length > 0 ) || (value.deptFollowers &&  value.deptFollowers.length > 0 )) ){
+		if(value && value.followers){
 	%>		 	
 <div id="searchbox" style="height:46px;border-bottom: 1px solid #9EBFC4">
 	<div class="adduserline"> 
@@ -18,7 +18,7 @@
 			if((mw3.when == 'edit' || mw3.when == 'new') && mw3.when != "public"){
 	%>				 		
 			 		<dd>
-						<img src="images/waveStyle/addUser.png" title="<%=mw3.localize('$AddUser')%>" onclick="javascript:<%=methods.addFollowers.caller()%>" style="margin-top:7px;">
+						<img src="images/waveStyle/addUser.png" title="<%=mw3.localize('$AddUser')%>" onclick="javascript:<%=methods.popupAddFollowers.caller()%>" style="margin-top:7px;">
 			 		</dd>
 	<%
 			}
