@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import org.directwebremoting.Browser;
@@ -108,7 +109,7 @@ public class Followers implements ContextAware {
 		popup.setWidth(400);
 		popup.setHeight(400);
 
-		session.setLastInstanceId(this.getInstanceId());
+		//session.setLastInstanceId(this.getInstanceId());
 		
 		FollowerSelectTab followerSelectTab = new FollowerSelectTab();
 		followerSelectTab.setMetaworksContext(new MetaworksContext());
@@ -214,7 +215,7 @@ public class Followers implements ContextAware {
 				tm.flushDatabaseMe();
 			}
 			
-			return new Object[]{new ToEvent(this, EventContext.EVENT_CHANGE), new Remover(user)};
+			return new Object[]{new ToEvent(new DocumentFollowers(), EventContext.EVENT_CHANGE), new Remover(user)};
 		
 		}else if(ADD_TOPICFOLLOWERS.equals(user.getMetaworksContext().getWhen())){
 			
@@ -276,8 +277,8 @@ public class Followers implements ContextAware {
 					}
 				}
 			}
-						
-			return new Object[]{new ToEvent(this, EventContext.EVENT_CHANGE), new Remover(user)};
+			
+			return new Object[]{new ToEvent(new TopicFollowers(), EventContext.EVENT_CHANGE), new Remover(user)};
 
 			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
 		}else if(ADD_INSTANCEFOLLOWERS.equals(user.getMetaworksContext().getWhen())){			
@@ -333,7 +334,7 @@ public class Followers implements ContextAware {
 				}
 			}
 			
-			return new Object[]{new ToEvent(this, EventContext.EVENT_CHANGE), new Remover(user)};
+			return new Object[]{new ToEvent(new InstanceFollowers(), EventContext.EVENT_CHANGE), new Remover(user)};
 			
 			//TODO: restored by jjy. 
 		}else if(ADD_DEPTFOLLOWERS.equals(user.getMetaworksContext().getWhen())){
@@ -393,7 +394,7 @@ public class Followers implements ContextAware {
 				}
 			}
 			
-			return new Object[]{new ToEvent(this, EventContext.EVENT_CHANGE), new Remover(user)};
+			return new Object[]{new ToEvent(new DeptFollowers(), EventContext.EVENT_CHANGE), new Remover(user)};
 
 		}else if(ADD_ROLEFOLLOWERS.equals(user.getMetaworksContext().getWhen())){
 			
@@ -405,7 +406,7 @@ public class Followers implements ContextAware {
 			roleUser.createDatabaseMe();
 			roleUser.flushDatabaseMe();
 			
-			return new Object[]{new ToEvent(this, EventContext.EVENT_CHANGE), new Remover(user)};
+			return new Object[]{new ToEvent(new RoleFollowers(), EventContext.EVENT_CHANGE), new Remover(user)};
 			
 		}
 		
@@ -480,6 +481,7 @@ public class Followers implements ContextAware {
 	public Object[] drop() throws Exception{
 		
 		Object clipboard = session.getClipboard();
+		Object[] returnRefObject = null;
 		if(clipboard instanceof IUser){
 			User newFollowUser = (User)clipboard;
 			
@@ -489,14 +491,36 @@ public class Followers implements ContextAware {
 					return null; //ignores same follower
 				}
 			}
+			newFollowUser.session = this.session;
+			newFollowUser.processManager = this.processManager;
 			
-			return this.addFollower(newFollowUser);
-			
+			if(this instanceof TopicFollowers){
+				newFollowUser.getMetaworksContext().setWhen(Followers.ADD_TOPICFOLLOWERS);
+			}else if(this instanceof DocumentFollowers){
+				newFollowUser.getMetaworksContext().setWhen(Followers.ADD_DOCUMENTFOLLOWERS);
+			}else if(this instanceof DeptFollowers){
+				newFollowUser.getMetaworksContext().setWhen(Followers.ADD_DEPTFOLLOWERS);
+			}else if(this instanceof RoleFollowers){
+				newFollowUser.getMetaworksContext().setWhen(Followers.ADD_ROLEFOLLOWERS);
+			}else if(this instanceof InstanceFollowers){
+				newFollowUser.getMetaworksContext().setWhen(Followers.ADD_INSTANCEFOLLOWERS);
+			}
+			returnRefObject = this.addFollower(newFollowUser);
 		}
 		
 		session.setClipboard(null);
 		
-		return new Object[]{ session };
+		ArrayList<Object> list =  new ArrayList<Object>() ;//returnRefObject
+		if( returnRefObject != null ){
+			for(int i = 0; i < returnRefObject.length; i++){
+				if( !(returnRefObject[i] instanceof Remover) ){
+					list.add(returnRefObject[i]);
+				}
+			}
+		}
+		list.add(session);
+		
+		return new Object[]{ list.toArray() };
 	}
 	
 	@Hidden
