@@ -73,19 +73,18 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 			this.description = description;
 		}
 		
-	Boolean isJoined;
-		public Boolean getIsJoined() {
-			return isJoined;
+	Boolean joined;
+		public Boolean getJoined() {
+			return joined;
 		}
-		public void setIsJoined(Boolean isJoined) {
-			this.isJoined = isJoined;
+		public void setJoined(Boolean joined) {
+			this.joined = joined;
 		}
 		
 		
 	@Override
 	public void add() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -102,7 +101,7 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 
 	@Override
 	public void load() throws Exception {
-		this.setIsJoinME();
+		this.settingJoined();
 	}
 
 	@Override
@@ -111,13 +110,13 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 		
 	}
 	@Override
-	public void setIsJoinME() throws Exception {
+	public void settingJoined() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	@Available(condition="isJoined == true")
+	@Available(condition="joined == true")
 	public Object[] unSubscribe() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
@@ -125,7 +124,7 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 	
 	
 	@Override
-	@Available(condition="isJoined == false")
+	@Available(condition="joined == false")
 	public Object[] subscribe() throws Exception {
 		// TODO Auto-generated method stub
 		return null;

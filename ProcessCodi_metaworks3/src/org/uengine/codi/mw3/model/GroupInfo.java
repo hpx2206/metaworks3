@@ -20,12 +20,6 @@ public class GroupInfo extends PerspectiveInfo{
 			this.secuopt = secuopt;
 		}
 
-	@Override
-	public void load() throws Exception {
-		super.load();
-	}
-	
-	
 	
 	@Override
 	public void followersLoad() throws Exception {
@@ -52,15 +46,15 @@ public class GroupInfo extends PerspectiveInfo{
 		
 	}
 	@Override
-	public void setIsJoinME() throws Exception {
+	public void settingJoined() throws Exception {
 		TopicMapping tm = new TopicMapping();
 		tm.setTopicId(session.getLastSelectedItem());
 		tm.setUserId(session.getEmployee().getEmpCode());
 		ITopicMapping rs = tm.findByUser();
 		if( rs.next() )
-			this.setIsJoined(true);
+			this.setJoined(true);
 		else
-			this.setIsJoined(false);
+			this.setJoined(false);
 			
 	}
 	@Override

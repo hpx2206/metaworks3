@@ -99,7 +99,7 @@ public class DeptInfo extends PerspectiveInfo{
 		logoFile.setUploadedPath(dept.getUrl());
 		logoFile.setFilename(dept.getThumbnail());
 		this.setLogoFile(logoFile);
-		this.setIsJoinME();
+		this.settingJoined();
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class DeptInfo extends PerspectiveInfo{
 	
 	
 	@Override
-	public void setIsJoinME() throws Exception {
+	public void settingJoined() throws Exception {
 
 		Employee emp = new Employee();
 		emp.setEmpCode(session.getEmployee().getEmpCode());
@@ -153,9 +153,9 @@ public class DeptInfo extends PerspectiveInfo{
 		IEmployee findEmp = emp.findMe();
 		
 		if(this.getId().equals(findEmp.getPartCode()))
-			this.setIsJoined(true);
+			this.setJoined(true);
 		else
-			this.setIsJoined(false);
+			this.setJoined(false);
 		
 				
 	}

@@ -84,7 +84,7 @@ public class TopicInfo extends GroupInfo{
 		logoFile.setUploadedPath(wfNode.getUrl());
 		logoFile.setFilename(wfNode.getThumbnail());
 		this.setLogoFile(logoFile);
-		this.setIsJoinME();
+		this.settingJoined();
 		
 	}
 	

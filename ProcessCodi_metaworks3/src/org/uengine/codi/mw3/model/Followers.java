@@ -104,7 +104,7 @@ public class Followers implements ContextAware {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	public Object[] popupAddFollowers() throws Exception{		
+	public Object[] openAddFollowers() throws Exception{		
 		Popup popup = new Popup(400,400);
 		popup.setWidth(400);
 		popup.setHeight(400);
@@ -403,10 +403,6 @@ public class Followers implements ContextAware {
 			roleUser.setEmpCode(user.getUserId());
 			IRoleUser findRoleUser = roleUser.findMe();
 			
-			if(findRoleUser != null){
-				throw new Exception("$AlreadyExistingRole");
-			}
-			
 			roleUser.createDatabaseMe();
 			roleUser.flushDatabaseMe();
 			
@@ -497,37 +493,6 @@ public class Followers implements ContextAware {
 			
 			return this.addFollower(newFollowUser);
 			
-			/*if("topic".equals(this.getInstanceId())){
-				TopicFollowers addFollower = new TopicFollowers();
-				addFollower.setInstanceId(getInstanceId());
-				newFollowUser.topicFollowers = addFollower;
-				newFollowUser.getMetaworksContext().setWhen(ADD_TOPICFOLLOWERS);
-			}else if("document".equals(this.getInstanceId())){
-				DocumentFollowers documentFollower = new DocumentFollowers();
-				documentFollower.setInstanceId(getInstanceId());
-				newFollowUser.documentFollowers = documentFollower;
-//				newFollowUser.setName(session.getUser().getName());
-				newFollowUser.getMetaworksContext().setWhen(ADD_DOCUMENTFOLLOWERS);
-			}else if("role".equals(this.getInstanceId())){
-				RoleFollowers roleFollower = new RoleFollowers();
-				roleFollower.setInstanceId(getInstanceId());
-				newFollowUser.roleFollowers = roleFollower;
-				newFollowUser.getMetaworksContext().setWhen(ADD_ROLEFOLLOWERS);
-			}else if("dept".equals(this.getInstanceId())){
-				DeptFollowers deptFollower = new DeptFollowers();
-				deptFollower.setInstanceId(getInstanceId());
-				newFollowUser.deptFollowers = deptFollower;
-				newFollowUser.getMetaworksContext().setWhen(ADD_DEPTFOLLOWERS);
-			}
-			else{	
-				InstanceFollowers addFollower = new InstanceFollowers();
-				addFollower.setInstanceId(getInstanceId());
-				newFollowUser.instanceFollowers = addFollower;
-				newFollowUser.getMetaworksContext().setWhen(ADD_INSTANCEFOLLOWERS);
-			}
-			newFollowUser.processManager = processManager;
-			newFollowUser.session = session;
-			return newFollowUser.addFollower();*/
 		}
 		
 		session.setClipboard(null);
