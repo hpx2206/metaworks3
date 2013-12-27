@@ -720,16 +720,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 
-/*	private void formatWorkItem(WorkItem wi) {
-		wi.setInstId(getInstId());
-		wi.setEndpoint(session.getUser().getUserId());
-		wi.setWriter(getWriter());
-		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		wi.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());		
-		wi.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-		wi.setInstantiation(isInstantiation());
-	}
-*/
 	@AutowiredFromClient
 	public NewInstancePanel newInstancePanel;
 	
@@ -924,6 +914,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 			}
 			
+			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
+			
+			if(this.getTaskId() == null || this.getTaskId() == -1)
+				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
+			
 			if(!newInstance){
 				//마지막 워크아이템의 제목을 인스턴스의 적용
 				String lastCmnt = instanceRef.getLastCmnt();
@@ -939,26 +934,23 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				if(lastCmnt == null){
 					instanceRef.setLastCmnt(cmntTitle);
 					instanceRef.setLastCmntUser(session.getUser());
+					instanceRef.setLastcmntTaskId(this.getTaskId());
 				}else{
 					if(instanceRef.getLastCmnt2() == null){
 						instanceRef.setLastCmnt2(cmntTitle);
 						instanceRef.setLastCmnt2User(session.getUser());
+						instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					}else {
 						instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
 						instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+						instanceRef.setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
 						
 						instanceRef.setLastCmnt2(cmntTitle);
 						instanceRef.setLastCmnt2User(session.getUser());
+						instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					}
 				}				
 			}
-			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
-								
-
-			
-			if(this.getTaskId() == null || this.getTaskId() == -1)
-				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
-			
 			
 			
 			if(this.getTitle() == null && WORKITEM_TYPE_FILE.equals(this.getType()) ||
@@ -992,6 +984,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			instance.setInstId(this.getInstId());
 			
 			instanceRef = instance.databaseMe();
+			String cmntTitle = this.getTitle();
+			if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
+				cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
+			}
+			if( instanceRef.getLastcmntTaskId() != null && instanceRef.getLastcmntTaskId().equals(this.getTaskId()) ){
+				instanceRef.setLastCmnt(cmntTitle);
+			}else if( instanceRef.getLastcmnt2TaskId() != null && instanceRef.getLastcmnt2TaskId().equals(this.getTaskId()) ){
+				instanceRef.setLastCmnt2(cmntTitle);
+			}
 			
 //			this.copyFrom(databaseMe());
 //			this.databaseMe();
@@ -1229,31 +1230,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 			}
 			
-			// noti 발송
-			if(prevInstId == null && this.getDueDate() != null){
-			/*	ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-				scEvent.setTitle(this.getTitle());
-				scEvent.setId(this.getInstId().toString());
-				scEvent.setStart(this.getDueDate());
-				scEvent.setEnd(this.getDueDate());
-				scEvent.setAllDay(true);
-				scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
-				scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(this.getStatus()));
-				
-				MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
-						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-						new Object[]{scEvent}); //getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
-				
-				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-						new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
-*/			}
-			
 			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
 					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
 					new Object[]{});
 			
-			// 본인 이외에 다른 사용자에게 push -     뭐지?			
+			// 본인 이외에 다른 사용자에게 push
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
@@ -1265,14 +1246,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			// 변경된 WorkItem 을 갱신
 			returnObjects = new Object[]{new Refresh(this, true)};
 			
-			// 본인 이외에 다른 사용자에게 push
 			final IWorkItem copyOfThis = this;
+			final IInstance copyOfInstance = instance;
+			 
+			// 자기 자신의 인스턴스 리스트를 새로고침
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
 			
-			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
-			
+			// 본인 이외에 다른 사용자에게 push
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new WorkItemListener(copyOfThis)});	
+					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener( WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
 		}		
 		
 		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();

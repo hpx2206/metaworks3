@@ -902,7 +902,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instanceViewContent.load(this);
 			
 			return instanceViewContent;
-			
 		}
 		
 	}
@@ -1349,7 +1348,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setFollowers(InstanceFollowers followers) {
 			this.followers = followers;
 		}
+		
+	Long lastcmntTaskId;
+		public Long getLastcmntTaskId() {
+			return lastcmntTaskId;
+		}
+		public void setLastcmntTaskId(Long lastcmntTaskId) {
+			this.lastcmntTaskId = lastcmntTaskId;
+		}
 
+	Long lastcmnt2TaskId;
+		public Long getLastcmnt2TaskId() {
+			return lastcmnt2TaskId;
+		}
+		public void setLastcmnt2TaskId(Long lastcmnt2TaskId) {
+			this.lastcmnt2TaskId = lastcmnt2TaskId;
+		}
+		
 	public void split() throws Exception {
 		Long root = new Long(-1);
 		databaseMe().setMainInstId(root);

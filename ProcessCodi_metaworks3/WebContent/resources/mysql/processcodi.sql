@@ -1047,3 +1047,6 @@ primary key(vmName)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table emptable modify column locale varchar(10);
+
+alter table bpm_procinst add column lastcmntTaskId int(11);
+alter table bpm_procinst add column lastcmnt2TaskId int(11);

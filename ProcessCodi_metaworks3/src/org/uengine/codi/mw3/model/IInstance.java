@@ -167,6 +167,12 @@ public interface IInstance extends IDAO{
 	public int getEffort();
 	public void setEffort(int effort);
 	
+	public Long getLastcmntTaskId();
+	public void setLastcmntTaskId(Long lastcmntTaskId);
+
+	public Long getLastcmnt2TaskId();
+	public void setLastcmnt2TaskId(Long lastcmnt2TaskId);
+	
 	@NonSavable
 	public String getTopicName();
 	public void setTopicName(String topicName);
