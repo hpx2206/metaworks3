@@ -89,7 +89,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(payload={"userId"}, target="none")
 	IEmployee loadEmployee() throws Exception;
 	
-	@ServiceMethod(mouseBinding="drag")
+	@ServiceMethod(mouseBinding="drag", payload={"userId", "name"})
 	public Session drag();
 
 	@ServiceMethod(mouseBinding="drop")
