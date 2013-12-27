@@ -66,7 +66,13 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 					}
 				}
 			}else{
-				instanceThreadObject.getFaceHelper().toAppend(value);
+				if(this.object.command == 'refresh'){
+					var workItem = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItem@"+value.taskId);
+					if(workItem != null && typeof workItem != 'undefined')
+						mw3.setObject(workItem.__objectId, value);
+				}else{
+					instanceThreadObject.getFaceHelper().toAppend(value);
+				}
 			}
 		}
 		
