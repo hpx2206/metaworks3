@@ -82,7 +82,7 @@ public class RoleInfo extends PerspectiveInfo{
 		logoFile.setUploadedPath(role.getUrl());
 		logoFile.setFilename(role.getThumbnail());
 		this.setLogoFile(logoFile);
-		this.setIsJoinME();
+		this.settingJoined();
 		
 	}
 
@@ -126,7 +126,7 @@ public class RoleInfo extends PerspectiveInfo{
 		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 	}
 	@Override
-	public void setIsJoinME() throws Exception {
+	public void settingJoined() throws Exception {
 
 		RoleUser roleUser = new RoleUser();
 		roleUser.setRoleCode(this.getId());
@@ -134,9 +134,9 @@ public class RoleInfo extends PerspectiveInfo{
 		IRoleUser findRoleUser = roleUser.findMe();
 		
 		if(findRoleUser != null)
-			this.setIsJoined(true);
+			this.setJoined(true);
 		else
-			this.setIsJoined(false);
+			this.setJoined(false);
 
 		
 				

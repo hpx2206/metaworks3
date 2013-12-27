@@ -18,7 +18,7 @@
 			if((mw3.when == 'edit' || mw3.when == 'new') && mw3.when != "public"){
 	%>				 		
 			 		<dd>
-						<img src="images/waveStyle/addUser.png" title="<%=mw3.localize('$AddUser')%>" onclick="javascript:<%=methods.popupAddFollowers.caller()%>" style="margin-top:7px;">
+						<img src="images/waveStyle/addUser.png" title="<%=mw3.localize('$AddUser')%>" onclick="javascript:<%=methods.openAddFollowers.caller()%>" style="margin-top:7px;">
 			 		</dd>
 	<%
 			}

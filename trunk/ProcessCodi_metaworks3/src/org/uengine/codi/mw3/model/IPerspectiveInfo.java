@@ -12,8 +12,8 @@ public interface IPerspectiveInfo {
 	public Followers getFollowers();
 	public void setFollowers(Followers followers);
 	
-	public Boolean getIsJoined();
-	public void setIsJoined(Boolean isJoined);
+	public Boolean getJoined();
+	public void setJoined(Boolean joined);
 	
 	public void add() throws Exception;
 	
@@ -29,7 +29,7 @@ public interface IPerspectiveInfo {
 	
 	public void followersLoad() throws Exception;
 	
-	public void setIsJoinME() throws Exception;
+	public void settingJoined() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] unSubscribe() throws Exception;
