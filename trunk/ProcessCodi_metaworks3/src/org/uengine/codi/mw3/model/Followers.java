@@ -23,9 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
-import org.uengine.processmanager.ProcessManagerRemote;
-
 import org.uengine.kernel.Role;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Followers implements ContextAware {
 	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
@@ -456,14 +455,14 @@ public class Followers implements ContextAware {
 			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
 			
 		}else{
-			String instId = session.getLastInstanceId();
+			String instId = user.session.getLastInstanceId();
 			
 			InstanceFollowers followers = new InstanceFollowers();
 				
 			//TODO delete rolemapping
 	
 			org.uengine.codi.mw3.model.RoleMapping roleMapping = new org.uengine.codi.mw3.model.RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + user.getUserId(), user.getUserId());
-			if(roleMapping.deleteByInfo(session)) {
+			if(roleMapping.deleteByInfo(user.session)) {
 				followers.setInstanceId(instId);
 				followers.load();
 	

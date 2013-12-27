@@ -5,8 +5,6 @@ import java.util.Calendar;
 import javax.servlet.http.HttpSession;
 import javax.sql.RowSet;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
