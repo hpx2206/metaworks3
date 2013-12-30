@@ -106,9 +106,11 @@ public class NewInstancePanel implements ContextAware {
 	
 		
 	public void load(Session session) throws Exception{
-		this.setTopicNodeId(session.getLastSelectedItem());
+		if("topic".equals(session.getLastPerspecteType()) ||
+				"project".equals(session.getLastPerspecteType()))
+			this.setTopicNodeId(session.getLastSelectedItem());
 		
-		if("document".equals(session.getLastPerspecteType())){
+		if("UnlabeledDocument".equals(session.getLastPerspecteType())){
 			newInstantiator = new DocWorkItem();
 			newInstantiator.setFolderId(getTopicNodeId());
 			newInstantiator.setType(IWorkItem.WORKITEM_TYPE_FILE);
