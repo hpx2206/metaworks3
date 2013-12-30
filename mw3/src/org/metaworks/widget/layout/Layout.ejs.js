@@ -5,7 +5,6 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 	this.div = $(this.divId);	
 	
 	var object = mw3.objects[this.objectId];
-	
 	if(object){
 		var faceHelper = this;
 		
@@ -41,52 +40,52 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 				this.name = layout.attr('layoutName');		
 		}
 		
-		$(this.divId + ' .show_east_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
+		$(this.divId + ' .show_east_btn').bind('click', {divId : this.divId, objectId : objectId}, function(event){
 			var faceHelper = mw3.getFaceHelper(event.data.objectId);
 			
 			if(faceHelper){
 				faceHelper.layout.open('east');	
 				faceHelper.resize();
 				
-				$(event.data.divId + ' .show_east_btn:first').hide();
+				$(event.data.divId + ' .show_east_btn').hide();
 				
 			}
 		});
 		
-		$(this.divId + ' .hide_east_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
+		$(this.divId + ' .hide_east_btn').bind('click', {divId : this.divId, objectId : objectId}, function(event){
 			var faceHelper = mw3.getFaceHelper(event.data.objectId);
 			
 			if(faceHelper){
 				faceHelper.layout.close('east');	
 				faceHelper.resize();
 				
-				$(event.data.divId + ' .show_east_btn:first').show();
+				$(event.data.divId + ' .show_east_btn').show();
 				
 			}
 		});
 		
-		$(this.divId + ' .hide_west_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
+		$(this.divId + ' .hide_west_btn').bind('click', {divId : this.divId, objectId : objectId}, function(event){
 			var faceHelper = mw3.getFaceHelper(event.data.objectId);
 			
 			if(faceHelper){
 				faceHelper.layout.close('west');	
 				faceHelper.resize();
 				
-				$(event.data.divId + ' .show_west_btn:first').show();
+				$(event.data.divId + ' .show_west_btn').show();
 				
 			}
 					
 		});
 
 		
-		$(this.divId + ' .show_west_btn:first').bind('click', {divId : this.divId, objectId : objectId}, function(event){
+		$(this.divId + ' .show_west_btn').bind('click', {divId : this.divId, objectId : objectId}, function(event){
 			var faceHelper = mw3.getFaceHelper(event.data.objectId);
 			
 			if(faceHelper){
 				faceHelper.layout.open('west');	
 				faceHelper.resize();
 				
-				$(event.data.divId + ' .show_west_btn:first').hide();
+				$(event.data.divId + ' .show_west_btn').hide();
 				
 			}
 					
