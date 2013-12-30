@@ -1,0 +1,34 @@
+	<%
+		if(value && value.followers){
+	%>		 	
+<div id="searchbox" style="height:46px;border-bottom: 1px solid #9EBFC4">
+	<div class="adduserline"> 
+		<dl>
+			<div class="usersAdded">
+			 	<div id="replyUsers">
+			 	
+			 	<dl>
+				 	<dd>
+			 			<%=fields.followers.here({options: {alignment:'horizontal'}})%>
+			 		</dd>
+				 	<dd>
+			 			<%=fields.deptFollowers.here({options: {alignment:'horizontal'}})%>
+			 		</dd>
+	<%
+			if((mw3.when == 'edit' || mw3.when == 'new') && mw3.when != "public"){
+	%>				 		
+			 		<dd>
+						<img src="images/waveStyle/addUser.png" title="<%=mw3.localize('$AddUser')%>" onclick="javascript:<%=methods.openAddFollowers.caller()%>" style="margin-top:7px;">
+			 		</dd>
+	<%
+			}
+	%>				 		
+			 	</dl>
+				</div>
+			</div>
+		</dl>
+	</div>
+</div>
+<%
+		}
+	%>

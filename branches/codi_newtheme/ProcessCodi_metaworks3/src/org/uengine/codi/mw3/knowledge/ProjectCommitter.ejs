@@ -1,0 +1,23 @@
+<% if(value){ %>
+<div class="time_line_Committer">
+	<div class="depth1 selected">친구 목록
+		<ul class="fist_menu">
+			<li><span><%=fields.contact.here()%></a></span></li>
+		</ul>
+	 </div>
+	</div>
+	<div style="float:left; margin:170px 10px">
+		 <%=methods.addCommitter.here()%><br /><br />
+		 <%=methods.removeCommitter.here()%>
+	 </div>
+	<div class="time_line_Committer2">
+		<div class="depth1 selected">커미터 목록
+		<ul class="fist_menu">
+			<%=fields.svnUserList.here()%>
+		</ul>
+	 </div>	
+	 <div class="clear"></div>
+</div>
+<%	
+}
+%>

@@ -1,0 +1,14 @@
+<%
+    if( value ){
+        var list = value.historyList;
+        for( var i = 0; i < list.length; i++){
+%>
+	<style> a:hover{ text-decoration:underline; } </style>
+		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
+            <span><%= list[i].defName %></span> 
+        </a>
+        &nbsp;<b>></b>&nbsp;
+<%
+        }
+    }
+%>
