@@ -46,7 +46,6 @@ import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
@@ -391,10 +390,6 @@ public class Login implements ContextAware {
 	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object signUp() throws Exception {
 		
-		if( !CodiStringUtil.isValidEmail(this.getEmail()) ){
-			throw new MetaworksException("$checkEmail");
-		}
-		
 		Employee employee = new Employee();
 		employee.setEmail(this.getEmail());
 		IEmployee employeeRef = employee.findByEmail();
@@ -483,10 +478,6 @@ public class Login implements ContextAware {
 	
 	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_STICK)
 	public Object firstSignUp() throws Exception {
-		
-		if( !CodiStringUtil.isValidEmail(this.getEmail()) ){
-			throw new MetaworksException("$checkEmail");
-		}
 		
 		Employee employee = new Employee();
 		employee.setEmail(this.getEmail());
@@ -804,7 +795,7 @@ public class Login implements ContextAware {
 		this.getMetaworksContext().setHow("forgotpassword");
 	}
 	
-	@ServiceMethod(callByContent=true, payload={"email"})
+	@ServiceMethod(callByContent=true, payload={"email"} , validate=true)
 	public void forgotPassword() throws Exception{
 		
 		Employee employee = new Employee();

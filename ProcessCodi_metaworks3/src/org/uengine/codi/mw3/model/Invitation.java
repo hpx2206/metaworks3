@@ -22,7 +22,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
@@ -82,13 +81,9 @@ public class Invitation implements ContextAware{
 	}
 	
 	
-	@ServiceMethod(callByContent=true, target="popup")
+	@ServiceMethod(callByContent=true, target="popup", validate=true)
 	@Face(displayName="$Invite")
 	public Object[] invite() throws Exception{
-		
-		if( !CodiStringUtil.isValidEmail(this.getEmail()) ){
-			throw new MetaworksException("$checkEmail");
-		}
 		
 		// 1. The invited person is already one of my friends
 		Employee emp = new Employee();

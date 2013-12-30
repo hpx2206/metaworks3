@@ -111,8 +111,8 @@ public interface IEmployee extends IDAO {
 	
 	@Face(displayName="$Email")
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.when == 'new2'", message="이메일을 입력하세요."),
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, condition="metaworksContext.when == 'new2'", options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이메일을 입력하세요."),
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
 	})
 	//@Pattern(regexp="/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/", message="이메일 형식이 잘못되었습니다")
 	public String getEmail();
