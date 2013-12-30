@@ -114,23 +114,31 @@ public class Followers implements ContextAware {
 		FollowerSelectTab followerSelectTab = new FollowerSelectTab();
 		followerSelectTab.setMetaworksContext(new MetaworksContext());
 		
-		String type = ADD_INSTANCEFOLLOWERS;
-		followerSelectTab.getMetaworksContext().setWhere("userDeptTab");
+		String type = null;
 		if("topic".equals(this.getInstanceId())){
 			type = ADD_TOPICFOLLOWERS;
+			session.setLastPerspecteType(this.getInstanceId());
 			followerSelectTab.getMetaworksContext().setWhere("userDeptTab");
 		}else if("dept".equals(this.getInstanceId())){
 			type = ADD_DEPTFOLLOWERS;
+			session.setLastPerspecteType(this.getInstanceId());
 			followerSelectTab.getMetaworksContext().setWhere("userTab");
 		}else if("role".equals(this.getInstanceId())){
 			type = ADD_ROLEFOLLOWERS;
+			session.setLastPerspecteType(this.getInstanceId());
 			followerSelectTab.getMetaworksContext().setWhere("userTab");
 		}else if("etc".equals(this.getInstanceId())){
 			type = ADD_ETCFOLLOWERS;
+			session.setLastPerspecteType(this.getInstanceId());
 			followerSelectTab.getMetaworksContext().setWhere("userDeptTab");
 		}else if("document".equals(this.getInstanceId())){
 			followerSelectTab.getMetaworksContext().setWhere("userDeptTab");
 			type = ADD_DOCUMENTFOLLOWERS;
+			session.setLastPerspecteType(this.getInstanceId());
+		}else{
+			type = ADD_INSTANCEFOLLOWERS;
+			session.setLastPerspecteType("instance");
+			followerSelectTab.getMetaworksContext().setWhere("userDeptTab");
 		}
 		
 		followerSelectTab.load(session, type);
@@ -159,6 +167,7 @@ public class Followers implements ContextAware {
 			tm.saveMe();
 			tm.flushDatabaseMe();
 			
+			return new Object[]{new ToEvent(new TopicFollowers(), EventContext.EVENT_CHANGE), new Remover(dept)};
 
 		}else if( "document".equals(dept.session.getLastPerspecteType()) ){
 			TreeNode node = dept;
@@ -177,8 +186,9 @@ public class Followers implements ContextAware {
 			tm.saveMe();
 			tm.flushDatabaseMe();
 			
+			return new Object[]{new ToEvent(new DocumentFollowers(), EventContext.EVENT_CHANGE), new Remover(dept)};
 
-		}else{
+		}else if( "instance".equals(dept.session.getLastPerspecteType()) ){
 			String instId = dept.session.getLastInstanceId();
 			// 현재 부서트리에서는 사용자를 체크 안하게 되어있지만 확장성을 위하여 employee쪽도 넣는 부분을 구현해 놓음
 			TreeNode node = dept;
@@ -194,9 +204,11 @@ public class Followers implements ContextAware {
 			}
 			dept.processManager.putRoleMapping(instId, roleMap);
 			dept.processManager.applyChanges();
+			
+			return new Object[]{new ToEvent(new InstanceFollowers(), EventContext.EVENT_CHANGE), new Remover(dept)};
 		}
 				
-		return new Object[]{new ToEvent(this, EventContext.EVENT_CHANGE), new Remover(dept)};
+		return null;
 
 		
 	}
