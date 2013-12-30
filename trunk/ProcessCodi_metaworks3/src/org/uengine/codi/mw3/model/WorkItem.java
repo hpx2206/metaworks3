@@ -1094,22 +1094,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(instanceFollowers)};	
 					}
 				}else if(this instanceof GenericWorkItem){
-					InstanceViewThreadPanel genericWorkItem = new InstanceViewThreadPanel();
-					genericWorkItem.session = session;
-					genericWorkItem.session.setLastPerspecteType("normal");
-					genericWorkItem.load(this.getInstId().toString());
+					CommentWorkItem commentWorkItem = new CommentWorkItem();
+					commentWorkItem.setInstId(this.getInstId());
+					commentWorkItem.setWriter(session.getUser());
+					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
-//					CommentWorkItem commentWorkItem = new CommentWorkItem();
-//					commentWorkItem.setInstId(this.getInstId());
-//					commentWorkItem.setWriter(session.getUser());
-//					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-//					
-//					DocumentTool documentTool = new DocumentTool();
-//					documentTool.setInstId(this.getFileInstId().toString());
-//					documentTool.onLoad();
-					
-					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(genericWorkItem)  , new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem) , new Refresh(instanceFollowers)};
 				}else if(this instanceof FileWorkItem){
 					DocWorkItem docWorkItem = new DocWorkItem();
 					docWorkItem.setInstId(this.getInstId());

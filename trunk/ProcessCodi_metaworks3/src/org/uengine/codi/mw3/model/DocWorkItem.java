@@ -55,9 +55,14 @@ public class DocWorkItem extends WorkItem {
 			fileWorkItem.setNotReturn(true);
 			fileWorkItem.add();
 
+			
 			DocumentTool tool = new DocumentTool();
 			tool.session = session;
 			tool.setInstId(fileWorkItem.getInstId().toString());
+			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			fileWorkItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+			fileWorkItem.setFileTransfer(null);
+			tool.setWorkitem(fileWorkItem);
 			
 			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
 			genericWIH.setTool(tool);
@@ -66,18 +71,19 @@ public class DocWorkItem extends WorkItem {
 			genericWI.session = session;
 			genericWI.processManager = this.processManager;
 			genericWI.instanceViewContent = this.instanceViewContent;
-			if("normal".equals(this.getMetaworksContext().getHow())){
-				genericWI.setInstId(this.getInstId());
-			}else{
-				genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			}
+			genericWI.setInstId(this.getInstId());
+			genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//			if("normal".equals(this.getMetaworksContext().getHow())){
+//				genericWI.setInstId(this.getInstId());
+//			}else{
+//				genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//			}
 			genericWI.setWriter(session.getUser());
 			genericWI.setTitle(this.getTitle());//parent.getName());
 			genericWI.setGrpTaskId(fileWorkItem.getTaskId());
 			genericWI.setGenericWorkItemHandler(genericWIH);
 			
 			Object[] returnObj = genericWI.add();
-			
 			
 			// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
 			// 수정처리 해야함
