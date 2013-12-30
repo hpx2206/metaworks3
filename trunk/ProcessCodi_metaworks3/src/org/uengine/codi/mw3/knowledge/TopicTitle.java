@@ -34,6 +34,7 @@ import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.SystemWorkItem;
+import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.codi.mw3.model.TopicPerspective;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -321,14 +322,22 @@ public class TopicTitle  implements ContextAware{
 	public Object[] modify() throws Exception{
 		this.saveMe();
 		
-		TopicNode topicNode = new TopicNode();
-		topicNode.setId(this.getTopicId());
-		topicNode.setName(this.getTopicTitle());
-		topicNode.setType(TopicNode.TOPIC);
+//		TopicNode topicNode = new TopicNode();
+//		topicNode.setId(this.getTopicId());
+//		topicNode.setName(this.getTopicTitle());
+//		topicNode.setType(TopicNode.TOPIC);
+		
+		TopicPanel topicMap = new TopicPanel();
+		topicMap.session = session;
+		topicMap.load();
+		
+		TopicInfo topicInfo = new TopicInfo(session);
+		topicInfo.setId(this.getTopicId());
+		topicInfo.load();
 		
 	//	this.notiToCompany();
 		
-		return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};		
+		return new Object[]{new Refresh(topicMap), new Refresh(topicInfo),new Remover(new ModalWindow())};		
 	}
 	
 	@Face(displayName="$Close")

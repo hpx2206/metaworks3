@@ -183,9 +183,14 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 
 	public ModalWindow modify() throws Exception {
 		
+		TopicNode topicNode = new TopicNode();
+		topicNode.setId(this.getId());
+		topicNode.copyFrom(topicNode.databaseMe());
+		
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setTopicId(this.getId());
-		topicTitle.setTopicTitle(this.getName());
+		topicTitle.setTopicTitle(topicNode.getName());
+		topicTitle.setTopicSecuopt("0".equals(topicNode.getSecuopt()) ? false : true );
 		topicTitle.setMetaworksContext(new MetaworksContext());
 		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		topicTitle.setLogoFile(new MetaworksFile());

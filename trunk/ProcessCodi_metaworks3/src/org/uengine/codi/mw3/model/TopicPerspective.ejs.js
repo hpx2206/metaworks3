@@ -17,7 +17,7 @@ var org_uengine_codi_mw3_model_TopicPerspective = function(objectId, className){
 			function(){
 				$(this).find('.west_more_btn').hide();
 			}
-		)
+		);
 	}
 	
 };
