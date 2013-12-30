@@ -1,9 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
-
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -12,13 +8,9 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.ITopicMapping;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.TopicTitle;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.kernel.GlobalContext;
 
 public class TopicInfo extends GroupInfo{
 
@@ -42,9 +34,14 @@ public class TopicInfo extends GroupInfo{
 
 	@Override
 	public ModalWindow modify() throws Exception {
+		TopicNode topicNode = new TopicNode();
+		topicNode.setId(this.getId());
+		topicNode.copyFrom(topicNode.databaseMe());
+		
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setTopicId(this.getId());
-		topicTitle.setTopicTitle(this.getName());
+		topicTitle.setTopicTitle(topicNode.getName());
+		topicTitle.setTopicSecuopt("0".equals(topicNode.getSecuopt()) ? false : true );
 		topicTitle.setLogoFile(new MetaworksFile());
 		topicTitle.setMetaworksContext(new MetaworksContext());
 		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);

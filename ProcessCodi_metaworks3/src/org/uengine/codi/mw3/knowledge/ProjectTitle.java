@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Date;
 
@@ -21,15 +22,22 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.ProcessMap;
+import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.oce.IServerInfo;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
+import org.uengine.codi.mw3.project.oce.ServerInfo;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.ProcessInstance;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,projectAlias,topicDescription,logoFile,projectSecuopt,fileType"} ,
@@ -196,75 +204,97 @@ public class ProjectTitle implements ContextAware {
 		this.getMetaworksContext().setHow("html");	
 
 		String command = null;
+//		
+//		String host = GlobalContext.getPropertyString("vm.manager.ip");
+//		String userId = GlobalContext.getPropertyString("vm.manager.user");
+//		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+//		
+//		JschCommand jschServerBehaviour = new JschCommand();
+//		jschServerBehaviour.sessionLogin(host, userId, passwd);
+//		
+//		if("svn".equals(this.getFileType())){
+//			if("1".equals(StartCodi.USE_IAAS)){
+//				
+//				// create SVN
+//				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				// setting SVN
+//				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//SVN 유저 추가
+//				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//Create Hudson
+//				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//Setting Hudson
+//				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
+//				jschServerBehaviour.runCommand(command);
+//			}
+//			else{//IaaS 미 연동 시
+//				//SVN 생성
+//				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				// setting SVN
+//				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//SVN 유저 추가
+//				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//Create Hudson
+//				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//Setting Hudson
+//				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectNode.getProjectAlias() + "\"" + " \"dev\"";
+//				jschServerBehaviour.runCommand(command);
+//				
+//				//Create Database
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//			}
+//			
+//		}
+//		else if("war".equals(this.getFileType())){
+//			if("1".equals(StartCodi.USE_IAAS)){
+//			
+//			}else{//IaaS 미 연동 시
+//				
+//				//Create Database
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+//				jschServerBehaviour.runCommand(command);
+//			}
+//		}
 		
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
 		
-		JschCommand jschServerBehaviour = new JschCommand();
-		jschServerBehaviour.sessionLogin(host, userId, passwd);
+		ServerInfo serverInfo = new ServerInfo();
+		serverInfo.setIaasServerType(ServerInfo.SERVER_TYPE_KT);
+		serverInfo.setVmName(this.getTopicTitle());
+		serverInfo.createDatabaseMe();
 		
-		if("svn".equals(this.getFileType())){
-			if("1".equals(StartCodi.USE_IAAS)){
-				
-				// create SVN
-				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-				// setting SVN
-				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-				//SVN 유저 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-				//Create Hudson
-				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
-				jschServerBehaviour.runCommand(command);
-				
-				//Setting Hudson
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
-				jschServerBehaviour.runCommand(command);
-			}
-			else{//IaaS 미 연동 시
-				//SVN 생성
-				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-				// setting SVN
-				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-				//SVN 유저 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-				//Create Hudson
-				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
-				jschServerBehaviour.runCommand(command);
-				
-				//Setting Hudson
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectNode.getProjectAlias() + "\"" + " \"dev\"";
-				jschServerBehaviour.runCommand(command);
-				
-				//Create Database
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-			}
-			
-		}
-		else if("war".equals(this.getFileType())){
-			if("1".equals(StartCodi.USE_IAAS)){
-			
-			}else{//IaaS 미 연동 시
-				
-				//Create Database
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
-				jschServerBehaviour.runCommand(command);
-			}
-		}
+		String defId = "serverStart.process";
+		ProcessMap processMap = new ProcessMap();
+		processMap.processManager = processManager;
+		processMap.session = session;
+		processMap.setDefId(defId);
 		
+		String instId = processMap.initializeProcess();
+				
+		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+		roleMappingPanel.putRoleMappings(processManager, instId);
+//		ProcessInstance instance  = processManager.getProcessInstance(instId);
+//		processManager.getProcessInstance(instId).setBeanProperty("serverName", this.getTopicTitle());
+//		instance.setBeanProperty(targetFieldName, (Serializable)value);
+		
+		processManager.executeProcess(instId);
+		processManager.applyChanges();
 		
 		Object[] returnObj = projectNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 3];
@@ -391,5 +421,6 @@ public class ProjectTitle implements ContextAware {
 	@AutowiredFromClient
 	transient public Session session;
 	
-
+	@Autowired
+	public ProcessManagerRemote processManager;
 }
