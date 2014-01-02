@@ -13,7 +13,7 @@ import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.contexts.InvocationContext;
 import org.uengine.util.UEngineUtil;
 
-public class InvocationActivity extends DefaultActivity implements IDrawDesigne {
+public class InvocationActivity extends DefaultActivity implements IDrawDesigner {
 	
 	public InvocationActivity(){
 		setName("invocation");

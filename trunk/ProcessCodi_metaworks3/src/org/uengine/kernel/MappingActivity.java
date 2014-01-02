@@ -7,7 +7,7 @@ import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.contexts.MappingContext;
 import org.uengine.util.UEngineUtil;
 
-public class MappingActivity extends DefaultActivity implements IDrawDesigne {
+public class MappingActivity extends DefaultActivity implements IDrawDesigner {
 
 	private static final long serialVersionUID = GlobalContext.SERIALIZATION_UID;
 	public final static String FILE_SYSTEM_DIR = GlobalContext.getPropertyString("filesystem.path", ProcessDefinitionFactory.DEFINITION_ROOT);

@@ -1,6 +1,6 @@
 package org.uengine.kernel;
 
-public interface IDrawDesigne {
+public interface IDrawDesigner {
 	
 	/**
 	 * 디자인 타임에서 사용
