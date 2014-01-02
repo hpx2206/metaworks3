@@ -1,6 +1,6 @@
 var org_metaworks_Remover = function(objectId, className){
 	this.object = mw3.objects[objectId];	
-	
+	var triggerObjId = null;
 	if(this.object == null)
 		return true;	
 	

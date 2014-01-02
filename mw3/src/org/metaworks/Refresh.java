@@ -30,7 +30,7 @@ public class Refresh {
 	}
 	
 	public Refresh(Object target, boolean match){
-		this(target, false, false);
+		this(target, match, false);
 	}
 	
 	public Refresh(Object target, boolean match, boolean self){
