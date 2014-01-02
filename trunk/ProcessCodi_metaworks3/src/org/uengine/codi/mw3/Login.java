@@ -38,8 +38,10 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
+import org.uengine.codi.mw3.ide.Dashboard;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Application;
@@ -49,7 +51,6 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
-import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
@@ -786,23 +787,23 @@ public class Login implements ContextAware {
 		Application app = null;
 		
 		if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
-			System.out.println("======================");
-			System.out.println(this.getLastVisitValue());
-			if(this.getLastVisitValue() != null){
-				ProjectNode project = new ProjectNode();
-				project.setId(this.getLastVisitValue());
-				project.copyFrom(project.databaseMe());
-				
-				app = new CloudIDE(session, project);
-			}else
-				app = new CloudIDE(session);
+			ProjectNode project = new ProjectNode();
+			project.setId(this.getLastVisitValue());
+			project.copyFrom(project.databaseMe());
+
+			app = new CloudIDE(session, project);
+		}else if("dashboard".equals(lastVisitPage)){
+			app = new Dashboard(session);
 		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
 			app = new Marketplace();
 		}else{
 			app = new SNS(session);
 		}
+
+		TopPanel topPanel = new TopPanel(session);
+		topPanel.setContentTopPanel(app.loadContentTopPanel(session));
 		
-		mainPanel = new MainPanel(new ProcessTopPanel(session), app);
+		mainPanel = new MainPanel(topPanel, app);
 		
 		Locale locale = new Locale();
 		locale.setLanguage(session.getEmployee().getLocale());

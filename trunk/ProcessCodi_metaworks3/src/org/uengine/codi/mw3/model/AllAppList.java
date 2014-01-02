@@ -9,7 +9,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.ide.CloudIDE;
+import org.uengine.codi.mw3.ide.Dashboard;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.marketplace.Marketplace;
@@ -62,15 +62,15 @@ public class AllAppList {
 	public Object[] goSNS() throws Exception {
 		SNS sns = new SNS(session);
 		
-		return new Object[]{new Refresh(sns), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		return new Object[]{new Refresh(sns), new Refresh(sns.loadContentTopPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] goIDE() throws Exception {
 		
-		CloudIDE cloudIDE = new CloudIDE(session);
+		Dashboard dashboasd = new Dashboard(session);
 		
-		return new Object[]{new Refresh(cloudIDE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		return new Object[]{new Refresh(dashboasd), new Refresh(dashboasd.loadContentTopPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)

@@ -198,7 +198,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	public Object[] goIDE() throws Exception{
 		CloudIDE ide = new CloudIDE(session, this);
 		
-		return new Object[]{ ide };
+		return new Object[]{ ide, ide.loadContentTopPanel(session) };
 	}
 	
 	@Autowired
