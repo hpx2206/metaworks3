@@ -101,10 +101,11 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setRoot(true);
 		treeNode.setExpanded(true);
 		treeNode.setId("rootNode");
-		treeNode.setName("조건");
+		treeNode.setName("Condition");  //TODO: locale
 		treeNode.setRoleList(roleList);
 		treeNode.setVariableList(variableList);
 		treeNode.setType(TreeNode.TYPE_FOLDER);
+		treeNode.setConditionType(ConditionTreeNode.CONDITION_OR);
 		
 		if( this.getTransition().getCondition() != null ){
 			makeChildTreeNode(treeNode , this.getTransition().getCondition()); 

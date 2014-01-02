@@ -189,7 +189,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 			}else if( val3 != null && val3.equalsIgnoreCase("variable") ){
 				val3 = expVal.getValiableChoice().getSelectedText();
 			}
-			nodeName = "[" +conditionType + "]" + val1 + " " +val2 + " " + val3; 
+			nodeName =  val1 + " " +val2 + " " + val3; 
 		}else if( conditionType != null && conditionType.equals(ConditionTreeNode.CONDITION_OTHERWISE) ){
 			nodeName = "otherwise";
 		}else{
