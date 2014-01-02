@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor.java;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
@@ -141,8 +142,8 @@ public class GenerateGettersAndSetters {
 			}
 		}
 		
-		//return new Object[]{new Remover(new ModalWindow()), new ToAppend(new JavaCodeEditor(this.getId()), sb.toString())};
-		return null;
+		System.out.println(sb.toString());
+		return new Object[]{new ToAppend(new JavaCodeEditor(this.getId()), sb.toString()), new Remover(new ModalWindow())};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)

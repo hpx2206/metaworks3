@@ -47,7 +47,7 @@ public class NewForm extends Templete {
 	public void load(){
 		Project project = workspace.findProject(this.getResourceNode().getProjectId());
 		
-		String packageName = project.getBuildPath().makePackageName(this.getResourceNode().getId());
+		String packageName = ResourceNode.makePackageName(this.getResourceNode().getId());
 		
 		this.setPackageName(packageName);
 	}

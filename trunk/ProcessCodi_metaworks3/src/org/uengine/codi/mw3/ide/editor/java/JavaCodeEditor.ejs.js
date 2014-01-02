@@ -42,7 +42,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	},
 		
 	toAppend : function(appendObject){
-		if(typeof appendObject == 'array'){
+		if(toString.call( appendObject ) == '[object Array]'){
 			var annotations = [];
 			
 			for(var i=0; i<appendObject.length; i++){
@@ -174,7 +174,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		    }
 		});
 		faceHelper.editor.commands.addCommand({
-		    name: "gotoleft",
+		    name: "gotoright",
 		    bindKey: this.bindKey("Right", "Right|Ctrl-F"),
 		    exec: function(env, args, request) {
 		    	faceHelper.closeAssist();

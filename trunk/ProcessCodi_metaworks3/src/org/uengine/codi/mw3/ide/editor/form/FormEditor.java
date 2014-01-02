@@ -54,12 +54,8 @@ public class FormEditor extends Editor {
 	@Override
 	public String load() {
 		
-		Project project = workspace.findProject(this.getResourceNode().getProjectId());
-		
-		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
-		
-		String packageName = project.getBuildPath().makePackageName(this.getId());
-		String className = project.getBuildPath().makeClassName(this.getId());
+		String packageName = ResourceNode.makePackageName(this.getId());
+		String className = ResourceNode.makeClassName(this.getId());
 		
 		Form form = new Form();
 		form.setPackageName(packageName);
@@ -120,17 +116,7 @@ public class FormEditor extends Editor {
 	@Hidden
 	public Object preview() throws Exception {
 		
-		Project project = workspace.findProject(this.getResourceNode().getProjectId());
-		
 		this.save();
-		
-		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
-		try {
-			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
 		

@@ -61,7 +61,6 @@ public class JavaRunAsMenu extends CloudMenu {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof JavaCodeEditor){
 			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
-			editor.workspace = workspace;
 			
 			//ArrayList<JavaCodeError> errorList = (ArrayList<JavaCodeError>)editor.save();
 			
