@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
 
 public class ProcessDefinitionNavigatorPanel {
@@ -20,14 +19,9 @@ public class ProcessDefinitionNavigatorPanel {
 	
 	public void load(){
 		
-		// make workspace
-		Workspace workspace = new Workspace();
-		workspace.load(session);
-		this.setWorkspace(workspace);
-		
-		Navigator navigator = new Navigator();		
-		navigator.load(workspace);
-		
+		// TODO : 뭐지? 확인 필요 cjw
+		//Navigator navigator = new Navigator();		
+		//navigator.load(workspace);
 	}
 	
 }

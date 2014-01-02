@@ -47,7 +47,7 @@ public class CommitWindow extends SVNWindow{
 	public void sync() throws SVNException, Exception{
 		SVNClientManager ourClientManager = getSVNClientManager();
 
-        String myWorkingCopyPath = CodiClassLoader.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+        String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().getCodebase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         
@@ -78,7 +78,7 @@ public class CommitWindow extends SVNWindow{
 		
 		SVNClientManager ourClientManager = getSVNClientManager();
         
-        String myWorkingCopyPath = CodiClassLoader.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+        String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().getCodebase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         

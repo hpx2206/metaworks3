@@ -123,12 +123,8 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		}
 		FileOutputStream fos = null;
 		try{
-			String path = "";
-			if( processEditor.getResourceNode() != null ){
-				path = processEditor.getResourceNode().getPath();
-			}else{
-				path = processEditor.getProcessNode().getPath();
-			}
+			String path = path = processEditor.getResourceNode().getPath();
+			
 			File file = new File(path);
 			fos = new FileOutputStream(file);
 			String definitionInString = (String)GlobalContext.serialize(def, ProcessDefinition.class);
@@ -165,7 +161,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		setProcessName(processName);
 		/// read source file
 		//File sourceCodeFile = new File(getBasePath() + getAlias());
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName);
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().getCodebase() + "/" + processName);
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
