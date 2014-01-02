@@ -67,7 +67,7 @@ public class MetadataBundle {
 		
 		
 		String projectId = getProjectId();
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		String tenantId = "root";
 		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
 			tenantId = TenantContext.getThreadLocalInstance().getTenantId();

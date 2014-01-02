@@ -34,80 +34,92 @@ import org.uengine.kernel.GlobalContext;
 
 public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
-	public List<File>          defaultSourcePath;
-    private File[]             sourcePath;
-    private String             optionalCharacterEncoding;
-    private boolean            debuggingInfoLines;
-    private boolean            debuggingInfoVars;
-    private boolean            debuggingInfoSource;
-    private Collection<String> compilerOptions = new ArrayList<String>();
+	public final static String DEFAULT_NAME = "root";
+	public final static String PATH_SEPARATOR = "/";
+	
+	String						codebase;
 
-    private JavaCompiler    compiler;
-    private JavaFileManager fileManager;
+	private File[]             sourcePath;
+	private String             optionalCharacterEncoding;
+	private boolean            debuggingInfoLines;
+	private boolean            debuggingInfoVars;
+	private boolean            debuggingInfoSource;
+	private Collection<String> compilerOptions = new ArrayList<String>();
+
+	private JavaCompiler    compiler;
+	private JavaFileManager fileManager;
 
 	public static CodiClassLoader codiClassLoader; //works for default classloader. 
-	
 
-    /**
-     * @see ICompilerFactory#newJavaSourceClassLoader()
-     */
-    public CodiClassLoader() {
-        this.init();
-    }
 
-    /**
-     * @see ICompilerFactory#newJavaSourceClassLoader(ClassLoader)
-     */
-    public CodiClassLoader(ClassLoader parentClassLoader) {
-        super(parentClassLoader);
-        this.init();
-    }
-    
-    public static CodiClassLoader getMyClassLoader(){
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+	/**
+	 * @see ICompilerFactory#newJavaSourceClassLoader()
+	 */
+	public CodiClassLoader() {
+		this.init();
+	}
 
-        return (CodiClassLoader) contextClassLoader;
-    }
-    
+	/**
+	 * @see ICompilerFactory#newJavaSourceClassLoader(ClassLoader)
+	 */
+	public CodiClassLoader(ClassLoader parentClassLoader) {
+		super(parentClassLoader);
+		this.init();
+	}
+
+	public String getCodebase() {
+		return codebase;
+	}
+	public void setCodebase(String codebase) {
+		this.codebase = codebase;
+	}
+
+	public static CodiClassLoader getMyClassLoader(){
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+		return (CodiClassLoader) contextClassLoader;
+	}
+
+	/*
 	public String sourceCodeBase(){
 
 		//TODO. setting a collect sourcePath 
-		
+
 		//if(sourcePath!=null)
 		//	return sourcePath[0].getPath();
-		
+
 		String mySourceCodeBase = mySourceCodeBase();
 
 		if(mySourceCodeBase!=null){
-		
-	        File wcDir = new File(mySourceCodeBase).getParentFile(); //project folder is one level parent folder than 'src'
-	        
-	        if (wcDir.exists()) {
-	        	setSourcePath(new File[]{new File(mySourceCodeBase)});
-	        	
-	        	return mySourceCodeBase;
-	        }
+
+			File wcDir = new File(mySourceCodeBase).getParentFile(); //project folder is one level parent folder than 'src'
+
+			if (wcDir.exists()) {
+				setSourcePath(new File[]{new File(mySourceCodeBase)});
+
+				return mySourceCodeBase;
+			}
 		}
-		
+
 		String userId = null;
 		try{
 			userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
 		}catch(Exception e){
-			
+
 		}
-		
+
 		//if(userId==null)
-			userId = "main";
-		
+		userId = "main";
+
 		String codebaseRoot = getCodeBaseRoot();
-		
+
 		String dir = codebaseRoot + userId;
-		
-		
+
+
 		File f = new File(dir);
 		if(!f.exists()) //f.mkdirs();
 			dir = codebaseRoot + "main";
-		
+
 		// 1. 메타데이터가 있는 경우 우선적으로 메타데이터 path 를 보도록 한다.
 		String firstSourcePath = null;
 		if(MetadataBundle.projectBundle != null){
@@ -122,464 +134,365 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		}else{
 			setSourcePath(new File[]{new File(dir + "/src/")});
 		}
-		
+
 		return sourcePath[0].getPath();
 	}
+	*/
 
-	private static String getCodeBaseRoot() {
+	public static String getCodeBaseRoot() {
 		String coderoot = GlobalContext.getPropertyString("codebase", "codebase/");
-		
+
 		if(!coderoot.endsWith("/")) coderoot=coderoot+"/";
-		
+
 		return coderoot;
 	}
-	
-	 /**
-	   * 1. appId 가 없으면, tenant 가 없으면
-		codebase 기본
-		  root
-		    src
-		    image
-		    file
-		
-		2. appId 가 없으면, tenant 가 있을때
-		codebase
-		  tenantId 기본
-		    src
-		    image
-		    file
-		
-		3. appId 가 있고, tenant 가 없으면(프로젝트 일때)
-		codebase
-		  appId
-		    root 기본
-		      src
-		      image
-		      file
-		
-		4. appId 가 있고, tenant 도 있으면
-		codebase
-		  appId
-		    tenantId 기본
-		      src
-		      image
-		      file
-	   */
-	public static String mySourceCodeBase(){
-		  String tenantId = null;
-		  String projectId = MetadataBundle.getProjectId();
-		  
-		  if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-			  tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-		  }
-		  return mySourceCodeBase(projectId , tenantId);
-	}
-	public static String mySourceCodeBase(String projectId){
-		String tenantId = null;
-		
-		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-		}
-		return mySourceCodeBase(projectId , tenantId);
-	}
-	
-	public static String mySourceCodeBase(String projectId, String tenantId){
-		if( tenantId == null && projectId == null ){
-			// 1번
-			return CodiClassLoader.getCodeBaseRoot() + "root" + File.separatorChar;
-		}else if( tenantId != null && projectId == null ){
-			// 2번
-			return CodiClassLoader.getCodeBaseRoot() + tenantId + File.separatorChar;
-		}else if( tenantId == null && projectId != null ){
-			// 3번
-			return CodiClassLoader.getCodeBaseRoot() + projectId +  File.separatorChar + "root" + File.separatorChar;
-		}else{
-			// 4번
-			return CodiClassLoader.getCodeBaseRoot() + projectId + File.separatorChar + tenantId + File.separatorChar;
-		}
-	}
-    
+
 	@Override
 	public InputStream getResourceAsStream(String name) {
-		
-		ArrayList<File> sourcePath = new ArrayList<File>();
-		
-		String firstSourcePath = "";
-		if( name != null  && name.startsWith("@") && MetadataBundle.projectBundle != null){
-			String key = name.substring(1);
-			String value = MetadataBundle.projectBundle.getProperty(key);
-			
-			/*
-			if( value != null ){
-				// tenant 의 소스를 보고 없으면 main 파일을 바라본다.
-				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-				File file = new File(sourceCodeBase + "/" + value);
-				if(file.exists()){
-					firstSourcePath = sourceCodeBase;
-				}else{
-					firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
-				}
-				
-				name = value;
-			}
-			*/
-			
-			name = value;	
-			
-			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-			
-			sourcePath.add(new File(sourceCodeBase + "/" + value));
-			sourcePath.add(new File(MetadataBundle.projectBundle.getProperty("sourceCodePath")));
-			
-		}else{
-			for(File file : this.sourcePath)
-				sourcePath.add(file);				
-		}
-		
-				
+
 		if(name != null){
 			//if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql") || name.endsWith(".wpd") || name.endsWith("metadata")){
-				
-				for(File file : sourcePath){
-					try {
-						if(file.exists()){
-							FileInputStream fis = new FileInputStream(file.getAbsolutePath() + "/" + name);
-							return fis;
-						}
-					} catch (FileNotFoundException e) {
-					}				
-				}
+
+			for(File file : this.sourcePath){
+				try {
+					if(file.exists()){
+						FileInputStream fis = new FileInputStream(file.getAbsolutePath() + "/" + name);
+						return fis;
+					}
+				} catch (FileNotFoundException e) {
+				}				
+			}
 			//}
 		}
-		
+
 		return super.getResourceAsStream(name);
 	}
-	
-	
 
-//	@Override
-//	protected synchronized Class<?> loadClass(String name,
-//			boolean resolve) throws ClassNotFoundException {
-//
-//		if(securedClasses.containsKey(name)){
-//           throw new ClassNotFoundException(securedClasses.get(name), new SecurityException());
-//		}
-//		
-//		return super.loadClass(name, resolve);
-//	}
-//
-//
-//
-//	protected Class<?> findClass(String className)
-//			throws ClassNotFoundException {
-//
-//		if(securedClasses.containsKey(className)){
-//			throw new RuntimeException(securedClasses.get(className));
-//		}
-//		
-//		return super.findClass(className);
-//	}
-	
-	
-	
-	
+
+
+	//	@Override
+	//	protected synchronized Class<?> loadClass(String name,
+	//			boolean resolve) throws ClassNotFoundException {
+	//
+	//		if(securedClasses.containsKey(name)){
+	//           throw new ClassNotFoundException(securedClasses.get(name), new SecurityException());
+	//		}
+	//		
+	//		return super.loadClass(name, resolve);
+	//	}
+	//
+	//
+	//
+	//	protected Class<?> findClass(String className)
+	//			throws ClassNotFoundException {
+	//
+	//		if(securedClasses.containsKey(className)){
+	//			throw new RuntimeException(securedClasses.get(className));
+	//		}
+	//		
+	//		return super.findClass(className);
+	//	}
+
+
+
+
 	//----------------------------------------     from this line, the codes are just copied from JavaSourceClassLoader.java in janino ---------------------------//
-	
-	
 
-	
-	
-	
-	
-    private void init() {
-   
-    	//TODO: it's too complicated to use. so we switch to use HotSwapper on behalf of this
-    	
-//    	// setting security filters for more fine-grained control
-//    	try {
-//    		pool = ClassPool.getDefault();
-//    		
-//    		pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/mongo-2.7.2.jar");
-//    		
-//    		CtClass cc = pool.get("com.mongodb.Mongo");
-//    		
-//    		CtConstructor cm = cc.getDeclaredConstructor(new CtClass[]{});
-//    		
-//    		cm.instrument(
-//    		    new ExprEditor() {
-//    		    	boolean checked = false;
-//    		    	
-//    		        public void edit(MethodCall m)
-//    		                      throws CannotCompileException
-//    		        {
-//    		        	
-//    		        	if(!checked){
-//    		                m.replace("{ System.out.println(\"how many test\"); throw new SecurityException(\"platform denied you\"); $_ = $proceed($$); }");
-//    		             
-//    		                checked = true;
-//    		        	}
-//    		        }
-//    		    });
-//    		
-////    	    Loader cl = new Loader(pool);
-////    	    
-////    	    SampleLoader loader = new SampleLoader(pool);
-////    	    loader.findClass("java.io.File");
-//    	}catch(Exception e){
-//    		throw new RuntimeException(e);
-//    	}
-//    	
-    	
-        this.compiler = ToolProvider.getSystemJavaCompiler();
-        if (this.compiler == null) {
-            throw new UnsupportedOperationException(
-                "JDK Java compiler not available - probably you're running a JRE, not a JDK"
-            );
-        }
-    }
 
-    /**
-     * Creates the underlying {@link JavaFileManager} lazily, because {@link #setSourcePath(File[])} and consorts
-     * are called <i>after</i> initialization.
-     */
-    public JavaFileManager getJavaFileManager() {
-        if (this.fileManager == null) {
 
-            // Get the original FM, which reads class files through this JVM's BOOTCLASSPATH and
-            // CLASSPATH.
-            JavaFileManager jfm = this.compiler.getStandardFileManager(null, null, null);
-    
-            // Wrap it so that the output files (in our case class files) are stored in memory rather
-            // than in files.
-            jfm = new ByteArrayJavaFileManager<JavaFileManager>(jfm);
-    
-            // Wrap it in a file manager that finds source files through the source path.
-            jfm = new FileInputJavaFileManager(
-                jfm,
-                StandardLocation.SOURCE_PATH,
-                Kind.SOURCE,
-                this.sourcePath,
-                this.optionalCharacterEncoding
-            );
-    
-            this.fileManager = jfm;
-        }
-        return this.fileManager;
-    }
 
-    @Override
-    public void setSourcePath(File[] sourcePath) {
-        this.sourcePath = sourcePath;
-    }
 
-    @Override
-    public void setSourceFileCharacterEncoding(String optionalCharacterEncoding) {
-        this.optionalCharacterEncoding = optionalCharacterEncoding;
-    }
 
-    @Override
-    public void setDebuggingInfo(boolean lines, boolean vars, boolean source) {
-        this.debuggingInfoLines  = lines;
-        this.debuggingInfoVars   = vars;
-        this.debuggingInfoSource = source;
-    }
 
-    /**
-     * Notice: Don't use the '-g' options - these are controlled through {@link #setDebuggingInfo(boolean, boolean,
-     * boolean)}.
-     *
-     * @param compilerOptions All command line options supported by the JDK JAVAC tool
-     */
-    public void setCompilerOptions(String[] compilerOptions) {
-        this.compilerOptions = Arrays.asList(compilerOptions);
-    }
+	private void init() {
 
-    /**
-     * Implementation of {@link ClassLoader#findClass(String)}.
-     *
-     * @throws ClassNotFoundException
-     */
-    protected Class<?> findClass(String className) throws ClassNotFoundException {
+		//TODO: it's too complicated to use. so we switch to use HotSwapper on behalf of this
 
-    	
-    	//TODO: it looks bad so, we switch to use HotSwapper in the javassist
-    	
-//    	if(className.equals("com.mongodb.Mongo")){
-//            try {
-//                CtClass cc = pool.get(className);
-//                // modify the CtClass object here
-//                byte[] b = cc.toBytecode();
-//                return defineClass(className, b, 0, b.length);
-//            } catch (NotFoundException e) {
-//                //throw new ClassNotFoundException();
-//            } catch (IOException e) {
-//                //throw new ClassNotFoundException();
-//            } catch (CannotCompileException e) {
-//                //throw new ClassNotFoundException();
-//            }
-//
-//    	}
-    	
-    	
-    	
-        byte[] ba;
-        int    size;
-        try {
+		//    	// setting security filters for more fine-grained control
+		//    	try {
+		//    		pool = ClassPool.getDefault();
+		//    		
+		//    		pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/mongo-2.7.2.jar");
+		//    		
+		//    		CtClass cc = pool.get("com.mongodb.Mongo");
+		//    		
+		//    		CtConstructor cm = cc.getDeclaredConstructor(new CtClass[]{});
+		//    		
+		//    		cm.instrument(
+		//    		    new ExprEditor() {
+		//    		    	boolean checked = false;
+		//    		    	
+		//    		        public void edit(MethodCall m)
+		//    		                      throws CannotCompileException
+		//    		        {
+		//    		        	
+		//    		        	if(!checked){
+		//    		                m.replace("{ System.out.println(\"how many test\"); throw new SecurityException(\"platform denied you\"); $_ = $proceed($$); }");
+		//    		             
+		//    		                checked = true;
+		//    		        	}
+		//    		        }
+		//    		    });
+		//    		
+		////    	    Loader cl = new Loader(pool);
+		////    	    
+		////    	    SampleLoader loader = new SampleLoader(pool);
+		////    	    loader.findClass("java.io.File");
+		//    	}catch(Exception e){
+		//    		throw new RuntimeException(e);
+		//    	}
+		//    	
 
-            // Maybe the bytecode is already there, because the class was compiled as a side effect of a preceding
-            // compilation.
-            JavaFileObject classFileObject = this.getJavaFileManager().getJavaFileForInput(
-                StandardLocation.CLASS_OUTPUT,
-                className,
-                Kind.CLASS
-            );
+		this.compiler = ToolProvider.getSystemJavaCompiler();
+		if (this.compiler == null) {
+			throw new UnsupportedOperationException(
+					"JDK Java compiler not available - probably you're running a JRE, not a JDK"
+					);
+		}
+	}
 
-            if (classFileObject == null) {
+	/**
+	 * Creates the underlying {@link JavaFileManager} lazily, because {@link #setSourcePath(File[])} and consorts
+	 * are called <i>after</i> initialization.
+	 */
+	public JavaFileManager getJavaFileManager() {
+		if (this.fileManager == null) {
 
-                // Get the sourceFile.
-                JavaFileObject sourceFileObject = this.getJavaFileManager().getJavaFileForInput(
-                    StandardLocation.SOURCE_PATH,
-                    className,
-                    Kind.SOURCE
-                );
-                
-                
-                if (sourceFileObject == null) {
- //                   throw new DiagnosticException("Source for '" + className + "' not found");
-                    throw new ClassNotFoundException("Source for '" + className + "' not found");
-                	
-                	//return null;
-                }
+			// Get the original FM, which reads class files through this JVM's BOOTCLASSPATH and
+			// CLASSPATH.
+			JavaFileManager jfm = this.compiler.getStandardFileManager(null, null, null);
 
-                // Compose the effective compiler options.
-                List<String> options = new ArrayList<String>(this.compilerOptions);
-                options.add(this.debuggingInfoLines ? (
-                    this.debuggingInfoSource ? (
-                        this.debuggingInfoVars
-                        ? "-g"
-                        : "-g:lines,source"
-                    ) : this.debuggingInfoVars ? "-g:lines,vars" : "-g:lines"
-                ) : this.debuggingInfoSource ? (
-                    this.debuggingInfoVars
-                    ? "-g:source,vars"
-                    : "-g:source"
-                ) : this.debuggingInfoVars ? "-g:vars" : "-g:none");
+			// Wrap it so that the output files (in our case class files) are stored in memory rather
+			// than in files.
+			jfm = new ByteArrayJavaFileManager<JavaFileManager>(jfm);
 
-              //  this.compiler
-                
-                // Run the compiler.
-                if (!this.compiler.getTask(
-                    null,                                   // out
-                    this.getJavaFileManager(),              // fileManager
-                    new DiagnosticListener<JavaFileObject>() { // diagnosticListener
+			// Wrap it in a file manager that finds source files through the source path.
+			jfm = new FileInputJavaFileManager(
+					jfm,
+					StandardLocation.SOURCE_PATH,
+					Kind.SOURCE,
+					this.sourcePath,
+					this.optionalCharacterEncoding
+					);
 
-                        @Override
-                        public void report(final Diagnostic<? extends JavaFileObject> diagnostic) {
-                            if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
-                                throw new DiagnosticException(diagnostic);
-                            }
-                        }
-                    },
-                    options,                                // options
-                    null,                                   // classes
-                    Collections.singleton(sourceFileObject) // compilationUnits
-                ).call()) {
-                    throw new ClassNotFoundException(className + ": Compilation failed");
-                }
+			this.fileManager = jfm;
+		}
+		return this.fileManager;
+	}
 
-                classFileObject = this.getJavaFileManager().getJavaFileForInput(
-                    StandardLocation.CLASS_OUTPUT,
-                    className,
-                    Kind.CLASS
-                );
+	@Override
+	public void setSourcePath(File[] sourcePath) {
+		this.sourcePath = sourcePath;
+	}
 
-                if (classFileObject == null) {
-                    throw new ClassNotFoundException(className + ": Class file not created by compilation");
-                }
-            }
+	@Override
+	public void setSourceFileCharacterEncoding(String optionalCharacterEncoding) {
+		this.optionalCharacterEncoding = optionalCharacterEncoding;
+	}
 
-            if (classFileObject instanceof ByteArrayJavaFileObject) {
-                ByteArrayJavaFileObject bajfo = (ByteArrayJavaFileObject) classFileObject;
-                ba = bajfo.toByteArray();
-                size = ba.length;
-            } else
-            {
-                ba = new byte[4096];
-                size = 0;
-                InputStream is = classFileObject.openInputStream();
-                try {
-                    for (;;) {
-                        int res = is.read(ba, size, ba.length - size);
-                        if (res == -1) break;
-                        size += res;
-                        if (size == ba.length) {
-                            byte[] tmp = new byte[2 * size];
-                            System.arraycopy(ba, 0, tmp, 0, size);
-                            ba = tmp;
-                        }
-                    }
-                } finally {
-                    is.close();
-                }
-            }
-        } catch (IOException ioe) {
-            throw new DiagnosticException(ioe);
-        }
+	@Override
+	public void setDebuggingInfo(boolean lines, boolean vars, boolean source) {
+		this.debuggingInfoLines  = lines;
+		this.debuggingInfoVars   = vars;
+		this.debuggingInfoSource = source;
+	}
 
-        return this.defineClass(className, ba, 0, size, (
-            this.optionalProtectionDomainFactory == null
-            ? null
-            : this.optionalProtectionDomainFactory.getProtectionDomain(getSourceResourceName(className))
-        ));
-    }
+	/**
+	 * Notice: Don't use the '-g' options - these are controlled through {@link #setDebuggingInfo(boolean, boolean,
+	 * boolean)}.
+	 *
+	 * @param compilerOptions All command line options supported by the JDK JAVAC tool
+	 */
+	public void setCompilerOptions(String[] compilerOptions) {
+		this.compilerOptions = Arrays.asList(compilerOptions);
+	}
 
-    /**
-     * Construct the name of a resource that could contain the source code of
-     * the class with the given name.
-     * <p>
-     * Notice that member types are declared inside a different type, so the relevant source file
-     * is that of the outermost declaring class.
-     *
-     * @param className Fully qualified class name, e.g. "pkg1.pkg2.Outer$Inner"
-     * @return the name of the resource, e.g. "pkg1/pkg2/Outer.java"
-     */
-    private static String getSourceResourceName(String className) {
+	/**
+	 * Implementation of {@link ClassLoader#findClass(String)}.
+	 *
+	 * @throws ClassNotFoundException
+	 */
+	protected Class<?> findClass(String className) throws ClassNotFoundException {
 
-        // Strip nested type suffixes.
-        {
-            int idx = className.lastIndexOf('.') + 1;
-            idx = className.indexOf('$', idx);
-            if (idx != -1) className = className.substring(0, idx);
-        }
 
-        return className.replace('.', '/') + ".java";
-    }
+		//TODO: it looks bad so, we switch to use HotSwapper in the javassist
 
-    public static class DiagnosticException extends RuntimeException {
+		//    	if(className.equals("com.mongodb.Mongo")){
+		//            try {
+		//                CtClass cc = pool.get(className);
+		//                // modify the CtClass object here
+		//                byte[] b = cc.toBytecode();
+		//                return defineClass(className, b, 0, b.length);
+		//            } catch (NotFoundException e) {
+		//                //throw new ClassNotFoundException();
+		//            } catch (IOException e) {
+		//                //throw new ClassNotFoundException();
+		//            } catch (CannotCompileException e) {
+		//                //throw new ClassNotFoundException();
+		//            }
+		//
+		//    	}
 
-        private static final long serialVersionUID = 5589635876875819926L;
 
-        public DiagnosticException(String message) {
-            super(message);
-        }
 
-        public DiagnosticException(Throwable cause) {
-            super(cause);
-        }
+		byte[] ba;
+		int    size;
+		try {
 
-        public DiagnosticException(Diagnostic<? extends JavaFileObject> diagnostic) {
-            super(diagnostic.toString());
-        }
-    }
-    
-	public static CodiClassLoader createClassLoader(String sourceCodeBase){
-		
+			// Maybe the bytecode is already there, because the class was compiled as a side effect of a preceding
+			// compilation.
+			JavaFileObject classFileObject = this.getJavaFileManager().getJavaFileForInput(
+					StandardLocation.CLASS_OUTPUT,
+					className,
+					Kind.CLASS
+					);
+
+			if (classFileObject == null) {
+
+				// Get the sourceFile.
+				JavaFileObject sourceFileObject = this.getJavaFileManager().getJavaFileForInput(
+						StandardLocation.SOURCE_PATH,
+						className,
+						Kind.SOURCE
+						);
+
+
+				if (sourceFileObject == null) {
+					//                   throw new DiagnosticException("Source for '" + className + "' not found");
+					throw new ClassNotFoundException("Source for '" + className + "' not found");
+
+					//return null;
+				}
+
+				// Compose the effective compiler options.
+				List<String> options = new ArrayList<String>(this.compilerOptions);
+				options.add(this.debuggingInfoLines ? (
+						this.debuggingInfoSource ? (
+								this.debuggingInfoVars
+								? "-g"
+										: "-g:lines,source"
+								) : this.debuggingInfoVars ? "-g:lines,vars" : "-g:lines"
+						) : this.debuggingInfoSource ? (
+								this.debuggingInfoVars
+								? "-g:source,vars"
+										: "-g:source"
+								) : this.debuggingInfoVars ? "-g:vars" : "-g:none");
+
+				//  this.compiler
+
+				// Run the compiler.
+				if (!this.compiler.getTask(
+						null,                                   // out
+						this.getJavaFileManager(),              // fileManager
+						new DiagnosticListener<JavaFileObject>() { // diagnosticListener
+
+							@Override
+							public void report(final Diagnostic<? extends JavaFileObject> diagnostic) {
+								if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
+									throw new DiagnosticException(diagnostic);
+								}
+							}
+						},
+						options,                                // options
+						null,                                   // classes
+						Collections.singleton(sourceFileObject) // compilationUnits
+						).call()) {
+					throw new ClassNotFoundException(className + ": Compilation failed");
+				}
+
+				classFileObject = this.getJavaFileManager().getJavaFileForInput(
+						StandardLocation.CLASS_OUTPUT,
+						className,
+						Kind.CLASS
+						);
+
+				if (classFileObject == null) {
+					throw new ClassNotFoundException(className + ": Class file not created by compilation");
+				}
+			}
+
+			if (classFileObject instanceof ByteArrayJavaFileObject) {
+				ByteArrayJavaFileObject bajfo = (ByteArrayJavaFileObject) classFileObject;
+				ba = bajfo.toByteArray();
+				size = ba.length;
+			} else
+			{
+				ba = new byte[4096];
+				size = 0;
+				InputStream is = classFileObject.openInputStream();
+				try {
+					for (;;) {
+						int res = is.read(ba, size, ba.length - size);
+						if (res == -1) break;
+						size += res;
+						if (size == ba.length) {
+							byte[] tmp = new byte[2 * size];
+							System.arraycopy(ba, 0, tmp, 0, size);
+							ba = tmp;
+						}
+					}
+				} finally {
+					is.close();
+				}
+			}
+		} catch (IOException ioe) {
+			throw new DiagnosticException(ioe);
+		}
+
+		return this.defineClass(className, ba, 0, size, (
+				this.optionalProtectionDomainFactory == null
+				? null
+						: this.optionalProtectionDomainFactory.getProtectionDomain(getSourceResourceName(className))
+				));
+	}
+
+	/**
+	 * Construct the name of a resource that could contain the source code of
+	 * the class with the given name.
+	 * <p>
+	 * Notice that member types are declared inside a different type, so the relevant source file
+	 * is that of the outermost declaring class.
+	 *
+	 * @param className Fully qualified class name, e.g. "pkg1.pkg2.Outer$Inner"
+	 * @return the name of the resource, e.g. "pkg1/pkg2/Outer.java"
+	 */
+	private static String getSourceResourceName(String className) {
+
+		// Strip nested type suffixes.
+		{
+			int idx = className.lastIndexOf('.') + 1;
+			idx = className.indexOf('$', idx);
+			if (idx != -1) className = className.substring(0, idx);
+		}
+
+		return className.replace('.', '/') + ".java";
+	}
+
+	public static class DiagnosticException extends RuntimeException {
+
+		private static final long serialVersionUID = 5589635876875819926L;
+
+		public DiagnosticException(String message) {
+			super(message);
+		}
+
+		public DiagnosticException(Throwable cause) {
+			super(cause);
+		}
+
+		public DiagnosticException(Diagnostic<? extends JavaFileObject> diagnostic) {
+			super(diagnostic.toString());
+		}
+	}
+
+	public static CodiClassLoader createClassLoader(String projectId, String tenantId, boolean useDefault){
+
 		CodiClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
-		
+
 		String sep = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ";" : ":";
-		
+
 		if( CodiMetaworksRemoteService.class.getClassLoader() instanceof URLClassLoader ){
-			
+
 			URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
 			URL urls[] = classLoader.getURLs();
 			StringBuffer sbClasspath = new StringBuffer();
@@ -587,138 +500,81 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 				String urlStr = url.getFile().toString();
 				sbClasspath.append(urlStr).append(sep);
 				//needed for javassist version of metaworks2
-//			try {
-//				ObjectType.classPool.insertClassPath(urlStr);
-//			} catch (NotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+				//			try {
+				//				ObjectType.classPool.insertClassPath(urlStr);
+				//			} catch (NotFoundException e) {
+				//				// TODO Auto-generated catch block
+				//				e.printStackTrace();
+				//			}
 				//end of needed for
 			}
-			
-			File libFileBase = new File(sourceCodeBase + "__lib");
-			if(libFileBase.exists()){
-				File[] libFiles = libFileBase.listFiles();
-				
-				for(File libFile : libFiles){
-					String absLibPath = libFile.getAbsolutePath();
-					sbClasspath.append(absLibPath).append(sep);
-					
-					//needed for javassist version of metaworks2
-//				try {
-//					ObjectType.classPool.insertClassPath(absLibPath);  //may occur some library version collision. should be separated.
-//				} catch (NotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-					//end of needed for
-				}
-			}
-			
+
 			cl.setCompilerOptions(
 					new String[]{
-//						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
 							"-classpath", sbClasspath.toString()
 					});
 		}
+		
 		//Loads user-defined library files
-		
-		
+
+
 		//ClassPool setting
-		
-		
-		
+		if(projectId == null)
+			projectId = MetadataBundle.getProjectId();
 
-
-//		if(sourceCodeBase==null)
-//			sourceCodeBase = "/Users/jyjang/javasources/";
-
-		
-		
 		List<File> sourcePath = new ArrayList<File>();
+
+		String codeBaseRoot = CodiClassLoader.getCodeBaseRoot();
+		String projectRoot = codeBaseRoot + projectId + PATH_SEPARATOR;
+		String projectDefaultPath = projectRoot + DEFAULT_NAME + PATH_SEPARATOR;
 		
-		
-		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
-		if(sourceCodeBase==null) {
-			//sourcePath.add(new File(CodiClassLoader.getCodeBaseRoot()));
-			System.out.println("============= sourceCodeBase is null ==============");
-		}else{
-			String projectKey = MetadataBundle.getProjectId();
-			if( projectKey == null ){
-				sourcePath.add(new File(sourceCodeBase));
-			}else{
-				sourcePath.add(new File(sourceCodeBase));
-				sourcePath.add(new File(CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey+ File.separatorChar + "root"));
-			}
+		// high tenant cobe base
+		if(!useDefault){
+			String projectTenantPath = projectRoot + tenantId + PATH_SEPARATOR;
+			
+			sourcePath.add(new File(projectTenantPath));
 		}
 		
-		cl.defaultSourcePath = sourcePath;
+		sourcePath.add(new File(projectDefaultPath));
+
+		cl.setCodebase(sourcePath.get(0).getAbsolutePath());
 		cl.setSourcePath(sourcePath.toArray(new File[sourcePath.size()]));
-				
+
 		return cl;
 	}  
-	
-	public void addSourcePath(String path){
-		
-		if(path != null){
-			boolean add = false;
-			List<File> sourcePath = new ArrayList<File>();
 
-			for(File file : this.defaultSourcePath){
-				sourcePath.add(file);
-			}
-
-			if(true){
-				fileManager = null;
-				
-				String[] paths;
-				
-				if(path.indexOf(",") > -1)
-					paths = path.split(",");
-				else
-					paths = new String[]{path};
-				
-				for (String addPath : paths)
-					sourcePath.add(0, new File(addPath));
-				
-				this.setSourcePath(sourcePath.toArray(new File[sourcePath.size()]));
-			}				
-		}
-	}
-	
 	public static void refreshClassLoader(String resourceName){
-		
+
 		try {
 			MetaworksRemoteService.getInstance().clearMetaworksType(resourceName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		/*
 		String sourceCodeBase = null;
-		
+
 		if(TransactionContext.getThreadLocalInstance()!=null && TransactionContext.getThreadLocalInstance().getRequest()!=null){
 			HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession();
 			if(session!=null){
 				sourceCodeBase = (String) session.getAttribute("sourceCodeBase");
 			}
 		}
-		
+
 		//TODO: looks sourceCodeBase is not required
 		CodiClassLoader cl = CodiClassLoader.createClassLoader(sourceCodeBase);
 
 		Thread.currentThread().setContextClassLoader(cl);
 		codiClassLoader = cl;
-		*/
+		 */
 	}
 
 	public static void initClassLoader(){
 		if(codiClassLoader==null)
 			refreshClassLoader(null);
-		
+
 		Thread.currentThread().setContextClassLoader(codiClassLoader);
-		
 	}
-	
+
 }

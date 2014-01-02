@@ -185,47 +185,45 @@ public class MetadataXML implements ContextAware {
 	
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode) throws Exception{
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
-		if( metadata == null ){
-			// 메타데이터 파일 생성
-			metadata = new MetadataXML();
-			metadata.setProperties(new ArrayList<MetadataProperty>());
-		}
-		metadata.setFilePath(resourceNode.getPath());
-		metadata.setProjectId(resourceNode.getProjectId());
 		
-		if( metadata.getProperties() != null ){
-			for(MetadataProperty metadataProperty : metadata.getProperties()){
-				if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
-	//				MetadataFile file = new MetadataFile();
-	//				file.setUploadedPath(metadataProperty.getValue());
-	//				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-	//				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
-	//				metadataProperty.setFile(file);
-					String projectSourcePath = CodiClassLoader.mySourceCodeBase(resourceNode.getProjectId());
-					MetadataFile file = new MetadataFile();
-					file.setBaseDir(projectSourcePath);
-					file.setUseClassLoader(true);
-					file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-					file.setUploadedPath(metadataProperty.getValue());
-					file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
-					
-					
-					MetadataFile previewFile = new MetadataFile();
-					previewFile.setBaseDir(projectSourcePath);
-					previewFile.setUseClassLoader(true);
-					previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-					previewFile.setUploadedPath(metadataProperty.getValue());
-					previewFile.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
-					
-					metadataProperty.setFile(file);
-					metadataProperty.setFilePreview(previewFile);
-				}
-				metadataProperty.setProjectId(resourceNode.getProjectId());
-				metadataProperty.selectType();
-				
-			}
-		}
-		metadata.init();
+		// TODO: 작업해야함
+		
+//		if( metadata == null ){
+//			// 메타데이터 파일 생성
+//			metadata = new MetadataXML();
+//			metadata.setProperties(new ArrayList<MetadataProperty>());
+//		}
+//		metadata.setFilePath(resourceNode.getPath());
+//		metadata.setProjectId(resourceNode.getProjectId());
+//		
+//		if( metadata.getProperties() != null ){
+//			for(MetadataProperty metadataProperty : metadata.getProperties()){
+//				if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+//					String projectSourcePath = CodiClassLoader.mySourceCodeBase(resourceNode.getProjectId());
+//					MetadataFile file = new MetadataFile();
+//					file.setBaseDir(projectSourcePath);
+//					file.setUseClassLoader(true);
+//					file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+//					file.setUploadedPath(metadataProperty.getValue());
+//					file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+//					
+//					
+//					MetadataFile previewFile = new MetadataFile();
+//					previewFile.setBaseDir(projectSourcePath);
+//					previewFile.setUseClassLoader(true);
+//					previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+//					previewFile.setUploadedPath(metadataProperty.getValue());
+//					previewFile.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+//					
+//					metadataProperty.setFile(file);
+//					metadataProperty.setFilePreview(previewFile);
+//				}
+//				metadataProperty.setProjectId(resourceNode.getProjectId());
+//				metadataProperty.selectType();
+//				
+//			}
+//		}
+//		metadata.init();
 		
 		return metadata;
 	}

@@ -226,86 +226,24 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		
 		HttpSession session = request.getSession();
+		
 		if(session!=null){
 			String tenantId = (String) session.getAttribute("tenantId");
-			String projectSourcePath = (String) session.getAttribute("projectSourcePath");
+			String projectId = (String) session.getAttribute("projectId");
+			boolean useDefault = false;
+
+			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(projectId, tenantId, useDefault);
 			
-			String sourceCodeBase;
-			if("1".equals(StartCodi.USE_MULTITENANCY)){
-				sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-			}else{
-				String projectId = MetadataBundle.getProjectId();
-				sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId,tenantId);
-			}
-			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
-			
-			/*
-			if( TenantContext.getThreadLocalInstance() != null )
-				tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-			
-			session.setAttribute("tenantId", tenantId);
-			*/
-			
-			if(projectSourcePath != null){
-				clForSession.addSourcePath(projectSourcePath);
-			}
-			
-			CodiClassLoader.codiClassLoader = clForSession;
+			//System.out.println("codebase : " + clForSession.getCodebase());
 			
 			Thread.currentThread().setContextClassLoader(clForSession);
-
-			/*
-			String tenantId = (String) session.getAttribute("tenantId");
-			if(tenantId == null || (tenantId != null && !tenantId.equals(TenantContext.getThreadLocalInstance().getTenantId()))){
-				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
-				if( TenantContext.getThreadLocalInstance() != null )
-					tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-				
-				session.setAttribute("tenantId", tenantId);
-				CodiClassLoader.codiClassLoader = clForSession;
-				
-				Thread.currentThread().setContextClassLoader(clForSession);
-			}else{
-				Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader); 
-			}
-			*/
 		}else{
-			Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
+			System.out.println("HttpSession is null");
 		}
-		
-//		HttpSession session = request.getSession();
-//		if(session!=null){
-//			boolean changeTenant = Boolean.parseBoolean((String)session.getAttribute("changeTenant"));
-//			
-//			if(changeTenant){
-//				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-//				session.setAttribute("sourceCodeBase", sourceCodeBase);
-//				
-//				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(CodiClassLoader.mySourceCodeBase());
-//				
-//				Thread.currentThread().setContextClassLoader(clForSession);
-//			}else{
-//				String sourceCodeBase = (String) session.getAttribute("sourceCodeBase");
-//				if(sourceCodeBase!=null){
-//					CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
-//					
-//					Thread.currentThread().setContextClassLoader(clForSession);				
-//				}else{
-//					Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
-//				}
-//			}
-//		}else{
-//			Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
-//		}
 
 		// TODO Auto-generated method stub
 		super.doPost(request, response);
 	}
-
-
-	
-
-	
 }

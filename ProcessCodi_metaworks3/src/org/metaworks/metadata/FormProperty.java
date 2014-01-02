@@ -1,13 +1,10 @@
 package org.metaworks.metadata;
 
-import java.io.File;
-
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 
@@ -38,16 +35,15 @@ public class FormProperty extends MetadataProperty{
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object modify() throws Exception {
 		
-		Project project = workspace.findProject(this.getProjectId());
 		
+		// TODO : 살려야함 cjw
 		ResourceNode node = new ResourceNode();
-		node.setId(this.getProjectId() + File.separatorChar + this.getValue());
+		node.setId(this.getValue());
 		node.setName(this.getValue());
-		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
+		//node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
 		node.setProjectId(this.getProjectId());
 		
 		FormEditor formEditor = new FormEditor(node);
-		formEditor.workspace = workspace;
 		formEditor.load();
 		
 		ModalWindow modalWindow = new ModalWindow(formEditor, 0, 0, "폼 편집");
@@ -62,15 +58,16 @@ public class FormProperty extends MetadataProperty{
 	@ServiceMethod(callByContent=true)
 	public void changeFile() throws Exception {
 
+		// TODO: 살려야함 cjw
+		/*
 		String path = this.getProjectId() + File.separatorChar + file.getUploadedPath();
 		
 		Project project = workspace.findProject(this.getProjectId());
 		
 		Object previewForm = Thread.currentThread().getContextClassLoader().loadClass(project.getBuildPath().makeFullClassName(path)).newInstance();
-				
 		
 		setFilePreview(previewForm);
-		
+		*/
 	}
 
 }

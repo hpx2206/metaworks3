@@ -72,7 +72,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 
 	@Override
 	public void removeDefinition(String pdvid) throws Exception {
-		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		
 		String defFileName = sourceCodeBase + "/" + pdvid;
 		
@@ -107,7 +107,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 			alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + (String) options.get("alias")  + "." + objectType;
 	
 		
-		String sourceCodeBase = CodiClassLoader.getMyClassLoader().mySourceCodeBase();
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		
 		String defFileName;
 

@@ -23,7 +23,7 @@ public class ResourceSearchBox extends SearchBox {
 		
 		ArrayList<ResourceFile> found = new ArrayList<ResourceFile>();
 		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		String resourceBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		find(resourceBase, resourceBase, found);
 	
 	

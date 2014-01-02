@@ -8,25 +8,29 @@ var org_uengine_codi_mw3_StartCodi = function(objectId, className){
 
 	if(this.object == null)
 		return true;	
-	
-	var lastVisitPage = getCookie("codi.lastVisit");
-	if(lastVisitPage) 
-		this.object.lastVisitPage = lastVisitPage;
-	
-	if(this.object.key == 'loader'){
-		var id = getCookie("codi.id");
-	
-		if(id)
-			this.object.key = 'login';
-		
-		this.object.load();
-	}else if(this.object.key == 'logout')
-		this.object.logout();
-	else if(this.object.key == 'login')
-		this.object.login();
 };
 
 org_uengine_codi_mw3_StartCodi.prototype = {
+	loaded : function(){
+		var lastVisitPage = getCookie("codi.lastVisit");
+		if(lastVisitPage){ 
+			this.object.lastVisitPage = lastVisitPage;
+			
+			var lastVisitPage = getCookie("codi.lastVisitValue");
+			
+			if(lastVisitPage)
+				this.object.lastVisitValue = lastVisitPage;	
+		}
+		
+		if(this.object.key == 'loader'){
+			this.object.load();
+		}else if(this.object.key == 'logout')
+			this.object.logout();
+		else if(this.object.key == 'login')
+			this.object.login();
+	}, 
 	startLoading : function(){
+	},
+	endLoading : function(){
 	}
 };
