@@ -1,22 +1,25 @@
 package org.uengine.codi.mw3.ide;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.admin.IDETopPanel;
-import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
+import org.uengine.codi.mw3.knowledge.IProjectNode;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.menu.MainMenuTop;
+import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
 
-public class CloudIDE {
+public class CloudIDE extends Application {
 	
 	@AutowiredFromClient
 	public Locale localeManager;
@@ -65,6 +68,28 @@ public class CloudIDE {
 		setLayout(outerLayout);		*/
 	}
 
+	public CloudIDE(Session session) throws Exception{
+		
+		IProjectNode projects = ProjectNode.load(session);
+		
+		Layout layout = new Layout();
+		layout.setCenter(projects);
+		
+		this.setLayout(layout);
+	}
+	
+	public CloudIDE(Session session, ProjectNode projectNode) throws Exception {
+		this.load(session, projectNode);
+	}
+	
+	ProjectNode project;
+		public ProjectNode getProject() {
+			return project;
+		}
+		public void setProject(ProjectNode project) {
+			this.project = project;
+		}
+
 	Layout layout;
 		public Layout getLayout() {
 			return layout;
@@ -73,14 +98,7 @@ public class CloudIDE {
 			this.layout = layout;
 		}
 		
-	Workspace workspace;
-		public Workspace getWorkspace() {
-			return workspace;
-		}
-		public void setWorkspace(Workspace workspace) {
-			this.workspace = workspace;
-		}
-
+	/*
 	ContentLibrary contentLibrary;
 		public ContentLibrary getContentLibrary() {
 			return contentLibrary;
@@ -96,7 +114,8 @@ public class CloudIDE {
 		public void setResourceLibrary(ResourceLibrary resourceLibrary) {
 			this.resourceLibrary = resourceLibrary;
 		}
-
+	*/
+		
 	String currentEditorId;
 		public String getCurrentEditorId() {
 			return currentEditorId;
@@ -105,22 +124,21 @@ public class CloudIDE {
 			this.currentEditorId = currentEditorId;
 		}
 
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
-			return pageNavigator;
-		}
-		public void setPageNavigator(PageNavigator pageNavigator) {
-			this.pageNavigator = pageNavigator;
-		}
-	
-	public void load(Session session) throws Exception{
+	public void load(Session session, ProjectNode projectNode) throws Exception{
+		
 		// make workspace
+		projectNode.setPath(CodiClassLoader.getCodeBaseRoot() + projectNode.getId() + CodiClassLoader.PATH_SEPARATOR + CodiClassLoader.DEFAULT_NAME + CodiClassLoader.PATH_SEPARATOR);
+		
+		this.setProject(projectNode);
+		
+		/*
 		Workspace workspace = new Workspace();
 		workspace.load(session);
 		this.setWorkspace(workspace);
+		*/
 		
 		Navigator navigator = new Navigator();		
-		navigator.load(workspace);
+		navigator.load(projectNode);
 
 		CloudWindow navigatorWindow = new CloudWindow("explorer");
 		navigatorWindow.getTabs().add(navigator);
@@ -160,7 +178,7 @@ public class CloudIDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(centerLayout);
-		outerLayout.setNorth(new IDETopPanel(session));
+		outerLayout.setNorth(new MainMenuTop());
 		
 		/*
 		if(false && "oce".equals(session.getUx())){
@@ -171,14 +189,14 @@ public class CloudIDE {
 		}
 		*/
 		
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:35");
 
 		this.setLayout(outerLayout);
 		
 
 	}
 	
-	public void load(Session session, String projectId){
+//	public void load(Session session, String projectId){
 		/*
 		String userId =  session.getUser().getUserId();
 		
@@ -300,15 +318,16 @@ public class CloudIDE {
 		myProject.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, myProgressMonitor);
 		 */
 
-	}
+	//}
 	
 	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.id")
 	public Editor editor;
 	
 	@ServiceMethod(payload={"currentEditorId", "workspace"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
-	public Object save() throws Exception{
-		editor.workspace = this.getWorkspace();
+	public Object[] save() throws Exception{
+		//editor.workspace = this.getWorkspace();
 		
+		/*
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		modalWindow.setWidth(300);
@@ -316,9 +335,10 @@ public class CloudIDE {
 						
 		modalWindow.setTitle("$SaveCompleteTitle");
 		modalWindow.setPanel(localeManager.getString("$SaveCompleteMessage"));
-		modalWindow.getButtons().put("$Confirm", new Refresh(editor.save()));		
+		modalWindow.getButtons().put("$Confirm", new Refresh());		
+		*/
 		
-		return modalWindow;
+		return new Object[]{ new ToAppend(new Editor(this.getCurrentEditorId()), editor.save()) };
 	}
 
 	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+W@Global", target=ServiceMethodContext.TARGET_NONE)
@@ -333,10 +353,11 @@ public class CloudIDE {
 		return new ModalWindow(openResource, 600, 450, "Open Resource");
 	}
 	
-	@ServiceMethod(payload={"currentEditorId", "workspace"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"currentEditorId", "project"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object run() throws Exception{
 		
-		editor.workspace = this.getWorkspace();
+		//editor.workspace = this.getWorkspace();
+		editor.projectNode = this.getProject();
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);

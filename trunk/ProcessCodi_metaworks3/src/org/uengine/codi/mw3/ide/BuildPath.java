@@ -46,19 +46,7 @@ public class BuildPath {
 			}
 		}
 		
-		if(packageName != null){
-			if(packageName.endsWith(".java")){
-				packageName = packageName.substring(0, packageName.length()-5);
-				
-				if(packageName.indexOf(File.separatorChar) > -1)
-					packageName = packageName.substring(0, packageName.lastIndexOf(File.separatorChar));
-				else
-					packageName = null;
-			}
-		}
 		
-		if(packageName != null)
-			packageName = packageName.replace(File.separatorChar, '.');
 		
 		return packageName;
 	}

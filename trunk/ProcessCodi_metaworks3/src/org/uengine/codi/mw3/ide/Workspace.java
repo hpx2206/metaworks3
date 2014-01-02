@@ -124,7 +124,7 @@ public class Workspace {
 	public void addTenant(){
 		
 		// 앱의 테넌트 불러오기 - codebase + projectId + tenantId
-		String codeBasePath = CodiClassLoader.mySourceCodeBase();
+		String codeBasePath = CodiClassLoader.getMyClassLoader().getCodebase();
 		CodiFileUtil.mkdirs(codeBasePath);
 		Project tenantMain = new Project();
 		tenantMain.setId(this.getId());
