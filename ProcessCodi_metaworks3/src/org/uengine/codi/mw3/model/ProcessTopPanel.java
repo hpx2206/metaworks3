@@ -19,7 +19,7 @@ public class ProcessTopPanel extends TopPanel {
 		tray = new Tray();
 		tray.session = session;
 		tray.load();
-		menuTopPanel = new MenuTopPanel(session);
+		menuTopPanel = new MenuTopPanel();
 		this.setMenuTopPanel(menuTopPanel);
 	}
 	
