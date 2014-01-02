@@ -17,18 +17,18 @@ import org.metaworks.FieldDescriptor;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.inputter.ArrayObjectInput;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.codi.mw3.webProcessDesigner.SubProcessResourceTree;
 import org.uengine.contexts.SubProcessContext;
 import org.uengine.contexts.TextContext;
 import org.uengine.util.UEngineUtil;
 
-public class SubProcessActivity extends DefaultActivity implements IDrawDesigne {
+public class SubProcessActivity extends DefaultActivity implements IDrawDesigner {
   private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
   
   protected final static String SUBPROCESS_INST_ID="instanceIdOfSubProcess"; 
@@ -65,6 +65,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 	    }
   
 	String alias;
+	@Hidden
 		public String getAlias() {
 			return alias;
 		}
@@ -73,6 +74,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 		}
 
 	String definitionId;
+	@Hidden
 	    public String getDefinitionId() {
 	      return definitionId;
 	    }
@@ -112,6 +114,21 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 
     
   int versionSelectOption = ProcessDefinition.VERSIONSELECTOPTION_CURRENT_PROD_VER;
+  @Range(
+		  options={		  
+			"Use the CURRENT production version",
+			"Use the production version AT THE INITIATED TIME",
+			"Use the production version AT THE DESIGNED TIME", 
+			"Use the version JUST SELECTED"
+		  },
+		  
+		  values={
+			""+ProcessDefinition.VERSIONSELECTOPTION_CURRENT_PROD_VER,
+			""+ProcessDefinition.VERSIONSELECTOPTION_PROD_VER_AT_INITIATED_TIME,
+			""+ProcessDefinition.VERSIONSELECTOPTION_PROD_VER_AT_DESIGNED_TIME, 
+			""+ProcessDefinition.VERSIONSELECTOPTION_JUST_SELECTED,
+		  }
+	)
     public int getVersionSelectOption() {
       return versionSelectOption;
     }
@@ -179,13 +196,13 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
       this.forEachVariable = forEachVariable;
     }
     
-  boolean viewAlsoInMainProcess;
-  	public boolean isViewAlsoInMainProcess() {
-		return viewAlsoInMainProcess;
-	}
-	public void setViewAlsoInMainProcess(boolean viewAlsoInMainProcess) {
-		this.viewAlsoInMainProcess = viewAlsoInMainProcess;
-	}
+//  boolean viewAlsoInMainProcess;
+//  	public boolean isViewAlsoInMainProcess() {
+//		return viewAlsoInMainProcess;
+//	}
+//	public void setViewAlsoInMainProcess(boolean viewAlsoInMainProcess) {
+//		this.viewAlsoInMainProcess = viewAlsoInMainProcess;
+//	}
 	  
   private Hashtable getUnInitiatedRoleMappings(ProcessInstance instance) throws Exception{
     RoleMapping mainRoleMapping = getForEachRole().getMapping(instance);
