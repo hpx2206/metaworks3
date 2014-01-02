@@ -12,8 +12,8 @@
 			<% if(mw3.how == 'minimised'){ %>
 				<span style="float:left;font-size: 14px;line-height: 23px" class="icon-download"></span>
 				<% if(showText){ %>
-					<a href="#" style="cursor: pointer; " onclick="<%=methods.download.caller()%>" title="<%=mw3.localize('$Download')%>">
-						<span style="float: left; line-height:1.8em; margin-left:10px; margin-right:10px;text-decoration: underline" id="filename_<%=objectId%>"></span>
+					<a href="#" style="cursor: pointer; float: left;" onclick="<%=methods.download.caller()%>" title="<%=mw3.localize('$Download')%>">
+						<span style=" line-height:1.8em; margin-left:10px; margin-right:10px;" id="filename_<%=objectId%>"></span>
 					</a>
 				<% } %>
 				<div class="clear"></div>
