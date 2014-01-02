@@ -279,22 +279,25 @@ public class ProjectTitle implements ContextAware {
 		serverInfo.setVmName(this.getTopicTitle());
 		serverInfo.createDatabaseMe();
 		
-		String defId = "serverStart.process";
-		ProcessMap processMap = new ProcessMap();
-		processMap.processManager = processManager;
-		processMap.session = session;
-		processMap.setDefId(defId);
 		
-		String instId = processMap.initializeProcess();
-				
-		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
-		roleMappingPanel.putRoleMappings(processManager, instId);
-//		ProcessInstance instance  = processManager.getProcessInstance(instId);
-//		processManager.getProcessInstance(instId).setBeanProperty("serverName", this.getTopicTitle());
-//		instance.setBeanProperty(targetFieldName, (Serializable)value);
-		
-		processManager.executeProcess(instId);
-		processManager.applyChanges();
+		if(false){
+			String defId = "serverStart.process";
+			ProcessMap processMap = new ProcessMap();
+			processMap.processManager = processManager;
+			processMap.session = session;
+			processMap.setDefId(defId);
+			
+			String instId = processMap.initializeProcess();
+					
+			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+			roleMappingPanel.putRoleMappings(processManager, instId);
+	//		ProcessInstance instance  = processManager.getProcessInstance(instId);
+	//		processManager.getProcessInstance(instId).setBeanProperty("serverName", this.getTopicTitle());
+	//		instance.setBeanProperty(targetFieldName, (Serializable)value);
+			
+			processManager.executeProcess(instId);
+			processManager.applyChanges();
+		}
 		
 		Object[] returnObj = projectNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 3];
