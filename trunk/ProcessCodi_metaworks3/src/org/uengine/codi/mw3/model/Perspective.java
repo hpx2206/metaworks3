@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -65,7 +66,7 @@ public class Perspective {
 		this.setLoader(true);
 	}
 	
-	@ServiceMethod(callByContent = true, payload = { "selected" })
+	@ServiceMethod(payload = { "selected" })
 	public Object[] select() throws Exception {
 		setLoader(false);
 		setSelected(!isSelected()); // toggle
@@ -78,7 +79,11 @@ public class Perspective {
 		return new Object[] { this };
 	}
 
-
+	@ServiceMethod(payload = { "selected" }, eventBinding=EventContext.EVENT_CHANGE)
+	public void refresh() throws Exception {
+		this.loadChildren();
+	}
+	
 	protected void loadChildren() throws Exception {
 		// TODO Override and load children when perspective selected
 	}
@@ -223,7 +228,9 @@ public class Perspective {
 		instListPanel.session = session;
 		instListPanel.setInstanceList(instList);
 
-		if("oce_app".equals(perspectiveType)){
+		
+		// TODO: 작업해야함
+		if(false){
 			NewInstancePanel newInstancePanel =  new NewInstancePanel();
 			newInstancePanel.session = session;
 			newInstancePanel.load(session);

@@ -8,7 +8,6 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class SNS extends Application{
 
 	public SNS(){

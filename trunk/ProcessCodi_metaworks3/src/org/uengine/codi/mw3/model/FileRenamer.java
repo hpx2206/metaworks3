@@ -61,7 +61,7 @@ public class FileRenamer implements ContextAware{
 	@ServiceMethod(callByContent=true)
 	public Object[] rename() throws FileNotFoundException, IOException, Exception{
 		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		String resourceBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		
 		String oldFileName = UEngineUtil.getFileName(file.getAlias());
 		String parentFolderName = UEngineUtil.getFilePath(file.getAlias());

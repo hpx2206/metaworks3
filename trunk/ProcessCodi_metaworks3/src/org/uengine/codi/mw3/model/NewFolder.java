@@ -79,7 +79,7 @@ public class NewFolder implements ContextAware{
 		*/
 		
 		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
+		String resourceBase = CodiClassLoader.getMyClassLoader().getCodebase() + "/";
 
 		
 		File file = new File(resourceBase + "/" + getParentFolderDefId() + "/" + getFolderName());

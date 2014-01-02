@@ -20,17 +20,17 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(
-		ejsPathMappingByContext=
-	{
-		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
-		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
-		"{where: 'oce_app', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}",
-		"{where: 'oce_project', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}"
-		
-	}		
-
-)
+//@Face(
+//		ejsPathMappingByContext=
+//	{
+//		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
+//		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
+//		"{where: 'oce_app', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}",
+//		"{where: 'oce_project', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}"
+//		
+//	}		
+//
+//)
 public class InstanceListPanel implements ContextAware{
 	
 	@AutowiredFromClient
