@@ -12,6 +12,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(options={"hideEditBtn"}, values={"true"},
@@ -29,6 +30,14 @@ public class Form implements ContextAware {
 		}	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
+		}
+
+	String projectId;
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
 		}
 
 	String id;
@@ -84,7 +93,6 @@ public class Form implements ContextAware {
 	}
 	
 	public void load() {
-		this.init();
 		try {
 			this.formLoad();
 		}catch(Exception ex) {
@@ -159,8 +167,15 @@ public class Form implements ContextAware {
 		
 		String alias = this.getFullClassName();
 		
+		ClassLoader prerCl = Thread.currentThread().getContextClassLoader();
+		CodiClassLoader cl = CodiClassLoader.createClassLoader(this.getProjectId(), null, true);
+		
+		Thread.currentThread().setContextClassLoader(cl);
+		
 		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(alias);
-
+		
+		Thread.currentThread().setContextClassLoader(prerCl);
+		
 		this.setName(wot.getDisplayName());
 		
 		for(int i=0; i < wot.getFieldDescriptors().length; i++){

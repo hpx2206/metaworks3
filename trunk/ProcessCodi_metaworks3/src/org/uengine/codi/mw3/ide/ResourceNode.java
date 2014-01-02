@@ -16,6 +16,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
@@ -113,23 +114,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		this.setPath(project.getPath());
 		this.setProjectId(project.getId());
 
-		setMetaworksContext(new MetaworksContext());
-	}
-
-	public ResourceNode(ProjectNode projectNode){
-		this.setId(projectNode.getId());
-		this.setName(projectNode.getName());
-		this.setType(TYPE_PROJECT);
-		this.setFolder(true);
-		this.setPath(projectNode.getPath());
-		this.setProjectId(projectNode.getId());
-
-		
-		File project = new File(this.getPath());
-		if(!project.exists()){
-			System.out.println("not exists project codebase :" + project.getAbsolutePath());
+		File file = new File(this.getPath());
+		if(!file.exists()){
+			System.out.println("not exists project codebase :" +file.getAbsolutePath());
 			
-			project.mkdirs();
+			file.mkdirs();
 			
 			System.out.println("mkdirs");
 		}
@@ -253,22 +242,15 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			this.setType(type);
 
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-				editor = new JavaCodeEditor(this);
-				editor.load();
+				if("UI".equals(this.getMetaworksContext().getWhen())){
+					editor = new FormEditor(this);
+				}else{
+					editor = new JavaCodeEditor(this);
+				}
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 				editor = new ProcessEditor(this);
-				try {
-					editor.load();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}else if(type.equals(TreeNode.TYPE_FILE_VALUECHAIN)){
 				editor = new ValueChainEditor(this);
-				try {
-					editor.load();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
 				editor = new MetadataEditor(this);
 				try {
@@ -280,6 +262,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				editor = new Editor(this);
 			}
 		}
+		
+		editor.load();
 
 		return editor;
 	}
@@ -416,22 +400,31 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			if(packageName.endsWith(".java")){
 				packageName = packageName.substring(0, packageName.length()-5);
 				
-				if(packageName.indexOf(File.separatorChar) > -1)
-					packageName = packageName.substring(0, packageName.lastIndexOf(File.separatorChar));
-				else
-					packageName = null;
 			}
+			
+			if(packageName.indexOf(File.separatorChar) > -1)
+				packageName = packageName.substring(packageName.indexOf(File.separatorChar)+1);
+			else
+				packageName = null;
+
 		}
+
+		if(packageName != null){
+			if(packageName.indexOf(File.separatorChar) > -1)
+				packageName = packageName.substring(packageName.lastIndexOf(File.separatorChar));
+			else
+				packageName = null;
+		}
+
 		
 		if(packageName != null)
 			packageName = packageName.replace(File.separatorChar, '.');		
 		
+		
 		return packageName;
 	}
 	
-	public static String makeClassName(String path){
-		String className = null;
-		
+	public static String makeClassName(String className){
 		if(className != null){
 			if(className.endsWith(".java"))
 				className = className.substring(0, className.length()-5);

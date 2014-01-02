@@ -82,11 +82,11 @@ public class CloudIDE extends Application {
 		this.load(session, projectNode);
 	}
 	
-	ProjectNode project;
-		public ProjectNode getProject() {
+	Project project;
+		public Project getProject() {
 			return project;
 		}
-		public void setProject(ProjectNode project) {
+		public void setProject(Project project) {
 			this.project = project;
 		}
 
@@ -129,7 +129,11 @@ public class CloudIDE extends Application {
 		// make workspace
 		projectNode.setPath(CodiClassLoader.getCodeBaseRoot() + projectNode.getId() + CodiClassLoader.PATH_SEPARATOR + CodiClassLoader.DEFAULT_NAME + CodiClassLoader.PATH_SEPARATOR);
 		
-		this.setProject(projectNode);
+		Project project = new Project();
+		project.setId(projectNode.getId());
+		project.setName(projectNode.getName());
+		project.setPath(projectNode.getPath());
+		this.setProject(project);
 		
 		/*
 		Workspace workspace = new Workspace();
@@ -138,7 +142,7 @@ public class CloudIDE extends Application {
 		*/
 		
 		Navigator navigator = new Navigator();		
-		navigator.load(projectNode);
+		navigator.load(project);
 
 		CloudWindow navigatorWindow = new CloudWindow("explorer");
 		navigatorWindow.getTabs().add(navigator);
@@ -355,9 +359,6 @@ public class CloudIDE extends Application {
 	
 	@ServiceMethod(payload={"currentEditorId", "project"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object run() throws Exception{
-		
-		//editor.workspace = this.getWorkspace();
-		editor.projectNode = this.getProject();
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);

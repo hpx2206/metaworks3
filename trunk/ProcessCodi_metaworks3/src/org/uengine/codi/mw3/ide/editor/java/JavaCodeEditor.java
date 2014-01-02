@@ -1178,7 +1178,7 @@ public class JavaCodeEditor extends Editor {
 			e.printStackTrace();
 		}
 		
-		return new IFrame(url.toString() + "/index.html?type=runner&projectId=" + this.projectNode.getId() + "&className=" + fullClassName);
+		return new IFrame(url.toString() + "/index.html?type=runner&projectId=" + this.getResourceNode().getProjectId() + "&className=" + fullClassName);
 	}
 
 	public ArrayList<JavaCodeError> complie(){
