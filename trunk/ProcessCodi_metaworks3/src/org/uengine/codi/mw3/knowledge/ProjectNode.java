@@ -11,18 +11,17 @@ import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.Main;
-import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.oce.dashboard.DashboardPanel;
-import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.oce.dashboard.MyProjectPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -38,7 +37,15 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		public void setProjectAlias(String projectAlias) {
 			this.projectAlias = projectAlias;
 		}
-
+		
+	String path;
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
+		
 	public ProjectNode(){
 		this.setType(TYPE_PROJECT);
 	}
@@ -90,17 +97,10 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
 		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_CONTACT_COUNT));
 		
-		String tenantId;
-		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-		}else{
-			tenantId = session.getCompany().getComCode();
-		}
-		
 		IProjectNode dao = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IProjectNode.class); 
 		dao.set("type", TYPE_PROJECT);
 		dao.set("userid", session.getEmployee().getEmpCode());
-		dao.set("companyId", tenantId);
+		dao.set("companyId", session.getCompany().getComCode());
 		dao.select();
 
 		return dao;
@@ -193,6 +193,12 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		}
 		
 		return new Object[]{new Remover(this)};
+	}
+
+	public Object[] goIDE() throws Exception{
+		CloudIDE ide = new CloudIDE(session, this);
+		
+		return new Object[]{ ide };
 	}
 	
 	@Autowired
