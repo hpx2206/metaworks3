@@ -1,4 +1,3 @@
-
 var org_metaworks_ToAppend = function(objectId, className){
 	
 	var object = mw3.objects[objectId];
