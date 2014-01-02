@@ -28,6 +28,12 @@ org_uengine_codi_mw3_model_InstanceList.prototype = {
 		
 	},
 	toPrepend : function(target){
+		if($('#' + mw3._getObjectDivId(this.objectId)).length == 0){
+			if(console)
+				console.log('not exist org.uengine.codi.mw3.model.InstanceList : ' + this.objectId); 
+			return false;
+		}
+		
 		if(target.__className == 'org.uengine.codi.mw3.model.Instance' || target.__className == 'org.uengine.codi.mw3.model.IInstance'){
 			var isAuth = false;
 
@@ -66,7 +72,7 @@ org_uengine_codi_mw3_model_InstanceList.prototype = {
 				
 			}
 			
-			if(isAuth){
+			if(isAuth){				
 				var html = mw3.locateObject(target, null);
 				
 				$('<div>').prependTo(this.divObj).append(html);

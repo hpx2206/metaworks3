@@ -12,53 +12,10 @@ if(value){
                 	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 150px; height: 150px; line-height: 150px;border:1px solid #ccc; background:url(images/waveStyle/bg_thmb.gif) center no-repeat;'}})%>
                 </div>
 
-
-                <div class="mp_sub_rightBox">
-                	<dl class="mp_sub_dsc1">
-                    	<dt style="font-size:16px;"><%=fields.name.here()%></dt>
-                    	
-                    	           
-                        
-                    </dl>                    
-                </div>
                 <div class="clear"></div>
-                <div id="searchbox" style="border-bottom:1px solid #9EBFC4;">
-	                <div class="positionRight" style="padding:5px 0">
-	                
-	                
-
-<%				
-				if(!mw3.isHiddenMethod(methods.subscribe)){
-%>					                
-	                <a id="wBtn" href="#" onClick="<%=methods.subscribe.caller()%>"><span><%=mw3.localize("$Topic.Subscribe")%></span></a>
-<%				
-				}
-%>					                
-	                
-	                
-	                
-<%
-				if(!mw3.isHiddenMethod(methods.unSubscribe)){
-
-%>
-				<a id="wBtn" href="#" onClick="<%=methods.unSubscribe.caller()%>"><span><%=mw3.localize("$Topic.UnSubscribe")%></span></a>	
-<%
-				}
-
-%>			
-						<%=methods.modify.here()%>
-						<%=methods.delete.here()%>
-						
-							
-						<div class="clear"></div>
-					</div>
-				</div>
-				<div class="clear"></div>
-            </li>
+          </li>
         </ul>
     </div>	
-
-
 <%
 }
 %>
