@@ -6,12 +6,11 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
-import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.libraries.RolePerspective;
 import org.uengine.codi.mw3.ide.libraries.SearchResultPanel;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.model.SearchBox;
 
 public class Navigator {
@@ -77,37 +76,34 @@ public class Navigator {
 		this.searchBox = new SearchBox();
 	}
 	
-	public void load(Workspace workspace){
-		ResourceNode workspaceNode = new ResourceNode();
-		workspaceNode.setId(workspace.getId());
-		workspaceNode.setRoot(true);
-		workspaceNode.setHidden(true);
-		
-		for(Project project : workspace.getProjects())
-			workspaceNode.add(new ResourceNode(project));
-		
+	public void load(ProjectNode project){
+
+		ResourceNode projectNode = new ResourceNode(project);
+
 		ResourceTree resourceTree = new ResourceTree();
-		resourceTree.setId(workspace.getId());
-		resourceTree.setNode(workspaceNode);
-		
+		resourceTree.setId(projectNode.getId());
+		resourceTree.setNode(projectNode);
+
 		this.setResourceTree(resourceTree);
+
 	}
 	
 	
 	public void load(String sourceCodeBase, String projectName){
+
 		ResourceNode projectNode = new ResourceNode();
 		projectNode.setRoot(true);
 		projectNode.setFolder(true);
 		projectNode.setType(ResourceNode.TYPE_FOLDER);
 		projectNode.setId("");
 		projectNode.setName(projectName);
-		
+
 		ResourceTree resourceTree = new ResourceTree();
 		resourceTree.setId(sourceCodeBase);
 		resourceTree.setNode(projectNode);
 
 		this.setResourceTree(resourceTree);		
-		
+
 	}
 	
 	@ServiceMethod(keyBinding="enter", target=ServiceMethodContext.TARGET_POPUP)
