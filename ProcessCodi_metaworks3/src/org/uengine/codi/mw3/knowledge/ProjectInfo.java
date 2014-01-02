@@ -471,6 +471,8 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	@Face(displayName = "$metadata")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public ModalWindow metadata() throws Exception {
+		
+		// TODO: 작업해야함
 		ModalWindow modalWindow = new ModalWindow();
 		String tenantId = "root";
 //		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
@@ -485,7 +487,6 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		main.setId(projectName);
 		main.setPath(mainPath);
 		main.load();
-		main.changeProject(tenantId);
 
 		// 아래에서 this 는 위에 project 값
 
