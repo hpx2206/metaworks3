@@ -43,25 +43,28 @@ public class ProcessProperty extends MetadataProperty{
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object modify() throws Exception {
 		
-		Project project = workspace.findProject(this.getProjectId());
-
-		ProcessNode node = new ProcessNode();
-		node.setId(this.getProjectId() + File.separatorChar + this.getValue());
-		node.setName(this.getValue());
-		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
-		node.setProjectId(this.getProjectId());
-
-		ProcessEditor processEditor = new ProcessEditor(node);
-		processEditor.setUseClassLoader(true);
-		processEditor.load();
+		// TODO : 살려야함 cjw
+//		Project project = workspace.findProject(this.getProjectId());
+//
+//		ProcessNode node = new ProcessNode();
+//		node.setId(this.getProjectId() + File.separatorChar + this.getValue());
+//		node.setName(this.getValue());
+//		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
+//		node.setProjectId(this.getProjectId());
+//
+//		ProcessEditor processEditor = new ProcessEditor(node);
+//		processEditor.setUseClassLoader(true);
+//		processEditor.load();
+//		
+//		ModalWindow modalWindow = new ModalWindow(processEditor, 0, 0, "$metadata.process.edit");
+//		
+//		modalWindow.getButtons().put("$Save", "save");
+//		modalWindow.getButtons().put("$Cancel", null);
+//		modalWindow.getCallback().put("$Save", "changeFile");
+//		
+//		return modalWindow;
 		
-		ModalWindow modalWindow = new ModalWindow(processEditor, 0, 0, "$metadata.process.edit");
-		
-		modalWindow.getButtons().put("$Save", "save");
-		modalWindow.getButtons().put("$Cancel", null);
-		modalWindow.getCallback().put("$Save", "changeFile");
-		
-		return modalWindow;
+		return null;
 	}		
 	
 	@ServiceMethod(callByContent=true, bindingHidden=true, bindingFor="file", eventBinding={"uploaded"})

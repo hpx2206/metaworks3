@@ -39,12 +39,18 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.ide.CloudIDE;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.marketplace.Marketplace;
+import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.ProcessTopPanel;
+import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
@@ -130,6 +136,15 @@ public class Login implements ContextAware {
 		public void setLastVisitPage(String lastVisitPage) {
 			this.lastVisitPage = lastVisitPage;
 		}
+		
+	String lastVisitValue;
+		public String getLastVisitValue() {
+			return lastVisitValue;
+		}
+		public void setLastVisitValue(String lastVisitValue) {
+			this.lastVisitValue = lastVisitValue;
+		}
+
 	@AutowiredFromClient
 	public Locale localeManager;
 	
@@ -756,31 +771,38 @@ public class Login implements ContextAware {
         
 		MainPanel mainPanel;
 		
-		PageNavigator pageNavigator = new PageNavigator();
-		pageNavigator.session = session;
+		//PageNavigator pageNavigator = new PageNavigator();
+		//pageNavigator.session = session;
 		
+		
+		/*
 		if("1".equals(StartCodi.USE_OCE)){
-				mainPanel =  pageNavigator.goDashBoard();
+			mainPanel =  pageNavigator.goDashBoard();
 		}else{
-			if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
-				mainPanel = pageNavigator.goKnowledge();
-			}else if("pinterest".equals(lastVisitPage)){
-				mainPanel = pageNavigator.goPinterest();
-			}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
-				mainPanel = pageNavigator.goIDE();
-			}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
-				mainPanel = pageNavigator.goMarketplace();
-			}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "1"))){
-				mainPanel = pageNavigator.goSelfServicePortal();
-			}else{
-				String preferUX = session.getEmployee().getPreferUX();
-				if("sns".equals(preferUX) || "".equals(preferUX)){
-					mainPanel = pageNavigator.goSns();
-				}else{
-					mainPanel = pageNavigator.goProcess();
-				}
-			}
+			mainPanel = pageNavigator.goProcess();
 		}
+		*/
+		
+		Application app = null;
+		
+		if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
+			System.out.println("======================");
+			System.out.println(this.getLastVisitValue());
+			if(this.getLastVisitValue() != null){
+				ProjectNode project = new ProjectNode();
+				project.setId(this.getLastVisitValue());
+				project.copyFrom(project.databaseMe());
+				
+				app = new CloudIDE(session, project);
+			}else
+				app = new CloudIDE(session);
+		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
+			app = new Marketplace();
+		}else{
+			app = new SNS(session);
+		}
+		
+		mainPanel = new MainPanel(new ProcessTopPanel(session), app);
 		
 		Locale locale = new Locale();
 		locale.setLanguage(session.getEmployee().getLocale());

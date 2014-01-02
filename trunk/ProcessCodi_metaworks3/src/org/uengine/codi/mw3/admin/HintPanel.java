@@ -2,9 +2,6 @@ package org.uengine.codi.mw3.admin;
 
 import org.uengine.codi.mw3.common.FacebookComments;
 import org.uengine.codi.mw3.knowledge.WfPanel;
-import org.uengine.codi.mw3.knowledge.Workflowy;
-import org.uengine.codi.mw3.knowledge.WorkflowyPanel;
-import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
 
 public class HintPanel {

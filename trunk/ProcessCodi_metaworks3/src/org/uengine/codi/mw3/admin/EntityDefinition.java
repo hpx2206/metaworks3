@@ -515,7 +515,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		setAlias(getParentFolder() + "/" + getEntityName() + ".sql");
 
 		/// generate source file
-		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		File sourceCodeFile = new File(sourceCodeBase + "/" + getAlias());
 		sourceCodeFile.getParentFile().mkdirs();
 		//

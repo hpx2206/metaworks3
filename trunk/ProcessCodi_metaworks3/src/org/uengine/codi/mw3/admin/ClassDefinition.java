@@ -470,7 +470,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
         CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
-		String myWorkingCopyPath = ((CodiClassLoader)contextClassLoader).mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+		String myWorkingCopyPath = ((CodiClassLoader)contextClassLoader).getCodebase();//"/Users/jyjang/MyWorkingCopy";
 		
         if(myWorkingCopyPath==null)
         	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 먼저 페이스북 로그인을 하신후 체크아웃(checkout)을 받으셔야 합니다.");
@@ -486,7 +486,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 		
 		/// generate source file
-		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().getCodebase();
 		File sourceCodeFile = new File(sourceCodeBase + "/" + getAlias());
 		sourceCodeFile.getParentFile().mkdirs();
 		//sourceCodeFile.createNewFile();
@@ -669,7 +669,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 		
 		/// read source file
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias().substring(0, getAlias().indexOf(".")) + ".java");
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().getCodebase() + "/" + getAlias().substring(0, getAlias().indexOf(".")) + ".java");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
@@ -687,7 +687,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		//if there is face code, read it.
-		String faceSource = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias();
+		String faceSource = CodiClassLoader.getMyClassLoader().getCodebase() + "/" + getAlias();
 		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
 		
 		File ejsFile = new File(faceSource);
@@ -708,7 +708,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}else{getSourceCodes().getFace().setCode("");}
 		
 		//if there is facehelper code, read it.
-		String faceHelperSource = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias();
+		String faceHelperSource = CodiClassLoader.getMyClassLoader().getCodebase() + "/" + getAlias();
 		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
 		
 		File ejsJsFile = new File(faceHelperSource);

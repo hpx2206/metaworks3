@@ -6,7 +6,6 @@ import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.common.MainPanel;
-import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
@@ -86,6 +85,8 @@ public class OcePageNavigator extends PageNavigator {
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
 		
+		// TODO: 이 클래스 없애야함 cjw
+		/*
 		session.setUx("oce");
 		
 		CloudIDE cloudIDE = new CloudIDE();
@@ -93,6 +94,10 @@ public class OcePageNavigator extends PageNavigator {
 		cloudIDE.load(session);
 			
 		return new MainPanel(cloudIDE);
+		*/
+		
+		return null;
+		
 //		return new MainPanel(new IDE(session));
 	}
 	
@@ -164,7 +169,6 @@ public class OcePageNavigator extends PageNavigator {
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
-		marketplace.setPageNavigator(new OcePageNavigator());
 		marketplace.load();
 		
 		return new MainPanel(marketplace);

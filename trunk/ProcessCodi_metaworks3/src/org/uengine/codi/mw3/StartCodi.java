@@ -6,14 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
-import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
-import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
@@ -51,6 +49,16 @@ public class StartCodi {
 		public void setLastVisitPage(String lastVisitPage) {
 			this.lastVisitPage = lastVisitPage;
 		}	
+		
+	String lastVisitValue;
+		@Hidden
+		public String getLastVisitValue() {
+			return lastVisitValue;
+		}
+		public void setLastVisitValue(String lastVisitValue) {
+			this.lastVisitValue = lastVisitValue;
+		}
+		
 	public StartCodi(){
 		this(null);
 	}
@@ -64,20 +72,31 @@ public class StartCodi {
 		this.setKey(key);
 	}
 	
-	@ServiceMethod(payload={"key","lastVisitPage"}, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"key","lastVisitPage", "lastVisitValue"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object load() throws Exception{
-		
+
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
 		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
 
 		if(loggedUserId != null)
-			return login();
+			return login();			
+
 		
-		String comAlias = TenantContext.getThreadLocalInstance().getTenantId();
-		
-		//String comCode = null;
-		
-		if(!"login".equals(this.getKey())){
+		if("login".equals(this.getKey())){
+			
+			Login login = new Login();
+			login.setMetaworksContext(new MetaworksContext());
+			login.getMetaworksContext().setHow("login");
+			login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			
+			return login;
+			
+		}else{
+			return new Refresh(new SignUp(), false, true);
+			
+			/*
+			String comAlias = TenantContext.getThreadLocalInstance().getTenantId();
+			
 			if(comAlias == null){
 				return new SignUp();
 			}
@@ -93,6 +112,7 @@ public class StartCodi {
 				return new Login();
 			}else
 				return new Login();
+			*/
 		}
 		
 		/*
@@ -115,17 +135,10 @@ public class StartCodi {
 		}
 		*/
 		
-		Login login = new Login();
-		login.setMetaworksContext(new MetaworksContext());
-		login.getMetaworksContext().setHow("login");
-		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-		return login;
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] login() throws Exception {
-		
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
 		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
 
@@ -138,6 +151,7 @@ public class StartCodi {
 		
 		Login login = new Login();
 		login.lastVisitPage = this.getLastVisitPage();
+		login.lastVisitValue = this.getLastVisitValue();
 		
 		return login.login(session);
 	}

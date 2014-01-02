@@ -19,7 +19,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	
 	if(this.object == null)
 		return true;	
-	
 
 	var lastVisitPage = getCookie("codi.lastVisit");
 	if(lastVisitPage) 
@@ -65,16 +64,15 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	if(input_rememberMe)
 		input_rememberMe.checked = true;
 
-	mw3.getInputElement(this.objectId, 'email').focus();
- 
+	
+	mw3.getInputElement(objectId, "email").focus();
+ 	
 	$('#' + this.divId).bind('keydown', function(event){
 		mw3.getFaceHelper(objectId).keydown(event);
 	});			
-};
-
-org_uengine_codi_mw3_Login.prototype = {
-	loaded : function(){
-		var login = mw3.getObjectFromUI(this.objectId);
+	
+	
+	var login = mw3.getObjectFromUI(this.objectId);
 		var facebookSSO = getCookie("codi.facebookSSO");
 		
 		if(login.email && login.password && login.rememberMe){
@@ -115,10 +113,15 @@ org_uengine_codi_mw3_Login.prototype = {
 				};
 			}
 		}
+};
+
+org_uengine_codi_mw3_Login.prototype = {
+	loaded : function(){
+		
 	},
 	keydown : function(e){
 		if(e.keyCode == 13){
-			window.event.returnValue = false;
+			e.returnValue = false;
 			if( this.object && this.object.status == 'forgotpassword'){
 				mw3.call(this.objectId, 'forgotPassword');
 			}else if(this.object && this.object.status == 'signup'){

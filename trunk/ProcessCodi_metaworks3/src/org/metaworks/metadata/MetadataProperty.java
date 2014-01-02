@@ -868,10 +868,11 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			 */
 
 
-			Object previewForm = Thread.currentThread().getContextClassLoader().loadClass(project.getBuildPath().makeFullClassName(path)).newInstance();
+			// TODO : 살려야함
+			//Object previewForm = Thread.currentThread().getContextClassLoader().loadClass(project.getBuildPath().makeFullClassName(path)).newInstance();
 
 			detailProperty.setFile(file);
-			detailProperty.setFilePreview(previewForm);
+			//detailProperty.setFilePreview(previewForm);
 
 			//detailProperty.setResourceNode(resourceNode);
 			//detailProperty.metadataXML = metadataXML;
