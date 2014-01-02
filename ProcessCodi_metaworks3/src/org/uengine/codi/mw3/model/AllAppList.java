@@ -2,12 +2,13 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
-import org.metaworks.annotation.Hidden;
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
@@ -15,13 +16,8 @@ import org.uengine.codi.mw3.marketplace.Marketplace;
 
 public class AllAppList {
 
-	Session session;
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
-		}
+	@AutowiredFromClient
+	public Session session;
 
 	ArrayList<AppMapping> myAppsList;
 		public ArrayList<AppMapping> getMyAppsList() {
@@ -40,6 +36,7 @@ public class AllAppList {
 		myapps.setComCode(session.getCompany().getComCode());
 		myapps.setIsDeleted(false);
 		myapps.session = session;
+		
 		//전체 리스트 나오게
 		IAppMapping getAppsList = myapps.findMyApps(0);
 		
@@ -60,25 +57,29 @@ public class AllAppList {
 			
 		}
 	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object[] goIDE() throws Exception {
-		CloudIDE cloudIDE = new CloudIDE();
-		cloudIDE.setPageNavigator(new PageNavigator());
-		cloudIDE.load(session);
-			
-		return new Object[]{new MainPanel(cloudIDE), new Remover(new Popup(), true)};
+
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] goSNS() throws Exception {
+		SNS sns = new SNS(session);
+		
+		return new Object[]{new Refresh(sns), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
-	@Hidden
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] goIDE() throws Exception {
+		
+		CloudIDE cloudIDE = new CloudIDE(session);
+		
+		return new Object[]{new Refresh(cloudIDE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] goAppStore() throws Exception {
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
-		marketplace.setPageNavigator(new PageNavigator());
 		marketplace.load();
 		
-		return new Object[]{new MainPanel(marketplace), new Remover(new Popup(), true)};
+		return new Object[]{new Refresh(marketplace), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 }

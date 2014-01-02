@@ -1,18 +1,15 @@
 package org.uengine.codi.mw3.marketplace;
 
-
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
-import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
-public class Marketplace {
+public class Marketplace extends Application {
 	
 	@AutowiredFromClient
 	public Session session;
@@ -25,21 +22,12 @@ public class Marketplace {
 			this.layout = layout;
 		}
 		
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
-			return pageNavigator;
-		}
-		public void setPageNavigator(PageNavigator pageNavigator) {
-			this.pageNavigator = pageNavigator;
-		}		
-
-		
 	@ServiceMethod
 	public void load() throws Exception {
 		
 		//top
 //		MarketplaceTopPanel top = new MarketplaceTopPanel(session);
-		ProcessTopPanel top = new ProcessTopPanel(session);
+		//ProcessTopPanel top = new ProcessTopPanel(session);
 
 
 		//center
@@ -97,7 +85,6 @@ public class Marketplace {
 		
 		Layout mainLayout = new Layout();
 		mainLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
-		mainLayout.setNorth(top);
 		mainLayout.setCenter(marketPlaceLayout);
 		
 		this.setLayout(mainLayout);
