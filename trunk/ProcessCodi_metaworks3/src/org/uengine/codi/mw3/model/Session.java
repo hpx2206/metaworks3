@@ -268,6 +268,8 @@ public class Session implements ContextAware{
 	public void fillUserInfoToHttpSession(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		httpSession.setAttribute("loggedUserId", getEmployee().getEmpCode());
+		httpSession.setAttribute("tenantId", getEmployee().getGlobalCom());
+		httpSession.setAttribute("projectId", null);
 		
 		/*
 		httpSession.setAttribute("loggedUserPw", session.getEmployee().getPassword());

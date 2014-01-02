@@ -181,13 +181,8 @@ public class ResourceFile implements ContextAware{
 //		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
 		String resourceBase;
 		
-		if("1".equals(StartCodi.USE_MULTITENANCY)){
-			resourceBase = CodiClassLoader.mySourceCodeBase();
-		}else{
-			String tenantId = session.getCompany().getComCode();
-			String projectId = MetadataBundle.getProjectId();
-			resourceBase = CodiClassLoader.mySourceCodeBase(projectId,tenantId);
-		}
+		resourceBase = CodiClassLoader.getMyClassLoader().getCodebase();
+		
 		// TODO workspace.getProjects().get(0) 이 부분을  loop 를 돌려서 프로젝트까지 보이도록 해야함
 		File file = new File(resourceBase + getAlias());
 		
@@ -273,7 +268,7 @@ public class ResourceFile implements ContextAware{
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, needToConfirm=true)
 	public Object delete() throws Exception {
 		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
+		String resourceBase = CodiClassLoader.getMyClassLoader().getCodebase() + "/";
 		
 		File file = new File(resourceBase + getAlias());
 		
@@ -312,7 +307,7 @@ public class ResourceFile implements ContextAware{
 	         //out.setMethod(ZipOutputStream.DEFLATED);
 	         byte data[] = new byte[BUFFER];
 	         // get a list of files from current directory
-	 		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
+	 		String resourceBase = CodiClassLoader.getMyClassLoader().getCodebase() + "/";
 			
 			File root = new File(resourceBase + getAlias());
 
@@ -386,7 +381,7 @@ public class ResourceFile implements ContextAware{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceFile && isFolder()){
 			ResourceFile fileInClipboard = (ResourceFile) clipboard;
-			String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+			String resourceBase = CodiClassLoader.getMyClassLoader().getCodebase();
 
 			new File(resourceBase + fileInClipboard.getAlias()).renameTo(
 					new File(resourceBase + getAlias() + "/" + fileInClipboard.getName())
