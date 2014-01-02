@@ -87,6 +87,7 @@ public class Documentation implements Serializable , ContextAware{
 		public void setRegulation(String regulation) {
 			this.regulation = regulation;
 		}
+		
 	String title;
 	@Face(displayName="$Subject")
 		public String getTitle() {
