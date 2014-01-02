@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor.java;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.example.ide.CodeAssist;
-import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.admin.JavaCodeAssist;
 import org.uengine.codi.mw3.ide.CompilationChecker;
@@ -1157,7 +1158,27 @@ public class JavaCodeEditor extends Editor {
 
 		fullClassName += className;
 
-		return new IFrame("http://localhost:7070/uengine-web/index.html?type=runner&projectId=" + this.projectNode.getId() + "&className=" + fullClassName);
+		StringBuffer url = new StringBuffer();
+		
+		try {
+			String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
+			String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
+			
+			URL urlURL = new java.net.URL(base);
+			String host = urlURL.getHost();
+			int port = urlURL.getPort();
+			String protocol = urlURL.getProtocol();
+			
+			url.append(protocol + "://");
+			url.append(host);
+			url.append((port == 80 ? "" : ":"+port));
+			url.append(TransactionContext.getThreadLocalInstance().getRequest().getContextPath());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new IFrame(url.toString() + "/index.html?type=runner&projectId=" + this.projectNode.getId() + "&className=" + fullClassName);
 	}
 
 	public ArrayList<JavaCodeError> complie(){
