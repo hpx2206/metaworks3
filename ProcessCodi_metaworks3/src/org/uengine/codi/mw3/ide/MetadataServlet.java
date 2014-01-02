@@ -101,7 +101,7 @@ public class MetadataServlet extends HttpServlet {
 					projectBasePath = MetadataBundle.getProjectBasePath(projectId);
 				}
 				// codebase/appId/tenentId
-				String tenentBasePath = CodiClassLoader.mySourceCodeBase();
+				String tenentBasePath = CodiClassLoader.getMyClassLoader().getCodebase();
 				if( "image".equalsIgnoreCase(metadataType)){
 					OutputStream out = null;
 					try{

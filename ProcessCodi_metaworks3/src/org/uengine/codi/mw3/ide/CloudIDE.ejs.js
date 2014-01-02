@@ -9,7 +9,15 @@ var org_uengine_codi_mw3_ide_CloudIDE = function(objectId, className){
 	if(this.object == null)
 		return true;
 
-	setCookie("codi.lastVisit", "ide", 10, "/", "", "");
+	setCookie("codi.lastVisit", "ide", 100, "/", "", "");
+	setCookie("codi.lastVisitValue", "", 10, "/", "", "");
+	
+	
+	if(this.object.project && this.object.project.id){
+		console.log(this.object.project.id)
+		
+		setCookie("codi.lastVisitValue", this.object.project.id, 10, "/", "", "");
+	}
 };
 
 org_uengine_codi_mw3_ide_CloudIDE.prototype = {

@@ -48,6 +48,7 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 		});
 	},
 	toAppend : function(object){
+	
 		var tabId = null;
 		var tabName = '';
 

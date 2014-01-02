@@ -3,12 +3,15 @@ package org.uengine.codi.mw3.ide;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Id;
+
 import org.metaworks.annotation.Face;
 
 @Face(options={"tabClass"}, values={"org.uengine.codi.mw3.ide.CloudTab"})
 public class CloudWindow {
 
 	String id;
+		@Id
 		public String getId() {
 			return id;
 		}

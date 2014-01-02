@@ -23,6 +23,7 @@ import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -115,13 +116,34 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		setMetaworksContext(new MetaworksContext());
 	}
 
+	public ResourceNode(ProjectNode projectNode){
+		this.setId(projectNode.getId());
+		this.setName(projectNode.getName());
+		this.setType(TYPE_PROJECT);
+		this.setFolder(true);
+		this.setPath(projectNode.getPath());
+		this.setProjectId(projectNode.getId());
+
+		
+		File project = new File(this.getPath());
+		if(!project.exists()){
+			System.out.println("not exists project codebase :" + project.getAbsolutePath());
+			
+			project.mkdirs();
+			
+			System.out.println("mkdirs");
+		}
+		
+		setMetaworksContext(new MetaworksContext());
+	}
 
 	@Override
-	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_APPEND)
 	public Object expand() throws Exception {
 
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 
+		System.out.println(this.getPath());
 		File file = new File(this.getPath());
 		String[] childFilePaths = file.list();
 
@@ -175,15 +197,12 @@ public class ResourceNode extends TreeNode implements ContextAware {
 					node.setParentId(this.getId());
 					node.setType(findNodeType(node.getName()));
 					node.setMetaworksContext(getMetaworksContext());
-					child.add(node);
-				
+					child.add(node);				
 				}
 			}
 		}
 
-		this.setChild(child);
-
-		return this;
+		return new ToAppend(this, child);
 	}
 
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_POPUP)
@@ -235,7 +254,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
 				editor = new JavaCodeEditor(this);
-				editor.workspace = workspace;
 				editor.load();
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 				editor = new ProcessEditor(this);
@@ -266,20 +284,10 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return editor;
 	}
 
-	private void changeProject(){
-		if( workspace != null ){
-			Project project = workspace.findProject(this.getProjectId());
-			
-			project.changeProject("root");
-		}
-	}
-	
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
 			
-		this.changeProject();
-		
 		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
 			metadataProperty.setResourceNode(this);
 
@@ -290,6 +298,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
 		}else{
 			Editor editor = this.beforeAction();
+
 //			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 //			if(  editor instanceof ProcessEditor ){
 //				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
@@ -300,8 +309,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 //			}
 //			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
 //			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
-			
-			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) };
+
+			return new Object[]{ new ToAppend(new CloudWindow("editor"), editor) };
 //			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
@@ -309,7 +318,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
-		this.changeProject();
 		
 		return new Object[]{new ResourceContextMenu(this, session) , new Refresh(session)};
 	}
@@ -353,11 +361,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	public Object drag() {
 		System.out.println("drag : " + this.getId());
 		
-		Project project = workspace.findProject(this.getProjectId());
+		//Project project = workspace.findProject(this.getProjectId());
 
-		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
+		//this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
 		
-		session.setClipboard(this);
+		//session.setClipboard(this);
 		
 		return session;
 	}
@@ -400,5 +408,41 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@ServiceMethod
 	public void deleteResourcePicker(){
 		this.setId(null);
+	}
+	
+	public static String makePackageName(String packageName){
+		
+		if(packageName != null){
+			if(packageName.endsWith(".java")){
+				packageName = packageName.substring(0, packageName.length()-5);
+				
+				if(packageName.indexOf(File.separatorChar) > -1)
+					packageName = packageName.substring(0, packageName.lastIndexOf(File.separatorChar));
+				else
+					packageName = null;
+			}
+		}
+		
+		if(packageName != null)
+			packageName = packageName.replace(File.separatorChar, '.');		
+		
+		return packageName;
+	}
+	
+	public static String makeClassName(String path){
+		String className = null;
+		
+		if(className != null){
+			if(className.endsWith(".java"))
+				className = className.substring(0, className.length()-5);
+			
+			if(className.indexOf(File.separatorChar) > -1)
+				className = className.substring(className.lastIndexOf(File.separatorChar)+1);
+
+			
+			className = className.replace(File.separatorChar, '.');
+		}
+		
+		return className;
 	}
 }
