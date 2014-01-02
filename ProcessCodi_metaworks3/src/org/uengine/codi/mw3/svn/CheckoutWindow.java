@@ -67,7 +67,7 @@ public class CheckoutWindow extends SVNWindow{
         final SVNURL url = repositoryURL.appendPath("mw3_test1", false);
 
         
-        String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+        String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().getCodebase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         
@@ -84,7 +84,7 @@ public class CheckoutWindow extends SVNWindow{
 
 		//let the session knows the source code is checked out that means classloader should use this code base 
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		session.setAttribute("sourceCodeBase", CodiClassLoader.getMyClassLoader().mySourceCodeBase());
+		session.setAttribute("sourceCodeBase", CodiClassLoader.getMyClassLoader().getCodebase());
 
 		setLog("check out done !");
 	}
@@ -92,7 +92,7 @@ public class CheckoutWindow extends SVNWindow{
 	@ServiceMethod(needToConfirm=true)
 	public void clearWorkingCopy() throws SVNException, Exception{
 
-		String myWorkingCopyPath = CodiClassLoader.mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+		String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().getCodebase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         

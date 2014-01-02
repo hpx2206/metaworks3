@@ -196,13 +196,13 @@ public class SelfServiceControlPanel {
 
 	@ServiceMethod(callByContent=true)
 	public void selectedApp() throws Exception {
-		
+
+		// TODO: 작업해야함
 		AppMapping appMapping = new AppMapping();
 		appMapping.setAppId(this.getAppId());
 		appMapping.setComCode(session.getCompany().getComCode());
 		
 		Project project = this.getWorkspace().findProject(appMapping.findMe().getProjectName());
-		project.changeProject(session.getCompany().getComCode());
 				
 		MetadataXML metadataXML = new MetadataXML();
 		try {
