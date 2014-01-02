@@ -1,19 +1,8 @@
 package org.uengine.codi.mw3.dashboard;
 
-import java.net.UnknownHostException;
-
-import org.metaworks.widget.chart.Area;
-import org.metaworks.widget.chart.Guage;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
 
 public class Usage {
-	
+	/*
 	Guage guage;
 	
 		public Guage getGuage() {
@@ -62,5 +51,5 @@ public class Usage {
         guage.setValue(100 - cur.size());
 
 	}
-
+	*/
 }
