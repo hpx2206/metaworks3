@@ -50,22 +50,32 @@ public class MyServicePanel{
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
+		
+		// TODO: 이 클래스 없애야함 cjw
+		/*
 		CloudIDE cloudIDE = new CloudIDE();
 		cloudIDE.setPageNavigator(new OcePageNavigator());
 		cloudIDE.load(session);
 		
 		return new MainPanel(cloudIDE);
+		*/
+		
+		return null;
 	}
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goMarketplace() throws Exception {
-		
+  
+		// TODO: 이 클래스 없애야함 cjw
+		/*
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
 		marketplace.setPageNavigator(new OcePageNavigator());
 		marketplace.load();
 		
 		return new MainPanel(marketplace);
+		*/
+		return null;
 	}
 	
 	
