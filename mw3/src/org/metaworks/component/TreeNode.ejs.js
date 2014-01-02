@@ -78,6 +78,8 @@ org_metaworks_component_TreeNode.prototype = {
 	
 	showStatus : function(message){
 		if('expand DONE.' == message){
+			this.nodeDiv.removeClass('loading');
+		
 			this.nodeDiv.addClass('minlast');
 			this.nodeDiv.removeClass('min');
 			
@@ -111,8 +113,8 @@ org_metaworks_component_TreeNode.prototype = {
 			var tempObject = [];
 			tempObject[0] = appendobject;
 			appendobject = tempObject;
-			
 		}
+		
 		if(appendobject != null && appendobject.length > 0){
 			for(var i=0; i<appendobject.length; i++){
 				$('<div>').appendTo(this.objectDiv.children('u').show()).html(mw3.locateObject(appendobject[i], null));
@@ -121,7 +123,6 @@ org_metaworks_component_TreeNode.prototype = {
 				
 				this.treeDiv.trigger('toAppended');
 			}
-		
 		}else{
 			this.nodeDiv.removeClass('minlast');
 		}
