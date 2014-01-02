@@ -98,7 +98,6 @@ public class MyAppPanel {
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
-		marketplace.setPageNavigator(new OcePageNavigator());
 		marketplace.load();
 		
 		return new MainPanel(marketplace);

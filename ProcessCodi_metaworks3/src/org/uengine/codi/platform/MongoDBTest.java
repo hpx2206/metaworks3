@@ -15,6 +15,7 @@ import com.mongodb.MongoException;
 
 public class MongoDBTest {
 
+	/*
 	@ServiceMethod
 	public void test() throws UnknownHostException, MongoException{
 
@@ -113,5 +114,5 @@ public class MongoDBTest {
 		new MongoDBTest().test();
 	}
 	
-	
+	*/
 }
