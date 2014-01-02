@@ -52,7 +52,6 @@ public class NewInstancePanel implements ContextAware {
 		}
 		
 	ProcessMapPanel processMapPanel;
-		@AutowiredToClient
 		public ProcessMapPanel getProcessMapPanel() {
 			return processMapPanel;
 		}

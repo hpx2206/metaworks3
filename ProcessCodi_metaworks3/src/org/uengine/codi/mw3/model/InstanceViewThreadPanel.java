@@ -183,7 +183,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 			this.more = more;
 		}
 		
-	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] drop() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IWfNode){

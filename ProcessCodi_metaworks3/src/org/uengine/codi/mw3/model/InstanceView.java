@@ -156,8 +156,11 @@ public class InstanceView {
 		
 		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 		instanceViewThreadPanel.setInstanceId(this.getInstanceId());
+		instanceViewThreadPanel.session = session;
+		instanceViewThreadPanel.load();
 		
-		setInstanceViewThreadPanel(new Loader(instanceViewThreadPanel, "load"));
+		setInstanceViewThreadPanel(instanceViewThreadPanel);
+		//setInstanceViewThreadPanel(new Loader(instanceViewThreadPanel, "load"));
 	}
 	
 	/*
