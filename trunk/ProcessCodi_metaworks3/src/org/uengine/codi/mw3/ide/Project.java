@@ -1,12 +1,6 @@
 package org.uengine.codi.mw3.ide;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import org.metaworks.annotation.Id;
-import org.metaworks.dao.TransactionContext;
-import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.kernel.GlobalContext;
 
 public class Project {
 

@@ -22,6 +22,7 @@ public class ProjectPanel {
 		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		projectTitle.session = session;
 		projectTitle.setLogoFile(new MetaworksFile());
+		
 		return new ModalWindow(projectTitle , 500, 400, "$CreateProject");
 	}
 	

@@ -5,6 +5,7 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
@@ -14,6 +15,7 @@ import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.knowledge.ProjectPanel;
 import org.uengine.codi.mw3.menu.MainMenuTop;
 import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.Locale;
@@ -70,10 +72,12 @@ public class CloudIDE extends Application {
 
 	public CloudIDE(Session session) throws Exception{
 		
-		IProjectNode projects = ProjectNode.load(session);
-		
+		ProjectPanel projectPanel = new ProjectPanel();
+		projectPanel.session = session;
+		projectPanel.load();
+
 		Layout layout = new Layout();
-		layout.setCenter(projects);
+		layout.setCenter(projectPanel);
 		
 		this.setLayout(layout);
 	}
@@ -83,6 +87,7 @@ public class CloudIDE extends Application {
 	}
 	
 	Project project;
+		@AutowiredToClient
 		public Project getProject() {
 			return project;
 		}

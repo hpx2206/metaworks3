@@ -107,7 +107,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 	public ResourceNode(Project project){
 		this.setId(project.getId());
-		this.setName(project.getId());
+		this.setName(project.getName());
 		this.setType(TYPE_PROJECT);
 		this.setFolder(true);
 
