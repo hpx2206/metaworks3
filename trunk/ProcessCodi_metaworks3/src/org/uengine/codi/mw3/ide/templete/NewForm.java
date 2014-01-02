@@ -62,7 +62,7 @@ public class NewForm extends Templete {
 			
 			Editor editor = null;
 			try {
-				editor = (Editor)node.beforeAction();
+				editor = (Editor)node.beforeAction(false);
 			} catch (Exception e) {
 			}
 			
@@ -70,7 +70,7 @@ public class NewForm extends Templete {
 			
 			if(editor instanceof FormEditor){
 				FormEditor formEditor = (FormEditor)editor;
-				formEditor.loadForm();
+				formEditor.load();
 			}
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow())};

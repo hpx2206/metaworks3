@@ -233,6 +233,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	}
 
 	public Editor beforeAction(){
+		return beforeAction(true);
+	}
+	public Editor beforeAction(boolean isLoad){
 
 		Editor editor = null;
 		
@@ -263,7 +266,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			}
 		}
 		
-		editor.load();
+		if(isLoad)
+			editor.load();
 
 		return editor;
 	}

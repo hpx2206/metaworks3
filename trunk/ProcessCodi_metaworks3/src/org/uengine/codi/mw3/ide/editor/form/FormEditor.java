@@ -48,11 +48,7 @@ public class FormEditor extends Editor {
 	}
 	
 	public FormEditor(ResourceNode resourceNode){
-		super(resourceNode);	
-	}
-	
-	@Override
-	public String load() {
+		super(resourceNode);
 		
 		String packageName = ResourceNode.makePackageName(this.getId());
 		String className = ResourceNode.makeClassName(this.getId());
@@ -61,19 +57,9 @@ public class FormEditor extends Editor {
 		form.setProjectId(this.getResourceNode().getProjectId());
 		form.setPackageName(packageName);
 		form.setId(className);
-		
 		form.init();
 
-		/*
-		if(this.getContent() != null)
-			form.load();
-		else
-			form.init();
-		*/
-		
 		this.setForm(form);
-		
-//		this.setProperties(new FormFieldProperties());
 		
 		FormProperties formProperties = new FormProperties();
 		formProperties.setId(form.getId());
@@ -81,15 +67,14 @@ public class FormEditor extends Editor {
 		formProperties.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setProperties(formProperties);
 		
-		
 		FormFieldMenu formFieldMenu = new FormFieldMenu();
 		formFieldMenu.load();
 		this.setMenu(formFieldMenu);
-		
-		return null;
+
 	}
 	
-	public void loadForm(){
+	@Override
+	public String load() {
 		try {
 			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
 		} catch (Exception e) {
@@ -99,6 +84,8 @@ public class FormEditor extends Editor {
 
 		form.load();
 		this.setForm(form);
+		
+		return null;
 	}
 	
 	@Override
