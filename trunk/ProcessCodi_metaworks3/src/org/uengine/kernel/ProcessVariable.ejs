@@ -1,4 +1,6 @@
 <% if(value){ %>
+	<ul>
+	
     <% if(mw3.how == 'list'){ %>
         <%=fields.name.here()%>
         <%=fields.displayName.here()%>
@@ -12,4 +14,6 @@
     <% }else{%>
         <%=value.name%>
     <% }%>
+    
+    </ul>
 <% }%>
