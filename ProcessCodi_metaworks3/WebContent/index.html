@@ -157,7 +157,7 @@
 		 	 */ 		
  			var facebookAppId = '119159701538006';
  		
-			//mw3.usingTemplateEngine = 'jQote';
+			mw3.usingTemplateEngine = 'jQote';
 			mw3.needToConfirmMessage = '$confirm.message';
 							
 			//mw3.optimizeObjectMemory = true;
@@ -182,6 +182,11 @@
 			}
 
 			$(document).ready(function() {
+				document.body.addEventListener("DOMNodeInserted", function (ev) {
+					//console.log('DOMNodeInserted');
+					//console.log(ev);
+				});
+			
 				$.fn.cycle.defaults.autoSelector = '.slideshow';
 				
 				var request = new Request();
@@ -374,12 +379,27 @@
 					if(errorString && errorString.length > 0)
 						alert(errorString);
 				});
-				        		
- 				var startcodi = new MetaworksObject({
-                    __className : "org.uengine.codi.mw3.StartCodi",
-					key : 'loader'             
-                }, 'body');
-       
+				        	
+				var type = request.getParameter('type');
+				if(type == 'runner'){
+					var projectId = request.getParameter('projectId');
+					var className = request.getParameter('className');
+				
+	 				var runner = new MetaworksObject({
+    	                __className : "org.uengine.codi.mw3.Runner",
+						projectId : projectId,
+						className : className             
+            	    }, 'body');
+            	    
+            	    runner.run();
+				
+				}else{
+	 				var startcodi = new MetaworksObject({
+    	                __className : "org.uengine.codi.mw3.StartCodi",
+						key : 'loader'             
+            	    }, 'body');
+				}
+				
        			window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
 				};
