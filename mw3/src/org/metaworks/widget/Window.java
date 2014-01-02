@@ -21,9 +21,6 @@ public class Window implements ContextAware {
 	public Window(Object panel, String title) {		
 		this.panel = panel;
 		this.title = title;
-		
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setHow("normal");
 	}
 	
 	Object panel;
