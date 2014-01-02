@@ -55,7 +55,7 @@ public class TemplateDesigner {
 		//WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(designee.getClass().getName());
 		
         CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
-		String myCodeBase = ((CodiClassLoader)contextClassLoader).mySourceCodeBase();
+		String myCodeBase = ((CodiClassLoader)contextClassLoader).getCodebase();
 		
         if(myCodeBase==null)
         	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 먼저 페이스북 로그인을 하신후 체크아웃(checkout)을 받으셔야 합니다.");

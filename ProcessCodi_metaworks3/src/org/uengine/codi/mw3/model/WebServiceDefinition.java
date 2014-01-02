@@ -123,7 +123,7 @@ public class WebServiceDefinition  {
 			
 		}
 		
-		String rootPath = CodiClassLoader.getMyClassLoader().sourceCodeBase();		
+		String rootPath = CodiClassLoader.getMyClassLoader().getCodebase();		
 		
 		WSDLToJava.main(new String[] {
 				"-client",

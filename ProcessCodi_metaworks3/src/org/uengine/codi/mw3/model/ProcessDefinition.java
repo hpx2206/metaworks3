@@ -1,15 +1,11 @@
 package org.uengine.codi.mw3.model;
 
-import javax.servlet.http.HttpSession;
-
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.knowledge.WorkflowyNode;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
@@ -233,6 +229,8 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				instanceView.load(instanceRef);
 
 				
+				
+				/*
 				WorkflowyNode parent = new WorkflowyNode(newInstancePanel.getKnowledgeNodeId());
 				parent.load();
 				
@@ -242,10 +240,10 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				parent.addChildNode(child);
 				
 				child.save();
-
+				*/
 			
 
-				return new Object[]{instanceView, parent};
+				return new Object[]{instanceView};
 				
 				
 			}else if(newInstancePanel.getParentInstanceId() != null){ //need to attach new instance to the parent instance
