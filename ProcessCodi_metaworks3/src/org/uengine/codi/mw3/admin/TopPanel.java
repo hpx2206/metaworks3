@@ -1,8 +1,11 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.uengine.codi.mw3.model.ContentTopPanel;
 import org.uengine.codi.mw3.model.ICompany;
+import org.uengine.codi.mw3.model.MenuTopPanel;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.SearchBox;
 import org.uengine.codi.mw3.model.Session;
@@ -17,7 +20,6 @@ public class TopPanel {
 	
 	public TopPanel(Session session) {
 		setSession(session);
-		setWindowPanel(new WindowPanel());
 		
 		MetaworksContext metaworksContext = new MetaworksContext();
 		metaworksContext.setWhere("topPanel");
@@ -35,18 +37,13 @@ public class TopPanel {
 		}
 		setLoginUser(topPanelUser);
 		this.getLoginUser().setMetaworksContext(metaworksContext);
+
+		setWindowPanel(new WindowPanel());
 		
+		MenuTopPanel menuTopPanel = new MenuTopPanel();
+		this.setMenuTopPanel(menuTopPanel);
+
 		setCompany(session.getCompany());
-		
-		/*
-		if("oce".equals(session.getUx())){
-			InstanceSearchBox searchBox = new InstanceSearchBox();
-			searchBox.setMetaworksContext(metaworksContext);
-			searchBox.setKeyUpSearch(true);
-			searchBox.setKeyEntetSearch(true);
-			setSearchBox(searchBox);
-		}
-		*/
 	}
 	
 	NotificationBadge notificationBadge;
@@ -106,6 +103,14 @@ public class TopPanel {
 			this.mode = mode;
 		}
 
+	ICompany company;
+		public ICompany getCompany() {
+			return company;
+		}
+		public void setCompany(ICompany company) {
+			this.company = company;
+		}
+		
 	WindowPanel windowPanel;
 		public WindowPanel getWindowPanel() {
 			return windowPanel;
@@ -114,12 +119,20 @@ public class TopPanel {
 			this.windowPanel = windowPanel;
 		}
 		
-	ICompany company;
-		public ICompany getCompany() {
-			return company;
+	ContentTopPanel contentTopPanel;
+		public ContentTopPanel getContentTopPanel() {
+			return contentTopPanel;
 		}
-		public void setCompany(ICompany company) {
-			this.company = company;
+		public void setContentTopPanel(ContentTopPanel contentTopPanel) {
+			this.contentTopPanel = contentTopPanel;
 		}
-	
+
+	MenuTopPanel menuTopPanel;
+		public MenuTopPanel getMenuTopPanel() {
+			return menuTopPanel;
+		}
+		public void setMenuTopPanel(MenuTopPanel menuTopPanel) {
+			this.menuTopPanel = menuTopPanel;
+		}
+
 }

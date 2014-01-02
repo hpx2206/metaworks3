@@ -11,13 +11,11 @@ import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
-import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectPanel;
-import org.uengine.codi.mw3.menu.MainMenuTop;
 import org.uengine.codi.mw3.model.Application;
+import org.uengine.codi.mw3.model.ContentTopPanel;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
 
@@ -25,7 +23,16 @@ public class CloudIDE extends Application {
 	
 	@AutowiredFromClient
 	public Locale localeManager;
+
+	@Override
+	public ContentTopPanel loadContentTopPanel(Session session) throws Exception{
+		ContentTopPanel contentTopPanel = new ContentTopPanel(ContentTopPanel.HOW_MENU);
+		contentTopPanel.session = session;
+		contentTopPanel.load();
 		
+		return contentTopPanel;
+	}
+
 	public CloudIDE() {
 
 		/*		setPageNavigator(new PageNavigator("ide"));
@@ -70,18 +77,6 @@ public class CloudIDE extends Application {
 		setLayout(outerLayout);		*/
 	}
 
-	public CloudIDE(Session session) throws Exception{
-		
-		ProjectPanel projectPanel = new ProjectPanel();
-		projectPanel.session = session;
-		projectPanel.load();
-
-		Layout layout = new Layout();
-		layout.setCenter(projectPanel);
-		
-		this.setLayout(layout);
-	}
-	
 	public CloudIDE(Session session, ProjectNode projectNode) throws Exception {
 		this.load(session, projectNode);
 	}
@@ -187,7 +182,6 @@ public class CloudIDE extends Application {
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(centerLayout);
-		outerLayout.setNorth(new MainMenuTop());
 		
 		/*
 		if(false && "oce".equals(session.getUx())){

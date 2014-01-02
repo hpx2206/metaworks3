@@ -1,13 +1,3 @@
-<%
-	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	
-	if(session && session.ux != 'phone'){
-%>
-	
 <div id="trayDiv" style="width:100%;height:50px;padding-left:169px;">
 	<%=fields.trayItems.here()%>
 </div>
-
-<%
-	}
-%>
