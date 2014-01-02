@@ -31,9 +31,6 @@ public class Editor {
 	@AutowiredFromClient
 	public Session session;
 	
-	@AutowiredFromClient
-	public ProjectNode projectNode; 
-
 	ResourceNode resourceNode;
 		@Hidden
 		public ResourceNode getResourceNode() {

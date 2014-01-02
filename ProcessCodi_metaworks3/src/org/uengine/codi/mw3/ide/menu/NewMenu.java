@@ -39,7 +39,7 @@ public class NewMenu extends CloudMenu {
 		this.add(new MenuItem("newValueChain", "$resource.menu.new.valuechain"));
 		//this.add(new MenuItem("newRole", "Role"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-		//this.add(new MenuItem("newClass", "Class"));
+		this.add(new MenuItem("newClass", "Class"));
 		this.add(new MenuItem("newForm", "$resource.menu.new.form"));
 		this.add(new MenuItem("newFolder", "$resource.menu.new.folder"));
 		this.add(new MenuItem("newFile", "$resource.menu.new.file"));
@@ -65,10 +65,9 @@ public class NewMenu extends CloudMenu {
 	public ModalWindow newForm(){
 		NewForm newForm = new NewForm();
 		newForm.setResourceNode(this.getResourceNode());
-		newForm.workspace = workspace;
 		newForm.load();
 		
-		return new ModalWindow(newForm, 300, 150, "New Form");
+		return new ModalWindow(newForm, 400, 200, "New Form");
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)

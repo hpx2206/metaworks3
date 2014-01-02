@@ -58,19 +58,12 @@ public class FormEditor extends Editor {
 		String className = ResourceNode.makeClassName(this.getId());
 		
 		Form form = new Form();
+		form.setProjectId(this.getResourceNode().getProjectId());
 		form.setPackageName(packageName);
 		form.setId(className);
 		
-		try {
-			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		form.init();
-		form.load();
-		
+
 		/*
 		if(this.getContent() != null)
 			form.load();
@@ -96,9 +89,21 @@ public class FormEditor extends Editor {
 		return null;
 	}
 	
+	public void loadForm(){
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		form.load();
+		this.setForm(form);
+	}
+	
 	@Override
 	@ServiceMethod(callByContent=true)
-	public Object save() {		
+	public Object save() {
 		this.setContent(form.generateJavaCode());
 		
 		try {

@@ -6,11 +6,11 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
 import org.uengine.codi.mw3.ide.libraries.RolePerspective;
 import org.uengine.codi.mw3.ide.libraries.SearchResultPanel;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.model.SearchBox;
 
 public class Navigator {
@@ -76,7 +76,7 @@ public class Navigator {
 		this.searchBox = new SearchBox();
 	}
 	
-	public void load(ProjectNode project){
+	public void load(Project project){
 
 		ResourceNode projectNode = new ResourceNode(project);
 
