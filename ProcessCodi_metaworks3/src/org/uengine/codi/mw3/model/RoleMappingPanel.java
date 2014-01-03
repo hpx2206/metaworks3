@@ -46,7 +46,7 @@ public class RoleMappingPanel implements ContextAware{
 		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(defId);
 		for(org.uengine.kernel.Role role : definition.getRoles()){
 			RoleMappingDefinition roleMappingDefinition = new RoleMappingDefinition();
-			roleMappingDefinition.setRoleDefId(TenantContext.getThreadLocalInstance().getTenantId() + "." + defId + "." + role.getName());
+			roleMappingDefinition.setRoleDefId(session.getEmployee().getGlobalCom() + "." + defId + "." + role.getName());
 			
 			try{
 				IRoleMappingDefinition roleMappingDef = roleMappingDefinition.databaseMe();
@@ -69,7 +69,7 @@ public class RoleMappingPanel implements ContextAware{
 				roleMappingDef.setDefId(defId);
 				roleMappingDef.setRoleName(role.getName());
 				roleMappingDef.setMappedUser(new User());
-				roleMappingDef.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
+				roleMappingDef.setComCode(session.getEmployee().getGlobalCom());
 				roleMappingDef.setRoleDefType(RoleMappingDefinition.ROLE_DEF_TYPE_USER);
 				
 				roleMappingDefinitions.add(roleMappingDef);
