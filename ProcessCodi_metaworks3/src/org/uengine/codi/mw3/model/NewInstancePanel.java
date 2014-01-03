@@ -78,7 +78,6 @@ public class NewInstancePanel implements ContextAware {
 		}
 		
 	Date dueDate;
-		@Hidden	
 		public Date getDueDate() {
 			return dueDate;
 		}
