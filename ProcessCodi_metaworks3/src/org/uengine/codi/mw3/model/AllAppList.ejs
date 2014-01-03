@@ -1,9 +1,14 @@
 <%
 	if(value){
 %>
-		<%=methods.goSNS.here()%>
-		<%=methods.goIDE.here()%>
-		<%=methods.goAppStore.here()%>
+		<div>
+			<ul class="process_map2 allApp">
+				<li onClick="<%=methods.goSNS.caller()%>"><img src="images/waveStyle/app_social.png"></li>
+				<li onClick="<%=methods.goIDE.caller()%>"><img src="images/waveStyle/app_ide.png"></li>
+				<li onClick="<%=methods.goAppStore.caller()%>"><img src="images/waveStyle/app_market.png"></li>
+			</ul>
+		</div>
+
 
 <!--		
 		<div class="time_line _noti_list myapp_panel">
