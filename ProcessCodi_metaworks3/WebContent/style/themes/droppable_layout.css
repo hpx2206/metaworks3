@@ -3459,6 +3459,7 @@ legend {display:none;}
 .process_map .fdiv a:hover{text-decoration:underline}
 .process_map .fdiv img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
 
+
 #editiconpop  { width:540px; background:#FFF;}
 #editiconpop dl{  overflow:hidden;width:520px;padding:0 0 10px 10px; margin-bottom:20px; border:1px solid #c2c2c2}
 
@@ -3478,6 +3479,8 @@ legend {display:none;}
 .process_map2 .purple {background:url(../../images/processMap/newPrcessBgPurple.png) no-repeat;}
 .process_map2 .folder {background:url(../../images/processMap/folder2_64.png) no-repeat;}
 
+
+
 .dashboard_map{overflow:hidden;padding:0 0 40px 20px; }
 .dashboard_map li{display:inline;float:left;width:66px; height:90px; margin:0px 25px 0 0;padding:0px;font-size:12px;text-align:center;list-style:none;  position:relative;}
 .dashboard_map li img{display:block;margin:0px; margin-bottom:5px;border:none; line-height:66px; width:66px; height:66px;-webkit-border-radius: 10px;
@@ -3492,7 +3495,8 @@ legend {display:none;}
 .process_map2 li .img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;padding-top: 20px;display: none;}
 
 .myapp_panel img{width:40px; max-height:40px;}
-
+.allApp li{background:none !important; cursor:poniter}
+.allApp li img {width:66px !important;  max-height:inherit !important; margin:0px !important;}
 
 .process_map3{overflow:hidden;padding:0; }
 .process_map3 li{display:inline;float:left; width:194px; height:194px; maring:15px;padding-bottom:25px;font-size:12px;text-align:center;list-style:none;  position:relative;  }
