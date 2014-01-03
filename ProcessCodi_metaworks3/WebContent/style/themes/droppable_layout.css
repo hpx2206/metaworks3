@@ -3495,7 +3495,7 @@ legend {display:none;}
 .process_map2 li .img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;padding-top: 20px;display: none;}
 
 .myapp_panel img{width:40px; max-height:40px;}
-.allApp li{background:none !important; cursor:poniter}
+.allApp li{background:none !important; cursor:pointer}
 .allApp li img {width:66px !important;  max-height:inherit !important; margin:0px !important;}
 
 .process_map3{overflow:hidden;padding:0; }
