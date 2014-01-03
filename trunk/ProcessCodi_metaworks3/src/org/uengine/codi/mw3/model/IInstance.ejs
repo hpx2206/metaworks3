@@ -62,7 +62,15 @@ if(value){
 							<tr>
 								<td  style="border:none;"><a href="#"><b><font color=204070><%=value.initiator.name%></font>&nbsp;&nbsp;
 								
-									<font color=#5C5C5C style="line-height:19px;"><%=instanceTitle%> </font></b></a>
+									<font color=#5C5C5C style="line-height:19px;">
+									<%if(value.dueDate){
+							            var format = 'y.mm.dd';
+                                        var convertValue = $.datepicker.formatDate( format, value.dueDate );
+									%>
+									    [<%= convertValue %>]
+									<%}%>
+									   <%=instanceTitle%> 
+									</font></b></a>
 									<a href="#">
 									<% if(topicName != null){ %> <span class="topic_span" onclick="<%=methods.loadTopic.caller()%>"><%=topicName%></span><% }%>
 									</a>
