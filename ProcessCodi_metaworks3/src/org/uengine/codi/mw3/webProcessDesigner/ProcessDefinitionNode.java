@@ -97,10 +97,10 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				if(childFile.isDirectory()){
 					ProcessDefinitionNode node = new ProcessDefinitionNode();
 					node.setProjectId(this.getProjectId());
-					node.setId(this.getId() + File.separatorChar + childFile.getName());				
+					node.setId(this.getId() + childFile.getName());				
 					node.setName(childFile.getName());
 					node.setDefId(childFile.getName());
-					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setPath(this.getPath() + childFile.getName());
 					node.setAlias(childFile.getName());
 //					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 //					node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
@@ -125,13 +125,11 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 					}
 					ProcessDefinitionNode node = new ProcessDefinitionNode();
 					node.setProjectId(this.getProjectId());
-					node.setId(this.getId() + File.separatorChar + childFile.getName());
+					node.setId(this.getId() + childFile.getName());
 					node.setName(childFile.getName());
 					node.setDefId(childFile.getName());
-					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setPath(this.getPath() + childFile.getName());
 					node.setAlias(childFile.getName());
-//					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-//					node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
 					node.setParentId(this.getId());
 					node.setType(type);
 					node.setMetaworksContext(getMetaworksContext());
@@ -159,11 +157,9 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			return new Object[] { new Refresh(processViewWindow) };
 		}
 		if( alias != null && !this.isFolder() && this.getType().equals(TreeNode.TYPE_FILE_PROCESS)){
-			String thisId = this.getId();
-			String thisPath = thisId.substring(this.getProjectId().length());
 			processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(defId);
-			processViewerPanel.setAlias(thisPath);
+			processViewerPanel.setAlias(path);
 			processViewerPanel.setProjectId(this.getParentId());
 			processViewerPanel.setViewType("definitionEditor");
 			processViewerPanel.loadDefinitionView();

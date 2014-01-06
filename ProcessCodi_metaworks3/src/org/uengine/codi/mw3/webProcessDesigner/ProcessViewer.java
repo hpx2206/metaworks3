@@ -85,6 +85,14 @@ public class ProcessViewer {
 		public void setDesignerMaxY(int designerMaxY) {
 			this.designerMaxY = designerMaxY;
 		}
+		
+	boolean useClassLoader;
+		public boolean isUseClassLoader() {
+			return useClassLoader;
+		}
+		public void setUseClassLoader(boolean useClassLoader) {
+			this.useClassLoader = useClassLoader;
+		}
 	public ProcessViewer(){
 		processDesignerContainer = new ProcessDesignerContainer();
 	}
@@ -99,28 +107,30 @@ public class ProcessViewer {
 		try {
 			bao = new ByteArrayOutputStream();
 			if( getAlias() != null ){
-//				File file = new File(getAlias());
-//				if(file.exists() && !file.isDirectory()){					
-					try {
-//						is = new FileInputStream(file);
-						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(getAlias());
-						if( is != null ){
-							MetaworksUtil.copyStream(is, bao);
-							
-							ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
-							this.processDesignerContainer.setViewType(viewType);
-							this.processDesignerContainer.setEditorId(editorId);
-							this.processDesignerContainer.init();
-							this.processDesignerContainer.load(def);
-							this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
-							this.setTitle(def.getName().getText());
-							
-							this.setDesignerMaxX(processDesignerContainer.getMaxX());
-							this.setDesignerMaxY(processDesignerContainer.getMaxY());
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}			
+				if( useClassLoader ){
+					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(getAlias());
+				}else{
+					File file = new File(getAlias());
+					is = new FileInputStream(file);
+				}
+				try {
+					if( is != null ){
+						MetaworksUtil.copyStream(is, bao);
+						
+						ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
+						this.processDesignerContainer.setViewType(viewType);
+						this.processDesignerContainer.setEditorId(editorId);
+						this.processDesignerContainer.init();
+						this.processDesignerContainer.load(def);
+						this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
+						this.setTitle(def.getName().getText());
+						
+						this.setDesignerMaxX(processDesignerContainer.getMaxX());
+						this.setDesignerMaxY(processDesignerContainer.getMaxY());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}			
 				}
 //			}
 		} catch (Exception e) {

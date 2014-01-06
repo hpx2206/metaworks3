@@ -17,14 +17,11 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.EventActivity;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.SubProcessActivity;
 
 public class ProcessViewerPanel implements ContextAware {
@@ -88,13 +85,6 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
-	Workspace workspace;
-		public Workspace getWorkspace() {
-			return workspace;
-		}
-		public void setWorkspace(Workspace workspace) {
-			this.workspace = workspace;
-		}	
 	String viewType;
 		public String getViewType() {
 			return viewType;
@@ -109,10 +99,19 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setProjectId(String projectId) {
 			this.projectId = projectId;
 		}
-		
+	boolean useClassLoader;
+		public boolean isUseClassLoader() {
+			return useClassLoader;
+		}
+		public void setUseClassLoader(boolean useClassLoader) {
+			this.useClassLoader = useClassLoader;
+		}	
 	@AutowiredFromClient
 	public ProcessViewWindow processViewWindow; 
 
+	@AutowiredFromClient
+	public Project project;
+	
 	public ProcessViewerPanel(){
 		metaworksContext = new MetaworksContext();
 	}
@@ -121,13 +120,11 @@ public class ProcessViewerPanel implements ContextAware {
 		this.getMetaworksContext().setHow("find");
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
-		Workspace workspace = new Workspace();
-		workspace.load(session);
-		this.setWorkspace(workspace);
 		
-		processViewNavigator.load(workspace);
+		processViewNavigator.load(project);
 		
 		processViewPanel = new ProcessViewPanel();
+		processViewPanel.setUseClassLoader(useClassLoader);
 		processViewPanel.load();
 	}
 	
@@ -135,13 +132,11 @@ public class ProcessViewerPanel implements ContextAware {
 		this.getMetaworksContext().setHow("valueChainFind");
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
-		Workspace workspace = new Workspace();
-		workspace.load(session);
-		this.setWorkspace(workspace);
 		
-		processViewNavigator.load(workspace);
+		processViewNavigator.load(project);
 		
 		processViewPanel = new ProcessViewPanel();
+		processViewPanel.setUseClassLoader(useClassLoader);
 		processViewPanel.load();
 	}
 	
@@ -152,6 +147,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.setAlias(alias);
 		processViewPanel.setProjectId(projectId);
 		processViewPanel.setViewType(this.getViewType());
+		processViewPanel.setUseClassLoader(useClassLoader);
 		processViewPanel.load();
 	}
 	
@@ -162,6 +158,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.setAlias(alias);
 		processViewPanel.setProjectId(projectId);
 		processViewPanel.setViewType(this.getViewType());
+		processViewPanel.setUseClassLoader(useClassLoader);
 		processViewPanel.load();
 	}
 	
@@ -267,11 +264,6 @@ public class ProcessViewerPanel implements ContextAware {
 			if( projectId == null ){
 				projectId = MetadataBundle.getProjectId();
 			}
-			if( workspace == null ){
-				workspace = new Workspace();
-				workspace.load(session);
-			}
-			Project project = workspace.findProject(projectId);
 			String path = project.getPath() + File.separatorChar + alias;
 			processNode.setProjectId(projectId);
 			processNode.setPath(path);

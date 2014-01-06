@@ -5,7 +5,6 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.component.Tree;
 import org.uengine.codi.mw3.ide.Project;
-import org.uengine.codi.mw3.ide.Workspace;
 
 public class ProcessViewNavigator {
 	
@@ -44,18 +43,16 @@ public class ProcessViewNavigator {
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-	public void load(Workspace workspace){
+	public void load(Project project){
 		ProcessDefinitionNode processDefinitionNode = new ProcessDefinitionNode();
-		processDefinitionNode.setId(workspace.getId());
+		processDefinitionNode.setId(project.getName());
 		processDefinitionNode.setRoot(true);
 		processDefinitionNode.setHidden(true);
 		
-		for(Project project: workspace.getProjects()){
-			processDefinitionNode.add(new ProcessDefinitionNode(project));
-		}
+		processDefinitionNode.add(new ProcessDefinitionNode(project));
 		
 		Tree tree = new Tree();
-		tree.setId(workspace.getId());
+		tree.setId(project.getName());
 		tree.setNode(processDefinitionNode);
 		
 		setProcessDefinitionTree(tree);
