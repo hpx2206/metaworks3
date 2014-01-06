@@ -237,6 +237,7 @@ if(value){
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Name")%> :</span><span><%=fields.empName.here()%></span></div>		
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Password")%> : </span><span><%=fields.password.here() %></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Re-Password")%> : </span><span><%=fields.confirmPassword.here() %></span></div>								
+
 <%		
 		}
 %>
@@ -246,8 +247,12 @@ if(value){
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$EmailNoti")%> : </span><span><%=fields.mailNoti.here() %></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$FacebookID")%> : </span><span><%=fields.facebookId.here() %></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Language")%> : </span><span><%=fields.locale.here() %></span></div>
+
+	<% if(false){ %>					
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$PreferUX")%> : </span><span><%=fields.preferUX.here() %></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$PreferMob")%> : </span><span><%=fields.preferMob.here() %></span></div>
+	<% } %>
+						
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Portrait")%> : </span><span><%=fields.imageFile.here() %></span></div>
 				</dd>
 
