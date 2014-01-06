@@ -56,7 +56,7 @@ public class InstanceView {
 		
 		// 2013-08-19 performance tuning
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT instid, name, defid, status, secuopt, dueDate");
+		sb.append("SELECT instid, name, defid, initep ,status, secuopt, dueDate");
 		sb.append("  FROM bpm_procinst");
 		sb.append(" WHERE instid = ?instid");
 		

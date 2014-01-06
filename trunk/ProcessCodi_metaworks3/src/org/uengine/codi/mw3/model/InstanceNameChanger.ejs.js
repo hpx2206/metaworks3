@@ -14,7 +14,7 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 		});
 		
 		$('#instanceName_' + this.objectId).bind('blur', function(){
-			mw3.getFaceHelper(objectId).change();
+			//mw3.getFaceHelper(objectId).change();
 			$(this).css("border","none");
 	
 		});
@@ -41,6 +41,9 @@ org_uengine_codi_mw3_model_InstanceNameChanger.prototype = {
 	},
 	change : function(){
 		var instanceName = $('#instanceName_' + this.objectId).val();
+		
+		//console.log('this.instanceName = ' + this.instanceName);
+		//console.log('instanceName = ' + instanceName);
 		
 		if(this.instanceName != instanceName){
 			mw3.call(this.objectId, 'change');			
