@@ -8,6 +8,7 @@ import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
 import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.templete.FileRenamer;
 import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.model.Session;
@@ -16,6 +17,9 @@ public class ValueChainContextMenu extends Menu {
 	
 	@AutowiredFromClient
 	public Session session;
+	
+	@AutowiredFromClient
+	public Project project;
 	
 	public ValueChainContextMenu(){
 	}
@@ -41,6 +45,7 @@ public class ValueChainContextMenu extends Menu {
 		if(clipboard instanceof MajorProcessDefinitionNode){
 			MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)clipboard;
 			node.session = session;
+			node.project = project;
 			return node.selectProcess();			
 		}else{
 			return null;

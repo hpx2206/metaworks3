@@ -40,6 +40,15 @@ public class ProcessViewPanel {
 		public void setProcessViewer(ProcessViewer processViewer) {
 			this.processViewer = processViewer;
 		}
+		
+	boolean useClassLoader;
+		public boolean isUseClassLoader() {
+			return useClassLoader;
+		}
+		public void setUseClassLoader(boolean useClassLoader) {
+			this.useClassLoader = useClassLoader;
+		}
+		
 	public ProcessViewPanel(){
 		processViewer = new ProcessViewer();
 	}
@@ -50,6 +59,7 @@ public class ProcessViewPanel {
 			processViewer.setProjectId(projectId);
 //			processViewer.setAlias(codebase + File.separatorChar + alias);
 			processViewer.setViewType(viewType);
+			processViewer.setUseClassLoader(useClassLoader);
 			processViewer.load();
 		}
 	}

@@ -40,6 +40,7 @@ public class EventActivityView extends ActivityView{
 				}else{
 					processViewerPanel.setOpenerActivity(this.getActivity());
 					processViewerPanel.setOpenerActivityViewId(this.getId());
+					processViewerPanel.project = project;
 					processViewerPanel.findDefinitionView();
 				}
 			}

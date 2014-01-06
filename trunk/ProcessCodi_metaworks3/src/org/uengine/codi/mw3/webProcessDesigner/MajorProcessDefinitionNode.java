@@ -21,6 +21,9 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	@AutowiredFromClient
 	public ProcessViewerPanel processViewerPanel;
 	
+	@AutowiredFromClient
+	public Project project;
+	
 	public final static String TYPE_PROJECT = "project";
 	
 	String alias;
@@ -90,6 +93,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	public Object selectProcess() {
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 		processViewerPanel.session = session;
+		processViewerPanel.project = project;
 		processViewerPanel.findValuechainView();
 		
 		ModalWindow modalWindow = new ModalWindow(processViewerPanel);
