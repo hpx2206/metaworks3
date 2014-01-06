@@ -9,9 +9,11 @@ import org.metaworks.annotation.Name;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 
 public class InstanceNameChanger implements ContextAware{
@@ -31,6 +33,9 @@ public class InstanceNameChanger implements ContextAware{
 
 	@AutowiredFromClient
 	public Session session;
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
 	
 	String instanceName;
 		@Name
@@ -59,22 +64,36 @@ public class InstanceNameChanger implements ContextAware{
 		instance.setInstId(new Long(instanceId));
 		
 		IInstance instanceRef = instance.databaseMe();
-		instanceRef.setName(getInstanceName());
-		
-		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-		scEvent.setTitle(instanceRef.getName());
-		scEvent.setId(instanceRef.getInstId().toString());
-		scEvent.setStart(instanceRef.getDueDate());
-		scEvent.setEnd(instanceRef.getDueDate());
-		scEvent.setAllDay(true);
-		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
-		scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
-		
-		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-				new Object[]{scEvent});
-		
-		return new Refresh(instance.databaseMe());
+		if( getInstanceName() != null && !getInstanceName().equals(instanceRef.getName()) ){
+			instanceRef.setName(getInstanceName());
+			
+			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+			scEvent.setTitle(instanceRef.getName());
+			scEvent.setId(instanceRef.getInstId().toString());
+			scEvent.setStart(instanceRef.getDueDate());
+			scEvent.setEnd(instanceRef.getDueDate());
+			scEvent.setAllDay(true);
+			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
+			
+			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+					new Object[]{scEvent});
+			
+			SystemWorkItem comment = new SystemWorkItem();
+			comment.processManager = processManager;
+			comment.session = session;
+			comment.setInstId(instanceRef.getInstId());
+			comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			comment.setSystemMessage(session.getUser().getName() + "님이 제목을 " + getInstanceName() + "으로 변경하였습니다.");
+			
+			
+			comment.add();
+			
+			return new Refresh(instance.databaseMe());
+		}else{
+			return null;
+		}
 	}
 	
 }
