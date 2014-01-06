@@ -446,15 +446,15 @@ public class ScheduleCalendar implements ContextAware {
 		String pattern = sf.toLocalizedPattern();
 
 //		title = "[" + date + "]";
-//		if( getSelDate() != null && this.isAllDay()){
-//			Calendar c = Calendar.getInstance ();
-//			c.setTime(getSelDate());
-//			c.set ( c.HOUR_OF_DAY  , +23);
-//			c.set ( c.MINUTE  , +59);
-//			c.set ( c.SECOND  , +59);
-//			
-//			this.setSelDate(c.getTime());			
-//		}
+		if( getSelDate() != null && this.isAllDay()){
+			Calendar c = Calendar.getInstance ();
+			c.setTime(getSelDate());
+			c.set ( c.HOUR_OF_DAY  , +23);
+			c.set ( c.MINUTE  , +59);
+			c.set ( c.SECOND  , +59);
+			
+			this.setSelDate(c.getTime());			
+		}
 
 		WorkItem newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());		
