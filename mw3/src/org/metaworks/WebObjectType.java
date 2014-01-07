@@ -1140,11 +1140,10 @@ public class WebObjectType{
 						
 						smc.attributes.put("hidden.how", hows);
 					}
-				}
-
-				if(hidden!=null){
-					if(hidden.on())
+					
+					if(hidden.on() && hidden.when().length == 0 && hidden.where().length == 0 && hidden.how().length == 0)
 						smc.setWhen("___hidden___");					
+
 				}
 
 				if(available!=null && available.condition().length > 0){
