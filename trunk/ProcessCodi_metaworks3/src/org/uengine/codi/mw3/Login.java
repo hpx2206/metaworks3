@@ -35,6 +35,7 @@ import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
@@ -42,6 +43,9 @@ import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.ide.Dashboard;
+import org.uengine.codi.mw3.ide.DefaultProject;
+import org.uengine.codi.mw3.ide.Project;
+import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Application;
@@ -786,22 +790,37 @@ public class Login implements ContextAware {
 		
 		Application app = null;
 		
-		if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
-			ProjectNode project = new ProjectNode();
-			project.setId(this.getLastVisitValue());
-			project.copyFrom(project.databaseMe());
-
-			app = new CloudIDE(session, project);
-		}else if("dashboard".equals(lastVisitPage)){
-			app = new Dashboard(session);
+		if("ide".equals(lastVisitPage) || "dashboard".equals(lastVisitPage)){
+			try{
+				if("ide".equals(lastVisitPage)  && this.getLastVisitValue() != null){
+					Project project = null;
+					
+					if(this.getLastVisitValue().equals(MetadataBundle.getProjectId())){
+						project = new DefaultProject();
+					}else{
+						ProjectNode node = new ProjectNode();
+						node.setId(this.getLastVisitValue());
+						node.copyFrom(node.databaseMe());
+						
+						project = new Project(node);
+					}
+					
+					app = new CloudIDE(session, project);
+				}else{
+					app = new Dashboard(session);	
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
 			app = new Marketplace();
-		}else{
-			app = new SNS(session);
 		}
+		
+		if(app == null)
+			app = new SNS(session);
 
 		TopPanel topPanel = new TopPanel(session);
-		topPanel.setContentTopPanel(app.loadContentTopPanel(session));
+		topPanel.setTopCenterPanel(app.loadTopCenterPanel(session));
 		
 		mainPanel = new MainPanel(topPanel, app);
 		
