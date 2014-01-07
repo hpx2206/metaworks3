@@ -76,7 +76,6 @@ public class OpenMenu extends CloudMenu{
 			ResourceNode node = (ResourceNode)clipboard;
 			node.getMetaworksContext().setWhen("UI");
 			
-			node.workspace = workspace;
 			return node.action();			
 		}else{
 			return null;

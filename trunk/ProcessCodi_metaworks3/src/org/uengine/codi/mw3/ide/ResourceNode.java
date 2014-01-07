@@ -44,9 +44,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	public Session session;
 
 	@AutowiredFromClient
-	public Workspace workspace;
-
-	@AutowiredFromClient
 	public MetadataProperty metadataProperty;
 
 
@@ -197,26 +194,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_POPUP)
 	public Object findResource(){
 
-		// make workspace
-		Workspace workspace = new Workspace();
-		workspace.load(session);
-
+		/*
 		Navigator navigator = new Navigator();
-
-		ResourceNode workspaceNode = new ResourceNode();
-		workspaceNode.setId(workspace.getId());
-		workspaceNode.setRoot(true);
-		workspaceNode.setHidden(true);
-		workspaceNode.setMetaworksContext(new MetaworksContext());
-		workspaceNode.getMetaworksContext().setHow("tree");
-
-		for(Project project : workspace.getProjects()){
-			if( this.getProjectId() != null && this.getProjectId().equals(project.getId()) ){
-				ResourceNode node = new ResourceNode(project);
-				node.getMetaworksContext().setWhere("resource");
-				workspaceNode.add(node);
-			}
-		}
 
 		ResourceTree resourceTree = new ResourceTree();
 		resourceTree.setId(workspace.getId());
@@ -224,9 +203,10 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		navigator.setResourceTree(resourceTree);
 		navigator.setId("popupTree");
-
+		*/
+		
 		Popup popup = new Popup();
-		popup.setPanel(navigator);
+		//popup.setPanel(navigator);
 		popup.setName("Project Resource");
 
 		return popup;	

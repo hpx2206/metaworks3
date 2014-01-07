@@ -38,7 +38,7 @@ public class Workspace {
 		this.setProjects(new ArrayList<Project>());
 	}
 	
-	public void load(Session session){
+	public void load(Session session) throws Exception{
 		
 		String tenantId = session.getCompany().getComCode();
 		
@@ -124,14 +124,14 @@ public class Workspace {
 	public void addTenant(){
 		
 		// 앱의 테넌트 불러오기 - codebase + projectId + tenantId
-		String codeBasePath = CodiClassLoader.getMyClassLoader().getCodebase();
-		CodiFileUtil.mkdirs(codeBasePath);
-		Project tenantMain = new Project();
-		tenantMain.setId(this.getId());
-		tenantMain.setPath(codeBasePath);
-		tenantMain.load();
-		
-		this.getProjects().add(tenantMain);
+//		String codeBasePath = CodiClassLoader.getMyClassLoader().getCodebase();
+//		CodiFileUtil.mkdirs(codeBasePath);
+//		Project tenantMain = new Project();
+//		tenantMain.setId(this.getId());
+//		tenantMain.setPath(codeBasePath);
+//		tenantMain.load();
+//		
+//		this.getProjects().add(tenantMain);
 	}
 	
 		
@@ -140,17 +140,17 @@ public class Workspace {
 	}
 	
 	public void addProject(String tenantId, String id, String name){
-		String path = MetadataBundle.getProjectBasePath(id, tenantId);
-		
-		CodiFileUtil.mkdirs(path);
-		
-		Project project = new Project();
-		project.setId(id);
-		project.setName(name);
-		project.setPath(path);
-		project.load();
-		
-		this.getProjects().add(project);
+//		String path = MetadataBundle.getProjectBasePath(id, tenantId);
+//		
+//		CodiFileUtil.mkdirs(path);
+//		
+//		Project project = new Project();
+//		project.setId(id);
+//		project.setName(name);
+//		project.setPath(path);
+//		project.load();
+//		
+//		this.getProjects().add(project);
 		
 	}
 
