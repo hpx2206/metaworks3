@@ -28,7 +28,11 @@
 			}
 		}else{
 %>
-    <%=fields.dueDate.here()%>
+   
+   <div class="topic_msg"><span class="toolbarIcon icon-calendar"></span> <span><%=fields.dueDate.here({when: mw3.WHEN_VIEW})%></span><span class="clear"></span></div>
+   <div style="height:30px; line-height:30px;"></div>
+   
+    
 	<%=fields.newInstantiator.here()%>
 	
 <%
