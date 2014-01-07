@@ -116,11 +116,12 @@ public class NewInstancePanel implements ContextAware {
 			newInstantiator = new CommentWorkItem();
 		}
 		
+		User writer = new User();
+		writer.copyFrom(session.getUser());
+		writer.setMetaworksContext(new MetaworksContext());
+		
 		newInstantiator.session = session;
-		newInstantiator.setWriter(session.getUser());
-		if(this.session == null)
-			this.session = session;
-			
+		newInstantiator.setWriter(writer);
 	
 		Choice securityLevel = new Choice();
 
