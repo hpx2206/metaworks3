@@ -14,6 +14,8 @@ public interface IUser extends IDAO{
 	public static final String MW3_WHERE_ROLEUSER_PICKER_CALLER = "roleUserPickerCaller";
 	public static final String MW3_WHERE_ROLEUSER_PICKER = "roleUserPicker";
 	
+	public final static String WHERE_SELF      = "self";
+	
 	@Id
 	public String getUserId();
 	public void setUserId(String userId);
