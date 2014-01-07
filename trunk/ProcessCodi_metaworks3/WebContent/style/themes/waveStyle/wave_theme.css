@@ -168,7 +168,7 @@ body {
 	overflow: auto;
 	display: none;
 	overflow: auto;
-	position: relative;
+	position: absolute;
 	border: 1px solid #ccc;
 	border-top: 1px solid #5793D7;
 }

@@ -22,9 +22,6 @@ var org_uengine_codi_mw3_model_TrayItem = function(objectId, className){
 	
 	if(object && object.metaworksContext && object.metaworksContext.how == 'down'){
 		$(this.divId + ' .topcontentcontainer').show().width(500);
-		
 		var layoutId = $(this.divId).closest('.mw3_layout').attr('objectId');
-		
-		mw3.getFaceHelper(layoutId).layout.allowOverflow('north');		
 	}
 };
