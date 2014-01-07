@@ -140,8 +140,10 @@ dl dt { margin-left:15px; }
 
 img { border: 0; }
 
-
+.error_div{position:absolute; z-index:999; top:0px; left:0px; width:100%;}
+.alert{margin-bottom:0px !important}
 /*wf*/
+
 .wf_panel ul {
 	padding-left: 25px;
 	list-style-type: none;
