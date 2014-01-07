@@ -153,7 +153,13 @@ public class StartCodi {
 		login.lastVisitPage = this.getLastVisitPage();
 		login.lastVisitValue = this.getLastVisitValue();
 		
-		return login.login(session);
+		try{
+			return login.login(session);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return new Object[]{new Refresh(new SignUp(), false, true)};
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
