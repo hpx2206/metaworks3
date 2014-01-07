@@ -40,7 +40,7 @@ public class ValueChainContextMenu extends Menu {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object selectProcess(){
+	public Object selectProcess() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof MajorProcessDefinitionNode){
 			MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)clipboard;
