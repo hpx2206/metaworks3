@@ -3,10 +3,10 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.admin.TopPanel;
 
 public class SNS extends Application{
 
@@ -88,14 +88,13 @@ public class SNS extends Application{
 			
 		}
 		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("process");
+		TopPanel topPanel = new TopPanel(session);
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
 			session.setUx("phone");
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(processTopPanel);
+			outerLayout.setNorth(topPanel);
 			
 			Window instanceListWindow = createInstanceListWindow(session);
 			
@@ -109,7 +108,7 @@ public class SNS extends Application{
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
-			outerLayout.setNorth(processTopPanel);			
+			outerLayout.setNorth(topPanel);			
 			outerLayout.setWest(createInstanceListWindow(session));
 			outerLayout.setCenter(createNewInstancePanel(session));	
 			outerLayout.setName("center");
