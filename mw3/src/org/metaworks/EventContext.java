@@ -5,4 +5,5 @@ public class EventContext {
 	public final static String EVENT_CLICK				= "click";
 	public final static String EVENT_SAVE				= "save";
 	public final static String EVENT_CLOSE				= "close";
+	public final static String EVENT_DROP				= "drop";
 }
