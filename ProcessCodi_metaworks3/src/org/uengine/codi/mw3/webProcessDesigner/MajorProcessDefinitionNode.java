@@ -90,7 +90,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	}
 	
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId"},target=ServiceMethodContext.TARGET_POPUP)
-	public Object selectProcess() {
+	public Object selectProcess() throws Exception {
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 		processViewerPanel.session = session;
 		processViewerPanel.project = project;
