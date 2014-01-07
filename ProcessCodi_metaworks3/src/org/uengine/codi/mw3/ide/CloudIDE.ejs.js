@@ -14,8 +14,6 @@ var org_uengine_codi_mw3_ide_CloudIDE = function(objectId, className){
 	
 	
 	if(this.object.project && this.object.project.id){
-		console.log(this.object.project.id)
-		
 		setCookie("codi.lastVisitValue", this.object.project.id, 10, "/", "", "");
 	}
 };

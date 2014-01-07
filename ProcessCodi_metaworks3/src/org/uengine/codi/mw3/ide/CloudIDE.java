@@ -9,31 +9,20 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
-import org.uengine.codi.mw3.knowledge.ProjectPanel;
 import org.uengine.codi.mw3.model.Application;
-import org.uengine.codi.mw3.model.ContentTopPanel;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.TopCenterPanel;
 
 public class CloudIDE extends Application {
 	
 	@AutowiredFromClient
 	public Locale localeManager;
 
-	@Override
-	public ContentTopPanel loadContentTopPanel(Session session) throws Exception{
-		ContentTopPanel contentTopPanel = new ContentTopPanel(ContentTopPanel.HOW_MENU);
-		contentTopPanel.session = session;
-		contentTopPanel.load();
-		
-		return contentTopPanel;
-	}
-
 	public CloudIDE() {
+		this.setTopCenterPanelType(TopCenterPanel.HOW_MENU);
 
 		/*		setPageNavigator(new PageNavigator("ide"));
 
@@ -77,8 +66,8 @@ public class CloudIDE extends Application {
 		setLayout(outerLayout);		*/
 	}
 
-	public CloudIDE(Session session, ProjectNode projectNode) throws Exception {
-		this.load(session, projectNode);
+	public CloudIDE(Session session, Project project) throws Exception {
+		this.load(session, project);
 	}
 	
 	Project project;
@@ -124,15 +113,11 @@ public class CloudIDE extends Application {
 			this.currentEditorId = currentEditorId;
 		}
 
-	public void load(Session session, ProjectNode projectNode) throws Exception{
+	public void load(Session session, Project project) throws Exception{
 		
 		// make workspace
-		projectNode.setPath(CodiClassLoader.getCodeBaseRoot() + projectNode.getId() + CodiClassLoader.PATH_SEPARATOR + CodiClassLoader.DEFAULT_NAME + CodiClassLoader.PATH_SEPARATOR);
+		project.load();
 		
-		Project project = new Project();
-		project.setId(projectNode.getId());
-		project.setName(projectNode.getName());
-		project.setPath(projectNode.getPath());
 		this.setProject(project);
 		
 		/*
