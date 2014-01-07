@@ -1,6 +1,7 @@
 var org_metaworks_Remover = function(objectId, className){
 	this.object = mw3.objects[objectId];	
 	var triggerObjId = null;
+		
 	if(this.object == null)
 		return true;	
 	
@@ -30,12 +31,12 @@ var org_metaworks_Remover = function(objectId, className){
 	}
 	
 	if(triggerObjId){
-		var faceHelper = mw3.getFaceHelper(mappedObjId);
+		var faceHelper = mw3.getFaceHelper(triggerObjId);
 				
 		if(faceHelper && faceHelper.remover)
 			faceHelper.remover(this.object.target);
 		else	
-			mw3.removeObject(mappedObjId);
+			mw3.removeObject(triggerObjId);
 	}
 	
 	this.loaded = function(){
