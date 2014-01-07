@@ -272,9 +272,9 @@
 					try{mw3.endLoading(objId);}catch(x){}
 					
 					var html;
-                    html = "<div class='alert alert-warning alert-dismissable'style='position: absolute; z-index: 99999; top: 0px; width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
+                    html = "<div class='alert alert-warning alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
                     
-                    $('body').append(html);
+                    $('.error_div').append(html);
                     
                     
 					
@@ -287,9 +287,9 @@
 		 		mw3.alert = function(message){
 		 			
 		 			var html;
-                    html = "<div class='alert alert-danger alert-dismissable'style='position: absolute; z-index: 99999; top: 0px; width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
+                    html = "<div class='alert alert-danger alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
                     
-                    $('body').append(html);
+                    $('.error_div').append(html);
                     
 					/* $.msg({
 							bgPath : mw3.base + '/images/',
@@ -411,5 +411,6 @@
 	</head>
 	
 	<body onload="dwr.engine.setActiveReverseAjax(true);">
+		<div class="error_div"></div>
 	</body>
 </html>
