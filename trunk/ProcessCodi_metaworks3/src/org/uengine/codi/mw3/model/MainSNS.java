@@ -83,13 +83,11 @@ public class MainSNS {
 		panel.load(session);				
 		ContentWindow wfWindow = new ContentWindow(panel);
 		
-		ProcessTopPanel topPanel = new ProcessTopPanel(session);
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
 			session.setUx("phone");
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(topPanel);
 			
 			outerLayout.setCenter(wfWindow);	
 			outerLayout.setName("center");
@@ -104,7 +102,6 @@ public class MainSNS {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
-			outerLayout.setNorth(topPanel);			
 			
 			outerLayout.setWest(createInstanceListWindow(session));
 			
@@ -125,7 +122,6 @@ public class MainSNS {
 			ContactWindow contactWindow = new ContactWindow(session.getUser());
 			
 			//Since there's are too many input boxes there, it is removed.
-			contactWindow.getContactPanel().setSearchBox(null);
 			
 			westLayout.setNorth(new  PerspectiveWindow(session));
 			westLayout.setCenter(contactWindow);
@@ -143,7 +139,6 @@ public class MainSNS {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(topPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
 //			topPanel.setLoginUser(null);

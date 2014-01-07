@@ -108,9 +108,6 @@ public class OceMain {
 		
 		this.setAppId(appId);
 		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("process");
-
 		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 		
 		DashboardWindowLayout dashboardWindowLayout = new DashboardWindowLayout();
@@ -124,7 +121,6 @@ public class OceMain {
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:1, north__size: 52");
 		
-		outerLayout.setNorth(processTopPanel);
 		outerLayout.setCenter(mainLayout);		
 		outerLayout.setName("center");
 		outerLayout.setUseHideBar(false);
@@ -141,8 +137,6 @@ public class OceMain {
 	public void loadAppSns(Session session) throws Exception {
 		
 		session.setUx("oce");
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("process");
 		
 		Layout westLayout = new Layout();
 		
@@ -177,7 +171,6 @@ public class OceMain {
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
-		outerLayout.setNorth(processTopPanel);
 		
 		//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
 		//processTopPanel.setLoginUser(null);
