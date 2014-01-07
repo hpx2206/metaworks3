@@ -10,11 +10,11 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
+import org.uengine.codi.mw3.ide.Project;
+import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.Main;
@@ -100,7 +100,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		IProjectNode dao = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IProjectNode.class); 
 		dao.set("type", TYPE_PROJECT);
 		dao.set("userid", session.getEmployee().getEmpCode());
-		dao.set("companyId", session.getCompany().getComCode());
+		dao.set("companyId", session.getEmployee().getGlobalCom());
 		dao.select();
 
 		return dao;
@@ -195,10 +195,10 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		return new Object[]{new Remover(this)};
 	}
 
-	public Object[] goIDE() throws Exception{
-		CloudIDE ide = new CloudIDE(session, this);
+	public Object[] goIDE() throws Exception {
+		CloudIDE ide = new CloudIDE(session, new Project(this)); 
 		
-		return new Object[]{ ide, ide.loadContentTopPanel(session) };
+		return new Object[]{ ide, ide.loadTopCenterPanel(session) };
 	}
 	
 	@Autowired
