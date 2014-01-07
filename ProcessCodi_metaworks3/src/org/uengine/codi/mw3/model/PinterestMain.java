@@ -36,7 +36,6 @@ public class PinterestMain {
 		newInstancePanel2.session = session;
 		newInstancePanel2.load(session);
 		setNewInstancePanel(newInstancePanel2);
-		setProcessTopPanel(new ProcessTopPanel(session));
 		
 //		outerLayout.setCenter(instanceListPanel);	
 //		outerLayout.setName("center");
@@ -56,15 +55,6 @@ public class PinterestMain {
 			this.newInstancePanel = newInstancePanel;
 		}
 
-	ProcessTopPanel processTopPanel;
-
-		public ProcessTopPanel getProcessTopPanel() {
-			return processTopPanel;
-		}
-		public void setProcessTopPanel(ProcessTopPanel processTopPanel) {
-			this.processTopPanel = processTopPanel;
-		}
-		
 	InstanceListPanel instanceListPanel;
 
 		public InstanceListPanel getInstanceListPanel() {
