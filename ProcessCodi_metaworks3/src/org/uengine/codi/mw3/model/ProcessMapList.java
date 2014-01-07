@@ -81,7 +81,7 @@ public class ProcessMapList implements ContextAware {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, callByContent=true)
-	public ModalWindow append() {
+	public ModalWindow append() throws Exception {
 		AddProcessMapPanel addProcessMapPanel = new AddProcessMapPanel();
 		addProcessMapPanel.session = session;
 		addProcessMapPanel.load();
