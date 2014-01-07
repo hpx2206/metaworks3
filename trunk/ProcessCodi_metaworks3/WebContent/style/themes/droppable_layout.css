@@ -3927,6 +3927,24 @@ legend {display:none;}
 *:first-child+html  .view_box .rb,.view_box .lb,.view_box .tr,.view_box .tl ,.view_box3 .rb,.view_box3 .lb,.view_box3 .tr,.view_box3 .tl,.view_box4 .rb,.view_box4 .lb,.view_box4 .tr,.view_box4 .tl{ background-image: none; }
 * html .view_box .rb,.view_box .lb,.view_box .tr,.view_box .tl ,.view_box3 .rb,.view_box3 .lb,.view_box3 .tr,.view_box3 .tl,.view_box4 .rb,.view_box4 .lb,.view_box4 .tr,.view_box4 .tl{ background-image: none; }
 
+.topic_msg {
+	content: "Example";
+	position: absolute;
+	top: -1px;
+	left: -1px;
+	padding: 3px 7px;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+	color: #9da0a4;
+	-webkit-border-radius: 4px 0 4px 0;
+	-moz-border-radius: 4px 0 4px 0;
+	border-radius: 4px 0 4px 0;
+}
+
+.topic_msg span{float:left}
+
 #mm_LineL{
     background: url('../../images/waveStyle/mm_MiddleLine.gif') 0% 50% no-repeat;
     width:13px;
