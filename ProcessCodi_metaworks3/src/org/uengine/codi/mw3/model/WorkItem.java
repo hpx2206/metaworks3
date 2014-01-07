@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -951,6 +952,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}
 				}				
 			}
+			// TODO 날자 저장시에 특정 시간이 없을 시에 하루의 가장 마지막 시간으로 설정
+			if( instanceRef.getDueDate() != null ){
+				Calendar c = Calendar.getInstance ();
+				c.setTime(instanceRef.getDueDate());
+				if( c.get(c.HOUR_OF_DAY) == 0 && c.get(c.MINUTE) == 0){
+					c.set ( c.HOUR_OF_DAY  , +23);
+					c.set ( c.MINUTE  , +59);
+					c.set ( c.SECOND  , +59);
+					instanceRef.setDueDate(c.getTime());
+				}
+			}
 			
 			
 			if(this.getTitle() == null && WORKITEM_TYPE_FILE.equals(this.getType()) ||
@@ -1257,10 +1269,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			Calendar c = Calendar.getInstance();
 			c.setTime(instanceRef.getDueDate());
 	
-			if(c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)
-				scEvent.setAllDay(true);
-			else
-				scEvent.setAllDay(false);
+//			if(c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)
+//				scEvent.setAllDay(true);
+//			else
+//				scEvent.setAllDay(false);
+			
+			// TODO 현재는 무조건 종일로 설정
+			scEvent.setAllDay(true);
 		}
 		
 		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
