@@ -247,11 +247,13 @@ public class ScheduleCalendar implements ContextAware {
 				Calendar c = Calendar.getInstance();
 				c.setTime(iInstance.getDueDate());
 
-				if("small".equals(this.getMetaworksContext().getHow()) || (c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)){
-					column.put("allDay", true);
-				}else{
-					column.put("allDay", false);
-				}
+//				if("small".equals(this.getMetaworksContext().getHow()) || (c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)){
+//					column.put("allDay", true);
+//				}else{
+//					column.put("allDay", false);
+//				}
+				// TODO 현재는 무조건 종일로 설정
+				column.put("allDay", true);
 				
 				/*
 				if(iInstance.getExt1() != null && "false".equals(iInstance.getExt1())){
