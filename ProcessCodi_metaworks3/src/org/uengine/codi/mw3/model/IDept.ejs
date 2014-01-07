@@ -2,7 +2,7 @@
 	if(value){
 		if(mw3.how == 'tree'){
 %>
-			<a style="cursor: pointer" onClick="<% if(mw3.where!='addContact'){%><%=methods.loadDeptList.caller()%><% }else{ %> <%=methods.drillDown.caller()%><% } %>" ><span class="icon-tree"></span><div style="display:inline-block; margin-left:10px;"><%=fields.partName.here()%></div></a>					
+			<a style="cursor: pointer" onClick="<% if(mw3.where!='addContact'){%><%=methods.loadDeptList.caller()%><% }else{ %> <%=methods.drillDown.caller()%><% } %>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>					
 <%
 			if(mw3.where=='deptPicker'){
 %>
