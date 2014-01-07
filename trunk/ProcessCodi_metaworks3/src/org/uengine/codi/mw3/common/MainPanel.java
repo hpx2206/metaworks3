@@ -32,6 +32,4 @@ public class MainPanel {
 		setTopPanel(topPanel);
 		setAppPanel(appPanel);
 	}
-	
-	
 }

@@ -8,7 +8,6 @@ import org.uengine.codi.mw3.model.ContactWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.PerspectivePanel;
 import org.uengine.codi.mw3.model.PerspectiveWindow;
-import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicPerspective;
 
@@ -53,9 +52,6 @@ public class Knowledge {
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size: '40%', north__size:52");
 		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("knol");
-		outerLayout.setNorth(processTopPanel);
 		outerLayout.setCenter(wfWindow);
 		outerLayout.setEast(mashup);
 		outerLayout.setName("center");
@@ -74,7 +70,6 @@ public class Knowledge {
 			
 			// contact
 			ContactWindow contactWindow = new ContactWindow(session.getUser());
-			contactWindow.getContactPanel().setSearchBox(null);
 			
 			// layout
 			Layout westLayout = new Layout();

@@ -1,15 +1,14 @@
 package org.uengine.codi.mw3.admin;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.model.ContentTopPanel;
 import org.uengine.codi.mw3.model.ICompany;
-import org.uengine.codi.mw3.model.MenuTopPanel;
+import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.SearchBox;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TodoBadge;
+import org.uengine.codi.mw3.model.TopCenterPanel;
+import org.uengine.codi.mw3.model.TopMenuPanel;
 import org.uengine.codi.mw3.model.TopPanelUser;
 
 public class TopPanel {
@@ -20,9 +19,6 @@ public class TopPanel {
 	
 	public TopPanel(Session session) {
 		setSession(session);
-		
-		MetaworksContext metaworksContext = new MetaworksContext();
-		metaworksContext.setWhere("topPanel");
 		
 		notificationBadge = new NotificationBadge();
 		
@@ -36,12 +32,10 @@ public class TopPanel {
 			e.printStackTrace();
 		}
 		setLoginUser(topPanelUser);
-		this.getLoginUser().setMetaworksContext(metaworksContext);
-
-		setWindowPanel(new WindowPanel());
+		this.getLoginUser().getMetaworksContext().setWhere(IUser.WHERE_SELF);
 		
-		MenuTopPanel menuTopPanel = new MenuTopPanel();
-		this.setMenuTopPanel(menuTopPanel);
+		TopMenuPanel topMenuPanel = new TopMenuPanel();
+		this.setTopMenuPanel(topMenuPanel);
 
 		setCompany(session.getCompany());
 	}
@@ -111,28 +105,20 @@ public class TopPanel {
 			this.company = company;
 		}
 		
-	WindowPanel windowPanel;
-		public WindowPanel getWindowPanel() {
-			return windowPanel;
-		}	
-		public void setWindowPanel(WindowPanel windowPanel) {
-			this.windowPanel = windowPanel;
-		}
-		
-	ContentTopPanel contentTopPanel;
-		public ContentTopPanel getContentTopPanel() {
-			return contentTopPanel;
-		}
-		public void setContentTopPanel(ContentTopPanel contentTopPanel) {
-			this.contentTopPanel = contentTopPanel;
-		}
+	TopCenterPanel topCenterPanel;
+	public TopCenterPanel getTopCenterPanel() {
+		return topCenterPanel;
+	}
+	public void setTopCenterPanel(TopCenterPanel topCenterPanel) {
+		this.topCenterPanel = topCenterPanel;
+	}
 
-	MenuTopPanel menuTopPanel;
-		public MenuTopPanel getMenuTopPanel() {
-			return menuTopPanel;
-		}
-		public void setMenuTopPanel(MenuTopPanel menuTopPanel) {
-			this.menuTopPanel = menuTopPanel;
-		}
+	TopMenuPanel topMenuPanel;
+	public TopMenuPanel getTopMenuPanel() {
+		return topMenuPanel;
+	}
+	public void setTopMenuPanel(TopMenuPanel topMenuPanel) {
+		this.topMenuPanel = topMenuPanel;
+	}
 
 }
