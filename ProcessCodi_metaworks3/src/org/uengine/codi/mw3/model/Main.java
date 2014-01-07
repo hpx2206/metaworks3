@@ -108,14 +108,11 @@ public class Main {
 			
 		}
 		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("process");
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
 			session.setUx("phone");
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(processTopPanel);
 			
 			Window instanceListWindow = createInstanceListWindow(session);
 			
@@ -132,7 +129,6 @@ public class Main {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
-			outerLayout.setNorth(processTopPanel);			
 			outerLayout.setWest(createInstanceListWindow(session));
 			outerLayout.setCenter(createNewInstancePanel(session));	
 			outerLayout.setName("center");
@@ -193,7 +189,6 @@ public class Main {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 168");
-			outerLayout.setNorth(processTopPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
 			//processTopPanel.setLoginUser(null);

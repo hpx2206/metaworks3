@@ -12,12 +12,8 @@ public class MainLMS {
 	}
 	public MainLMS(Session session) throws Exception {
 		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("LMS");
-		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size:300, north__size:52");
-		outerLayout.setNorth(processTopPanel);
 		
 		Window window = new Window();	
 		String url = "http://aof4.sns.active4c.4csoft.com:8088/index.jsp?knowledge=Y";
