@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.ide.Dashboard;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.marketplace.Marketplace;
+import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
 
 public class AllAppList {
 
@@ -62,7 +63,7 @@ public class AllAppList {
 	public Object[] goSNS() throws Exception {
 		SNS sns = new SNS(session);
 		
-		return new Object[]{new Refresh(sns), new Refresh(sns.loadContentTopPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		return new Object[]{new Refresh(sns), new Refresh(sns.loadTopCenterPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
@@ -70,7 +71,7 @@ public class AllAppList {
 		
 		Dashboard dashboasd = new Dashboard(session);
 		
-		return new Object[]{new Refresh(dashboasd), new Refresh(dashboasd.loadContentTopPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		return new Object[]{new Refresh(dashboasd), new Refresh(dashboasd.loadTopCenterPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
@@ -81,5 +82,13 @@ public class AllAppList {
 		marketplace.load();
 		
 		return new Object[]{new Refresh(marketplace), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] goJMS() throws Exception{
+		ProcessExplorer processExplorer = new ProcessExplorer();
+		processExplorer.load(session);
+		
+		return new Object[]{new Refresh(processExplorer), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 }

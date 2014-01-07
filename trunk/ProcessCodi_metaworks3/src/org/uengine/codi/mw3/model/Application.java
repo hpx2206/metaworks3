@@ -1,11 +1,26 @@
 package org.uengine.codi.mw3.model;
 
 public class Application {
-	public ContentTopPanel loadContentTopPanel(Session session) throws Exception{
-		ContentTopPanel contentTopPanel = new ContentTopPanel(ContentTopPanel.HOW_TRAY);
+	
+	public Session session;
+	
+	String topCenterPanelType;
+		public String getTopCenterPanelType() {
+			return topCenterPanelType;
+		}
+		public void setTopCenterPanelType(String topCenterPanelType) {
+			this.topCenterPanelType = topCenterPanelType;
+		}
+
+	public Application(){
+		this.setTopCenterPanelType(TopCenterPanel.HOW_TRAY);
+	}
+	
+	public TopCenterPanel loadTopCenterPanel(Session session) throws Exception {
+		TopCenterPanel contentTopPanel = new TopCenterPanel(this.getTopCenterPanelType());
 		contentTopPanel.session = session;
 		contentTopPanel.load();
 		
-		return contentTopPanel;
+		return contentTopPanel; 
 	}
 }
