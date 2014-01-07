@@ -1,14 +1,10 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.File;
-import java.util.ArrayList;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.metadata.MetadataProperty;
-import org.metaworks.metadata.MetadataXML;
-import org.uengine.codi.mw3.CodiClassLoader;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 public class AddProcessMapPanel {
@@ -23,6 +19,7 @@ public class AddProcessMapPanel {
 		}
 
 	MetadataProperty metadataTree;
+		@Hidden
 		@Face(displayName="$MetadataResource")
 		public MetadataProperty getMetadataTree() {
 			return metadataTree;
@@ -34,26 +31,24 @@ public class AddProcessMapPanel {
 	@AutowiredFromClient
 	public Session session;
 		
-	public void load(){
+	public void load() throws Exception{
+		
+		
+		ResourceFile processDefinitions = new ResourceFile();
+		
+		processDefinitions.setMetaworksContext(new MetaworksContext());	
+		processDefinitions.getMetaworksContext().setWhen("appendProcessMap");
+
+		processDefinitions.setFolder(true);
+		processDefinitions.setAlias("");
+		processDefinitions.setName("/");
+		processDefinitions.session = session;
+		processDefinitions.drillDown();
+		
+		this.setProcessDefinitions(processDefinitions);
 		
 		// TODO: 작업해야함
-//		ResourceFile processDefinitions = new ResourceFile();
-//		
-//		processDefinitions.setMetaworksContext(new MetaworksContext());	
-//		processDefinitions.getMetaworksContext().setWhen("appendProcessMap");
-//
-//		processDefinitions.setFolder(true);
-//		processDefinitions.setAlias("");
-//		processDefinitions.setName("/");
-//		processDefinitions.session = session;
-//		processDefinitions.drillDown();
-//		
-//		this.setProcessDefinitions(processDefinitions);
-//		
-//		
-//		
-//		
-//		
+		
 //		MetadataProperty metadataTree = new MetadataProperty();
 //		metadataTree.setMetaworksContext(new MetaworksContext());
 //		metadataTree.getMetaworksContext().setHow("appendProcessMap");
