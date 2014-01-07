@@ -5,7 +5,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
-import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
 
@@ -56,17 +55,7 @@ public class SelfService {
 		centerLayout.setName("center");
 		centerLayout.setCenter(windowPanel);
 		
-		Layout outerLayout = new Layout();
-		outerLayout.setCenter(centerLayout);
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
-		
-		if("oce".equals(session.getUx())){
-			outerLayout.setNorth(new ProcessTopPanel(session));
-		}else{
-			outerLayout.setNorth(new TopPanel(session));
-		}
-
-		this.setLayout(outerLayout);
+		this.setLayout(centerLayout);
 	}
 		
 	@ServiceMethod
@@ -78,17 +67,7 @@ public class SelfService {
 		centerLayout.setName("center");
 		centerLayout.setCenter(windowPanel);
 		
-		Layout outerLayout = new Layout();
-		outerLayout.setCenter(centerLayout);
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
-		
-		if("oce".equals(session.getUx())){
-			outerLayout.setNorth(new ProcessTopPanel(session));
-		}else{
-			outerLayout.setNorth(new TopPanel(session));
-		}
-
-		this.setLayout(outerLayout);
+		this.setLayout(centerLayout);
 		
 	}
 

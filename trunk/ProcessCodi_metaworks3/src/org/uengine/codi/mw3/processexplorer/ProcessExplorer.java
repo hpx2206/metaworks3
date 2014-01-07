@@ -3,11 +3,11 @@ package org.uengine.codi.mw3.processexplorer;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.model.ProcessTopPanel;
+import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
-public class ProcessExplorer {
+public class ProcessExplorer extends Application {
 	Layout layout;
 		public Layout getLayout() {
 			return layout;
@@ -16,14 +16,6 @@ public class ProcessExplorer {
 			this.layout = layout;
 		}
 		
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
-			return pageNavigator;
-		}
-		public void setPageNavigator(PageNavigator pageNavigator) {
-			this.pageNavigator = pageNavigator;
-		}		
-
 	@AutowiredToClient
 	public Session session;
 		
@@ -43,9 +35,6 @@ public class ProcessExplorer {
 		
 		processExplorerWindow.setPanel(processViewWindow);
 		
-		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
-		processTopPanel.setPageType("ProcessExplorer");
-		
 		Layout centerLayout = new Layout();
 		centerLayout.setId("center");
 		centerLayout.setName("center");
@@ -60,10 +49,8 @@ public class ProcessExplorer {
 		outerLayout.setWest(processExplorerPerspectiveWindow);
 		outerLayout.setName("center");
 		outerLayout.setCenter(centerLayout);
-		outerLayout.setNorth(processTopPanel);
 		
 		this.setLayout(outerLayout);
-		this.pageNavigator = new PageNavigator();
 	}
 	
 }
