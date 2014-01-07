@@ -3,6 +3,7 @@
  */
 package org.metaworks.dao;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -44,7 +45,10 @@ public class UniqueKeyGenerator {
 	}
 
 	public static Long issueRoleMappingKey(ConnectionFactory cf) throws Exception{
-		return issueKey("RoleMapping", cf);
+		Map options = new HashMap();
+		options.put("useTableNameHeader", true);
+
+		return issueKey("RoleMapping", options, cf);
 	}
 	
 	public static Long issueWorkItemKey(ConnectionFactory cf) throws Exception{
