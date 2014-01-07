@@ -18,13 +18,11 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.Download;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.ide.Workspace;
@@ -169,7 +167,7 @@ public class ResourceFile implements ContextAware{
 		}
 		
 	@ServiceMethod(callByContent=true, except="childs", target="self")
-	public void drillDown(){
+	public void drillDown() throws Exception {
 		if(isOpened()){
 			setOpened(false);
 			
@@ -230,7 +228,7 @@ public class ResourceFile implements ContextAware{
 	}
 	
 	@ServiceMethod
-	public void drillDownDeeply(){
+	public void drillDownDeeply() throws Exception{
 		drillDown();
 		
 		if(childs!=null)
@@ -377,7 +375,7 @@ public class ResourceFile implements ContextAware{
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V", needToConfirm=true)
-	public Object[] paste(){
+	public Object[] paste() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceFile && isFolder()){
 			ResourceFile fileInClipboard = (ResourceFile) clipboard;
