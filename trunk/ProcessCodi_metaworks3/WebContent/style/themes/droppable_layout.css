@@ -3561,8 +3561,7 @@ legend {display:none;}
     margin-right:5px;
 }
 #wih_button a .comment_select{ width:16px; height:13px; position:absolute; bottom:-38px;background: url('../../images/waveStyle/i_comment_selector.png') no-repeat; }
-#wih_button .comment_btn_on {
-}
+
 
 #wih_button a span {
     display: block;
@@ -3571,8 +3570,14 @@ legend {display:none;}
     line-height: 20px;
     overflow: hidden
 }
+#wih_button .comment_btn_on {
+	font-size:15px;	
+}
+
 #wih_button .comment_btn_off {
     color:#ccc;  
+    font-size:15px;
+    
 }
 
 #wih_button .comment_btn_off .comment_select,#wih_button .memo_btn_off .comment_select,#wih_button .file_btn_off .comment_select,#wih_button .code_btn_off .comment_select,#wih_button .etc_btn_off .comment_select{
