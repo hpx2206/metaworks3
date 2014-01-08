@@ -51,28 +51,28 @@
 			
 %>			
 				<div id="wih_button" style="<%=hideButton ? "display:none;" : ""%>">		
-				<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span><div class="comment_select"></div></a>
+				<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span class="icon-bubble"></span><span><%=mw3.localize("$Write")%></span><div class="comment_select"></div></a>
 	<%
 				        if( session && session.ux != 'pad'){
 	%>			
-        					<a class="<%= value.type=='memo'?'memo_btn_on':'memo_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%><div class="comment_select"></div></span></a>
+        					<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span class="icon-newspaper"></span><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%><div class="comment_select"></div></span></a>
         				
         					<!-- 회상회의 -->
         					<% if(value.useBBB){ %>
-        						<a class="<%= value.type=='remoteConf'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newRemoteConference.caller()%>"><span id="method_<%=objectId%>_newRemoteConference"><%=mw3.localize("$RemoteConference")%><div class="comment_select"></div></span></a>
+        						<a class="<%= value.type=='remoteConf'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newRemoteConference.caller()%>"><span class="icon-screen"></span><span id="method_<%=objectId%>_newRemoteConference"><%=mw3.localize("$RemoteConference")%><div class="comment_select"></div></span></a>
         					<% }%>
 	<%
 				        }
 				
 	%>
-    				<a class="<%= (value.type=='file' || value.type=='document')?'file_btn_on':'file_btn_off' %>" onclick="<%=methods.newDocument.caller()%>"><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span><div class="comment_select"></div></a>
+    				<a class="<%= (value.type=='file' || value.type=='document')?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newDocument.caller()%>"><span class="icon-attachment"></span><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span><div class="comment_select"></div></a>
     			
-    				<a class="<%= value.type=='src'?'code_btn_on':'code_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%><div class="comment_select"></div></span></a>
+    				<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span class="icon-code"></span><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%><div class="comment_select"></div></span></a>
 				
 	<%		
 				if(session && session.employee && session.employee.approved && !session.employee.guest && newActivityFlag){
 	%>
-			<a class="<%= value.type=='etc'?'etc_btn_on':'etc_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity">앱<div class="comment_select"></div></span></a>
+			<a class="<%= value.type=='etc'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"><span class="glyphicon glyphicon-th"></span><span id="method_<%=objectId%>_newActivity">앱<div class="comment_select"></div></span></a>
 	<%
 				}					
 			}
