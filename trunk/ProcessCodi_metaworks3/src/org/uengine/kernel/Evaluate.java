@@ -77,10 +77,16 @@ public class Evaluate extends Condition{
 			FieldDescriptor fields[] = returnValObjInst.getFieldDescriptors();
 			Object keyVal = null;
 			String [] wholePartPath = getKey().replace('.','@').split("@");
-			if( wholePartPath.length == 3 ){	// variable + ObjectName + Object.variable
-				Object rootObject = instance.getBeanProperty(wholePartPath[0] + "." + wholePartPath[1]);
+			if( wholePartPath.length >= 2 ){
+				Object rootObject = instance.getBeanProperty(wholePartPath[0]);
+				String rootObjectName = wholePartPath[1] ;
+				if( wholePartPath.length > 2 ){
+					for(int j = 2 ; j < wholePartPath.length; j++){
+						rootObjectName += "."+ wholePartPath[j];
+					}
+				}
 				if( rootObject != null ){
-					keyVal = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
+					keyVal = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
 				}
 			}else{
 				for(int j=0; j<fields.length; j++){
