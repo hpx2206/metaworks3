@@ -15912,7 +15912,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id) {
-	var me = this, group, geomElement, _style = {}, childNodes, i, boundary, titleLine, group_hidden, _tempStyle = {};
+	var me = this, group, geomElement, _style = {}, childNodes, i, boundary, titleLine, group_hidden, _tempStyle = {}, geom_shadow;
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
@@ -15941,11 +15941,21 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 	geomElement = this._drawGeometry(group.node, geometry, _style);
 	group.node.geom = geometry;
 	group.attr(me._CONFIG.DEFAULT_STYLE.SHAPE);
+	
+	// Draw Hidden Shadow
+	boundary = geometry.getBoundary();
+	group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft()
+		, (boundary.getUpperRight().x - boundary.getUpperLeft().x)
+		, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
+	geom_shadow = this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
+	geom_shadow.style = new OG.geometry.Style({
+		'cursor': "move"
+	});
 
 	// 타이틀 라인 Drawing
 	OG.Util.apply(_tempStyle, geometry.style.map, _style);
 	if (_tempStyle['label-direction'] && _tempStyle['vertical-align'] === 'top') {
-		boundary = geometry.getBoundary();
+		//boundary = geometry.getBoundary();
 		if (_tempStyle['label-direction'] === 'vertical') {
 			titleLine = new OG.geometry.Line(
 				[boundary.getUpperLeft().x + 20, boundary.getUpperLeft().y],
