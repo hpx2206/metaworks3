@@ -57,7 +57,7 @@ public class ValueChainNavigatorPanel implements ContextAware {
 				if(majorProcessDefinitionNode.getChild().get(i) instanceof MajorProcessDefinitionNode) {
 					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)majorProcessDefinitionNode.getChild().get(i);
 					node.setMetaworksContext(this.getMetaworksContext());
-					
+					node.injectionMetaworksContext(this.getMetaworksContext(), node.getChild());
 				} else {
 					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)majorProcessDefinitionNode.getChild().get(i);
 					node.setMetaworksContext(this.getMetaworksContext());

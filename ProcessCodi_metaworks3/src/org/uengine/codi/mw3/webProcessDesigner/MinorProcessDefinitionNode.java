@@ -69,8 +69,11 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			processViewWindow.load();
 			
 			return new Refresh(processViewWindow);
-			
-		} else if("viewer".equals(this.getMetaworksContext().getHow())){
+	
+		} 
+		// TODO 바로 추가시에는 how가 viewer가 아니다.. 기본적으로 path가 있을 경우 프로세스를 보여준다.
+//		} else if("viewer".equals(this.getMetaworksContext().getHow())){
+		if(TreeNode.TYPE_FILE_PROCESS.equals(this.getType()) && this.getPath() != null){
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setAlias(this.getPath());
 			processViewerPanel.setDefinitionId(this.getName());
