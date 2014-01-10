@@ -22,9 +22,12 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);
 	
 	var scrollDiv = $('#objDiv_' + this.objectId + " #addcontact-con");
+	var scrollDivChild = $('#objDiv_' + this.objectId + " #addcontact-con > div");
 	
 	scrollDiv.scroll(function(e) {
 		if(scrollDiv.scrollTop() > 1){
+			/*scrollDiv.animate({height:scrollDivChild.height()});*/
+			
 			scrollDiv.animate({height:$('body').height()-50});
 			scrollDiv.closest('.target_stick,.target_popup').animate({top:3});
 		}
