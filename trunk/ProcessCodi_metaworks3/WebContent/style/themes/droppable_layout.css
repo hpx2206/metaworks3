@@ -3155,7 +3155,8 @@ font-size:20px;
 .lst_type2 a{color:#2d2c2d;text-decoration:none}
 .lst_type2 a:hover{text-decoration:underline}
 
-.user_card_top{height:30px; border-bottom:1px solid #ededed; padding: 5px 10px;}
+.user_card_top{height:5px;	background:url('../../images/signIn/login_top.png');}
+.user_card_title{height:30px; border-bottom:1px solid #ededed; padding: 5px 10px;}
 /* //UI Object */
 
 

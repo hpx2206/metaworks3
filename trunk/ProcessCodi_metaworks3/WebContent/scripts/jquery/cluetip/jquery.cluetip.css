@@ -177,7 +177,7 @@ top: 7px;
 .cluetip-rounded #cluetip-inner {
   zoom: 1;
   margin: 0px;
-  padding: 5px 0px 0px;
+  padding: 0px 0px 0px;
   border-bottom:1px solid #ccc;
   float:none !important;
 }
