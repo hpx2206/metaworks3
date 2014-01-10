@@ -3197,7 +3197,7 @@ font-size:20px;
 .tbl_type td{padding:0px;border-bottom:1px solid #e5e5e5;color:#4c4c4c}
 .tbl_type .a td{padding:0px;border-top:none;color:#4c4c4c}
 
-.tbl_type_border {border-top:1px solid #ccc;border-left:1px solid #e9e9e9;}
+.tbl_type_border {border-top:1px solid #e9e9e9;border-left:1px solid #e9e9e9;}
 .tbl_type_border th{ text-align:center;border-bottom:1px solid #e9e9e9;border-right:1px solid #e9e9e9; background:#f7f7f7;}
 .tbl_type_border td{ text-align:center;border-bottom:1px solid #e9e9e9;border-right:1px solid #e9e9e9;}
 /* //table */
