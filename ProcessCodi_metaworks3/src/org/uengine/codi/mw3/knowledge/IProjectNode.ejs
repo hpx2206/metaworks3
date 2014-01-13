@@ -1,6 +1,6 @@
 <%
 	if(value){
-		if(mw3.how == 'perspective'){
+		if(mw3.how == 'perspectivePanel'){
 			if(value.secuopt=='1'){
 %>	
  				<a onClick="<%=methods.loadTopic.caller()%>" href="#"><span class="icon-lab"></span><%=value.name%></a>
@@ -16,7 +16,7 @@
 			 <li style="cursor: pointer" onClick="<%=methods.goIDE.caller()%>">
 				 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
 				 <%=value.name%>
-				 <div class="editicon3" onClick="<%=methods.remove.caller()%>">
+				 <div class="editicon3" onClick="<%=methods.remove.caller()%>"></div>
 			 </li>
 		</ul>
 <%	
