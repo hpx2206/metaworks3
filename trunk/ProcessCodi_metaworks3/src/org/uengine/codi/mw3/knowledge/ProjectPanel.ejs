@@ -23,7 +23,14 @@
 		</ul>
 	<% } %>
 	
-	<%=methods.addProject.here()%>
+	<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+		<li>
+			<a href="#" onclick="<%=methods.addProject.caller()%>"><span class="icon-plus"></span><b>새프로젝트 만들기</b></a>
+			<div class="clear"></div>
+		</li>
+	</ul>
+		
+	
 	
 <%
 	}
