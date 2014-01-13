@@ -7,7 +7,7 @@
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ Licensed under the MIT (http://raphaeljs.com/license.html) license.│ \\
 // └────────────────────────────────────────────────────────────────────┘ \\
-
+ 
 /* group 기능 추가 (by 이승백, 2012-04-17)
 @example
 var paper = new Raphael('canvas', 800, 600);
@@ -14675,6 +14675,19 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 
 	// Draw text
 	element = this._PAPER.text(position[0], position[1], text);
+	
+	//FIXME: only support SVG format
+	/*
+	element = $(group).append("foreignObject") 
+		.attr("id", id)
+		.attr("x", position[0])
+		.attr("y", position[1])
+		.attr("width",width)
+		.attr("height",height)
+		.append("xhtml:body")
+		.append("p")
+		.text(text);
+		*/
 	element.attr(_style);
 
 	// real size
@@ -15321,6 +15334,7 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSelf) {
+
 	var me = this, group, _style = {},
 		vertices = line.getVertices(),
 		from = vertices[0], to = vertices[vertices.length - 1],
@@ -19297,15 +19311,21 @@ OG.handler.EventHandler.prototype = {
 						isSelf = fromShape && toShape && fromShape.id === toShape.id;
 
 						if (!isSelf || me._isSelfConnectable(toShape.shape)) {
-							// draw
-							element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
-							if (element) {
-								guide = me._RENDERER.drawGuide(element);
-								if (guide) {
-									me.setResizable(element, guide, true);
-									me._RENDERER.toFront(guide.group);
-								}
-							}
+                            if(toShape != null && fromShape != null){
+                                // draw
+                                element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
+                                if (element) {
+                                    guide = me._RENDERER.drawGuide(element);
+                                    if (guide) {
+                                        me.setResizable(element, guide, true);
+                                        me._RENDERER.toFront(guide.group);
+                                    }
+                                }
+                            }else{
+                                if (element){
+                                    me._RENDERER.remove(element);
+                                }
+                            }
 						}
 					}
 				});
