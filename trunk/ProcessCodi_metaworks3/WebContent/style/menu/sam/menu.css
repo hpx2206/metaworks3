@@ -6,6 +6,7 @@ version: 2.8.1
 */
 .yuimenu{
     top:-999em;left:-999em;
+	outline: none;
 }
 
 .yuimenubar{
@@ -150,9 +151,9 @@ version: 2.8.1
 }
 
 .yuimenu .bd{
-    *zoom:1;_zoom:normal;
-	/*
-border:solid 1px #808080;
+/* 
+    * *zoom:1;_zoom:normal;	
+	border:solid 1px #808080;
 	background-color:#fff;
 */
 }
@@ -213,6 +214,7 @@ background-clip: padding-box;
 
 .yuimenuitem{
     _border-bottom:solid 1px #fff;
+	outline: none;
 }
 
 .yuimenuitemlabel{
@@ -252,8 +254,8 @@ white-space: nowrap;
 }
 
 .yuimenuitem-selected{
-    background-color:#B3D4FF;
-    outline: none;
+    background-color:#EAECED;
+	outline: none;
 }
 
 .yuimenuitemlabel-disabled,.yuimenuitemlabel-disabled:visited{
