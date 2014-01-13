@@ -843,7 +843,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus(WORKITEM_STATUS_RUNNING);									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				instanceRef.setName(this.getTitle());
+				String title = this.getTitle();
+				if(title.length() > 200){
+					title = title.substring(0, 200) + "...";
+				}
+				instanceRef.setName(title);
 				if(this.getFolderId() != null){
 					instanceRef.setTopicId(this.getFolderId());
 				}
