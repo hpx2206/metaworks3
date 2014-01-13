@@ -15897,6 +15897,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 	}
 	// draw hidden edge
 	this._drawGeometry(group.node, edge, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
+    _style["cursor"]="default";
 	// draw Edge
 	this._drawGeometry(group.node, edge, _style);
 	group.node.geom = edge;
@@ -19322,6 +19323,7 @@ OG.handler.EventHandler.prototype = {
                                     }
                                 }
                             }else{
+                                // remove edge
                                 if (element){
                                     me._RENDERER.remove(element);
                                 }
@@ -22914,7 +22916,7 @@ OG.graph.Canvas.prototype = {
 			if (edge) {
 				// enable event
 				this._HANDLER.setClickSelectable(edge, this._CONFIG.SELECTABLE);
-				this._HANDLER.setMovable(edge, this._CONFIG.SELECTABLE && edge.shape.MOVABLE);
+				//this._HANDLER.setMovable(edge, this._CONFIG.SELECTABLE && edge.shape.MOVABLE);
 				this._HANDLER.setResizable(edge, guide, this._CONFIG.SELECTABLE && edge.shape.RESIZABLE);
 				if (edge.shape.LABEL_EDITABLE) {
 					this._HANDLER.enableEditLabel(edge);
