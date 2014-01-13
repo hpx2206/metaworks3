@@ -28,6 +28,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.util.CodiStatusUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -286,7 +287,7 @@ public class FileWorkItem extends WorkItem{
 		return isConvert;
 	}
 
-	public boolean createPreviewFile(String targetPath, String convertType){
+	public boolean createPreviewFile(String targetPath, String convertType, String targetUserId){
 
 		try {
 			this.copyFrom(this.databaseMe());
@@ -314,7 +315,6 @@ public class FileWorkItem extends WorkItem{
 
 		if(convert){
 			CodiStatusUtil statusUtil = new CodiStatusUtil(targetPath, this.getTaskId() + "_" +  convertType);
-
 			if(!statusUtil.ready())
 				return false;
 
@@ -381,8 +381,7 @@ public class FileWorkItem extends WorkItem{
 						return false;
 					}
 
-					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
-
+					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
 				}
 			}else if("image".equals(convertType)){
 				
@@ -399,7 +398,7 @@ public class FileWorkItem extends WorkItem{
 					databaseMe().setExt2(preview.getPageCount());
 
 
-					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
+					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
 				} catch (Exception e) {
 					e.printStackTrace();
 					return false;
