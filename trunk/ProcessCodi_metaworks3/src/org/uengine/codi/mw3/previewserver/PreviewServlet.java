@@ -105,9 +105,10 @@ public class PreviewServlet extends HttpServlet {
 				if(connectionFactory!=null)
 					tx.setConnectionFactory(connectionFactory);
 
-
+				
 				try {
-					converted = workItem.createPreviewFile(taskDirectory.getAbsolutePath(), previewType);
+					String targetUserId = (String)request.getSession().getAttribute("userId");
+					converted = workItem.createPreviewFile(taskDirectory.getAbsolutePath(), previewType, targetUserId);
 					tx.commit();
 				} catch(Throwable e){
 					try {
