@@ -186,7 +186,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 					$("#post_" + this.objectId).focus();
 				}
 			}else{
-				value.add();
+				if(value.title != null)
+					value.add();
 			}
 		}
 		
