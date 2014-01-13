@@ -151,8 +151,10 @@ version: 2.8.1
 
 .yuimenu .bd{
     *zoom:1;_zoom:normal;
-	border:solid 1px #808080;
+	/*
+border:solid 1px #808080;
 	background-color:#fff;
+*/
 }
 
 .yuimenu .yuimenu .bd{
@@ -164,7 +166,17 @@ version: 2.8.1
 }
 
 .yuimenu ul.first-of-type{
-    border-width:0;
+   padding: 5px 0;
+margin: 2px 0 0;
+font-size: 14px;
+list-style: none;
+background-color: #fff;
+border: 1px solid #ccc;
+border: 1px solid rgba(0,0,0,0.15);
+border-radius: 4px;
+-webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+background-clip: padding-box;
 }
 
 .yuimenu h6{
@@ -212,7 +224,13 @@ version: 2.8.1
 }
 
 .yuimenuitemlabel:visited{
-    color:#000;
+    display: block;
+padding: 3px 20px;
+clear: both;
+font-weight: normal;
+line-height: 1.428571429;
+color: #333;
+white-space: nowrap;
 }
 
 .yuimenuitemlabel .helptext{
@@ -228,7 +246,9 @@ version: 2.8.1
 }
 
 .yui-menu-shadow-visible{
-    background-color:#000;opacity:.12;filter:alpha(opacity=12);
+  /*
+  background-color:#000;opacity:.12;filter:alpha(opacity=12);
+*/
 }
 
 .yuimenuitem-selected{
