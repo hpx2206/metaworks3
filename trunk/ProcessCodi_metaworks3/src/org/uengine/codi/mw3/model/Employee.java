@@ -935,7 +935,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				
 		findEmployee.setPreferUX(defaultUX);
 		findEmployee.setPreferMob(defaultMob);
-		findEmployee.setEmpName(null);
 		findEmployee.setPassword(null);
 		return findEmployee;
 	}

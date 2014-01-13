@@ -462,6 +462,10 @@ public class Login implements ContextAware {
 		String defaultMob = "auto";
 		
 		//tenantName.substring(0, tenantName.lastIndexOf("@"))
+		
+		String empName = employee.getEmail().substring(0, employee.getEmail().indexOf("@"));
+		
+		employee.setEmpName(empName);	
 		employee.setGlobalCom(tenantId);
 		employee.setAuthKey(authKey);
 		employee.setIsAdmin(isAdmin);
