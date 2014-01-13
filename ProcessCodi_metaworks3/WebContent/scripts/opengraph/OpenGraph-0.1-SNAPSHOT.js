@@ -10581,7 +10581,57 @@ OG.shape.bpmn.A_Task.prototype.createTerminal = function(){
 }
 
 /**
- * BPMN : Task Activity Shape
+ * BPMN : Human Task Shape
+ *
+ * @class
+ * @extends OG.shape.bpmn.A_Task
+ * @requires OG.common.*, OG.geometry.*, OG.shape.bpmn.A_Task
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.A_HumanTask = function (label) {
+    OG.shape.bpmn.A_HumanTask.superclass.call(this);
+    
+    this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
+    this.label = label;
+    this.CONNECTABLE = true;
+    this.GROUP_COLLAPSIBLE = false;
+    this.LoopType = "None";
+    this.TaskType = "User";
+}
+OG.shape.bpmn.A_HumanTask.prototype = new OG.shape.bpmn.A_Task();
+OG.shape.bpmn.A_HumanTask.superclass = OG.shape.bpmn.A_Task;
+OG.shape.bpmn.A_HumanTask.prototype.constructor = OG.shape.bpmn.A_HumanTask;
+OG.A_HumanTask = OG.shape.bpmn.A_HumanTask;
+
+/**
+ * BPMN : Service(Invokation) Task Shape
+ *
+ * @class
+ * @extends OG.shape.bpmn.A_Task
+ * @requires OG.common.*, OG.geometry.*, OG.shape.bpmn.A_Task
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.A_ServiceTask = function (label) {
+    OG.shape.bpmn.A_HumanTask.superclass.call(this);
+    
+    this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
+    this.label = label;
+    this.CONNECTABLE = true;
+    this.GROUP_COLLAPSIBLE = false;
+    this.LoopType = "None";
+    this.TaskType = "Service";
+}
+OG.shape.bpmn.A_ServiceTask.prototype = new OG.shape.bpmn.A_Task();
+OG.shape.bpmn.A_ServiceTask.superclass = OG.shape.bpmn.A_Task;
+OG.shape.bpmn.A_ServiceTask.prototype.constructor = OG.shape.bpmn.A_ServiceTask;
+OG.A_ServiceTask = OG.shape.bpmn.A_ServiceTask;
+
+/**
+ * BPMN : Signal Activity Shape
  *
  * @class
  * @extends OG.shape.GeomShape
@@ -14877,13 +14927,19 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 
 		shape.geom = groupNode.geom;
 	}
-
+    
 	if (shape.geom) {
 		groupNode.shape = shape;
 	}
 	groupNode.shapeStyle = (style instanceof OG.geometry.Style) ? style.map : style;
-
 	$(groupNode).attr("_shape_id", shape.SHAPE_ID);
+    
+    
+    // Draw for Task
+    if(shape instanceof OG.shape.bpmn.A_Task){
+           this.drawLoopType(groupNode);
+           this.drawTaskType(groupNode);
+    }
 
 	// Draw Label
 	if (!(shape instanceof OG.shape.TextShape)) {
@@ -14922,7 +14978,7 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 			delete groupNode.angle;
 		}
 	}
-
+    
     $(me.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, element) {
         var elements, i;
         elements = me.getElementsByBBox(element.shape.geom.getBoundary());
