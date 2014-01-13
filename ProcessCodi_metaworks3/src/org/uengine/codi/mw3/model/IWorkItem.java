@@ -17,6 +17,7 @@ import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
 @Table(name = "bpm_worklist")
@@ -290,6 +291,10 @@ public interface IWorkItem extends IDAO{
 		public String getExt10();
 		public void setExt10(String ext10);
 
+		@NonSavable
+		@NonLoadable
+		public IFrame getConference();
+		public void setConference(IFrame conference);
 		
 		@NonSavable
 		@NonLoadable
