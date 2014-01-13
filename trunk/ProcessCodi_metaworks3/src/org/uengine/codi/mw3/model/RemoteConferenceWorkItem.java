@@ -138,11 +138,91 @@ public class RemoteConferenceWorkItem extends WorkItem{
 
         burr.close();
         
-		databaseMe().setStatus("Completed");
+		databaseMe().setStatus("Waited");
 		setWriter(session.getUser());
 		setTitle(databaseMe().getTitle());
 		
-//		databaseMe().setExt4(getRecordURI);
+		recodingCheck();
+		
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object recodingCheck() throws Exception{
+		String salt = GlobalContext.getPropertyString("bbb.security.salt");
+		
+		String meetingID = databaseMe().getExt1();
+		String recordParam = "meetingID=" + meetingID;
+		String checkSum = hex_sha1("getRecordings" + recordParam + salt);
+		String recordURI = "/bigbluebutton/api/getRecordings?" + recordParam + "&checksum=" + checkSum;
+		
+		String recordUrl = null;
+		String recordID = null;
+		
+		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port")), "http");
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+			
+		GetMethod getMethod = new GetMethod(recordURI);
+
+		httpClient.executeMethod(getMethod);
+		
+		InputStream is = getMethod.getResponseBodyAsStream();
+		boolean returnFalg = false;
+		try{
+			SAXBuilder builder = new SAXBuilder();
+			builder.setValidation(false);
+			builder.setExpandEntities(false);
+			builder.setIgnoringElementContentWhitespace(true);
+	
+			Document documentToAttach = builder.build(is);
+			Element rootElement = documentToAttach.getRootElement();
+			
+			Element childs = rootElement.getChild("recordings").getChild("recording");
+			if( childs != null ){
+				List<Element> childsList = childs.getChildren();
+				
+				for(Element elem : childsList){
+					if("recordID".equals(elem.getName())){
+						recordID = elem.getValue();
+					}
+				}
+				recordUrl = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/presentation/playback.html?meetingId=" + recordID;
+				IFrame iframe = new IFrame();
+				iframe.setSrc(recordUrl);
+				iframe.setWidth("100%");
+				this.setConference(iframe);
+				this.setContentLoaded(true);
+				returnFalg = true;
+				databaseMe().setStatus("Completed");
+			}else{
+				
+				IFrame iframe = new IFrame();
+				String loadingUrl = "http://" 
+				        + GlobalContext.getPropertyString("web.server.ip" , "a") 
+				        + ":"
+						+ GlobalContext.getPropertyString("web.server.port", "b") 
+						+ "/"
+						+ GlobalContext.getPropertyString("web.context.root", "c") 
+						+ "/images/waveStyle/loadingBg.png";
+				
+				iframe.setSrc(loadingUrl);
+				iframe.setWidth("100%");
+				this.setConference(iframe);
+				this.setContentLoaded(false);
+				returnFalg = false;
+
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			is.close();
+			
+		}
+		if( returnFalg ){
+			return this;
+		}else{
+			return null;
+		}
 		
 	}
 
@@ -254,6 +334,13 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		iframe.setWidth("100%");
 		
 		return new ModalWindow(iframe, 1000, 550, databaseMe().getTitle());
+		
+	}
+	
+	@Override
+	public void loadContents() throws Exception {
+		this.recodingCheck();
+		this.setContentLoaded(true);
 		
 	}
 	

@@ -254,7 +254,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setFile(MetaworksFile file) {
 			this.file = file;
 		}
-		
+	
+	IFrame conference;
+		public IFrame getConference() {
+			return conference;
+		}
+		public void setConference(IFrame conference) {
+			this.conference = conference;
+		}
+	
 	OverlayCommentOption overlayCommentOption;
 		public OverlayCommentOption getOverlayCommentOption() {
 			return overlayCommentOption;

@@ -36,6 +36,26 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		contentLoad = true;
 	}else if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
 		contentLoad = true;
+	}else if(workItem.type == 'remoteConf'){
+		 
+		 if(!workItem.contentLoaded){
+		 	contentLoad = true;
+		}else if(workItem.status =='Waited'){
+			var workItemObjectId = this.objectId;
+			
+			var jobId = setInterval(function(){
+			var workItemsss = mw3.objects[workItemObjectId];
+				if( workItemsss.status !='Completed' ){
+					mw3.call(workItemObjectId, 'recodingCheck');
+				}else{
+					if(jobId != ''){ 
+						clearInterval(jobId);
+						return;
+					}
+				}
+			
+			}, 10000);
+		}
 	}
 	
 	if(contentLoad)
