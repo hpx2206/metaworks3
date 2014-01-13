@@ -576,9 +576,9 @@ public class User extends Database<IUser> implements IUser {
 		employee.setMetaworksContext(new MetaworksContext());
 		employee.getMetaworksContext().setWhere("user_menu_option");
 		
-		int height = 59;
+		int height = 87;
 		if(employee.getIsAdmin())
-			height = 89;
+			height = 116;
 				
 		return new Object[]{new Popup(200, height, employee)};
 	}
