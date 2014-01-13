@@ -19311,16 +19311,22 @@ OG.handler.EventHandler.prototype = {
 						isSelf = fromShape && toShape && fromShape.id === toShape.id;
 
 						if (!isSelf || me._isSelfConnectable(toShape.shape)) {
-							// draw
-							element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
-							if (element) {
-								guide = me._RENDERER.drawGuide(element);
-								if (guide) {
-									me.setResizable(element, guide, true);
-									me._RENDERER.toFront(guide.group);
-								}
-							}
-                        }
+                            if(toShape != null && fromShape != null){
+                                // draw
+                                element = me._RENDERER.connect(fromTerminal, toTerminal, element, element.shape.geom.style);
+                                if (element) {
+                                    guide = me._RENDERER.drawGuide(element);
+                                    if (guide) {
+                                        me.setResizable(element, guide, true);
+                                        me._RENDERER.toFront(guide.group);
+                                    }
+                                }
+                            }else{
+                                if (element){
+                                    me._RENDERER.remove(element);
+                                }
+                            }
+						}
 					}
 				});
 
