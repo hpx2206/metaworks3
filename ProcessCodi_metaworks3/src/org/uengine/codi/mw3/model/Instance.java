@@ -1548,8 +1548,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			ids.getMetaworksContext().setWhere("sns");
 		}
 		ids.getMetaworksContext().setWhen("edit");
-		
-		return new Popup(400,340,ids);
+		Popup pop = new Popup(400,340,ids);
+		pop.setName("$Schedule");
+		return pop;
 	}
 	
 	public Popup newSubInstance() throws Exception{
