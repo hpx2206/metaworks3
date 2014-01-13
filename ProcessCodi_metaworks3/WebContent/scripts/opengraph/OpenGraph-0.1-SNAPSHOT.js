@@ -16637,9 +16637,10 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 	if (isSelf) {
 		fromXY = toXY = fromShape.shape.geom.getBoundary().getRightCenter();
 	}
+    
 	// 라인 드로잉
 	edge = this.drawEdge(new OG.Line(fromXY, toXY),
-		OG.Util.apply(_style, {"edge-direction": fromDrct + " " + toDrct, "edge-type": "plain"}), edge ? edge.id : null, isSelf);
+		OG.Util.apply(_style, {"edge-direction": fromDrct + " " + toDrct, "edge-type": this._CONFIG.DEFAULT_STYLE.EDGE["edge-type"]}), edge ? edge.id : null, isSelf);
 
 	// Draw Label
 	this.drawLabel(edge, label);
