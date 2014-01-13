@@ -20064,13 +20064,13 @@ OG.handler.EventHandler.prototype = {
 				});
 			}
 
-			if (isSelectable && me._isMovable(element.shape)) {
-				me._RENDERER.setAttr(element, {cursor: 'move'});
-				OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
-			} else {
+//			if (isSelectable && me._isMovable(element.shape)) {
+//				me._RENDERER.setAttr(element, {cursor: 'move'});
+//				OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
+//			} else {
 				me._RENDERER.setAttr(element, {cursor: 'pointer'});
 				OG.Util.apply(element.shape.geom.style.map, {cursor: 'pointer'});
-			}
+//			}
 		} else {
 			$(element).unbind('click');
 			me._RENDERER.setAttr(element, {cursor: me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
