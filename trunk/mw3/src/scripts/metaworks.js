@@ -422,8 +422,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						for(var objectId in objectIds){
 							var targetElement = document.getElementById(mw3._getObjectDivId(objectId));
 							
-							if(targetElement == null || targetElement.innerHTML == mw3.MESSAGE_LOADING)
-								break;
+							//if(targetElement == null || targetElement.innerHTML == mw3.MESSAGE_LOADING)
+							//	break;
 							
 							var object = mw3.objects[objectId];
 							
