@@ -45,12 +45,19 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 //	})
 	
 	if(this.object && this.object.preloaded){
-		
 		var scrollDiv = $('#objDiv_' + this.objectId + " .bottom");
-		
+		var instanceList = this.object.instanceList;
+		var prelastMore = lastMore;
 		scrollDiv.scroll(function(e) {
-			if(scrollDiv.scrollTop() > scrollDiv.find('div').eq(0).height() - scrollDiv.height()-200){
-				mw3.objects[lastMore].more();
+			if( instanceList ){
+				var instanceListObjectId = instanceList.__objectId;
+				var instanceListObjectDivId = mw3._getObjectDivId(instanceListObjectId);
+				if(scrollDiv.scrollTop() > $('#' + instanceListObjectDivId).height() - scrollDiv.height()-100){
+					if( prelastMore != lastMore){
+						prelastMore = lastMore;
+    	                mw3.objects[lastMore].more();
+					}
+	            }
 			}
 		});
 		
