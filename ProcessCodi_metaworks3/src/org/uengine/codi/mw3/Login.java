@@ -407,6 +407,11 @@ public class Login implements ContextAware {
 		}
 	}
 	
+	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_STICK)
+	public Object signUpForMain() throws Exception {
+		return signUp();
+	}
+	
 	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object signUp() throws Exception {
 		
