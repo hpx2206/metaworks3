@@ -328,7 +328,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 #addcontact li { float: left; }
 
-.adduserline { height: 46px; }
+.adduserline { height: 46px; overflow:hidden; }
 .adduserline dd {
 	margin: 3px 0 0 3px;
 	height: 40px;
@@ -449,11 +449,13 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 	font-size: 9pt;
 	text-align: center;
 	height: 19px;
+	line-height:17px;
 	color: #000;
 	letter-spacing: -1px;
 	border-right: 1px solid #b5b9bf;
 	padding: 0 10px 0 3px;
 	cursor: pointer;
+	
 }
 .toolbar li.right {
 	float: right !important; 
@@ -466,7 +468,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 	height: 20px;
 }
 .toolbarIcon {
-	line-height:20px;
+	line-height:18px;
 	padding:0px 4px;
 	font-size:13px;
 	color:#7A8794
