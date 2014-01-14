@@ -19,7 +19,6 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.uengine.codi.mw3.model.FileWorkItem;
 import org.uengine.codi.util.CodiStatusUtil;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.util.UEngineUtil;
 
 /**
  * Servlet implementation class PreviewServlet
@@ -107,8 +106,7 @@ public class PreviewServlet extends HttpServlet {
 
 				
 				try {
-					String targetUserId = (String)request.getSession().getAttribute("userId");
-					converted = workItem.createPreviewFile(taskDirectory.getAbsolutePath(), previewType, targetUserId);
+					converted = workItem.createPreviewFile(taskDirectory.getAbsolutePath(), previewType);
 					tx.commit();
 				} catch(Throwable e){
 					try {

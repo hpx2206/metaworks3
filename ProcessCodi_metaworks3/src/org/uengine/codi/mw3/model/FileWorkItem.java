@@ -28,7 +28,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.util.CodiStatusUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -114,6 +113,7 @@ public class FileWorkItem extends WorkItem{
 			if(mimeType != null && mimeType.indexOf("image") != 0){
 				Preview preview = new Preview();
 				preview.setTaskId(getTaskId());
+				preview.setGrpTaskId(this.getGrpTaskId());
 				preview.setMimeType(mimeType);
 				this.setPreview(preview);
 			}else{
@@ -132,9 +132,9 @@ public class FileWorkItem extends WorkItem{
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			this.setMajorVer(nextVersion);
-			this.databaseMe().setTitle(getFile().getFileTransfer().getFilename());
+			String title = this.getFile().getFilename();
+			this.databaseMe().setTitle(title);
 			String originInstId = instanceViewContent.getInstanceView().getInstanceId();
-			String title = this.getTitle();
 			
 			FileWorkItem fileWorkItem = new FileWorkItem();
 			
@@ -164,6 +164,7 @@ public class FileWorkItem extends WorkItem{
 			String thisVersion = String.valueOf(nextVersion+ "." + 0);
 			workItemVersionChooser.getVersionSelector().add(thisVersion , thisVersion);
 			workItemVersionChooser.setSelectedVersion(thisVersion);
+			workItemVersionChooser.getTaskIdsPerVersion().add(this.getTaskId());
 			workItemVersionChooser.getVersionSelector().setSelectedValue(workItemVersionChooser.getSelectedVersion());
 			
 			SystemWorkItem SystemWorkItem = new SystemWorkItem();
@@ -179,6 +180,11 @@ public class FileWorkItem extends WorkItem{
 			fileWorkItem.setType(WORKITEM_TYPE_GENERIC);
 			fileWorkItem.loadCurrentView();
 			
+			if( this.getPreview() != null ){
+				this.getPreview().setTaskId(this.getTaskId());
+			}
+			this.setFileTransfer(null);
+			this.getFile().setFileTransfer(null);
 			
 //			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 //			instanceViewThreadPanel.session = session;
@@ -287,7 +293,7 @@ public class FileWorkItem extends WorkItem{
 		return isConvert;
 	}
 
-	public boolean createPreviewFile(String targetPath, String convertType, String targetUserId){
+	public boolean createPreviewFile(String targetPath, String convertType){
 
 		try {
 			this.copyFrom(this.databaseMe());
@@ -369,6 +375,7 @@ public class FileWorkItem extends WorkItem{
 
 				if(converted){
 					Preview preview = new Preview();
+					preview.setGrpTaskId(this.getGrpTaskId());
 					preview.setTaskId(this.getTaskId());
 					preview.setMimeType(convertType);
 					preview.setConvertStatus("1");
@@ -380,8 +387,8 @@ public class FileWorkItem extends WorkItem{
 						e.printStackTrace();
 						return false;
 					}
-
-					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
+//					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
 				}
 			}else if("image".equals(convertType)){
 				
@@ -390,6 +397,7 @@ public class FileWorkItem extends WorkItem{
 
 					Preview preview = new Preview();
 					preview.setTaskId(this.getTaskId());
+					preview.setGrpTaskId(this.getGrpTaskId());
 					preview.setMimeType(convertType);
 					preview.setPageCount(String.valueOf(pageCount));
 					preview.setConvertStatus("2");
@@ -397,8 +405,8 @@ public class FileWorkItem extends WorkItem{
 					databaseMe().setExt1(preview.getConvertStatus());
 					databaseMe().setExt2(preview.getPageCount());
 
-
-					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
+//					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
 				} catch (Exception e) {
 					e.printStackTrace();
 					return false;

@@ -66,18 +66,15 @@ public class WorkItemVersionChooser implements ORMappingListener{
 
 	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE)
 	public IWorkItem choose() throws Exception{
-		WorkItem workItem = null;
+		FileWorkItem workItem = null;
 		int i=0;
 		for(String value : getVersionSelector().getOptionValues()){
 			if(value.equals(getVersionSelector().getSelected())){
-				workItem = new WorkItem();
+				workItem = new FileWorkItem();
 				workItem.setTaskId(getTaskIdsPerVersion().get(i));
 				workItem.copyFrom(workItem.databaseMe());
-				while(workItem.next()){
-					workItem.setMetaworksContext(new MetaworksContext());
-					workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
-				}
-
+				workItem.setMetaworksContext(new MetaworksContext());
+				workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
 			}
 			i++;
 		}
@@ -100,7 +97,7 @@ public class WorkItemVersionChooser implements ORMappingListener{
 				
 				//workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where instid=?instId and grptaskid=?grpTaskId order by taskid desc, majorver desc");
 				//workitem.set("instId", getInstId());
-				workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where grptaskid=?grpTaskId order by taskid desc, majorver desc");				
+				workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where grptaskid=?grpTaskId and majorver != 0 order by taskid desc, majorver desc");				
 				workitem.set("grpTaskId", getGrpTaskId());
 				
 				workitem.select();
