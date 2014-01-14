@@ -193,8 +193,8 @@ public interface IWorkItem extends IDAO{
 		
 		
 		@ORMapping(
-			databaseFields = {"taskId", "ext1", "ext2"}, 
-			objectFields = {"taskId", "convertStatus", "pageCount"},
+			databaseFields = {"taskId", "grpTaskId","ext1", "ext2"}, 
+			objectFields = {"taskId", "grpTaskId","convertStatus", "pageCount"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen = {"type=='file'","type=='document'","type=='generic'"}		
 		)

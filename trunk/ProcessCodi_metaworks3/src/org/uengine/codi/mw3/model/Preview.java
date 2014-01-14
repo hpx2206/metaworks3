@@ -13,8 +13,15 @@ public class Preview {
 			this.pageCount = pageCount;
 		}
 		
-	Long taskId;
+	Long grpTaskId;
 		@Id
+		public Long getGrpTaskId() {
+			return grpTaskId;
+		}
+		public void setGrpTaskId(Long grpTaskId) {
+			this.grpTaskId = grpTaskId;
+		}
+	Long taskId;
 		public Long getTaskId() {
 			return taskId;
 		}
