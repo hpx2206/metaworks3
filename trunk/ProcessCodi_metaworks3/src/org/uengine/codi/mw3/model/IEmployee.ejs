@@ -318,12 +318,12 @@ if(value){
 	<%
 		if(value.isAdmin){
 	%>
-		<div class="info_top_show_detail" onClick="<%=methods.showAdmin.caller() %>" style="border:none; cursor:pointer;"><span class="icon-unlocked" style="margin-right:8px;"></span>관리자</div>
+		<div class="info_top_show_detail" onClick="<%=methods.showAdmin.caller() %>" style=" cursor:pointer;"><span class="icon-user4" style="margin-right:8px;"></span>관리자</div>
 	<%
 		}
 	%>
-		<div class="info_top_show_detail" onClick="<%=methods.showNotiSetting.caller() %>" style="border:none; cursor:pointer;"><img src="images/waveStyle/i_logout.png"><%=mw3.localize('$NotiSetting')%></div>
-		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><img src="images/waveStyle/i_logout.png"><%=mw3.localize('$Logout')%></div>
+		<div class="info_top_show_detail" onClick="<%=methods.showNotiSetting.caller() %>" style="cursor:pointer;"><span class="icon-cog2" style="margin-right:8px;"></span><%=mw3.localize('$NotiSetting')%></div>
+		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><span class="icon-unlocked" style="margin-right:8px;"></span><%=mw3.localize('$Logout')%></div>
 	<%
 	} else {
 	%>
