@@ -10,7 +10,7 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 		return true;
 
 	if(user.metaworksContext && user.metaworksContext.how!='picker'){
-		$('#objDiv_' + this.objectId).parent().css({'border':'none'});	
+		$('#objDiv_' + this.objectId).parent().css({'border':'none','margin-bottom':'10px'});	
 	}
 
 	if(user.metaworksContext && user.metaworksContext.when=='contacts'){
