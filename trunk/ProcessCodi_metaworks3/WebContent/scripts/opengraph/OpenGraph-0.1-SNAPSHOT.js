@@ -18908,7 +18908,7 @@ OG.handler.EventHandler.prototype = {
 
 											// enable event
 											me.setClickSelectable(clonedElement, me._isSelectable(clonedElement.shape));
-											//me.setMovable(clonedElement, me._isMovable(clonedElement.shape));
+											me.setMovable(clonedElement, me._isMovable(clonedElement.shape));
 											if (me._CONFIG.GROUP_DROPABLE && clonedElement.shape.GROUP_DROPABLE) {
 												me.enableDragAndDropGroup(clonedElement);
 											}
@@ -18946,7 +18946,7 @@ OG.handler.EventHandler.prototype = {
 												//if (edge && guide) {
 													// enable event
 													me.setClickSelectable(edge, me._isSelectable(edge.shape));
-													me.setMovable(edge, me._isMovable(edge.shape));
+													//me.setMovable(edge, me._isMovable(edge.shape));
 													me.setResizable(edge, guide, me._isResizable(edge.shape));
 													if (me._isLabelEditable(edge.shape)) {
 														me.enableEditLabel(edge);
