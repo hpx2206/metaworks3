@@ -10,11 +10,11 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 		return true;
 
 	if(user.metaworksContext && user.metaworksContext.how!='picker'){
-		$('#objDiv_' + this.objectId).parent().css({'border':'none','margin-bottom':'10px'});	
+		$('#objDiv_' + this.objectId).parent().css({'border':'none'});	
 	}
 
 	if(user.metaworksContext && user.metaworksContext.when=='contacts'){
-		$('#objDiv_' + this.objectId).parent().parent().css({'float':'left'});	
+		$('#objDiv_' + this.objectId).parent().parent().css({'float':'left','margin-bottom':'10px'});	
 	}
 
 	
