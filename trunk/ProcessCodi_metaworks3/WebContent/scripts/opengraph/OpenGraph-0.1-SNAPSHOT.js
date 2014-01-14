@@ -8717,9 +8717,9 @@ OG.geometry.PolyLine = function (vertices) {
 	 * @type OG.geometry.Coordinate[]
 	 */
 	this.vertices = [];
-
+    
 	// Array 좌표를 OG.geometry.Coordinate 로 변환
-	if (vertices && vertices.length > 0) {
+	if (vertices && vertices.length > 0) {    
 		for (i = 0; i < vertices.length; i++) {
 			this.vertices.push(this.convertCoordinate(vertices[i]));
 		}
@@ -9162,7 +9162,7 @@ OG.geometry.BezierCurve.prototype.toString = function () {
 	s.push("type:'" + OG.Constants.GEOM_NAME[this.TYPE] + "'");
 	s.push("vertices:[" + this.getVertices() + "]");
 	s.push("controlPoints:[" + this.getControlPoints() + "]");
-
+ 
 	return "{" + s.join() + "}";
 };
 
@@ -9435,15 +9435,15 @@ OG.geometry.GeometryCollection.prototype.toString = function () {
  * @param {OG.geometry.Coordinate} to 라인 끝 좌표값
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.geometry.Line = function (from, to) {
+OG.geometry.Line = function (from, to, poi) {
 
 	var _from = this.convertCoordinate(from),
 		_to = this.convertCoordinate(to);
 
 	OG.geometry.Line.superclass.call(this, [
 		[_from.x, _from.y],
-		[_to.x, _to.y]
-	]);
+		[_to.x, _to.y],
+	], poi);
 
 	this.TYPE = OG.Constants.GEOM_TYPE.LINE;
 	this.style = new OG.geometry.Style();
@@ -15378,6 +15378,42 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
 };
 
 /**
+ * 사용자가 지정한 변곡점을 반환 
+ * - 조건: 
+ *   오직 4개의 점을 가지고있는 다각선에서 
+ *   변곡점이 자동으로 그려진 점의 위치가 아닐 때
+ *
+ * - issue: 사용자가 지정한 변곡점(?)은 유지되어야 함
+**/
+OG.renderer.RaphaelRenderer.prototype._getPointOfInflectionFromEdge = function (line) {
+    var offset = null, _startV, _endV, _centerV,_vertices, _ax, _ay;
+    if(line instanceof OG.geometry.PolyLine){
+        _vertices = line.getVertices();
+        //한개의 변곡점 일 때 처리하도록 함
+        if(_vertices.length != 4){
+            return offset;
+        }
+
+        _startV = _vertices[0];
+        _endV = _vertices[_vertices.length - 1];
+        _centerV = _vertices[1];
+        
+        offset = {
+            "x":_centerV["x"] - _startV["x"]
+            ,"y":_centerV["y"] - _startV["y"]
+        };
+        
+        _ax = OG.Util.round((_endV["x"] - _startV["x"]) / 2);
+        _ay = OG.Util.round((_endV["y"] - _startV["y"]) / 2);
+               
+        offset["x"] = (offset["x"] == _ax)?0:offset["x"];
+        offset["y"] = (offset["y"] == _ay)?0:offset["y"];
+    }
+    
+    return offset;
+};
+
+/**
  * 라인을 캔버스에 드로잉한다.
  * OG.geometry.Line 타입인 경우 EdgeType 에 따라 Path 를 자동으로 계산하며,
  * OG.geometry.PolyLine 인 경우는 주어진 Path 그대로 drawing 한다.
@@ -15389,8 +15425,8 @@ OG.renderer.RaphaelRenderer.prototype.drawImage = function (position, imgSrc, si
  * @return {Element} Group DOM Element with geometry
  * @override
  */
-OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSelf) {
-
+OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSelf, pointOfInflection) {
+   
 	var me = this, group, _style = {},
 		vertices = line.getVertices(),
 		from = vertices[0], to = vertices[vertices.length - 1],
@@ -15412,21 +15448,41 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		},
 		getArrayOfOrthogonal_2 = function (from, to, isHorizontal) {
 			if (isHorizontal) {
-				return [
-					[from[0], from[1]],
-					[OG.Util.round((from[0] + to[0]) / 2), from[1]],
-					[OG.Util.round((from[0] + to[0]) / 2), to[1]],
-					[to[0], to[1]]
-				];
+               // console.log("horizontal!!");
+			   if(pointOfInflection && pointOfInflection["x"] > 0){
+					return [
+						[from[0], from[1]],
+						[from[0] + pointOfInflection["x"], from[1]],
+						[from[0] + pointOfInflection["x"], to[1]],
+						[to[0], to[1]]
+					];
+			   }else{
+					return [
+						[from[0], from[1]],
+						[OG.Util.round((from[0] + to[0]) / 2), from[1]],
+						[OG.Util.round((from[0] + to[0]) / 2), to[1]],
+						[to[0], to[1]]
+					];
+				}
 			} else {
-				return [
-					[from[0], from[1]],
-					[from[0], OG.Util.round((from[1] + to[1]) / 2)],
-					[to[0], OG.Util.round((from[1] + to[1]) / 2)],
-					[to[0], to[1]]
-				];
+				if(pointOfInflection && pointOfInflection["y"] > 0){
+					return [
+						[from[0], from[1]],
+						[from[0], from[1] + pointOfInflection["y"]],
+						[to[0], from[1] + pointOfInflection["y"]],
+						[to[0], to[1]]
+					];				
+				}else{
+					return [
+						[from[0], from[1]],
+						[from[0], OG.Util.round((from[1] + to[1]) / 2)],
+						[to[0], OG.Util.round((from[1] + to[1]) / 2)],
+						[to[0], to[1]]
+					];
+				}
 			}
 		};
+    
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {},
 		OG.Util.apply({}, line.style.map, me._CONFIG.DEFAULT_STYLE.EDGE));
@@ -16511,10 +16567,16 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 			}
 		}
 	}
+    
+    // issue: 유저가 선택한 변곡점은 계속 유지되어야 함
+    var pointOfInflection = null, _edgeElem = me._ELE_MAP.get(edgeElement);
+    if(_edgeElem.node.shape.geom){
+        pointOfInflection = me._getPointOfInflectionFromEdge(_edgeElem.node.shape.geom);
+    }
 
 	// redraw edge
-	edge = this.drawEdge(new OG.Line(fromXY, toXY),
-		OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
+	edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+		OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf, pointOfInflection);
 
 	// Draw Label
 	this.drawLabel(edge);
@@ -18846,7 +18908,7 @@ OG.handler.EventHandler.prototype = {
 
 											// enable event
 											me.setClickSelectable(clonedElement, me._isSelectable(clonedElement.shape));
-											me.setMovable(clonedElement, me._isMovable(clonedElement.shape));
+											//me.setMovable(clonedElement, me._isMovable(clonedElement.shape));
 											if (me._CONFIG.GROUP_DROPABLE && clonedElement.shape.GROUP_DROPABLE) {
 												me.enableDragAndDropGroup(clonedElement);
 											}
@@ -22654,12 +22716,12 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		/**
 		 * Shape Move & Resize 시 이동 간격
 		 */
-		MOVE_SNAP_SIZE: 1,
+		MOVE_SNAP_SIZE: 5,
 
 		/**
 		 * 터미널 cross 사이즈
 		 */
-		TERMINAL_SIZE: 3,
+		TERMINAL_SIZE: 6,
 
 		/**
 		 * Shape 복사시 패딩 사이즈
