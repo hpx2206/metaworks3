@@ -33,6 +33,7 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
@@ -1041,14 +1042,24 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
-		
+		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null && !"".equals(getImageFile().getFileTransfer().getFilename())){
+			if( getImageFile().getFileTransfer().getMimeType() != null  && !getImageFile().getFileTransfer().getMimeType().startsWith("image")){
+				throw new MetaworksException("$OnlyImageFileCanUpload");
+			}
+		}
 		this.saveMe();
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
 			
+			SNS sns = new SNS(session);
+			TopPanel topPanel = new TopPanel(session);
+			topPanel.setTopCenterPanel(sns.loadTopCenterPanel(session));
+			
+			MainPanel mainPanel = new MainPanel(topPanel, sns);
+			
 //			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
-			return new Object[] {new Remover(new ModalWindow(), true), new Refresh(new MainPanel(new Main(session)))};
+			return new Object[] {new Remover(new ModalWindow(), true), new Refresh(mainPanel) };
 		}
 		
 		if(this.getIsAdmin() == false && !this.isApproved()){

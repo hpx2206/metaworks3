@@ -111,21 +111,18 @@
                 Metaworks3.prototype.showInfo = function(objId, message){
                     var divId = mw3._getObjectDivId(objId);
                     var offset = $('#' + divId).offset();                    
-                    
-                    if(offset){
-                    	var offsetRight = offset.left + $('#' + divId).width() - 20;                    
-                        var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
-                        
-                        var html;
-                        html = "<div id='info_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_done_box'  >"+message+"</div></div>";
-                        
-                        $('body').append(html);
-                        setTimeout(function(){
-                        	$('body>#info_div_' + objId).fadeOut(500);
-                        	setTimeout(function(){$('body>#info_div_' + objId).remove();},500);	
-                        	},2000);
-                    }
-                    
+//                    if(offset){
+//                    	var offsetRight = offset.left + $('#' + divId).width() - 20;                    
+//                        var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
+//                        var html;
+//                        html = "<div id='info_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_done_box'  >"+message+"</div></div>";
+//                        
+//                        $('body').append(html);
+//                        setTimeout(function(){
+//                        	$('body>#info_div_' + objId).fadeOut(500);
+//                        	setTimeout(function(){$('body>#info_div_' + objId).remove();},500);	
+//                        	},2000);
+//                    }
                 };
                 
                 Metaworks3.prototype.endLoading = function(objId){

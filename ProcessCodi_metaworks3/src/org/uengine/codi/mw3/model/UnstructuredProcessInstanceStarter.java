@@ -70,9 +70,9 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		
 		InstanceViewContent instanceView = (InstanceViewContent) instanceViewAndInstanceList[0];
 		
-		instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
-		instanceView.getInstanceView().getInstanceNameChanger().session = session;
-		instanceView.getInstanceView().getInstanceNameChanger().change();
+//		instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
+//		instanceView.getInstanceView().getInstanceNameChanger().session = session;
+//		instanceView.getInstanceView().getInstanceNameChanger().change();
 
 		final String instId = instanceView.getInstanceView().instanceId;
 		Instance instance = new Instance();
@@ -83,6 +83,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		instance.databaseMe().setInitiator(initUser);
 //		instance.databaseMe().setInitEp(session.user.getUserId());
 		instance.databaseMe().setDueDate(null);
+		instance.databaseMe().setName(getTitle());
 		
 		if(session.getEmployee() != null)
 			instance.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());

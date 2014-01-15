@@ -121,7 +121,9 @@ public interface IWorkItem extends IDAO{
 		
 		@ORMapping(
 			objectFields={"taskId","instId","content","extFile","tool","startDate","endDate"},
-			databaseFields={"taskId","instId","content","extFile","tool","startDate","endDate"})
+			databaseFields={"taskId","instId","content","extFile","tool","startDate","endDate"},
+			availableWhen= "type=='file'"
+			)
 		public DocumentDrag getDocumentDrag();
 		public void setDocumentDrag(DocumentDrag documentDrag);
 		

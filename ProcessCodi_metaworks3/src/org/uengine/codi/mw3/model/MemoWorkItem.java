@@ -3,18 +3,11 @@ package org.uengine.codi.mw3.model;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 
-import org.codehaus.commons.compiler.CompileException;
-import org.codehaus.commons.compiler.jdk.SimpleCompiler;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.example.ide.CompileError;
-import org.metaworks.example.ide.SourceCode;
-import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.kernel.FormActivity;
 import org.uengine.util.UEngineUtil;
@@ -57,7 +50,7 @@ public class MemoWorkItem extends WorkItem{
 				fos.write(getMemo().getContents());
 				fos.close();
 				
-				setExtFile(relativeFilePath);
+				this.setExtFile(relativeFilePath);
 
 				getMemo().setContents("...loading...");
 					
@@ -74,14 +67,42 @@ public class MemoWorkItem extends WorkItem{
 	public void loadContents() throws Exception {
 		if(getExtFile()!=null){
 			
-			ByteArrayOutputStream bao = new ByteArrayOutputStream();
-
-			String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + getExtFile();
-
-			UEngineUtil.copyStream(new FileInputStream(absoluteFilePath), bao);
-			
-			getMemo().setContents(bao.toString());
-			setContentLoaded(true);
+			InputStream is = null;
+			ByteArrayOutputStream bao = null;
+			try{
+				bao = new ByteArrayOutputStream();
+				String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + getExtFile();
+				is = new FileInputStream(absoluteFilePath);
+	
+				UEngineUtil.copyStream(is, bao);
+				
+				getMemo().setContents(bao.toString());
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}finally{
+				setContentLoaded(true);
+				
+				if(is != null){
+					try {
+						is.close();
+						is = null;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+					
+				if(bao != null){
+					try {
+						bao.close();
+						bao = null;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 
 		}
 	}

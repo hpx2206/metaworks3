@@ -1018,6 +1018,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setLastCmnt2(cmntTitle);
 			}
 			
+			if( WORKITEM_TYPE_MEMO.equals(this.getType()) ){
+				this.setContentLoaded(false);
+			}
+			
 //			this.copyFrom(databaseMe());
 //			this.databaseMe();
 			this.syncToDatabaseMe();
