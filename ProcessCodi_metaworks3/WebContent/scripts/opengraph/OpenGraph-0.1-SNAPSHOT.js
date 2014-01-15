@@ -5403,7 +5403,7 @@ window.Raphael.vml && function (R) {
         // res.paper.canvas.style.display = E;
     },
     addGradientFill = function (o, gradient, fill) {
-        console.log('addGradientFill 3');
+        //console.log('addGradientFill 3');
 
         o.attrs = o.attrs || {};
         var attrs = o.attrs,
@@ -14985,7 +14985,7 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
         for(i=0; i<elements.length; i++){
             if(element.id != elements[i].id){
                 if(!$(elements[i]).parent().get(0).shape){
-                    console.log(element);
+                    //console.log(element);
 
                     element.appendChild(elements[i]);
                 }
@@ -15432,6 +15432,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		from = vertices[0], to = vertices[vertices.length - 1],
 		points = [], edge, edge_direction,
 		getArrayOfOrthogonal_1 = function (from, to, isHorizontal) {
+			//TODO: 유저가 선택한 변곡점은 계속 유지되어야 함
+			//console.log("call getArrayOfOrthogonal_1");
 			if (isHorizontal) {
 				return [
 					[from[0], from[1]],
@@ -15448,7 +15450,6 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		},
 		getArrayOfOrthogonal_2 = function (from, to, isHorizontal) {
 			if (isHorizontal) {
-               // console.log("horizontal!!");
 			   if(pointOfInflection && pointOfInflection["x"] > 0){
 					return [
 						[from[0], from[1]],
@@ -16571,7 +16572,8 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
     // issue: 유저가 선택한 변곡점은 계속 유지되어야 함
     var pointOfInflection = null, _edgeElem = me._ELE_MAP.get(edgeElement);
     if(_edgeElem.node.shape.geom){
-        pointOfInflection = me._getPointOfInflectionFromEdge(_edgeElem.node.shape.geom);
+		//보류
+        //pointOfInflection = me._getPointOfInflectionFromEdge(_edgeElem.node.shape.geom);
     }
 
 	// redraw edge
@@ -17251,6 +17253,7 @@ OG.renderer.RaphaelRenderer.prototype.drawRubberBand = function (position, size,
 		height = size ? size[1] : 0,
 		rect = this._getREleById(OG.Constants.RUBBER_BAND_ID),
 		_style = {};
+
 	if (rect) {
 		rect.attr({
 			x     : x,
@@ -17261,6 +17264,7 @@ OG.renderer.RaphaelRenderer.prototype.drawRubberBand = function (position, size,
 		return rect;
 	}
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {}, me._CONFIG.DEFAULT_STYLE.RUBBER_BAND);
+	__test_style = _style;
 	rect = this._PAPER.rect(x, y, width, height).attr(_style);
 	this._add(rect, OG.Constants.RUBBER_BAND_ID);
 	this._ETC_GROUP.node.appendChild(rect.node);
@@ -19177,7 +19181,7 @@ OG.handler.EventHandler.prototype = {
                             for(i=0; i<elements.length; i++){
                                 if(ele.id != elements[i].id){
                                     if(!$(elements[i]).parent().get(0).shape){
-                                        console.log(ele);
+                                        //console.log(ele);
 
                                         ele.appendChild(elements[i]);
                                     }
@@ -20237,6 +20241,7 @@ OG.handler.EventHandler.prototype = {
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
 					me._RENDERER.drawRubberBand([x, y], [Math.abs(width), Math.abs(height)]);
+					console.log("mouse_move");
 				}
 			});
 			$(rootEle).bind("mouseup", function (event) {
