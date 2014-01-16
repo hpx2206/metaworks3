@@ -383,7 +383,7 @@ margin-top: 1px;
 	float: left;
 	margin-right: 5px;
 }
-.user .user_detail { /* float: left;*/ }
+.user .user_detail {float: left; padding-left:10px; }
 .user .user_compact {
 	float: left;
 	font-size: 14px;
