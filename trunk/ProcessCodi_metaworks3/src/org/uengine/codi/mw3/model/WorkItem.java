@@ -1,11 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
@@ -35,12 +36,13 @@ import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
-import org.uengine.kernel.Role;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
+import org.uengine.persistence.processinstance.ProcessInstanceDAO;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.search.solr.SolrData;
@@ -514,10 +516,34 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			return documentDrag;
 		}
 	
-		public void setDocumentDrag(DocumentDrag documentDrag) {
+	public void setDocumentDrag(DocumentDrag documentDrag) {
 			this.documentDrag = documentDrag;
 		}
 
+	String activityAppAlias;
+		public String getActivityAppAlias() {
+			return activityAppAlias;
+		}
+		public void setActivityAppAlias(String activityAppAlias) {
+			this.activityAppAlias = activityAppAlias;
+		}
+		
+	ArrayList<String> initialFollowers;
+		public ArrayList<String> getInitialFollowers() {
+			return initialFollowers;
+		}
+		public void setInitialFollowers(ArrayList<String> initialFollowers) {
+			this.initialFollowers = initialFollowers;
+		}
+		
+	ArrayList<ParameterValue> parameters;
+		public ArrayList<ParameterValue> getParameters() {
+			return parameters;
+		}
+		public void setParameters(ArrayList<ParameterValue> parameters) {
+			this.parameters = parameters;
+		} 
+		
 	public void like() throws Exception{
 		
 	}
@@ -822,14 +848,57 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(this.getInstId() == null){
 				isNewInstance = true;
 				
-				// 인스턴스 발행을 위한 ProcessMap 사용
-				ProcessMap processMap = new ProcessMap();
-				processMap.processManager = processManager;
-				processMap.session = session;
-				processMap.setDefId(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
+				String instId = null;
 				
-				String instId = processMap.initializeProcess();
-				processMap.executeProcess(instId);
+				if(getActivityAppAlias()!=null){
+					instId = processManager.initializeProcess(getActivityAppAlias());
+					
+					StringTokenizer tokenizer = new StringTokenizer(this.getTitle());
+					String connector = null;
+					
+					if(getParameters()!=null){
+						StringBuffer generatedTitle = new StringBuffer();
+						
+						int substringDelimiter = 0;
+						for(ParameterValue pv : getParameters()){
+							connector = tokenizer.nextToken("$").substring(substringDelimiter);
+							tokenizer.nextToken(">");
+							
+							generatedTitle.append(connector).append(pv.getValueObject());
+							
+							substringDelimiter=1;
+						}
+					
+						for(ParameterValue pv : getParameters()){
+							Serializable valueObject = (Serializable)pv.getValueObject();
+							
+							processManager.setProcessVariable(instId, "", pv.getVariableName(), valueObject);
+						}
+
+						this.setTitle(generatedTitle.append(tokenizer.nextElement()).toString());
+					}
+					
+					RoleMapping rm = RoleMapping.create();
+					if(session.getUser() != null){
+						rm.setName("Initiator");
+						rm.setEndpoint(session.getUser().getUserId());
+						
+						processManager.putRoleMapping(instId, rm);
+					}
+					
+					processManager.setLoggedRoleMapping(rm);
+					processManager.executeProcess(instId);
+					processManager.applyChanges();
+				}else{
+					// 인스턴스 발행을 위한 ProcessMap 사용
+					ProcessMap processMap = new ProcessMap();
+					processMap.processManager = processManager;
+					processMap.session = session;
+					processMap.setDefId(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
+					
+					instId = processMap.initializeProcess();
+					processMap.executeProcess(instId);
+				}
 				
 				// WorkItem 의 InstId 할당
 				this.setInstId(new Long(instId));
@@ -1249,8 +1318,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
-		Object[] returnObjects = null;
-		
 		Long prevInstId = this.getInstId();
 		
 		Instance instance = new Instance();
