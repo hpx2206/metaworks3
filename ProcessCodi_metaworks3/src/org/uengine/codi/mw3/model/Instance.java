@@ -60,143 +60,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public Instance(){
 		
 	}
-	public IInstance loadOnDashboard(Navigation navigation, int page, int count)
-			throws Exception {
-		
-		Map<String, String> criteria = new HashMap<String, String>();
-		
-		if( page < 0 ){
-			page = 0;
-		}
-		// paging 
-		String tempStr = "";
-		tempStr = "" + (page * count);
-		criteria.put("startIndex", tempStr);
-
-		tempStr = "" + (page + 1) * count;
-		criteria.put("lastIndex", tempStr);
-		
-		StringBuffer worklistSql = new StringBuffer();
-		StringBuffer instanceSql = new StringBuffer();
-
-		// TODO makes all criteria
-
-		createSqlPhase1(navigation, 
-				criteria, worklistSql, instanceSql);
-		
-		StringBuffer stmt = new StringBuffer();		
-
-		String searchKeyword = navigation.getKeyword();
-		if(searchKeyword != null && !searchKeyword.isEmpty() && !Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
-			//stmt.append("(");
-			
-			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
-			
-			if(	"inbox".equals(navigation.getPerspectiveType())) {				
-				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
-				
-			}else{
-				appendedInstanceSql.append(" AND (exists (select 1 from bpm_worklist wl where inst.INSTID = wl.instid and title like ?keyword) or inst.name like ?keyword)  ");
-			}
-			
-			criteria.put("keyword", "%" + searchKeyword + "%");			
-
-//			SolrSearch solrSearch = new SolrSearch();
-//			solrSearch.setKeyword(searchKeyword);
-//			String instanceStr = solrSearch.searchInstance();
-//			//if( instanceStr != null ){
-//				appendedInstanceSql.append("   AND inst.INSTID in (" + instanceStr + ") ");
-////				criteria.put("instanceStr", "(" + instanceStr + ")" );
-//			//}
-			
-			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
-
-
-			//stmt.append(") union (");
-
-
-			//StringBuffer appendedWorkListSql = new StringBuffer(worklistSql);
-			
-			
-			//criteria.put("worklistTitle", "%" + searchKeyword + "%");			
-			
-			//createSQLPhase2(session, criteria, stmt, appendedWorkListSql, instanceSql);
-			
-			//stmt.append(")");
-
-		}else{
-
-			createSQLPhase2(navigation, criteria, stmt, worklistSql, instanceSql);
-		}
-		
-		// TODO add direct append to sql
-//		criteria.put(Instance.TASK_DIRECT_APPEND_SQL_KEY, taskSql.toString());
-//		criteria.put(Instance.INSTANCE_DIRECT_APPEND_SQL_KEY,
-//				instanceSql.toString());
-		
-		
-		
-		
-		StringBuffer bottomList = new StringBuffer();
-		bottomList.append("select bottomlist.* from (");	
-		bottomList
-			.append(stmt)
-			.append(") bottomlist");
-		
-//		if(oracle)
-//			stmt.append("where rindex between ?startIndex and ?lastIndex ");
-		
-
-/*		if ("ORACLE".equals(typeOfDBMS))
-			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
-		else if ("MYSQL".equals(typeOfDBMS))*/
-		//if( count != 0 && page != 0 )
-		
-		bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
-		
-		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
-		
-		criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
-		criteria.put("endpoint", navigation.getEmployee().getEmpCode());
-		criteria.put("partcode", navigation.getEmployee().getPartCode());
-		
-		
-		// TODO add criteria
-		Set<String> keys = criteria.keySet();
-		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
-			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
-				continue;
-			} else {
-				System.out.println(key + " : " + criteria.get(key) );
-				instanceContents.set(key, criteria.get(key));
-			}
-		}
-		System.out.println(worklistSql);
-		System.out.println("");
-		System.out.println(bottomList.toString());
-		instanceContents.select();
-		
-//		instanceContents.getCurrentUser().getMetaworksContext().setHow("small");
-		
-		return instanceContents;
-	}
 	
 	static public IInstance load(Navigation navigation, int page, int count)
 			throws Exception {
 		
-		Map<String, String> criteria = new HashMap<String, String>();
+		System.out.println("navigation.getPerspectiveMode() : " + navigation.getPerspectiveMode());
+		System.out.println("navigation.getPerspectiveType() : " + navigation.getPerspectiveType());
+		System.out.println("navigation.getPerspectiveValue() : " + navigation.getPerspectiveValue());
 		
-		if( page < 0 ){
-			page = 0;
-		}
-		// paging 
-		String tempStr = "";
-		tempStr = "" + (page * count);
-		criteria.put("startIndex", tempStr);
-
-		tempStr = "" + (page + 1) * count;
-		criteria.put("lastIndex", tempStr);
+		Map<String, String> criteria = new HashMap<String, String>();
 		
 		StringBuffer worklistSql = new StringBuffer();
 		StringBuffer instanceSql = new StringBuffer();
@@ -210,44 +82,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		String searchKeyword = navigation.getKeyword();
 		if(searchKeyword != null && !searchKeyword.isEmpty() && !Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
-			//stmt.append("(");
-			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
 			if(	"inbox".equals(navigation.getPerspectiveType())) {				
 				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
-				
 			}else{
 				appendedInstanceSql.append(" AND (exists (select 1 from bpm_worklist wl where inst.INSTID = wl.instid and title like ?keyword) or inst.name like ?keyword)  ");
 			}
 			
-			criteria.put("keyword", "%" + searchKeyword + "%");			
-
-//			SolrSearch solrSearch = new SolrSearch();
-//			solrSearch.setKeyword(searchKeyword);
-//			String instanceStr = solrSearch.searchInstance();
-//			//if( instanceStr != null ){
-//				appendedInstanceSql.append("   AND inst.INSTID in (" + instanceStr + ") ");
-////				criteria.put("instanceStr", "(" + instanceStr + ")" );
-//			//}
+			criteria.put("keyword", "%" + searchKeyword + "%");
 			
 			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
-
-
-			//stmt.append(") union (");
-
-
-			//StringBuffer appendedWorkListSql = new StringBuffer(worklistSql);
-			
-			
-			//criteria.put("worklistTitle", "%" + searchKeyword + "%");			
-			
-			//createSQLPhase2(session, criteria, stmt, appendedWorkListSql, instanceSql);
-			
-			//stmt.append(")");
-
 		}else{
-
 			createSQLPhase2(navigation, criteria, stmt, worklistSql, instanceSql);
 		}
 		
@@ -274,7 +120,20 @@ public class Instance extends Database<IInstance> implements IInstance{
 		else if ("MYSQL".equals(typeOfDBMS))*/
 		//if( count != 0 && page != 0 )
 		
-		bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
+		if(!Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())){
+			if( page < 0 ){
+				page = 0;
+			}
+			// paging 
+			String tempStr = "";
+			tempStr = "" + (page * count);
+			criteria.put("startIndex", tempStr);
+
+			tempStr = "" + (page + 1) * count;
+			criteria.put("lastIndex", tempStr);
+			
+			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
+		}
 		
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		
@@ -350,7 +209,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return null;
 	}
 	
-	static private void createSQLPhase2(Navigation navigation, Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) {
+	static private void createSQLPhase2(Navigation navigation, Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) throws Exception {
 		stmt.append("select");
 		
 		//if(oracle)
@@ -381,20 +240,27 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt
 		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
 		.append("   	   FROM bpm_worklist worklist");
-		if("role".equals(navigation.getPerspectiveType())) {
+		
+		if(Perspective.MODE_ROLE.equals(navigation.getPerspectiveMode())) {
 			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
 		}
-		if("organization.group"	.equals(navigation.getPerspectiveType())) {
+		if(Perspective.MODE_DEPT.equals(navigation.getPerspectiveMode())) {
 			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
 		}
+		
 		stmt.append("  		  WHERE worklist.status != 'RESERVED'");
-		if("role"	.equals(navigation.getPerspectiveType())) {
+		
+		if(Perspective.MODE_ROLE.equals(navigation.getPerspectiveMode())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
-			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
+			stmt.append("and rolemapping.endpoint in (select empcode from roleusertable where rolecode=?roleCode) ");
+			
+			criteria.put("roleCode", navigation.getPerspectiveValue());
 		}
-		if("organization.group"	.equals(navigation.getPerspectiveType())) {
+		if(Perspective.MODE_DEPT.equals(navigation.getPerspectiveMode())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
-			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
+			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?partCode) ");
+			
+			criteria.put("partCode", navigation.getPerspectiveValue());
 		}
 		
 		stmt.append("  		  GROUP BY worklist.rootinstid) task ");
@@ -423,391 +289,31 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else		
 			stmt.append(" ORDER BY task.startdate desc) instanceList ");
 	}
-	
-
 
 	static private void createSqlPhase1(Navigation navigation,
 			Map<String, String> criteria, StringBuffer taskSql,
-			StringBuffer instanceSql) {
+			StringBuffer instanceSql) throws Exception {
 
-		if(	"inbox"
-				.equals(navigation.getPerspectiveType()) || Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
-			
-			/*
-			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
-			criteria.put("taskStatus1", "NEW");
-			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and rolemapping.endpoint=?endpoint ");
-			taskSql.append("or(worklist.duedate is not null and worklist.defid is null)");			
-			if(session.getMetaworksContext().getWhen() != null && session.getMetaworksContext().getWhen().equals("todoBadge")){
-				instanceSql.append("and inst.status !='Completed' ");
-			}
-			*/
-			
-			taskSql
-			.append("      , bpm_worklist wl")
-			.append("           INNER JOIN bpm_rolemapping rm")
-			.append("                   ON WL.INSTID=rm.rootinstid")
-			.append("                  AND rm.endpoint=?endpoint");
-			
-			instanceSql
-			.append("   AND wl.instid=inst.instid")			
-			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
-			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
-			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
-			.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-			.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
-			.append("   AND inst.isdeleted!=?instIsdelete ")
-			.append("and inst.isDocument =?isDocument ");
-			
-			criteria.put("instIsdelete", "1");			
-			criteria.put("isDocument", "0");
-		}else if("all"
-				.equals(navigation.getPerspectiveType())) {
-			
-			taskSql
-			.append("      , bpm_worklist wl")
-			.append("           INNER JOIN bpm_rolemapping rm")
-			.append("                   ON WL.INSTID=rm.INSTID")
-			.append("                  AND rm.endpoint=?endpoint");
-			
-			instanceSql
-			.append("   AND wl.instid=inst.instid")			
-			.append("   AND inst.isdeleted!=?instIsdelete ");
-			//.append("   and inst.status=?instStatus ");
-			
-			criteria.put("instIsdelete", "1");			
-			//	criteria.put("instStatus", "Running");			
-			
-			// secureopt
-			instanceSql			
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partCode ) ) ")
-			.append("			)	 ");
-	
+		instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
+		instanceSql.append(" and inst.status!=?instStatus ");
+		instanceSql.append(" and inst.isDocument =?isDocument ");
+		
+		criteria.put("instIsdelete", "1");
+		criteria.put("instStatus", "Stopped");
+		criteria.put("isDocument", "0");
 
-		}else if("running"
-				.equals(navigation.getPerspectiveType())) {
-			
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status!=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			// secureopt
-			instanceSql
-					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?endpoint and inst.rootinstid=rm.rootinstid)) ");
-		}else if("request"
-					.equals(navigation.getPerspectiveType())) {
-			
-			instanceSql.append(" and inst.initep=?instInitep ");
-			criteria.put("instInitep", navigation.getEmployee().getEmpCode());
-			instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.isDocument =?isDocument ");
-			criteria.put("isDocument", "0");
-
-		}else if("stopped"
-					.equals(navigation.getPerspectiveType())) {
-			
-			instanceSql.append("and inst.status=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.isDocument =?isDocument ");
-			criteria.put("isDocument", "0");
-			
-			// secureopt
+		if(Perspective.TYPE_NEWSFEED.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())) {
 			instanceSql
 			.append(" and	exists ( ")
 			.append("			select 1 from bpm_procinst	 ")
 			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
+			.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
 			.append("			union all	 ")
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-
-		}else if("organization"
-					.equals(navigation.getPerspectiveType())) {
-			
-			taskSql
-			.append("      , bpm_worklist wl")
-			.append("           INNER JOIN bpm_rolemapping rm")
-			.append("                   ON WL.INSTID=rm.INSTID")
-			.append("                  AND rm.endpoint=?taskEndpoint");
-			
-			instanceSql
-			.append("   AND wl.instid=inst.instid")			
-			.append("   AND inst.isdeleted!=?instIsdelete ");
-			
-			criteria.put("taskEndpoint", navigation.getPerspectiveValue());
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-			
-		}else if("organization.group"
-				.equals(navigation.getPerspectiveType())) {
-			
-//			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
-			
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			
-			criteria.put("lastSelectedItem", navigation.getPerspectiveValue());			
-			criteria.put("instIsdelete", "1");
-			
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-
-		}else if("role"
-				.equals(navigation.getPerspectiveType())) {
-			
-//			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
-			
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			
-			criteria.put("lastSelectedItem", navigation.getPerspectiveValue());			
-			criteria.put("instIsdelete", "1");
-			
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-
-		}else if("process"
-				.equals(navigation.getPerspectiveType())) {
-			
-			instanceSql.append("and inst.defverid=?instDefVerId ");
-			criteria.put("instDefVerId", navigation.getPerspectiveValue());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-
-		}else if("strategy"
-				.equals(navigation.getPerspectiveType())) {
-			
-			instanceSql.append("and inst.strategyid=?instStrategyId ");
-			criteria.put("instStrategyId", navigation.getPerspectiveValue());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-
-		}else if("taskExt1"
-				.equals(navigation.getPerspectiveType())) {
-			
-			instanceSql.append("and task.ext1=?taskExt1 ");
-			criteria.put("taskExt1", navigation.getPerspectiveValue());
-			instanceSql.append("and inst.status=?status ");
-			criteria.put("status", "Running");
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-			.append("			)	 ");
-
-		}else if("status".equals(navigation.getPerspectiveType())) {
-			instanceSql.append("and inst.status=?status ");
-			criteria.put("status", navigation.getPerspectiveValue());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ");
-
-		}else if("allICanSee".equals(navigation.getPerspectiveType()) || "calendar".equals(navigation.getPerspectiveType()) || "dashboard".equals(navigation.getPerspectiveType()) ) {
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status!=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			instanceSql.append("and inst.isDocument =?isDocument ");
-			criteria.put("isDocument", "0");
-			
-			// secureopt
-			if(navigation.getEmployee().isApproved() && !navigation.getEmployee().isGuest()){
-				instanceSql
-				.append(" and	exists ( ")
-				.append("			select 1 from bpm_procinst	 ")
-				.append("			where inst.instid = instid	 ")
-				.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
-				.append("			union all	 ")
-				.append("			select 1 from bpm_rolemapping rm	 ")
-				.append("			where inst.instid = rm.rootinstid	 ")
-				.append("			and inst.secuopt <= 1	 ")
-				.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-				.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-				.append("			union all 	 ")
-				.append("			select 1 from bpm_topicmapping tm	 ")
-				.append("			where inst.topicId = tm.topicId	 ")
-				.append("			and inst.secuopt = 3	 ")
-				.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
-				.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
-				.append("			)	 ");
-				
-				if("calendar".equals(navigation.getPerspectiveType()))
-					instanceSql.append("			and DATE_FORMAT(inst.duedate, '%Y%m%d') = " + navigation.getPerspectiveValue());
-				
-			}else{
-				instanceSql
-				.append(" and	exists ( ")
-				.append("			select 1 from bpm_rolemapping rm	 ")
-				.append("			where inst.instid = rm.rootinstid	 ")
-				.append("			and assigntype = 0 and rm.endpoint = ?endpoint")
-				.append("			)	 ");
-			}
-			
-
-//			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?endpoint and inst.rootinstid=rm.rootinstid) ")
-//			.append("																or ?endpoint in ( select empcode from emptable where partcode in (  ")
-//			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid))))  ")
-//			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
-//			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
-//			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
-		}else if("showWall".equals(navigation.getPerspectiveType()) ) {
-			instanceSql.append(" and inst.initep=?instInitep ");
-			criteria.put("instInitep", navigation.getPerspectiveValue());
-			instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.isDocument =?isDocument ");
-			criteria.put("isDocument", "0");
-			
-			// secureopt
-			if(navigation.getEmployee().isApproved() && !navigation.getEmployee().isGuest()){
-				instanceSql
-				.append(" and	exists ( ")
-				.append("			select 1 from bpm_procinst	 ")
-				.append("			where inst.instid = instid	 ")
-				.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
-				.append("			union all	 ")
-				.append("			select 1 from bpm_rolemapping rm	 ")
-				.append("			where inst.instid = rm.rootinstid	 ")
-				.append("			and inst.secuopt <= 1	 ")
-				.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-				.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
-				.append("			union all 	 ")
-				.append("			select 1 from bpm_topicmapping tm	 ")
-				.append("			where inst.topicId = tm.topicId	 ")
-				.append("			and inst.secuopt = 3	 ")
-				.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
-				.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
-				.append("			)	 ");
-										
-				
-			}else{
-				instanceSql
-				.append(" and	exists ( ")
-				.append("			select 1 from bpm_rolemapping rm	 ")
-				.append("			where inst.instid = rm.rootinstid	 ")
-				.append("			and assigntype = 0 and rm.endpoint = ?endpoint")
-				.append("			)	 ");
-			}
-			
-
-		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "oce_app".equals(navigation.getPerspectiveType())) {
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status!=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			instanceSql.append("and inst.topicId =?topicId ");
-			criteria.put("topicId", navigation.getPerspectiveValue());
-			// secureopt
-			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	 ")
-			.append("			union all	 ")
-			.append("			select 1 from bpm_rolemapping rm	 ")
-			.append("			where inst.instid = rm.rootinstid	 ")
-			.append("			and inst.secuopt = 1	 ")
+			.append("			and inst.secuopt <= 1	 ")
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			union all 	 ")
@@ -816,18 +322,48 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and inst.secuopt = 3	 ")
 			.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
-			.append("			)	 ");
-
+			.append("		)	 ");
+		}else if(Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
+			  || Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
+			instanceSql
+			.append("   AND wl.instid=inst.instid")			
+			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
+			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
+			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
+			.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+			.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))");
+		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())){
+			instanceSql.append(" and inst.initep=?instInitep ");
+			criteria.put("instInitep", navigation.getEmployee().getEmpCode());
 		}else{
-			// personal inbox
-			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
-			criteria.put("taskStatus1", "NEW");
-			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
-			criteria.put("taskEndpoint", navigation.getEmployee().getEmpCode());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
+			throw new Exception("wrong perspective");
 		}
+		
+		if(Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType()) 
+		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())) {
+			instanceSql.append(" and wl.instid=inst.instid");
+			
+			taskSql
+			.append("      , bpm_worklist wl")
+			.append("           INNER JOIN bpm_rolemapping rm")
+			.append("                   ON WL.INSTID=rm.INSTID")
+			.append("                  AND rm.endpoint=?endpoint");
+		}
+		
+		if(Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())){
+			instanceSql.append(" and inst.duedate is not null ");
+		}
+		
+		if(Perspective.MODE_TOPIC.equals(navigation.getPerspectiveMode())){
+			instanceSql.append(" and inst.topicId = ?topicId ");
+			criteria.put("topicId", navigation.getPerspectiveValue());
+		}else if(Perspective.MODE_PROCESS.equals(navigation.getPerspectiveMode())){
+			instanceSql.append(" and inst.defverid=?instDefVerId ");
+			criteria.put("instDefVerId", navigation.getPerspectiveValue());
+		}
+
 	}
 	
 	public Object[] view() throws Exception{
@@ -1341,11 +877,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 	 * 2013-01-10 cjw
 	 * push client 의 보안 처리
 	 */
-	InstanceFollowers followers;
-		public InstanceFollowers getFollowers() {
+	Followers followers;
+		public Followers getFollowers() {
 			return followers;
 		}
-		public void setFollowers(InstanceFollowers followers) {
+		public void setFollowers(Followers followers) {
 			this.followers = followers;
 		}
 		
@@ -1386,8 +922,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 		 * push client 의 보안 처리
 		 */
 		try{
-			InstanceFollowers followers = new InstanceFollowers();
-			followers.setInstanceId(this.getInstId().toString());
+			InstanceFollower follower = new InstanceFollower();
+			follower.setParentId(this.getInstId().toString());
+			
+			Followers followers = new Followers(follower);
 			followers.load();
 
 			this.setFollowers(followers);
@@ -1604,6 +1142,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public void toggleSecurityConversation() throws Exception{
 		String secuopt = this.getSecuopt();
 		IInstance instanceRef = databaseMe();
+		
+		/*
 		this.fillFollower();
 		
 		IUser followers = getFollowers().getFollowers();
@@ -1628,10 +1168,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}
 			deptFollower.beforeFirst();
 		}
+		*/
 		
-		if( !iCanSee ){
-			throw new Exception("$OnlyFollowerCanSecuopt");
-		}
+		//if( !iCanSee ){
+		//	throw new Exception("$OnlyFollowerCanSecuopt");
+		//}
 		
 		if (secuopt.charAt(0) != '0') {
 			databaseMe().setSecuopt("0");
@@ -1696,12 +1237,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 		todoBadge.session = session;
 		todoBadge.refresh();
 		
-		CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
+		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 //		commingTodoPerspective.setSelected(true);
 //		commingTodoPerspective.loadChildren();
 
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(commingTodoPerspective)});			
+				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(upcommingTodoPerspective)});			
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
 		int businessValue = instanceRef.getBenefit() + instanceRef.getPenalty();

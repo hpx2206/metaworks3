@@ -259,20 +259,20 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	public Object[] loadDocument() throws Exception {
 		String title = "문서명: " + this.getName();
-		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
+		//Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
 		
-		return returnObject;
-
+		//return returnObject;
+		return null;
 	}
 	
 	@Override
 	public Object[] loadExplorerDocument() throws Exception{
 		
 		String title = "문서명: " + this.getName();
-		Object[] returnObject = Perspective.loadDocumentListPanel(session, "explorer", getId(), title);
+		//Object[] returnObject = Perspective.loadDocumentListPanel(session, "explorer", getId(), title);
 		
-		return returnObject;
-		
+		//return returnObject;
+		return null;
 		
 		
 	}
@@ -383,7 +383,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			
 			InstanceListPanel instListPanel = new InstanceListPanel();
 			instListPanel.session = session;
-			instListPanel.load();
+			//instListPanel.load();
 			return new Object[]{new Refresh(instView), new Refresh(instListPanel)};
 		}
 		

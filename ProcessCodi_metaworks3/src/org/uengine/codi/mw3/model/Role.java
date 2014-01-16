@@ -343,11 +343,12 @@ public class Role extends Database<IRole> implements IRole {
 	@Override
 	public Object[] loadRole() throws Exception{
 		
-		String title = "역할 : " + this.getDescr();
-		Object[] returnObject = Perspective.loadInstanceListPanel(session, ROLE, this.getRoleCode(), title);
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, this.getRoleCode());
+		instanceListPanel.setTitle("역할 : " + this.getDescr());
 		
-		return returnObject;
+		RoleInfo roleInfo = new RoleInfo(session);
 		
+		return new Object[]{session,  new ListPanel(instanceListPanel, roleInfo)};
 	}
 	
 	

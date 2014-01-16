@@ -199,9 +199,9 @@ public class InstanceDueSetter implements ContextAware{
 		todoBadge.session = session;
 		todoBadge.refresh();
 		
-		CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
+		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 		  
-		return new Object[]{new Remover(new Popup(), true), new Refresh(todoBadge), new Refresh(commingTodoPerspective)};
+		return new Object[]{new Remover(new Popup(), true), new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)};
 	}
 
 	

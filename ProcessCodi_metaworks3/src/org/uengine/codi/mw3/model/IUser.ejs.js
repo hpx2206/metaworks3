@@ -19,8 +19,6 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 
 	
 	if(user.metaworksContext && user.metaworksContext.when=='contacts'){
-		
-		
 		var msg=$('#objDiv_' + objectId).find('.fontgray').text();
 		var comp=msg.length ;
 		

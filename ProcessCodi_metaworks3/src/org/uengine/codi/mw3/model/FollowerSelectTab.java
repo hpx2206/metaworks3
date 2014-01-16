@@ -3,12 +3,23 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 
 @Face(ejsPath="genericfaces/Tab.ejs"  )
 public class FollowerSelectTab {
 
+	String id;
+		@Hidden
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
 	ContactPanel contactPanel;
 		@Face(displayName="$FollowerFriends")
+		@Available(condition="contactPanel")
 		public ContactPanel getContactPanel() {
 			return contactPanel;
 		}
@@ -18,7 +29,7 @@ public class FollowerSelectTab {
 		
 	OrganizationTree deptTree;
 		@Face(displayName="$Organization")
-		@Available(where={"userDeptTab"})
+		//@Available(condition="deptTree")
 		public OrganizationTree getDeptTree() {
 			return deptTree;
 		}
@@ -35,14 +46,23 @@ public class FollowerSelectTab {
 		}
 		
 	public FollowerSelectTab() throws Exception{
-		
+		this(null);
 	}
 	
-	public void load(Session session, String type) throws Exception {
+	public FollowerSelectTab(String id) throws Exception{
+		this.setId(id);
+	}
 	
-		ContactPanel contactPanel = new ContactPanel(session, type);
+	public void loadContactPanel(Session session, String how) throws Exception {
+		ContactPanel contactPanel = new ContactPanel();
+		contactPanel.session = session;
+		contactPanel.setId(this.getId());
+		contactPanel.load();
+		
 		this.setContactPanel(contactPanel);
-
+	}
+	
+	public void loadDeptTree(Session session) throws Exception {
 		OrganizationTree deptTree = new OrganizationTree(session);
 		deptTree.setId("dept");
 		deptTree.setHiddenEmployee(true);
@@ -50,6 +70,5 @@ public class FollowerSelectTab {
 		deptTree.load();		
 		
 		this.setDeptTree(deptTree);
-
 	}
 }

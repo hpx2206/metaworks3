@@ -4,7 +4,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 
-public class OrganizationPerspective extends Perspective {
+public class OrganizationPerspective extends CollapsePerspective {
 
 	public OrganizationPerspective() {
 		setLabel("Organization");

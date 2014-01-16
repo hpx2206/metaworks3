@@ -1,47 +1,17 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.EventContext;
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
-import org.springframework.beans.factory.annotation.Autowired;
 
+public class PerspectiveInfo {
 
-public class PerspectiveInfo implements IPerspectiveInfo{
-	
 	@AutowiredFromClient
 	public Session session;
-	
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
-
-	Followers followers;
-		public Followers getFollowers() {
-			return followers;
-		}
-		public void setFollowers(Followers followers) {
-			this.followers = followers;
-		}
-		
-	MetaworksFile logoFile;
-		public MetaworksFile getLogoFile() {
-			return logoFile;
-		}
-		public void setLogoFile(MetaworksFile logoFile) {
-			this.logoFile = logoFile;
-		}
 
 	String type;
+		@Hidden
 		public String getType() {
 			return type;
 		}
@@ -49,91 +19,58 @@ public class PerspectiveInfo implements IPerspectiveInfo{
 			this.type = type;
 		}
 
-	String id;
-		public String getId() {
-			return id;
+	String title;
+		public String getTitle() {
+			return title;
 		}
-		public void setId(String id) {
-			this.id = id;
-		}
-	
-	String name;
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-	
-	String description;
-		public String getDescription() {
-			return description;
-		}
-		public void setDescription(String description) {
-			this.description = description;
+		public void setTitle(String title) {
+			this.title = title;
 		}
 		
-	Boolean joined;
-		public Boolean getJoined() {
-			return joined;
+	PerspectiveTopPanel topPanel;
+		public PerspectiveTopPanel getTopPanel() {
+			return topPanel;
 		}
-		public void setJoined(Boolean joined) {
-			this.joined = joined;
+		public void setTopPanel(PerspectiveTopPanel topPanel) {
+			this.topPanel = topPanel;
 		}
+	
+	public PerspectiveInfo(){
+		setTopPanel(new PerspectiveTopPanel());
+	}
+	
+	public PerspectiveInfo(String type){
+		this();
 		
-		
-	@Override
-	public void add() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public Object[] delete() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ModalWindow modify() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void load() throws Exception {
-		this.settingJoined();
-	}
-
-	@Override
-	public void followersLoad() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void settingJoined() throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.setType(type);
 	}
 	
-	@Override
-	@Available(condition="joined == true")
-	public Object[] unSubscribe() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public Object[] load(String type) throws Exception{
+		return new Object[]{session, Perspective.loadInstanceList(session, session.getLastPerspecteMode(), type, session.getLastSelectedItem())};
 	}
 	
-	
-	@Override
-	@Available(condition="joined == false")
-	public Object[] subscribe() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	@Face(displayName="$All")
+	@ServiceMethod
+	public Object[] switchToInstanceList() throws Exception{
+		return this.load(Perspective.TYPE_NEWSFEED);
 	}
-	
-	@Override
-	public void refresh() throws Exception {
-		this.load();
-	}
-	
 
+	@Face(displayName="$Following")
+	@ServiceMethod
+	public Object[] switchToInstanceListFollowing() throws Exception{
+		return this.load(Perspective.TYPE_FOLLOWING);
+	}
+
+	@Face(displayName="$MyToDo")
+	@ServiceMethod
+	public Object[] switchToInstanceListMyToDo() throws Exception{
+		return this.load(Perspective.TYPE_INBOX);
+	}
+
+	@Face(displayName="$Calendar")
+	@ServiceMethod
+	public Object[] switchToScheduleCalendar() throws Exception{
+		return this.load(Perspective.TYPE_CALENDAR);
+	}
+	
 }

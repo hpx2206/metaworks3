@@ -506,10 +506,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
 	@ServiceMethod
 	public Object[] processListFilter() throws Exception{
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PROCESS, Perspective.TYPE_NEWSFEED, this.getDefId());
+		instanceListPanel.setTitle("프로세스 : " + this.getDefId());
 		
-		Perspective perspective = new Perspective();
-		
-		return perspective.loadInstanceListPanel(session, PROCESS, this.getDefId(), "프로세스 : " + this.getDefId());
+		return new Object[]{ session, new ListPanel(instanceListPanel, new ProcessInfo(session)) };
 	}
 	
 	protected void afterInstantiation(Instance instanceRef) throws Exception {

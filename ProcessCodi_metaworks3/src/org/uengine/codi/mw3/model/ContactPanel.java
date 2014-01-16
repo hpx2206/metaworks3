@@ -1,161 +1,110 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 
-public class ContactPanel {
-	
-	String contactViewType;
-	@Id
-		public String getContactViewType() {
-			return contactViewType;
-		}
-		public void setContactViewType(String contactViewType) {
-			this.contactViewType = contactViewType;
-		}
-
-	public ContactPanel(){}
-	
-	public ContactPanel(IUser user) throws Exception{
-		setContactViewType(ContactListPanel.CONTACT);
-		ContactListPanel contactListPanel = new ContactListPanel();		
-		contactListPanel.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-		contactListPanel.load(user.getUserId());		
-		
-		user.getMetaworksContext().setWhen("self");
-		
-		setContactListPanel(contactListPanel);
-		setUser(user);		
-		
-		ContactSearchBox searchBox = new ContactSearchBox(); 
-		searchBox.setMetaworksContext(new MetaworksContext());
-		searchBox.getMetaworksContext().setWhere("contactList");
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-		
-		setSearchBox(searchBox);
-	}
-	
-	public ContactPanel(Session session, String type) throws Exception {
-		setContactViewType(ContactListPanel.FOLLOWER);
-		ContactListPanel contactListPanel = new ContactListPanel();
-		contactListPanel.getMetaworksContext().setHow("follower");
-		contactListPanel.setId(type);
-		contactListPanel.session = session;
-		contactListPanel.load(session.getUser().getUserId());
-		
-		if(contactListPanel.getContactList() != null)
-			contactListPanel.getContactList().getMetaworksContext().setWhen(type);
-		if(contactListPanel.getContactList() != null)
-			contactListPanel.getContactList().getMetaworksContext().setWhen(type);
-
-		this.setContactListPanel(contactListPanel);
-		
-		ContactSearchBox searchBox = new ContactSearchBox(); 
-		searchBox.setMetaworksContext(new MetaworksContext());
-		searchBox.getMetaworksContext().setWhere(type);
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-//		searchBox.session = session;
-		
-		setSearchBox(searchBox);
-	}
-
-	IUser user;	
-		public IUser getUser() {
-			return user;
-		}	
-		public void setUser(IUser user) {
-			this.user = user;
-		}
-
-	ContactSearchBox searchBox;
-		@Face(options={"keyupSearch"}, values={"true"})
-		public ContactSearchBox getSearchBox() {
-			return searchBox;
-		}
-		public void setSearchBox(ContactSearchBox searchBox) {
-			this.searchBox = searchBox;
-		}	
-	
-	ContactListPanel contactListPanel;
-		public ContactListPanel getContactListPanel() {
-			return contactListPanel;
-		}
-		public void setContactListPanel(ContactListPanel contactListPanel) {
-			this.contactListPanel = contactListPanel;
-		}
-
-
-	int pageX;
-		@Hidden
-		public int getPageX() {
-			return pageX;
-		}	
-		public void setPageX(int pageX) {
-			this.pageX = pageX;
-		}
-
-	int pageY;
-		@Hidden
-		public int getPageY() {
-			return pageY;
-		}	
-		public void setPageY(int pageY) {
-			this.pageY = pageY;
-		}
-
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	public Object addContact() throws Exception{
-		Popup popup = new Popup();
-		
-		//ModalWindow popup = new ModalWindow();
-		
-//			popup.setPageX(this.pageX);
-//			popup.setPageY(this.pageY);
-		popup.setPanel(new UnifiedAddContactPanel(session));
-		//popup.setTitle("연락처 추가");
-		return popup;
-	}
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	public Object addLocalContact() throws Exception{
-		ModalWindow popup = new ModalWindow();
-//		Popup popup = new Popup();
-		
-//		popup.setPageX(this.pageX);
-//		popup.setPageY(this.pageY);
-		
-		popup.setPanel(new AddLocalContactPanel(session));
-		popup.setTitle("연락처 추가");
-		
-		return popup;
-	}
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object invite() throws Exception{
-		ModalWindow popup = new ModalWindow();
-//		Popup popup = new Popup();
-		
-//		popup.setPageX(this.pageX);
-//		popup.setPageY(this.pageY);
-		
-		Invitation invitation = new Invitation();
-		invitation.session = session;
-		
-		popup.setPanel(invitation);
-		popup.setTitle("연락처 추가");
-		
-		return popup;
-	}
+public class ContactPanel implements ContextAware {
 	
 	@AutowiredFromClient
 	public Session session;
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
+	String id;
+		@Id
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
+	Follower follower;
+		public Follower getFollower() {
+			return follower;
+		}
+		public void setFollower(Follower follower) {
+			this.follower = follower;
+		}
+
+	int count;
+		public int getCount() {
+			return count;
+		}
+		public void setCount(int count) {
+			this.count = count;
+		}
+
+	SearchBox searchBox;
+		@Face(options={"keyupSearch"}, values={"true"})
+		public SearchBox getSearchBox() {
+			return searchBox;
+		}
+		public void setSearchBox(SearchBox searchBox) {
+			this.searchBox = searchBox;
+		}
+		
+	IContact list;
+		public IContact getList() {
+			return list;
+		}
+		public void setList(IContact list) {
+			this.list = list;
+		}
+
+	Invitation invitation;
+		@Available(condition="typeof count == 'undefined' || count == 0")
+		public Invitation getInvitation() {
+			return invitation;
+		}
+		public void setInvitation(Invitation invitation) {
+			this.invitation = invitation;
+		}
+		
+	public ContactPanel(){
+		MetaworksContext metaworksContext = new MetaworksContext();
+		this.setMetaworksContext(metaworksContext);
+		
+		SearchBox searchBox = new SearchBox(); 
+		this.setSearchBox(searchBox);
+
+		Invitation invitation = new Invitation();
+		invitation.getMetaworksContext().setHow("invite");
+		
+		this.setInvitation(invitation);	
+	}
+	
+	private String getKeyword(){
+		String keyword = null;
+		if(this.getSearchBox() != null)
+			keyword = this.getSearchBox().getKeyword();
+
+		return keyword;
+	}
+			
+	public void load() throws Exception{
+		this.getFollower().session = session;
+		
+		IContact contacts = this.getFollower().findContacts(this.getKeyword());
+		
+		this.setList(contacts);
+		this.setCount(contacts.size());
+	}
+
+	@ServiceMethod(callByContent=true, except="list", eventBinding=EventContext.EVENT_CHANGE)
+	public void refresh() throws Exception{
+		this.load();
+	}
 }

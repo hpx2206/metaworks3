@@ -4,16 +4,15 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
-import org.uengine.kernel.GlobalContext;
 
-public class PerspectivePanel  implements ContextAware {
+public class PerspectivePanel implements ContextAware {
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
-		}		
+		}
 
 	PersonalPerspective personalPerspective;
 		public PersonalPerspective getPersonalPerspective() {
@@ -24,25 +23,22 @@ public class PerspectivePanel  implements ContextAware {
 			this.personalPerspective = personalPerspective;
 		}
 	
-	OrganizationPerspectiveDept organizationPerspectiveDept;
-		public OrganizationPerspectiveDept getOrganizationPerspectiveDept() {
-			return organizationPerspectiveDept;
+	DeptPerspective deptPerspective;
+		public DeptPerspective getDeptPerspective() {
+			return deptPerspective;
 		}
-		public void setOrganizationPerspectiveDept(
-				OrganizationPerspectiveDept organizationPerspectiveDept) {
-			this.organizationPerspectiveDept = organizationPerspectiveDept;
+		public void setDeptPerspective(DeptPerspective deptPerspective) {
+			this.deptPerspective = deptPerspective;
 		}
-	
-	OrganizationPerspectiveRole organizationPerspectiveRole;
-		public OrganizationPerspectiveRole getOrganizationPerspectiveRole() {
-			return organizationPerspectiveRole;
+
+	RolePerspective rolePerspective;
+		public RolePerspective getRolePerspective() {
+			return rolePerspective;
 		}
-	
-		public void setOrganizationPerspectiveRole(
-				OrganizationPerspectiveRole organizationPerspectiveRole) {
-			this.organizationPerspectiveRole = organizationPerspectiveRole;
+		public void setRolePerspective(RolePerspective rolePerspective) {
+			this.rolePerspective = rolePerspective;
 		}
-	
+
 	ProcessPerspective processPerspective;
 		public ProcessPerspective getProcessPerspective() {
 			return processPerspective;
@@ -111,29 +107,31 @@ public class PerspectivePanel  implements ContextAware {
 			this.contactPerspective = contactPerspective;
 		}
 
-	CommingTodoPerspective commingTodoPerspective;
-		public CommingTodoPerspective getCommingTodoPerspective() {
-			return commingTodoPerspective;
+	UpcommingTodoPerspective upcommingTodoPerspective;
+		public UpcommingTodoPerspective getUpcommingTodoPerspective() {
+			return upcommingTodoPerspective;
 		}
-		public void setCommingTodoPerspective(
-				CommingTodoPerspective commingTodoPerspective) {
-			this.commingTodoPerspective = commingTodoPerspective;
+		public void setUpcommingTodoPerspective(
+				UpcommingTodoPerspective upcommingTodoPerspective) {
+			this.upcommingTodoPerspective = upcommingTodoPerspective;
 		}
-		
+
 	@AutowiredFromClient
 	public Session session;
 		
 	public PerspectivePanel() throws Exception {
-		this(null);
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
 	public PerspectivePanel(Session session) throws Exception {
+		this();
+		
 		if(session != null){
 			//개인별
 			if("1".equals(Perspective.USE_PERSONAL)){
 				personalPerspective = new PersonalPerspective();
 				personalPerspective.session = session;
-				personalPerspective.select();
 			}
 			
 			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
@@ -144,14 +142,15 @@ public class PerspectivePanel  implements ContextAware {
 				
 				//조직도
 				if("1".equals(Perspective.USE_GROUP)){
-					organizationPerspectiveDept = new OrganizationPerspectiveDept();
+					deptPerspective = new DeptPerspective();
 //					organizationPerspectiveDept.session = session;
 //					organizationPerspectiveDept.select();
 				}
 				
 				//역할
 				if("1".equals(Perspective.USE_ROLE)){
-					organizationPerspectiveRole = new OrganizationPerspectiveRole();
+					rolePerspective = new RolePerspective();
+					
 //					organizationPerspectiveRole.session = session;
 //					organizationPerspectiveRole.select();
 				}
@@ -167,7 +166,7 @@ public class PerspectivePanel  implements ContextAware {
 					contactPerspective = new ContactPerspective();
 				}
 				if("1".equals(Perspective.USE_COMMINGTODO)){
-					commingTodoPerspective = new CommingTodoPerspective();
+					upcommingTodoPerspective = new UpcommingTodoPerspective();
 				}
 				
 				//앱
@@ -195,9 +194,10 @@ public class PerspectivePanel  implements ContextAware {
 			}
 			if("1".equals(Perspective.USE_DOCUMENT)){
 			     documentPerspective = new DocumentPerspective();
-			     setMetaworksContext(new MetaworksContext());
-			     this.getMetaworksContext().setHow("perspectivePanel");
-			     documentPerspective.setMetaworksContext(this.getMetaworksContext());
+			     MetaworksContext metaworksContext = new MetaworksContext();
+			     metaworksContext.setHow("perspectivePanel");
+			     
+			     documentPerspective.setMetaworksContext(metaworksContext);
 			     String tenentId = Employee.extractTenantName(session.getEmployee().getEmail());
 			     documentPerspective.setTenentId(tenentId);
 			}

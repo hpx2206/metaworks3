@@ -142,8 +142,6 @@ public class SNS extends Application{
 				contentWindow = (InstanceViewContent)instance.detail();
 			}
 			
-			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
-			
 			westLayout.setCenter(perspectiveWindow);
 			westLayout.setUseHideBar(true);
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
@@ -157,7 +155,7 @@ public class SNS extends Application{
 //			}
 			
 			Layout eastLayout = new Layout();
-			eastLayout.setWest(instanceListWindow);
+			eastLayout.setWest(createInstanceListWindow(session));
 			eastLayout.setCenter(contentWindow);
 			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
 			eastLayout.setName("east");
@@ -211,32 +209,29 @@ public class SNS extends Application{
 		return contentWindow;
 	}
 
-	static public Window createInstanceListWindow(Session session) throws Exception {
-		Window instanceListWindow = new Window();
+	static public ListWindow createInstanceListWindow(Session session) throws Exception {
 
-		instanceListWindow.setTitle("Instances");
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PERSONAL, Perspective.TYPE_NEWSFEED);
+
+		ListPanel listPanel = new ListPanel();
+		listPanel.setPerspectiveInfo(new PerspectiveInfo(Perspective.TYPE_NEWSFEED));
+		listPanel.setInstanceListPanel(instanceListPanel);
 		
-		InstanceListPanel instanceListPanel;
+		ListWindow listWindow = new ListWindow();
+		listWindow.setPanel(listPanel);
 		
+		/*
 		if("asana".equals(session.getEmployee().getPreferUX())){
 		
 			instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
-			instanceListPanel.switchToKnowledge();
 			instanceListWindow.setPanel(instanceListPanel);
 			
 		}else{
-			PersonalPerspective personalPerspective = new PersonalPerspective();
-			personalPerspective.session = session;
-			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
-
-			instanceListPanel.session = session;
-			instanceListPanel.setMetaworksContext(new MetaworksContext());
-			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
-			instanceListWindow.setPanel(instanceListPanel);
 		}
+		*/
 		
-		return instanceListWindow;
+		return listWindow;
 	}
 }
 

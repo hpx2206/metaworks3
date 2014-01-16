@@ -1,21 +1,27 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.UniqueKeyGenerator;
 
 public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping {
-	public static final String ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX = "follower_";
-	
+
 	Long roleMappingId;
 	Long rootInstId;
+	Long instId;
 	String roleName;
 	String endpoint;
+	String resName;
+	int assignType;
+	int dispatchOption;
 
 	public RoleMapping() {
-		super();
+		this.setDispatchOption(-1);
 	}
 
 	public RoleMapping(Long rootInstId, String roleName, String endpoint) {
-		super();
+		this();
+		
 		this.rootInstId = rootInstId;
 		this.roleName = roleName;
 		this.endpoint = endpoint;
@@ -60,6 +66,35 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 	public void setEndpoint(String endpoint) {
 		this.endpoint = endpoint;
 	}
+	
+	public String getResName() {
+		return resName;
+	}
+	public void setResName(String resName) {
+		this.resName = resName;
+	}
+
+	public Long getInstId() {
+		return instId;
+	}
+	public void setInstId(Long instId) {
+		this.instId = instId;
+	}
+
+	public int getAssignType() {
+		return assignType;
+	}
+	public void setAssignType(int assignType) {
+		this.assignType = assignType;
+	}
+
+	public int getDispatchOption() {
+		return dispatchOption;
+	}
+	public void setDispatchOption(int dispatchOption) {
+		this.dispatchOption = dispatchOption;
+	}
+
 	
 	public boolean confirmFollower() throws Exception {
 		StringBuffer querry = new StringBuffer();
@@ -123,5 +158,71 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		
 		return findRoleMapping;
 	}
+	
+	public IRoleMapping findMe() throws Exception {
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT *");
+		sql.append("  FROM bpm_rolemapping ");
+		sql.append(" WHERE instid=?instid");
+		sql.append("   AND endpoint=?endpoint");
+		sql.append("   AND assigntype=?assigntype");
+		sql.append("   AND rolename=?rolename");
+		
+		System.out.println(sql.toString());
+		
+		IRoleMapping rm = sql(sql.toString());
+		rm.setInstId(this.getInstId());
+		rm.setEndpoint(this.getEndpoint());
+		rm.setAssignType(this.getAssignType());
+		rm.setRoleName(this.getRoleName());
+		rm.select();
+		
+		return rm;
+	}
 
+	public IFollower findFollowers() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT distinct rm.endpoint, rm.resname, rm.assigntype, CAST(rm.rootinstid as char) parentId, '" + Follower.TYPE_INSTANCE + "' parentType");
+		sql.append("  FROM bpm_rolemapping rm");
+		sql.append(" WHERE rm.rootinstid=?rootinstid");
+		
+		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
+		follower.set("rootinstid", this.getRootInstId());
+		follower.select();	
+		
+		return follower;
+	}
+
+	public IRoleMapping saveMe() throws Exception{
+		Long mappingId = UniqueKeyGenerator.issueRoleMappingKey(TransactionContext.getThreadLocalInstance());
+		
+		this.setRoleMappingId(mappingId);
+		
+		return createDatabaseMe();
+	}
+	
+	public void removeMe() throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("DELETE FROM bpm_rolemapping");
+		sql.append(" WHERE instid=?instid");
+		sql.append("   AND endpoint=?endpoint");
+		sql.append("   AND assigntype=?assigntype");
+		sql.append("   AND rolename=?rolename");
+		
+		System.out.println(sql.toString());
+		
+		IRoleMapping rm = sql(sql.toString());
+		rm.setInstId(this.getInstId());
+		rm.setEndpoint(this.getEndpoint());
+		rm.setAssignType(this.getAssignType());
+		rm.setRoleName(this.getRoleName());
+		
+		int updateCnt = rm.update();
+		
+		if(updateCnt == 0){
+			System.out.println("Process participants can not be deleted.");
+		}
+	}
 }
+

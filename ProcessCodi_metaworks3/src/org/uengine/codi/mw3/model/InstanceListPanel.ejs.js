@@ -17,7 +17,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	
 	this.divId = mw3._getObjectDivId(this.objectId);
 	
-	// window 의 title 설정
+	// set window title
 	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
 	
 	if(this.object && this.object.title){
@@ -25,14 +25,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(this.object.title));
 		}
 	}
-	
-	var browser = mw3.browserCheck();
-	if(browser == "MSIE 7"){
-		$('.searchboxarea').css("margin-left","20");
-	}else{
-		searchBarMagin = $('.newprocessbtn').width() + 20;
-		$('.searchboxarea').css("margin-left",searchBarMagin);
-	}
+
 	
 //	$("#project_Info").click(function(){
 //		if($(this).hasClass('current')){
@@ -75,10 +68,6 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		
 		$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'topicFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");
 		$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'documentFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");
-	}else{
-		setTimeout(function(){
-			mw3.call(objectId, 'load');	
-		}, 1);
 	}
 };
 

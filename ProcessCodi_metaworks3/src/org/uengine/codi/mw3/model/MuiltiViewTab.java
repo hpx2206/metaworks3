@@ -36,18 +36,9 @@ public class MuiltiViewTab {
 			this.processInstanceMonitor = processInstanceMonitor;
 		}
 		
-	FollowerPanel followerPanel;
-		public FollowerPanel getFollowerPanel() {
-			return followerPanel;
-		}
-		public void setFollowerPanel(FollowerPanel followerPanel) {
-			this.followerPanel = followerPanel;
-		}
-
 	public void load() throws Exception{
 		this.scheduleCalendar = new ScheduleCalendar(); 
 		this.panel = new WfPanel();
 		this.processInstanceMonitor = new InstanceMonitorPanel();
-		followerPanel = new FollowerPanel("instance");
 	}
 }

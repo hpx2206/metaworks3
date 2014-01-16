@@ -7,7 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 
-public class DocumentPerspective extends Perspective  implements ContextAware {
+public class DocumentPerspective extends CollapsePerspective implements ContextAware {
 	
 	String tenentId;
 		public String getTenentId() {

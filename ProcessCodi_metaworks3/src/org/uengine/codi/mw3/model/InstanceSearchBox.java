@@ -1,13 +1,17 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
+
 public class InstanceSearchBox extends SearchBox {
 
 	public InstanceSearchBox() {
 	}	
 	
-	@Override
+	@ServiceMethod(callByContent=true)
 	public Object[] search() throws Exception {
 		session.setSearchKeyword(getKeyword());
-		return Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem());
+		
+		return new Object[]{Perspective.loadInstanceList(session, session.getLastPerspecteMode(), session.getLastPerspecteType(), session.getLastSelectedItem())};
 	}
 }

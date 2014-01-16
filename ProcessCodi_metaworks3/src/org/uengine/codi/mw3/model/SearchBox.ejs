@@ -1,52 +1,15 @@
 <%
 	if(value){
-	
-		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");	
-		
-		if( session && session.employee && session.employee.preferUX == 'sns'){
-%>	
-			<div style="width:300px; margin-top:5px;">
-				<ul>
-					<li style="width:16px; height:26px;float: left;    position: relative;    left: -16px;  margin-right: -16px"><img src="images/waveStyle/searchLineLeft.png" /></li>
-					<li style="float: left; height:26px; width:100%; background:url(images/waveStyle/searchLineCenter.png) repeat-x;">
-						<input placeholder='<%=mw3.localize("$Search")%>' id="search_<%=objectId%>" class="contactsinput" style="width:100%; border:none; background:transparent; height:24px;"value="<%=value.keyword ? value.keyword : ''%>">
-					</li>
-					<li style="float: left;    left: 28px;    width: 28px;    margin-left: -28px"><img src="images/waveStyle/searchLineRight.png" /></li>
-				</ul>
-			</div>
-	
-
-<%
-		}else{
 %>
-		
-			<% if( mw3.where == 'topPanel') { %>
-				<div style="width:300px; margin-top:5px;">
-					<ul>
-						<li style="width:16px; height:26px;float: left;    position: relative;    left: -16px;  margin-right: -16px"><img src="images/waveStyle/searchLineLeft.png" /></li>
-						<li style="float: left; height:26px; width:100%; background:url(images/waveStyle/searchLineCenter.png) repeat-x;">
-							<input placeholder='<%=mw3.localize("$Search")%>' id="search_<%=objectId%>" class="contactsinput" style="width:100%; border:none; background:transparent; height:24px;"value="<%=value.keyword ? value.keyword : ''%>">
-						</li>
-						<li style="float: left;    left: 28px;    width: 28px;    margin-left: -28px"><img src="images/waveStyle/searchLineRight.png" /></li>
-					</ul>
-				</div>
-			<% }else { %>
-				<ul>
-				    <li class="inputleft"><img src="images/waveStyle/searchLeft.gif" border="0" /></li>
-				    <li class="inputcenter">
-				    	<input placeholder='<%=mw3.localize("$Search")%>' id="search_<%=objectId%>" class="contactsinput" value="<%=value.keyword ? value.keyword : ''%>">
-				    </li>
-				    
-				    <li class="inputright"><img src="images/waveStyle/searchRight.gif" border="0" /></li>
-				    <li style="clear:left;"></li>
-				</ul>
+	<ul>
+	    <li class="inputleft"><img src="images/waveStyle/searchLeft.gif" border="0" /></li>
+	    <li class="inputcenter">
+	    	<input placeholder='<%=mw3.localize("$Search")%>' id="search_<%=objectId%>" class="contactsinput" value="<%=value.keyword ? value.keyword : ''%>">
+	    </li>
+	    
+	    <li class="inputright"><a href="javascript: <%=methods.search.caller()%>"><img src="images/waveStyle/searchRight.gif" border="0" /></a></li>
+	    <li style="clear:left;"></li>
+	</ul>
 <%
-			}
-		}
 	}
 %>    
-
-
-
-
-    
