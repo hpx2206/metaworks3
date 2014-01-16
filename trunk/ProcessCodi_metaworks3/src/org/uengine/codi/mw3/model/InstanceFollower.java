@@ -8,18 +8,18 @@ public class InstanceFollower extends Follower {
 	public InstanceFollower(){
 		this.setParentType(TYPE_INSTANCE);
 	}
-
-	@Override
-	public void put() throws Exception {
+	
+	public InstanceFollower(String instanceId){
+		this();
+		
+		this.setParentId(instanceId);
+	}
+	
+	public RoleMapping makeRoleMapping() throws Exception {
 		Long instId = Long.parseLong(this.getParentId());
 		
-		// find root instnace id
-		Instance instance = new Instance();
-		instance.setInstId(Long.parseLong(this.getParentId()));
-		Long rootInstId = instance.databaseMe().getRootInstId();
-		
 		RoleMapping rm = new RoleMapping();
-		rm.setRootInstId(rootInstId);
+		rm.setRootInstId(instId);
 		rm.setInstId(instId);
 		
 		if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
@@ -30,9 +30,32 @@ public class InstanceFollower extends Follower {
 		rm.setAssignType(this.getAssigntype());
 		rm.setRoleName(RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
 		
+		return rm;
+	}
+	
+	@Override
+	public IFollower find() throws Exception {
+		
+		RoleMapping rm = this.makeRoleMapping();
+		IFollower follower = rm.findFollower();
+		
 		// not exist save rolemapping
-		if( !rm.findMe().next() ){
+		if( follower.next() ){
+			return follower;
+		}else{
+			return null;
+		}
+	}
+	
+	@Override
+	public void put() throws Exception {
+		// not exist save rolemapping
+		Object findObj = find();
+		if( findObj == null ){
+			RoleMapping rm = this.makeRoleMapping();
 			rm.saveMe();
+			
+			super.push();
 		}
 	}
 
