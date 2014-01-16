@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 
 public class RoleFollower extends Follower {
 
@@ -8,14 +7,32 @@ public class RoleFollower extends Follower {
 		this.setParentType(TYPE_TOPIC);
 	}
 
-	@Override
-	public void put() throws Exception {
+	public RoleUser makeRoleUser(){
 		RoleUser roleUser = new RoleUser();
 		roleUser.setRoleCode(this.getParentId());
 		roleUser.setEmpCode(this.getUser().getUserId());
 		
-		roleUser.createDatabaseMe();
-		roleUser.flushDatabaseMe();
+		return roleUser;
+	}
+	
+	@Override
+	public IFollower find() throws Exception {
+		RoleUser roleUser = this.makeRoleUser();
+		IFollower follower = roleUser.findFollower();
+		if(follower.next())
+			return follower;
+		else
+			return null;
+	}
+	
+	@Override
+	public void put() throws Exception {
+		
+		if(this.find() == null){
+			RoleUser roleUser = this.makeRoleUser();
+			roleUser.createDatabaseMe();
+			roleUser.flushDatabaseMe();
+		}
 	}
 
 	@Override

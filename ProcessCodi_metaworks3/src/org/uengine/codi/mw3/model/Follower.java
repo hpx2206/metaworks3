@@ -7,6 +7,10 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.kernel.Role;
 
 public class Follower extends Database<IFollower> implements IFollower {	
@@ -70,6 +74,10 @@ public class Follower extends Database<IFollower> implements IFollower {
 			this.dept = dept;
 		}
 	
+	public IFollower find() throws Exception {
+		throw new Exception("not defined exist method");
+	}
+
 	public void put() throws Exception {
 		throw new Exception("not defined put method");
 	}
@@ -139,6 +147,13 @@ public class Follower extends Database<IFollower> implements IFollower {
 		popup.setPanel(addFollowerPanel);
 
 		return new Object[]{ new Refresh(session), popup }; 
+	}
+	
+	public void push() throws Exception {
+		// 본인 이외에 다른 사용자에게 push
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new Object[]{this});
 	}
 	
 }

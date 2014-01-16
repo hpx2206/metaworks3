@@ -180,14 +180,34 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		return rm;
 	}
 
+	public IFollower findFollower() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT distinct rm.endpoint, rm.resname, rm.assigntype, CAST(rm.rootinstid as char) parentId, '" + Follower.TYPE_INSTANCE + "' parentType");
+		sql.append("  FROM bpm_rolemapping rm");
+		sql.append(" WHERE instid=?instid");
+		sql.append("   AND endpoint=?endpoint");
+		sql.append("   AND assigntype=?assigntype");
+		sql.append("   AND rolename=?rolename");
+		
+		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
+		follower.set("instid", this.getInstId());
+		follower.set("endpoint", this.getEndpoint());
+		follower.set("assigntype", this.getAssignType());
+		follower.set("rolename", this.getRoleName());
+		
+		follower.select();	
+		
+		return follower;
+	}
+	
 	public IFollower findFollowers() throws Exception{
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT distinct rm.endpoint, rm.resname, rm.assigntype, CAST(rm.rootinstid as char) parentId, '" + Follower.TYPE_INSTANCE + "' parentType");
 		sql.append("  FROM bpm_rolemapping rm");
-		sql.append(" WHERE rm.rootinstid=?rootinstid");
+		sql.append(" WHERE rm.instId=?instId");
 		
 		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
-		follower.set("rootinstid", this.getRootInstId());
+		follower.set("instId", this.getRootInstId());
 		follower.select();	
 		
 		return follower;
