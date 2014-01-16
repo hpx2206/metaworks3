@@ -131,7 +131,7 @@ public class PreviewServlet extends HttpServlet {
 
 		// 반환처리
 		if(converted || pass){
-			System.out.println("반환처리 : " + stringTaskId);
+//			System.out.println("반환처리 : " + stringTaskId + " , previewType = " + previewType);
 			String convertedFilePath = null;
 
 			if("pdf".equals(previewType))
