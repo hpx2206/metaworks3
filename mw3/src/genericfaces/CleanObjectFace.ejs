@@ -3,7 +3,7 @@
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 	  		var fd = objectMetadata.fieldDescriptors[i];
 	  	
-			if(mw3.isHidden(fd)) continue;
+			if(mw3.isHidden(fields[fd.name])) continue;
 			if(fd.name == 'metaworksContext') continue;
 	  	
 			var fieldValue = value[fd.name];
