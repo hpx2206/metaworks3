@@ -200,7 +200,7 @@ public class Contact extends Database<IContact> implements IContact{
 		sb.append("      where topicid=?topicId and t.userid=c.friendId");
 		sb.append("    )");
 		
-		if(keyword != null)
+		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by friendName desc ");
@@ -229,7 +229,7 @@ public class Contact extends Database<IContact> implements IContact{
 		sb.append("      where rootinstid=?instanceId and rm.endpoint=c.friendId");
 		sb.append("    )");
 		
-		if(keyword != null)
+		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
@@ -254,7 +254,7 @@ public class Contact extends Database<IContact> implements IContact{
 		sb.append(Contact.createContactSql());
 		sb.append("   and e.partcode != ?partcode");
 		
-		if(keyword != null)
+		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
@@ -283,7 +283,7 @@ public class Contact extends Database<IContact> implements IContact{
 		sb.append("      where roleCode=?roleCode and rst.empcode=c.friendId");
 		sb.append("    )");
 		
-		if(keyword != null)
+		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
