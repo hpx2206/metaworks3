@@ -96,10 +96,7 @@ public class NewInstancePanel implements ContextAware {
 	
 		
 	public void load(Session session) throws Exception{
-		if("topic".equals(session.getLastPerspecteType()) ||
-				"project".equals(session.getLastPerspecteType()))
-			this.setTopicNodeId(session.getLastSelectedItem());
-		
+
 		if("UnlabeledDocument".equals(session.getLastPerspecteType())){
 			newInstantiator = new DocWorkItem();
 			newInstantiator.setFolderId(getTopicNodeId());
@@ -115,34 +112,14 @@ public class NewInstancePanel implements ContextAware {
 		newInstantiator.session = session;
 		newInstantiator.setWriter(writer);
 	
-		Choice securityLevel = new Choice();
-
-		if(session.getUx()!= "oce_app" && session.getUx() != "oce" && session.getUx() != "oce_project"){
-			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-				
-				processMapPanel = new ProcessMapPanel();		
-				processMapPanel.setMetaworksContext(this.getMetaworksContext());
-				processMapPanel.load(session);			
-				
-				securityLevel.add("$Privacy.Normal","0");
-				securityLevel.add("$Privacy.OnlyFollowers","1");
-//				securityLevel.add("$Privacy.Public","2");
-			}
-			
-		}
-		/* for helper */
+		processMapPanel = new ProcessMapPanel();		
+		processMapPanel.setMetaworksContext(this.getMetaworksContext());
+		processMapPanel.load(session);			
 		
-		if("sns".equals(session.getEmployee().getPreferUX())){
-			getMetaworksContext().setHow("sns");
-			newInstantiator.getMetaworksContext().setHow("sns");			
-		}
-		if("oce".equals(session.getUx())){
-			newInstantiator.getMetaworksContext().setWhere("oce");
-		}else if("oce_app".equals(session.getUx()) || "oce_project".equals(session.getUx())){
-			newInstantiator.getMetaworksContext().setHow("sns");
-			newInstantiator.getMetaworksContext().setWhere("oce");
-		}
-		
+		Choice securityLevel = new Choice(); 
+		securityLevel.add("$Privacy.Normal","0");
+		securityLevel.add("$Privacy.OnlyFollowers","1");
+		setSecurityLevel(securityLevel);
 	
 		/*
 		 * default security level
@@ -156,6 +133,8 @@ public class NewInstancePanel implements ContextAware {
 		 *  - 1 : 공개 토픽 
 		 *  - 3 : 비공개 토픽
 		 */
+		
+		/*
 		if("topic".equals(session.getLastPerspecteType())){
 			StringBuffer sb = new StringBuffer();
 			sb.append("select * from bpm_knol knol");
@@ -199,5 +178,6 @@ public class NewInstancePanel implements ContextAware {
 		}
 		
 		setSecurityLevel(securityLevel);
+		*/
 	}
 }

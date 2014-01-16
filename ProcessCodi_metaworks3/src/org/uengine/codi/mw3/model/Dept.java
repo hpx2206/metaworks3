@@ -365,8 +365,13 @@ public class Dept extends Database<IDept> implements IDept {
 		
 	public Object[] loadDeptList() throws Exception {
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_DEPT, Perspective.TYPE_NEWSFEED, getPartCode());
-		instanceListPanel.setTitle("부서 : " + this.getPartName());
 		
+		Locale locale = new Locale(session);
+		locale.load();
+
+		String title = locale.getString("$Dept" + " - " + getPartName());
+		session.setWindowTitle(title);
+
 		DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
 		
 		return new Object[]{session,  new ListPanel(instanceListPanel, deptInfo)};
