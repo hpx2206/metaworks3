@@ -2,18 +2,13 @@ package org.uengine.codi.mw3.ide.libraries;
 
 import java.util.ArrayList;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.CollapsePerspective;
 import org.uengine.codi.mw3.model.IRole;
-import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Role;
 import org.uengine.codi.mw3.model.Session;
 
-public class RolePerspective extends Perspective {
+public class RolePerspective extends CollapsePerspective {
 
 	public RolePerspective() {
 		setLabel("Role");

@@ -1,8 +1,8 @@
 package org.uengine.codi.mw3.processexplorer;
 
-import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.CollapsePerspective;
 
-public class FavoritePerspective  extends Perspective {
+public class FavoritePerspective  extends CollapsePerspective {
 	
 	FavoritePanel favoritePanel;
 		public FavoritePanel getFavoritePanel() {

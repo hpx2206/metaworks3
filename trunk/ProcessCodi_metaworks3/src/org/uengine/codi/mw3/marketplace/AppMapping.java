@@ -222,8 +222,6 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		instanceListPanel = (InstanceListPanel) returnObject[1];
 		instanceListPanel.session = session;
-		instanceListPanel.setMetaworksContext(new MetaworksContext());
-		instanceListPanel.getMetaworksContext().setWhere("oce_app");
 		
 		Layout appPanel = new Layout();
 		appPanel.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__spacing_open:1, east__size:'400'");

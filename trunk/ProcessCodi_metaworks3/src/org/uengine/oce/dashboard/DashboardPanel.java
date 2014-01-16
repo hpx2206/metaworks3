@@ -108,10 +108,7 @@ public class DashboardPanel {
 		InstanceListPanel instanceListPanel = new InstanceListPanel();
 		instanceListPanel.session = session;
 		
-		instanceListPanel = (InstanceListPanel) personalPerspective.loadDashboard()[1];
-		instanceListPanel.setMetaworksContext(new MetaworksContext());
-		instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
-		instanceListPanel.getMetaworksContext().setHow("dashboard");
+		//instanceListPanel = (InstanceListPanel) personalPerspective.loadDashboard()[1];
 
 		return instanceListPanel;
 		
