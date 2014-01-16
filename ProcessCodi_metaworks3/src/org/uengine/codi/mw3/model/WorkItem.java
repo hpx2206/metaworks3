@@ -868,45 +868,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				if(this.getDueDate()!= null)
 					instanceRef.setDueDate(this.getDueDate());
 			}
-			
-			instance.fillFollower();
 
-			// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
-			if(!isNewInstance){
-				boolean existFollower = instance.getFollowers().existFollower(session.getUser().getUserId(), Role.ASSIGNTYPE_USER);
-				if(!existFollower){
-					RoleMapping newFollower = RoleMapping.create();
-					newFollower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
-					newFollower.setEndpoint(session.getUser().getUserId());
-					
-					processManager.putRoleMapping(getInstId().toString(), newFollower);
-					processManager.applyChanges();
-					
-					// TODO: 추가된 팔로워에 대한 push 진행되어야함
-				}
-			}
-
-			// 덧글 상태일때 덧글에 입력된 사용자명 자동으로 follower 에 추가해주는 기능
-			if(this instanceof CommentWorkItem || this instanceof RemoteConferenceWorkItem){
-				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
-				if(initialFollowers!=null){
-					for(String userId : initialFollowers){
-						boolean existFollower = instance.getFollowers().existFollower(userId, Role.ASSIGNTYPE_USER);
-						
-						if(!existFollower){
-							RoleMapping follower = RoleMapping.create();
-							follower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
-							follower.setEndpoint(userId);						
-	
-							processManager.putRoleMapping(this.getInstId().toString() , follower);
-							processManager.applyChanges();
-							
-							// TODO: 추가된 팔로워에 대한 push 진행되어야함
-						}
-					}
-				}
-			}
-			
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
 			
 			if(this.getTaskId() == null || this.getTaskId() == -1)
@@ -969,15 +931,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
 			
-			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
-			if(this instanceof CommentWorkItem && !(this instanceof SystemWorkItem)){
-				if(this.getTitle().length() > TITLE_LIMIT_SIZE){
-					this.setType(WORKITEM_TYPE_MEMO);
-					this.setContent(getTitle());
-					this.setTitle(getTitle().substring(0, TITLE_LIMIT_SIZE) + "...");
-				}
-			}
-			
 			this.createDatabaseMe();
 			Instance tempInstance = new Instance();
 			tempInstance.setInstId(this.getInstId());
@@ -1028,6 +981,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
 		instance.flushDatabaseMe();
+		
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			this.getMetaworksContext().setWhen(WHEN_VIEW);
@@ -1049,27 +1003,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(prevInstId == null){
 				Object detail = instance.detail();
 				
-				if("sns".equals(mood)){
-					newInstancePanel = new NewInstancePanel();
-					newInstancePanel.load(session);
-					
-					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
-				}/*else if("oce".equals(session.getUx())){
-					newInstancePanel = new NewInstancePanel();
-					newInstancePanel.getMetaworksContext().setHow("sns");
-					newInstancePanel.load(session);
-					
-					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
-				}*/
-				else{
-				     UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
-				     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail), new Refresh(upcommingTodoPerspective)};
-				}							
+			     UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
+			     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
+			    		 				      new Refresh(detail),
+			    		 				      new Refresh(upcommingTodoPerspective)};
 			// 덧글
 			}else{
-				if("oce".equals(session.getUx())){
-					this.getMetaworksContext().setHow("sns");
-				}
 				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				
