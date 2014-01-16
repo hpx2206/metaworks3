@@ -16669,6 +16669,15 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 		toXY = to;
 		toDrct = "c";
 	}
+	
+	if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
+			|| toShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data"  ){
+		_style["stroke-dasharray"] = ". ";
+	}else if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation" 
+			|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"  ){
+		_style["arrow-end"] = "none";
+		_style["stroke-dasharray"] = ". ";
+	}
 
 	if (fromShape && toShape) {
 		beforeEvent = jQuery.Event("beforeConnectShape", {edge: edge, fromShape: fromShape, toShape: toShape});
@@ -17556,6 +17565,12 @@ OG.renderer.RaphaelRenderer.prototype.drawLoopType = function (element) {
             rElement.appendChild(_rect1);
         }
 	return null;
+};
+
+//Marker Draw
+
+OG.renderer.RaphaelRenderer.prototype.drawAttatchEvent = function (element) {
+	
 };
 
 //TaskType 드로우
@@ -20241,7 +20256,6 @@ OG.handler.EventHandler.prototype = {
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
 					me._RENDERER.drawRubberBand([x, y], [Math.abs(width), Math.abs(height)]);
-					console.log("mouse_move");
 				}
 			});
 			$(rootEle).bind("mouseup", function (event) {
@@ -22726,7 +22740,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		/**
 		 * 터미널 cross 사이즈
 		 */
-		TERMINAL_SIZE: 6,
+		TERMINAL_SIZE: 3,
 
 		/**
 		 * Shape 복사시 패딩 사이즈
@@ -22795,6 +22809,8 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	};
 
 	this._RENDERER = container ? new OG.RaphaelRenderer(container, containerSize, backgroundColor, backgroundImage, this._CONFIG) : null;
+	//TODO: Canvas add to renderer
+	this._RENDERER._CANVAS = this;
 	this._HANDLER = new OG.EventHandler(this._RENDERER, this._CONFIG);
 	this._CONTAINER = OG.Util.isElement(container) ? container : document.getElementById(container);
 };
