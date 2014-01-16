@@ -14,9 +14,14 @@ public class DeptFollower extends Follower {
 		
 		Employee emp = new Employee();
 		emp.copyFrom(findEmp.findMe());
-		emp.setPartCode(this.getParentId());
-		emp.syncToDatabaseMe();
-		emp.flushDatabaseMe();
+		
+		if(!emp.getPartCode().equals(this.getParentId())){
+			emp.setPartCode(this.getParentId());
+			emp.syncToDatabaseMe();
+			emp.flushDatabaseMe();
+			
+			this.push();
+		}
 	}
 
 	@Override
@@ -28,6 +33,8 @@ public class DeptFollower extends Follower {
 		employee.setPartCode(null);
 		employee.syncToDatabaseMe();
 		employee.flushDatabaseMe();
+		
+		this.push();
 	}
 	
 	@Override

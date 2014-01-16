@@ -293,11 +293,12 @@ public class User extends Database<IUser> implements IUser {
 		
 		if(clipboard instanceof Follower){
 			Follower follower = (Follower)clipboard;
+			follower.session = session;
 			follower.put(this);
 		}
 		
-		//refresh opener followers, refresh self, remover self
-		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new Remover(ServiceMethodContext.TARGET_SELF)};
+		// refresh self
+		return new Object[]{new Remover(ServiceMethodContext.TARGET_SELF)};
 	}
 	
 	public Object[] removeFollower() throws Exception {
@@ -307,14 +308,15 @@ public class User extends Database<IUser> implements IUser {
 		
 		if(clipboard instanceof Follower){
 			Follower follower = (Follower)clipboard;
+			follower.session = session;
 			follower.delegate(this);
 		}
 		
 		// change context for remover 'removeFollower' button
 		this.getMetaworksContext().setWhere(WHERE_EVER);
 		
-		// refresh opener followers, refresh self
-		return new Object[] { new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new Refresh(this, false, true) };
+		// refresh self
+		return new Object[]{new Refresh(this, false, true)};
 	}
 	
 	@Override

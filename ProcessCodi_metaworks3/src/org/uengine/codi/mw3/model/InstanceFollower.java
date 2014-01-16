@@ -55,7 +55,7 @@ public class InstanceFollower extends Follower {
 			RoleMapping rm = this.makeRoleMapping();
 			rm.saveMe();
 			
-			super.push();
+			this.push();
 		}
 	}
 
@@ -68,6 +68,7 @@ public class InstanceFollower extends Follower {
 		rm.setRoleName(RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
 		
 		rm.removeMe();
+		this.push();
 
 	}
 	

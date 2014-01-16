@@ -32,6 +32,8 @@ public class RoleFollower extends Follower {
 			RoleUser roleUser = this.makeRoleUser();
 			roleUser.createDatabaseMe();
 			roleUser.flushDatabaseMe();
+			
+			this.push();
 		}
 	}
 
@@ -42,6 +44,8 @@ public class RoleFollower extends Follower {
 		roleUser.setEmpCode(this.getUser().getUserId());
 		
 		roleUser.removeUser();
+		
+		this.push();
 	}
 	
 	@Override

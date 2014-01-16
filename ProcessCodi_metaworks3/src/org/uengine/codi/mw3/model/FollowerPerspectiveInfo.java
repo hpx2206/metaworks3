@@ -5,7 +5,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.knowledge.TopicNode;
 
 public class FollowerPerspectiveInfo extends PerspectiveInfo{
 	
@@ -73,6 +72,7 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 	@Available(condition="!joined")
 	@ServiceMethod(callByContent=true, except="followers")
 	public void join() throws Exception {
+		this.getFollower().session = session;
 		this.getFollower().put(session.getUser());
 		this.load();
 	}

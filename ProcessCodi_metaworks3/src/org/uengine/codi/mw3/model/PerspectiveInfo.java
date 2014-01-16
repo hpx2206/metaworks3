@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -64,5 +65,4 @@ public class PerspectiveInfo {
 	public Object[] switchToScheduleCalendar() throws Exception {
 		return this.load(Perspective.TYPE_CALENDAR);
 	}
-
 }
