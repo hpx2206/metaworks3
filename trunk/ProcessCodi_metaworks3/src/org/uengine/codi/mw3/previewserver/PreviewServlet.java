@@ -85,7 +85,8 @@ public class PreviewServlet extends HttpServlet {
 		FileWorkItem workItem = new FileWorkItem();
 		workItem.setTaskId(taskId);
 
-		if("image".equals(previewType) || "pdf".equals(previewType)){
+		if("image".equals(previewType)){	// 처음에 이미지가 호출이 되고 이미지가 호출되는 순간 PDF 가 변환이 되기때문에 pdf 는 isProcessing 체크를 하지 않는다.
+//		if("image".equals(previewType) || "pdf".equals(previewType)){
 			// 변환진행 여부
 			if(statusUtil.isProcessing()){		// 변환중
 				// 변환완료
