@@ -60,7 +60,7 @@ public class Knowledge {
 			// perspective
 			TopicPerspective topicPerspective = new TopicPerspective();
 			topicPerspective.session = session;
-			topicPerspective.select();
+			topicPerspective.collapse();
 			
 			PerspectivePanel perspectivePanel = new PerspectivePanel();
 			perspectivePanel.setTopicPerspective(topicPerspective);
@@ -69,7 +69,7 @@ public class Knowledge {
 			perspectiveWindow.setPanel(perspectivePanel);
 			
 			// contact
-			ContactWindow contactWindow = new ContactWindow(session.getUser());
+			ContactWindow contactWindow = new ContactWindow();
 			
 			// layout
 			Layout westLayout = new Layout();

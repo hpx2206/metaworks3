@@ -16,7 +16,6 @@ import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IContact;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 
@@ -147,10 +146,12 @@ public class ProjectCommitter {
 		
 		Contact contact = new Contact();
 		contact.setUserId(this.getUserId());
-		IContact friends = contact.loadContacts(true);
-		friends.getMetaworksContext().setHow("comitter");
 		
-		setContact(friends);
+		// TODO : 작업해야함
+//		IContact friends = contact.loadContacts(true);
+//		friends.getMetaworksContext().setHow("comitter");
+//		
+//		setContact(friends);
 	}
 	
 		
@@ -197,6 +198,8 @@ public class ProjectCommitter {
 						su.setIsJoined(true);
 						su.setIsChecked(true);
 						
+						// TODO: 작업해야함
+						/*
 						TopicFollowers tf = new TopicFollowers();
 						TopicMapping tm = new TopicMapping();
 						tm.setTopicId(this.getProjectId());
@@ -212,6 +215,8 @@ public class ProjectCommitter {
 						}
 						tf.session = session;
 						tf.load();
+						*/
+						
 						 svnUserList.add(su);
 						}
 					}

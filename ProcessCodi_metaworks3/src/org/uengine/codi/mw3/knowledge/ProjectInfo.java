@@ -238,25 +238,13 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		
 
 	
-	public ProjectInfo(){
-		//this(null);
+	public ProjectInfo(Session session) throws Exception {
+		super(session, session.getLastSelectedItem());
 	}
-	public ProjectInfo(String projectId){
-		this.setProjectId(projectId);
-		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-	}
-	
-	public ProjectInfo(Session session){
-		this.session = session;
-		this.setProjectId(session.getLastSelectedItem());
-		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-	}
+
 	
 	public void load() throws Exception {
 		this.setUseIaaS("1".equals(StartCodi.USE_IAAS));
-		followersLoad();
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
 		wfNode.copyFrom(wfNode.databaseMe());
@@ -650,7 +638,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			Perspective perspective = new Perspective();
 			perspective.session = session;
 			
-			Object[] returnObject =  perspective.loadInstanceListPanel(ProjectNode.TYPE_PROJECT, getProjectId());
+			Object[] returnObject =  perspective.loadInstanceListPanel(Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, getProjectId());
 			return new Object[]{new Refresh(returnObject[1])};
 		}
 		
@@ -660,9 +648,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		instanceListPanel.session = session;
-		instanceListPanel.setNewInstancePanel(newInstancePanel);
 		instanceListPanel.getInstanceList().load();
-		instanceListPanel.topicFollowersLoad();
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(instanceListPanel)};

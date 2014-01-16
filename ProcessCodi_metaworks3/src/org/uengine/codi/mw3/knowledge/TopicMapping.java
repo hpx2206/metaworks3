@@ -9,16 +9,15 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.marketplace.App;
+import org.uengine.codi.mw3.model.Follower;
 import org.uengine.codi.mw3.model.IDept;
+import org.uengine.codi.mw3.model.IFollower;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -115,7 +114,10 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		}
 		*/
 		
-		return createDatabaseMe();
+		ITopicMapping result = createDatabaseMe();
+		flushDatabaseMe();
+		
+		return result;
 	}
 	
 	public ITopicMapping findUsers() throws Exception {
@@ -163,8 +165,32 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		return dept;
 	}
 	
-	public void remove() throws Exception {
-		deleteDatabaseMe();
+	public IFollower findFollowers() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT distinct tm.userId endpoint, tm.userName resname, tm.assigntype, tm.topicId parentId, '" + Follower.TYPE_TOPIC + "' parentType");
+		sql.append("  FROM bpm_topicmapping tm");
+		sql.append(" WHERE tm.topicid = ?topicId");
+		
+		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
+		follower.set("topicId", this.getTopicId());
+		follower.select();	
+		
+		return follower;
+	}
+
+	public void removeMe() throws Exception {
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("DELETE");
+		sql.append("  FROM bpm_topicmapping");
+		sql.append(" WHERE topicId=?topicId");
+		sql.append("   AND userId=?userId");
+		
+		ITopicMapping tm = sql(sql.toString());
+		tm.setTopicId(this.getTopicId());
+		tm.setUserId(this.getUserId());
+		tm.update();
+		
 	}
 	
 	protected void createDatabaseToTadpole(String vmDB, String vmIP) {

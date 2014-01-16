@@ -79,7 +79,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			
 			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId());
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, getId());
 			return new Object[]{returnObject[1] };
 		}
 		
@@ -95,7 +95,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
 		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
-		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_CONTACT_COUNT));
+		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_TOPIC_COUNT));
 		
 		IProjectNode dao = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IProjectNode.class); 
 		dao.set("type", TYPE_PROJECT);
