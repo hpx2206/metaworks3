@@ -1119,8 +1119,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 		TodoBadge todoBadge = new TodoBadge();
 		todoBadge.session = session;
 		todoBadge.refresh();
+		
+		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge)});			
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});			
 		
 		if(!"sns".equals(session.getEmployee().getPreferUX())){
 			NewInstancePanel instancePanel = new NewInstancePanel();
@@ -1238,8 +1240,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		todoBadge.refresh();
 		
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
-//		commingTodoPerspective.setSelected(true);
-//		commingTodoPerspective.loadChildren();
 
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(upcommingTodoPerspective)});			
