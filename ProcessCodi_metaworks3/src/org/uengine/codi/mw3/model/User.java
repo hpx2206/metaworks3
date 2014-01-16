@@ -388,17 +388,16 @@ public class User extends Database<IUser> implements IUser {
 		
 	@Override
 	public Object[] showSchedule() throws Exception{
-		InstanceListPanel instListPanel = new InstanceListPanel();
 		
-		ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
-		scheduleCalendar.session = session;
-		scheduleCalendar.loadByUserId(getUserId());
+		session.setLastSelectedItem(getUserId());
 		
-		instListPanel.setPreloaded(true);
-		instListPanel.setScheduleCalendar(scheduleCalendar);
-		instListPanel.setTitle(getName() + " Schedule");
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
 		
-		return new Object[]{instListPanel, new Remover(new Popup())};
+		Object [] returnObject = MetaworksUtil.makeRefreshObjectArray(personalPerspective.load(Perspective.TYPE_CALENDAR));
+		returnObject = MetaworksUtil.putObjectArray(returnObject, new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE));
+		
+		return returnObject;
 	}
 	
 	@ServiceMethod()
