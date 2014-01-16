@@ -102,9 +102,14 @@
 			</td>			
 			<td width=50 align="center" style="padding-right:15px;">
 				<button type="button" class="btn btn-warning btn-sm btn-block" style="width:46px;" onClick="mw3.getFaceHelper('<%=objectId%>').sendComment()"  id="method_<%=objectId%>_add" ><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
-
+							
 			</td>
 		</tr> 
+		<tr>
+			<td colspan="3">
+				<span class="workdueDate"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>
+			</td>
+		</tr>
 <%		
 		}else if(value.type == "src"){
 %>
@@ -130,6 +135,7 @@
 		</tr>				
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px;">
+				<span class="workdueDate" style="margin-left:0px;"><a href="#"><span class="badge"><%= value.dueDate %></span></a>	</span>			
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
 				<button type="button" class="btn btn-success btn-sm "  onClick="<%=methods.compile.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize("$Compile")%></button>
 			</td>
@@ -155,6 +161,7 @@
 		</tr>				
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px; ">
+				<span class="workdueDate" style="margin-left:0px;"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>			
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
 			</td>
 		</tr>
@@ -179,8 +186,13 @@
 			<td style=" padding:10px 15px 0px 0px;">
 				<%=fields.file.here()%>
 			</td>
-			<td style=" padding:10px 0px 0px 0px;">
+			<td style=" padding:10px 0px 0px 0px;">				
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<span class="workdueDate"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>
 			</td>
 		</tr>
 <%	
