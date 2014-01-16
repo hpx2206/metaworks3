@@ -1,10 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 
 public class PersonalPerspective extends Perspective {
 

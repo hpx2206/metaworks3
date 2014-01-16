@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.TopicTitle;
@@ -58,16 +60,14 @@ public class GroupInfo extends FollowerPerspectiveInfo{
 		return new Popup(MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, topicTitle);
 	}
 	
-	@Override
+	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		TopicNode deletedNode = new TopicNode();
 		deletedNode.setId(this.getId());
 		deletedNode.copyFrom(deletedNode.databaseMe());
 		deletedNode.deleteDatabaseMe();
 		
-		//this가 아닌 Node지우기.
-		//return new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE), PersonalPerspective.loadAllICanSee()};
-		return null;
+		return super.remove();
 	}
-
+	
 }

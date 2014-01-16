@@ -7,22 +7,23 @@ import java.util.Map;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
-import org.uengine.codi.mw3.knowledge.TopicPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Dept extends Database<IDept> implements IDept {
@@ -177,13 +178,38 @@ public class Dept extends Database<IDept> implements IDept {
 	public IDept findByCode() throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from partTable ");
-		sb.append("where partcode=?partcode");
+		sb.append("where partcode=?partcode ");
+		sb.append("and isDeleted=0");
 		
 		IDept dao = null;
 		
 		try {
 			dao = sql(sb.toString());
 			dao.setPartCode(this.getPartCode());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao;
+	}
+	
+	public IDept findByName() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from partTable ");
+		sb.append("where partName=?partName ");
+		sb.append("and isDeleted=0");
+		
+		IDept dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setPartName(this.getPartName());
 			dao.select();
 			
 			if(!dao.next())
@@ -379,15 +405,12 @@ public class Dept extends Database<IDept> implements IDept {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
 			//그룹 중복 검사
-			Dept dept = new Dept();
-			dept.setPartCode(this.getPartName());
-			IDept findDept = dept.findByCode();
+			IDept findDept = this.findByName();
 			
 			if(findDept != null)
 				throw new Exception("$DuplicateName");
 			
 			// �앹꽦
-			this.setPartCode(this.getPartName());
 			this.setGlobalCom(session.getCompany().getComCode());
 			this.setIsDeleted("0");		
 			
@@ -395,14 +418,16 @@ public class Dept extends Database<IDept> implements IDept {
 				this.setUrl(this.getLogoFile().getUploadedPath());
 				this.setThumbnail(this.getLogoFile().getFilename());
 			}
+			
+			Map options = new HashMap();
+			options.put("onlySequenceTable", true);
+			
+			Long genKey = UniqueKeyGenerator.issueKey("PartTable", options, TransactionContext.getThreadLocalInstance());
+			
+			this.setPartCode(genKey.toString());
+			
 			createDatabaseMe();
-			syncToDatabaseMe();			
-
-			DeptList deptList = new DeptList();			
-			if(this.getParent_PartCode() == null)				
-				deptList.setId("/ROOT/");
-			else
-				deptList.setId(this.getParent_PartCode());
+			flushDatabaseMe();
 			
 			//deptFollow에 dept생성자 추가.
 			Employee emp = new Employee();
@@ -412,21 +437,24 @@ public class Dept extends Database<IDept> implements IDept {
 			emp.syncToDatabaseMe();
 			emp.flushDatabaseMe();
 			
-//			this.notiToCompany();
-//			return new Object[]{new Remover(new Popup()), new ToAppend(deptList, this)};
 			
-			Object[] returnObj = this.loadDeptList();
-			Object[] returnObject = new Object[ returnObj.length + 2];
-			for (int i = 0; i < returnObj.length; i++) {
-				if( returnObj[i] instanceof InstanceListPanel){
-					returnObject[i] = new Refresh(returnObj[i]);
-				}else{
-					returnObject[i] = new Refresh(returnObj[i]);
-				}			
-			}
-			returnObject[returnObj.length] = new ToAppend(deptList, this);
-			returnObject[returnObj.length+1] = new Remover(new Popup());
-			return returnObject;
+			
+			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_DEPT, Perspective.TYPE_NEWSFEED, getPartCode());
+			instanceListPanel.setTitle("부서 : " + this.getPartName());
+			
+			DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
+			
+			return new Object[]{new Refresh(session), 
+					 			new Refresh(new ListPanel(instanceListPanel, deptInfo)),  
+					 			new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE),
+					 			new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+			
+			
+			//returnObject = MetaworksUtil.putObjectArray(returnObject, new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE), false);
+			//returnObject = MetaworksUtil.putObjectArray(returnObject, new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE), false);
+			
+			//returnObject[returnObj.length+1] = new Remover(new Popup());
+			//return returnObject;
 
 //			return null;
 			

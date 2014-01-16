@@ -28,6 +28,14 @@ public class Locale{
 			this.resourceBundle = resourceBundle;
 		}
 
+	public Locale(){
+		
+	}
+	// TODO : static method 로 getString 가능하게 처리		
+	public Locale(Session session){
+		this.setLanguage(session.getEmployee().getLocale());
+	}
+	
 	@ServiceMethod(payload={"language"})
 	public void load(){		
 		// default language setting

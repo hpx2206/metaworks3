@@ -120,9 +120,7 @@ public class Perspective {
 		savePerspectiveToSession(session, perspectiveMode, perspectiveType, selectedItem);
 
 		String title = null;
-		if(perspectiveType != null && perspectiveType.equals("topic")){
-			title = session.getWindowTitle();
-		}else{
+		if(MODE_PERSONAL.equals(perspectiveMode)){
 			title = "$perspective." + perspectiveType;
 		}
 
