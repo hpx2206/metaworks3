@@ -663,6 +663,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setInstId(getInstId());
 		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
+		wi.setDueDate(this.getDueDate());
 		wi.setMetaworksContext(this.getMetaworksContext());
 	}
 		
