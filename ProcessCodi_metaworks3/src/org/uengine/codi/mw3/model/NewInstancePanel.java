@@ -77,14 +77,6 @@ public class NewInstancePanel implements ContextAware {
 			this.knowledgeNodeId = knowledgeNodeId;
 		}
 		
-	Date dueDate;
-		public Date getDueDate() {
-			return dueDate;
-		}
-		public void setDueDate(Date dueDate) {
-			this.dueDate = dueDate;
-		}
-		
 	String parentInstanceId;
 		@Hidden
 		public String getParentInstanceId() {
