@@ -30,22 +30,21 @@ public class MetaworksUtil {
 		}
 	}
 	
-	static public Object[] putObjectArray(Object[] array, Object object){
-		return MetaworksUtil.putObjectArray(array,  object, true);
+	static public Object[] makeRefreshObjectArray(Object[] array){
+		for (int i = 0; i < array.length; i++) {
+			array[i] = new Refresh(array[i]);
+		}
+		
+		return array;
 	}
 	
-	// TODO: refectoring
-	static public Object[] putObjectArray(Object[] array, Object object, boolean useRefresh){
+	static public Object[] putObjectArray(Object[] array, Object object){
 		Object[] returnObject = new Object[ array.length + 1];
 
 		for (int i = 0; i < array.length; i++) {
-			if(useRefresh)
-				returnObject[i] = new Refresh(array[i]);
-			else
-				returnObject[i] = array[i];
+			returnObject[i] = array[i];
 		}
 		returnObject[returnObject.length - 1] = object;
-		
 		
 		return returnObject;
 	}
