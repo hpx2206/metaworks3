@@ -1,21 +1,15 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.KeyGeneratorDAO;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.knowledge.BrainstormPanel;
 
 public class Role extends Database<IRole> implements IRole {
 	
@@ -220,8 +214,6 @@ public class Role extends Database<IRole> implements IRole {
 				this.setUrl(this.getLogoFile().getUploadedPath());
 				this.setThumbnail(this.getLogoFile().getFilename());
 			}
-			//roleFollow에 dept생성자 추가.
-			
 			
 			createDatabaseMe();
 			syncToDatabaseMe();
@@ -230,10 +222,6 @@ public class Role extends Database<IRole> implements IRole {
 			roleUser.setRoleCode(roleCode);
 			roleUser.setEmpCode(session.getEmployee().getEmpCode());
 			roleUser.createDatabaseMe();
-			RoleList roleList = new RoleList();
-			roleList.setId("/ROOT/");
-			
-			return new Object[]{new Remover(new Popup()), new ToAppend(roleList, this)};
 		} else {
 			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
 				this.setUrl(this.getLogoFile().getUploadedPath());
@@ -242,12 +230,9 @@ public class Role extends Database<IRole> implements IRole {
 			
 			syncToDatabaseMe();
 			flushDatabaseMe();
-			
-			this.getMetaworksContext().setWhere("navigator");
-			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
-			
-			return new Object[]{new Remover(new Popup()), new Remover(new ModalWindow()), new Refresh(this)};
 		}
+		
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 
 	@Override

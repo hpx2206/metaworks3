@@ -66,7 +66,7 @@ public interface IRole extends IDAO {
 	public Popup editPopup() throws Exception;
 
 	@Face(displayName="$Save")
-	@ServiceMethod(callByContent=true, except={"employeeList"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, except={"employeeList"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] saveMe() throws Exception;
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
