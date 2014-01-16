@@ -43,7 +43,7 @@ public class RoleInfo extends FollowerPerspectiveInfo {
 		role.syncToDatabaseMe();
 		role.flushDatabaseMe();
 		
-		return MetaworksUtil.putObjectArray(super.remove(), new ToEvent(new RolePerspective(), EventContext.EVENT_CHANGE));
+		return MetaworksUtil.putObjectArray(MetaworksUtil.makeRefreshObjectArray(super.remove()), new ToEvent(new RolePerspective(), EventContext.EVENT_CHANGE));
 		
 	}
 
