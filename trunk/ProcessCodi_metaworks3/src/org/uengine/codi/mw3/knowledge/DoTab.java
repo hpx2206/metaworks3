@@ -21,7 +21,7 @@ public class DoTab extends HorizontalSplitBox {
 			PersonalPerspective personalPerspective = new PersonalPerspective();
 			
 			this.setTop("searchbox");		
-			this.setBottom(personalPerspective.loadInstanceListPanel(session, "inbox", null)[1]);		
+			//this.setBottom(personalPerspective.loadInstanceListPanel(session, "inbox", null)[1]);		
 			this.setFixHeight(-1);
 			
 		}catch(Exception e){

@@ -42,8 +42,9 @@ public class ProjectManager implements ContextAware {
 	}
 	
 	public void load(String projectId) throws Exception{
-		ProjectInfo projectInfo = new ProjectInfo(projectId);
-		projectInfo.load();
+		// TODO: 작업해야함
+		//ProjectInfo projectInfo = new ProjectInfo(projectId);
+		//projectInfo.load();
 		
 		ProjectServersPanel projectServersPanel = new ProjectServersPanel();
 		projectServersPanel.processManager = processManager;

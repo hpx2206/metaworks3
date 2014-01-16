@@ -17,14 +17,16 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.ListPanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.kernel.GlobalContext;
 
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
-	public final static String DEFAULT_CONTACT_COUNT = "5";
+	public final static String DEFAULT_TOPIC_COUNT = "5";
 	public final static String KNOWLEGE = "knowlege";
 	public final static String TOPIC = "topic";
 	public final static String HTML = "html";
@@ -96,31 +98,12 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			this.description = description;
 		}
 
-		
-	public static ITopicNode load(Session session) throws Exception {
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append("select * from bpm_knol knol");
-		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
-		sb.append(" where knol.type = ?type");
-		sb.append(" and knol.companyId = ?companyId");
-		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
-		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
-		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
-		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_CONTACT_COUNT));
-		
-		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
-		dao.set("type", "topic");
-		dao.set("userid", session.getEmployee().getEmpCode());
-		dao.set("companyId", session.getCompany().getComCode());
-		dao.select();
-		
-		return dao; 
+	
+	public static ITopicNode findTopic(Session session) throws Exception {
+		return TopicNode.findTopic(session, true);
 	}
 	
-	public static ITopicNode moreView(Session session) throws Exception {
-		
-		DAOUtil daoUtil = new DAOUtil();
+	public static ITopicNode findTopic(Session session, boolean isMore) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
@@ -132,6 +115,9 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
 		sb.append(" order by updateDate desc");
 		
+		if(!isMore)
+			sb.append(" limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_TOPIC_COUNT));		
+		
 		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
 		dao.set("type", "topic");
 		dao.set("userid", session.getEmployee().getEmpCode());
@@ -141,24 +127,53 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		return dao; 
 	}
 	
+	public static int calcTopicCount(Session session) throws Exception {
+		
+		DAOUtil daoUtil = new DAOUtil();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(*) count from bpm_knol knol");
+		sb.append(" where knol.type = ?type");
+		sb.append(" and knol.companyId = ?companyId");
+		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
+		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
+		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
+		
+		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+		dao.set("type", "topic");
+		dao.set("userid", session.getEmployee().getEmpCode());
+		dao.set("companyId", session.getCompany().getComCode());
+		dao.select();
+		
+		if(dao.next())
+			return dao.getInt("count");
+		else
+			return 0;
+	}
+	
 	public Object[] loadTopic() throws Exception{
 		
 		if(pageNavigator != null && KNOWLEGE.equals(pageNavigator.getPageName())){
 			return new Object[]{new BrainstormPanel(this.getId())};
 		}else{
-			String title = "주제 : " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, TOPIC, getId(), title);
-			
 			// recentItem 에 create
 			RecentItem recentItem = new RecentItem();
 			recentItem.setEmpCode(session.getEmployee().getEmpCode());
 			recentItem.setItemId(this.getId());
 			recentItem.setItemType(this.getType());
 			recentItem.setUpdateDate(Calendar.getInstance().getTime());
-			
 			recentItem.add();
+
+			// init search keyword
+			session.setSearchKeyword(null);
 			
-			return returnObject;
+			String title = "주제 : " + getName();
+			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getId());
+			instanceListPanel.setTitle(title);
+			
+			ListPanel listPanel = new ListPanel(instanceListPanel, new TopicInfo(session, this.getId()));
+			
+			return new Object[]{session, listPanel};
 		}
 	}
 	

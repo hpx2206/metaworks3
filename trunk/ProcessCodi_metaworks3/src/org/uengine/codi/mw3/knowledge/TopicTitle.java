@@ -28,13 +28,11 @@ import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.INotiSetting;
 import org.uengine.codi.mw3.model.Instance;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.NotiSetting;
 import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.SystemWorkItem;
-import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.codi.mw3.model.TopicPerspective;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -187,11 +185,14 @@ public class TopicTitle  implements ContextAware{
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
+		
+		// TODO: @NotNull 으로 처리해야함
 		if(this.getTopicTitle().equals("")){
 			throw new Exception("주제를 입력해주세요");
 		}
 		
-		ITopicNode topicNodeList = TopicNode.moreView(session);
+		// TODO: 이름으로 바로 검색하여 중복 값 체크 할 수 있게 수정해야함
+		ITopicNode topicNodeList = TopicNode.findTopic(session);
 		while(topicNodeList.next()){
 			if(this.getTopicTitle().equals(topicNodeList.getName())){
 				throw new Exception("$DuplicateName");
@@ -214,25 +215,16 @@ public class TopicTitle  implements ContextAware{
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");
 		
-		
 		Object[] returnObj = topicNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 2];
 		for (int i = 0; i < returnObj.length; i++) {
-			if( returnObj[i] instanceof InstanceListPanel){
-				returnObject[i] = new Refresh(returnObj[i]);
-			}else{
-				returnObject[i] = new Refresh(returnObj[i]);
-			}			
+			returnObject[i] = new Refresh(returnObj[i]);
 		}
 		
-		TopicNode topicList = new TopicNode();
-		topicList.copyFrom(topicNodeList);
-		TopicPerspective topicPerspective = new TopicPerspective();
-		returnObject[returnObj.length ] = new Refresh(topicPerspective);
+		returnObject[returnObj.length ] = new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE);
 		returnObject[returnObj.length + 1] = new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE);
 		
 		return returnObject;
-
 	}
 	
 	
@@ -327,17 +319,19 @@ public class TopicTitle  implements ContextAware{
 //		topicNode.setName(this.getTopicTitle());
 //		topicNode.setType(TopicNode.TOPIC);
 		
-		TopicPanel topicMap = new TopicPanel();
-		topicMap.session = session;
-		topicMap.load();
+//		TopicPanel topicMap = new TopicPanel();
+//		topicMap.session = session;
+//		topicMap.load();
 		
+		/*
 		TopicInfo topicInfo = new TopicInfo(session);
 		topicInfo.setId(this.getTopicId());
-		topicInfo.load();
+		topicInfo.load();new Refresh(topicInfo),
+		*/
 		
 	//	this.notiToCompany();
 		
-		return new Object[]{new Refresh(topicMap), new Refresh(topicInfo),new Remover(new ModalWindow())};		
+		return new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};		
 	}
 	
 	@Face(displayName="$Close")

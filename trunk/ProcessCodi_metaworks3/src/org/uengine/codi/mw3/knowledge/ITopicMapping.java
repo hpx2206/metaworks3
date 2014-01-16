@@ -24,7 +24,4 @@ public interface ITopicMapping extends IDAO {
 		
 		public int getAssigntype() ;
 		public void setAssigntype(int assigntype) ;
-		
-		@ServiceMethod
-		public void remove() throws Exception;
 }

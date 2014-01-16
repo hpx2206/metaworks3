@@ -1,8 +1,8 @@
 package org.uengine.codi.mw3.knowledge;
 
-import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.CollapsePerspective;
 
-public class ProjectPerspective extends Perspective {
+public class ProjectPerspective extends CollapsePerspective {
 
 	ProjectPanel projectPanel;
 		public ProjectPanel getProjectPanel() {
