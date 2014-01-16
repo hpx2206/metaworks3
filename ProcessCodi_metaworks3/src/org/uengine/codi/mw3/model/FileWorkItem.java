@@ -26,6 +26,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.metaworks.dao.Database;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.util.CodiStatusUtil;
@@ -129,6 +130,10 @@ public class FileWorkItem extends WorkItem{
 			
 			int thisMajorVersion = this.getMajorVer();
 			int nextVersion = this.getMajorVer()+1;
+			WorkItem tempWi = getMaxVersion();
+			if( tempWi != null ){
+				nextVersion = tempWi.getMajorVer() + 1;
+			}
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			this.setMajorVer(nextVersion);
@@ -182,6 +187,7 @@ public class FileWorkItem extends WorkItem{
 			
 			if( this.getPreview() != null ){
 				this.getPreview().setTaskId(this.getTaskId());
+				this.getPreview().setConvertStatus(null);
 			}
 			this.setFileTransfer(null);
 			this.getFile().setFileTransfer(null);
@@ -211,6 +217,30 @@ public class FileWorkItem extends WorkItem{
 		super.edit();
 	}
 
+	public WorkItem getMaxVersion() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select max(majorVer) as majorVer , max(minorVer) as minorVer");
+		sql.append("  from bpm_worklist");
+		sql.append(" where grpTaskId=?grpTaskId ");
+		sql.append(" and  isDeleted !=?isDeleted ");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("grpTaskId", this.getGrpTaskId());
+		workitem.set("isDeleted",1);
+		
+		workitem.select();
+		
+		if( workitem.next() ){
+			WorkItem wi = new WorkItem();
+			wi.copyFrom(workitem);
+			return wi;
+		}else{
+			return null;
+		}
+		
+	}
 
 	public int getImageForPdf(String inputFile, String outputFile) throws IOException{
 

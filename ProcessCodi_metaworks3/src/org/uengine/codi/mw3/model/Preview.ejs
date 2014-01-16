@@ -13,7 +13,13 @@
 			 </ul>
 		</div>
 <%		
-		if(value.mimeType != null && value.mimeType == 'image'){
+        var convertMimeType = 'image';
+        if(value.convertStatus == null && value.mimeType != null && (value.mimeType.indexOf("ms")>=1 || value.mimeType.indexOf("officedocument")>=1 || value.mimeType.indexOf("pdf")>=1) ){
+            convertMimeType = 'image';
+        }else{
+            convertMimeType = value.mimeType;
+        }
+		if(convertMimeType != null && convertMimeType == 'image'){
 			if(value.convertStatus != null && value.convertStatus == '2')
 				preview = true
 		}else{			
@@ -33,7 +39,7 @@
 		</div>
 <%
 		}
-		if(value.mimeType == null || (value.mimeType != null && value.mimeType == 'image')){
+		if(convertMimeType == null || (convertMimeType != null && convertMimeType == 'image')){
 			if(!preview){
 %>
 		<img style="display:none" src="preview/<%=value.taskId%>.image" />
