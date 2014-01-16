@@ -203,12 +203,14 @@ public class Dept extends Database<IDept> implements IDept {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from partTable ");
 		sb.append("where partName=?partName ");
+		sb.append("and globalCom=?globalCom ");
 		sb.append("and isDeleted=0");
 		
 		IDept dao = null;
 		
 		try {
 			dao = sql(sb.toString());
+			dao.setGlobalCom(this.getGlobalCom());
 			dao.setPartName(this.getPartName());
 			dao.select();
 			
@@ -405,6 +407,7 @@ public class Dept extends Database<IDept> implements IDept {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
 			//그룹 중복 검사
+			
 			IDept findDept = this.findByName();
 			
 			if(findDept != null)
