@@ -1,8 +1,7 @@
 package org.uengine.codi.mw3.model;
 
-import javax.validation.constraints.Pattern;
+import javax.persistence.GeneratedValue;
 
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -21,8 +20,8 @@ public interface IDept extends IDAO {
 
 	@Id
 //	@Pattern(regexp="/[*a-z][*0-9]/", message="$deptcode.space.error.message")
+	@GeneratedValue
 	public String getPartCode();
-
 	public void setPartCode(String partCode);
 
 	@Name
@@ -106,7 +105,7 @@ public interface IDept extends IDAO {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object editDeptInfo() throws Exception;
 
-	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)//, validate=true
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true
 	public Object[] saveDeptInfo() throws Exception;
 
 	@ServiceMethod(needToConfirm=true , target=ServiceMethodContext.TARGET_APPEND)

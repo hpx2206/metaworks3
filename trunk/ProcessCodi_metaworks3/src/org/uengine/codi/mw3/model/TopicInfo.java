@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
+import org.metaworks.ToEvent;
+import org.metaworks.common.MetaworksUtil;
+
 
 public class TopicInfo extends GroupInfo{
 
@@ -13,4 +17,8 @@ public class TopicInfo extends GroupInfo{
 		super(session, topicId);
 	}
 	
+	@Override
+	public Object[] remove() throws Exception {
+		return MetaworksUtil.putObjectArray(super.remove(), new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE));
+	}	
 }

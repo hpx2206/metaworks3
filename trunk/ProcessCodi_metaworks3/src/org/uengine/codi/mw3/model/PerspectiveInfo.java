@@ -49,28 +49,28 @@ public class PerspectiveInfo {
 		return new Object[]{session, Perspective.loadInstanceList(session, session.getLastPerspecteMode(), type, session.getLastSelectedItem())};
 	}
 	
-	@Face(displayName="$All")
+	@Face(displayName = "$All")
 	@ServiceMethod
-	public Object[] switchToInstanceList() throws Exception{
+	public Object[] switchToInstanceList() throws Exception {
 		return this.load(Perspective.TYPE_NEWSFEED);
 	}
 
-	@Face(displayName="$Following")
+	@Face(displayName = "$Following")
 	@ServiceMethod
-	public Object[] switchToInstanceListFollowing() throws Exception{
+	public Object[] switchToInstanceListFollowing() throws Exception {
 		return this.load(Perspective.TYPE_FOLLOWING);
 	}
 
-	@Face(displayName="$MyToDo")
+	@Face(displayName = "$MyToDo")
 	@ServiceMethod
-	public Object[] switchToInstanceListMyToDo() throws Exception{
+	public Object[] switchToInstanceListMyToDo() throws Exception {
 		return this.load(Perspective.TYPE_INBOX);
 	}
 
-	@Face(displayName="$Calendar")
+	@Face(displayName = "$Calendar")
 	@ServiceMethod
-	public Object[] switchToScheduleCalendar() throws Exception{
+	public Object[] switchToScheduleCalendar() throws Exception {
 		return this.load(Perspective.TYPE_CALENDAR);
 	}
-	
+
 }

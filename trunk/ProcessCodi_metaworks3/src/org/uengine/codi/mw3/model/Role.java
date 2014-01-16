@@ -343,8 +343,13 @@ public class Role extends Database<IRole> implements IRole {
 	@Override
 	public Object[] loadRole() throws Exception{
 		
+		Locale locale = new Locale(session);
+		locale.load();
+		
+		String title = locale.getString("$Role") + " - " + this.getDescr();
+		
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, this.getRoleCode());
-		instanceListPanel.setTitle("역할 : " + this.getDescr());
+		instanceListPanel.setTitle(title);
 		
 		RoleInfo roleInfo = new RoleInfo(session);
 		
@@ -355,7 +360,8 @@ public class Role extends Database<IRole> implements IRole {
 	public IRole findByCode() throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from roleTable ");
-		sb.append("where rolecode=?rolecode");
+		sb.append("where rolecode=?rolecode ");
+		sb.append("and isDeleted='0'");
 		
 		IRole dao = null;
 		

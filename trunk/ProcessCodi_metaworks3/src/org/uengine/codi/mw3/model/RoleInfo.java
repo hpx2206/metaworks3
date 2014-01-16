@@ -10,6 +10,10 @@ public class RoleInfo extends FollowerPerspectiveInfo {
 	public final static int MODIFY_POPUP_HEIGHT = 250;
 	public final static int MODIFY_POPUP_WIDTH = 500;
 	
+	public RoleInfo(){
+		
+	}
+	
 	public RoleInfo(Session session) throws Exception{
 		super(Perspective.TYPE_NEWSFEED);
 		

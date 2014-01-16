@@ -18,6 +18,7 @@ import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.ListPanel;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
@@ -167,7 +168,10 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			// init search keyword
 			session.setSearchKeyword(null);
 			
-			String title = "주제 : " + getName();
+			Locale locale = new Locale(session);
+			locale.load();
+			
+			String title = locale.getString("$Topic") + " - " + getName();
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getId());
 			instanceListPanel.setTitle(title);
 			

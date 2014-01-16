@@ -5,6 +5,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.knowledge.TopicNode;
 
 public class FollowerPerspectiveInfo extends PerspectiveInfo{
 	
@@ -90,7 +91,10 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 	
 	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
-		throw new Exception("not defined modify method");
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		
+		return personalPerspective.loadAllICanSee();
 	}
 
 	@Hidden

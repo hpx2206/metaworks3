@@ -2,17 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.common.MetaworksUtil;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.knowledge.ITopicMapping;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 
 public class DeptInfo extends FollowerPerspectiveInfo{
 
@@ -66,8 +58,7 @@ public class DeptInfo extends FollowerPerspectiveInfo{
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
 		
-		return null;
-		//return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};	
+		return MetaworksUtil.putObjectArray(super.remove(), new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE));
 	}
 	/*
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
