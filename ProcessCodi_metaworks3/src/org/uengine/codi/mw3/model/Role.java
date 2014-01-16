@@ -216,12 +216,13 @@ public class Role extends Database<IRole> implements IRole {
 			}
 			
 			createDatabaseMe();
-			syncToDatabaseMe();
+			flushDatabaseMe();
 			
 			RoleUser roleUser = new RoleUser();
 			roleUser.setRoleCode(roleCode);
 			roleUser.setEmpCode(session.getEmployee().getEmpCode());
 			roleUser.createDatabaseMe();
+			roleUser.flushDatabaseMe();
 		} else {
 			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
 				this.setUrl(this.getLogoFile().getUploadedPath());
@@ -232,7 +233,13 @@ public class Role extends Database<IRole> implements IRole {
 			flushDatabaseMe();
 		}
 		
-		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, getRoleCode());
+		instanceListPanel.setTitle("역할 : " + this.getRoleCode());
+		
+		return new Object[]{new Refresh(session),
+							new Refresh(new ListPanel(instanceListPanel, new RoleInfo(session))),
+							new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), 
+							new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 
 	@Override
@@ -244,6 +251,8 @@ public class Role extends Database<IRole> implements IRole {
 		
 		role.syncToDatabaseMe();
 		role.flushDatabaseMe();
+		
+		
 		
 		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(role)};				
 	}
@@ -331,7 +340,7 @@ public class Role extends Database<IRole> implements IRole {
 		Locale locale = new Locale(session);
 		locale.load();
 		
-		String title = locale.getString("$Role") + " - " + this.getDescr();
+		String title = locale.getString("$Role") + " - " + this.getRoleCode();
 		
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, this.getRoleCode());
 		instanceListPanel.setTitle(title);
