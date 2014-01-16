@@ -75,7 +75,6 @@ public class TrayItem implements ContextAware {
 	@ServiceMethod(inContextMenu=true, payload={"instId"})
 	public Tray close() throws Exception{
 		tray.getTrayItems().remove(this);
-		tray.session = session;
 		tray.save();
 		
 		return tray;
@@ -103,9 +102,6 @@ public class TrayItem implements ContextAware {
 		return false;
 	}
 
-	@AutowiredFromClient //TODO: not good for performance. some except options should work for the autowired fields.
-	public Tray tray;
-	
 	@Autowired
 	public InstanceView instanceView;
 	
@@ -114,5 +110,7 @@ public class TrayItem implements ContextAware {
 	
 	@AutowiredFromClient
 	public Session session;
-	
+
+	@AutowiredFromClient
+	public Tray tray;
 }

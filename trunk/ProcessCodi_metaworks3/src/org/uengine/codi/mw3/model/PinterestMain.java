@@ -25,12 +25,6 @@ public class PinterestMain {
 
 		instanceListPanel.session = session;
 
-		instanceListPanel.setMetaworksContext(new MetaworksContext());
-		instanceListPanel.getMetaworksContext().setWhere("pinterest");
-		instanceListPanel.getInstanceList().setMetaworksContext(new MetaworksContext());
-		instanceListPanel.getInstanceList().getMetaworksContext().setWhere("pinterest");
-		instanceListPanel.getInstanceList().getInstances().getMetaworksContext().setWhere("pinterest");
-//		
 		setInstanceListPanel(instanceListPanel);
 		NewInstancePanel newInstancePanel2 = new NewInstancePanel();
 		newInstancePanel2.session = session;

@@ -21,9 +21,9 @@ import org.uengine.codi.mw3.Login;
 )
 public class InstanceList implements ContextAware{
 
-	final static int PAGE_CNT = 15;
-	final static int PAGE_CNT_MOBILE = 5;
-	final static int PAGE_CNT_DASHBOARD = 3;
+	public final static int PAGE_CNT = 15;
+	public final static int PAGE_CNT_MOBILE = 5;
+	public final static int PAGE_CNT_DASHBOARD = 3;
 	
 	public InstanceList(){
 		this(null);
@@ -139,35 +139,13 @@ public class InstanceList implements ContextAware{
 				
 			});
 		}
-		int count;
-		Instance tempInstanceContent = new Instance();
-		tempInstanceContent.setMetaworksContext(new MetaworksContext());
-		if(getMetaworksContext()!=null && getMetaworksContext().getHow()!=null && "dashboard".equals(getMetaworksContext().getHow())){
-			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT_DASHBOARD);
-			tempInstanceContent.getMetaworksContext().setHow("dashboard");
-			
-		}else{
-			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
-		}
-		tempInstanceContent.session = this.session;
-		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
+		
+		int count =  ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
+		
+		IInstance instanceContents = Instance.load(navigation, getPage()-1, count);
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		
-		if(this.getMetaworksContext() == null) {
-			this.setMetaworksContext(new MetaworksContext());
-		}
-		if(!("TodoBadge".equals(this.getMetaworksContext().getWhen()))){
-			instanceContents.getMetaworksContext().setHow("instance");
-		}
-		if(getMetaworksContext()==null){
-			setMetaworksContext(new MetaworksContext());
-			
-		}
-		if( session != null ){
-			if("dashboard".equals(session.getLastPerspecteType())){
-				instanceContents.getMetaworksContext().setWhere("dashboard");
-			}
-		}
+		this.setInstances(instanceContents);
 		
 //		if("sns".equals(preferUX)){
 //			if("oce".equals(session.getUx())){
@@ -178,7 +156,7 @@ public class InstanceList implements ContextAware{
 //				instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 //			}
 //		}
-		setInstances(instanceContents);
+		
 			// setting moreInstanceList
 		if( instanceContents.size() >= PAGE_CNT){
 			setMoreInstanceList(new InstanceList());

@@ -1,0 +1,23 @@
+<%
+	if(value){
+%>
+	<div class="depth1">
+		<span><%=fields.label.here()%></span>
+	</div>
+
+	<%=methods.collapse.here()%>
+	<%=methods.expand.here()%>
+	<div class="clear" />
+
+	<div class="depth2">
+		<%=fields.child.here()%>
+		<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+			<li>
+				<a href="#" onClick="<%=methods.popupAdd.caller()%>"><span class="icon-plus"></span><b>새<%=mw3.localize(value.label)%></b></a>
+				<div class="clear"></div>
+			</li>
+		</ul>
+	</div>
+<%
+	}
+%>

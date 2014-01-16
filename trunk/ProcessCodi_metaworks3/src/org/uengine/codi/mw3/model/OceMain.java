@@ -215,7 +215,6 @@ public class OceMain {
 		
 			instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
-			instanceListPanel.switchToKnowledge();
 			instanceListWindow.setPanel(instanceListPanel);
 			
 		}else{
@@ -228,16 +227,11 @@ public class OceMain {
 				
 				instanceListPanel = (InstanceListPanel) returnObject[1];
 				instanceListPanel.session = session;
-				instanceListPanel.setMetaworksContext(new MetaworksContext());
-				instanceListPanel.getMetaworksContext().setWhere("oce_app");
-				instanceListWindow.setPanel(instanceListPanel);
 		
 			}else{
 				
 				instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 				instanceListPanel.session = session;
-				instanceListPanel.setMetaworksContext(new MetaworksContext());
-				instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
 				instanceListWindow.setPanel(instanceListPanel);
 			}
 		}
@@ -256,7 +250,6 @@ public class OceMain {
 		
 			instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
-			instanceListPanel.switchToKnowledge();
 			instanceListWindow.setPanel(instanceListPanel);
 			
 		}else{
@@ -265,9 +258,6 @@ public class OceMain {
 			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 
 			instanceListPanel.session = session;
-			instanceListPanel.setMetaworksContext(new MetaworksContext());
-			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
-			instanceListWindow.setPanel(instanceListPanel);
 		}
 		
 		return instanceListWindow;

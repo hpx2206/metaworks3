@@ -10,6 +10,14 @@ public class Navigation {
 			this.media = media;
 		}
 
+	String perspectiveMode;
+		public String getPerspectiveMode() {
+			return perspectiveMode;
+		}
+		public void setPerspectiveMode(String perspectiveMode) {
+			this.perspectiveMode = perspectiveMode;
+		}
+
 	String perspectiveType;
 		public String getPerspectiveType() {
 			return perspectiveType;
@@ -57,6 +65,7 @@ public class Navigation {
 				e.printStackTrace();
 			}
 			
+			this.setPerspectiveMode(session.getLastPerspecteMode());
 			this.setPerspectiveType(session.getLastPerspecteType());
 			this.setPerspectiveValue(session.getLastSelectedItem());		
 			this.setKeyword(session.getSearchKeyword());

@@ -61,6 +61,8 @@ public interface IWorkItem extends IDAO{
 		public final static int TITLE_LIMIT_SIZE             = 2900;
 		public final static int LASTCMT_LIMIT_SIZE             = 200;
 		
+		public final static String WHERE_WORKLIST				= "worklist";
+		
 		@Id
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
 		public Long getTaskId();

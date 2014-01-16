@@ -7,8 +7,8 @@ var org_uengine_codi_mw3_model_ContactPerspective = function(objectId, className
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.div = $('#' + this.divId);		
 
-	if(this.object.loader)
-		mw3.call(this.objectId, 'select');
+	if(this.object.loader && !this.object.loaded)
+		mw3.call(this.objectId, 'refresh');
 	else{
 		this.div.hover(
 			function(){

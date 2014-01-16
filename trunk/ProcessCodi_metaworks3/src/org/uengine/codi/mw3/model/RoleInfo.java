@@ -1,40 +1,35 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToEvent;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
 
-public class RoleInfo extends PerspectiveInfo{
+public class RoleInfo extends FollowerPerspectiveInfo {
 
 	public final static int MODIFY_POPUP_HEIGHT = 250;
 	public final static int MODIFY_POPUP_WIDTH = 500;
 	
-	public RoleInfo(){
-		
-	}
 	public RoleInfo(Session session) throws Exception{
+		super(Perspective.TYPE_NEWSFEED);
+		
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
-		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		
+		this.load();
 	}
 	
 	@Override
-	public void add() {
-		// TODO Auto-generated method stub
+	public void load() throws Exception {
+		RoleFollower follower = new RoleFollower();
+		follower.setParentId(this.getId());
 		
+		this.setFollower(follower);
+		
+		super.load();
 	}
-
+	
 	@Override
-	public Object[] delete() throws Exception {
+	public Object[] remove() throws Exception {
 		Role role = new Role();
 		role.setRoleCode(this.getId());		
 		role.copyFrom(role.databaseMe());
@@ -47,7 +42,7 @@ public class RoleInfo extends PerspectiveInfo{
 	}
 
 	@Override
-	public ModalWindow modify() throws Exception {
+	public Popup modify() throws Exception {
 		Role role = new Role();
 		role.setRoleCode(this.getId());
 		role.copyFrom(role.databaseMe());
@@ -56,44 +51,10 @@ public class RoleInfo extends PerspectiveInfo{
 		role.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		role.setLogoFile(new MetaworksFile());
 		
-		
-		
-		return new ModalWindow(role, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "$EditTopic");
+		return new Popup(MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, role);
 	}
 
-	@Override
-	public void load() throws Exception {
-		this.followersLoad();
-		
-		Role role = new Role();
-		role.setRoleCode(this.getId());
-		
-		try {
-			role.copyFrom(role.databaseMe());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.setName(role.getDescr());
-		this.setDescription(role.getDescr());
-		
-		MetaworksFile logoFile = new MetaworksFile();
-		logoFile.setUploadedPath(role.getUrl());
-		logoFile.setFilename(role.getThumbnail());
-		this.setLogoFile(logoFile);
-		this.settingJoined();
-		
-	}
-
-	@Override
-	public void followersLoad() throws Exception {
-		followers = new RoleFollowers();
-		followers.session = session;
-		followers.load();
-	}
-	
-	
+	/*
 	@Override
 	public Object[] subscribe() throws Exception {
 		
@@ -141,5 +102,6 @@ public class RoleInfo extends PerspectiveInfo{
 		
 				
 	}
+	*/
 
 }

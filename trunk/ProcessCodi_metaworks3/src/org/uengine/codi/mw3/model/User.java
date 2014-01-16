@@ -1,27 +1,33 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 import javax.sql.RowSet;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {
-	
-	public final static String FRIEND = "friend";
-	
+
+	@Autowired
+	public ProcessManagerRemote processManager;
+
+	@AutowiredFromClient
+	public Session session;
+
 	String name;
 		public String getName() {
 			return name;
@@ -54,14 +60,6 @@ public class User extends Database<IUser> implements IUser {
 			this.mood = mood;
 		}
 		
-	boolean userChecked;
-		public boolean isUserChecked() {
-			return userChecked;
-		}
-		public void setUserChecked(boolean userChecked) {
-			this.userChecked = userChecked;
-		}
-		
 	int businessValue;
 		public int getBusinessValue() {
 			return businessValue;
@@ -78,43 +76,34 @@ public class User extends Database<IUser> implements IUser {
 			this.todoCount = todoCount;
 		}
 		
-	boolean guest;
-		public boolean isGuest() {
-			return guest;
+	boolean self;
+		public boolean isSelf() {
+			return self;
 		}
-		public void setGuest(boolean guest) {
-			this.guest = guest;
+		public void setSelf(boolean self) {
+			this.self = self;
 		}
-		
-	String inviteUser;
-		public String getInviteUser() {
-			return inviteUser;
+	
+	boolean friend;
+		public boolean isFriend() {
+			return friend;
 		}
-		public void setInviteUser(String inviteUser) {
-			this.inviteUser = inviteUser;
+		public void setFriend(boolean friend) {
+			this.friend = friend;
 		}
-
-	@AutowiredFromClient
-	public Session session;
 
 	@Override
 	public Popup pickUp() throws Exception {
 		Popup popup = new Popup();
 		
-		String type = "addPicker";
-		ContactPanel contactPanel = new ContactPanel(session.getUser());
-		contactPanel.getContactListPanel().setId(type);
-		if(contactPanel.getContactListPanel().getContactList() != null)
-			contactPanel.getContactListPanel().getContactList().getMetaworksContext().setWhen(type);		
-		if(contactPanel.getContactListPanel().getContactList() != null)
-			contactPanel.getContactListPanel().getContactList().getMetaworksContext().setWhen(type);
-		contactPanel.getUser().getMetaworksContext().setWhen(type);
-		
-		/*AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addAskFollower" );
-		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
-		userPicker.getMetaworksContext().setWhen("userPicker");*/
-		
+		/*
+		ContactPanel contactPanel = new ContactPanel();
+		contactPanel.getMetaworksContext().setHow(ContactPanel.HOW_FORPICKER);
+		contactPanel.setUser(session.getUser());
+		contactPanel.load();
+
 		popup.setPanel(contactPanel);
+		*/
 		popup.setName("AddFollowerPanel");
 		
 		return popup;
@@ -153,39 +142,45 @@ public class User extends Database<IUser> implements IUser {
 		return emp.databaseMe();
 	}
 	
-//	String  instanceId;
-//	
-//	@Override
-//	public String getInstanceId() {
-//		return instanceId;
-//	}
-//	
-//	@Override
-//	public void setInstanceId(String instanceId) {
-//		this.instanceId = instanceId;
-//	}
+	public void load() throws Exception {
+		boolean isSelf = this.getUserId().equals(session.getUser().getUserId());
+		boolean isFriend = false;
+		
+		this.setSelf(isSelf);
+		
+		if(!isSelf){
+			IContact findContact = Contact.findContactsWithFriendId(session.getUser(), this.getUserId());
+			if(findContact != null)
+				isFriend = true;
+		}
+		
+		this.setFriend(isFriend);
+	}
 	
 	@Override
 	public Popup detail() throws Exception {
-		
 		int with = 435;
 		int height = 275;
 		
-		System.out.println("when : " + getMetaworksContext().getWhen());
+		this.load();
 		
-		this.getMetaworksContext().setHow("info");
+		//this.getMetaworksContext().setWhen(this.getMetaworksContext().getWhere());
+		this.getMetaworksContext().setHow(HOW_INFO);
 		
-		String when = this.getMetaworksContext().getWhen();
+//		String when = this.getMetaworksContext().getWhen();
+//		
+//		if(when != null && when.equals(Followers.CONTEXT_WHERE_INFOLLOWERS)){
+//			String instId = session.getLastInstanceId();
+//			
+//			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+//			if(!roleMapping.confirmFollower()){
+//				this.getMetaworksContext().setWhen("participant");
+//			}
+//		}
 		
-		if(when != null && when.equals(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			String instId = session.getLastInstanceId();
-			
-			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
-			if(!roleMapping.confirmFollower()){
-				this.getMetaworksContext().setWhen("participant");
-			}
-		}
 		
+		// TODO: User 가 로드되고 나서 나중에 로드 되게 수정해야함
+		/*
 		try{
 			Employee employee = new Employee();
 			employee.setEmpCode(getUserId());
@@ -204,33 +199,16 @@ public class User extends Database<IUser> implements IUser {
 			
 			setNetwork("local");
 			
-			//선택한 유저 recentItem에 add
-			RecentItem recentItem = new RecentItem();
-			recentItem.setEmpCode(session.getEmployee().getEmpCode());
-			recentItem.setItemId(this.getUserId());
-			recentItem.setItemType(FRIEND);
-			recentItem.setUpdateDate(Calendar.getInstance().getTime());
-			
-			recentItem.add();
 			
 		}catch(Exception e){
 		//	e.printStackTrace();
 		}
-		
+		*/
+
 		Popup popup = new Popup(with, height);
 		popup.setPanel(this);
 
 		return popup;
-	}
-	
-	public Window friends() throws Exception{
-		
-		ContentWindow contactWindow = new ContentWindow();
-		contactWindow.setTitle(getName() + "'s friends");
-		ContactPanel contactPanel = new ContactPanel(this);
-		contactWindow.setPanel(contactPanel);
-		
-		return contactWindow;
 	}
 	
 	@Override
@@ -245,39 +223,21 @@ public class User extends Database<IUser> implements IUser {
 		return instanceStarter;
 	}
 
-	@Autowired
-	public ProcessManagerRemote processManager;
-
-
-	public Object[] addFollower() throws Exception {
-		
-		Followers followers = new Followers();
-		return followers.addFollower(this);
-		
-	}
-	@ServiceMethod(target=TARGET_APPEND)
-	public Object[] removeFollower() throws Exception {
-		
-		Followers followers = new Followers();
-		return followers.removeFollower(this);
-		
+	public void addContact() throws Exception {
+		Contact contact = new Contact();
+		contact.session = session;
+		contact.setFriend(this);
+		contact.setUserId(session.getUser().getUserId());
+		contact.put();
 	}
 	
-	public Refresh addContact() throws Exception {
+	public Object[] addContactForInfo() throws Exception {
+		this.addContact();
+		this.load();
 		
-		Contact contact = new Contact();
-		contact.setFriend(this);
-		if(this.getNetwork() != null && this.getNetwork().equals("fb"))
-			contact.setFriendId(this.getName());
-		else
-			contact.setFriendId(this.getUserId());
+		return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this, false, true)};
 		
-		contact.setUserId(session.getUser().getUserId());
-		contact.addContact();
-		
-		
-		
-		
+		/*
 		ContactList contactList = new ContactList();
 		contactList.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
 		
@@ -303,41 +263,59 @@ public class User extends Database<IUser> implements IUser {
 		contactList.load(session.getUser().getUserId());		
 		
 		return new Refresh(contactList);
+		*/
 	}	
 	
+	@Override
+	public Object[] addContactForList() throws Exception {
+		this.addContact();
+		
+		return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Remover(ServiceMethodContext.TARGET_SELF)};
+	}
 	
+	@Override
 	public Object[] removeContact() throws Exception {
 		Contact contact = new Contact();
 		contact.setFriend(this);
 		contact.setUserId(session.getUser().getUserId());
-		contact.removeContact();
+		contact.delegate();
 		
-		ContactList contactList = new ContactList();
-		contactList.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-		contactList.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-		contactList.load(session.getUser().getUserId());
+		this.load();
 		
-		return new Object[] {new Refresh(contactList , true)};
-		
+		return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this, false, true)};
 	}
 	
-//	@ServiceMethod(target="popup", payload={"userId", "network"})
-	public Popup info() throws Exception{
-		Popup infoWindow = new Popup(600, 425);
+	@Override
+	public Object[] addFollower() throws Exception {
+		// use clipboard for addFollower
+		Object clipboard = session.getClipboard();
 		
-		Employee me = new Employee();
-		me.setEmpCode(getUserId());
+		if(clipboard instanceof Follower){
+			Follower follower = (Follower)clipboard;
+			follower.put(this);
+		}
 		
-		IEmployee dbMe = me.databaseMe();	
-		dbMe.getMetaworksContext().setWhen("view");		
-		dbMe.getMetaworksContext().setHow("detail");
-		dbMe.getMetaworksContext().setWhere("inDetailPopup");
-
-		infoWindow.setPanel(dbMe);		
-		
-		return infoWindow;
+		//refresh opener followers, refresh self, remover self
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new Remover(ServiceMethodContext.TARGET_SELF)};
 	}
-
+	
+	public Object[] removeFollower() throws Exception {
+		
+		// use clipboard for removeFollower
+		Object clipboard = session.getClipboard();
+		
+		if(clipboard instanceof Follower){
+			Follower follower = (Follower)clipboard;
+			follower.delegate(this);
+		}
+		
+		// change context for remover 'removeFollower' button
+		this.getMetaworksContext().setWhere(WHERE_EVER);
+		
+		// refresh opener followers, refresh self
+		return new Object[] { new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new Refresh(this, false, true) };
+	}
+	
 	@Override
 	public void changeMood() throws Exception {
 
@@ -382,66 +360,6 @@ public class User extends Database<IUser> implements IUser {
 	}
 
 	@Override
-	public Object[] unsubscribe() throws Exception {
-		
-		IEmployee emp = new Employee();
-		emp.setEmpCode(getUserId());
-		Employee employee = (Employee)emp.findMe();	
-		
-		String inviteUser = employee.getInviteUser();
-		
-		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin() ||
-				(inviteUser != null && inviteUser.equals(session.getUser().getUserId()))) {
-			
-			employee.databaseMe().setIsDeleted("1");		
-			
-			if(getUserId().equals(session.getUser().getUserId()))
-				return new Object[]{session.logout(), new Remover(new ModalWindow())};
-			else
-				return new Object[]{new Remover(new Popup())};
-		}
-		else
-			throw new Exception("$OnlyTheAdminAndWriterAndInviteUserCanUnsubscribe");
-	}
-	
-	@Override
-	public void guestToUser() throws Exception {	
-		
-		IEmployee emp = new Employee();
-		emp.setEmpCode(getUserId());
-		Employee employee = (Employee)emp.findMe();		
-		
-		String inviteUser = employee.getInviteUser();
-		
-		if((inviteUser != null && inviteUser.equals(session.getUser().getUserId()))
-				|| session.getEmployee().getIsAdmin()) {
-			
-			employee.databaseMe().setGuest(false);
-			this.setGuest(employee.databaseMe().isGuest());
-		}
-		else
-			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
-	}
-	
-	@Override
-	public void userToGuest() throws Exception {
-		IEmployee emp = new Employee();
-		emp.setEmpCode(getUserId());
-		Employee employee = (Employee)emp.findMe();		
-		
-		String inviteUser = employee.getInviteUser();
-		
-		if((inviteUser != null && inviteUser.equals(session.getUser().getUserId()))
-				|| session.getEmployee().getIsAdmin()) {
-			
-			employee.databaseMe().setGuest(true);
-			this.setGuest(employee.databaseMe().isGuest());
-		}
-		else
-			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
-	}
-
-	@Override
 	public void addAsAdmin() throws Exception {
 		if(session.getEmployee().getIsAdmin()){
 			
@@ -456,19 +374,11 @@ public class User extends Database<IUser> implements IUser {
 	@Override
 	public Object[] showWall() throws Exception{
 		
-		Employee employee = new Employee();
-		employee.setEmpCode(getUserId());
-		employee.copyFrom(employee.databaseMe());
-		//employee.session = session;
+		session.setLastSelectedItem(getUserId());
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
 		
-		// "organization" 팔로워기준 - 자기가 추가되어있으면 다보임
-//		Object[] employeeList = employee.loadOrganization();
-		
-		// "request"  시작자기준 
-		//employee.session.setEmployee(employee);
-		Object[] employeeList = Perspective.loadInstanceListPanel(session, "showWall", employee.getEmpCode(), "사원 : " + employee.getEmpName());
-		
-		return new Object[]{(InstanceListPanel) employeeList[1], new Remover(new Popup())};
+		return new Object[]{personalPerspective.loadAllICanSee()};
 	}
 	
 		
@@ -579,8 +489,50 @@ public class User extends Database<IUser> implements IUser {
 		int height = 87;
 		if(employee.getIsAdmin())
 			height = 116;
-				
+
 		return new Object[]{new Popup(200, height, employee)};
+	}
+	
+	public static void updateRecentItem(Session session, IUser user) throws Exception {
+		//선택한 유저 recentItem에 add
+		RecentItem recentItem = new RecentItem();
+		recentItem.setEmpCode(session.getEmployee().getEmpCode());
+		recentItem.setItemId(user.getUserId());
+		recentItem.setItemType(RecentItem.TYPE_FRIEND);
+		recentItem.setUpdateDate(new Date());
+		
+		recentItem.add();
+	}
+	
+	public static IUser findUsers(IUser user, String keyword) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT e.empcode userId, e.empname name, CONCAT(p.partname,IF(!isnull(p.partname) and length(trim(p.partname))>0 and !isnull(e.jikname) and length(trim(e.jikname))>0, ', ', ''), e.jikname) mood");
+		sb.append("  FROM emptable e");
+		sb.append("  LEFT JOIN parttable p");
+		sb.append("         ON e.partcode=p.partcode");
+		sb.append(" WHERE e.empcode!=?userid");
+		sb.append("   AND e.isdeleted=?isdeleted");
+		sb.append("   AND NOT EXISTS");
+		sb.append("    (SELECT 1");
+		sb.append("       FROM contact c");
+		sb.append("      WHERE c.userid=?userid");
+		sb.append("        AND c.friendid=e.empcode");
+		sb.append("    )");
+		
+		if(keyword != null && keyword.trim().length() > 0)
+			sb.append("   AND e.empname LIKE ?empname");
+		
+		
+		IUser dao = (IUser)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+	   			 sb.toString(), 
+	   			 IUser.class);
+
+		dao.setUserId(user.getUserId());		
+		dao.set("empname", "%" + keyword + "%");
+		dao.set("isdeleted", "0");
+		dao.select();
+
+		return dao;
 	}
 }
 

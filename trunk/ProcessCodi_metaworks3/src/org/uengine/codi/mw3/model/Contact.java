@@ -1,163 +1,21 @@
 package org.uengine.codi.mw3.model;
 
-
 import java.rmi.RemoteException;
-import java.util.StringTokenizer;
 
+import org.metaworks.Remover;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
-import org.uengine.codi.mw3.knowledge.ProjectCommitter;
-import org.uengine.codi.mw3.knowledge.SvnUser;
+import org.metaworks.dao.MetaworksDAO;
+import org.metaworks.dao.TransactionContext;
 import org.uengine.kernel.GlobalContext;
-
 
 public class Contact extends Database<IContact> implements IContact{
 	
-	public final static String DEFAULT_TOPIC_COUNT = "9";
-	public final static String TOPIC = "topic";
-	public final static String ETC = "etc";
+	public final static String DEFAULT_TOPIC_COUNT = GlobalContext.getPropertyString("contact.more.count", "9");
 
-	public IContact loadContacts(boolean isWholeLoad) throws Exception{
-		IUser friend = new User();
-		
-		StringBuffer sb = new StringBuffer();
-//		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, item.updatedate")
-//		  .append("  from contact c ")
-//		  .append("  	left join emptable e")
-//		  .append("    		on c.friendid = e.empcode")
-//		  .append("  	left join recentItem item ")
-//		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
-//		  .append(" where c.userId=?userId")
-//		  .append("   and e.isDeleted=?isDeleted");
-//		
-//		if(this.getFriend() != null && this.getFriend().getName() != null){
-//			sb.append("   and c.friendName like ?friendName");
-////			sb.append("   and c.network=?network");
-//		}
-//		
-//		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {			
-//			if(TOPIC.equals(session.getLastInstanceId())) {
-//				sb.append(" and not exists")
-//				  .append(" (select t.userid")
-//				  .append(" from bpm_topicmapping t")
-//				  .append(" where topicid='" + session.getLastSelectedItem() + "' and assigntype=0 and t.userid=c.friendId)");
-//			}else if(ETC.equals(session.getLastInstanceId())) {
-//			}else {
-//				sb.append(" and not exists")
-//				  .append(" (select distinct r.endpoint")
-//				  .append(" from bpm_rolemapping r")
-//				  .append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
-//			}
-//		}
-//		
-//		sb.append(" order by updatedate desc ");
-//		
-//		if(!isSelected) {
-//			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
-//		}
-//		
-// 		IContact contacts = sql(sb.toString());
-//		contacts.setUserId(getUserId());		
-//		if(this.getFriend() != null && this.getFriend().getName() != null){
-//			contacts.set("friendName", this.getFriend().getName() + "%");
-////			contacts.set("network", this.getFriend().getNetwork());
-//		}
-
-		sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
-		sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
-		sb.append(" where c.userid=?userId ");
-
-		
-		if(!isWholeLoad){
-			sb.append(" limit 9 ");
-		}
-		
-		IContact contacts = sql(sb.toString());
-		
-		contacts.set("userId",getUserId());
-		contacts.select();
-		contacts.setMetaworksContext(getMetaworksContext());
-		return contacts;
-	}
-	
-	public int findContactCount() throws Exception{
-		
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("select DISTINCT c.userid, c.friendid, ifnull(e.empname,c.friendname) friendname, e.mood ");
-		sb.append(" from contact c left join emptable e on c.friendid = e.empcode ");
-		sb.append(" where c.userid=?userId");
-		
-		IContact contacts = sql(sb.toString());
-		
-		contacts.set("userId",getUserId());
-		contacts.select();
-		return contacts.size();
-	}
-	
-	public IContact findContactsWithFriendName(String keyword) throws Exception{
-		IContact contacts = sql("select * from contact where userId=?userId and friendName like '%" + keyword + "%'");
-		
-		contacts.set("friendName", keyword);
-		contacts.setUserId(getUserId());
-		contacts.select();
-		
-		return contacts;
-	}
-	
-	public IContact findContactsWithFriendId() throws Exception{
-		StringBuffer sb = new StringBuffer();
-		sb.append("select * from contact ");
-		sb.append(" where  userId=?userId ");
-		sb.append("  and friendId = ?friendId ");
-		
-		IContact dao = null;
-		
-		try {
-			dao = sql(sb.toString());
-			dao.setUserId(this.getUserId());
-			dao.setFriendId(this.getFriendId());
-			dao.select();
-			
-			if(!dao.next())
-				dao = null;
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return dao;
-	}
-	
-	public void addContact() throws Exception{
-		if(!this.getUserId().equals(getFriend().getUserId())){
-			IContact contact = sql("select * from contact where userid = ?userId and friendId = ?friendId");
-			contact.set("friendId", this.getFriend().getUserId());
-			contact.setUserId(getUserId());
-			
-			contact.select();
-			
-			if(contact.size() == 0){
-				createDatabaseMe();
-				flushDatabaseMe();
-			}else{
-				// TODO : 이미 추가된 사람이라는 오류 처리 ?
-			}
-		}else{
-			// TODO : 본인 선택 했다는 오류 처리 ?
-		}
-	}
-	
-	public void removeContact() throws Exception{
-		IContact contact = sql("delete from contact where userid = ?userId and friendId = ?friendId");
-		contact.set("friendId", getFriend().getUserId());
-		contact.setUserId(getUserId());
-
-		contact.update();
-	}
+	@AutowiredFromClient
+	public Session session;
 
 	String friendId;
 		public String getFriendId() {
@@ -180,30 +38,51 @@ public class Contact extends Database<IContact> implements IContact{
 		public String getUserId() {
 			return userId;
 		}
-	
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}		
-		
-	boolean checked;
-	public boolean isChecked() {
-		return checked;
-	}
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
 
-	@AutowiredFromClient
-	public Session session;
-		
-	public User pickUp() throws RemoteException, Exception {
+	boolean checked;
+		public boolean isChecked() {
+			return checked;
+		}
+		public void setChecked(boolean checked) {
+			this.checked = checked;
+		}
+
+	public void put() throws Exception {
+		if(!this.getUserId().equals(getFriend().getUserId())){
+			
+			IContact contact = sql("select * from contact where userid = ?userId and friendId = ?friendId");
+			contact.set("friendId", this.getFriend().getUserId());
+			contact.setUserId(getUserId());
+			
+			contact.select();
+			
+			if(contact.size() == 0){
+				createDatabaseMe();
+				flushDatabaseMe();
+				
+				User.updateRecentItem(session, this.getFriend());
+			}
+		}
+	}
+	
+	public void delegate() throws Exception{
+		IContact contact = sql("delete from contact where userid = ?userId and friendId = ?friendId");
+		contact.set("friendId", getFriend().getUserId());
+		contact.setUserId(getUserId());
+		contact.update();
+	}
+	
+	public Object[] pickUp() throws RemoteException, Exception {
 		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
 		
 		User user = new User();
 		user.copyFrom(this.getFriend());
 		user.getMetaworksContext().setWhen("pickUp"); //keep the context 
 		
-		return user;
+		return new Object[]{new ToOpener(user), new Remover(new Popup())};
 	}
 
 	public User roleUserPickUp() throws RemoteException, Exception {
@@ -214,9 +93,217 @@ public class Contact extends Database<IContact> implements IContact{
 		return user;
 	}
 	
+	public static int calcFriendCount(IUser user) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select count(c.userId) count")
+		  .append("  from contact c")
+		  .append("  	left join emptable e")
+		  .append("    		on c.friendid = e.empcode")
+		  .append(" where userId=?userId")
+		  .append("   and e.isDeleted=?isDeleted");
+		
+ 		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+ 													   			 sb.toString(), 
+ 													   			 IContact.class);
+ 		
+ 		dao.setUserId(user.getUserId());		
+ 		dao.set("isDeleted", "0");
+ 		dao.select();
+ 		
+ 		if(dao.next())
+ 			return dao.getInt("count");
+ 		else
+ 			return 0;
+	}
+	
+	public static IContact findContactsWithFriendId(IUser self, String friendId) throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from contact ");
+		sb.append(" where  userId=?userId ");
+		sb.append("  and friendId = ?friendId ");
+		
+		IContact dao = null;
+		
+		try {
+	 		dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+		   			 sb.toString(), 
+		   			 IContact.class);
+
+			dao.setUserId(self.getUserId());
+			dao.setFriendId(friendId);
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao;
+	}
+	
+	public static IContact findContacts(IUser user) throws Exception {
+		return Contact.findContacts(user, true);
+	}
+	
+	public static IContact findContacts(IUser user, boolean isMore) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, item.updatedate")
+		  .append("  from contact c ")
+		  .append("  	left join emptable e")
+		  .append("    		on c.friendid = e.empcode")
+		  .append("  	left join recentItem item ")
+		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
+		  .append(" where c.userId=?userId")
+		  .append("   and e.isDeleted=?isDeleted")
+          .append(" order by updatedate desc ");
+		
+		if(!isMore) {
+			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
+		}
+
+ 		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+ 													   			 sb.toString(), 
+ 													   			 IContact.class);
+ 		
+ 		dao.setUserId(user.getUserId());		
+ 		dao.set("itemType", RecentItem.TYPE_FRIEND);
+ 		dao.set("isDeleted", "0");
+ 		dao.select();
+ 		
+		return dao;
+	}
+	
+	public static String createContactSql() throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, IFNULL(c.mood, CONCAT(p.partname,CONCAT(IF(!isnull(p.partname) and !isnull(e.jikname), ', ', ''), e.jikname))) mood");
+		sb.append("  from contact c ");
+		sb.append("  left join emptable e");
+		sb.append("    on c.friendid = e.empcode");
+		sb.append("  LEFT JOIN parttable p");
+		sb.append("    ON e.partcode=p.partcode");
+		sb.append(" where c.userId=?userId");
+		sb.append("   and e.isDeleted=?isDeleted");
+		
+		return sb.toString();
+	}
+	
+	public static IContact findContactsForTopic(String topicId, IUser user, String keyword) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(Contact.createContactSql());
+		sb.append("   and not exists");
+		sb.append("    (select t.userid");
+		sb.append("       from bpm_topicmapping t");
+		sb.append("      where topicid=?topicId and t.userid=c.friendId");
+		sb.append("    )");
+		
+		if(keyword != null)
+			sb.append("   AND friendname LIKE ?friendname");
+
+		sb.append(" order by friendName desc ");
+		
+ 		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+ 													   			 sb.toString(), 
+ 													   			 IContact.class);
+ 		
+ 		dao.setUserId(user.getUserId());
+ 		dao.set("topicId", topicId);
+		dao.set("friendName", "%" + keyword + "%");
+ 		dao.set("itemType", RecentItem.TYPE_FRIEND);
+ 		dao.set("isDeleted", "0");
+ 		dao.select();
+ 		
+		return dao;
+	}
+
+	public static IContact findContactsForInstance(String instanceId, IUser user, String keyword) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(Contact.createContactSql());
+		sb.append("   and not exists");
+		sb.append("    (select 1");
+		sb.append("       from bpm_rolemapping rm");
+		sb.append("      where rootinstid=?instanceId and rm.endpoint=c.friendId");
+		sb.append("    )");
+		
+		if(keyword != null)
+			sb.append("   AND friendname LIKE ?friendname");
+
+		sb.append(" order by empname ");
+		
+ 		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+ 													   			 sb.toString(), 
+ 													   			 IContact.class);
+ 		
+ 		dao.setUserId(user.getUserId());
+ 		dao.set("instanceId", instanceId);	
+		dao.set("friendname", "%" + keyword + "%");
+ 		dao.set("itemType", RecentItem.TYPE_FRIEND);
+ 		dao.set("isDeleted", "0");
+ 		dao.select();
+ 		
+		return dao;
+	}
+
+	public static IContact findContactsForDept(String partCode, IUser user, String keyword) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(Contact.createContactSql());
+		sb.append("   and e.partcode != ?partcode");
+		
+		if(keyword != null)
+			sb.append("   AND friendname LIKE ?friendname");
+
+		sb.append(" order by empname ");
+		
+ 		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+ 													   			 sb.toString(), 
+ 													   			 IContact.class);
+ 		
+ 		dao.setUserId(user.getUserId());
+ 		dao.set("partcode", partCode);	
+		dao.set("friendname", "%" + keyword + "%");
+ 		dao.set("itemType", RecentItem.TYPE_FRIEND);
+ 		dao.set("isDeleted", "0");
+ 		dao.select();
+ 		
+		return dao;
+	}
+	
+	public static IContact findContactsForRole(String roleCode, IUser user, String keyword) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append(Contact.createContactSql());
+		sb.append("   and not exists");
+		sb.append("    (select 1");
+		sb.append("       from roleusertable rst");
+		sb.append("      where roleCode=?roleCode and rst.empcode=c.friendId");
+		sb.append("    )");
+		
+		if(keyword != null)
+			sb.append("   AND friendname LIKE ?friendname");
+
+		sb.append(" order by empname ");
+		
+ 		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
+ 													   			 sb.toString(), 
+ 													   			 IContact.class);
+ 		
+ 		dao.setUserId(user.getUserId());
+ 		dao.set("roleCode", roleCode);	
+		dao.set("friendname", "%" + keyword + "%");
+ 		dao.set("itemType", RecentItem.TYPE_FRIEND);
+ 		dao.set("isDeleted", "0");
+ 		dao.select();
+ 		
+		return dao;
+	}
+	
 	public void check(){
 		this.setChecked(!this.isChecked());
 	}
-	
 }
 

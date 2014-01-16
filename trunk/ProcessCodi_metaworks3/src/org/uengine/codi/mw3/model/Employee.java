@@ -1137,34 +1137,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
-	public Object[] addContact() throws Exception {
-		Contact contact = new Contact();
-		IUser friendUser = new User();
-		friendUser.setUserId(getEmpCode());
-		friendUser.setName(getEmpName());		
-		friendUser.setNetwork(ContactList.LOCAL);		
-		
-		contact.setFriendId(friendUser.getUserId());
-		contact.setFriend(friendUser);
-		contact.setUserId(session.getUser().getUserId());
-		contact.addContact();
-		
-		ContactList cp = new ContactList();
-		cp.setId(ContactList.LOCAL);
-		cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
-		
-		cp.load(session.getUser().getUserId());
-		
-		this.notiToFriend();
-		
-		return new Object[] {new Refresh(cp , true), new Remover(this)};
-	}
-	@Override
 	public void addTopicUser() throws Exception {
 		System.out.println(getEmpName());
 	}
-	
 	
 	@Override
 	public void checkEmpCode() throws Exception {
@@ -1478,7 +1453,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	public IUser getUser(){
-		IUser user = new User();
+		User user = new User();
+		user.session = session;
 		user.setUserId(this.getEmpCode());
 		user.setName(this.getEmpName());
 		

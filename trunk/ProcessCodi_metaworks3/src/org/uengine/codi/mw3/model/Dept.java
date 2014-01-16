@@ -336,7 +336,12 @@ public class Dept extends Database<IDept> implements IDept {
 	}
 		
 	public Object[] loadDeptList() throws Exception {
-		return Perspective.loadInstanceListPanel(session, "organization.group", getPartCode(), "부서 : " + this.getPartName());
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_DEPT, Perspective.TYPE_NEWSFEED, getPartCode());
+		instanceListPanel.setTitle("부서 : " + this.getPartName());
+		
+		DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
+		
+		return new Object[]{session,  new ListPanel(instanceListPanel, deptInfo)};
 	}
 
 	@Override
@@ -693,6 +698,21 @@ public class Dept extends Database<IDept> implements IDept {
 			locatorForEmployeeInClipboard.flushDatabaseMe();
 			
 			return new Object[]{new Remover(employeeInClipboard)};
+	}
+	
+	public IFollower findFollowers() throws Exception {
+
+		StringBuffer sql = new StringBuffer();
+		sql.append("select emptable.empcode as endpoint, emptable.empname as resname, emptable.partcode parentId, '" + Follower.TYPE_DEPT + "' parentType");
+		sql.append("  from emptable LEFT OUTER JOIN PARTTABLE");
+		sql.append("    on emptable.partcode=PARTTABLE.partcode ");
+		sql.append(" where emptable.partcode=?partCode ");
+		
+		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
+		follower.set("partCode", this.getPartCode());
+		follower.select();	
+		
+		return follower;
 	}
 	
 	@Autowired

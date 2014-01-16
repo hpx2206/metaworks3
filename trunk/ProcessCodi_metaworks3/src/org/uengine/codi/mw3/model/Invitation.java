@@ -104,10 +104,7 @@ public class Invitation implements ContextAware{
 			}
 			
 			
-			Contact friends = new Contact();
-			friends.setUserId(session.getEmployee().getEmpCode());
-			friends.setFriendId(findEmp.getEmpCode());
-			IContact findContact = friends.findContactsWithFriendId();
+			IContact findContact = Contact.findContactsWithFriendId(session.getUser(), findEmp.getEmpCode());
 			if(findContact != null)
 				throw new Exception("이미 내 친구 입니다.");
 		
@@ -124,14 +121,9 @@ public class Invitation implements ContextAware{
 				addContactEachother();
 				
 				sendMailToUser(authKey);
-				ContactList cp = new ContactList();
-				cp.setId(ContactList.LOCAL);
-				cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-				cp.getMetaworksContext().setWhere(ContactList.LOCAL);
 				
-				cp.load(session.getUser().getUserId());
-				
-				return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
+				return null;
+				//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 			}
 			
 			// 3. The invited person is already a member of my company.
@@ -147,17 +139,9 @@ public class Invitation implements ContextAware{
 			newContact.setFriend(user);
 			newContact.createDatabaseMe();
 			newContact.flushDatabaseMe();
-			
-			
-			ContactList cp = new ContactList();
-			cp.setId(ContactList.LOCAL);
-			cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-			cp.getMetaworksContext().setWhere(ContactList.LOCAL);
-			
-			cp.load(session.getUser().getUserId());
-	
-			return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
-		
+
+			return null;
+			//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 		}
 		
 		// 4. The invited person is not CODI user.
@@ -184,15 +168,8 @@ public class Invitation implements ContextAware{
 		
 		addContactEachother();
 		
-		ContactList cp = new ContactList();
-		cp.setId(ContactList.LOCAL);
-		cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
-		
-		cp.load(session.getUser().getUserId());
-		
-        return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
-		
+		return null;
+        //return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
 	}
 	
 	public void addContactEachother() throws Exception{

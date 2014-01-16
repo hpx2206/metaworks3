@@ -248,7 +248,6 @@ public class Main {
 		
 			instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
-			instanceListPanel.switchToKnowledge();
 			instanceListWindow.setPanel(instanceListPanel);
 			
 		}else{
@@ -257,9 +256,6 @@ public class Main {
 			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 
 			instanceListPanel.session = session;
-			instanceListPanel.setMetaworksContext(new MetaworksContext());
-			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
-			instanceListWindow.setPanel(instanceListPanel);
 		}
 		
 		return instanceListWindow;

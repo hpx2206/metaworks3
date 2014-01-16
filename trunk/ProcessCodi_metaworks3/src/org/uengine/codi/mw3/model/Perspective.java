@@ -1,18 +1,30 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.EventContext;
-import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.kernel.GlobalContext;
 
 public class Perspective {
 	
+	public final static String MODE_PERSONAL 	= "personal";
+	public final static String MODE_TOPIC 		= "topic";
+	public final static String MODE_DEPT 		= "dept";
+	public final static String MODE_ROLE 		= "role";
+	public final static String MODE_PROCESS 	= "process";
+	public final static String MODE_PROJECT		= "project";
+	
+	public final static String TYPE_NEWSFEED 	= "allICanSee";
+	public final static String TYPE_FOLLOWING   = "following"; 
+	public final static String TYPE_INBOX 		= "inbox";
+	public final static String TYPE_STARTEDBYME     = "request";
+	public final static String TYPE_CALENDAR	= "calendar";
 	
 	public final static String USE_PERSONAL = GlobalContext.getPropertyString("personal.use", "1");
 	public final static String USE_PROJECT = GlobalContext.getPropertyString("project.use", "0");
@@ -38,14 +50,14 @@ public class Perspective {
 			this.label = label;
 		}
 
-	boolean selected;
-		public boolean isSelected() {
-			return selected;
+	Object child;
+		public Object getChild() {
+			return child;
 		}
-		public void setSelected(boolean selected) {
-			this.selected = selected;
+		public void setChild(Object child) {
+			this.child = child;
 		}
-		
+	
 	boolean loaded;
 		public boolean isLoaded() {
 			return loaded;
@@ -61,128 +73,82 @@ public class Perspective {
 		public void setLoader(boolean loader) {
 			this.loader = loader;
 		}
-		
+
 	public Perspective(){
-		this.setLoader(true);
+		
 	}
 	
-	@ServiceMethod(payload = { "selected" })
-	public Object[] select() throws Exception {
-		setLoader(false);
-		setSelected(!isSelected()); // toggle
-		if (isSelected()) {
-			loadChildren();
-			
-		} else {
-			unloadChildren();
-		}
-		return new Object[] { this };
+	protected void loadChildren() throws Exception {
+		this.setLoaded(true);
 	}
 
-	@ServiceMethod(payload = { "selected" }, eventBinding=EventContext.EVENT_CHANGE)
+	@ServiceMethod(callByContent=true, except="child", eventBinding=EventContext.EVENT_CHANGE)
 	public void refresh() throws Exception {
 		this.loadChildren();
 	}
 	
-	protected void loadChildren() throws Exception {
-		// TODO Override and load children when perspective selected
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Popup popupAdd() throws Exception{
+		throw new Exception("not defined popupAdd() method");
 	}
 
-	protected void unloadChildren() throws Exception {
-		// TODO Override and unload children when perspective deselected
-	}
-
-	public Object[] loadInstanceListPanel(String perspectiveType,
+	public Object[] loadInstanceListPanel(String perspectiveMode, String perspectiveType,
 			String selectedItem) throws Exception {
-		return loadInstanceListPanel(session, perspectiveType, selectedItem);
+		return loadInstanceListPanel(session, perspectiveMode, perspectiveType, selectedItem);
 	}
 	
-	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,
+	public static Object[] loadInstanceListPanel(Session session, String perspectiveMode, String perspectiveType,
 			String selectedItem) throws Exception {
-		return loadInstanceListPanel(session, perspectiveType, selectedItem, null);
+		return loadInstanceListPanel(session, perspectiveMode, perspectiveType, selectedItem, null);
 	}
 	
-	public static Object[] loadDocumentListPanel(Session session, String perspectiveType,
-			String selectedItem, String title) throws Exception{
-		
-		InstanceList instList = new InstanceList(session);
-		instList.setFolderId(selectedItem);
-		instList.setMetaworksContext(new MetaworksContext());
-		savePerspectiveToSession(session, perspectiveType, selectedItem);
+	public static void pushTodoBadge(Session session) throws Exception {
+		/* 내가 할일 카운트 다시 계산 */
+		TodoBadge todoBadge = new TodoBadge();
+		todoBadge.session = session;
+		todoBadge.refresh();
 
-		InstanceListPanel instListPanel = new InstanceListPanel(session);
-		instListPanel.setInstanceList(instList);
-		instListPanel.session = session;
-		//instListPanel.documentFollowerLoad();
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge, true)});			
+	}
+	
+	public static InstanceListPanel loadInstanceList(Session session, String perspectiveMode, String perspectiveType) throws Exception {
+		return Perspective.loadInstanceList(session, perspectiveMode, perspectiveType, null);
+	}
+	
+	public static InstanceListPanel loadInstanceList(Session session, String perspectiveMode, String perspectiveType, String selectedItem) throws Exception {
+	
+		savePerspectiveToSession(session, perspectiveMode, perspectiveType, selectedItem);
 
-		SearchBox searchBox = new SearchBox();
-		searchBox.setKeyword(session.getSearchKeyword());
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-			
-		final Object[] returnObject;
-		
-		returnObject = new Object[]{new Refresh(searchBox)};
-		if(perspectiveType.equals("document")){
-			instList.loadDocument();
-			
-			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-			if( title == null && perspectiveType != null && perspectiveType.equals("document")){
-				title = session.getWindowTitle();
-			}else if( title == null ){
-				title = "$perspective." + perspectiveType;
-			}
-			instListPanel.setTitle(title);
-			session.setWindowTitle(title);
-			if(instListPanel.getPerspectiveInfo()!= null)
-				instListPanel.getPerspectiveInfo().load();
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
-			
-			return new Object[]{session, instListPanel};
-		}else if(perspectiveType.equals("explorer")){
-			instList.loadDocument();
-			 
-			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-			if( title == null && perspectiveType != null && perspectiveType.equals("explorer")){
-				title = session.getWindowTitle();
-			}else if( title == null ){
-				title = "$perspective." + perspectiveType;
-			}
-			instListPanel.setTitle(title);
-			session.setWindowTitle(title);
-			
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
-			
-			ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
-			processExploreWindow.setPanel(instListPanel);
-			return new Object[]{session, processExploreWindow};
-			
-		}else if(perspectiveType.equals("UnlabeledDocument")){
-			instList.setMetaworksContext(new MetaworksContext());
-			instList.getMetaworksContext().setHow("UnlabeledDocument");
-			instList.loadDocument();
-			
-			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-			if( title == null && perspectiveType != null && perspectiveType.equals("UnlabeledDocument")){
-				title = session.getWindowTitle();
-			}else if( title == null ){
-				title = "$perspective." + perspectiveType;
-			}
-			instListPanel.setTitle(title);
-			session.setWindowTitle(title);
-			
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
-			
-			return new Object[]{session, instListPanel};
+		String title = null;
+		if(perspectiveType != null && perspectiveType.equals("topic")){
+			title = session.getWindowTitle();
+		}else{
+			title = "$perspective." + perspectiveType;
 		}
-		return null;
+
+		InstanceListPanel instListPanel = new InstanceListPanel();
+		instListPanel.setTitle(title);
+
+		if(TYPE_CALENDAR.equals(perspectiveType)){
+			ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+			scheduleCalendar.session = session;
+			scheduleCalendar.load();
+			
+			instListPanel.setScheduleCalendar(scheduleCalendar);
+		}else{
+			InstanceList instList = new InstanceList(session);
+			instList.load();
+
+			instListPanel.setInstanceList(instList);
+		}
+		
+		return instListPanel;
 	}
 	
-	
-	
-	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,
+	public static Object[] loadInstanceListPanel(Session session, String perspectiveMode, String perspectiveType,
 			String selectedItem, String title) throws Exception {
 		
+		/*
 		try {
 			if(perspectiveType.equals(session.getLastPerspecteType()) != true) {
 				System.out.println("clear text in the search box because perspectiveType is not equal");
@@ -198,98 +164,33 @@ public class Perspective {
 		} catch (Exception e) {
 			System.out.println("Do nothing");
 		}
+		*/
 		
-		if(perspectiveType.equals("inbox")){
-			/* 내가 할일 카운트 다시 계산 */
-			TodoBadge todoBadge = new TodoBadge();
-			todoBadge.session = session;
-			todoBadge.refresh();
-
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					new Object[]{new Refresh(todoBadge, true)});			
-		}
-			
-		
-		savePerspectiveToSession(session, perspectiveType, selectedItem);
-		
-		
-		InstanceList instList = new InstanceList(session);
-		instList.session = session;
-		instList.setMetaworksContext(new MetaworksContext());
-		instList.getMetaworksContext().setHow(perspectiveType);
-		if(selectedItem == null){
-			instList.getMetaworksContext().setWhere(session.getLastPerspecteType());
-		}else {
-			instList.getMetaworksContext().setWhere(selectedItem);
-		}
-		instList.load();
-		
-		InstanceListPanel instListPanel = new InstanceListPanel(session);
-		instListPanel.session = session;
-		instListPanel.setInstanceList(instList);
-
-		
-		// TODO: 작업해야함
-		if(false){
-			NewInstancePanel newInstancePanel =  new NewInstancePanel();
-			newInstancePanel.session = session;
-			newInstancePanel.load(session);
-			instListPanel.setNewInstancePanel(newInstancePanel);
-		}
-		// set search Keyword to searchBox
-		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){
-			title = session.getWindowTitle();
-		}else if( title == null ){
-			title = "$perspective." + perspectiveType;
-		}
-
-		
-		instListPanel.setTitle(title);
-		
-		if(instListPanel.getPerspectiveInfo()!= null)
-			instListPanel.getPerspectiveInfo().load();
+		InstanceListPanel instListPanel = Perspective.loadInstanceList(session, perspectiveMode, perspectiveType, selectedItem); 
 		
 		session.setWindowTitle(title);
-
 		
 		InstanceSearchBox searchBox = new InstanceSearchBox();
 		searchBox.setKeyword(session.getSearchKeyword());
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
 			
-		//final Object[] returnObject;
-		
-//		if("sns".equals(session.getEmployee().getPreferUX())){
-//			WfPanel wfPanel = new WfPanel();
-//			
-//			if("topic".equals(perspectiveType)){
-//				wfPanel.session = session;
-//				wfPanel.load(selectedItem);
-//			}else{			
-//				wfPanel.session = session;
-//				wfPanel.load(session.getCompany().getComCode());
-//			}
-//			
-//			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
-//		}else
-//			returnObject = new Object[]{new Refresh(searchBox)};
-//		
-//		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
-		
-		if("oce".equals(selectedItem)){
-			return new Object[] {instListPanel};
+		if(perspectiveType.equals("inbox")){
+			Perspective.pushTodoBadge(session);
 		}
-		return new Object[] {session, instListPanel};
+
+		ListPanel listPanel = new ListPanel();
+		listPanel.setInstanceListPanel(instListPanel);
+
+		return new Object[] {session, listPanel};
 	}
 
-	private static void savePerspectiveToSession(Session session,
-			String perspectiveType, String selectedItem) {
+	private static void savePerspectiveToSession(Session session, String perspectiveMode, String perspectiveType, String selectedItem) {
+		session.setLastPerspecteMode(perspectiveMode);
 		session.setLastPerspecteType(perspectiveType);
 		session.setLastSelectedItem(selectedItem);
-		//session.setSearchKeywordBox(null);
 	}
 
 	@AutowiredFromClient
-	public static Session session;
+	public Session session;
 }

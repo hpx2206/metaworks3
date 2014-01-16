@@ -233,8 +233,8 @@ public interface IInstance extends IDAO{
 	@Hidden
 	@NonLoadable
 	@NonSavable
-	public InstanceFollowers getFollowers();
-	public void setFollowers(InstanceFollowers followers);
+	public Followers getFollowers();
+	public void setFollowers(Followers followers);
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, keyBinding="Ctrl+X")
 	@Available(how="instance")

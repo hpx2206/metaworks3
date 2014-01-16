@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.uengine.codi.mw3.knowledge.WfPanel;
 
-public class StrategicPerspective extends Perspective {
+public class StrategicPerspective extends CollapsePerspective {
 
 	public StrategicPerspective() throws Exception {
 		setLabel("Strategic");

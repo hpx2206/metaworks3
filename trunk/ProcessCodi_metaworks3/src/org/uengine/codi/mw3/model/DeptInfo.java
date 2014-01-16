@@ -14,7 +14,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 
-public class DeptInfo extends PerspectiveInfo{
+public class DeptInfo extends FollowerPerspectiveInfo{
 
 	public final static int MODIFY_POPUP_HEIGHT = 250;
 	public final static int MODIFY_POPUP_WIDTH = 500;
@@ -22,34 +22,28 @@ public class DeptInfo extends PerspectiveInfo{
 	public DeptInfo(){
 		
 	}
-	public DeptInfo(Session session) throws Exception{
+	
+	public DeptInfo(Session session, String type) throws Exception{
+		super(type);
+		
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
-		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		
-	}
-	@Override
-	public void add() {
-		// TODO Auto-generated method stub
-		
+		this.load();
 	}
 
 	@Override
-	public Object[] delete() throws Exception {
-		Dept dept = new Dept();
-		dept.setPartCode(this.getId());		
-		dept.copyFrom(dept.databaseMe());
-		dept.setIsDeleted("1");
-				
-		dept.syncToDatabaseMe();
-		dept.flushDatabaseMe();
-		
-		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};	
-	}
+	public void load() throws Exception {
+		DeptFollower follower = new DeptFollower();
+		follower.session = session;
+		follower.setParentId(this.getId());
 
+		this.setFollower(follower);
+		
+		super.load();
+	}
+	
 	@Override
-	public ModalWindow modify() throws Exception {
+	public Popup modify() throws Exception {
 		
 		Dept dept = new Dept();
 		dept.setPartCode(this.getId());
@@ -59,11 +53,23 @@ public class DeptInfo extends PerspectiveInfo{
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		dept.setLogoFile(new MetaworksFile());
 		
-		return new ModalWindow(dept, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "부서정보바꾸기");
-	//	return popup;		
-	
+		return new Popup(MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, dept);
 	}
 	
+	@Override
+	public Object[] remove() throws Exception {
+		Dept dept = new Dept();
+		dept.setPartCode(this.getId());		
+		dept.copyFrom(dept.databaseMe());
+		dept.setIsDeleted("1");
+				
+		dept.syncToDatabaseMe();
+		dept.flushDatabaseMe();
+		
+		return null;
+		//return new Object[]{new Refresh(new InstanceListPanel()), new Remover(dept , true)};	
+	}
+	/*
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="$part.addNewChildDept")
 	public Object addNewChildDept() throws Exception {
@@ -79,28 +85,7 @@ public class DeptInfo extends PerspectiveInfo{
 		return popup;
 	}
 
-	@Override
-	public void load() throws Exception {
-		this.followersLoad();
-		Dept dept = new Dept();
-		dept.setPartCode(this.getId());
-		
-		try {
-			dept.copyFrom(dept.databaseMe());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.setName(dept.getPartName());
-		this.setDescription(dept.getDescription());
-		
-		MetaworksFile logoFile = new MetaworksFile();
-		logoFile.setUploadedPath(dept.getUrl());
-		logoFile.setFilename(dept.getThumbnail());
-		this.setLogoFile(logoFile);
-		this.settingJoined();
-	}
+	
 
 	@Override
 	public void followersLoad() throws Exception {
@@ -159,4 +144,5 @@ public class DeptInfo extends PerspectiveInfo{
 		
 				
 	}
+	*/
 }

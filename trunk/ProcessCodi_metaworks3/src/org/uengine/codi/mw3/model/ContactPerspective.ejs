@@ -1,13 +1,19 @@
 <%
 	if(value){
 %>
-	<div class="depth1" onClick="<%=methods.select.caller()%>"><span><%=mw3.localize("$Contact")%></span></div>
+	<div class="depth1">
+		<span><%=fields.label.here()%></span>
+	</div>
+
+	<%=methods.collapse.here()%>
+	<%=methods.expand.here()%>
+	<div class="clear" />
+	
+	<div style="position:relative">
+		<%=fields.child.here()%>
+		<a style="cursor: pointer" onclick="<%=methods.popupAdd.caller()%>"><img style="margin-top:10px" src="images/waveStyle/addUser2.png" /></a>
+	</div>
 	
 <%
-		if(value.selected){
-%>
-	<div style="position:relative"><%=fields.contactPanel.here()%></div>
-<%
-		}
 	}
 %>

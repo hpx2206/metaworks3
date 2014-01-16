@@ -119,7 +119,7 @@ public class MainSNS {
 
 		
 			Layout westLayout = new Layout();
-			ContactWindow contactWindow = new ContactWindow(session.getUser());
+			ContactWindow contactWindow = new ContactWindow();
 			
 			//Since there's are too many input boxes there, it is removed.
 			
@@ -182,7 +182,6 @@ public class MainSNS {
 		
 			instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
-			instanceListPanel.switchToKnowledge();
 			instanceListWindow.setPanel(instanceListPanel);
 			
 		}else{
@@ -191,9 +190,6 @@ public class MainSNS {
 			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 
 			instanceListPanel.session = session;
-			instanceListPanel.setMetaworksContext(new MetaworksContext());
-			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
-			instanceListWindow.setPanel(instanceListPanel);
 		}
 		
 		return instanceListWindow;

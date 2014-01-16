@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
+import org.metaworks.EventContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -36,30 +38,8 @@ public class SearchBox {
 			this.keyword = keyword;
 		}
 		
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
-		
-		
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] search() throws Exception{
-//		
-//		InstanceList instanceList = new InstanceList();
-//		instanceList.init();
-//		instanceList.setKeyword(getKeyword());
-//		instanceList.load(session);
-//		
-//		//instanceListPanel.setSearchBox(this);
-//		
-//		return new Object[]{instanceList};
-		
-//		session.setSearchKeyword(getKeyword());
-//		return Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem());
-		
-		return null;
+		return new Object[]{ new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE) };
 	}	
 }

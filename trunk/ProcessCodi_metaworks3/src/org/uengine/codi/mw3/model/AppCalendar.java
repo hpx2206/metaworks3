@@ -21,7 +21,7 @@ public class AppCalendar {
 		instanceListPanel.session = session;
 		
 		try{
-			instanceListPanel.switchToScheduleCalendar();
+			//instanceListPanel.switchToScheduleCalendar();
 		}catch(Exception e){
 			e.printStackTrace();
 		}

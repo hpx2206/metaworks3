@@ -84,18 +84,19 @@ public class InstanceViewThreadPanel implements ContextAware {
 	}
 	
 	public void load(String instanceId) throws Exception {
-		String how = null;
+//		String how = null;
+//		
+//		if(session.getEmployee() != null && "sns".equals(session.getEmployee().getPreferUX()))
+//			how = "sns";
+//		/*else if("oce".equals(session.getUx()))	
+//			how = "sns";*/
+//		else if("document".equals(session.getLastPerspecteType()) || "UnlabeledDocument".equals(session.getLastPerspecteType()))
+//			how = "document";
+//		else
+//			how = "normal";
+//		
+//		getMetaworksContext().setHow(how);
 		
-		if(session.getEmployee() != null && "sns".equals(session.getEmployee().getPreferUX()))
-			how = "sns";
-		/*else if("oce".equals(session.getUx()))	
-			how = "sns";*/
-		else if("document".equals(session.getLastPerspecteType()) || "UnlabeledDocument".equals(session.getLastPerspecteType()))
-			how = "document";
-		else
-			how = "normal";
-		
-		getMetaworksContext().setHow(how);
 		setInstanceId(instanceId);
 		
 		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
@@ -116,27 +117,25 @@ public class InstanceViewThreadPanel implements ContextAware {
 			thread.moveToInsertRow();
 			thread.getImplementationObject().copyFrom(result);
 		}
-		thread.getWriter().getMetaworksContext().setWhere("workItemList");
+		thread.getMetaworksContext().setWhere(IWorkItem.WHERE_WORKLIST);
 		setThread(thread);
 		
-		if("document".equals(session.getLastPerspecteType())|| "UnlabeledDocument".equals(session.getLastPerspecteType())){
-			DocWorkItem fileItem = new DocWorkItem();
-			fileItem.setInstId(new Long(getInstanceId()));
-			fileItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			fileItem.getMetaworksContext().setHow(how);
-			fileItem.setWriter(session.getUser());
-			
-			setNewItem(fileItem);
-		}else{
-		
-		CommentWorkItem newItem = new CommentWorkItem();
-		newItem.setInstId(new Long(getInstanceId()));
-		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		newItem.getMetaworksContext().setHow(how);
-		newItem.setWriter(session.getUser());
+		User writer = new User();
+		writer.copyFrom(session.getUser());
+		writer.setMetaworksContext(new MetaworksContext());
 
-		setNewItem(newItem);
+		IWorkItem newItem = null;
+		if("document".equals(session.getLastPerspecteType())|| "UnlabeledDocument".equals(session.getLastPerspecteType())){
+			newItem = new DocWorkItem();
+		}else{
+			newItem = new CommentWorkItem();
 		}
+		
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		newItem.setInstId(new Long(getInstanceId()));
+		newItem.setWriter(writer);
+		
+		setNewItem(newItem);
 	}
 	
 	@ServiceMethod(callByContent = true)

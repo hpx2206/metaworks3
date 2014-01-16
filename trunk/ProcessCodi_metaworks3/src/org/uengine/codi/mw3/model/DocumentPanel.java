@@ -44,9 +44,10 @@ public class DocumentPanel implements ContextAware {
 	public Object[] loadUnformed() throws Exception{
 
 		String title = tenentId+"의 미분류 문서";
-		Object[] returnObject = Perspective.loadDocumentListPanel(session, "UnlabeledDocument", "Main", title);
+		//Object[] returnObject = Perspective.loadDocumentListPanel(session, "UnlabeledDocument", "Main", title);
 		
-		return returnObject;
+		//return returnObject;
+		return null;
 	}
 
 	public void load() throws Exception{

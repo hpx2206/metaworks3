@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_model_TopicPerspective = function(objectId, className){
+var org_uengine_codi_mw3_model_MoreViewPerspective = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
@@ -7,8 +7,8 @@ var org_uengine_codi_mw3_model_TopicPerspective = function(objectId, className){
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.div = $('#' + this.divId);		
 
-	if(this.object.loader)
-		mw3.call(this.objectId, 'select');
+	if(this.object.loader && !this.object.loaded)
+		mw3.call(this.objectId, 'refresh');
 	else{
 		this.div.hover(
 			function(){
@@ -19,9 +19,9 @@ var org_uengine_codi_mw3_model_TopicPerspective = function(objectId, className){
 			}
 		);
 	}
-	
 };
-org_uengine_codi_mw3_model_TopicPerspective.prototype.loaded = function(){
+
+org_uengine_codi_mw3_model_MoreViewPerspective.prototype.loaded = function(){
 	$('#navigator .depth2 a').click(function(){
 		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
 		$(this).parent().addClass('selected_navi');

@@ -660,7 +660,7 @@ public class ResourceFile implements ContextAware{
 		@ServiceMethod(callByContent=true, payload={"objType"})
 		public Object[] loadProcess() throws Exception {
 			if(getObjType().equals("process")) {
-				return Perspective.loadInstanceListPanel(session, "process", getAlias());
+				return Perspective.loadInstanceListPanel(session, Perspective.MODE_PROCESS, Perspective.TYPE_NEWSFEED, getAlias());
 			}
 			return null;
 		}

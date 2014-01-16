@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.sql.RowSet;
 
-import org.metaworks.Loader;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -92,8 +91,10 @@ public class InstanceView {
 		setSecuopt(inst.getSecuopt());
 		setDueDate(inst.getDueDate());
 		
-		InstanceFollowers followers = new InstanceFollowers();
-		followers.setInstanceId(inst.getInstId().toString());
+		Follower follower = new InstanceFollower();
+		follower.setParentId(this.getInstanceId());
+		
+		Followers followers = new Followers(follower);
 		followers.load();
 		
 		this.setFollowers(followers);
@@ -423,11 +424,11 @@ public class InstanceView {
 			this.eventTriggerPanel = eventTrigger;
 		}
 		
-	InstanceFollowers followers;
-		public InstanceFollowers getFollowers() {
+	Followers followers;
+		public Followers getFollowers() {
 			return followers;
 		}
-		public void setFollowers(InstanceFollowers followers) {
+		public void setFollowers(Followers followers) {
 			this.followers = followers;
 		}
 	
@@ -695,6 +696,7 @@ public class InstanceView {
 		
 		boolean iCanSee = true;
 		
+		/*
 		if("1".equals(getSecuopt())){ //means secured conversation
 			iCanSee = false;
 			
@@ -721,6 +723,7 @@ public class InstanceView {
 			
 			followers.beforeFirst();
 		}
+		*/
 		
 		return iCanSee;
 	}

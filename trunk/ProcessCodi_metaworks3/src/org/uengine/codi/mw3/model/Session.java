@@ -121,6 +121,15 @@ public class Session implements ContextAware{
 			this.context = paramMetaworksContext;
 		}
 
+	String lastPerspecteMode;
+		@Hidden
+		public String getLastPerspecteMode() {
+			return lastPerspecteMode;
+		}
+		public void setLastPerspecteMode(String lastPerspecteMode) {
+			this.lastPerspecteMode = lastPerspecteMode;
+		}
+
 	String lastPerspecteType;
 		@Hidden
 		public String getLastPerspecteType() {
@@ -250,7 +259,7 @@ public class Session implements ContextAware{
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] returnToList() throws Exception{
-		Object[] instanceListObj = PersonalPerspective.loadInstanceListPanel(this, this.getLastPerspecteType(), this.getLastSelectedItem());
+		Object[] instanceListObj = PersonalPerspective.loadInstanceListPanel(this, this.getLastPerspecteMode(), this.getLastPerspecteType(), this.getLastSelectedItem());
 		InstanceListWindow instanceListWindow = null;
 				
 		for(int i=0; i<instanceListObj.length; i++){

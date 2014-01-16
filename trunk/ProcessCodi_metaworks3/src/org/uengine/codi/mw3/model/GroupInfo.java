@@ -1,14 +1,12 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToEvent;
-import org.uengine.codi.mw3.knowledge.ITopicMapping;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
-import org.uengine.codi.mw3.knowledge.WfNode;
+import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.knowledge.TopicNode;
+import org.uengine.codi.mw3.knowledge.TopicTitle;
 
-public class GroupInfo extends PerspectiveInfo{
+
+public class GroupInfo extends FollowerPerspectiveInfo{
 	public final static int MODIFY_POPUP_HEIGHT = 250;
 	public final static int MODIFY_POPUP_WIDTH = 500;
 	
@@ -19,73 +17,57 @@ public class GroupInfo extends PerspectiveInfo{
 		public void setSecuopt(String secuopt) {
 			this.secuopt = secuopt;
 		}
+		
+	public GroupInfo(){
+		
+	}
+	
+	public GroupInfo(Session session, String topicId) throws Exception {
+		super(Perspective.TYPE_NEWSFEED);
+		
+		this.session = session;
+		this.setId(topicId);
+		this.load();
+	}
+	
+	@Override
+	public void load() throws Exception {
+		TopicFollower follower = new TopicFollower();
+		follower.setParentId(this.getId());
+		
+		this.setFollower(follower);
+		
+		super.load();
+	}
+	
+	@Override
+	public Popup modify() throws Exception {
+		TopicNode topicNode = new TopicNode();
+		topicNode.setId(this.getId());
+		topicNode.copyFrom(topicNode.databaseMe());
+		
+		TopicTitle topicTitle = new TopicTitle();
+		topicTitle.setTopicId(this.getId());
+		topicTitle.setTopicTitle(topicNode.getName());
+		topicTitle.setTopicSecuopt("0".equals(topicNode.getSecuopt()) ? false : true );
+		topicTitle.setLogoFile(new MetaworksFile());
+		topicTitle.setMetaworksContext(new MetaworksContext());
+		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		topicTitle.session = session;
+		
+		return new Popup(MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, topicTitle);
+	}
+	
+	@Override
+	public Object[] remove() throws Exception {
+		TopicNode deletedNode = new TopicNode();
+		deletedNode.setId(this.getId());
+		deletedNode.copyFrom(deletedNode.databaseMe());
+		deletedNode.deleteDatabaseMe();
+		
+		//this가 아닌 Node지우기.
+		//return new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE), PersonalPerspective.loadAllICanSee()};
+		return null;
+	}
 
-	
-	@Override
-	public void followersLoad() throws Exception {
-		this.followers =  new TopicFollowers();
-		this.followers.session = session;
-		this.followers.load();
-	}
-	
-	public void convertSecuopt() throws Exception{
-		WfNode wfNode = new WfNode();
-		wfNode.setId(this.getId());
-		try {
-			wfNode.copyFrom(wfNode.databaseMe());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if("0".equals(wfNode.getSecuopt())){
-			wfNode.setSecuopt("1");
-		}else{
-			wfNode.setSecuopt("0");
-		}
-		wfNode.syncToDatabaseMe();
-		
-	}
-	@Override
-	public void settingJoined() throws Exception {
-		TopicMapping tm = new TopicMapping();
-		tm.setTopicId(session.getLastSelectedItem());
-		tm.setUserId(session.getEmployee().getEmpCode());
-		ITopicMapping rs = tm.findByUser();
-		if( rs.next() )
-			this.setJoined(true);
-		else
-			this.setJoined(false);
-			
-	}
-	@Override
-	public Object[] unSubscribe() throws Exception {
-		
-		User user = new User();
-		user.setUserId(session.getEmployee().getEmpCode());
-		user.setName(session.getEmployee().getEmpName());
-		user.session = this.session;
-		user.setMetaworksContext(new MetaworksContext());
-		user.getMetaworksContext().setWhen("topicFollowers");
-		
-		followers.removeFollower(user);
-
-		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
-	}
-	@Override
-	public Object[] subscribe() throws Exception {
-		
-		User user = new User();
-		user.setUserId(session.getEmployee().getEmpCode());
-		user.setName(session.getEmployee().getEmpName());
-		user.session = this.session;
-		user.setMetaworksContext(new MetaworksContext());
-		user.getMetaworksContext().setHow("follower");
-		user.getMetaworksContext().setWhen(Followers.ADD_TOPICFOLLOWERS);
-		
-		followers.addFollower(user);
-		
-		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE)};
-	}
-	
-	
 }

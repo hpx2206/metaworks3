@@ -1,23 +1,36 @@
 package org.uengine.codi.mw3.model;
 
-public class ContactPerspective extends Perspective {
+
+
+public class ContactPerspective extends MoreViewPerspective {
 	
 	public ContactPerspective() throws Exception {
-		setLabel("Contact");
+		this.setLabel("$Contact");
+		this.setLoader(true);
+		this.setEnableMore(true);
 	}
-	
-	ContactPanel contactPanel;
-		public ContactPanel getContactPanel() {
-			return contactPanel;
-		}
-		public void setContactPanel(ContactPanel contactPanel) {
-			this.contactPanel = contactPanel;
-		}
-
+		
 	@Override
 	protected void loadChildren() throws Exception {
-		contactPanel = new ContactPanel(session.getUser());
-		contactPanel.session = session;
+		super.loadChildren();
+		
+		IContact contact = Contact.findContacts(session.getUser(), this.isMore());
+		contact.getMetaworksContext().setWhere(IUser.WHERE_FRIENDS);
+		
+		int count = Contact.calcFriendCount(session.getUser());
+		if(count > Integer.parseInt(Contact.DEFAULT_TOPIC_COUNT))
+			this.setEnableMore(true);
+		else
+			this.setEnableMore(false);
+		
+		this.setChild(contact);
 	}
-
+	
+	@Override
+	public Popup popupAdd() throws Exception{
+		Popup popup = new Popup();
+		popup.setPanel(new AddContactPanel(session));
+		
+		return popup;
+	}
 }

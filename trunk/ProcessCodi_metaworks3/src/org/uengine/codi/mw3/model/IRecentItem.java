@@ -10,6 +10,8 @@ import org.metaworks.dao.IDAO;
 @Table(name="recentItem")
 public interface IRecentItem extends IDAO{
 
+	public final static String TYPE_FRIEND		= "friend";
+	
 	@Id
 	public String getEmpCode();
 	public void setEmpCode(String empCode);

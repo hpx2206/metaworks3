@@ -5,7 +5,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 
-public class OrganizationPerspectiveApp extends Perspective{
+public class OrganizationPerspectiveApp extends CollapsePerspective{
 	
 	public OrganizationPerspectiveApp(){
 		setLabel("App");

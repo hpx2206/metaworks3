@@ -90,15 +90,15 @@ public class DeptTreeNode extends TreeNode {
 	
 	@ServiceMethod(eventBinding="click", callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] addFollowDept() throws Exception{
-		
+		return null;
 		/*Dept dept = new Dept();
 		dept.session = this.session;
 		dept.setMetaworksContext(new MetaworksContext());
 		dept.getMetaworksContext().setHow("follower");
 		dept.getMetaworksContext().setWhen(Followers.ADD_DEPTFOLLOWERS);*/
-		Followers followers = new Followers();
+		//Followers followers = new Followers();
 		
-		return followers.addFollower(this);
+		//return followers.addFollower(this);
 		
 		/*if( Followers.ADD_INSTANCEFOLLOWERS.equals(getFollowerType()) ){
 			String instId = instanceFollowers.getInstanceId();

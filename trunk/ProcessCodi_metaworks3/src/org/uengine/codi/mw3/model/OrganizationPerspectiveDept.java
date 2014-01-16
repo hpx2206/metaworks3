@@ -4,9 +4,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.kernel.GlobalContext;
 
-public class OrganizationPerspectiveDept extends Perspective {
+public class OrganizationPerspectiveDept extends CollapsePerspective {
 
 	public OrganizationPerspectiveDept() {
 		setLabel("Organization");

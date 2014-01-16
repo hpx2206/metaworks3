@@ -38,16 +38,22 @@ public class DocumentInfo extends GroupInfo{
 		}
 		
 	
-	public DocumentInfo(){
-		
-	}
 	public DocumentInfo(Session session) throws Exception{
-		this.session = session;
-		this.setId(session.getLastSelectedItem());
-		this.setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		
+		super(session, session.getLastSelectedItem());
 	}
+	
+	@Override
+	public Object[] remove() throws Exception {
+		DocumentNode deletedNode = new DocumentNode();
+		deletedNode.setId(this.getId());
+		deletedNode.copyFrom(deletedNode.databaseMe());
+		deletedNode.deleteDatabaseMe();
+		
+		//this가 아닌 Node지우기.
+		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(deletedNode)};
+	}
+	
+	/*
 	@Override
 	public void load() throws Exception {
 		this.followersLoad();
@@ -104,25 +110,5 @@ public class DocumentInfo extends GroupInfo{
 		
 		return new ModalWindow(documentSubTitle , 500, 200,  "$addSubDocument");
 	}
-	
-	@Override
-	public Object[] delete() throws Exception {
-		DocumentNode deletedNode = new DocumentNode();
-		deletedNode.setId(this.getId());
-		deletedNode.copyFrom(deletedNode.databaseMe());
-		deletedNode.deleteDatabaseMe();
-		
-		//this가 아닌 Node지우기.
-		return new Object[]{new Refresh(new InstanceListPanel()), new Remover(deletedNode)};
-	}
-	
-	@Override
-	public void followersLoad() throws Exception {
-		this.followers =  new DocumentFollowers();
-		this.followers.session = session;
-		this.followers.load();
-	}
-	
-	
-	
+	*/
 }

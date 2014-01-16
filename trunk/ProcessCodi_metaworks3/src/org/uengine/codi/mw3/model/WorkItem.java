@@ -38,6 +38,7 @@ import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
+import org.uengine.kernel.Role;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -802,7 +803,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	public IInstance save() throws Exception {
 		
-		boolean newInstance = false;
+		boolean isNewInstance = false;
+		Instance instance = null;
 		IInstance instanceRef = null;		
 		
 		
@@ -812,13 +814,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			writer.setName(session.getUser().getName());
 			this.setWriter(writer);
 		}
-		
-		
+
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen()) || this instanceof FileWorkItem){
 			// 인스턴스 발행
 			if(this.getInstId() == null){
-				newInstance = true;
+				isNewInstance = true;
 				
 				// 인스턴스 발행을 위한 ProcessMap 사용
 				ProcessMap processMap = new ProcessMap();
@@ -833,7 +834,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				this.setInstId(new Long(instId));
 				
 				// 기본 정보 설정  
-				Instance instance = new Instance();
+				instance = new Instance();
 				instance.setInstId(this.getInstId());
 				
 				instanceRef = instance.databaseMe();	
@@ -843,11 +844,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus(WORKITEM_STATUS_RUNNING);									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				String title = this.getTitle();
-				if(title.length() > 200){
-					title = title.substring(0, 200) + "...";
-				}
-				instanceRef.setName(title);
+				instanceRef.setName(this.getTitle());
 				if(this.getFolderId() != null){
 					instanceRef.setTopicId(this.getFolderId());
 				}
@@ -857,72 +854,51 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				instanceRef.setIsDocument(WorkItem.WORKITEM_TYPE_FILE.equals(this.getType()));
 				
-				
-				
 				afterInstantiation(instanceRef);				
 			}else{
-				Instance instance = new Instance();
+				instance = new Instance();
 				instance.setInstId(this.getInstId());
 				
 				instanceRef = instance.databaseMe();
 				
 				if(this.getDueDate()!= null)
 					instanceRef.setDueDate(this.getDueDate());
-						
-				// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
-				instance.fillFollower();
+			}
+			
+			instance.fillFollower();
 
-				IUser followers = instance.getFollowers().getFollowers();
-				boolean existFollower = false;
-				
-				if(followers != null){
-					followers.beforeFirst();
-					
-					while(followers.next()){
-						if(followers.getUserId().equals(session.getUser().getUserId())){
-							existFollower = true;
-							
-							break;
-						}
-					}
-				}	
-						
+			// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
+			if(!isNewInstance){
+				boolean existFollower = instance.getFollowers().existFollower(session.getUser().getUserId(), Role.ASSIGNTYPE_USER);
 				if(!existFollower){
 					RoleMapping newFollower = RoleMapping.create();
-					newFollower.setName(Followers.CONTEXT_WHERE_INFOLLOWERS + session.getUser().getUserId());
+					newFollower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
 					newFollower.setEndpoint(session.getUser().getUserId());
 					
 					processManager.putRoleMapping(getInstId().toString(), newFollower);
 					processManager.applyChanges();
+					
+					// TODO: 추가된 팔로워에 대한 push 진행되어야함
 				}
 			}
+
 			// 덧글 상태일때 덧글에 입력된 사용자명 자동으로 follower 에 추가해주는 기능
-			if(this instanceof CommentWorkItem){
+			if(this instanceof CommentWorkItem || this instanceof RemoteConferenceWorkItem){
 				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
 				if(initialFollowers!=null){
 					for(String userId : initialFollowers){
+						boolean existFollower = instance.getFollowers().existFollower(userId, Role.ASSIGNTYPE_USER);
 						
-						RoleMapping follower = RoleMapping.create();
-						follower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + userId);
-						follower.setEndpoint(userId);						
-
-						processManager.putRoleMapping(this.getInstId().toString() , follower);
-						processManager.applyChanges();
-					}
-				}
-			}
-			
-			if(this instanceof RemoteConferenceWorkItem){
-				ArrayList<String> initialFollowers = ((RemoteConferenceWorkItem)this).initialFollowers;
-				if(initialFollowers!=null){
-					for(String userId : initialFollowers){
-						
-						RoleMapping follower = RoleMapping.create();
-						follower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + userId);
-						follower.setEndpoint(userId);						
-
-						processManager.putRoleMapping(this.getInstId().toString() , follower);
-						processManager.applyChanges();
+						if(!existFollower){
+							RoleMapping follower = RoleMapping.create();
+							follower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
+							follower.setEndpoint(userId);						
+	
+							processManager.putRoleMapping(this.getInstId().toString() , follower);
+							processManager.applyChanges();
+							
+							// TODO: 추가된 팔로워에 대한 push 진행되어야함
+						}
 					}
 				}
 			}
@@ -932,7 +908,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 			
-			if(!newInstance){
+			if(!isNewInstance){
 				//마지막 워크아이템의 제목을 인스턴스의 적용
 				String lastCmnt = instanceRef.getLastCmnt();
 				// title 이 LASTCMT_LIMIT_SIZE 보다 크다면 사이즈를 조절함
@@ -1004,7 +980,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
 		// 수정
 		}else{
-			Instance instance = new Instance();
+			instance = new Instance();
 			instance.setInstId(this.getInstId());
 			
 			instanceRef = instance.databaseMe();
@@ -1016,10 +992,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setLastCmnt(cmntTitle);
 			}else if( instanceRef.getLastcmnt2TaskId() != null && instanceRef.getLastcmnt2TaskId().equals(this.getTaskId()) ){
 				instanceRef.setLastCmnt2(cmntTitle);
-			}
-			// 파일이 수정되어서 파일을 새롭게 로딩해야하는 타입들은 ContentLoaded(false); 로 준다
-			if( WORKITEM_TYPE_MEMO.equals(this.getType()) || WORKITEM_TYPE_SRC.equals(this.getType())){
-				this.setContentLoaded(false);
 			}
 			
 //			this.copyFrom(databaseMe());
@@ -1065,7 +1037,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
 			copyOfInstance.fillFollower();
-			InstanceFollowers instanceFollowers = copyOfInstance.getFollowers();
+			
+			// TODO: 문제있음 수정해야함
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
 			
 			// 인스턴스 발행
@@ -1085,9 +1058,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail),new Refresh(newInstancePanel)};
 				}*/
 				else{
-				     CommingTodoPerspective commingTodoPerspective = new CommingTodoPerspective();
-				     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail), new Refresh(commingTodoPerspective)};
-				    }							
+				     UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
+				     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail), new Refresh(upcommingTodoPerspective)};
+				}							
 			// 덧글
 			}else{
 				if("oce".equals(session.getUx())){
@@ -1100,7 +1073,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					WorkItem parentWorkItem = new WorkItem();
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
-					returnObjects = new Object[]{new ToAppend(parentWorkItem, this) , new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(parentWorkItem, this)};
 					
 				}else if(this instanceof CommentWorkItem){		
 					if("memo".equals(this.getType())){
@@ -1108,7 +1081,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						memo.copyFrom(this);
 						memo.setMemo(new WebEditor(this.getContent()));
 
-						returnObjects = new Object[]{new Refresh(memo, false, true) , new Refresh(instanceFollowers)};
+						returnObjects = new Object[]{new Refresh(memo, false, true)};
 					}else{
 //						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
 //							
@@ -1119,7 +1092,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
 //						}
 //						else
-						returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(instanceFollowers)};	
+						returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
@@ -1127,38 +1100,42 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem) , new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
 				}else if(this instanceof FileWorkItem){
 					DocWorkItem docWorkItem = new DocWorkItem();
 					docWorkItem.setInstId(this.getInstId());
 					docWorkItem.getMetaworksContext().setHow("document");
 					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)  , new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)};
 				}else{
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
 					commentWorkItem.setInstId(this.getInstId());
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)  , new Refresh(instanceFollowers)};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
 				}
 				
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
+				//MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
 			
+			HashMap<String, String> notiUsers = new HashMap<String, String>();
+			
+			// TODO : follower 처리햐아함
 			// 팔로워들에게 알림처리
 			// 부서로 추가된 팔로워들의 userId 를 가져온다.
-			IDept deptFollower = instanceFollowers.getDeptFollowers();
-			HashMap<String, String> notiUsers = new HashMap<String, String>();
-			if(deptFollower != null){
-				deptFollower.beforeFirst();
-				while(deptFollower.next()){
-					HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptFollower.getPartCode());
-					
-					if(deptSessionList != null)
-						notiUsers.putAll(deptSessionList);
-				}
-			}
+//			IDept deptFollower = instanceFollowers.getDeptFollowers();
+//			if(deptFollower != null){
+//				deptFollower.beforeFirst();
+//				while(deptFollower.next()){
+//					HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptFollower.getPartCode());
+//					
+//					if(deptSessionList != null)
+//						notiUsers.putAll(deptSessionList);
+//				}
+//			}
 			
+			// TODO : follower 작업해야함
+			/*
 			// 유저로 추가된 팔로워 알림 처리
 			IUser followers = instanceFollowers.getFollowers();
 			if(followers != null){
@@ -1175,6 +1152,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					notiUsers.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()) );
 				}
 			}
+			*/
 			
 			//같은 조직인 사람에게 알림 처리
 //			IUser deptEmployee = deptFollowers.getFollowers();
