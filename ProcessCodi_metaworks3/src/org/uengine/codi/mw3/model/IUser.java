@@ -54,7 +54,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] showWall() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] showSchedule() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=TARGET_SELF)

@@ -139,7 +139,7 @@ public class ScheduleCalendar implements ContextAware {
 		}
 		
 	public void load() throws Exception {
-		String userId = session.getUser().getUserId();
+		String userId = session.getLastSelectedItem();
 		loadByUserId(userId);
 	}	
 	
