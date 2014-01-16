@@ -49,19 +49,19 @@ org_uengine_codi_mw3_model_InstanceList.prototype = {
 				
 			} else if(target.secuopt == '1'){			// follower
 				for(var i=0; i<target.followers.followers.length; i++){
-					var user = target.followers.followers[i];
+					var follower = target.followers.followers[i];
 					
-					if(user.userId == userId){
+					if(follower.user.userId == userId){
 						isAuth = true;
 						break;
 					}
 				}
 				
 				if(!isAuth){
-					for(var i=0; i<target.followers.deptFollowers.length; i++){
-						var dept = target.followers.deptFollowers[i];
+					for(var i=0; i<target.followers.followers.length; i++){
+                        var follower = target.followers.followers[i];
 						
-						if(dept.partCode == partCode){
+						if(follower.dept.partCode == partCode){
 							isAuth = true;
 							break;
 						}
