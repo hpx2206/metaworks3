@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import javax.persistence.GeneratedValue;
+import javax.validation.constraints.NotNull;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
@@ -48,6 +49,7 @@ public interface IRole extends IDAO {
 	public void setSelected(boolean selected);
 	
 	
+	@NotNull(message="역할 이름을 입력해주세요.")
 	public String getRoleName();
 	public void setRoleName(String roleName);
 	
@@ -74,7 +76,7 @@ public interface IRole extends IDAO {
 	public Popup editPopup() throws Exception;
 
 	@Face(displayName="$Save")
-	@ServiceMethod(callByContent=true, except={"employeeList"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, except={"employeeList"}, target=ServiceMethodContext.TARGET_APPEND, validate=true)
 	public Object[] saveMe() throws Exception;
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
