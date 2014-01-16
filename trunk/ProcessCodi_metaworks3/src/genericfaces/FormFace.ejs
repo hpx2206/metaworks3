@@ -2,10 +2,10 @@
 	if (value) {
 		var title = objectMetadata.getOptionValue('title', null);
 	
-		var methodVAlign = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodVAlign']?objectMetadata.faceOptions['methodVAlign']:'bottom') : 'bottom');
+		var methodVAlign = objectMetadata.getOptionValue('methodVAlign', 'bottom');
 		var showViewBox =  false; 
 
-		var methodOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodOrder']?objectMetadata.faceOptions['methodOrder']:'') : '');
+		var methodOrderValue = objectMetadata.getOptionValue('methodOrder', '');
 		var methodOrder = [];
 		
 		if(methodOrderValue && methodOrderValue.length>0){
@@ -22,7 +22,7 @@
 			}
 		}
 		
-		var fieldOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['fieldOrder']?objectMetadata.faceOptions['fieldOrder']:'') : '');
+		var fieldOrderValue = objectMetadata.getOptionValue('fieldOrder', '');
 		var fieldOrder = [];
 		var cols = 2;
 		
@@ -50,7 +50,7 @@
 					if(fields[tempOrder[j]]){
 						var fd = fields[tempOrder[j]].fieldDescriptor;
 						
-						if(mw3.isHidden(fd)) continue;
+						if(mw3.isHidden(fields[fd.name])) continue;
 						
 						tempField += separator + tempOrder[j];
 						separator = '-';
@@ -69,7 +69,7 @@
 				var fd = objectMetadata.fieldDescriptors[i];
 	   		   							
 				if(fd.name == 'metaworksContext') continue;							
-				if(mw3.isHidden(fd)) continue;
+				if(mw3.isHidden(fields[fd.name])) continue;
 										
 				/*	
 				if(value[fd.name] == null
