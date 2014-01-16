@@ -65,7 +65,7 @@
 				<div class="invit_input"><%=fields.email.here({when:'edit'})%></div>
 		        <div class="positionRight" style="margin-top:3px;"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span><%=mw3.localize('$FriendInvite')%></span></a></div>
 	        	<div style="clear:both"></div>
-	        	<%=fields.invitedMessage.here({when:'view'})%>
+	        	<div class="alert alert-info" style="margin-top:15px; padding:5px;"><%=fields.invitedMessage.here({when:'view'})%></div>
 	        </div>            
 		    </div>
 		    <div class="guide"><span class="lb"></span><span class="rb"></span></div>
