@@ -1017,8 +1017,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}else if( instanceRef.getLastcmnt2TaskId() != null && instanceRef.getLastcmnt2TaskId().equals(this.getTaskId()) ){
 				instanceRef.setLastCmnt2(cmntTitle);
 			}
-			
-			if( WORKITEM_TYPE_MEMO.equals(this.getType()) ){
+			// 파일이 수정되어서 파일을 새롭게 로딩해야하는 타입들은 ContentLoaded(false); 로 준다
+			if( WORKITEM_TYPE_MEMO.equals(this.getType()) || WORKITEM_TYPE_SRC.equals(this.getType())){
 				this.setContentLoaded(false);
 			}
 			
