@@ -105,11 +105,13 @@
 							
 			</td>
 		</tr> 
+		<% if(value.dueDate){ %>
 		<tr>
 			<td colspan="3">
-				<span class="workdueDate"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>
+				<span class="workdueDate"><a href="#"><span class="badge"><span class="icon-alarm2"></span><span style="display:inline-block; margin-left:5px;"> <%=fields.dueDate.here({when:'view'})%></span></span></a></span>
 			</td>
 		</tr>
+		<%}%>
 <%		
 		}else if(value.type == "src"){
 %>
@@ -135,7 +137,7 @@
 		</tr>				
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px;">
-				<span class="workdueDate" style="margin-left:0px;"><a href="#"><span class="badge"><%= value.dueDate %></span></a>	</span>			
+				<% if(value.dueDate){ %><span class="workdueDate" style="margin-left:0px;"><a href="#"><span class="badge"><span class="icon-alarm2"></span><span style="display:inline-block; margin-left:5px;"> <%=fields.dueDate.here({when:'view'})%></span></span></a></span>	<%}%>		
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
 				<button type="button" class="btn btn-success btn-sm "  onClick="<%=methods.compile.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize("$Compile")%></button>
 			</td>
@@ -161,7 +163,7 @@
 		</tr>				
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px; ">
-				<span class="workdueDate" style="margin-left:0px;"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>			
+				<% if(value.dueDate){ %><span class="workdueDate" style="margin-left:0px;"><a href="#"><span class="badge"><span class="icon-alarm2"></span><span style="display:inline-block; margin-left:5px;"> <%=fields.dueDate.here({when:'view'})%></span></span></a></span>	<%}%>			
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
 			</td>
 		</tr>
@@ -190,11 +192,13 @@
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
 			</td>
 		</tr>
+		<% if(value.dueDate){ %>
 		<tr>
 			<td colspan="3">
-				<span class="workdueDate"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>
+				<span class="workdueDate"><a href="#"><span class="badge"><span class="icon-alarm2"></span><span style="display:inline-block; margin-left:5px;"> <%=fields.dueDate.here({when:'view'})%></span></span></a></span>
 			</td>
 		</tr>
+		<%}%>
 <%	
 		}else if(value.type == "remoteConf"){
 %>
@@ -214,11 +218,13 @@
 				<div id="commandFollowerDiv_<%=objectId%>"></div>
 			</td>
 		</tr>	
+		<% if(value.dueDate){ %>
 		<tr>
 			<td colspan="3">
-				<span class="workdueDate"><a href="#"><span class="badge"><%= value.dueDate %></span></a></span>
+				<span class="workdueDate"><a href="#"><span class="badge"><span class="icon-alarm2"></span><span style="display:inline-block; margin-left:5px;"> <%=fields.dueDate.here({when:'view'})%></span></span></a></span>
 			</td>
-		</tr>		
+		</tr>	
+		<%}%>	
 <%		
 		}
 %>
