@@ -4060,7 +4060,7 @@ legend {display:none;}
 .morePointR{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointR.png") no-repeat;}
 
 .topic_span{ padding:0 6px 1px 18px;-webkit-border-radius: 9px;     -moz-border-radius: 9px;  border-radius: 9px; background:url('../../images/waveStyle/i_topic_w.png') 0px -2px no-repeat #d9ebfd; border:1px solid #76b7f8; white-space:nowrap;}
-
+.workdueDate{ float:left; margin-left:67px; margin-top:4px;}
 
 .security_hidden_radio_box{height:60px; width:60px; position:relative; margin:0 auto;cursor:pointer;}      
 .security_hidden_radio{opacity: 0;   -moz-opacity: 0;   -khtml-opacity: 0;  filter:alpha(opacity=0);height:60px; width:60px; line-height:0; margin:0px; }

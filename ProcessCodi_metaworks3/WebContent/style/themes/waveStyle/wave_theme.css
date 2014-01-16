@@ -434,6 +434,7 @@ margin-top: 1px;
 	font-size:10px;
 	letter-spacing: -1px;
 }
+/*
 .badge {
 	float: left;
 	background: #409030;
@@ -443,10 +444,9 @@ margin-top: 1px;
 	box-shadow: 2px 2px 2px #888;
 	font-size: 11px;
 	color: #fff;
-	font-weight: bolder;/*	 border-width:2px;
-     border-style:solid;
-     border-color:#dfe5e5;*/
+	font-weight: bolder;
 }
+*/
 .btnbadge {
 	display: inline-block;
 	padding: 5px 20px;
