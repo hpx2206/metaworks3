@@ -2,9 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
@@ -40,6 +38,40 @@ public class DocWorkItem extends WorkItem {
 		if(!UEngineUtil.isNotEmpty(getTitle())){
 			setTitle(new String(this.getFile().getFilename()));
 		}
+		Object[] returnObj = null;
+//		String mimeType = this.getFile().getFileTransfer().getMimeType();
+//		// txt 파일은 SourceCodeWorkItem으로
+//		if( mimeType != null && "text/plain".equals(mimeType)){
+//			
+//			Class dstClass = null;
+//
+//			WebObjectType srcWOT = MetaworksRemoteService.getInstance().getMetaworksType(this.getClass().getName());
+//			ObjectInstance srcInstance = (ObjectInstance) srcWOT.metaworks2Type().createInstance();
+//			srcInstance.setObject(this);
+//
+//			WebObjectType dstWOT = MetaworksRemoteService.getInstance().getMetaworksType(SourceCodeWorkItem.class.getName());
+//			ObjectInstance dstInstance = (ObjectInstance) dstWOT.metaworks2Type().createInstance();
+//
+//			for (FieldDescriptor fd : dstWOT.metaworks2Type().getFieldDescriptors()) {
+//				if (fd.getAttribute("ormapping") == null)
+//					dstInstance.setFieldValue(fd.getName(),
+//							srcInstance.getFieldValue(fd.getName()));
+//			}
+//			
+//			// 파일 업로드
+//			getFile().upload();
+//			
+//			SourceCodeWorkItem sourceCodeWorkItem = (SourceCodeWorkItem)dstInstance.getObject();
+//			sourceCodeWorkItem.session = session;
+//			sourceCodeWorkItem.processManager = processManager;
+//			sourceCodeWorkItem.instanceViewContent = this.instanceViewContent;
+//			sourceCodeWorkItem.setType(WORKITEM_TYPE_SRC);
+//			sourceCodeWorkItem.setTool(mimeType);
+//			sourceCodeWorkItem.setExtFile(this.getFile().getUploadedPath());
+//			sourceCodeWorkItem.setContent("loading...");
+//			returnObj = sourceCodeWorkItem.add();
+//		}else{
+		
 			FileWorkItem fileWorkItem = new FileWorkItem();
 			fileWorkItem.session = session;
 			fileWorkItem.processManager = this.processManager;
@@ -83,14 +115,14 @@ public class DocWorkItem extends WorkItem {
 			genericWI.setGrpTaskId(fileWorkItem.getTaskId());
 			genericWI.setGenericWorkItemHandler(genericWIH);
 			
-			Object[] returnObj = genericWI.add();
+			returnObj = genericWI.add();
 			
 			// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
 			// 수정처리 해야함
 			Instance tempInstance = new Instance();
 			tempInstance.setInstId(fileWorkItem.getInstId());
 			tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
-					
+//		}
 			return returnObj;
 	}
 	

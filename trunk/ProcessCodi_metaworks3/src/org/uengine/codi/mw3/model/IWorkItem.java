@@ -50,6 +50,7 @@ public interface IWorkItem extends IDAO{
 		
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
 		public final static String WORKITEM_TYPE_FILE		 = "file";
+		public final static String WORKITEM_TYPE_SRC		 = "src";
 		public final static String WORKITEM_TYPE_DOCUMENT = "document";
 		
 		public final static String WORKITEM_TYPE_REMOTECONF	 = "remoteConf";

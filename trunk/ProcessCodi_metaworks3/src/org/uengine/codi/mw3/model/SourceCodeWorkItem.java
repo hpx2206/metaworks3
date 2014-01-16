@@ -18,7 +18,7 @@ import org.uengine.util.UEngineUtil;
 public class SourceCodeWorkItem extends WorkItem{
 	
 	public SourceCodeWorkItem(){
-		setType("src");
+		setType(WORKITEM_TYPE_SRC);
 		this.setSourceCode(new SourceCode());
 		
 	}
@@ -57,6 +57,8 @@ public class SourceCodeWorkItem extends WorkItem{
 				setExtFile(relativeFilePath);
 
 				getSourceCode().setCode("...loading...");
+			}else{
+				setExtFile(null);
 			}
 			
 			// TODO : ormapping 순서 문제로 this.content 값이 들어가 null 이 되는 현상 근본적 해결 필요			
