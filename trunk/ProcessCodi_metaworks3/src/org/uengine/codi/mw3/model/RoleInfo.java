@@ -1,8 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.Remover;
+import org.metaworks.ToEvent;
+import org.metaworks.common.MetaworksUtil;
 import org.metaworks.website.MetaworksFile;
 
 public class RoleInfo extends FollowerPerspectiveInfo {
@@ -42,7 +43,8 @@ public class RoleInfo extends FollowerPerspectiveInfo {
 		role.syncToDatabaseMe();
 		role.flushDatabaseMe();
 		
-		return new Object[]{new Refresh(new InstanceListPanel()),new Remover(role)};
+		return MetaworksUtil.putObjectArray(super.remove(), new ToEvent(new RolePerspective(), EventContext.EVENT_CHANGE));
+		
 	}
 
 	@Override
