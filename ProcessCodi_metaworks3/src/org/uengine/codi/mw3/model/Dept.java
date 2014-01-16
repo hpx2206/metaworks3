@@ -204,13 +204,13 @@ public class Dept extends Database<IDept> implements IDept {
 		sb.append("select * from partTable ");
 		sb.append("where partName=?partName ");
 		sb.append("and globalCom=?globalCom ");
-		sb.append("and isDeleted=0");
+		sb.append("and isDeleted='0'");
 		
 		IDept dao = null;
 		
 		try {
 			dao = sql(sb.toString());
-			dao.setGlobalCom(this.getGlobalCom());
+			dao.setGlobalCom(session.getEmployee().getGlobalCom());
 			dao.setPartName(this.getPartName());
 			dao.select();
 			
@@ -371,7 +371,7 @@ public class Dept extends Database<IDept> implements IDept {
 
 		String title = locale.getString("$Dept" + " - " + getPartName());
 		session.setWindowTitle(title);
-
+		
 		DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
 		
 		return new Object[]{session,  new ListPanel(instanceListPanel, deptInfo)};
@@ -407,16 +407,16 @@ public class Dept extends Database<IDept> implements IDept {
 			this.getLogoFile().upload();
 		}
 		
-				
+		
+		//그룹 중복 검사
+		
+		IDept findDept = this.findByName();
+		
+		if(findDept != null)
+			throw new Exception("$DuplicateName");
+		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			
-			//그룹 중복 검사
-			
-			IDept findDept = this.findByName();
-			
-			if(findDept != null)
-				throw new Exception("$DuplicateName");
 			
 			// �앹꽦
 			this.setGlobalCom(session.getCompany().getComCode());
@@ -481,7 +481,7 @@ public class Dept extends Database<IDept> implements IDept {
 			syncToDatabaseMe();
 			flushDatabaseMe();
 			
-			return new Object[]{new Remover(new Popup()), new Remover(new ModalWindow()), new Refresh(this)};
+			return new Object[]{new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		}
 		//}
 		// TODO execute drillDown()
