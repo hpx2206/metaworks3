@@ -34,6 +34,14 @@ public class Navigation {
 			this.perspectiveValue = perspectiveValue;
 		}
 		
+	boolean isDiffrentCompany;
+		public boolean isDiffrentCompany() {
+			return isDiffrentCompany;
+		}
+		public void setDiffrentCompany(boolean isDiffrentCompany) {
+			this.isDiffrentCompany = isDiffrentCompany;
+		}
+
 	String keyword;
 		public String getKeyword() {
 			return keyword;

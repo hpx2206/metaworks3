@@ -68,6 +68,21 @@ public class Instance extends Database<IInstance> implements IInstance{
 		System.out.println("navigation.getPerspectiveType() : " + navigation.getPerspectiveType());
 		System.out.println("navigation.getPerspectiveValue() : " + navigation.getPerspectiveValue());
 		
+		// 다른 회사 사람 확인
+		Employee employee = null;
+		
+		if(navigation.getPerspectiveValue() != null && 
+		   Perspective.MODE_PERSONAL.equals(navigation.getPerspectiveMode()) &&
+		   !navigation.getPerspectiveValue().equals(navigation.getEmployee().getEmpCode())){
+			
+			employee = new Employee();
+			employee.setEmpCode(navigation.getPerspectiveValue());
+			employee.copyFrom(employee.findMe());
+			
+			if(!employee.getGlobalCom().equals(navigation.getEmployee().getGlobalCom()))
+				navigation.setDiffrentCompany(true);
+		}
+		
 		Map<String, String> criteria = new HashMap<String, String>();
 		
 		StringBuffer worklistSql = new StringBuffer();
@@ -134,13 +149,28 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
 		}
-		
+		System.out.println(bottomList.toString());
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		
-		criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
-		criteria.put("endpoint", navigation.getEmployee().getEmpCode());
-		criteria.put("partcode", navigation.getEmployee().getPartCode());
-		
+		if(navigation.isDiffrentCompany){
+			if(employee == null)
+				throw new Exception("can't load employee. it is diffrent company");
+			
+			criteria.put("partcode", employee.getPartCode());
+			criteria.put("endpoint", employee.getEmpCode());
+			
+			criteria.put("self_endpoint", navigation.getEmployee().getEmpCode());
+			criteria.put("self_partcode", navigation.getEmployee().getPartCode());			
+			
+		}else{
+			criteria.put("self_endpoint", navigation.getEmployee().getEmpCode());
+			criteria.put("self_partcode", navigation.getEmployee().getPartCode());
+			
+			criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
+			criteria.put("partcode", navigation.getEmployee().getPartCode());
+			criteria.put("endpoint", navigation.getEmployee().getEmpCode());
+		}
+	
 		// TODO add criteria
 		Set<String> keys = criteria.keySet();
 		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
@@ -252,15 +282,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		if(Perspective.MODE_ROLE.equals(navigation.getPerspectiveMode())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
-			stmt.append("and rolemapping.endpoint in (select empcode from roleusertable where rolecode=?roleCode) ");
+			stmt.append("and rolemapping.endpoint in (select empcode from roleusertable where rolecode=?select_roleCode) ");
 			
-			criteria.put("roleCode", navigation.getPerspectiveValue());
+			criteria.put("select_roleCode", navigation.getPerspectiveValue());
 		}
 		if(Perspective.MODE_DEPT.equals(navigation.getPerspectiveMode())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
-			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?partCode) ");
+			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?select_partCode) ");
 			
-			criteria.put("partCode", navigation.getPerspectiveValue());
+			criteria.put("select_partCode", navigation.getPerspectiveValue());
 		}
 		
 		stmt.append("  		  GROUP BY worklist.rootinstid) task ");
@@ -304,34 +334,45 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		if(Perspective.TYPE_NEWSFEED.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType())
-		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())) {
+		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
 			instanceSql
-			.append(" and	exists ( ")
-			.append("			select 1 from bpm_procinst	 ")
-			.append("			where inst.instid = instid	 ")
-			.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
-			.append("			union all	 ")
+			.append(" and	exists ( ");
+			
+			if(!navigation.isDiffrentCompany){
+				instanceSql
+				.append("			select 1 from bpm_procinst	 ")
+				.append("			where inst.instid = instid	 ")
+				.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
+				.append("			union all	 ");		
+			}
+			
+			instanceSql
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt <= 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?self_endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?self_partcode ) ) ")
 			.append("			union all 	 ")
 			.append("			select 1 from bpm_topicmapping tm	 ")
 			.append("			where inst.topicId = tm.topicId	 ")
 			.append("			and inst.secuopt = 3	 ")
-			.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
-			.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
+			.append("			and ( 	( assigntype = 0 and tm.userid = ?self_endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and tm.userid = ?self_partcode ) ) ")
 			.append("		)	 ");
-		}else if(Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
-			  || Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
-			instanceSql
-			.append("   AND wl.instid=inst.instid")			
-			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
-			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
-			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
-			.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-			.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))");
+			
+			if(Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
+			|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
+					instanceSql
+					.append("   AND wl.instid=inst.instid")			
+					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
+					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
+					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
+					.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+					.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))");
+					
+			}			
 		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())){
 			instanceSql.append(" and inst.initep=?instInitep ");
 			criteria.put("instInitep", navigation.getEmployee().getEmpCode());
@@ -339,7 +380,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			throw new Exception("wrong perspective");
 		}
 		
-		if(Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType()) 
+		if(navigation.isDiffrentCompany
+		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType()) 
 		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())) {
