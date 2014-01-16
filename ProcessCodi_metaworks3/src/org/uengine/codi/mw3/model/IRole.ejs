@@ -26,7 +26,7 @@
 		<%
 				if(mw3.where == 'navigator'){
 		%>	
-			<a style="cursor: pointer" onClick="<%=methods.loadRole.caller() %>"><span class="icon-user4"></span><div style="display:inline-block"><%=fields.roleCode.here() %></div></a>
+			<a style="cursor: pointer" onClick="<%=methods.loadRole.caller() %>"><span class="icon-user4"></span><div style="display:inline-block"><%=fields.roleName.here() %></div></a>
 			
 		<%
 					if(value.selected) {
@@ -43,7 +43,7 @@
 		%>
 				
 				<div class="lst_type2" style="height:190px; padding-top:20px">
-					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleName")%> :</span><span><%=fields.roleCode.here((mw3.when=='edit'?{when:'view'}:{})) %></span></div>		
+					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleName")%> :</span><span><%=fields.roleName.here((mw3.when=='edit'?{when:'view'}:{})) %></span></div>		
 					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleDesc")%> :</span><span><%=fields.descr.here()%></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$LogoFile")%> :</span><span><%=fields.logoFile.here({when:'edit'})%></span></div>	
 				</div>
