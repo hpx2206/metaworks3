@@ -82,22 +82,6 @@ public class OcePerspectivePanel extends Perspective{
 		return new MainPanel(new OceMain(session));
 	}
 	
-	
-	@ServiceMethod
-	static public Object[] loadAllICanSee() throws Exception{
-		
-		Object[] returnObject = loadInstanceListPanel(session , "allICanSee", "oce");
-		
-		String title = GlobalContext.getPropertyString("$All");
-		
-		DashboardWindow window = new DashboardWindow();
-		window.session = session;
-		window.setPanel(returnObject);
-		window.setTitle(title);
-
-		return new Object[]{session , window};
-	}
-	
 	@ServiceMethod
 	public MainPanel goSNS() throws Exception {
 		if(session != null){

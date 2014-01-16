@@ -24,11 +24,14 @@ import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceList;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.Navigation;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
@@ -174,6 +177,7 @@ public class ScheduleCalendar implements ContextAware {
 		DataConvert(arrListData, iInstanceProcess, userId);
 		*/
 		
+		/*
 		String sql = 	" select distinct(inst.INSTID), inst.DEFVERID, inst.DEFID, inst.DEFNAME, inst.DEFPATH, inst.DEFMODDATE, inst.STARTEDDATE, inst.FINISHEDDATE, inst.DUEDATE, inst.STATUS, inst.INFO, inst.NAME, inst.ISDELETED, inst.ISADHOC, inst.ISARCHIVE, inst.ISSUBPROCESS, inst.ISEVENTHANDLER, inst.ROOTINSTID, inst.MAININSTID, inst.MAINDEFVERID, inst.MAINACTTRCTAG, inst.MAINEXECSCOPE, inst.ABSTRCPATH, inst.DONTRETURN, inst.MODDATE, inst.EXT1, inst.INITEP, inst.INITRSNM, inst.CURREP, inst.CURRRSNM, inst.STRATEGYID, inst.PREVCURREP, inst.PREVCURRRSNM, inst.STARCNT, inst.STARRSNM, inst.STARFLAG, inst.ABSTRACTINST, inst.CURRTRCTAG, inst.PREVTRCTAG, inst.INITCOMCD, inst.SECUOPT, inst.lastcmnt, inst.initcmpl "+ 
 						" from bpm_procinst inst , bpm_rolemapping follower "+
 						" where inst.duedate is not null " +
@@ -213,6 +217,7 @@ public class ScheduleCalendar implements ContextAware {
 		
 		sql +=" order by inst.duedate";
 		
+		
 		Instance instance = new Instance();
 		IInstance iInstance = (IInstance) instance.sql(Instance.class, sql);
 		iInstance.setInitEp(userId);
@@ -220,8 +225,15 @@ public class ScheduleCalendar implements ContextAware {
 		iInstance.set("endpoint", session.getEmployee().getEmpCode());
 		iInstance.set("partcode", session.getEmployee().getPartCode());
 		iInstance.select();		
+		*/
+
+		session.setLastPerspecteType(Perspective.TYPE_CALENDAR);
 		
-		DataConvert(arrListData, iInstance, userId);
+		Navigation navigation = new Navigation(session);
+		
+		IInstance instanceContents = Instance.load(navigation, 0, 0);
+		
+		DataConvert(arrListData, instanceContents, userId);
 		
 		setShowUserId(userId);
 		setData(arrListData);
