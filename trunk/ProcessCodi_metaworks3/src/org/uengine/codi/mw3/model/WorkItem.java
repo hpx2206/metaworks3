@@ -844,7 +844,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus(WORKITEM_STATUS_RUNNING);									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				instanceRef.setName(this.getTitle());
+				String title = this.getTitle();
+				if(title.length() > TITLE_LIMIT_SIZE){
+					title = title.substring(0, TITLE_LIMIT_SIZE) + "...";
+				}
+				instanceRef.setName(title);
 				if(this.getFolderId() != null){
 					instanceRef.setTopicId(this.getFolderId());
 				}
@@ -1083,15 +1087,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 						returnObjects = new Object[]{new Refresh(memo, false, true)};
 					}else{
-//						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
-//							
-//							InstanceFollowers followers = new InstanceFollowers();
-//							followers.setInstanceId(this.getInstId().toString());
-//							followers.load();
-//							
-//							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
-//						}
-//						else
 						returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
@@ -1386,9 +1381,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			else
 				instanceRef.setSecuopt("0");
 			
-			if(newInstancePanel.getDueDate() != null){
-				instanceRef.setDueDate(newInstancePanel.getDueDate());
-			}
+//			if(newInstancePanel.getDueDate() != null){
+//				instanceRef.setDueDate(newInstancePanel.getDueDate());
+//			}
 			
 			if(newInstancePanel.getTopicNodeId() != null){
 				instanceRef.setTopicId(newInstancePanel.getTopicNodeId());
@@ -1437,7 +1432,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		processMapList.setParentInstanceId(getInstId());
 		processMapList.setTitle(getTitle());
 		
-		if( newInstancePanel != null && newInstancePanel.getDueDate() != null){
+		if( this.getDueDate() != null){
 			processMapList.setDueDateSetting(true);
 			// 새글을 쓰려는데 dueDate 가 이미 있는 경우
 		}else if( newInstancePanel == null && instanceViewContent != null && instanceViewContent.getInstanceView() != null && instanceViewContent.getInstanceView().getDueDate() != null ){

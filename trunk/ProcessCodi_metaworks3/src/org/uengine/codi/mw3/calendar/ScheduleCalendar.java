@@ -491,7 +491,7 @@ public class ScheduleCalendar implements ContextAware {
 		}else{
 			NewInstancePanel newInstancePanel =  new NewInstancePanel();
 			
-			newInstancePanel.setDueDate(this.getSelDate());
+//			newInstancePanel.setDueDate(this.getSelDate());
 			/*
 			if(this.getEndDate() != null){
 				newInstancePanel.setDueDate(this.getEndDate());
