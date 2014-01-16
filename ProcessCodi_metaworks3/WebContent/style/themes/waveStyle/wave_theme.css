@@ -406,7 +406,7 @@ margin-top: 1px;
 	background-repeat: no-repeat;
 	position:relative;
 }
-.contact_list{padding-top:10px;}
+.contact_list{padding-top:10px; padding-left:13px;}
 .contact_list .user_focus { margin-bottpm:4px; }
 .contact_list li{float:left}
 
