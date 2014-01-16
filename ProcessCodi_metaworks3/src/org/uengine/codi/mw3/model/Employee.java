@@ -561,9 +561,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		// TODO: 부서 딕셔너리 처리 필		
-		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
-			getImageFile().setEmpCode(this.getEmpCode());
-			getImageFile().upload();
+		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null && !"".equals(getImageFile().getFileTransfer().getFilename())){
+			if( getImageFile().getFileTransfer().getMimeType() != null  && !getImageFile().getFileTransfer().getMimeType().startsWith("image")){
+				throw new MetaworksException("$OnlyImageFileCanUpload");
+			}else{
+				getImageFile().setEmpCode(this.getEmpCode());
+				getImageFile().upload();
+			}
 		}
 		
 		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
@@ -1042,11 +1046,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
-		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null && !"".equals(getImageFile().getFileTransfer().getFilename())){
-			if( getImageFile().getFileTransfer().getMimeType() != null  && !getImageFile().getFileTransfer().getMimeType().startsWith("image")){
-				throw new MetaworksException("$OnlyImageFileCanUpload");
-			}
-		}
+		
 		this.saveMe();
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
