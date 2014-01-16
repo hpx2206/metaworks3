@@ -30,10 +30,17 @@ public class PerspectiveTopPanel {
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.load(session);
 		
-		NewInstanceWindow window = new NewInstanceWindow(newInstancePanel);
-		if( session.getWindowTitle() != null){
-			window.setTitle(session.getWindowTitle());
+		String title = "새로쓰기";
+		
+		if(Perspective.MODE_TOPIC.equals(session.getLastPerspecteMode()) ||
+		   Perspective.MODE_PROJECT.equals(session.getLastPerspecteType())){
+			title = "'" + session.getWindowTitle() + "' 에 새로쓰기";
+			
+			newInstancePanel.setTopicNodeId(session.getLastSelectedItem());
 		}
+
+		NewInstanceWindow window = new NewInstanceWindow(newInstancePanel);
+		window.setTitle(title);
 		
 		return window;
 	}

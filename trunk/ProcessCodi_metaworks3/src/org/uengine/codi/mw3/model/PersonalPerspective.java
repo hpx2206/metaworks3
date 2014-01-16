@@ -18,6 +18,8 @@ public class PersonalPerspective extends Perspective {
 		listPanel.setInstanceListPanel(instanceListPanel);
 		listPanel.setPerspectiveInfo(new PerspectiveInfo(type));
 
+		session.setWindowTitle(null);
+		
 		return new Object[]{session, listPanel};
 	}
 	

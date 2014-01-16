@@ -171,12 +171,13 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			Locale locale = new Locale(session);
 			locale.load();
 			
-			String title = locale.getString("$Topic") + " - " + getName();
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getId());
-			instanceListPanel.setTitle(title);
 			
 			ListPanel listPanel = new ListPanel(instanceListPanel, new TopicInfo(session, this.getId()));
-			
+
+			String title = locale.getString("$Topic") + " - " + getName();
+			session.setWindowTitle(title);
+
 			return new Object[]{session, listPanel};
 		}
 	}
