@@ -17,6 +17,7 @@ import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,15 @@ public class Invitation implements ContextAware{
 		}
 	}
 	
+	String invitedMessage;
+		@Available(how={"afterinvite"})
+		public String getInvitedMessage() {
+			return invitedMessage;
+		}
+		public void setInvitedMessage(String invitedMessage) {
+			this.invitedMessage = invitedMessage;
+		}
+
 	String email;
 	//@Face(options={"placeholder"}, values={"Enter your work email address"})
 	@Pattern(regexp = "/^[a-z A-Z 0-9\\-_]+@[a-z A-Z 0-9\\-]+(\\.[a-z A-Z 0-9 \\-]+)+$/", message = "이메일 형식이 잘못되었습니다.")
@@ -100,13 +110,16 @@ public class Invitation implements ContextAware{
 				saveEmp.copyFrom(findEmp);
 				saveEmp.syncToDatabaseMe();
 				
-				return new Object[]{new Remover(new Popup(), true)};
+				this.setInvitedMessage("이미 친구에 등록된 이메일 입니다.");
+				this.getMetaworksContext().setHow("afterinvite");
+				//return new Object[]{new Remover(new Popup(), true)};
+				return new Object[]{new Refresh(this)};
 			}
 			
 			
 			IContact findContact = Contact.findContactsWithFriendId(session.getUser(), findEmp.getEmpCode());
 			if(findContact != null)
-				throw new Exception("이미 내 친구 입니다.");
+				throw new Exception("이미 친구에 등록된 이메일 입니다.");
 		
 			// 2. The invited person is not a member of my company.
 			// different company
@@ -122,7 +135,9 @@ public class Invitation implements ContextAware{
 				
 				sendMailToUser(authKey);
 				
-				return null;
+				this.setInvitedMessage("친구가 등록 되었습니다.");
+				this.getMetaworksContext().setHow("afterinvite");
+				return new Object[]{new Refresh(this)};
 				//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 			}
 			
@@ -140,14 +155,18 @@ public class Invitation implements ContextAware{
 			newContact.createDatabaseMe();
 			newContact.flushDatabaseMe();
 
-			return null;
+			this.setInvitedMessage("친구가 등록 되었습니다.");
+			this.getMetaworksContext().setHow("afterinvite");
+			return new Object[]{new Refresh(this)};
 			//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 		}
 		
 		// 4. The invited person is not CODI user.
 		String authKey = UUID.randomUUID().toString();
+		String empName = this.getEmail().substring(0, this.getEmail().indexOf("@"));
 		Employee newUser = new Employee();
 		newUser.setEmail(getEmail());
+		newUser.setEmpName(empName);
 		newUser.setEmpCode(newUser.createNewId());
 		newUser.setAuthKey(authKey);
 		newUser.setIsDeleted("0");
@@ -167,8 +186,10 @@ public class Invitation implements ContextAware{
 		sendMailToNoUser(authKey);
 		
 		addContactEachother();
+		this.setInvitedMessage("친구초대 메일을 보냈습니다.");
+		this.getMetaworksContext().setHow("afterinvite");
 		
-		return null;
+		return new Object[]{new Refresh(this)};
         //return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
 	}
 	

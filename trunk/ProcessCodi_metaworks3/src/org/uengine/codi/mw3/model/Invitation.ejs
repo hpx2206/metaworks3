@@ -60,24 +60,16 @@
 			}else if(mw3.how == 'afterinvite'){		
 		%>
 			
-			<div id="signup_popup">
-			<div class="login_top_codi"></div>
-    		<div class="popup_logo_codi"></div>
-		    <div class="popup_title"> <span><%=mw3.localize("$InviteByEmail")%></span> </div>
-    		<div class="popup_content">
-
-
-			<label class="after_result_label"><%=mw3.localize("$InviteEmail")%></label>
-        		<%=fields.email.here({htmlAttrChild: {class:'textinput textinputreadonly', readonly: 'readonly',  style: 'margin-bottom:15px'}})%>
-			<div class="signup_textbox">
-				초대하여 주셔서 감사합니다.<br>
-				<b>초대받으신 분은 이메일을 확인하신 후 가입을 할 수</b><br>
-				<b>있습니다.</b>					
-				만약 이메일을 받지 못하셨으면 스펨 폴더를<br>
-				 확인하도록 유도하여 주세요.<br>
-			</div>
-        
-        
+			<div class="invitation_div">
+				<p class="title"><%=mw3.localize('$InviteYourFriend')%></p>
+				<div class="invit_input"><%=fields.email.here({when:'edit'})%></div>
+		        <div class="positionRight" style="margin-top:3px;"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span><%=mw3.localize('$FriendInvite')%></span></a></div>
+	        	<div style="clear:both"></div>
+	        	<%=fields.invitedMessage.here({when:'view'})%>
+	        </div>            
+		    </div>
+		    <div class="guide"><span class="lb"></span><span class="rb"></span></div>
+			
         <div style="clear:both"></div>
 		<%
 			}		
