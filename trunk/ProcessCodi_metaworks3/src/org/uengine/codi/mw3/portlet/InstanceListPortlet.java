@@ -7,6 +7,7 @@ import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.PersonalPerspective;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class InstanceListPortlet extends Window {
@@ -150,6 +151,6 @@ public class InstanceListPortlet extends Window {
 		}
 		*/
 		
-		return PersonalPerspective.loadInstanceListPanel(session, "topic", this.getTopicName());
+		return PersonalPerspective.loadInstanceListPanel(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, this.getTopicName());
 	}
 }

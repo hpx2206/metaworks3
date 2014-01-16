@@ -201,9 +201,10 @@ public class ResourceContextMenu extends CloudMenu {
 			projectNode.setName(node.getProjectId());
 			projectNode.copyFrom(projectNode.findByNameForProject());
 			
+			// TODO : 작업해야함
 			
-			ProjectInfo projectInfo = new ProjectInfo(projectNode.getId());
-			projectInfo.load();
+			//ProjectInfo projectInfo = new ProjectInfo(projectNode.getId());
+			//projectInfo.load();
 			
 			ProjectServers devServers = new ProjectServers(projectNode.getId(), "dev"); //prod
 			devServers.processManager = processManager;
