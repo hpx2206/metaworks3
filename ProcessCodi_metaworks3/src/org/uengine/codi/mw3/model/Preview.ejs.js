@@ -18,5 +18,15 @@ org_uengine_codi_mw3_model_Preview.prototype = {
 				$("#convert_progress_pdf_" + this.objectId).hide();
 				$('#converted_pdf_' + this.objectId).show();
 		}
+	},
+	viewAsImages: function(){
+		$("#imagePreview_" + this.objectId).addClass("current");
+		$("#pdfPreview_" + this.objectId).removeClass("current");
+		this.object.viewAsImages();
+	},
+	viewAsPDF: function(){
+		$("#imagePreview_" + this.objectId).removeClass("current");
+		$("#pdfPreview_" + this.objectId).addClass("current");
+		this.object.viewAsPDF();
 	}
 };
