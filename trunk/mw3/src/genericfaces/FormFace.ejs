@@ -28,7 +28,7 @@
 					if(fields[tempOrder[j]]){
 						var fd = fields[tempOrder[j]].fieldDescriptor;
 						
-						if(mw3.isHidden(fd)) continue;
+						if(mw3.isHidden(fields[fd.name])) continue;
 						
 						tempField += separator + tempOrder[j];
 						separator = '-';
@@ -48,7 +48,7 @@
 	   		   							
 				if(fd.name == 'metaworksContext') continue;
 							
-				if(mw3.isHidden(fd)) continue;
+				if(mw3.isHidden(fields[fd.name])) continue;
 
 				/*
 				if(value[fd.name] == null

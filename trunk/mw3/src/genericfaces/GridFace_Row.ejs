@@ -48,7 +48,7 @@
 	for(var i=0; i<listOrder.length; i++){
 		var fd = objectMetadata.fieldDescriptors[listOrder[i]];
 	   	
-	  	if(mw3.isHidden(fd)) continue;
+	  	if(mw3.isHidden(fields[fd.name])) continue;
 	  	if(fd.name == 'metaworksContext') continue;
 	  	
 	  	var align = 'left';
