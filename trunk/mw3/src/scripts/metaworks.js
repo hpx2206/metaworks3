@@ -47,14 +47,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.base = "";
 				
 				this.objects = {};
-				this.metaworksContexts = {};
+				this.objectContexts = {};
 				this.beanExpressions = {};
 				
 				this.objectId_KeyMapping = {};
 				this.objectId_ClassNameMapping = {};
 				
 				this.face_ObjectIdMapping = {};
-				this.objectIds_FaceMapping={};
+				this.objectIds_FaceMapping = {};
 				
 				this.loaded = false;
 				this.loadedScripts = {};				
@@ -88,6 +88,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    	
 			    this.afterLoadFaceHelper = {};
 			    this.afterLoadFaceHelperCount = 0;
+			    this.loadFaceHelperStatus = 'ready';
 			    
 			    this.isRecordingSession = false;
 			    this.recording = [];
@@ -366,7 +367,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							}
 						}catch(faceHelperLoadException){
 						
-						console.log(faceHelperLoadException);
+							console.log(faceHelperLoadException);
 						
 							//TODO:
 							//mw3.showError(objectId, faceHelperLoadException.message, 'init');
@@ -413,33 +414,52 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					this.objectIds_FaceMapping[face] = null;
 				}
 				*/
+				
+				if(this.loadFaceHelperStatus != 'ready'){
+					this.loadFaceHelperStatus = 'more';
+					
+					return;
+				}
+
+				this.loadFaceHelperStatus = 'process';
+				
 		    	for(var i in mw3.afterLoadFaceHelper){
 		    		var face = mw3.afterLoadFaceHelper[i];
 		    		
 		    		if(face != null){
 			    		objectIds = mw3.objectIds_FaceMapping[face];								    		
 						
+						//console.log(face);
+						//console.log(objectIds);
+						
 						for(var objectId in objectIds){
+							//console.log('in : ' + objectId);
+							
 							var targetElement = document.getElementById(mw3._getObjectDivId(objectId));
 							
-							//if(targetElement == null || targetElement.innerHTML == mw3.MESSAGE_LOADING)
-							//	break;
-							
-							var object = mw3.objects[objectId];
+							/*
+							if(targetElement == null || targetElement.innerHTML == mw3.MESSAGE_LOADING)
+								break;
+							*/
+									
+							var objectContext = mw3.objectContexts[objectId];
 							
 							// object attr apply
-							var htmlAttr = (object && object.__options && object.__options['htmlAttr'] ? object.__options['htmlAttr'] : null);
+							var htmlAttr = (objectContext && objectContext.__options && objectContext.__options['htmlAttr'] ? objectContext.__options['htmlAttr'] : null);
 							
 							if(htmlAttr)
 								$(targetElement).attr(htmlAttr);
 							
-							var htmlAttrChild = (object && object.__options && object.__options['htmlAttrChild'] ? object.__options['htmlAttrChild'] : null);
-							if(htmlAttrChild)
+							var htmlAttrChild = (objectContext && objectContext.__options && objectContext.__options['htmlAttrChild'] ? objectContext.__options['htmlAttrChild'] : null);
+							if(htmlAttrChild){
 								$(targetElement).children(':first').attr(htmlAttrChild);
+							}
 							
 							if(mw3.loadFaceHelper(objectId, face)){
 								mw3.afterLoadFaceHelper[i] = null;
 								mw3.objectIds_FaceMapping[face] = null;
+
+								var object = mw3.objects[objectId];
 
 								if(object!=null && object.__className){
 									var metadata = mw3.getMetadata(object.__className);
@@ -463,7 +483,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							}
 						}
 		    		}
-		    	}				
+		    	}		
+		    	
+		    	if(this.loadFaceHelperStatus == 'more'){
+		    		this.loadFaceHelperStatus = 'ready';
+		    		
+		    		this.onLoadFaceHelperScript();
+		    	}else{
+		    		this.loadFaceHelperStatus = 'ready';
+		    	}
+		    			
 			};			
 			
 			Metaworks3.prototype.getFaceHelper = function(objectId){
@@ -658,7 +687,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						}catch(e){}
 					}
 					
-					
 					if(!fd.attributes) continue;
 					
 					if(fd.attributes['namefield']){
@@ -712,8 +740,30 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					serviceMethodMap[serviceMethod.methodName] = serviceMethod;
 					
+					var superClasses = webObjectType.superClasses;
+					
+					for(var superClsIdx = 0; superClsIdx<superClasses.length; superClsIdx++){
+						var className = superClasses[superClsIdx];
+
+						try{
+							if(serviceMethod.displayName==null || serviceMethod.displayName.toUpperCase()==serviceMethod.methodName.toUpperCase()){
+								var messageKey = className + "." + serviceMethod.methodName;
+								var message = mw3.getMessage(messageKey);
+								
+								if(messageKey!=message){
+									
+									serviceMethod.displayName = message;
+									
+									break;
+								}
+								
+							}
+						}catch(e){}
+					}
+					
 					if(!serviceMethod.displayName)
 						serviceMethod.displayName = serviceMethod.methodName.substr(0,1).toUpperCase() + serviceMethod.methodName.substr(1, serviceMethod.methodName.length-1);
+					
 					
 					if(serviceMethod.nameGetter){
 						webObjectType['nameGetter'] = serviceMethod;
@@ -847,16 +897,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					*/
 
-					this.metaworksContexts[objectId] = {when:mw3.when, how:mw3.how, where:mw3.where};
-
 					/*
 					 * 2013/12/18 cjw
-					 * object 에 view 당시의 metaworksContext 와 option 을 저장한다.
+					 * view 당시의 metaworksContext 와 option 을 저장한다.
 					 */
-					if(this.objects[objectId]){
-						this.objects[objectId]['__metaworksContexts'] = {when:mw3.when, how:mw3.how, where:mw3.where};
-						this.objects[objectId]['__options'] = options;
-					}
+					this.objectContexts[objectId] = {};
+					this.objectContexts[objectId]['__metaworksContext'] = {when:mw3.when, how:mw3.how, where:mw3.where};
+					this.objectContexts[objectId]['__options'] = options;
 					
 					
 					if(!actualFace && options && options['ejsPath']){
@@ -888,7 +935,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								actualFace = metadata && metadata.faceForArray ? metadata.faceForArray : 'dwr/metaworks/genericfaces/ArrayFace.ejs';
 							}
 						}							
-						
 						
 						if(!actualFace){
 							var faceMappingByContext = metadata.faceMappingByContext;
@@ -956,6 +1002,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					this.objectIds_FaceMapping [actualFace][objectId] = faceInfo;
 						
+					//console.log(actualFace + ' - ' + objectId);
+					
 					//end
 
 					var objectRef = this._createObjectRef(object, objectId);
@@ -1144,7 +1192,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					which = 1;
 
 				   				if(methodContext.mouseBinding == "drag"){
-				   					
+									
 				   					theDiv[0]['dragCommand'] = command;
 				   					theDiv[0]['objectId'] = objectId;
 				   					
@@ -1622,6 +1670,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 				this.newBeanProperty(objectId);
 
+				//console.log('locateObject : ' + objectId);
+				
 				this.objects[objectId] = value; //caches the values
 				this._armObject(objectId, value); //empower the object !
 				
@@ -1756,6 +1806,24 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objectTypeName = arguments[2];
 				}
 				
+				
+				var divId =  "#objDiv_" + objectId;
+				
+				/*
+				$(divId).replaceWith(function(){
+					if(!objectTypeName)
+						objectTypeName = value.__className;
+					
+					html = mw3.locateObject(value, objectTypeName, null);
+					
+					return html;
+				});
+	
+				mw3.removeObject(objectId);
+								
+				return true;
+				*/
+				
 				if(this.recentCallMethodName && objectId == this.recentCallObjectId){
 					if(mw3.getFaceHelper(objectId) && mw3.getFaceHelper(objectId).endLoading){
 						mw3.getFaceHelper(objectId).endLoading(this.recentCallMethodName);
@@ -1788,7 +1856,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				//alert( dwr.util.toDescriptiveString(value, 5))
 				
 
-				var divId =  "#objDiv_" + objectId;
+				
 				
 				// 2012-03-27 cjw destroy event
     			if(this.objects[objectId]){
@@ -3097,100 +3165,138 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return objectRef;
 			};
 			
-			Metaworks3.prototype.isHidden = function(fd){
-
-				if(this.when == "__design"){
+			Metaworks3.prototype.isHidden = function(field){
+				return this.isHiddenFieldDescriptor(field.fieldDescriptor, field.object);
+			}
+			
+			Metaworks3.prototype.isHiddenFieldDescriptor = function(fd, object){
+				var isHidden = false;
+				
+				var metaworksContext = this.objectContexts[object.__objectId]['__metaworksContext'];
+				
+				if(metaworksContext.when == "__design"){
 					return !fd.attributes['resource']; 
 				}
+				
 				if(fd.attributes){
 					if(fd.attributes['hidden.when']){
-						return (fd.attributes['hidden.when'] == this.when);
+						if(fd.attributes['hidden.when'] == metaworksContext.when)
+							isHidden = true;
 					}
+
+					if(fd.attributes['hidden.where']){
+						if(fd.attributes['hidden.where'] == metaworksContext.where)
+							isHidden = true;
+					}
+
+					if(fd.attributes['hidden.how']){
+						if(fd.attributes['hidden.how'] == metaworksContext.how)
+							 isHidden = true;
+					}
+					
+					// && metaworksContext.when == '___hidden___'
+
+					if(fd.attributes['hidden']) 
+						isHidden = true;
 						
 					if(fd.attributes['show.when']){
-						return (fd.attributes['show.when']!= this.when);
+						if(fd.attributes['show.when'] != metaworksContext.when)
+							isHidden = false;
 					} 
 					
+					if(fd.attributes['available.when'] || 
+					   fd.attributes['available.where'] ||
+					   fd.attributes['available.how'] ||
+					   fd.attributes['available.condition']){
+					   
+					   isHidden = true;
+					}
+					
 					if(fd.attributes['available.when']){
-						return (fd.attributes['available.when'][this.when]==null);
+						if(fd.attributes['available.when'][metaworksContext.when] != null)
+							isHidden = false;
 					} 
 					
 					if(fd.attributes['available.where']){
-						return (fd.attributes['available.where'][this.where]==null);
+						if(fd.attributes['available.where'][metaworksContext.where] != null)
+							isHidden = false;
 					} 
 
 					if(fd.attributes['available.how']){
-						return (fd.attributes['available.how'][this.how]==null);
+						if(fd.attributes['available.how'][metaworksContext.how] != null)
+							isHidden = false;
 					} 
 
 					if(fd.attributes['available.condition'] && object){
 						for(var key in fd.attributes['available.condition']){
 							var condition = fd.attributes['available.condition'][key]; 
 							var validateCondition = true;
+							
 			    			if(condition != null){
 			    				with(object)
-			    					validateCondition = !eval(condition);
+			    					validateCondition = eval(condition);
 			    			}			
 			    			
-			    			if(!validateCondition)
-			    				return validateCondition;
+			    			if(validateCondition)
+			    				isHidden = false;
 						}
-						
-						return true;
 					}					
-					
-					if(fd.attributes['hidden'] || this.when == '___hidden___') 
-						return true;
-										
 				} 
 				
-				return false;
+				return isHidden;
 			};
 			
 			Metaworks3.prototype.isHiddenMethod = function(method){
-				/*
-				if(method.methodContext.when != mw3.WHEN_EVER){
-		   			if( (mw3.when && (method.methodContext.when.indexOf(mw3.when) == -1) ) 
-		   					||
-			   			(mw3.where && (method.methodContext.where!='wherever' && method.methodContext.where.indexOf(mw3.where) == -1) )
-			   				
-		   			)
-	   				return true;
-				}
-				*/
-				
 				return this.isHiddenMethodContext(method.methodContext, method.object);
 			};
 			
 			Metaworks3.prototype.isHiddenMethodContext = function(methodContext, object){
+				var isHidden = false;
+			
+				var metaworksContext = this.objectContexts[object.__objectId]['__metaworksContext'];
 				
 				if(methodContext.attributes){
 					if(methodContext.attributes['hidden.when']){
-						return (methodContext.attributes['hidden.when'][this.when]!=null);
+						if(methodContext.attributes['hidden.when'][metaworksContext.when]!=null);
+							isHidden = true;
 					} 
 					
 					if(methodContext.attributes['hidden.where']){
-						return (methodContext.attributes['hidden.where'][this.where]!=null);
+						if(methodContext.attributes['hidden.where'][metaworksContext.where]!=null)
+							isHidden = true;
 					} 
 	
 					if(methodContext.attributes['hidden.how']){
-						return (methodContext.attributes['hidden.how'][this.how]!=null);
+						if(methodContext.attributes['hidden.how'][metaworksContext.how]!=null)
+							isHidden = true;
 					}
+					
+					if(methodContext.attributes['hidden']) 
+						isHidden = true;
+					
 				}
-								
+
+				if((methodContext.when && methodContext.when.indexOf('whenever|') == -1) || 
+				   (methodContext.where && methodContext.where.indexOf('wherever|') == -1) || 
+				   (methodContext.how) || 
+				   (methodContext.attributes && methodContext.attributes['available.condition'])){
+				 	
+					isHidden = true;
+				}
+				
 				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
-					if(methodContext.when.indexOf(mw3.when + '|') == -1)
-						return true;						
+					if(methodContext.when.indexOf(metaworksContext.when + '|') > -1)
+						isHidden = false;						
 				}
 				
 				if(methodContext.where != null && methodContext.where.indexOf('wherever|') == -1){
-					if(methodContext.where.indexOf(mw3.where + '|') == -1)
-						return true;						
+					if(methodContext.where.indexOf(metaworksContext.where + '|') > -1)
+						isHidden = false;						
 				}
 
 				if(methodContext.how != null){
-					if(methodContext.how.indexOf(mw3.how + '|') == -1)
-						return true;						
+					if(methodContext.how.indexOf(metaworksContext.how + '|') > -1)
+						isHidden = false;						
 				}
 				
 				if(methodContext.attributes && methodContext.attributes['available.condition'] && object){
@@ -3199,40 +3305,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						var validateCondition = true;
 		    			if(condition != null){
 		    				with(object)
-		    					validateCondition = !eval(condition);
+		    					validateCondition = eval(condition);
 		    			}			
-		    			
-		    			if(!validateCondition)
-		    				return validateCondition;
+						
+		    			if(validateCondition){
+		    				isHidden = false;
+		    			}
 					}
-					
-					return true;
 				}
 				
-				return false;				
-			}
-			
-			Metaworks3.prototype.isHiddenMethodForCache = function(cacheContext, methodContext){
-				
-				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
-					if(methodContext.when.indexOf(cacheContext.when + '|') == -1)
-						return true;						
-				}
-				
-				if(methodContext.where != null && methodContext.where.indexOf('wherever|') == -1){
-					if(methodContext.where.indexOf(cacheContext.where + '|') == -1)
-						return true;						
-				}
-
-				if(methodContext.how != null){
-					if(methodContext.how.indexOf(cacheContext.how + '|') == -1)
-						return true;						
-				}
-								
-				if(methodContext.when == '___hidden___')
-					return true;
-
-				return false;				
+				return isHidden;				
 			}
 			
 			Metaworks3.prototype.validationCondition = function (validator, object){
@@ -3637,7 +3719,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   		var methodContext = metadata.serviceMethodContextMap[methodName];
 			   	
 			   		//console.log('try : ' + methodName);
-				    if(mw3.isHiddenMethodForCache(mw3.metaworksContexts[objectId], methodContext) && !methodContext.bindingHidden)
+		
+				    if(mw3.isHiddenMethodContext(methodContext, object) && !methodContext.bindingHidden)
 					   continue;
 
 				    //console.log('pass : ' + methodName);
@@ -3672,6 +3755,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   							}
 	   							
 	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
+	   								event.stopPropagation();
+	   								
 	   								eval(event.data.command);
 	   							});
 	   						}
@@ -3708,7 +3793,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		   					which = 3;
 		   				else if(methodContext.mouseBinding == "left")
 		   					which = 1;
-
+						
 		   				if(methodContext.mouseBinding == "drag" || methodContext.mouseBinding == "drag-enableDefault"){
 		   					if(faceHelper && faceHelper.draggable){
 		   						faceHelper.draggable(command);
@@ -3778,17 +3863,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   			 				
 		   					var mouseup = function(e) {
 		   			 			
-		   			 			if(e.which == which){
+		   			 			if(e.which == e.data.which){
 			   				    	mw3.mouseX = e.pageX;
 			   		    			mw3.mouseY = e.pageY;
-		   			 				
+		   			 			
 			   						eval(this['mouseCommand' + e.which]);
 			   									   						
-		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+		   			 				//e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
 		   			 			}
 		   			 		};
 		   			 		
-		   			 		$(theDiv[0]).bind('mouseup', mouseup);
+		   			 		$(theDiv[0]).bind('mouseup', {which: which}, mouseup);
 		   				}
 		   				
 		   				
@@ -3854,7 +3939,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   if(menuItems.length){
 					   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
 						   YAHOO.util.Event.onContentReady(targetDivId, function () {
-							   new YAHOO.widget.ContextMenu(
+						   console.log("_contextmenu_" + objectId);
+						   
+							    var menu = new YAHOO.widget.ContextMenu(
 									"_contextmenu_" + objectId,
 									{
 										zindex: 2000,
@@ -3870,7 +3957,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   }
 			   }		
 			}
-			
+
+			Metaworks3.prototype.showContextMenu = function(objId){
+		   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objId);
+		   		
+		   		var xy = YAHOO.util.Event.getXY(event);
+		   		menu.cfg.setProperty("xy", xy);
+				menu.show();													
+			}
+						
 			Metaworks3.prototype.showPopop = function(objId, serviceMethodContext, result){
 				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='position: absolute; z-index:10; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 				
@@ -3944,7 +4039,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			
 			FieldRef.prototype.here = function(context){
-				if(mw3.isHidden(this.fieldDescriptor))					
+				if(mw3.isHidden(this))					
 					return "";
 				
 				var html;
@@ -4421,5 +4516,18 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 	};
 
 };
-			
-			
+
+var MetaworksListener = {
+	listenerList : [],
+	
+	addListener : function(){
+		
+	},
+	
+	init : function(){
+		document.body.addEventListener("DOMNodeInserted", function (ev) {
+			//console.log('DOMNodeInserted');
+			//console.log(ev);
+		});		
+	}	
+}
