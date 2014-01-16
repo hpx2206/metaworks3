@@ -13,6 +13,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.common.MetaworksUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
@@ -375,10 +376,11 @@ public class User extends Database<IUser> implements IUser {
 	public Object[] showWall() throws Exception{
 		
 		session.setLastSelectedItem(getUserId());
+		
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		
-		return new Object[]{personalPerspective.loadAllICanSee()};
+		return new Object[]{MetaworksUtil.makeRefreshObjectArray(personalPerspective.load(Perspective.TYPE_NEWSFEED))};
 	}
 	
 		

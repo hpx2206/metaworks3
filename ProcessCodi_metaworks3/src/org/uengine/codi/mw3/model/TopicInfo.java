@@ -19,6 +19,6 @@ public class TopicInfo extends GroupInfo{
 	
 	@Override
 	public Object[] remove() throws Exception {
-		return MetaworksUtil.putObjectArray(super.remove(), new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE));
+		return MetaworksUtil.putObjectArray(MetaworksUtil.makeRefreshObjectArray(super.remove()), new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE));
 	}	
 }

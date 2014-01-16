@@ -1050,3 +1050,7 @@ alter table emptable modify column locale varchar(10);
 
 alter table bpm_procinst add column lastcmntTaskId int(11);
 alter table bpm_procinst add column lastcmnt2TaskId int(11);
+
+
+-- 역할 이름 추가( 민수환 )
+alter table roletable add column roleName varchar(100);
