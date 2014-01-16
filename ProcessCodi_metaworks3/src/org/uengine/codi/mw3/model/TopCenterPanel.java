@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Order;
 import org.uengine.codi.mw3.admin.WindowPanel;
 import org.uengine.codi.mw3.menu.MainMenuTop;
 
@@ -24,6 +25,7 @@ public class TopCenterPanel implements ContextAware {
 		}
 
 	Tray tray;
+		@Order(value=2)
 		@Available(how=HOW_TRAY)
 		public Tray getTray() {
 			return tray;
@@ -33,6 +35,7 @@ public class TopCenterPanel implements ContextAware {
 		}
 	
 	WindowPanel windowPanel;
+		@Order(value=1)
 		@Available(how=HOW_TRAY)
 		public WindowPanel getWindowPanel() {
 			return windowPanel;

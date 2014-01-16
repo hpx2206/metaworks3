@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
@@ -11,6 +12,7 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
+@Face(ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
 public interface IContact extends IDAO{
 	
 	public final static String HOW_PICK 					= "contact_pick";

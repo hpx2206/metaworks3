@@ -25,7 +25,8 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 		"{how: '" + Perspective.TYPE_COMMINGTODO + "', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_commingTodo.ejs'}",
 		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}",
 		"{where: 'dashboard', face: 'dwr/metaworks/org/uengine/oce/dashboard/IInstance_dashboard.ejs'}"
-	}		
+	},
+	ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs"
 )
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
