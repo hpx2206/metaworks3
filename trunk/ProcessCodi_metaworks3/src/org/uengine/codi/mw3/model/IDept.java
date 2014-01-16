@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import javax.persistence.GeneratedValue;
+import javax.validation.constraints.NotNull;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
@@ -25,8 +26,8 @@ public interface IDept extends IDAO {
 	public void setPartCode(String partCode);
 
 	@Name
+	@NotNull(message="부서 이름을 입력해주세요.")
 	public String getPartName();
-
 	public void setPartName(String partName);
 
 	public String getParent_PartCode();
@@ -105,7 +106,7 @@ public interface IDept extends IDAO {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object editDeptInfo() throws Exception;
 
-	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND, validate=true) 
 	public Object[] saveDeptInfo() throws Exception;
 
 	@ServiceMethod(needToConfirm=true , target=ServiceMethodContext.TARGET_APPEND)

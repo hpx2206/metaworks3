@@ -58,7 +58,7 @@ public class DeptInfo extends FollowerPerspectiveInfo{
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
 		
-		return MetaworksUtil.putObjectArray(super.remove(), new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE));
+		return MetaworksUtil.putObjectArray(MetaworksUtil.makeRefreshObjectArray(super.remove()), new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE));
 	}
 	/*
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)

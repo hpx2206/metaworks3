@@ -51,7 +51,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Popup detail() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] showWall() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
@@ -91,6 +91,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(mouseBinding="drag", payload={"userId", "name"})
 	public Session drag();
 
+	@Available(where={MW3_WHERE_ROLEUSER_PICKER_CALLER, MW3_WHERE_ROLEUSER_PICKER})
 	@ServiceMethod(mouseBinding="drop")
 	public void drop();
 	
