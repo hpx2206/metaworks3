@@ -2149,7 +2149,7 @@ select.select[class] {
 .west_more_btn {
 	position:absolute;
 	right:10px;
-	top:12px;
+	top:10px;
 	font-size:11px;
 	display:none;
 }
