@@ -4,13 +4,13 @@ import org.metaworks.EventContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
-import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.kernel.Role;
 
 public class Follower extends Database<IFollower> implements IFollower {	
@@ -153,7 +153,7 @@ public class Follower extends Database<IFollower> implements IFollower {
 		// 본인 이외에 다른 사용자에게 push
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
-				new Object[]{this});
+				new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
 	}
-	
+
 }

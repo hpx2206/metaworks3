@@ -829,10 +829,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		IInstance instanceRef = null;		
 		
 		
-		IUser writer = new User();
+		
 		if( this.getWriter() == null || (this.getWriter() != null && this.getWriter().getUserId() == null)){
+			IUser writer = new User();
 			writer.setUserId(session.getUser().getUserId());
 			writer.setName(session.getUser().getName());
+			
 			this.setWriter(writer);
 		}
 		
@@ -935,9 +937,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				InstanceFollower follower = new InstanceFollower(instance.getInstId().toString());
 				follower.session = session;
-				if(follower.find() == null){
-					follower.push();
-				}
+				follower.setUser(this.getWriter());
+				
+				if(follower.find() == null)
+					follower.put();
 			}
 
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
@@ -1045,9 +1048,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		this.getMetaworksContext().setWhen(WHEN_VIEW);
 		this.getWriter().setMetaworksContext(this.getMetaworksContext());
 
-		final IWorkItem copyOfThis = this;
-		final IInstance copyOfInstance = instance;
-
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			// 인스턴스 발행
@@ -1066,6 +1066,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			returnObjects = new Object[]{new Refresh(this, true)};
 		}
 		
+		final IWorkItem copyOfThis = this;
+		final IInstance copyOfInstance = instance;
+
 		// 자기 자신의 인스턴스 리스트를 새로고침
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
 

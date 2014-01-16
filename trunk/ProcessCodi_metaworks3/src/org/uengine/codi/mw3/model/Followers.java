@@ -128,9 +128,8 @@ public class Followers implements ContextAware {
 		if(clipboard instanceof IUser){
 			User newFollowUser = (User)clipboard;
 		
+			this.getFollower().session = session;
 			this.getFollower().put(newFollowUser);
-			
-			return new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CHANGE);
 		}
 		
 		return null;

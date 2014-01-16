@@ -18,6 +18,7 @@ public class TopicFollower extends Follower {
 		// not exist save topicmapping
 		if( !tm.findByUser().next() ){
 			tm.saveMe();
+			this.push();
 		}
 	}
 
@@ -29,6 +30,7 @@ public class TopicFollower extends Follower {
 		tm.setUserName(user.getName());
 		
 		tm.removeMe();
+		this.push();
 	}
 	
 	@Override
