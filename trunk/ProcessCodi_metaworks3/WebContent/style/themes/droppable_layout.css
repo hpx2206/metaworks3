@@ -3135,8 +3135,9 @@ font-size:20px;
 .fontgray{ color:#7F7F7F; line-height:15px;display:block; overflow:hidden;    white-space:nowrap;    text-overflow:ellipsis;    -o-text-overow: ellipsis;}
 .tabs-2 ul li{ padding:3px;}
 
-.user{margin:3px 0; cursor:pointer;}
 
+.user{margin:3px 0; cursor:pointer;}
+.adduserline .user{margin-bottom:5px;}
 
 /* UI Object */
 .lst_type{width:580px;padding:10px;border:1px solid #c2c2c2;list-style:none}
