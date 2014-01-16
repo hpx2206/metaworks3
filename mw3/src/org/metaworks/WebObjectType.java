@@ -446,8 +446,6 @@ public class WebObjectType{
 					
 				*/
 				
-				fd.setAttribute("hidden", hidden.on());
-				
 				if(hidden.when().length > 0){
 					Map whens = new HashMap();
 					for(String when : hidden.when()){
@@ -483,6 +481,9 @@ public class WebObjectType{
 					
 					fd.setAttribute("hidden.media", medias);
 				}
+				
+				if(hidden.when().length == 0 && hidden.where().length == 0 && hidden.how().length == 0 && hidden.media().length == 0)
+					fd.setAttribute("hidden", hidden.on());
 			}
 
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), AutowiredToClient.class)!=null)
@@ -1141,9 +1142,8 @@ public class WebObjectType{
 						smc.attributes.put("hidden.how", hows);
 					}
 					
-					if(hidden.on() && hidden.when().length == 0 && hidden.where().length == 0 && hidden.how().length == 0)
-						smc.setWhen("___hidden___");					
-
+					if(hidden.when().length == 0 && hidden.where().length == 0 && hidden.how().length == 0)
+						smc.attributes.put("hidden", hidden.on());
 				}
 
 				if(available!=null && available.condition().length > 0){
