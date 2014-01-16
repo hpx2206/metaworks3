@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import javax.persistence.GeneratedValue;
+
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -13,7 +15,9 @@ import org.metaworks.website.MetaworksFile;
 
 @Table(name="roletable")
 public interface IRole extends IDAO {
+	
 	@Id
+	@GeneratedValue
 	public String getRoleCode();
 	public void setRoleCode(String roleCode);
 
@@ -42,6 +46,10 @@ public interface IRole extends IDAO {
 	@Hidden
 	public boolean isSelected();
 	public void setSelected(boolean selected);
+	
+	
+	public String getRoleName();
+	public void setRoleName(String roleName);
 	
 	@NonLoadable
 	@NonSavable

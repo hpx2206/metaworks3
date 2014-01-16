@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -9,6 +12,8 @@ import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.website.MetaworksFile;
 
 public class Role extends Database<IRole> implements IRole {
@@ -29,14 +34,14 @@ public class Role extends Database<IRole> implements IRole {
 			this.roleCode = roleCode;
 		}
 
-	String name;
-		public String getName() {
-			return name;
+	String roleName;
+		public String getRoleName() {
+			return roleName;
 		}
-		public void setName(String name) {
-			this.name = name;
+		public void setRoleName(String roleName) {
+			this.roleName = roleName;
 		}
-	
+
 	String url;
 		public String getUrl() {
 			return url;
@@ -195,9 +200,11 @@ public class Role extends Database<IRole> implements IRole {
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			
 			//역할 중복 검사
-			Role role = new Role();
-			role.setRoleCode(this.getRoleCode());
-			IRole findRole = role.findByCode();
+//			Role role = new Role();
+//			role.setRoleName(this.getRoleName());
+//			role.setComCode(session.getEmployee().getGlobalCom());
+			
+			IRole findRole = this.findByName();
 			
 			if(findRole != null)
 				throw new Exception("$DuplicateName");
@@ -214,6 +221,13 @@ public class Role extends Database<IRole> implements IRole {
 				this.setUrl(this.getLogoFile().getUploadedPath());
 				this.setThumbnail(this.getLogoFile().getFilename());
 			}
+			
+			Map options = new HashMap();
+			options.put("onlySequenceTable", true);
+			
+			Long genKey = UniqueKeyGenerator.issueKey("RoleTable", options, TransactionContext.getThreadLocalInstance());
+			
+			this.setRoleCode(genKey.toString());
 			
 			createDatabaseMe();
 			flushDatabaseMe();
@@ -234,7 +248,7 @@ public class Role extends Database<IRole> implements IRole {
 		}
 		
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, getRoleCode());
-		instanceListPanel.setTitle("역할 : " + this.getRoleCode());
+		instanceListPanel.setTitle("역할 : " + this.getRoleName());
 		
 		return new Object[]{new Refresh(session),
 							new Refresh(new ListPanel(instanceListPanel, new RoleInfo(session))),
@@ -351,10 +365,37 @@ public class Role extends Database<IRole> implements IRole {
 	}
 	
 	
+	public IRole findByName() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from roleTable ");
+		sb.append("where roleName=?roleName ");
+		sb.append("and comCode=?comCode ");
+		sb.append("and isDeleted='0'");
+		
+		IRole dao = null;
+		
+		try {
+			dao = sql(sb.toString());
+			dao.setRoleName(this.getRoleName());
+			dao.setComCode(this.getComCode());
+			dao.select();
+			
+			if(!dao.next())
+				dao = null;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return dao;
+	}
+	
 	public IRole findByCode() throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from roleTable ");
 		sb.append("where rolecode=?rolecode ");
+		sb.append("and comCode=?comCode ");
 		sb.append("and isDeleted='0'");
 		
 		IRole dao = null;
@@ -362,6 +403,7 @@ public class Role extends Database<IRole> implements IRole {
 		try {
 			dao = sql(sb.toString());
 			dao.setRoleCode(this.getRoleCode());
+			dao.setComCode(session.getEmployee().getGlobalCom());
 			dao.select();
 			
 			if(!dao.next())
