@@ -10,6 +10,9 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.metaworks.common.MetaworksUtil;
+import org.metaworks.dao.Database;
+import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
@@ -34,94 +37,27 @@ public class CommentWorkItem extends WorkItem{
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] add() throws Exception {
 		
-		Object[] returnObjects = null;
-		Long prevInstId = this.getInstId();
-
-		// TODO: 우선 추가 모드 일때만 작업
-		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			// defId setting
-			if(getActivityAppAlias()!=null){
-				StringTokenizer tokenizer = new StringTokenizer(this.getTitle());
-				String connector = null;
-				
-				if(getParameters()!=null){
-					StringBuffer generatedTitle = new StringBuffer();
-					
-					int substringDelimiter = 0;
-					for(ParameterValue pv : getParameters()){
-						connector = tokenizer.nextToken("$").substring(substringDelimiter);
-						tokenizer.nextToken(">");
-						
-						generatedTitle.append(connector).append(pv.getValueObject());
-						
-						substringDelimiter=1;
-					}
-					
-					this.setTitle(generatedTitle.append(tokenizer.nextElement()).toString());
-				}
-				
-				String newInstId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
-				
-				if(getParameters()!=null){	
-					for(ParameterValue pv : getParameters()){
-						Serializable valueObject = (Serializable)pv.getValueObject();
-						
-						processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
-					}
-				}
-				
-				RoleMapping rm = RoleMapping.create();
-				if(session.getUser() != null){
-					rm.setName("Initiator");
-					rm.setEndpoint(session.getUser().getUserId());
-					
-					processManager.putRoleMapping(newInstId, rm);
-				}
-				
-				processManager.setLoggedRoleMapping(rm);
-				
-				
-				ProcessInstance instanceObject = processManager.getProcessInstance(newInstId);
-				
-				EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
-				ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
-				
-				instanceDAO.set("initComCd", session.getCompany().getComCode());
-
-				//means sub process
-				if(this.getInstId() != null ){				
-					instanceDAO.setRootInstId(new Long(getInstId()));
-					this.setRootInstId(this.getInstId());
-				}
-				
-				this.setInstId(new Long(newInstId));
-
-				processManager.executeProcess(newInstId);
-				
-				instanceDAO.set("InitEp", session.getUser().getUserId());
-				instanceDAO.set("InitRsNm", session.getUser().getName());
-
-				//when newly creating process instance, there must be at least one or more rolemapping. so if there's no rolemapping has been defined by running process, add one implicitly.
-				if(prevInstId == null){
-					IRoleMapping roleMapping = new org.uengine.codi.mw3.model.RoleMapping().auto();
-					roleMapping.setRootInstId(new Long(newInstId));
-					roleMapping.select();
-					
-					if(!roleMapping.next()){
-						processManager.putRoleMapping(newInstId, rm);
-					}
-				}
-				
-				processManager.applyChanges();
-			}
+		// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
+		if(this.getTitle().length() > TITLE_LIMIT_SIZE){
+			this.setType(WORKITEM_TYPE_MEMO);
+			
+			Class type = MetaworksUtil.getDesiredTypeByTypeSelector(this);
+			if(type == null)
+				throw new Exception("can't convert CommentWorkItem to MemoWorkItem");
+			
+			WorkItem workItem = (WorkItem)MetaworksUtil.cast(this, type);
+			
+			
+			workItem.processManager = processManager;
+			workItem.session = session;
+			workItem.setContent(getTitle());
+			workItem.setTitle(getTitle().substring(0, TITLE_LIMIT_SIZE) + "...");
+			workItem.setMemo(new WebEditor(this.getContent()));
+			
+			return workItem.add();
+		}else{
+			return super.add();
 		}
-		
-
-		IInstance instance = this.save();
-		
-		returnObjects = super.makeReturn(prevInstId, instance);
-		
-		return returnObjects;
 	}
 	
 	@Test(scenario="first", starter=true, instruction="$first.NewActivity", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
