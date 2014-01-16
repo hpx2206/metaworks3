@@ -15,7 +15,7 @@
 				var fd = objectMetadata.fieldDescriptors[i];
 					
 				if(fd.name == 'metaworksContext') continue;							
-				if(mw3.isHidden(fd)) continue;
+				if(mw3.isHidden(fields[fd.name])) continue;
 					
 				fieldOrder.push(fd.name);				
 			}
