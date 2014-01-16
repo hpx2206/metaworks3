@@ -197,17 +197,17 @@ public class Role extends Database<IRole> implements IRole {
 			this.getLogoFile().upload();
 		}
 		
+		//역할 중복 검사
+//		Role role = new Role();
+//		role.setRoleName(this.getRoleName());
+//		role.setComCode(session.getEmployee().getGlobalCom());
+		
+		IRole findRole = this.findByName();
+		
+		if(findRole != null)
+			throw new Exception("$DuplicateName");
+		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
-			
-			//역할 중복 검사
-//			Role role = new Role();
-//			role.setRoleName(this.getRoleName());
-//			role.setComCode(session.getEmployee().getGlobalCom());
-			
-			IRole findRole = this.findByName();
-			
-			if(findRole != null)
-				throw new Exception("$DuplicateName");
 			
 			// 생성
 			this.setComCode(session.getCompany().getComCode());
@@ -237,6 +237,15 @@ public class Role extends Database<IRole> implements IRole {
 			roleUser.setEmpCode(session.getEmployee().getEmpCode());
 			roleUser.createDatabaseMe();
 			roleUser.flushDatabaseMe();
+			
+			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, getRoleCode());
+			instanceListPanel.setTitle("역할 : " + this.getRoleName());
+			
+			return new Object[]{new Refresh(session),
+								new Refresh(new ListPanel(instanceListPanel, new RoleInfo(session))),
+								new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), 
+								new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+			
 		} else {
 			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
 				this.setUrl(this.getLogoFile().getUploadedPath());
@@ -245,15 +254,10 @@ public class Role extends Database<IRole> implements IRole {
 			
 			syncToDatabaseMe();
 			flushDatabaseMe();
+			
+			return new Object[]{new ToEvent(new RolePerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		}
 		
-		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, getRoleCode());
-		instanceListPanel.setTitle("역할 : " + this.getRoleName());
-		
-		return new Object[]{new Refresh(session),
-							new Refresh(new ListPanel(instanceListPanel, new RoleInfo(session))),
-							new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), 
-							new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 
 	@Override
@@ -358,7 +362,7 @@ public class Role extends Database<IRole> implements IRole {
 		Locale locale = new Locale(session);
 		locale.load();
 		
-		String title = locale.getString("$Role") + " - " + this.getRoleCode();
+		String title = locale.getString("$Role") + " - " + this.getRoleName();
 		session.setWindowTitle(title);
 		
 		return new Object[]{session,  new ListPanel(instanceListPanel, roleInfo)};
@@ -377,7 +381,7 @@ public class Role extends Database<IRole> implements IRole {
 		try {
 			dao = sql(sb.toString());
 			dao.setRoleName(this.getRoleName());
-			dao.setComCode(this.getComCode());
+			dao.setComCode(session.getEmployee().getGlobalCom());
 			dao.select();
 			
 			if(!dao.next())
