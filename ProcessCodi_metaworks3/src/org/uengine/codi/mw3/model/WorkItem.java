@@ -4,16 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
@@ -30,19 +25,15 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
-import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
-import org.uengine.persistence.processinstance.ProcessInstanceDAO;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.search.solr.SolrData;
@@ -828,6 +819,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.notReturn = notReturn;
 		}
 
+		
+	private boolean changeFollower = false;
+	
 	public IInstance save() throws Exception {
 		
 		boolean isNewInstance = false;
@@ -840,6 +834,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			writer.setUserId(session.getUser().getUserId());
 			writer.setName(session.getUser().getName());
 			this.setWriter(writer);
+		}
+		
+		String title = this.getTitle();
+		if(title.length() > TITLE_LIMIT_SIZE){
+			title = title.substring(0, TITLE_LIMIT_SIZE) + "...";
 		}
 
 		// 추가
@@ -914,10 +913,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus(WORKITEM_STATUS_RUNNING);									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				String title = this.getTitle();
-				if(title.length() > TITLE_LIMIT_SIZE){
-					title = title.substring(0, TITLE_LIMIT_SIZE) + "...";
-				}
 				instanceRef.setName(title);
 				if(this.getFolderId() != null){
 					instanceRef.setTopicId(this.getFolderId());
@@ -937,32 +932,32 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				if(this.getDueDate()!= null)
 					instanceRef.setDueDate(this.getDueDate());
+				
+				InstanceFollower follower = new InstanceFollower(instance.getInstId().toString());
+				follower.session = session;
+				if(follower.find() == null){
+					follower.push();
+				}
 			}
 
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
+			instanceRef.setStatus(WORKITEM_STATUS_RUNNING);
 			
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
-			
+
 			if(!isNewInstance){
-				//마지막 워크아이템의 제목을 인스턴스의 적용
-				String lastCmnt = instanceRef.getLastCmnt();
-				// title 이 LASTCMT_LIMIT_SIZE 보다 크다면 사이즈를 조절함
-				String cmntTitle = this.getTitle();
-				if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
-					cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
-				}
-				
 				if(WORKITEM_TYPE_FILE.equals(this.getType()) || WORKITEM_TYPE_DOCUMENT.equals(this.getType()) || WORKITEM_TYPE_GENERIC.equals(this.getType()))
 					instanceRef.setIsFileAdded(true);
-				
-				if(lastCmnt == null){
-					instanceRef.setLastCmnt(cmntTitle);
+
+				//마지막 워크아이템의 제목을 인스턴스의 적용
+				if(instanceRef.getLastCmnt() == null){
+					instanceRef.setLastCmnt(title);
 					instanceRef.setLastCmntUser(session.getUser());
 					instanceRef.setLastcmntTaskId(this.getTaskId());
 				}else{
 					if(instanceRef.getLastCmnt2() == null){
-						instanceRef.setLastCmnt2(cmntTitle);
+						instanceRef.setLastCmnt2(title);
 						instanceRef.setLastCmnt2User(session.getUser());
 						instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					}else {
@@ -970,7 +965,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
 						instanceRef.setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
 						
-						instanceRef.setLastCmnt2(cmntTitle);
+						instanceRef.setLastCmnt2(title);
 						instanceRef.setLastCmnt2User(session.getUser());
 						instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					}
@@ -988,7 +983,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 			}
 			
-			
 			if(this.getTitle() == null && WORKITEM_TYPE_FILE.equals(this.getType()) ||
 					this.getTitle() == null && WORKITEM_TYPE_GENERIC.equals(this.getType()))
 				this.setTitle(new String(this.getFile().getFilename()));
@@ -997,32 +991,27 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
 			this.setStatus(WORKITEM_STATUS_FEED);
-			this.setIsDeleted(false);			
+			this.setIsDeleted(false);		
+			
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
 			
 			this.createDatabaseMe();
-			Instance tempInstance = new Instance();
-			tempInstance.setInstId(this.getInstId());
-			tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
+			
+			
 		// 수정
 		}else{
 			instance = new Instance();
 			instance.setInstId(this.getInstId());
 			
 			instanceRef = instance.databaseMe();
-			String cmntTitle = this.getTitle();
-			if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
-				cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
-			}
+			
 			if( instanceRef.getLastcmntTaskId() != null && instanceRef.getLastcmntTaskId().equals(this.getTaskId()) ){
-				instanceRef.setLastCmnt(cmntTitle);
+				instanceRef.setLastCmnt(title);
 			}else if( instanceRef.getLastcmnt2TaskId() != null && instanceRef.getLastcmnt2TaskId().equals(this.getTaskId()) ){
-				instanceRef.setLastCmnt2(cmntTitle);
+				instanceRef.setLastCmnt2(title);
 			}
 			
-//			this.copyFrom(databaseMe());
-//			this.databaseMe();
 			this.syncToDatabaseMe();
 		}		
 		
@@ -1039,36 +1028,28 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public Object[] makeReturn(Long prevInstId, IInstance instanceRef) throws Exception {
 		
 		Object[] returnObjects = null;
-		String mood = null;
-		
-		if(session.getEmployee() != null)
-			mood = session.getEmployee().getPreferUX();
-		
-		this.getMetaworksContext().setHow(mood);
 		
 		Instance instance = new Instance();
 		instance.copyFrom(instanceRef);
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
 		instance.flushDatabaseMe();
-		
+
+		// 주제 제목 설정
+		if(instance.getTopicId() != null){
+			TopicNode topic = new TopicNode();
+			topic.setId(instance.getTopicId());
+			instance.setTopicName(topic.databaseMe().getName());
+		}
+
+		this.getMetaworksContext().setWhen(WHEN_VIEW);
+		this.getWriter().setMetaworksContext(this.getMetaworksContext());
+
+		final IWorkItem copyOfThis = this;
+		final IInstance copyOfInstance = instance;
+
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
-			this.getMetaworksContext().setWhen(WHEN_VIEW);
-			this.getWriter().setMetaworksContext(this.getMetaworksContext());
-			if( session.getLastPerspecteType() != null && TopicNode.TOPIC.equals(session.getLastPerspecteType())){
-				TopicNode topic = new TopicNode();
-				topic.setId(session.getLastSelectedItem());
-				topic.copyFrom(topic.databaseMe());
-				instance.setTopicName(topic.getName());
-			}
-			final IWorkItem copyOfThis = this;
-			final IInstance copyOfInstance = instance;
-			copyOfInstance.fillFollower();
-			
-			// TODO: 문제있음 수정해야함
-			copyOfInstance.getMetaworksContext().setWhen("blinking");
-			
 			// 인스턴스 발행
 			if(prevInstId == null){
 				Object detail = instance.detail();
@@ -1077,240 +1058,41 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
 			    		 				      new Refresh(detail),
 			    		 				      new Refresh(upcommingTodoPerspective)};
-			// 덧글
-			}else{
-				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
-				
-				if(this instanceof OverlayCommentWorkItem){
-					WorkItem parentWorkItem = new WorkItem();
-					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
-					
-					returnObjects = new Object[]{new ToAppend(parentWorkItem, this)};
-					
-				}else if(this instanceof CommentWorkItem){		
-					if("memo".equals(this.getType())){
-						MemoWorkItem memo = new MemoWorkItem();						
-						memo.copyFrom(this);
-						memo.setMemo(new WebEditor(this.getContent()));
-
-						returnObjects = new Object[]{new Refresh(memo, false, true)};
-					}else{
-						returnObjects = new Object[]{new Refresh(this, false, true)};	
-					}
-				}else if(this instanceof GenericWorkItem){
-					CommentWorkItem commentWorkItem = new CommentWorkItem();
-					commentWorkItem.setInstId(this.getInstId());
-					commentWorkItem.setWriter(session.getUser());
-					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
-				}else if(this instanceof FileWorkItem){
-					DocWorkItem docWorkItem = new DocWorkItem();
-					docWorkItem.setInstId(this.getInstId());
-					docWorkItem.getMetaworksContext().setHow("document");
-					
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(docWorkItem)};
-				}else{
-					CommentWorkItem commentWorkItem = new CommentWorkItem();
-					commentWorkItem.setInstId(this.getInstId());
-					commentWorkItem.setWriter(session.getUser());
-					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
-				}
-				
-				//MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
-			
-			HashMap<String, String> notiUsers = new HashMap<String, String>();
-			
-			// TODO : follower 처리햐아함
-			// 팔로워들에게 알림처리
-			// 부서로 추가된 팔로워들의 userId 를 가져온다.
-//			IDept deptFollower = instanceFollowers.getDeptFollowers();
-//			if(deptFollower != null){
-//				deptFollower.beforeFirst();
-//				while(deptFollower.next()){
-//					HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptFollower.getPartCode());
-//					
-//					if(deptSessionList != null)
-//						notiUsers.putAll(deptSessionList);
-//				}
-//			}
-			
-			// TODO : follower 작업해야함
-			/*
-			// 유저로 추가된 팔로워 알림 처리
-			IUser followers = instanceFollowers.getFollowers();
-			if(followers != null){
-				followers.beforeFirst();
-				
-				while(followers.next()){
-					if(session.getUser().getUserId().equals(followers.getUserId()))
-						continue;
-					
-					notiUsers.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()));
-					if(notiUsers.containsKey(followers.getUserId().toUpperCase())){
-						notiUsers.remove(followers.getUserId().toUpperCase());
-					}
-					notiUsers.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()) );
-				}
-			}
-			*/
-			
-			//같은 조직인 사람에게 알림 처리
-//			IUser deptEmployee = deptFollowers.getFollowers();
-//			if(deptEmployee != null){
-//				deptEmployee.beforeFirst();
-//				
-//				while(deptEmployee.next()){
-//					if(session.getUser().getUserId().equals(deptEmployee.getUserId()))
-//						continue;
-//					
-//					notiUsers.put(deptEmployee.getUserId() , Login.getSessionIdWithUserId(deptEmployee.getUserId()));
-//					if(notiUsers.containsKey(deptEmployee.getUserId().toUpperCase())){
-//						notiUsers.remove(deptEmployee.getUserId().toUpperCase());
-//					}
-//					notiUsers.put(deptEmployee.getUserId() , Login.getSessionIdWithUserId(deptEmployee.getUserId()) );
-//				}
-//			}
-			
-			//주제에 추가된 팔로워 알림 처리		
-			if(copyOfInstance.getTopicId() != null){
-				TopicMapping tm = new TopicMapping();
-				tm.setTopicId(copyOfInstance.getTopicId());
-				IUser topicFollower = tm.findUser();
-				if(topicFollower != null){
-					topicFollower.beforeFirst();
-					
-					while(topicFollower.next()){
-						if(session.getUser().getUserId().equals(topicFollower.getUserId()))
-							continue;
-						
-						notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()));
-						if(notiUsers.containsKey(topicFollower.getUserId().toUpperCase())){
-							notiUsers.remove(topicFollower.getUserId().toUpperCase());
-						}
-						notiUsers.put(topicFollower.getUserId() , Login.getSessionIdWithUserId(topicFollower.getUserId()) );
-					}
-				}
-				
-				// 부서로 주제에 추가된 팔로워들의 userId 를 가져온다.
-				IDept deptTopicFollower = tm.findDept();
-				HashMap<String, String> notiTopicUsers = new HashMap<String, String>();
-				if(deptTopicFollower != null){
-					deptTopicFollower.beforeFirst();
-					while(deptTopicFollower.next()){
-						HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptTopicFollower.getPartCode());
-						
-						if(deptSessionList != null)
-							notiTopicUsers.putAll(deptSessionList);
-					}
-				}
-			}
-			// noti 저장
-			Iterator<String> iterator = notiUsers.keySet().iterator();
-			while(iterator.hasNext()){
-				String followerUserId = (String)iterator.next();
-				Notification noti = new Notification();
-				INotiSetting notiSetting = new NotiSetting();
-				INotiSetting findResult = notiSetting.findByUserId(followerUserId);
-//				findResult.next();
-				if(!findResult.next() || findResult.isWriteInstance()){
-					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-					noti.setUserId(followerUserId);
-					noti.setActorId(session.getUser().getUserId());
-					noti.setConfirm(false);
-					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setTaskId(getTaskId());
-					noti.setInstId(getInstId());					
-					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-		
-					noti.add(copyOfInstance);
-				}
-			}
-			
-			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
-					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
-					new Object[]{});
-			
-			// 본인 이외에 다른 사용자에게 push
-			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
 			
 		// 수정
 		}else{		
-			this.getMetaworksContext().setWhen(WHEN_VIEW);
-			
 			// 변경된 WorkItem 을 갱신
 			returnObjects = new Object[]{new Refresh(this, true)};
-			
-			final IWorkItem copyOfThis = this;
-			final IInstance copyOfInstance = instance;
-			 
-			// 자기 자신의 인스턴스 리스트를 새로고침
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
-			
-			// 본인 이외에 다른 사용자에게 push
-			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener( WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
-		}		
+		}
 		
-		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-		scEvent.setTitle(instanceRef.getName());
-		scEvent.setId(instanceRef.getInstId().toString());
-		scEvent.setStart(instanceRef.getDueDate());
+		// 자기 자신의 인스턴스 리스트를 새로고침
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
+
+		// 본인 이외에 다른 사용자에게 push
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
+				new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
 		
+		// 관련된 사용자에게 일정 입력 시 달력에 push
 		if(instanceRef.getDueDate() != null){
+			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+			scEvent.setTitle(instanceRef.getName());
+			scEvent.setId(instanceRef.getInstId().toString());
+			scEvent.setStart(instanceRef.getDueDate());
+			
 			Calendar c = Calendar.getInstance();
 			c.setTime(instanceRef.getDueDate());
 	
-//			if(c.get(c.HOUR_OF_DAY) == 23 && c.get(c.MINUTE) == 59 && c.get(c.SECOND) == 59)
-//				scEvent.setAllDay(true);
-//			else
-//				scEvent.setAllDay(false);
-			
-			// TODO 현재는 무조건 종일로 설정
-			scEvent.setAllDay(true);
-		}
-		
-		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
-		scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
-		
-		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-				new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
-		
-		//NEW WAY IS GOOD
-		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
-			@Override
-			public void run() {
-				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + TodoBadge.class.getName() + "').refresh", new Object[]{});					
-			}
-			
-		});
-		
-		
-		
-		/*
-		if(this.getDueDate() != null){
-			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-			scEvent.setTitle(instanceRef.getName());
-			scEvent.setId(this.getInstId().toString());
-			scEvent.setStart(this.getDueDate());
-			scEvent.setEnd(this.getDueDate());
+			// TODO : 현재는 무조건 종일로 설정
 			scEvent.setAllDay(true);
 			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
-			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(this.getStatus()));
+			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
 			
 			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-					new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
+					new Object[]{scEvent});
 		}
-		*/
-		
 		
 		return returnObjects;
 	}
