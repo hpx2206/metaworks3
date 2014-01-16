@@ -507,7 +507,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 #wihContent { }
 #navigator { padding-right:13px; }
 #navigator .depth2 { position:relative }
-#navigator .depth2 .fist_menu { margin: 5px; }
+#navigator .depth2 .fist_menu ul{ margin: 5px; }
 .AddLocalContactPanel .fist_menu { margin:0px !important; }
 .AddLocalContactPanel .fist_menu .ui-droppable a {
 	border-bottom: 1px solid #E7EAEF;
@@ -573,6 +573,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 	margin-top:9px;
 	border-top: 1px solid #c6cbd0;
 	padding-top: 7px;
+	position:relative;
 }
 #navigator .depth1 .depth1td_on {
 	height: 25px;
@@ -2148,7 +2149,7 @@ select.select[class] {
 .west_more_btn {
 	position:absolute;
 	right:10px;
-	top:-18px;
+	top:12px;
 	font-size:11px;
 	display:none;
 }

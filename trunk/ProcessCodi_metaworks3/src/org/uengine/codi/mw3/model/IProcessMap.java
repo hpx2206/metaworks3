@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
@@ -13,6 +14,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 
+@Face(ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
 public interface IProcessMap extends IDAO {
 
 	

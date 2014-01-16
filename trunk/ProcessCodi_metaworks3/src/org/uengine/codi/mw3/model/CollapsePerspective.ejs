@@ -5,21 +5,24 @@
 <%
 		if(value.selected){
 %>
-	<div class="depth2">		
-		<%=fields.child.here()%>
+	<div class="depth2">
+		<div class="fist_menu">		
+			<%=fields.child.here()%>
+
+		
 <%
 		if(!mw3.isHiddenMethod(methods.popupAdd)){
 %>
-		<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+		<ul style="margin:0 0 0 5px; position:relative; top:-5px;">
 			<li>
-				<a href="#" onClick="<%=methods.popupAdd.caller()%>"><span class="icon-plus"></span><b>새<%=mw3.localize(value.label)%></b></a>
+				<a href="#" onClick="<%=methods.popupAdd.caller()%>" class="add_new_label"><span class="icon-plus"></span>새<%=mw3.localize(value.label)%></a>
 				<div class="clear"></div>
 			</li>
 		</ul>
 <%
 		}
 %>
-
+		</div>
 	</div>	
 <%
 		}

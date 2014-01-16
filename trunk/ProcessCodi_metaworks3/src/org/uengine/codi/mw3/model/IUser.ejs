@@ -13,18 +13,25 @@
 	
 		if(mw3.how == 'picker'){
 %>
-		<div class="user">	
-			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
+			<div class="user">	
+				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
+					<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
+				</div>
+					
+				<div class="user_compact">
+					<%=value.name%>
+				</div>
+				<div style="clear:both"></div>
 			</div>
-				
-			<div class="user_compact">
-				<%=value.name%>
-			</div>
-			<div style="clear:both"></div>
-		</div>			
 <%		
 		}else{			
+%>
+<%
+		if(mw3.where == 'addcontact' || mw3.where == 'addfollower'){
+%>	
+		<div style="padding:3px 0px; border-bottom:1px solid #e7e7e7;">
+<%		
+		}
 %>
 		<div class="user">		
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
@@ -51,6 +58,13 @@
 %>			
 			
 		</div>
+<%
+		if(mw3.where == 'addcontact' || mw3.where == 'addfollower'){
+%>	
+		</div>
+<%		
+		}
+%>
 <%		 
 		}
 	}

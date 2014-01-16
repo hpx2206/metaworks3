@@ -407,6 +407,8 @@ margin-top: 1px;
 	position:relative;
 }
 .contact_list .user_focus { margin:4px; }
+.contact_list li{float:left}
+
 .user .user_focus .followers_name {
 	position:absolute;
 	bottom:0px;
