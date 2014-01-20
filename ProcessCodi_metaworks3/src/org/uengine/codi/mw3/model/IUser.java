@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Group;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -17,6 +18,9 @@ public interface IUser extends IDAO{
 	public static final String MW3_WHERE_ROLEUSER_PICKER_CALLER = "roleUserPickerCaller";
 	public static final String MW3_WHERE_ROLEUSER_PICKER = "roleUserPicker";
 
+	public static final String HOW_PICKER 					= "picker";
+	public static final String HOW_PICKERLIST 				= "pickerlist";
+	
 	public final static String HOW_INFO				 		= "info";
 	
 	public final static String WHERE_SELF			 		= "self";
@@ -39,15 +43,11 @@ public interface IUser extends IDAO{
 	public String getMood();
 	public void setMood(String mood);
 	
-	@ServiceMethod(when="edit", inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	@Face(displayName="$PickUp")
-	public Popup pickUp() throws Exception;
+	@Available(how=HOW_PICKERLIST)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
+	public Object[] pickUp() throws Exception;
 	
-	@Hidden
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	public Popup openRoleUserPicker() throws Exception;
-
-	@Hidden(how={HOW_INFO}, where={WHERE_SELF, WHERE_ADDCONTACT, WHERE_ADDFOLLOWER, WHERE_FOLLOWERS})
+	@Hidden(how={HOW_INFO, HOW_PICKER}, where={WHERE_SELF, WHERE_ADDCONTACT, WHERE_ADDFOLLOWER, WHERE_FOLLOWERS})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Popup detail() throws Exception;
 	
@@ -112,4 +112,13 @@ public interface IUser extends IDAO{
 	@Available(where={WHERE_SELF})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object[] showMenu() throws Exception;
+	
+	@Group(name="admin")
+	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] delUser() throws Exception;
+	
+	@Available(how=HOW_PICKER)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Popup popupPicker() throws Exception;
+	
 }

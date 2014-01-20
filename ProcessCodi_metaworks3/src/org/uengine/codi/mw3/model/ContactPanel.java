@@ -47,6 +47,14 @@ public class ContactPanel implements ContextAware {
 			this.count = count;
 		}
 
+	boolean picker;
+		public boolean isPicker() {
+			return picker;
+		}
+		public void setPicker(boolean picker) {
+			this.picker = picker;
+		}
+
 	SearchBox searchBox;
 		@Face(options={"keyupSearch"}, values={"true"})
 		public SearchBox getSearchBox() {
@@ -65,7 +73,7 @@ public class ContactPanel implements ContextAware {
 		}
 
 	Invitation invitation;
-		@Available(condition="typeof count == 'undefined' || count == 0")
+		@Available(condition="(typeof count == 'undefined' || count == 0) && (typeof picker == 'undefined' || !picker)")
 		public Invitation getInvitation() {
 			return invitation;
 		}
@@ -95,9 +103,18 @@ public class ContactPanel implements ContextAware {
 	}
 			
 	public void load() throws Exception{
-		this.getFollower().session = session;
 		
-		IContact contacts = this.getFollower().findContacts(this.getKeyword());
+		IContact contacts = null;
+		if(this.getFollower() != null){
+			this.getFollower().session = session;
+			
+			contacts = this.getFollower().findContacts(this.getKeyword());
+		}else{
+			contacts = Contact.findContacts(session.getUser(), true);
+		}
+		
+		if(this.isPicker())
+			contacts.getMetaworksContext().setHow(IUser.HOW_PICKERLIST);
 		
 		this.setList(contacts);
 		this.setCount(contacts.size());
