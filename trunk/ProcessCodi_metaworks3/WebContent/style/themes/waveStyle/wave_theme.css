@@ -434,6 +434,7 @@ margin-top: 1px;
 	font-size:10px;
 	letter-spacing: -1px;
 }
+.rolemapping .user_focus{ float:none; width:33px; height:33px;}
 /*
 .badge {
 	float: left;
