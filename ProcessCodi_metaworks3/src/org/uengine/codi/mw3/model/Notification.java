@@ -209,42 +209,14 @@ public class Notification extends Database<INotification> implements INotificati
 	
 	public Object[] see() throws Exception{
 		
-		if("oce".equals(session.getUx())){
-			if(session != null){
-				session.setLastSelectedItem("goSns");
-				session.setUx("sns");
-			}
-			
-			return new Object[]{new MainPanel(new Main(session, String.valueOf(this.getInstId())))};
-		}else if(this.getInstId() == null || this.getInstId() < 1){
-			return null;
-		}else{
-			Instance instance = new Instance();
-			instance.setInstId(getInstId());
-			instance.session = session;
-			
-			instanceViewContent.session = session;
-			instanceViewContent.load(instance);
-			
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.session = session;
-			instanceViewThreadPanel.processManager = instanceViewContent.instanceView.processManager;
-			instanceViewThreadPanel.load(getInstId().toString());
-			instanceViewThreadPanel.getThread().getMetaworksContext().setHow("instance");
-			instanceViewThreadPanel.getNewItem().getMetaworksContext().setHow("instance");
-			
-			instanceViewContent.instanceView.setInstanceViewThreadPanel(instanceViewThreadPanel);
-			
-			setConfirm(true);
-			//flushDatabaseMe();
-			
-			NotificationBadge notiBadge = new NotificationBadge();
-			notiBadge.session = session;
-			notiBadge.refresh();
-			
+		// 확인 표시
+		this.setConfirm(true);
+		
+		Instance instance = new Instance();
+		instance.setInstId(getInstId());
+		instance.session = session;
 
-			return new Object[]{instanceViewContent, new Refresh(notiBadge), this};
-		}
+		return new Object[]{instance.detail(), this};
 		
 	}
 	
