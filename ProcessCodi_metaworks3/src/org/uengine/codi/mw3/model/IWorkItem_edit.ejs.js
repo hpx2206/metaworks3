@@ -390,12 +390,17 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 			}
 			*/
     	}
-		/////// assists about user names //////
     	
-		var contactListPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactListPanel');
-		if(text && text.length>0 && contactListPanel){
-			var contactList = contactListPanel.contactList;
-
+		/////// assists about user names //////
+		if(!this.contacts){
+			var contactPespective = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactPerspective');
+			if(contactPespective.more)
+				this.contacts = contactPespective.child;
+			else
+				this.contacts = contactPespective.loadAllContact();
+		}
+		
+		if(text && text.length>0 && this.contacts){
 			var exisingFollowers = {};
 			var value = mw3.objects[this.objectId];
 			
@@ -408,8 +413,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 				}
 			}
 			
-			for(var i=0; i<contactList.contacts.length; i++){
-				var contact = contactList.contacts[i];
+			for(var i=0; i<this.contacts.length; i++){
+				var contact = this.contacts[i];
 				
 				if(contact.friend && contact.friend.userId && contact.friend.name && text.indexOf(contact.friend.name) > -1 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
 					var innerHtmlStr = 	"<div id=\"" + followerDivId + '_' + contact.friend.userId + "\" >";
