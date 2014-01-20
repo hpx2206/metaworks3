@@ -2644,7 +2644,9 @@ input[type="button"].btn-block {
 }
 
 .glyphicon:empty {
-  width: 1em;
+ /*
+ width: 1em;
+*/
 }
 
 .glyphicon-asterisk:before {
