@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 body {
-	background: url(../../../images/waveStyle/bgTop.gif) repeat-x #EAECEE;
+	background: url(../../../images/waveStyle/bgTop.gif) repeat-x #EAECEE !important;
 	height: 100%;
 	width: 100%;
 	padding: 0;
