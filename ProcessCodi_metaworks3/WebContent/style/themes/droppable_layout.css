@@ -3476,8 +3476,8 @@ legend {display:none;}
 .process_map .fdiv img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
 
 
-#editiconpop  { width:540px; background:#FFF;}
-#editiconpop dl{  overflow:hidden;width:520px;padding:0 0 10px 10px; margin-bottom:20px; border:1px solid #c2c2c2}
+#editiconpop  { padding:9px; background:#FFF;}
+#editiconpop dl{  overflow:hidden;padding:0 0 10px 10px; margin:0 auto; margin-bottom:20px; border:1px solid #c2c2c2}
 
 #editiconpop dl dt {background:#FFF; padding:3px; font-weight:bold; font-size:12px; margin-top:15px;}
 #editiconpop dl dd{ font-size:12px;text-align:center;list-style:none;  display:inline;float:left;width:66px;margin:20px 20px 0 0;padding:0px;}
@@ -3622,7 +3622,7 @@ legend {display:none;}
     -webkit-box-shadow:0 3px 4px #ccc;
     -webkit-border-radius:14px;
     -moz-border-radius:14px;
-    border-radius:14px;
+    border-radius:6px;
     box-shadow:0 3px 4px #ccc;
 }
 
