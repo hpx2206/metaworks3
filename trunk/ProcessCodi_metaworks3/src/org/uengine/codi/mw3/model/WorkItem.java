@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
@@ -980,6 +981,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					instanceRef.setDueDate(c.getTime());
 				}
 			}
+			if( instanceRef.getIsDeleted() ){
+				throw new MetaworksException("$alreadyDeletedPost");
+			}
 			
 			if(this.getTitle() == null && WORKITEM_TYPE_FILE.equals(this.getType()) ||
 					this.getTitle() == null && WORKITEM_TYPE_GENERIC.equals(this.getType()))
@@ -1003,6 +1007,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			instance.setInstId(this.getInstId());
 			
 			instanceRef = instance.databaseMe();
+			
+			if( instanceRef.getIsDeleted() ){
+				throw new MetaworksException("$alreadyDeletedPost");
+			}
 			
 			if( instanceRef.getLastcmntTaskId() != null && instanceRef.getLastcmntTaskId().equals(this.getTaskId()) ){
 				instanceRef.setLastCmnt(title);
