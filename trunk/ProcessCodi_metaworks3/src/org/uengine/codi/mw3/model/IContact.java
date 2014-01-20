@@ -39,12 +39,6 @@ public interface IContact extends IDAO{
 //	public String getMood();
 //	public void setMood(String mood);
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] pickUp() throws RemoteException, Exception;
-	
-	@ServiceMethod(callByContent=true, target="opener")
-	public User roleUserPickUp() throws RemoteException, Exception;
-	
 	@Available(how="comitter")
 	@ServiceMethod(callByContent=true, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK, target=ServiceMethodContext.TARGET_SELF)
 	public void check();

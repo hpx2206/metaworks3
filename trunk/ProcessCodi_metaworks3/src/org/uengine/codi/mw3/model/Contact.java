@@ -75,24 +75,6 @@ public class Contact extends Database<IContact> implements IContact{
 		contact.update();
 	}
 	
-	public Object[] pickUp() throws RemoteException, Exception {
-		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
-		
-		User user = new User();
-		user.copyFrom(this.getFriend());
-		user.getMetaworksContext().setWhen("pickUp"); //keep the context 
-		
-		return new Object[]{new ToOpener(user), new Remover(new Popup())};
-	}
-
-	public User roleUserPickUp() throws RemoteException, Exception {
-		User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
-		user.copyFrom(this.getFriend());
-		user.getMetaworksContext().setWhere(IUser.MW3_WHERE_ROLEUSER_PICKER_CALLER); //keep the context 
-		
-		return user;
-	}
-	
 	public static int calcFriendCount(IUser user) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select count(c.userId) count")

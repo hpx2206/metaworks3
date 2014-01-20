@@ -57,18 +57,21 @@
      	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
      		<ul>
 <%
+		var groupMap = {};
+		
 		if(objectMetadata.serviceMethodContexts){
 			for(var i=0; i<objectMetadata.serviceMethodContexts.length; i++){
    	   			var serviceMethod = objectMetadata.serviceMethodContexts[i];
    	   			
    	   			if(serviceMethod.mouseBinding == 'drag' || serviceMethod.mouseBinding == 'drop')
-   	   				continue; 
+   	   				continue;
 %>
-				<li><%=methods[serviceMethod.methodName].here()%></li>
+				<li style="<%=serviceMethod.group?'float:left':''%>"> <%=methods[serviceMethod.methodName].here()%></li>
 <%
 			}
 		}
 %>
+
      		</ul>
      	</div>
      	<div style="clear:both"></div>

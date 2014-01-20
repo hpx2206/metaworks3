@@ -11,6 +11,7 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
@@ -93,20 +94,8 @@ public class User extends Database<IUser> implements IUser {
 		}
 
 	@Override
-	public Popup pickUp() throws Exception {
-		Popup popup = new Popup();
-		
-		/*
-		ContactPanel contactPanel = new ContactPanel();
-		contactPanel.getMetaworksContext().setHow(ContactPanel.HOW_FORPICKER);
-		contactPanel.setUser(session.getUser());
-		contactPanel.load();
-
-		popup.setPanel(contactPanel);
-		*/
-		popup.setName("AddFollowerPanel");
-		
-		return popup;
+	public Object[] pickUp() throws Exception {
+		return new Object[]{new ToOpener(this), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	public static User fromHttpSession(){
@@ -124,16 +113,6 @@ public class User extends Database<IUser> implements IUser {
 	
 	}
 
-	@Override
-	public Popup openRoleUserPicker() throws Exception {
-		Popup popup = new Popup();
-		
-		RoleUserPickerPanel roleUserPicker = new RoleUserPickerPanel(session.getUser());
-		popup.setPanel(roleUserPicker);
-		popup.setName("Role User Pickup Panel");
-		return popup;
-	}
-	
 	@Override
 	public IEmployee loadEmployee() throws Exception{
 		Employee emp = new Employee();
@@ -535,6 +514,31 @@ public class User extends Database<IUser> implements IUser {
 		dao.select();
 
 		return dao;
+	}
+	
+	public Object[] delUser() throws Exception {
+		
+		IEmployee emp = new Employee();
+		emp.setEmpCode(getUserId());
+		Employee employee = (Employee)emp.findMe();	
+		
+		employee.databaseMe().setIsDeleted("1");		
+			
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
+	public Popup popupPicker() throws Exception {
+		Popup popup = new Popup();
+		
+		ContactPanel contactPanel = new ContactPanel();
+		contactPanel.session = session;
+		contactPanel.setPicker(true);
+		contactPanel.load();
+
+		popup.setPanel(contactPanel);
+		popup.setName("AddFollowerPanel");
+		
+		return popup;
 	}
 }
 

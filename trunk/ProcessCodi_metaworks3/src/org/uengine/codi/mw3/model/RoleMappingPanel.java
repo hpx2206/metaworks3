@@ -71,6 +71,7 @@ public class RoleMappingPanel implements ContextAware{
 				roleMappingDef.setMappedUser(new User());
 				roleMappingDef.setComCode(session.getEmployee().getGlobalCom());
 				roleMappingDef.setRoleDefType(RoleMappingDefinition.ROLE_DEF_TYPE_USER);
+				roleMappingDef.getMetaworksContext().setHow(IUser.HOW_PICKER);
 				
 				roleMappingDefinitions.add(roleMappingDef);
 			}
