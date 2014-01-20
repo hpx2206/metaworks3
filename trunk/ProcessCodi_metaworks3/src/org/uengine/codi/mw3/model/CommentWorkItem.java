@@ -1,9 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -11,12 +8,7 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.common.MetaworksUtil;
-import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.admin.WebEditor;
-import org.uengine.kernel.EJBProcessInstance;
-import org.uengine.kernel.ProcessInstance;
-import org.uengine.kernel.RoleMapping;
-import org.uengine.persistence.processinstance.ProcessInstanceDAO;
 
 //@Face(displayName="답글")
 public class CommentWorkItem extends WorkItem{
@@ -56,7 +48,19 @@ public class CommentWorkItem extends WorkItem{
 			
 			return workItem.add();
 		}else{
-			return super.add();
+			boolean isOwnReturn = false;
+			if( (WHEN_NEW.equals(getMetaworksContext().getWhen()) && this.getInstId() == null) || WHEN_EDIT.equals(getMetaworksContext().getWhen()) ){
+				isOwnReturn = true;
+			}else{
+				isOwnReturn = false;
+			}
+			
+			Object[] returnObjects = super.add();
+			if( !isOwnReturn ){
+				// 덧글이 새로 올라왔을 경우 특별한 리턴처리를 해준다. ( 화면상에 taskId 가 없기때문에 refresh를 false 로 가져가야함 )
+				returnObjects = new Object[]{new Refresh(this, false, true)};
+			}
+			return returnObjects;
 		}
 	}
 	

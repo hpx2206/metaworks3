@@ -39,91 +39,58 @@ public class DocWorkItem extends WorkItem {
 			setTitle(new String(this.getFile().getFilename()));
 		}
 		Object[] returnObj = null;
-//		String mimeType = this.getFile().getFileTransfer().getMimeType();
-//		// txt 파일은 SourceCodeWorkItem으로
-//		if( mimeType != null && "text/plain".equals(mimeType)){
-//			
-//			Class dstClass = null;
-//
-//			WebObjectType srcWOT = MetaworksRemoteService.getInstance().getMetaworksType(this.getClass().getName());
-//			ObjectInstance srcInstance = (ObjectInstance) srcWOT.metaworks2Type().createInstance();
-//			srcInstance.setObject(this);
-//
-//			WebObjectType dstWOT = MetaworksRemoteService.getInstance().getMetaworksType(SourceCodeWorkItem.class.getName());
-//			ObjectInstance dstInstance = (ObjectInstance) dstWOT.metaworks2Type().createInstance();
-//
-//			for (FieldDescriptor fd : dstWOT.metaworks2Type().getFieldDescriptors()) {
-//				if (fd.getAttribute("ormapping") == null)
-//					dstInstance.setFieldValue(fd.getName(),
-//							srcInstance.getFieldValue(fd.getName()));
-//			}
-//			
-//			// 파일 업로드
-//			getFile().upload();
-//			
-//			SourceCodeWorkItem sourceCodeWorkItem = (SourceCodeWorkItem)dstInstance.getObject();
-//			sourceCodeWorkItem.session = session;
-//			sourceCodeWorkItem.processManager = processManager;
-//			sourceCodeWorkItem.instanceViewContent = this.instanceViewContent;
-//			sourceCodeWorkItem.setType(WORKITEM_TYPE_SRC);
-//			sourceCodeWorkItem.setTool(mimeType);
-//			sourceCodeWorkItem.setExtFile(this.getFile().getUploadedPath());
-//			sourceCodeWorkItem.setContent("loading...");
-//			returnObj = sourceCodeWorkItem.add();
-//		}else{
+		FileWorkItem fileWorkItem = new FileWorkItem();
+		fileWorkItem.session = session;
+		fileWorkItem.processManager = this.processManager;
+		fileWorkItem.instanceViewContent = this.instanceViewContent;
+		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-			FileWorkItem fileWorkItem = new FileWorkItem();
-			fileWorkItem.session = session;
-			fileWorkItem.processManager = this.processManager;
-			fileWorkItem.instanceViewContent = this.instanceViewContent;
-			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			
-			fileWorkItem.setWriter(session.getUser());
-			fileWorkItem.setFile(this.getFile());
-			fileWorkItem.setTitle(this.getTitle());
-			fileWorkItem.setMajorVer(1);
-			fileWorkItem.setFolderId(this.getFolderId());
-			fileWorkItem.setGrpTaskId(this.getTaskId());
-			fileWorkItem.setNotReturn(true);
-			fileWorkItem.add();
+		fileWorkItem.setWriter(session.getUser());
+		fileWorkItem.setFile(this.getFile());
+		fileWorkItem.setTitle(this.getTitle());
+		fileWorkItem.setMajorVer(1);
+		fileWorkItem.setFolderId(this.getFolderId());
+		fileWorkItem.setGrpTaskId(this.getTaskId());
+		fileWorkItem.setNotReturn(true);
+		fileWorkItem.add();
 
-			
-			DocumentTool tool = new DocumentTool();
-			tool.session = session;
-			tool.setInstId(fileWorkItem.getInstId().toString());
-			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			fileWorkItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
-			fileWorkItem.setFileTransfer(null);
-			tool.setWorkitem(fileWorkItem);
-			
-			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
-			genericWIH.setTool(tool);
-			
-			GenericWorkItem genericWI = new GenericWorkItem();
-			genericWI.session = session;
-			genericWI.processManager = this.processManager;
-			genericWI.instanceViewContent = this.instanceViewContent;
-			genericWI.setInstId(this.getInstId());
-			genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		DocumentTool tool = new DocumentTool();
+		tool.session = session;
+		tool.setInstId(fileWorkItem.getInstId().toString());
+		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		fileWorkItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+		fileWorkItem.setFileTransfer(null);
+		tool.setWorkitem(fileWorkItem);
+		
+		GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+		genericWIH.setTool(tool);
+		
+		GenericWorkItem genericWI = new GenericWorkItem();
+		genericWI.session = session;
+		genericWI.processManager = this.processManager;
+		genericWI.instanceViewContent = this.instanceViewContent;
+		genericWI.setInstId(this.getInstId());
+		genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 //			if("normal".equals(this.getMetaworksContext().getHow())){
 //				genericWI.setInstId(this.getInstId());
 //			}else{
 //				genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 //			}
-			genericWI.setWriter(session.getUser());
-			genericWI.setTitle(this.getTitle());//parent.getName());
-			genericWI.setGrpTaskId(fileWorkItem.getTaskId());
-			genericWI.setGenericWorkItemHandler(genericWIH);
-			
-			returnObj = genericWI.add();
-			
-			// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
-			// 수정처리 해야함
-			Instance tempInstance = new Instance();
-			tempInstance.setInstId(fileWorkItem.getInstId());
-			tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
-//		}
-			return returnObj;
+		genericWI.setWriter(session.getUser());
+		genericWI.setTitle(this.getTitle());//parent.getName());
+		genericWI.setGrpTaskId(fileWorkItem.getTaskId());
+		genericWI.setGenericWorkItemHandler(genericWIH);
+		
+		returnObj = genericWI.add();
+		
+		// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
+		// 수정처리 해야함
+		Instance tempInstance = new Instance();
+		tempInstance.setInstId(fileWorkItem.getInstId());
+		tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
+		
+		return returnObj;
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)

@@ -10,6 +10,7 @@ import java.util.StringTokenizer;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
@@ -1106,7 +1107,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		instance.fillFollower();
-
+		
+		/**
+		 *  ==== returnObjects 생성 ====
+		 *  새로 쓴 글을 제외하고는 workItem 만 컨트롤을 한다.
+		 */
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			// 인스턴스 발행
@@ -1117,6 +1122,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
 			    		 				      new Refresh(detail),
 			    		 				      new Refresh(upcommingTodoPerspective)};
+			}else{
+				// 댓글
+				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
+				
+				CommentWorkItem commentWorkItem = new CommentWorkItem();
+				commentWorkItem.setInstId(this.getInstId());
+				commentWorkItem.setWriter(session.getUser());
+				commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+				returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
 			}
 			
 		// 수정
@@ -1125,7 +1140,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			returnObjects = new Object[]{new Refresh(this, true)};
 		}
 		
-		
+		/**
+		 *  ===  push 부분 ===
+		 */
 		final IWorkItem copyOfThis = this;
 		final IInstance copyOfInstance = instance;
 		
@@ -1213,18 +1230,47 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
 			throw new Exception("$CanNotDelete");
 		}
-		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
-			deleteDatabaseMe();
-			return new Remover(this);
-		}
-
 		Instance theInstance = new Instance();
 		theInstance.setInstId(getInstId());
+		theInstance.copyFrom(theInstance.databaseMe());
 		
-		if(theInstance.databaseMe().getInitiator().getUserId().equals(session.getUser().getUserId())){
-			deleteDatabaseMe();
-			return new Remover(this);
+		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin()) || theInstance.getInitiator().getUserId().equals(session.getUser().getUserId())){
+			if( this.getTaskId().equals(theInstance.getLastcmntTaskId()) ){
+				if( theInstance.getLastcmnt2TaskId() != null ){
+					// 두번째 댓글이 있다면 두번째 댓글을 첫번째로 옴기고 두번째 댓글을 지운다
+					theInstance.databaseMe().setLastCmnt(theInstance.getLastCmnt2());
+					theInstance.databaseMe().setLastCmntUser(theInstance.getLastCmnt2User());
+					theInstance.databaseMe().setLastcmntTaskId(theInstance.getLastcmnt2TaskId());
+					
+					theInstance.databaseMe().setLastCmnt2(null);
+					theInstance.databaseMe().setLastCmnt2User(null);
+					theInstance.databaseMe().setLastcmnt2TaskId(null);
+				}else{
+					// 두번째 댓글이 없다면 댓글을 지운다.
+					theInstance.databaseMe().setLastCmnt(null);
+					theInstance.databaseMe().setLastCmntUser(null);
+					theInstance.databaseMe().setLastcmntTaskId(null);
+				}
+				
+			}else if(this.getTaskId().equals(theInstance.getLastcmnt2TaskId()) ){
+				theInstance.databaseMe().setLastCmnt2(null);
+				theInstance.databaseMe().setLastCmnt2User(null);
+				theInstance.databaseMe().setLastcmnt2TaskId(null);
+			}
 			
+			deleteDatabaseMe();
+			
+			final IWorkItem copyOfThis = this;
+			final IInstance copyOfInstance = theInstance;
+			// 자기 자신의 인스턴스 리스트를 새로고침
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
+			
+			// 본인 이외에 다른 사용자에게 push
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
+					new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REMOVE , copyOfThis)});	
+			
+			return new Remover(this);
 		}
 				
 		throw new Exception("$OnlyTheWriterCanDelete");

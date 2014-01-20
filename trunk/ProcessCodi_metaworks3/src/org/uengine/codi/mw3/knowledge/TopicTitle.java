@@ -148,15 +148,16 @@ public class TopicTitle  implements ContextAware{
 			throw new Exception("주제를 입력해주세요");
 		}
 		
-		// TODO: 이름으로 바로 검색하여 중복 값 체크 할 수 있게 수정해야함
-		ITopicNode topicNodeList = TopicNode.findTopic(session);
-		while(topicNodeList.next()){
-			if(this.getTopicTitle().equals(topicNodeList.getName())){
-				throw new Exception("$DuplicateName");
-			}
-		}
-		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+			
+			// TODO: 이름으로 바로 검색하여 중복 값 체크 할 수 있게 수정해야함
+			ITopicNode topicNodeList = TopicNode.findTopic(session);
+			while(topicNodeList.next()){
+				if(this.getTopicTitle().equals(topicNodeList.getName())){
+					throw new Exception("$DuplicateName");
+				}
+			}
+			
 			wfNode.setName(this.getTopicTitle());
 			wfNode.setType("topic");
 			wfNode.setSecuopt(topicSecuopt ? "1" : "0");

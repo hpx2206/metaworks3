@@ -70,6 +70,10 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 					var workItem = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItem@"+value.taskId);
 					if(workItem != null && typeof workItem != 'undefined')
 						mw3.setObject(workItem.__objectId, value);
+				}else if(this.object.command == 'remove'){
+					var workItem = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItem@"+value.taskId);
+                    if(workItem != null && typeof workItem != 'undefined')
+		              mw3.removeObject(workItem.__objectId);
 				}else{
 					instanceThreadObject.getFaceHelper().toAppend(value);
 				}
