@@ -1163,20 +1163,28 @@ public class Instance extends Database<IInstance> implements IInstance{
 		todoBadge.refresh();
 		
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
-
+		
+		/* push 부분 */
+		// 자기자신의 todoBadge 와 다가오는 일정을 refresh 시킨다.
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});			
 		
+		// 자기자신의 달력화면이 열려있다면 달력의 글을 제거한다.
+		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+		scEvent.setId(instanceRef.getInstId().toString());
+		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
+				new Object[]{scEvent});
+		
+		// 다른 사용자의 인스턴스 리스트를 제거한다.
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
+				new Object[]{new InstanceListener(InstanceListener.COMMAND_REMOVE, instanceRef)});
+		
+		
+		/* return 부분 */
 		if(!"sns".equals(session.getEmployee().getPreferUX())){
 			NewInstancePanel instancePanel = new NewInstancePanel();
 			instancePanel.load(session);
-
-			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-			scEvent.setId(instanceRef.getInstId().toString());
-			
-			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
-					new Object[]{scEvent}); //new Object[]{instanceRef.getInstId().toString()});
-			
 			return new Object[]{new Remover(this), new Refresh(new ContentWindow(instancePanel))};
 		}else{
 			return new Object[]{new Remover(this)};
