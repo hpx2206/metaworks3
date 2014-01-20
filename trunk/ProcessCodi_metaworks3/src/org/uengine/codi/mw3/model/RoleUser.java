@@ -124,10 +124,10 @@ public class RoleUser extends Database<IRoleUser> implements IRoleUser {
 	public IFollower findFollower() throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select emptable.empcode as endpoint, emptable.empname as resname, rolecode parentId, '" + Follower.TYPE_ROLE + "' parentType");
-		sql.append(" from emptable left outer join roleusertable ");
-		sql.append("   on emptable.empcode=roleusertable.EMPCODE ");
+		sql.append("  from emptable left outer join roleusertable ");
+		sql.append("    on emptable.empcode=roleusertable.EMPCODE ");
 		sql.append(" where rolecode=?rolecode");
-		sql.append(" where emptable.empcode=?empcode");
+		sql.append("   and emptable.empcode=?empcode");
 		
 		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
 		follower.set("rolecode", this.getRoleCode());
