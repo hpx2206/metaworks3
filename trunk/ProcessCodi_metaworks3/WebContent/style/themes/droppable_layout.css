@@ -3051,7 +3051,7 @@ select.select[class] {
 	width:110px;
 	height:110px;
 	border:1px solid #ccc;
-	padding:6px 0 0 6px;
+	padding:4px 0 0 4px;
 	float:left;
 	margin-right:20px;
 	margin-bottom:10px;
@@ -3077,6 +3077,8 @@ select.select[class] {
 	border:1px solid #ccc;
 }
 .singnup_mutiline { margin-bottom:10px; }
+.singnup_mutiline .btn-info{line-height:1.8em}
+
 @media all and (max-width: 900px) {
 .index_banner_r_btn,
 .index_banner_l_btn { display:none }
