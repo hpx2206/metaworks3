@@ -1185,38 +1185,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public void toggleSecurityConversation() throws Exception{
 		String secuopt = this.getSecuopt();
-		IInstance instanceRef = databaseMe();
-		
-		/*
-		this.fillFollower();
-		
-		IUser followers = getFollowers().getFollowers();
-		followers.beforeFirst();
-		
-		boolean iCanSee = false;
-		while(followers.next()){
-			if(session.getUser().getUserId().equals(followers.getUserId())){
-				iCanSee = true;
-				break;
-			}
-		}
-		followers.beforeFirst();
-		IDept deptFollower = getFollowers().getDeptFollowers();
-		if( deptFollower.getImplementationObject().getCachedRows() != null ){
-			deptFollower.beforeFirst();
-			while( deptFollower.next() ){
-				if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
-					iCanSee = true;
-					break;
-				}
-			}
-			deptFollower.beforeFirst();
-		}
-		*/
-		
-		//if( !iCanSee ){
-		//	throw new Exception("$OnlyFollowerCanSecuopt");
-		//}
 		
 		if (secuopt.charAt(0) != '0') {
 			databaseMe().setSecuopt("0");
@@ -1224,15 +1192,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 			databaseMe().setSecuopt("1");
 		}
 		
+		IInstance instanceRef = databaseMe();
+		Instance instance = new Instance();
+		instance.copyFrom(instanceRef);
+		instance.fillFollower();
 		
 		// 비공개로 설정할 경우 나를 제외한 다른 사람의 인스턴스목록에서 글 제거
 		if( "1".equals(instanceRef.getSecuopt()) ){
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(InstanceListener.COMMAND_REMOVE, instanceRef)});			
+					new Object[]{new InstanceListener(InstanceListener.COMMAND_REMOVE, instance)});			
 		}
 		// 자기자신의 인스턴스 상태를 변경함
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 	}
 	
 	public void complete() throws Exception{
@@ -1267,14 +1239,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		// instance update flush
 		instanceRef.setStatus(tobe);
-
-		//this.load(instanceRef);
-		//this.setStatus(tobe);
+		
+		Instance instance = new Instance();
+		instance.copyFrom(instanceRef);
+		instance.fillFollower();
 
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
-				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
+				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 
 		/* 내가 할일 카운트 다시 계산 */
 		TodoBadge todoBadge = new TodoBadge();

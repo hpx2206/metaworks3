@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.metaworks.MetaworksContext;
@@ -1037,16 +1038,34 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
 		instance.flushDatabaseMe();
-
+		
+		boolean securityPush = false;
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		String currentUserId = session.getUser().getUserId();
 		// 주제 제목 설정
 		if(instance.getTopicId() != null){
 			TopicNode topic = new TopicNode();
 			topic.setId(instance.getTopicId());
 			instance.setTopicName(topic.databaseMe().getName());
+			String topicSecuopt = topic.databaseMe().getSecuopt();
+			if( "1".equals( topicSecuopt )){
+				securityPush = true;
+				TopicFollower topicFollower = new TopicFollower();
+				topicFollower.setParentId(topic.databaseMe().getId());
+				
+				IFollower topicFollowers = topicFollower.findFollowers();
+				while(topicFollowers.next()){
+					String followerUserId = topicFollowers.getEndpoint();
+					if( !currentUserId.equals(followerUserId)){	// 자기 자신은 제외
+						if( Login.getSessionIdWithUserId(followerUserId) != null ){
+							pushUserMap.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+						}
+					}
+				}
+			}
 		}
-
-		this.getMetaworksContext().setWhen(WHEN_VIEW);
-		this.getWriter().setMetaworksContext(this.getMetaworksContext());
+		
+		instance.fillFollower();
 
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
@@ -1066,36 +1085,68 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			returnObjects = new Object[]{new Refresh(this, true)};
 		}
 		
+		
 		final IWorkItem copyOfThis = this;
 		final IInstance copyOfInstance = instance;
-
-		// 자기 자신의 인스턴스 리스트를 새로고침
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
-
-		// 본인 이외에 다른 사용자에게 push
-		MetaworksRemoteService.pushClientObjectsFiltered(
-				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-				new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
 		
-		// 관련된 사용자에게 일정 입력 시 달력에 push
-		if(instanceRef.getDueDate() != null){
-			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-			scEvent.setTitle(instanceRef.getName());
-			scEvent.setId(instanceRef.getInstId().toString());
-			scEvent.setStart(instanceRef.getDueDate());
-			
-			Calendar c = Calendar.getInstance();
-			c.setTime(instanceRef.getDueDate());
-	
-			// TODO : 현재는 무조건 종일로 설정
-			scEvent.setAllDay(true);
-			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
-			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
-			
-			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-					new Object[]{scEvent});
+		if( !securityPush ){
+			pushUserMap = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
 		}
+		
+		if(prevInstId == null){
+			// 인스턴스가 새로글을 쓸 경우에는 달력과 다른사람에게 instance 푸쉬만 되어야함
+			// 새글이 아닐 경우에는 달력 푸쉬는 필요가 없다. 
+			// 관련된 사용자에게 일정 입력 시 달력에 push
+			if(instanceRef.getDueDate() != null){
+				ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+				scEvent.setTitle(instanceRef.getName());
+				scEvent.setId(instanceRef.getInstId().toString());
+				scEvent.setStart(instanceRef.getDueDate());
+				
+				Calendar c = Calendar.getInstance();
+				c.setTime(instanceRef.getDueDate());
+		
+				// TODO : 현재는 무조건 종일로 설정
+				scEvent.setAllDay(true);
+				scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+				scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
+				
+				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(currentUserId),
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+						new Object[]{scEvent});
+			}
+			// 새 글일 경우에는 다른사람에게만 push를 하여준다.
+			// 본인 이외에 다른 사용자에게 push
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+					new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});	
+			
+		}else{
+			if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
+				// 덧글은 append 로 붙어야 하고,
+				// 자기 자신의 인스턴스 리스트를 새로고침
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});
+				
+				// 본인 이외에 다른 사용자에게 push
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+						new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_APPEND , copyOfThis)});	
+				
+			}else if(WHEN_EDIT.equals(getMetaworksContext().getWhen())){
+				// edit는 refresh 로 붙어야함
+				// 자기 자신의 인스턴스 리스트를 새로고침
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
+				
+				// 본인 이외에 다른 사용자에게 push
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+						new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
+				
+			}
+		}
+
+		this.getMetaworksContext().setWhen(WHEN_VIEW);
+		this.getWriter().setMetaworksContext(this.getMetaworksContext());
 		
 		return returnObjects;
 	}
