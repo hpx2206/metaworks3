@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
-
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
 
 public class ContactPerspective extends MoreViewPerspective {
 	
@@ -32,5 +33,10 @@ public class ContactPerspective extends MoreViewPerspective {
 		popup.setPanel(new AddContactPanel(session));
 		
 		return popup;
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
+	public IContact loadAllContact() throws Exception {
+		return Contact.findContacts(session.getUser(), true);
 	}
 }
