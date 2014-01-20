@@ -15,7 +15,7 @@ public class DeptFollower extends Follower {
 		Employee emp = new Employee();
 		emp.copyFrom(findEmp.findMe());
 		
-		if(!emp.getPartCode().equals(this.getParentId())){
+		if(emp.getPartCode() == null || !emp.getPartCode().equals(this.getParentId())){
 			emp.setPartCode(this.getParentId());
 			emp.syncToDatabaseMe();
 			emp.flushDatabaseMe();
