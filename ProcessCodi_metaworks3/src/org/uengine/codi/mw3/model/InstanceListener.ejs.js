@@ -11,8 +11,6 @@ var org_uengine_codi_mw3_model_InstanceListener = function(objectId, className){
 		var value = this.object.applyItem;
 		
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-		console.log(session);
-		console.log(value);
 		var command = this.object.command;
 		if( (session.lastPerspecteType == 'allICanSee' || session.lastPerspecteType == 'all' || session.lastPerspecteType == 'inbox' || session.lastPerspecteType == 'following') && (session.keyword == null || typeof session.keyword == 'undefined' && session.searchKeyword == '')){
 			value.instanceViewThreadPanel = null;
