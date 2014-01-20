@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -69,6 +70,7 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 		this.setJoined(isJoined);
 	}
 
+	@Face(displayName="$Join")
 	@Available(condition="!joined")
 	@ServiceMethod(callByContent=true, except="followers")
 	public void join() throws Exception {
@@ -77,18 +79,22 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 		this.load();
 	}
 	
+	@Face(displayName="$Leave")
 	@Available(condition="joined")
 	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true)
 	public void leave() throws Exception {
+		this.getFollower().session = session;
 		this.getFollower().delegate(session.getUser());
 		this.load();
 	}
 	
+	@Face(displayName="$Modify")
 	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true, target=ServiceMethodContext.TARGET_STICK)
 	public Popup modify() throws Exception {
 		throw new Exception("not defined modify method");
 	}
 	
+	@Face(displayName="$Remove")
 	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		PersonalPerspective personalPerspective = new PersonalPerspective();
