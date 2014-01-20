@@ -18,7 +18,6 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {

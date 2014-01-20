@@ -54,6 +54,7 @@ public class InstanceFollower extends Follower {
 		if( findObj == null ){
 			RoleMapping rm = this.makeRoleMapping();
 			rm.saveMe();
+			rm.flushDatabaseMe();
 			
 			this.push();
 		}
@@ -80,6 +81,7 @@ public class InstanceFollower extends Follower {
 		IFollower follower = roleMapping.findFollowers();
 		follower.getMetaworksContext().setWhere(WHERE_FOLLOWER);
 		
+		System.out.println("follower : " + follower.size());
 		return follower;
 	}
 	

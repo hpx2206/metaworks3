@@ -30,6 +30,7 @@ import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.Role;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
@@ -826,10 +827,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public IInstance save() throws Exception {
 		
 		boolean isNewInstance = false;
+		
 		Instance instance = null;
 		IInstance instanceRef = null;		
-		
-		
 		
 		if( this.getWriter() == null || (this.getWriter() != null && this.getWriter().getUserId() == null)){
 			IUser writer = new User();
@@ -935,13 +935,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				if(this.getDueDate()!= null)
 					instanceRef.setDueDate(this.getDueDate());
-				
-				InstanceFollower follower = new InstanceFollower(instance.getInstId().toString());
-				follower.session = session;
-				follower.setUser(this.getWriter());
-				
-				if(follower.find() == null)
-					follower.put();
 			}
 
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
@@ -1019,6 +1012,53 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.syncToDatabaseMe();
 		}		
 		
+		// 팔로워 추가(추천 및 게시)
+		boolean isAddFollwer = false;
+		
+		InstanceFollower findFollower = new InstanceFollower(instance.getInstId().toString());
+		findFollower.session = session;
+		findFollower.setEnablePush(false);
+		
+		IFollower follower = findFollower.findFollowers();
+		
+		if(initialFollowers == null){
+			initialFollowers = new ArrayList<String>();	
+		}
+		
+		// 게시 사용자도 팔로워에 추가되게
+		initialFollowers.add(this.getWriter().getUserId());
+		
+		for(String userId : initialFollowers){
+			follower.beforeFirst();
+			
+			boolean isExist = false;
+			
+			while(follower.next()){
+				if(follower.getEndpoint().equals(userId)){
+					isExist = true;
+					
+					break;
+				}
+			}
+			
+			if(!isExist){
+				Employee addUser = new Employee();
+				addUser.setEmpCode(userId);
+				addUser.copyFrom(addUser.findMe());
+				
+				findFollower.setUser(addUser.getUser());
+				findFollower.put();
+				
+				isAddFollwer = true;
+			}
+		}
+		
+		if(isAddFollwer){
+			findFollower.setEnablePush(true);
+			findFollower.push();
+		}
+		
+		// this code here must be for transaction problem 
 		this.flushDatabaseMe();
 		
 		SolrData SolrData = new SolrData();

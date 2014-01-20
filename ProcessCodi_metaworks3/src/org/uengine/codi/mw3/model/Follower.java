@@ -73,6 +73,18 @@ public class Follower extends Database<IFollower> implements IFollower {
 		public void setDept(IDept dept) {
 			this.dept = dept;
 		}
+		
+	boolean enablePush;
+		public boolean isEnablePush() {
+			return enablePush;
+		}
+		public void setEnablePush(boolean enablePush) {
+			this.enablePush = enablePush;
+		}
+	
+	public Follower(){
+		this.setEnablePush(true);
+	}
 	
 	public IFollower find() throws Exception {
 		throw new Exception("not defined exist method");
@@ -150,10 +162,14 @@ public class Follower extends Database<IFollower> implements IFollower {
 	}
 	
 	public void push() throws Exception {
-		// 본인 이외에 다른 사용자에게 push
-		MetaworksRemoteService.pushClientObjectsFiltered(
-				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
-				new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
+		
+		if(this.isEnablePush()){
+			// 본인 이외에 다른 사용자에게 push
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
+		}
+		
 	}
 
 }
