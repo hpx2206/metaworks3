@@ -379,11 +379,9 @@ public class Login implements ContextAware {
 			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
 			BufferedReader br = new BufferedReader(isr);
 			
-			
-			while(true){
-				tempContent += br.readLine();
-				if(br.readLine() == null) break;
-				System.out.println(tempContent);
+			int data;
+			while((data = br.read()) != -1){
+				tempContent += (char)data;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

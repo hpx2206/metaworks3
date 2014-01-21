@@ -116,11 +116,6 @@ public class Invitation implements ContextAware{
 				return new Object[]{new Refresh(this)};
 			}
 			
-			
-			IContact findContact = Contact.findContactsWithFriendId(session.getUser(), findEmp.getEmpCode());
-			if(findContact != null)
-				throw new Exception("이미 친구에 등록된 이메일 입니다.");
-		
 			// 2. The invited person is not a member of my company.
 			// different company
 			if(!session.getEmployee().getGlobalCom().equals(findEmp.getGlobalCom())){
@@ -254,11 +249,9 @@ public class Invitation implements ContextAware{
 			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
 			BufferedReader br = new BufferedReader(isr);
 			
-			
-			while(true){
-				tempContent += br.readLine();
-				if(br.readLine() == null) break;
-				System.out.println(tempContent);
+			int data;
+			while((data = br.read()) != -1){
+				tempContent += (char)data;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -311,11 +304,9 @@ public class Invitation implements ContextAware{
 			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
 			BufferedReader br = new BufferedReader(isr);
 			
-			
-			while(true){
-				tempContent += br.readLine();
-				if(br.readLine() == null) break;
-				System.out.println(tempContent);
+			int data;
+			while((data = br.read()) != -1){
+				tempContent += (char)data;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
