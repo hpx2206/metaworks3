@@ -1151,6 +1151,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		/**
 		 *  ===  push 부분 ===
 		 */
+		this.getWriter().getMetaworksContext().setWhere("worklist");
+
 		final IWorkItem copyOfThis = this;
 		final IInstance copyOfInstance = instance;
 		
