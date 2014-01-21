@@ -126,6 +126,10 @@ dt {
 	padding: 0px;
 }
 
+.editor_div ul, .editor_div ol {
+	margin-left:15px;
+}
+
 .editor_div ul li {
 	list-style-type:disc;
 	margin-left:15px;
