@@ -3373,7 +3373,7 @@ legend {display:none;}
 .good_up .cb_activate_up a em,.good_up .cb_activate_down a em,.good_up .cb_activate_cancel a em{color:#aaa}
 
 
-.form_table{padding:1em 0;font-size:12px;width:100%;}
+.form_table{padding:1em;font-size:12px;width:100%;}
 .form_table input,
 .form_table textarea,
 .form_table select,
