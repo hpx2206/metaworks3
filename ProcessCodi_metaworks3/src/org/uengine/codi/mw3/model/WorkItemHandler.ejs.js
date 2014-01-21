@@ -6,30 +6,37 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 	
 	// 댓글달기 버튼  
 	if( object && object.parameters){
-		for(var i = 0; i < object.parameters.length; i++){
-			
-			var valObject = object.parameters[i].valueObject;
-			var metadata = mw3.getMetadata(valObject.__className);
-			if(metadata.fieldDescriptors){
-				for (var j=0; j<metadata.fieldDescriptors.length; j++){
-					var fd = metadata.fieldDescriptors[j];
-					var fieldName = fd.name;
-					if(!fieldName || fieldName.length == 0)
-						continue;
-					
+        for(var i = 0; i < object.parameters.length; i++){
+   
+            var valObject = object.parameters[i].valueObject;
+            var metadata = mw3.getMetadata(valObject.__className);
+            if(metadata.fieldDescriptors){
+                for (var j=0; j<metadata.fieldDescriptors.length; j++){
+                    var fd = metadata.fieldDescriptors[j];
+                    var fieldName = fd.name;
+                    if(!fieldName || fieldName.length == 0)
+	                   continue;
+	     
 					var valiableObjectId = mw3.getChildObjectId(valObject.__objectId, fieldName);
 					if( valiableObjectId ){
 						var valiableObjectDivId = mw3._getObjectDivId(valiableObjectId);
 						var valiableObjectDiv = $('#' + valiableObjectDivId);
+						valiableObjectDiv.css("position","relative");
 						valiableObjectDiv.find('input').css('float','left');
-						valiableObjectDiv.find('.form-control').css('width','200px');
-						var buttonHtml = '<a id="wBtn" style="float:right" href="#" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span style="color:#000; margin-right:0px"> ' + mw3.localize('$AddComment') + ' </span></a>';
+						//valiableObjectDiv.find('.form-control').css('width','200px');
+						var buttonHtml = '<button class="btn btn-default btn-xs" type="button" style="position:absolute; right:3px; top:4px; display:none;" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span class="glyphicon glyphicon-comment"></span> ' + mw3.localize('$AddComment') + '</button>';
+						      
 						valiableObjectDiv.append(buttonHtml);
-					}
-				}
-			}
-		}
-	}
+						      
+						valiableObjectDiv.hover(
+						function(){$(this).find('.btn').show();},
+						function(){$(this).find('.btn').hide();}
+						);
+	               }
+	           }
+	       }
+	   }
+    }
 };
 	
 org_uengine_codi_mw3_model_WorkItemHandler.prototype = {
