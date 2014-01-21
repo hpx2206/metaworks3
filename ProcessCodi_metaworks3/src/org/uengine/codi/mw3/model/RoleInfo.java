@@ -8,7 +8,7 @@ import org.metaworks.website.MetaworksFile;
 
 public class RoleInfo extends FollowerPerspectiveInfo {
 
-	public final static int MODIFY_POPUP_HEIGHT = 250;
+	public final static int MODIFY_POPUP_HEIGHT = 200;
 	public final static int MODIFY_POPUP_WIDTH = 500;
 	
 	public RoleInfo(){

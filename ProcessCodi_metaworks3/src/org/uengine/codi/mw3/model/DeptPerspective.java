@@ -51,9 +51,7 @@ public class DeptPerspective extends CollapsePerspective {
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		dept.setLogoFile(new MetaworksFile());
 		
-		Popup popup = new Popup();
-		popup.setPanel(dept);
-		
-		return popup;
+		return new Popup(500, 200, dept);
+
 	}
 }

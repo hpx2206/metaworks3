@@ -35,10 +35,7 @@ public class RolePerspective extends CollapsePerspective {
 		role.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		role.setLogoFile(new MetaworksFile());
 		
-		Popup popup = new Popup();
-		popup.setPanel(role);
-		
-		return popup;
+		return new Popup(500, 200, role);
 	}
 	
 }
