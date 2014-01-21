@@ -112,6 +112,14 @@ public class Follower extends Database<IFollower> implements IFollower {
 		this.delegate();
 	}
 	
+	public void delegate(IDept dept) throws Exception {
+		this.setDept(dept);
+		this.setEndpoint(dept.getPartCode());
+		this.setResName(dept.getPartName());
+		this.setAssigntype(Role.ASSIGNTYPE_DEPT);
+		this.delegate();
+	}
+	
 	public IFollower findFollowers() throws Exception {
 		throw new Exception("not defined findFollowers method");
 	}

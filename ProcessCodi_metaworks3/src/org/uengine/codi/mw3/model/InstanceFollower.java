@@ -63,7 +63,7 @@ public class InstanceFollower extends Follower {
 	public void delegate() throws Exception {
 		RoleMapping rm = new RoleMapping();
 		rm.setInstId(Long.parseLong(this.getParentId()));
-		rm.setEndpoint(this.getUser().getUserId());
+		rm.setEndpoint(this.getEndpoint());
 		rm.setAssignType(this.getAssigntype());
 		rm.setRoleName(RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
 		

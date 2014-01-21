@@ -3,15 +3,16 @@ package org.uengine.codi.mw3.model;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
-import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.Login;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.Role;
 import org.uengine.kernel.UEngineException;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
@@ -189,6 +190,54 @@ public class Notification extends Database<INotification> implements INotificati
 				
 			}.start();
 		}
+	}
+	
+	public HashMap<String, String> findInstanceNotiUser(String instanceId) throws Exception{
+		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		
+		InstanceFollower findFollower = new InstanceFollower(instanceId);
+		findFollower.session = session;
+		findFollower.setEnablePush(false);
+		
+		IFollower follower = findFollower.findFollowers();
+		while(follower.next()){
+			int assigntype = follower.getAssigntype();
+			if( assigntype == Role.ASSIGNTYPE_USER ){
+				String followerUserId = follower.getEndpoint();
+				if( session.getUser().getUserId().equals(followerUserId)){	// 자기 자신은 제외
+					continue;
+				}
+				notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+				
+			}else if( assigntype == Role.ASSIGNTYPE_DEPT ){
+				// TODO
+			}
+		}
+		return notiUsers;
+	}
+	
+	public HashMap<String, String> findTopicNotiUser(String topicId) throws Exception{
+		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		
+		TopicFollower topicFollower = new TopicFollower();
+		topicFollower.setParentId(topicId);
+		
+		IFollower topicFollowers = topicFollower.findFollowers();
+		while(topicFollowers.next()){
+			int assigntype = topicFollowers.getAssigntype();
+			if( assigntype == Role.ASSIGNTYPE_USER ){
+				String followerUserId = topicFollowers.getEndpoint();
+				if( session.getUser().getUserId().equals(followerUserId)){	// 자기 자신은 제외
+					continue;
+				}
+				notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+				
+			}else if( assigntype == Role.ASSIGNTYPE_DEPT ){
+				// TODO
+			}
+		}
+		
+		return notiUsers;
 	}
 		
 	INotification list(Session session) throws Exception{

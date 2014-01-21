@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import org.metaworks.MetaworksContext;
@@ -28,6 +29,7 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.TopicNode;
@@ -1099,18 +1101,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			String topicSecuopt = topic.databaseMe().getSecuopt();
 			if( "1".equals( topicSecuopt )){
 				securityPush = true;
-				TopicFollower topicFollower = new TopicFollower();
-				topicFollower.setParentId(topic.databaseMe().getId());
 				
-				IFollower topicFollowers = topicFollower.findFollowers();
-				while(topicFollowers.next()){
-					String followerUserId = topicFollowers.getEndpoint();
-					if( !currentUserId.equals(followerUserId)){	// 자기 자신은 제외
-						if( Login.getSessionIdWithUserId(followerUserId) != null ){
-							pushUserMap.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
-						}
-					}
-				}
+				Notification notification = new Notification();
+				notification.session = session;
+				pushUserMap = notification.findTopicNotiUser(topic.getId());
 			}
 		}
 		
@@ -1211,6 +1205,51 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 			}
 		}
+		
+		/**
+		 *  === noti push 부분 ===
+		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
+		 */
+		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		Notification notification = new Notification();
+		notification.session = session;
+		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+		if(instance.getTopicId() != null){
+			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instance.getTopicId());
+			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
+			}
+		}
+		
+		// noti 저장
+		Iterator<String> iterator = notiUsers.keySet().iterator();
+		while(iterator.hasNext()){
+			String followerUserId = (String)iterator.next();
+			Notification noti = new Notification();
+			INotiSetting notiSetting = new NotiSetting();
+			INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+			if(!findResult.next() || findResult.isWriteInstance()){
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(followerUserId);
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setTaskId(getTaskId());
+				noti.setInstId(getInstId());					
+				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+				noti.add(copyOfInstance);
+			}
+		}
+		
+		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+				new Object[]{});
+		
+		/**
+		 *  === MetaworksContext 처리 ===
+		 */
 
 		this.getMetaworksContext().setWhen(WHEN_VIEW);
 		this.getWriter().setMetaworksContext(this.getMetaworksContext());
