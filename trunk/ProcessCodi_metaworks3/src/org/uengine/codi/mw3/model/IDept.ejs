@@ -105,12 +105,25 @@
 		} else {
 			if(mw3.when == 'new' || mw3.when == 'edit'){
 %>
-			
-		<div class="lst_type2" style="height:190px; padding-top:20px">
-			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$PartName")%> </span><span> <%=fields.partName.here()%></span></div>	
-			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$PartDesc")%> </span><span> <%=fields.description.here()%></span></div>	
-			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px; float:left"><%=mw3.localize("$LogoFile")%> </span><span style="margin-top:9px; float:left"> <%=fields.logoFile.here({when:'edit'})%></span></div>
-		</div>
+				<div class="form_table">
+					<table style="width: 100%;" border="0" cellspacing="0">	
+						<tbody>
+							<tr>
+								<th style="width:auto"><%=mw3.localize("$PartName")%> </th>
+								<td><%=fields.partName.here() %></td>
+							<tr>
+							<tr>
+								<th style="width:auto"><%=mw3.localize("$PartDesc")%></th>
+								<td><%=fields.description.here()%></td>
+							<tr>
+							<tr>
+								<th style="width:auto"><%=mw3.localize("$LogoFile")%></th>
+								<td><%=fields.logoFile.here({when:'edit'})%></td>
+							<tr>
+						</tbody>
+					</table>
+				</div>
+
 		
 		
 		<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
