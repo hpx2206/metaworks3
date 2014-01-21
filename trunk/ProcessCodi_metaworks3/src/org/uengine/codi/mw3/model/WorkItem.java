@@ -917,6 +917,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitiator(this.getWriter());
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setDueDate(getDueDate());
+				instanceRef.setStatus(WORKITEM_STATUS_RUNNING); // 처음 상태 Running
 				instanceRef.setName(title);
 				if(this.getFolderId() != null){
 					instanceRef.setTopicId(this.getFolderId());
@@ -939,9 +940,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
-			if( !WORKITEM_STATUS_COMPLETED.equalsIgnoreCase(instanceRef.getStatus())){
-				instanceRef.setStatus(WORKITEM_STATUS_RUNNING); // 처음 상태 Running
-			}
+			
+			
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 
