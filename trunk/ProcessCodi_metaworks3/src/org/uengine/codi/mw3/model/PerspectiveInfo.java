@@ -19,6 +19,14 @@ public class PerspectiveInfo {
 		public void setType(String type) {
 			this.type = type;
 		}
+		
+	String title;
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}		
 
 	PerspectiveTopPanel topPanel;
 		public PerspectiveTopPanel getTopPanel() {
@@ -32,9 +40,11 @@ public class PerspectiveInfo {
 		setTopPanel(new PerspectiveTopPanel());
 	}
 	
-	public PerspectiveInfo(String type){
+	public PerspectiveInfo(Session session, String type){
 		this();
 		
+		setTitle(session.getWindowTitle());
+		this.session = session;
 		this.setType(type);
 	}
 	

@@ -239,7 +239,12 @@ public class Role extends Database<IRole> implements IRole {
 			roleUser.flushDatabaseMe();
 			
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_ROLE, Perspective.TYPE_NEWSFEED, getRoleCode());
-			instanceListPanel.setTitle("역할 : " + this.getRoleName());
+			
+			Locale locale = new Locale(session);
+			locale.load();
+			String title = locale.getString("$Role") + " : " + this.getRoleName(); 
+			
+			session.setWindowTitle(title);
 			
 			return new Object[]{new Refresh(session),
 								new Refresh(new ListPanel(instanceListPanel, new RoleInfo(session))),
@@ -255,7 +260,16 @@ public class Role extends Database<IRole> implements IRole {
 			syncToDatabaseMe();
 			flushDatabaseMe();
 			
-			return new Object[]{new ToEvent(new RolePerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+			Locale locale = new Locale(session);
+			locale.load();
+			String title = locale.getString("$Role") + " : " + this.getRoleName(); 
+			
+			session.setWindowTitle(title);
+			
+			return new Object[]{new Refresh(session),
+								new Refresh(new RoleInfo(session)),
+								new ToEvent(new RolePerspective(), EventContext.EVENT_CHANGE), 
+								new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		}
 		
 	}

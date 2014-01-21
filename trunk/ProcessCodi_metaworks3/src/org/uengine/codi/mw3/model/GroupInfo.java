@@ -25,9 +25,8 @@ public class GroupInfo extends FollowerPerspectiveInfo{
 	}
 	
 	public GroupInfo(Session session, String topicId) throws Exception {
-		super(Perspective.TYPE_NEWSFEED);
+		super(session, Perspective.TYPE_NEWSFEED);
 		
-		this.session = session;
 		this.setId(topicId);
 		this.load();
 	}
