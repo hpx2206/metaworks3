@@ -1250,6 +1250,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		Instance instance = new Instance();
 		instance.copyFrom(instanceRef);
+		instance.flushDatabaseMe();
 		instance.fillFollower();
 
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
