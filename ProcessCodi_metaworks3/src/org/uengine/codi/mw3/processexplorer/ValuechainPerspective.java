@@ -8,9 +8,9 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
+import org.uengine.codi.mw3.ide.DefaultProject;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.CollapsePerspective;
 import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
@@ -54,13 +54,9 @@ public class ValuechainPerspective extends CollapsePerspective  implements Conte
 	public void loadChildren() throws Exception {
 		
 		if(!isLoaded()) {
-			Workspace workspace = new Workspace();
-			workspace.load(session);
-			
-			for(Project project: workspace.getProjects()){
-				File file = new File(project.getPath());
-				findChildValueChain(file);
-			}
+			Project project = new DefaultProject();
+			File file = new File(project.getPath());
+			findChildValueChain(file);
 			setLoaded(true);
 		}
 	}
