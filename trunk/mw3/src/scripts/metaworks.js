@@ -366,9 +366,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								return true;
 							}
 						}catch(faceHelperLoadException){
-						
-							console.log(faceHelperLoadException);
-						
 							//TODO:
 							//mw3.showError(objectId, faceHelperLoadException.message, 'init');
 							if(console){
@@ -3939,8 +3936,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   if(menuItems.length){
 					   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
 						   YAHOO.util.Event.onContentReady(targetDivId, function () {
-						   console.log("_contextmenu_" + objectId);
-						   
 							    var menu = new YAHOO.widget.ContextMenu(
 									"_contextmenu_" + objectId,
 									{
