@@ -214,7 +214,7 @@ public class SNS extends Application{
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PERSONAL, Perspective.TYPE_NEWSFEED);
 
 		ListPanel listPanel = new ListPanel();
-		listPanel.setPerspectiveInfo(new PerspectiveInfo(Perspective.TYPE_NEWSFEED));
+		listPanel.setPerspectiveInfo(new PerspectiveInfo(session, Perspective.TYPE_NEWSFEED));
 		listPanel.setInstanceListPanel(instanceListPanel);
 		
 		ListWindow listWindow = new ListWindow();

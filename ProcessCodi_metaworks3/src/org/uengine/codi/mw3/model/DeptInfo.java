@@ -16,9 +16,8 @@ public class DeptInfo extends FollowerPerspectiveInfo{
 	}
 	
 	public DeptInfo(Session session, String type) throws Exception{
-		super(type);
+		super(session, type);
 		
-		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.load();
 	}

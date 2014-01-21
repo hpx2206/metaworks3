@@ -16,9 +16,8 @@ public class RoleInfo extends FollowerPerspectiveInfo {
 	}
 	
 	public RoleInfo(Session session) throws Exception{
-		super(Perspective.TYPE_NEWSFEED);
+		super(session, Perspective.TYPE_NEWSFEED);
 		
-		this.session = session;
 		this.setId(session.getLastSelectedItem());
 		this.load();
 	}

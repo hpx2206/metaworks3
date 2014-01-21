@@ -45,8 +45,8 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 		
 	}
 	
-	public FollowerPerspectiveInfo(String type){
-		super(type);
+	public FollowerPerspectiveInfo(Session session, String type){
+		super(session, type);
 	}
 		
 	public void load() throws Exception {

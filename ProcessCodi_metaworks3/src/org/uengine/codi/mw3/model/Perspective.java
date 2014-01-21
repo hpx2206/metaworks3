@@ -119,13 +119,14 @@ public class Perspective {
 	
 		savePerspectiveToSession(session, perspectiveMode, perspectiveType, selectedItem);
 
+		InstanceListPanel instListPanel = new InstanceListPanel();
+		
 		String title = null;
 		if(MODE_PERSONAL.equals(perspectiveMode)){
 			title = "$perspective." + perspectiveType;
+			
+			session.setWindowTitle(title);
 		}
-
-		InstanceListPanel instListPanel = new InstanceListPanel();
-		instListPanel.setTitle(title);
 
 		if(TYPE_CALENDAR.equals(perspectiveType)){
 			ScheduleCalendar scheduleCalendar = new ScheduleCalendar();

@@ -28,15 +28,6 @@ public class InstanceListPanel {
 	@AutowiredFromClient
 	public Session session;
 
-	String title;
-		@Hidden
-		public String getTitle() {
-			return title;
-		}
-		public void setTitle(String title) {
-			this.title = title;
-		}
-	
 	ScheduleCalendar scheduleCalendar;
 		public ScheduleCalendar getScheduleCalendar() {
 			return scheduleCalendar;

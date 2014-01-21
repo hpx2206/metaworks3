@@ -369,7 +369,7 @@ public class Dept extends Database<IDept> implements IDept {
 		Locale locale = new Locale(session);
 		locale.load();
 
-		String title = locale.getString("$Dept" + " - " + getPartName());
+		String title = locale.getString("$Dept") + " - " + getPartName();
 		session.setWindowTitle(title);
 		
 		DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
@@ -446,14 +446,16 @@ public class Dept extends Database<IDept> implements IDept {
 			emp.flushDatabaseMe();
 			
 			
-			
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_DEPT, Perspective.TYPE_NEWSFEED, getPartCode());
-			instanceListPanel.setTitle("부서 : " + this.getPartName());
+
+			Locale locale = new Locale(session);
+			locale.load();
+			String title = locale.getString("$Dept") + " : " + this.getPartName(); 
 			
-			DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
+			session.setWindowTitle(title);
 			
 			return new Object[]{new Refresh(session), 
-					 			new Refresh(new ListPanel(instanceListPanel, deptInfo)),  
+					 			new Refresh(new ListPanel(instanceListPanel, new DeptInfo(session, Perspective.TYPE_NEWSFEED))),  
 					 			new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE),
 					 			new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 			
@@ -473,6 +475,14 @@ public class Dept extends Database<IDept> implements IDept {
 			//returnValueDept = findRefreshableParentDept();
 		} else {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+
+			Locale locale = new Locale(session);
+			locale.load();
+			String title = locale.getString("$Dept") + " : " + this.getPartName(); 
+			
+			session.setWindowTitle(title);
+			
+			DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
 			
 			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
 				this.setUrl(this.getLogoFile().getUploadedPath());
@@ -481,7 +491,10 @@ public class Dept extends Database<IDept> implements IDept {
 			syncToDatabaseMe();
 			flushDatabaseMe();
 			
-			return new Object[]{new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+			return new Object[]{new Refresh(session), 
+								new Refresh(deptInfo),
+								new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE), 
+								new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		}
 		//}
 		// TODO execute drillDown()
