@@ -93,6 +93,14 @@ public class User extends Database<IUser> implements IUser {
 			this.friend = friend;
 		}
 
+	boolean admin;
+		public boolean isAdmin() {
+			return admin;
+		}
+		public void setAdmin(boolean admin) {
+			this.admin = admin;
+		}
+		
 	@Override
 	public Object[] pickUp() throws Exception {
 		return new Object[]{new ToOpener(this), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
@@ -134,6 +142,7 @@ public class User extends Database<IUser> implements IUser {
 		}
 		
 		this.setFriend(isFriend);
+		this.setAdmin(session.getEmployee().getIsAdmin());
 	}
 	
 	@Override

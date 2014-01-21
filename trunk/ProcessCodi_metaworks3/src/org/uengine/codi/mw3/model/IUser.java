@@ -115,7 +115,8 @@ public interface IUser extends IDAO{
 	@Available(where={WHERE_SELF})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object[] showMenu() throws Exception;
-	
+
+	@Available(condition="typeof admin != 'undefined' && admin")
 	@Group(name="admin")
 	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] delUser() throws Exception;
