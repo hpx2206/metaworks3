@@ -1,5 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.dao.IDAO;
+import org.metaworks.dao.MetaworksDAO;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.TransactionListener;
+
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 
 public class RoleFollower extends Follower {
 
@@ -31,9 +38,8 @@ public class RoleFollower extends Follower {
 		if(this.find() == null){
 			RoleUser roleUser = this.makeRoleUser();
 			roleUser.createDatabaseMe();
-			roleUser.flushDatabaseMe();
 			
-			this.push();
+			this.addPushListener();
 		}
 	}
 
@@ -55,6 +61,8 @@ public class RoleFollower extends Follower {
 
 		IFollower follower = roleUser.findFollowers();
 		follower.getMetaworksContext().setWhere(WHERE_FOLLOWER);
+		
+		System.out.println("size : " + follower.size());
 		
 		return follower;
 	}

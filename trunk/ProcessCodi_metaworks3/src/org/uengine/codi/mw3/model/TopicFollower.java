@@ -18,7 +18,7 @@ public class TopicFollower extends Follower {
 		// not exist save topicmapping
 		if( !tm.findByUser().next() ){
 			tm.saveMe();
-			this.push();
+			this.addPushListener();
 		}
 	}
 

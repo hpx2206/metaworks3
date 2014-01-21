@@ -8,6 +8,8 @@ import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.TransactionListener;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
@@ -159,6 +161,39 @@ public class Follower extends Database<IFollower> implements IFollower {
 		popup.setPanel(addFollowerPanel);
 
 		return new Object[]{ new Refresh(session), popup }; 
+	}
+	
+	public void addPushListener(){
+		/*
+		 * event 순서 문제 해결
+		 * 
+		 * desc : flushDatabaseMe() 에서 beforeCommit 이벤트를 발생 시켜 create 및 update 를 실행하는데
+		 * push 가 create 및 update 보다 더 빨리 실행 되여 발생하여 afterCommit 시  push 되도록 수정
+		 */
+		final Follower pushFollower = this;
+		
+		TransactionListener flusher = new TransactionListener(){
+			public void beforeCommit(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+			}
+
+			public void beforeRollback(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+			}
+
+			public void afterCommit(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+				System.out.println("afterCommit");
+				pushFollower.push();
+			}
+
+			public void afterRollback(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+			}
+		};
+
+		TransactionContext tx = TransactionContext.getThreadLocalInstance();
+		tx.addTransactionListener(flusher);
 	}
 	
 	public void push() throws Exception {
