@@ -9,7 +9,13 @@ var org_uengine_codi_mw3_model_Preview = function(objectId, className){
 	if(this.object == null)
 		return true;	
 	
-	
+	if( this.object.mimeType == null || this.object.mimeType == 'image'){
+		$("#imagePreview_" + this.objectId).addClass("current");
+        $("#pdfPreview_" + this.objectId).removeClass("current");
+	}else{
+		$("#imagePreview_" + this.objectId).removeClass("current");
+        $("#pdfPreview_" + this.objectId).addClass("current");
+	}
 };
 
 org_uengine_codi_mw3_model_Preview.prototype = {
