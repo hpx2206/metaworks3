@@ -916,7 +916,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
 				instanceRef.setInitiator(this.getWriter());
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
-				instanceRef.setStatus(WORKITEM_STATUS_RUNNING);									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(title);
 				if(this.getFolderId() != null){
@@ -940,8 +939,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
-			instanceRef.setStatus(WORKITEM_STATUS_RUNNING);
-			
+			if( !WORKITEM_STATUS_COMPLETED.equalsIgnoreCase(instanceRef.getStatus())){
+				instanceRef.setStatus(WORKITEM_STATUS_RUNNING); // 처음 상태 Running
+			}
 			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 
@@ -1317,10 +1317,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setSecuopt(newInstancePanel.getSecurityLevel().getSelected());			
 			else
 				instanceRef.setSecuopt("0");
-			
-//			if(newInstancePanel.getDueDate() != null){
-//				instanceRef.setDueDate(newInstancePanel.getDueDate());
-//			}
 			
 			if(newInstancePanel.getTopicNodeId() != null){
 				instanceRef.setTopicId(newInstancePanel.getTopicNodeId());
