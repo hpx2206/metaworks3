@@ -28,6 +28,7 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Group;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Icon;
 import org.metaworks.annotation.Id;
@@ -986,7 +987,8 @@ public class WebObjectType{
 				Hidden hidden =  (Hidden) getAnnotationDeeply(tryingClasses, method.getName(), Hidden.class, false);
 				Testing testSet = (Testing) getAnnotationDeeply(tryingClasses, method.getName(), Testing.class, false);
 				Test test = (Test) getAnnotationDeeply(tryingClasses, method.getName(), Test.class, false);
-	
+				Group group = (Group) getAnnotationDeeply(tryingClasses, method.getName(), Group.class, false);
+				
 				ServiceMethodContext smc = new ServiceMethodContext();
 				smc.setMethodName(method.getName());
 				smc.setWhen(annotation.when() + "|");
@@ -998,6 +1000,10 @@ public class WebObjectType{
 				smc.setValidate(annotation.validate());
 				smc.setRtnCls(method.getReturnType().getName());
 				smc.setBindingHidden(annotation.bindingHidden());
+				
+				if(group != null)
+					smc.setGroup(group.name());
+				
 				/*
 				 * 2012-12-06 jinwon
 				 * add childrenLoader option
