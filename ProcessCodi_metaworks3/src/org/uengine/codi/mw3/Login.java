@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,7 +46,6 @@ import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.ide.Dashboard;
 import org.uengine.codi.mw3.ide.DefaultProject;
 import org.uengine.codi.mw3.ide.Project;
-import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Application;
@@ -321,11 +321,9 @@ public class Login implements ContextAware {
 			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
 			BufferedReader br = new BufferedReader(isr);
 			
-			
-			while(true){
-				tempContent += br.readLine();
-				if(br.readLine() == null) break;
-//				System.out.println(tempContent);
+			int data;
+			while((data = br.read()) != -1){
+				tempContent += (char)data;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -337,7 +335,7 @@ public class Login implements ContextAware {
 		content = this.replaceString(tempContent,beforeCompany,afterCompany);
 		content = this.replaceString(content, parameterSignUpURL, url);
 		content = this.replaceString(content, signUpBaseUrl, baseUrl);
-		System.out.println(content);
+		System.out.println(tempContent);
 		
 	
 		try{
@@ -620,7 +618,7 @@ public class Login implements ContextAware {
 	}
 	
 	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, validate=true)
 	public Object[] login() throws Exception {
 
 		/*
