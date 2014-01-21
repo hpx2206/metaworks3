@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
+import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -73,7 +74,7 @@ public interface IUser extends IDAO{
 	public Object[] removeContact() throws Exception;
 	
 	@Available(where=WHERE_ADDFOLLOWER)
-	@ServiceMethod(callByContent=true, target=TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND, eventBinding=EventContext.EVENT_CLICK)
 	public Object[] addFollower() throws RemoteException, Exception;
 
 	@Available(where=WHERE_FOLLOWERS)
@@ -88,6 +89,8 @@ public interface IUser extends IDAO{
 	@ServiceMethod(payload={"userId"}, target="none")
 	IEmployee loadEmployee() throws Exception;
 
+	
+	@Hidden(how={HOW_INFO, HOW_PICKER}, where={WHERE_ADDCONTACT, WHERE_ADDFOLLOWER})
 	@ServiceMethod(mouseBinding="drag", payload={"userId", "name"})
 	public Session drag();
 
