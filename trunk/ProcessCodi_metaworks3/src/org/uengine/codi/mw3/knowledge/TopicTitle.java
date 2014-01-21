@@ -28,11 +28,16 @@ import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.INotiSetting;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.ListPanel;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.NotiSetting;
 import org.uengine.codi.mw3.model.Notification;
 import org.uengine.codi.mw3.model.NotificationBadge;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.SystemWorkItem;
+import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.codi.mw3.model.TopicPerspective;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -332,7 +337,23 @@ public class TopicTitle  implements ContextAware{
 		
 	//	this.notiToCompany();
 		
-		return new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};		
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getTopicId());
+		
+		Locale locale = new Locale(session);
+		locale.load();
+		String title = locale.getString("$Topic") + " - " + this.getTopicTitle(); 
+		
+		session.setWindowTitle(title);
+		
+		TopicInfo topicInfo = new TopicInfo(session, Perspective.TYPE_NEWSFEED);
+		
+		return new Object[]{new Refresh(session),
+							new Refresh(new ListPanel(instanceListPanel, topicInfo)),
+				 			new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE),
+				 			new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		
+		
+//		return new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};		
 	}
 	
 	@Face(displayName="$Close")
