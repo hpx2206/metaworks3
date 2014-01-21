@@ -507,7 +507,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 #wihContent { }
 #navigator { padding-right:13px; }
 #navigator .depth2 { position:relative }
-#navigator .depth2 .fist_menu ul{ margin: 5px; }
+#navigator .depth2 .fist_menu { margin: 5px; }
 .AddLocalContactPanel .fist_menu { margin:0px !important; }
 .AddLocalContactPanel .fist_menu .ui-droppable a {
 	border-bottom: 1px solid #E7EAEF;
