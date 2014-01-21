@@ -73,14 +73,7 @@ li.widget .widget-content {
 
 
 .editor_div { font-size:13px; }
-.editor_div ul li {
-	list-style-type:disc;
-	margin-left:15px;
-}
-.editor_div ol li {
-	list-style-type:decimal;
-	margin-left:15px;
-}
+
 .editor_div dl dd,
 
 
@@ -131,6 +124,15 @@ dt {
 	list-style-type: none;
 	margin: 0px;
 	padding: 0px;
+}
+
+.editor_div ul li {
+	list-style-type:disc;
+	margin-left:15px;
+}
+.editor_div ol li {
+	list-style-type:decimal;
+	margin-left:15px;
 }
 
 .clear { clear: both; }
