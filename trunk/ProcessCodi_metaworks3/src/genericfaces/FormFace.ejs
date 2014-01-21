@@ -166,17 +166,18 @@
 		
 	   	if(methodVAlign == 'bottom' && methodOrder.length > 0){
 %>
-		
-		<div class="positionRight">
+		<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+			<div class="positionRight">
 <%			   	
-			for(var i=0; i<methodOrder.length; i++){
-	   		   	var serviceMethodName = methodOrder[i];	   		   	
+				for(var i=0; i<methodOrder.length; i++){
+	   		   		var serviceMethodName = methodOrder[i];	   		   	
 %>
-				<%=methods[serviceMethodName].here()%>
+					<%=methods[serviceMethodName].here()%>
 <%	   	   	
 			}
 %>			
-			<div class="clear"></div>
+				<div class="clear"></div>
+			</div>
 		</div>
 		<div class="clear"></div>
 <%			
