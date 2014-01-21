@@ -203,7 +203,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 						+ GlobalContext.getPropertyString("web.server.port", "b") 
 						+ "/"
 						+ GlobalContext.getPropertyString("web.context.root", "c") 
-						+ "/images/waveStyle/loadingBg.png";
+						+ "/dwr/metaworks/images/circleloading.gif";
 				
 				iframe.setSrc(loadingUrl);
 				iframe.setWidth("100%");
