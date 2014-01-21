@@ -9,7 +9,7 @@ import org.uengine.codi.mw3.knowledge.TopicTitle;
 
 
 public class GroupInfo extends FollowerPerspectiveInfo{
-	public final static int MODIFY_POPUP_HEIGHT = 250;
+	public final static int MODIFY_POPUP_HEIGHT = 200;
 	public final static int MODIFY_POPUP_WIDTH = 500;
 	
 	String secuopt;
