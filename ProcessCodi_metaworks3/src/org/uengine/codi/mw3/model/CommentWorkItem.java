@@ -43,7 +43,13 @@ public class CommentWorkItem extends WorkItem{
 			workItem.processManager = processManager;
 			workItem.session = session;
 			workItem.setContent(getTitle());
-			workItem.setTitle(getTitle().substring(0, TITLE_LIMIT_SIZE) + "...");
+			
+			String title = getTitle().substring(0, MEMO_TITLE_LIMIT_SIZE) + "...";
+			if( title.indexOf("\n") > 0 ){
+				title = title.substring(0, title.indexOf("\n"));
+			}
+			
+			workItem.setTitle(title);
 			workItem.setMemo(new WebEditor(this.getContent()));
 			
 			return workItem.add();
