@@ -74,7 +74,7 @@ public class UserPanel {
 	}
 			
 	public void load() throws Exception{
-		IUser users = User.findUsers(session.getUser(), this.getKeyword());
+		IUser users = User.findUsers(session, this.getKeyword());
 		users.getMetaworksContext().setWhere(IUser.WHERE_ADDCONTACT);
 		
 		this.setList(users);

@@ -494,7 +494,7 @@ public class User extends Database<IUser> implements IUser {
 		recentItem.add();
 	}
 	
-	public static IUser findUsers(IUser user, String keyword) throws Exception {
+	public static IUser findUsers(Session session, String keyword) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT e.empcode userId, e.empname name, CONCAT(p.partname,IF(!isnull(p.partname) and length(trim(p.partname))>0 and !isnull(e.jikname) and length(trim(e.jikname))>0, ', ', ''), e.jikname) mood");
 		sb.append("  FROM emptable e");
@@ -502,6 +502,7 @@ public class User extends Database<IUser> implements IUser {
 		sb.append("         ON e.partcode=p.partcode");
 		sb.append(" WHERE e.empcode!=?userid");
 		sb.append("   AND e.isdeleted=?isdeleted");
+		sb.append("   AND e.globalcom=?globalcom");
 		sb.append("   AND NOT EXISTS");
 		sb.append("    (SELECT 1");
 		sb.append("       FROM contact c");
@@ -517,9 +518,10 @@ public class User extends Database<IUser> implements IUser {
 	   			 sb.toString(), 
 	   			 IUser.class);
 
-		dao.setUserId(user.getUserId());		
+		dao.setUserId(session.getUser().getUserId());		
 		dao.set("empname", "%" + keyword + "%");
 		dao.set("isdeleted", "0");
+		dao.set("globalcom", session.getEmployee().getGlobalCom());
 		dao.select();
 
 		return dao;
