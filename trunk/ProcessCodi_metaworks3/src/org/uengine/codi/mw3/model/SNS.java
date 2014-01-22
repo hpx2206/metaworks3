@@ -210,8 +210,8 @@ public class SNS extends Application{
 	}
 
 	static public ListWindow createInstanceListWindow(Session session) throws Exception {
-
-		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PERSONAL, Perspective.TYPE_NEWSFEED);
+		
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PERSONAL, Perspective.TYPE_NEWSFEED, session.getUser().getUserId());
 
 		ListPanel listPanel = new ListPanel();
 		listPanel.setPerspectiveInfo(new PerspectiveInfo(session, Perspective.TYPE_NEWSFEED));
