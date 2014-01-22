@@ -29,6 +29,14 @@ public class CommentWorkItem extends WorkItem{
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] add() throws Exception {
 		
+		boolean isOwnReturn = false;
+		Object[] returnObjects = null;
+		if( (WHEN_NEW.equals(getMetaworksContext().getWhen()) && this.getInstId() == null) || WHEN_EDIT.equals(getMetaworksContext().getWhen()) ){
+			isOwnReturn = true;
+		}else{
+			isOwnReturn = false;
+		}
+		
 		// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
 		if(this.getTitle().length() > TITLE_LIMIT_SIZE){
 			this.setType(WORKITEM_TYPE_MEMO);
@@ -50,24 +58,21 @@ public class CommentWorkItem extends WorkItem{
 			}
 			
 			workItem.setTitle(title);
-			workItem.setMemo(new WebEditor(this.getContent()));
+			workItem.setMemo(new WebEditor(workItem.getContent()));
 			
-			return workItem.add();
-		}else{
-			boolean isOwnReturn = false;
-			if( (WHEN_NEW.equals(getMetaworksContext().getWhen()) && this.getInstId() == null) || WHEN_EDIT.equals(getMetaworksContext().getWhen()) ){
-				isOwnReturn = true;
-			}else{
-				isOwnReturn = false;
+			returnObjects = workItem.add();
+			if( !isOwnReturn ){
+				// 덧글이 새로 올라왔을 경우 특별한 리턴처리를 해준다. ( 화면상에 taskId 가 없기때문에 refresh를 false 로 가져가야함 )
+				returnObjects = new Object[]{new Refresh(workItem, false, true)};
 			}
-			
-			Object[] returnObjects = super.add();
+		}else{
+			returnObjects = super.add();
 			if( !isOwnReturn ){
 				// 덧글이 새로 올라왔을 경우 특별한 리턴처리를 해준다. ( 화면상에 taskId 가 없기때문에 refresh를 false 로 가져가야함 )
 				returnObjects = new Object[]{new Refresh(this, false, true)};
 			}
-			return returnObjects;
 		}
+		return returnObjects;
 	}
 	
 	@Test(scenario="first", starter=true, instruction="$first.NewActivity", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
