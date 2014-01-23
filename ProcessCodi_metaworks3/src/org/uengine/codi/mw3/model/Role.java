@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -191,10 +192,27 @@ public class Role extends Database<IRole> implements IRole {
 	
 	@Override
 	public Object[] saveMe() throws Exception {
+		
+		if(this.getRoleName().length() > 10){
+			throw new MetaworksException("10자 이상 입력 불가");
+		}
+		
+		if(!this.getRoleName().matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*"))
+		{
+		    throw new MetaworksException("$SpecialLettersCannotInput");
+		}
+		
+		
 		if(this.getLogoFile().getFileTransfer() != null &&
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0){			
-			this.getLogoFile().upload();
+			
+			if( this.getLogoFile().getFileTransfer().getMimeType() != null  && !this.getLogoFile().getFileTransfer().getMimeType().startsWith("image")){
+				throw new MetaworksException("$OnlyImageFileCanUpload");
+			}else{
+				this.getLogoFile().upload();
+			}
+			
 		}
 		
 		//역할 중복 검사
