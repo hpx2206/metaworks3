@@ -5,9 +5,25 @@
 	
 	<div class="toolbar">
         <ul>
+<%
+		var session = mw3.fn.getSession();
+		
+		if(session.lastPerspecteMode == 'personal' && session.lastSelectedItem != session.user.userId){
+%>       
+            <li onclick="<%=methods.switchToRequest.caller()%>" <%=(value.type=='request') ? "class='toolbar_current'" : ""%>>
+            	<span class="toolbarIcon icon-feed"></span><span><%=mw3.localize("$StartedBy")%></span>
+            </li>
+<%       
+        }else{
+%>
             <li onclick="<%=methods.switchToInstanceList.caller()%>" <%=(value.type=='allICanSee') ? "class='toolbar_current'" : ""%>>
             	<span class="toolbarIcon icon-feed"></span><span><%=mw3.localize("$ComingUp")%></span>
             </li>
+<%       
+	    }
+%>
+
+
             <li onclick="<%=methods.switchToInstanceListFollowing.caller()%>" <%=(value.type=='following') ? "class='toolbar_current'" : ""%>>
             	<span class="toolbarIcon icon-users"></span><span ><%=mw3.localize("$Following")%></span>
             </li>               

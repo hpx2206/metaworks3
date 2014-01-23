@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.EventContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -56,6 +57,12 @@ public class PerspectiveInfo {
 	@ServiceMethod
 	public Object[] switchToInstanceList() throws Exception {
 		return this.load(Perspective.TYPE_NEWSFEED);
+	}
+	
+	@Face(displayName = "$Request")
+	@ServiceMethod
+	public Object[] switchToRequest() throws Exception{
+		return this.load(Perspective.TYPE_STARTEDBYME);
 	}
 
 	@Face(displayName = "$Following")
