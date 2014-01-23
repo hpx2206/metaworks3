@@ -1130,8 +1130,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							if(methodContext.needToConfirm)
 							    command = "if (confirm(\'Are you sure to "+mw3.localize(methodContext.displayName)+" this?\'))" + command;
 
-
-							   
 							if(methodContext.eventBinding && methodContext.eventBinding.length > 0){
 						    	for(var i=0; i<methodContext.eventBinding.length; i++){
 						    		var eventBinding = methodContext.eventBinding[i];
@@ -3281,17 +3279,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					isHidden = true;
 				}
 				
-				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
+				if(methodContext.when != null && metaworksContext.when.length > 0 && methodContext.when.indexOf('whenever|') == -1){
 					if(methodContext.when.indexOf(metaworksContext.when + '|') > -1)
 						isHidden = false;						
 				}
 				
-				if(methodContext.where != null && methodContext.where.indexOf('wherever|') == -1){
+				if(methodContext.where != null && metaworksContext.where.length > 0 && methodContext.where.indexOf('wherever|') == -1){
 					if(methodContext.where.indexOf(metaworksContext.where + '|') > -1)
 						isHidden = false;						
 				}
 
-				if(methodContext.how != null){
+				if(methodContext.how != null && metaworksContext.how.length > 0){
 					if(methodContext.how.indexOf(metaworksContext.how + '|') > -1)
 						isHidden = false;						
 				}
@@ -3720,7 +3718,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				    if(mw3.isHiddenMethodContext(methodContext, object) && !methodContext.bindingHidden)
 					   continue;
 
-				    //console.log('pass : ' + methodName);
+				    console.log('pass : ' + methodName);
 				    //console.log(methodContext);
 				    
 				    // make call method
