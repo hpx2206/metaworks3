@@ -5,12 +5,25 @@
 		   <%  if(mw3.how == 'tree'){    %>
 			     <a style="cursor: pointer" onClick="<%=methods.loadDeptList.caller()%>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>					
            <%  }else if(mw3.how == 'addFollower'){  %>
-                <a style="cursor: pointer" onClick="<%=methods.drillDown.caller()%>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>
-                <%  if(value.followed) {    %>
-                        <a style="cursor: pointer; float:righ" onClick="<%=methods.removeFollower.caller()%>" >v팔로워</a>
-                <%  } else {    %>
-                        <a style="cursor: pointer; float:righ" onClick="<%=methods.addFollower.caller()%>" >팔로워추가</a>
-                <%  }    %>
+                <a style="cursor: pointer" onClick="<%=methods.drillDown.caller()%>" >
+	                <div class="user">		
+						<div class="user_focus" style="background: url('portrait/KYT.thumnail'); background-size:cover;" title="Youngtak Kim">	
+							<img id="user_picture_896" src="images/portrait/group.png" width="34" height="34">
+						</div>
+						<div class="user_detail">
+							<span class="fontbold"><%=fields.partName.here()%></span>
+							<span class="fontgray"></span>
+						</div>
+		                <%  if(value.followed) {    %>
+		                        <button type="button" class="btn btn-default btn-xs"  onClick="<%=methods.removeFollower.caller()%>" style="float:right; margin:7px 7px 0 0">삭제</button>
+		                <%  } else {    %>
+		                        <button type="button" class="btn btn-primary btn-xs"  onClick="<%=methods.addFollower.caller()%>" style="float:right; margin:7px 7px 0 0">추가</button>
+		                <%  }    %>
+						<div style="clear:both"></div>				
+						<div style="padding:3px 0px; border-bottom:1px solid #e7e7e7;"></div>
+					</div>
+                </a>
+
            <%  }  %>
 <%   
 			if(mw3.where=='deptPicker'){
