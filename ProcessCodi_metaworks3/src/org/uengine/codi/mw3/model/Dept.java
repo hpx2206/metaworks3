@@ -233,7 +233,7 @@ public class Dept extends Database<IDept> implements IDept {
 		return deptList;
 	}
 	
-	public IDept findDeptForInstance(String instanceId) throws Exception {
+	public IDept findDeptForInstance(String instanceId, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
@@ -252,6 +252,8 @@ public class Dept extends Database<IDept> implements IDept {
 		} else {
 			sb.append("and pt.parent_partcode is null ");
 		}
+		if(keyword != null && keyword.trim().length() > 0)
+			sb.append("   AND pt.partname LIKE ?deptname");
 		
 		sb.append("  ) c ");
 		
@@ -260,11 +262,12 @@ public class Dept extends Database<IDept> implements IDept {
 		childDeptList.setGlobalCom(globalCom);
 		childDeptList.setParent_PartCode(this.getParent_PartCode());
 		childDeptList.set("instanceId", instanceId);
+		childDeptList.set("deptname", "%" + keyword + "%");
 		childDeptList.select();
 		
 		return childDeptList;
 	}
-	public IDept findDeptForTopic(String topicId) throws Exception {
+	public IDept findDeptForTopic(String topicId, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
@@ -284,6 +287,9 @@ public class Dept extends Database<IDept> implements IDept {
 			sb.append("and pt.parent_partcode is null ");
 		}
 		
+		if(keyword != null && keyword.trim().length() > 0)
+			sb.append("   AND pt.partname LIKE ?deptname");
+		
 		sb.append("  ) c ");
 		
 		
@@ -291,6 +297,7 @@ public class Dept extends Database<IDept> implements IDept {
 		childDeptList.setGlobalCom(globalCom);
 		childDeptList.setParent_PartCode(this.getParent_PartCode());
 		childDeptList.set("topicId", topicId);
+		childDeptList.set("deptname", "%" + keyword + "%");
 		childDeptList.select();
 		
 		return childDeptList;
@@ -505,7 +512,7 @@ public class Dept extends Database<IDept> implements IDept {
 			flushDatabaseMe();
 			
 			return new Object[]{new Refresh(session), 
-								new Refresh(deptInfo),
+								new Refresh(deptInfo), 
 								new ToEvent(new DeptPerspective(), EventContext.EVENT_CHANGE), 
 								new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		}

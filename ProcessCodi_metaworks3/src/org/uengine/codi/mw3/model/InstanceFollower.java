@@ -104,6 +104,6 @@ public class InstanceFollower extends Follower {
 		Dept dept = new Dept();
 		dept.setGlobalCom(session.getEmployee().getGlobalCom());
 		
-		return dept.findDeptForInstance(this.getParentId());
+		return dept.findDeptForInstance(this.getParentId(), keyword);
 	}
 }

@@ -71,6 +71,6 @@ public class TopicFollower extends Follower {
 		Dept dept = new Dept();
 		dept.setGlobalCom(session.getEmployee().getGlobalCom());
 		
-		return dept.findDeptForTopic(this.getParentId());
+		return dept.findDeptForTopic(this.getParentId(), keyword);
 	}
 }
