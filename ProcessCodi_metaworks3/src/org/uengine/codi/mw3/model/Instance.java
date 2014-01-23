@@ -163,12 +163,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("self_partcode", navigation.getEmployee().getPartCode());			
 			
 		}else{
-			criteria.put("self_endpoint", navigation.getEmployee().getEmpCode());
+			criteria.put("self_endpoint", navigation.getPerspectiveValue());
 			criteria.put("self_partcode", navigation.getEmployee().getPartCode());
 			
 			criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
 			criteria.put("partcode", navigation.getEmployee().getPartCode());
-			criteria.put("endpoint", navigation.getEmployee().getEmpCode());
+			criteria.put("endpoint", navigation.getPerspectiveValue());
 		}
 	
 		// TODO add criteria
@@ -375,7 +375,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}			
 		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())){
 			instanceSql.append(" and inst.initep=?instInitep ");
-			criteria.put("instInitep", navigation.getEmployee().getEmpCode());
+			criteria.put("instInitep", navigation.getPerspectiveValue());
 		}else{
 			throw new Exception("wrong perspective");
 		}
