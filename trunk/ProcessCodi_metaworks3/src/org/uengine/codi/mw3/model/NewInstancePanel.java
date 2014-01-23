@@ -24,6 +24,14 @@ public class NewInstancePanel implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 	
+	String title;
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
 	WorkItem newInstantiator;
 		public WorkItem getNewInstantiator() {
 			return newInstantiator;
@@ -96,6 +104,15 @@ public class NewInstancePanel implements ContextAware {
 	
 		
 	public void load(Session session) throws Exception{
+
+		String title = "새로쓰기";
+
+		if(Perspective.MODE_TOPIC.equals(session.getLastPerspecteMode()) ||
+				   Perspective.MODE_PROJECT.equals(session.getLastPerspecteType())){
+			this.setTopicNodeId(session.getLastSelectedItem());
+			title = "'" + session.getWindowTitle() + "' 에 새로쓰기";
+		}
+		setTitle(title);
 
 		if("UnlabeledDocument".equals(session.getLastPerspecteType())){
 			newInstantiator = new DocWorkItem();
