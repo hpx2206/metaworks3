@@ -351,18 +351,23 @@ public class TopicTitle  implements ContextAware{
 		
 	//	this.notiToCompany();
 		
-		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getTopicId());
+		
 		
 		Locale locale = new Locale(session);
 		locale.load();
-		String title = locale.getString("$Topic") + " - " + this.getTopicTitle(); 
 		
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getTopicId());
+
+		String title = locale.getString("$Topic") + " - " + this.getTopicTitle();
 		session.setWindowTitle(title);
 		
-		TopicInfo topicInfo = new TopicInfo(session, Perspective.TYPE_NEWSFEED);
+		ListPanel listPanel = new ListPanel(instanceListPanel, new TopicInfo(session, this.getTopicId()));
+		
+		TopicInfo topicInfo = new TopicInfo(session, session.getLastPerspecteType());
+		topicInfo.load();
 		
 		return new Object[]{new Refresh(session),
-							new Refresh(new ListPanel(instanceListPanel, topicInfo)),
+							new Refresh(listPanel),
 				 			new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE),
 				 			new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		
