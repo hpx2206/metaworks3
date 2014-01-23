@@ -3,7 +3,9 @@ package org.uengine.codi.mw3.model;
 import javax.persistence.GeneratedValue;
 import javax.validation.constraints.NotNull;
 
+import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -49,31 +51,28 @@ public interface IDept extends IDAO {
 	public String getThumbnail();
 	public void setThumbnail(String thumbnail);
 
-	
-//	public String getComCode();
-//
-//	public void setComCode(String comCode);
-	
 	@NonSavable
 	@NonLoadable
 	public MetaworksFile getLogoFile();
 	public void setLogoFile(MetaworksFile logoFile);
 	
 	public String getGlobalCom();
-
 	public void setGlobalCom(String globalCom);
 
 	@Hidden
 	@NonSavable
 	@NonLoadable
 	public boolean getSelected() throws Exception;
-
 	public void setSelected(boolean value) throws Exception;
 
 	@NonSavable
 	@NonLoadable
 	public DeptList getChildren() throws Exception;
 	public void setChildren(DeptList children) throws Exception;
+	
+	@NonSavable
+	public boolean isFollowed();
+	public void setFollowed(boolean followed);
 
 	@NonSavable
 	@NonLoadable
@@ -98,6 +97,13 @@ public interface IDept extends IDAO {
 	
 	public IDept findRootDeptByGlobalCom(String globalCom) throws Exception;
 
+	@Available(where=IUser.WHERE_ADDFOLLOWER)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND, eventBinding=EventContext.EVENT_CLICK)
+	public Object[] addFollower() throws Exception;
+	
+	@Available(where=IUser.WHERE_FOLLOWERS)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
+	public Object[] removeFollower() throws Exception;
 
 	// service methods
 	@ServiceMethod(target="self", callByContent = true, payload = { "partCode", "selected" })

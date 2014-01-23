@@ -25,6 +25,9 @@ public class InstanceFollower extends Follower {
 		if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
 			rm.setEndpoint(user.getUserId());
 			rm.setResName(user.getName());
+		}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+			rm.setEndpoint(dept.getPartCode());
+			rm.setResName(dept.getPartName());
 		}
 		
 		rm.setAssignType(this.getAssigntype());
@@ -85,7 +88,22 @@ public class InstanceFollower extends Follower {
 	}
 	
 	@Override
+	public AddFollowerPanel makeFollowerPanel(Session session, Follower follower) throws Exception{
+		AddFollowerPanel addFollowerPanel = new AddFollowerPanel(session, this);
+		addFollowerPanel.loadDept(session, follower);
+		return addFollowerPanel;
+	}
+	
+	@Override
 	public IContact findContacts(String keyword) throws Exception {
 		return Contact.findContactsForInstance(this.getParentId(), session.getUser(), keyword);
+	}
+	
+	@Override
+	public IDept findDepts(String keyword) throws Exception {
+		Dept dept = new Dept();
+		dept.setGlobalCom(session.getEmployee().getGlobalCom());
+		
+		return dept.findDeptForInstance(this.getParentId());
 	}
 }

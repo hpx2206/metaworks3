@@ -1,25 +1,29 @@
 <%
 	if(value){
-		if(mw3.how == 'tree'){
-%>
-			<a style="cursor: pointer" onClick="<% if(mw3.where!='addContact'){%><%=methods.loadDeptList.caller()%><% }else{ %> <%=methods.drillDown.caller()%><% } %>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>					
-<%
+		if(mw3.how == 'tree' || mw3.how == 'addFollower'){
+%>		
+		   <%  if(mw3.how == 'tree'){    %>
+			     <a style="cursor: pointer" onClick="<%=methods.loadDeptList.caller()%>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>					
+           <%  }else if(mw3.how == 'addFollower'){  %>
+                <a style="cursor: pointer" onClick="<%=methods.drillDown.caller()%>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>
+                <%  if(value.followed) {    %>
+                        <a style="cursor: pointer; float:righ" onClick="<%=methods.removeFollower.caller()%>" >v팔로워</a>
+                <%  } else {    %>
+                        <a style="cursor: pointer; float:righ" onClick="<%=methods.addFollower.caller()%>" >팔로워추가</a>
+                <%  }    %>
+           <%  }  %>
+<%   
 			if(mw3.where=='deptPicker'){
 %>
 			<%=methods.pickup.here()%>
 <%			
 			}
-%>		
-		
-<%		
 			if(value.selected) {
 				if(value.children) {
 %>
-				
 					<div><%=fields.children.here() %></div>
 <%
 				}
-				
 				if(value.deptEmployee) {
 %>
 					<div style=" padding:5px;border-bottom: 1px solid #E7EAEF;"><%=fields.deptEmployee.here() %></div>
@@ -35,18 +39,6 @@
 			<span><%=methods.openPicker.here()%></span>
 <%	
 			}
-		} else if(mw3.how == 'deptFollower'){
-		%>
-			<span style="float: left; border: none;"> 
-				<div class="user">		
-				<div class="user_focus" style="background: url(images/portrait/group.png); background-size:cover;"  title="<%=value.partName%>">	
-					<img id="user_picture_<%=objectId%>" src="images/portrait/group.png" width=34 height=34>
-					<div class="followers_name" title="<%=value.partName%>"><%=value.partName%></div>
-				</div>
-				<div style="clear:both"></div>
-				</div>
-			</span>
-		<%
 		} else if(mw3.how == 'manager'){
 		%>
 			<div class="form_table2"> 
@@ -134,6 +126,18 @@
 		</div>
 
 <%			
+            } else if(mw3.where == 'followers'){
+        %>
+            <span style="float: left; border: none;"> 
+                <div class="user">      
+                <div class="user_focus" style="background: url(images/portrait/group.png); background-size:cover;"  title="<%=value.partName%>">    
+                    <img id="user_picture_<%=objectId%>" src="images/portrait/group.png" width=34 height=34>
+                    <div class="followers_name" title="<%=value.partName%>"><%=value.partName%></div>
+                </div>
+                <div style="clear:both"></div>
+                </div>
+            </span>
+        <%
 			}
 		}
 	}
