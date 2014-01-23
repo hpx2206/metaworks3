@@ -42,7 +42,7 @@ public class DeptInfo extends FollowerPerspectiveInfo{
 		
 		dept.getMetaworksContext().setWhere("admin");
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		dept.setLogoFile(new MetaworksFile());
+		dept.setLogoFile(new PortraitImageFile());
 		
 		return new Popup(MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, dept);
 	}

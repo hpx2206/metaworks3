@@ -1054,3 +1054,7 @@ alter table bpm_procinst add column lastcmnt2TaskId int(11);
 
 -- 역할 이름 추가( 민수환 )
 alter table roletable add column roleName varchar(100);
+
+-- 부서테이블에 url , thumbnail 제거 (김형국)
+alter table PARTTABLE drop url ;
+alter table PARTTABLE drop thumbnail;

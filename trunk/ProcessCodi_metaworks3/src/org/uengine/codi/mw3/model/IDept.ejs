@@ -1,18 +1,22 @@
 <%
 	if(value){
+	    var portrait = '';
+	    if(value.partName)
+                portrait = 'portrait/dept_' + value.partCode + '.thumnail'; 
+                
 		if(mw3.how == 'tree' || mw3.how == 'addFollower'){
 %>		
 		   <%  if(mw3.how == 'tree'){    %>
 			     <a style="cursor: pointer" onClick="<%=methods.loadDeptList.caller()%>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>					
            <%  }else if(mw3.how == 'addFollower'){  %>
-                <a style="cursor: pointer" onClick="<%=methods.drillDown.caller()%>" >
+                <a style="cursor: pointer">
 	                <div class="user">		
-						<div class="user_focus" style="background: url('portrait/KYT.thumnail'); background-size:cover;" title="Youngtak Kim">	
-							<img id="user_picture_896" src="images/portrait/group.png" width="34" height="34">
+						<div class="user_focus" style="background-size:cover;" title="<%=value.partName%>">	
+							<img id="user_picture_896" src="<%=portrait%>" width="34" height="34">
 						</div>
 						<div class="user_detail">
 							<span class="fontbold"><%=fields.partName.here()%></span>
-							<span class="fontgray"></span>
+							<span class="fontgray">dsd</span>
 						</div>
 		                <%  if(value.followed) {    %>
 		                        <button type="button" class="btn btn-default btn-xs"  onClick="<%=methods.removeFollower.caller()%>" style="float:right; margin:7px 7px 0 0">삭제</button>
@@ -144,7 +148,7 @@
             <span style="float: left; border: none;"> 
                 <div class="user">      
                 <div class="user_focus" style="background: url(images/portrait/group.png); background-size:cover;"  title="<%=value.partName%>">    
-                    <img id="user_picture_<%=objectId%>" src="images/portrait/group.png" width=34 height=34>
+                    <img id="user_picture_<%=objectId%>" src="<%=portrait%>" width=34 height=34>
                     <div class="followers_name" title="<%=value.partName%>"><%=value.partName%></div>
                 </div>
                 <div style="clear:both"></div>
