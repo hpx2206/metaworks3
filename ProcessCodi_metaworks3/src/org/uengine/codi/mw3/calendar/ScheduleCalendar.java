@@ -475,40 +475,14 @@ public class ScheduleCalendar implements ContextAware {
 		newInstantiator.setWriter(session.getUser());		
 		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newInstantiator.setDueDate(this.getSelDate());
-		//newInstantiator.setStartDate();
-//		newInstantiator.setTitle(title);
-		newInstantiator.scheduleCalendar = this;
 		
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			if( newInstancePanel != null ){
-				newInstantiator.getMetaworksContext().setHow("sns");
-				
-				NewInstancePanel newInstancePanel = this.newInstancePanel;
-				newInstancePanel.setNewInstantiator(newInstantiator);
-				
-				return new Object[]{newInstancePanel};
-			}
-			return null;
-		}else{
-			NewInstancePanel newInstancePanel =  new NewInstancePanel();
-			
-//			newInstancePanel.setDueDate(this.getSelDate());
-			/*
-			if(this.getEndDate() != null){
-				newInstancePanel.setDueDate(this.getEndDate());
-			}else{
-				newInstancePanel.setDueDate(dueDate);
-			}*/
-			
-			newInstancePanel.session = session;
-			newInstancePanel.load(session);
-			
-			newInstancePanel.setNewInstantiator(newInstantiator);
-			
-			newInstantiator.newInstancePanel = newInstancePanel;
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.session = session;
+		newInstancePanel.load(session);
 		
-			return new Object[]{new NewInstanceWindow(newInstancePanel)};
-		}
+		newInstancePanel.setNewInstantiator(newInstantiator);
+	
+		return new Object[]{new NewInstanceWindow(newInstancePanel)};
 	}
 	
 }
