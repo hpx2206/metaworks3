@@ -443,8 +443,9 @@ public class ScheduleCalendar implements ContextAware {
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] linkScheduleDay() throws Exception{
-		if( getShowUserId() != null && !getShowUserId().equalsIgnoreCase(session.getUser().getUserId())){
-			// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
+		
+		// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
+		if( Perspective.MODE_PERSONAL.equals(session.getLastPerspecteMode()) && !session.getLastSelectedItem().equals(session.getUser().getUserId())){
 			return null;
 		}
 		
