@@ -78,9 +78,9 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		initUser.setUserId(session.getUser().getUserId());
 		initUser.setName(session.getUser().getName());
 		instance.databaseMe().setInitiator(initUser);
-//		instance.databaseMe().setInitEp(session.user.getUserId());
 		instance.databaseMe().setDueDate(null);
 		instance.databaseMe().setName(getTitle());
+		instance.databaseMe().setStatus(WorkItem.WORKITEM_STATUS_RUNNING);
 		instance.fillFollower();
 		
 		if(session.getEmployee() != null)
@@ -101,7 +101,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 //		Object[] returnObject = comment.add();
 		
 		instance.copyFrom(comment.save());
-		Object[] returnObject = comment.makeReturn(new Long(instId), instance);
+		Object[] returnObject = comment.makeReturn(null, instance);
 		
 		instanceView.load(instance);
 	
@@ -132,13 +132,12 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 			returnObject2[returnObject.length] = new Remover(new Popup());
 			return returnObject2;
 		}else{
-			Object[] returnObject2 = new Object[ returnObject.length + 3 ];
+			Object[] returnObject2 = new Object[ returnObject.length + 2 ];
 			for( int i = 0; i < returnObject.length; i++){
 				returnObject2[i] = returnObject[i];
 			}
 			returnObject2[returnObject.length] = new Refresh(instanceView);
-			returnObject2[returnObject.length + 1] = new ToPrepend(new InstanceList(), instance);
-			returnObject2[returnObject.length + 2] = new Remover(new Popup());
+			returnObject2[returnObject.length + 1] = new Remover(new Popup());
 			return returnObject2;
 		}
 		
