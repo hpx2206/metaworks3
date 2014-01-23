@@ -130,28 +130,27 @@ public class Dept extends Database<IDept> implements IDept {
 	}
 	
 	boolean selected;
-
-	@Override
-	public boolean getSelected() throws Exception {
-		return selected;
-	}
-
-	@Override
-	public void setSelected(boolean value) throws Exception {
-		selected = value;
-	}
+		public boolean getSelected() throws Exception {
+			return selected;
+		}
+		public void setSelected(boolean value) throws Exception {
+			selected = value;
+		}
+	boolean followed;
+		public boolean isFollowed() {
+			return followed;
+		}
+		public void setFollowed(boolean followed) {
+			this.followed = followed;
+		}
 
 	DeptList children;
-
-	@Override
-	public DeptList getChildren() {
-		return children;
-	}
-
-	@Override
-	public void setChildren(DeptList children) {
-		this.children = children;
-	}
+		public DeptList getChildren() {
+			return children;
+		}
+		public void setChildren(DeptList children) {
+			this.children = children;
+		}
 
 	EmployeeList deptEmployee;
 
@@ -225,31 +224,6 @@ public class Dept extends Database<IDept> implements IDept {
 		return dao;
 	}
 	
-//	@Override
-//	public IDept findByComCode(String comcode) throws Exception {
-//		String sql = "select * from parttable where comcode=?comCode";
-//		IDept deptList = sql(sql);
-//		deptList.setComCode(comcode);
-//		deptList.select();
-//		return deptList;
-//	}
-//
-//	@Override
-//	public IDept findTreeByComCode(String comcode) throws Exception {
-//		String sql = "select * from parttable where comcode=?comCode ";
-//		IDept deptList = sql(sql);
-//		deptList.setComCode(comcode);
-//		deptList.select();
-//		deptList.setMetaworksContext(new MetaworksContext());
-//		deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//		if (deptList.size() == 0) {
-//			deptList = new Dept();
-//			deptList.setMetaworksContext(new MetaworksContext());
-//			deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-//		}
-//		return deptList;
-//	}
-	
 	@Override
 	public IDept findByGlobalCom() throws Exception {
 		String sql = "select * from parttable where globalcom=?globalCom and parent_partCode is null and isDeleted='0' ";
@@ -275,6 +249,69 @@ public class Dept extends Database<IDept> implements IDept {
 			deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		}
 		return deptList;
+	}
+	
+	public IDept findDeptForInstance(String instanceId) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		
+		sb.append("select pt.*  ");
+		sb.append(" , (select count('x') from bpm_rolemapping rm   ");
+		sb.append("    where pt.partcode = rm.endpoint ");
+		sb.append("    and rm.rootinstid=?instanceId ");
+		sb.append("   ) ");
+		sb.append("   as cnt  ");
+		sb.append("from parttable pt ");
+		sb.append("where pt.globalcom=?globalCom ");
+		sb.append("  and pt.isDeleted='0' ");
+		if(getPartCode() != null) {
+			sb.append("and pt.parent_partcode=?parent_PartCode ");
+		} else {
+			sb.append("and pt.parent_partcode is null ");
+		}
+		
+		sb.append("  ) c ");
+		
+		
+		IDept childDeptList = sql(sb.toString());
+		childDeptList.setGlobalCom(globalCom);
+		childDeptList.setParent_PartCode(this.getParent_PartCode());
+		childDeptList.set("instanceId", instanceId);
+		childDeptList.select();
+		
+		return childDeptList;
+	}
+	public IDept findDeptForTopic(String topicId) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		
+		sb.append("select pt.*  ");
+		sb.append(" , (select count('x') from bpm_topicmapping tm   ");
+		sb.append("    where tm.topicId=?topicId ");
+		sb.append("    and tm.userid=pt.partcode ");
+		sb.append("   ) ");
+		sb.append("   as cnt  ");
+		sb.append("from parttable pt ");
+		sb.append("where pt.globalcom=?globalCom ");
+		sb.append("  and pt.isDeleted='0' ");
+		if(getPartCode() != null) {
+			sb.append("and pt.parent_partcode=?parent_PartCode ");
+		} else {
+			sb.append("and pt.parent_partcode is null ");
+		}
+		
+		sb.append("  ) c ");
+		
+		
+		IDept childDeptList = sql(sb.toString());
+		childDeptList.setGlobalCom(globalCom);
+		childDeptList.setParent_PartCode(this.getParent_PartCode());
+		childDeptList.set("topicId", topicId);
+		childDeptList.select();
+		
+		return childDeptList;
 	}
 
 	@Override
@@ -303,15 +340,6 @@ public class Dept extends Database<IDept> implements IDept {
 		return childDeptList;
 	}
 	
-//	@Override
-//	public IDept findRootDeptByComCode(String comcode) throws Exception{
-//		setComCode(comcode);
-//		setPartName(comcode);
-//		setPartCode(null);
-//		drillDown();
-//		return this;
-//	}
-	
 	@Override
 	public IDept findRootDeptByGlobalCom(String globalCom) throws Exception{
 		setGlobalCom(globalCom);
@@ -331,10 +359,10 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			setChildren(deptList);
 			
-			EmployeeList employeeList = new EmployeeList();
-			employeeList.setId(this.getPartCode());
-			
-			setDeptEmployee(employeeList);
+//			EmployeeList employeeList = new EmployeeList();
+//			employeeList.setId(this.getPartCode());
+//			
+//			setDeptEmployee(employeeList);
 		} else {
 			DeptList deptList = new DeptList();
 			deptList.setMetaworksContext(this.getMetaworksContext());
@@ -342,24 +370,23 @@ public class Dept extends Database<IDept> implements IDept {
 			deptList.setDept(this.findChildren());			
 			setChildren(deptList);			
 			
-			if(!("deptPicker".equals(this.getMetaworksContext().getWhere()))){
-				IEmployee employee = new Employee();
-				employee.setMetaworksContext(this.getMetaworksContext());
-				employee.getMetaworksContext().setHow("tree");
-				if( "addContact".equals(this.getMetaworksContext().getWhere()) ){
-					// TODO 이렇게 분기하는게 좋은 코드는 아니지만 우선 적용함 - 2/17 김형국
-					employee.getMetaworksContext().setWhere("addContact");
-				}else{
-					employee.getMetaworksContext().setWhere("navigator");
-				}
-				
-				EmployeeList employeeList = new EmployeeList();			
-				employeeList.setMetaworksContext(this.getMetaworksContext());
-				employeeList.setId(this.getPartCode());
-				employeeList.setEmployee(employee.findByDept(this));
-				
-				setDeptEmployee(employeeList);
-			}
+//			if(!("deptPicker".equals(this.getMetaworksContext().getWhere()))){
+//				IEmployee employee = new Employee();
+//				employee.setMetaworksContext(this.getMetaworksContext());
+//				employee.getMetaworksContext().setHow("tree");
+//				if( "addContact".equals(this.getMetaworksContext().getWhere()) ){
+//					employee.getMetaworksContext().setWhere("addContact");
+//				}else{
+//					employee.getMetaworksContext().setWhere("navigator");
+//				}
+//				
+//				EmployeeList employeeList = new EmployeeList();			
+//				employeeList.setMetaworksContext(this.getMetaworksContext());
+//				employeeList.setId(this.getPartCode());
+//				employeeList.setEmployee(employee.findByDept(this));
+//				
+//				setDeptEmployee(employeeList);
+//			}
 		}
 	}
 		
@@ -407,15 +434,12 @@ public class Dept extends Database<IDept> implements IDept {
 			this.getLogoFile().upload();
 		}
 		
-		
-		//그룹 중복 검사
-		
-		IDept findDept = this.findByName();
-		
-		if(findDept != null)
-			throw new Exception("$DuplicateName");
-		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
+			//그룹 중복 검사
+			IDept findDept = this.findByName();
+			if(findDept != null)
+				throw new Exception("$DuplicateName");
+			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
 			// �앹꽦
@@ -714,7 +738,40 @@ public class Dept extends Database<IDept> implements IDept {
 		}
 		
 	}
-
+	
+	@Override
+	public Object[] addFollower() throws Exception {
+		// use clipboard for addFollower
+		Object clipboard = session.getClipboard();
+		
+		if(clipboard instanceof Follower){
+			Follower follower = (Follower)clipboard;
+			follower.session = session;
+			follower.put(this);
+		}
+		this.setFollowed(true);
+		
+		// refresh self
+		return new Object[]{new Refresh(this, false, true)};
+	}
+	@Override
+	public Object[] removeFollower() throws Exception {
+		
+		// use clipboard for removeFollower
+		Object clipboard = session.getClipboard();
+		
+		if(clipboard instanceof Follower){
+			Follower follower = (Follower)clipboard;
+			follower.session = session;
+			follower.delegate(this);
+		}
+		this.setFollowed(false);
+		// change context for remover 'removeFollower' button
+		this.getMetaworksContext().setWhere(WHERE_EVER);
+		
+		// refresh self
+		return new Object[]{new Refresh(this, false, true)};
+	}
 	@Override
 	public Popup openPicker() throws Exception {
 		DeptPicker deptPicker = new DeptPicker(session.getCompany().getComCode());

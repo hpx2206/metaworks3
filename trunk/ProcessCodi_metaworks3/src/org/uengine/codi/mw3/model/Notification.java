@@ -210,9 +210,26 @@ public class Notification extends Database<INotification> implements INotificati
 				notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
 				
 			}else if( assigntype == Role.ASSIGNTYPE_DEPT ){
-				// TODO
+				String partcode = follower.getEndpoint();
+				Dept dept = new Dept();
+				dept.setGlobalCom(session.getCompany().getComCode());
+				dept.setPartCode(partcode);
+				
+				IEmployee employee = new Employee();
+				employee.setMetaworksContext(this.getMetaworksContext());
+				employee = employee.findByDept(dept);
+				if( employee != null ){
+					while(employee.next()){
+						String followerUserId = employee.getEmpCode();
+						if( session.getUser().getUserId().equals(followerUserId)){	// 자기 자신은 제외
+							continue;
+						}
+						notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+					}
+				}
 			}
 		}
+		
 		return notiUsers;
 	}
 	
@@ -233,10 +250,25 @@ public class Notification extends Database<INotification> implements INotificati
 				notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
 				
 			}else if( assigntype == Role.ASSIGNTYPE_DEPT ){
-				// TODO
+				String partcode = topicFollowers.getEndpoint();
+				Dept dept = new Dept();
+				dept.setGlobalCom(session.getCompany().getComCode());
+				dept.setPartCode(partcode);
+				
+				IEmployee employee = new Employee();
+				employee.setMetaworksContext(this.getMetaworksContext());
+				employee = employee.findByDept(dept);
+				if( employee != null ){
+					while(employee.next()){
+						String followerUserId = employee.getEmpCode();
+						if( session.getUser().getUserId().equals(followerUserId)){	// 자기 자신은 제외
+							continue;
+						}
+						notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+					}
+				}
 			}
 		}
-		
 		return notiUsers;
 	}
 		

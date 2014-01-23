@@ -18,6 +18,17 @@ public class AddFollowerPanel {
 			this.contactPanel = contactPanel;
 		}
 		
+	DeptList deptList;
+		@Order(value=2)
+		@Face(displayName="$Organization")
+		@Available(condition="deptList")
+		public DeptList getDeptList() {
+			return deptList;
+		}
+		public void setDeptList(DeptList deptList) {
+			this.deptList = deptList;
+		}
+		
 	public AddFollowerPanel(Session session, Follower follower) throws Exception {
 		ContactPanel contactPanel = new ContactPanel();
 		contactPanel.session = session;
@@ -26,5 +37,15 @@ public class AddFollowerPanel {
 		contactPanel.getMetaworksContext().setWhere(User.WHERE_ADDFOLLOWER);
 		
 		this.setContactPanel(contactPanel);
+	}
+	
+	public void loadDept(Session session, Follower follower) throws Exception{
+
+		DeptList deptList = new DeptList();
+		deptList.setId("/ROOT/");
+		deptList.setFollower(follower);
+		deptList.loadWithCheckFollowedDept(session);
+		
+		this.setDeptList(deptList);
 	}
 }

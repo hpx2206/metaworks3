@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.kernel.Role;
 
 public class TopicFollower extends Follower {
 
@@ -12,8 +13,14 @@ public class TopicFollower extends Follower {
 	public void put() throws Exception {
 		TopicMapping tm = new TopicMapping();
 		tm.setTopicId(this.getParentId());
-		tm.setUserId(user.getUserId());
-		tm.setUserName(user.getName());
+		tm.setAssigntype(this.getAssigntype());
+		if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
+			tm.setUserId(user.getUserId());
+			tm.setUserName(user.getName());
+		}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+			tm.setUserId(dept.getPartCode());
+			tm.setUserName(dept.getPartName());
+		}
 		
 		// not exist save topicmapping
 		if( !tm.findByUser().next() ){
@@ -26,8 +33,11 @@ public class TopicFollower extends Follower {
 	public void delegate() throws Exception {
 		TopicMapping tm = new TopicMapping();
 		tm.setTopicId(this.getParentId());
-		tm.setUserId(user.getUserId());
-		tm.setUserName(user.getName());
+		if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
+			tm.setUserId(user.getUserId());
+		}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+			tm.setUserId(dept.getPartCode());
+		}
 		
 		tm.removeMe();
 		this.push();
@@ -45,8 +55,22 @@ public class TopicFollower extends Follower {
 	}
 	
 	@Override
+	public AddFollowerPanel makeFollowerPanel(Session session, Follower follower) throws Exception{
+		AddFollowerPanel addFollowerPanel = new AddFollowerPanel(session, this);
+		addFollowerPanel.loadDept(session, follower);
+		return addFollowerPanel;
+	}
+	
+	@Override
 	public IContact findContacts(String keyword) throws Exception {
 		return Contact.findContactsForTopic(this.getParentId(), session.getUser(), keyword);
 	}
 
+	@Override
+	public IDept findDepts(String keyword) throws Exception {
+		Dept dept = new Dept();
+		dept.setGlobalCom(session.getEmployee().getGlobalCom());
+		
+		return dept.findDeptForTopic(this.getParentId());
+	}
 }

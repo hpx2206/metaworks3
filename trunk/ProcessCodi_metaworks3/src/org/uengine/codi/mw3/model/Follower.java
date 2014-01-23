@@ -101,6 +101,13 @@ public class Follower extends Database<IFollower> implements IFollower {
 		this.setAssigntype(Role.ASSIGNTYPE_USER);
 		this.put();
 	}
+	public void put(IDept dept) throws Exception {
+		this.setDept(dept);
+		this.setEndpoint(dept.getPartCode());
+		this.setResName(dept.getPartName());
+		this.setAssigntype(Role.ASSIGNTYPE_DEPT);
+		this.put();
+	}
 	
 	public void delegate() throws Exception {
 		throw new Exception("not defined delegate method");
@@ -125,6 +132,9 @@ public class Follower extends Database<IFollower> implements IFollower {
 	}
 
 	public IContact findContacts(String keyword) throws Exception {
+		throw new Exception("not defined findContacts(String keyword) method");
+	}
+	public IDept findDepts(String keyword) throws Exception {
 		throw new Exception("not defined findContacts(String keyword) method");
 	}
 
@@ -164,11 +174,15 @@ public class Follower extends Database<IFollower> implements IFollower {
 
 		// copy to follower for addFollower
 		session.setClipboard(this);
-
-		AddFollowerPanel addFollowerPanel = new AddFollowerPanel(session, this);
-		popup.setPanel(addFollowerPanel);
+		
+		popup.setPanel(this.makeFollowerPanel(session, this));
 
 		return new Object[]{ new Refresh(session), popup }; 
+	}
+	
+	public AddFollowerPanel makeFollowerPanel(Session session, Follower follower) throws Exception{
+		AddFollowerPanel addFollowerPanel = new AddFollowerPanel(session, this);
+		return addFollowerPanel;
 	}
 	
 	public void addPushListener(){
