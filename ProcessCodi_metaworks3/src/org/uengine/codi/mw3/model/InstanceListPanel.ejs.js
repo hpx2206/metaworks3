@@ -5,7 +5,6 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	this.objectDiv = $('#' + this.objectDivId);
 	
 	this.object = mw3.objects[this.objectId];
-
 	if(this.object == null)
 		return true;
 	
@@ -41,8 +40,9 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 //		}
 //	})
 	
-	if(this.object && this.object.preloaded){
-		var scrollDiv = $('#objDiv_' + this.objectId + " .bottom");
+	if(this.object){
+
+		var scrollDiv = $('#objDiv_' + this.objectId).parent();
 		var instanceList = this.object.instanceList;
 		var prelastMore = lastMore;
 		scrollDiv.scroll(function(e) {
