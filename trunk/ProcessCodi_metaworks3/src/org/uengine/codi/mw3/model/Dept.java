@@ -423,8 +423,14 @@ public class Dept extends Database<IDept> implements IDept {
 		if(this.getLogoFile().getFileTransfer() != null &&
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0){			
-			this.getLogoFile().setEmpCode("dept_"+this.getPartCode());
-			this.getLogoFile().upload();
+
+			if( this.getLogoFile().getFileTransfer().getMimeType() != null  && !this.getLogoFile().getFileTransfer().getMimeType().startsWith("image")){
+				throw new MetaworksException("$OnlyImageFileCanUpload");
+			}else{
+				this.getLogoFile().setEmpCode("dept_"+this.getPartCode());
+				this.getLogoFile().upload();
+			}
+			
 		}
 		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
