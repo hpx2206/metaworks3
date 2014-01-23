@@ -18,15 +18,15 @@ public class AddFollowerPanel {
 			this.contactPanel = contactPanel;
 		}
 		
-	DeptList deptList;
+	DeptPanel deptPanel;
 		@Order(value=2)
 		@Face(displayName="$Organization")
-		@Available(condition="deptList")
-		public DeptList getDeptList() {
-			return deptList;
+		@Available(condition="deptPanel")
+		public DeptPanel getDeptPanel() {
+			return deptPanel;
 		}
-		public void setDeptList(DeptList deptList) {
-			this.deptList = deptList;
+		public void setDeptPanel(DeptPanel deptPanel) {
+			this.deptPanel = deptPanel;
 		}
 		
 	public AddFollowerPanel(Session session, Follower follower) throws Exception {
@@ -41,11 +41,12 @@ public class AddFollowerPanel {
 	
 	public void loadDept(Session session, Follower follower) throws Exception{
 
-		DeptList deptList = new DeptList();
+		DeptPanel deptList = new DeptPanel();
 		deptList.setId("/ROOT/");
 		deptList.setFollower(follower);
+		deptList.setSearchBox(new SearchBox());
 		deptList.loadWithCheckFollowedDept(session);
 		
-		this.setDeptList(deptList);
+		this.setDeptPanel(deptList);
 	}
 }

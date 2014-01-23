@@ -27,14 +27,6 @@ public class DeptList implements ContextAware {
 			this.dept = dept;
 		}
 		
-	Follower follower;
-		public Follower getFollower() {
-			return follower;
-		}
-		public void setFollower(Follower follower) {
-			this.follower = follower;
-		}
-		
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -42,18 +34,5 @@ public class DeptList implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-		
-	public void loadWithCheckFollowedDept(Session session) throws Exception{
-		IDept dept = null;
-		if( this.getFollower() != null ){
-			dept = this.getFollower().findDepts(null);
-		}
-		
-		dept.getMetaworksContext().setHow("addFollower");
-		dept.getMetaworksContext().setWhere(User.WHERE_ADDFOLLOWER);
-		
-		setDept(dept);
-		
-	}
 	
 }
