@@ -1150,8 +1150,54 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		final IWorkItem copyOfThis = this;
 		final IInstance copyOfInstance = instance;
 		
+		/**
+		 *  === noti push 부분 ===
+		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
+		 */
+		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		Notification notification = new Notification();
+		notification.session = session;
+		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+		if(instance.getTopicId() != null){
+			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instance.getTopicId());
+			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
+			}
+		}
+		
+		// noti 저장
+		Iterator<String> iterator = notiUsers.keySet().iterator();
+		while(iterator.hasNext()){
+			String followerUserId = (String)iterator.next();
+			Notification noti = new Notification();
+			INotiSetting notiSetting = new NotiSetting();
+			INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+			if(!findResult.next() || findResult.isWriteInstance()){
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(followerUserId);
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setTaskId(getTaskId());
+				noti.setInstId(getInstId());					
+				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+				noti.add(copyOfInstance);
+			}
+		}
+		
+		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+				new Object[]{});
+		
+		/**
+		 *  === instance push 부분 ===
+		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
+		 */
 		if( !securityPush ){
 			pushUserMap = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+			pushUserMap.putAll(notiUsers);	// 다른 테넌트의 follower 가 있을수도 있으니 추가를 해줌
 		}
 		
 		if(prevInstId == null){
@@ -1205,47 +1251,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 			}
 		}
-		
-		/**
-		 *  === noti push 부분 ===
-		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
-		 */
-		HashMap<String, String> notiUsers = new HashMap<String, String>();
-		Notification notification = new Notification();
-		notification.session = session;
-		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
-		if(instance.getTopicId() != null){
-			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instance.getTopicId());
-			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
-			while(iterator.hasNext()){
-				String followerUserId = (String)iterator.next();
-				notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
-			}
-		}
-		
-		// noti 저장
-		Iterator<String> iterator = notiUsers.keySet().iterator();
-		while(iterator.hasNext()){
-			String followerUserId = (String)iterator.next();
-			Notification noti = new Notification();
-			INotiSetting notiSetting = new NotiSetting();
-			INotiSetting findResult = notiSetting.findByUserId(followerUserId);
-			if(!findResult.next() || findResult.isWriteInstance()){
-				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-				noti.setUserId(followerUserId);
-				noti.setActorId(session.getUser().getUserId());
-				noti.setConfirm(false);
-				noti.setInputDate(Calendar.getInstance().getTime());
-				noti.setTaskId(getTaskId());
-				noti.setInstId(getInstId());					
-				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-				noti.add(copyOfInstance);
-			}
-		}
-		
-		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
-				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
-				new Object[]{});
 		
 		/**
 		 *  === MetaworksContext 처리 ===
