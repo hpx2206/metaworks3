@@ -58,7 +58,9 @@ public class PortraitServlet extends HttpServlet {
 			String srcName = portraitPath + File.separatorChar + empCode + ".jpg";
 			//String unknownName = portraitPath + File.separatorChar + "unknown_user.gif";
 			String unknownName = this.getServletContext().getRealPath("/") +  "images" + File.separatorChar +"portrait" + File.separatorChar +"unknown_user.gif";
-			
+			if( empCode.startsWith("dept_")){
+				unknownName = this.getServletContext().getRealPath("/") +  "images" + File.separatorChar +"portrait" + File.separatorChar +"group.png";
+			}
 			// 쎔네일 파일 존재 확인
 			File thumnailFile = new File(thumnailName);
 			if(thumnailFile.exists() && thumnailFile.isFile()){
@@ -88,8 +90,13 @@ public class PortraitServlet extends HttpServlet {
 					File unknownFile = new File(unknownName);
 					if(unknownFile.exists() && unknownFile.isFile()){
 						BufferedImage bi = ImageIO.read(unknownFile);
-						response.setContentType("image/gif");
-						ImageIO.write(bi, "gif", out);					
+						if( empCode.startsWith("dept_")){
+							response.setContentType("image/png");
+							ImageIO.write(bi, "png", out);					
+						}else{
+							response.setContentType("image/gif");
+							ImageIO.write(bi, "gif", out);					
+						}
 					}				
 				}
 			}finally{

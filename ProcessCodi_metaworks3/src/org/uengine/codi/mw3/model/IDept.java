@@ -33,28 +33,19 @@ public interface IDept extends IDAO {
 	public void setPartName(String partName);
 
 	public String getParent_PartCode();
-
 	public void setParent_PartCode(String parentPartCode);
 
 	@Hidden
 	public String getIsDeleted();
-
 	public void setIsDeleted(String deleted);
 
 	public String getDescription();
-
 	public void setDescription(String description);
-
-	public String getUrl();
-	public void setUrl(String url);
-
-	public String getThumbnail();
-	public void setThumbnail(String thumbnail);
 
 	@NonSavable
 	@NonLoadable
-	public MetaworksFile getLogoFile();
-	public void setLogoFile(MetaworksFile logoFile);
+	public PortraitImageFile getLogoFile();
+	public void setLogoFile(PortraitImageFile logoFile);
 	
 	public String getGlobalCom();
 	public void setGlobalCom(String globalCom);
@@ -82,18 +73,12 @@ public interface IDept extends IDAO {
 	// methods
 	public IDept load() throws Exception;
 
-//	public IDept findByComCode(String comcode) throws Exception;
-//
-//	public IDept findTreeByComCode(String comcode) throws Exception;
-	
 	public IDept findByGlobalCom() throws Exception;
 
 	public IDept findTreeByGlobalCom(String globalCom) throws Exception;
 
 
 	public IDept findChildren() throws Exception;
-	
-//	public IDept findRootDeptByComCode(String comcode) throws Exception;
 	
 	public IDept findRootDeptByGlobalCom(String globalCom) throws Exception;
 

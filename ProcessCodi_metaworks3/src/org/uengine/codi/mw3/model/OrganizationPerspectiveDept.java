@@ -60,7 +60,7 @@ public class OrganizationPerspectiveDept extends CollapsePerspective {
 	public Popup addDept() {
 		IDept dept = new Dept();
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		dept.setLogoFile(new MetaworksFile());
+		dept.setLogoFile(new PortraitImageFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(dept);

@@ -49,7 +49,7 @@ public class DeptPerspective extends CollapsePerspective {
 	public Popup popupAdd() {
 		IDept dept = new Dept();
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		dept.setLogoFile(new MetaworksFile());
+		dept.setLogoFile(new PortraitImageFile());
 		
 		return new Popup(500, 200, dept);
 

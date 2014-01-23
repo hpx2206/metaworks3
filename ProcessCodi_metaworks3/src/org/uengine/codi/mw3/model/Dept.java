@@ -19,8 +19,6 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
-import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
@@ -32,23 +30,6 @@ public class Dept extends Database<IDept> implements IDept {
 	String parentPartCode;
 	String isDeleted;
 	String description;
-//	String comCode;
-	
-	String url;
-		public String getUrl() {
-			return url;
-		}
-		public void setUrl(String url) {
-			this.url = url;
-		}
-
-	String thumbnail;
-		public String getThumbnail() {
-			return thumbnail;
-		}
-		public void setThumbnail(String thumbnail) {
-			this.thumbnail = thumbnail;
-		}
 	
 	public Dept(String partCode){
 		this.partCode = partCode;
@@ -121,14 +102,14 @@ public class Dept extends Database<IDept> implements IDept {
 		this.globalCom = globalCom;
 	}
 
-	MetaworksFile logoFile;
-	public MetaworksFile getLogoFile() {
-		return logoFile;
-	}
-	public void setLogoFile(MetaworksFile logoFile) {
-		this.logoFile = logoFile;
-	}
-	
+	PortraitImageFile logoFile;
+		public PortraitImageFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(PortraitImageFile logoFile) {
+			this.logoFile = logoFile;
+		}
+
 	boolean selected;
 		public boolean getSelected() throws Exception {
 			return selected;
@@ -412,7 +393,7 @@ public class Dept extends Database<IDept> implements IDept {
 		
 		dept.getMetaworksContext().setWhere("admin");
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		dept.setLogoFile(new MetaworksFile());
+		dept.setLogoFile(new PortraitImageFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(dept);
@@ -431,6 +412,7 @@ public class Dept extends Database<IDept> implements IDept {
 		if(this.getLogoFile().getFileTransfer() != null &&
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0){			
+			this.getLogoFile().setEmpCode("dept_"+this.getPartCode());
 			this.getLogoFile().upload();
 		}
 		
@@ -442,14 +424,8 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
-			// �앹꽦
 			this.setGlobalCom(session.getCompany().getComCode());
 			this.setIsDeleted("0");		
-			
-			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
-				this.setUrl(this.getLogoFile().getUploadedPath());
-				this.setThumbnail(this.getLogoFile().getFilename());
-			}
 			
 			Map options = new HashMap();
 			options.put("onlySequenceTable", true);
@@ -508,10 +484,6 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			DeptInfo deptInfo = new DeptInfo(session, Perspective.TYPE_NEWSFEED);
 			
-			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
-				this.setUrl(this.getLogoFile().getUploadedPath());
-				this.setThumbnail(this.getLogoFile().getFilename());
-			}
 			syncToDatabaseMe();
 			flushDatabaseMe();
 			
@@ -679,7 +651,7 @@ public class Dept extends Database<IDept> implements IDept {
 		newDept.setParent_PartCode(getPartCode());
 		newDept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newDept.getMetaworksContext().setWhere("admin");
-		newDept.setLogoFile(new MetaworksFile());
+		newDept.setLogoFile(new PortraitImageFile());
 		
 		Popup popup = new Popup();
 		popup.setPanel(newDept);
