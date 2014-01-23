@@ -369,7 +369,7 @@ public class User extends Database<IUser> implements IUser {
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		
-		return new Object[]{MetaworksUtil.makeRefreshObjectArray(personalPerspective.load(Perspective.TYPE_NEWSFEED))};
+		return new Object[]{MetaworksUtil.makeRefreshObjectArray(personalPerspective.load(Perspective.TYPE_STARTEDBYME))};
 	}
 	
 		
