@@ -4,12 +4,14 @@ import java.net.URL;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -79,6 +81,7 @@ public class TopicTitle  implements ContextAware{
 
 	String topicTitle;
 		@Face(displayName="$topicTitle")
+		@NotNull(message="주제 이름을 입력해주세요.")
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getTopicTitle() {
 			return topicTitle;
@@ -86,6 +89,7 @@ public class TopicTitle  implements ContextAware{
 		public void setTopicTitle(String topicTitle) {
 			this.topicTitle = topicTitle;
 		}
+		
 	boolean topicSecuopt;				
 		@Face(displayName="$topicSecuopt")
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
@@ -142,15 +146,25 @@ public class TopicTitle  implements ContextAware{
 	public void saveMe() throws Exception {
 		WfNode wfNode = new WfNode();
 		
+		if(this.getTopicTitle().length() > 10){
+			throw new MetaworksException("10자 이상 입력 불가");
+		}
+		
+		if(!this.getTopicTitle().matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*"))
+		{
+		    throw new MetaworksException("$SpecialLettersCannotInput");
+		}
+		
 		if(this.getLogoFile().getFileTransfer() != null &&
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0){			
-			this.getLogoFile().upload();
-		}
-		
-		// TODO: @NotNull 으로 처리해야함
-		if(this.getTopicTitle().equals("")){
-			throw new Exception("주제를 입력해주세요");
+			
+			if( this.getLogoFile().getFileTransfer().getMimeType() != null  && !this.getLogoFile().getFileTransfer().getMimeType().startsWith("image")){
+				throw new MetaworksException("$OnlyImageFileCanUpload");
+			}else{
+				this.getLogoFile().upload();
+			}
+			
 		}
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
@@ -202,7 +216,7 @@ public class TopicTitle  implements ContextAware{
 	
 	@Face(displayName="$Create")
 	@Available(when={MetaworksContext.WHEN_NEW})
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, validate=true)
 	public Object[] save() throws Exception{
 		
 		this.saveMe();
