@@ -5403,7 +5403,7 @@ window.Raphael.vml && function (R) {
         // res.paper.canvas.style.display = E;
     },
     addGradientFill = function (o, gradient, fill) {
-        //console.log('addGradientFill 3');
+        ////console.log('addGradientFill 3');
 
         o.attrs = o.attrs || {};
         var attrs = o.attrs,
@@ -7180,13 +7180,13 @@ OG.ParamError = OG.common.ParamError;
  *     'key2': 'value2'
  * });
  *
- * console.log(map1.get('key1'));
+ * //console.log(map1.get('key1'));
  *
  * var map2 = new OG.common.HashMap();
  * map2.put('key1', 'value1');
  * map2.put('key2', 'value2');
  *
- * console.log(map2.get('key1'));
+ * //console.log(map2.get('key1'));
  *
  * @param {Object} jsonObject key:value 매핑 JSON 오브젝트
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
@@ -14985,7 +14985,7 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
         for(i=0; i<elements.length; i++){
             if(element.id != elements[i].id){
                 if(!$(elements[i]).parent().get(0).shape){
-                    //console.log(element);
+                    ////console.log(element);
 
                     element.appendChild(elements[i]);
                 }
@@ -15433,7 +15433,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		points = [], edge, edge_direction,
 		getArrayOfOrthogonal_1 = function (from, to, isHorizontal) {
 			//TODO: 유저가 선택한 변곡점은 계속 유지되어야 함
-			//console.log("call getArrayOfOrthogonal_1");
+			////console.log("call getArrayOfOrthogonal_1");
 			if (isHorizontal) {
 				return [
 					[from[0], from[1]],
@@ -17316,10 +17316,10 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 
 	if (rElement && terminals && terminals.length > 0) {
 		group = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.GROUP);
-		//rect = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
-		if (group /*|| rect*/) {
+		rect = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
+		if (group || rect) {
 			return {
-				//bBox    : rect.node,
+				bBox    : rect.node,
 				terminal: group.node
 			};
 		}
@@ -17331,9 +17331,12 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 		/*
 		rect = this._PAPER.rect(envelope.getUpperLeft().x - rect_gap, envelope.getUpperLeft().y - rect_gap,
 			envelope.getWidth() + rect_gap * 2, envelope.getHeight() + rect_gap * 2);
+		*/
+		rect = this._PAPER.rect(envelope.getUpperLeft().x, envelope.getUpperLeft().y,
+			envelope.getWidth(), envelope.getHeight());
+
 		rect.attr(me._CONFIG.DEFAULT_STYLE.TERMINAL_BBOX);
 		this._add(rect, rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
-		*/
 		
 		// terminal
 		$.each(terminals, function (idx, item) {
@@ -17355,10 +17358,11 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 		// layer 위치 조정
 		//rect.insertBefore(rElement);
 		group.insertAfter(rElement);
+		rect.insertAfter(rElement);
 		//rElement.appendChild(group);
 
 		return {
-			//bBox    : rect.node,
+			bBox    : rect.node,
 			terminal: group.node
 		};
 	}
@@ -17382,12 +17386,12 @@ OG.renderer.RaphaelRenderer.prototype.removeTerminal = function (element) {
 		if (group) {
 			this._remove(group);
 		}
-		/*
+
 		rect = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
 		if (rect) {
 			this._remove(rect);
 		}
-		*/
+
 	}
 };
 
@@ -18803,12 +18807,15 @@ OG.handler.EventHandler.prototype = {
 		var me = this, terminalGroup, root = me._RENDERER.getRootGroup();
 	
 		$(element).bind({
-			mouseover: function () {
+			mouseover: function (event) {
+				//console.log("-element-mouseover");
 				if("element_selected" == $(element).data("status")){
-					return false;
+					//console.log("-element-mouseover : element-status => "+$(element).data("status"));
+					return;
 				}
 				
-				console.log("-element-mouseover");
+				//console.log("-element-mouseover : set terminal");
+				
 				if (element.shape.isCollapsed === false) {
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
@@ -18833,14 +18840,53 @@ OG.handler.EventHandler.prototype = {
 						}
 						
 						$(terminalGroup.bBox).bind({
+							mousedown: function(event){
+								me._RENDERER.removeTerminal(element);
+								//console.log($(element).data("status"));
+								$(element).trigger("click");
+								//console.log($(element).data("status"));
+							},
 							mouseover: function (event) {
-								console.log("-terminalGroup.bBox-mouseover");
+								//console.log("-terminalGroup.bBox-mouseover");
 							},
 							mouseout: function (event) {
-								console.log("-terminalGroup.bBox-mouseout");
-							
-								if (!$(root).data("edge")) {
-									me._RENDERER.removeTerminal(element);
+								//console.log("-terminalGroup.bBox-mouseout");
+								if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
+									me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
+									$(root).removeData("edge_terminal");
+								}
+											
+								// if(도형 위에 있는지)
+								var el_ul_x = element.shape.geom.boundary._upperLeft.x;
+								var el_ul_y = element.shape.geom.boundary._upperLeft.y;
+								var el_lr_x = element.shape.geom.boundary._width + el_ul_x;
+								var el_lr_y = element.shape.geom.boundary._height + el_ul_y;
+												
+								if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
+									&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
+									//console.log("-delegate event => terminal");
+									//delegate event => terminal
+									var _re_event = event.relatedTarget;
+									$(_re_event).bind("mouseout", function(event){
+										if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
+											&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
+											//console.log("-terminal-unbind-event");
+											//unbind event
+											$(_re_event).unbind("mouseout");
+										}else{
+											var status = $(element).data("status");
+											if("connect_start" != status){
+												//console.log("-terminal-call : element mouseout");
+												$(terminalGroup.bBox).trigger("mouseout");
+											}
+										}
+									});
+								}else{
+									var status = $(element).data("status");
+									if("connect_start" != status){
+										//console.log("-terminalGroup.bBox : remove-terminal");
+										me._RENDERER.removeAllTerminal();
+									}
 								}
 							},
 						});
@@ -18849,7 +18895,7 @@ OG.handler.EventHandler.prototype = {
 							if (item.terminal) {
 								$(item).bind({
 									mouseover: function (event) {
-										console.log("-terminal-mouseover");
+										//console.log("-terminal-mouseover");
 										var fromTerminal = $(root).data("from_terminal"),
 											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
 											isSelf = element && fromShape && element.id === fromShape.id;
@@ -18863,7 +18909,7 @@ OG.handler.EventHandler.prototype = {
 										}
 									},
 									mouseout : function (event) {
-										console.log("-terminal-mouseout");
+										//console.log("-terminal-mouseout");
 										me._RENDERER.setAttr(item, me._CONFIG.DEFAULT_STYLE.TERMINAL);
 										$(root).removeData("edge_terminal");
 									}
@@ -18888,7 +18934,7 @@ OG.handler.EventHandler.prototype = {
 										});
 									},
 									drag : function (event) {
-										console.log('drag');
+										//console.log('drag');
 										var eventOffset = me._getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
@@ -18936,7 +18982,7 @@ OG.handler.EventHandler.prototype = {
 									},
 									stop : function (event) {
 										$(element).data("status", "connect_end");
-										console.log('stop');
+										//console.log('stop');
 										
 										var to = me._getOffset(event),
 											edge = $(root).data("edge"),
@@ -19033,58 +19079,7 @@ OG.handler.EventHandler.prototype = {
 				}
 			},
 			mouseout : function (event) {
-				if("element_selected" == $(element).data("status")){
-					return false;
-				}
-			
-				console.log("-element-mouseout-execute");
-				if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
-					me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
-					$(root).removeData("edge_terminal");
-				}
-				
-				
-				// if(도형 위에 있는지)
-				var el_ul_x = element.shape.geom.boundary._upperLeft.x;
-				var el_ul_y = element.shape.geom.boundary._upperLeft.y;
-				var el_lr_x = element.shape.geom.boundary._width + el_ul_x;
-				var el_lr_y = element.shape.geom.boundary._height + el_ul_y;
-				
-				/*
-				console.log("====> event.offsetX : "+event.offsetX);
-				console.log("====> event.offsetY : "+event.offsetY);
-				console.log("====> el_ul_x : "+el_ul_x);
-				console.log("====> el_ul_y : "+el_ul_y);
-				console.log("====> el_lr_x : "+el_lr_x);
-				console.log("====> el_lr_y : "+el_lr_y);
-				*/
-				
-				if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
-					&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
-					console.log("-delegate event => terminal");
-					//delegate event => terminal
-					var _re_event = event.relatedTarget;
-					$(_re_event).bind("mouseout", function(event){
-						if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
-							&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
-							console.log("-terminal-unbind-event");
-							//unbind event
-							$(_re_event).unbind("mouseout");
-						}else{
-							var status = $(element).data("status");
-							if("connect_start" != status){
-								console.log("-terminal-call : remove-terminal");
-								me._RENDERER.removeTerminal(element);
-							}
-						}
-					});
-				}else{
-					var status = $(element).data("status");
-					if("connect_start" != status){
-						console.log("-element-call : remove-terminal");
-						me._RENDERER.removeTerminal(element);
-					}
-				}
+
 			}
 		});
 	},
@@ -19199,6 +19194,7 @@ OG.handler.EventHandler.prototype = {
 			// move handle
 			$(element).draggable({
 				start: function (event) {
+					//console.log(" element move ");
 					var eventOffset = me._getOffset(event), guide;
 
 					// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
@@ -19290,7 +19286,7 @@ OG.handler.EventHandler.prototype = {
                         });
 					}
 
-                    me._RENDERER.removeGuide(element);
+                    //me._RENDERER.removeGuide(element);
 					$(root).removeData("bBoxArray");
 				}
 			});
@@ -21635,7 +21631,7 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape 엘리먼트
 	 */
 	selectShape: function (element) {
-		console.log(" => selectShape call!! ");
+		//console.log(" => selectShape call!! ");
 		var me = this, guide;
 		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
 			guide = me._RENDERER.drawGuide(element);
@@ -22883,7 +22879,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
 			TERMINAL      : { stroke: "#03689A", "stroke-width": 0.5, fill: "r(0.5, 0.5)#FFFFFF-#03689A", "fill-opacity": 0.1, cursor: "pointer" },
 			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
-			TERMINAL_BBOX : { stroke: "none", fill: "yellow", "fill-opacity": 0.5 },
+			TERMINAL_BBOX : { stroke: "none", fill: "yellow", "fill-opacity": 0 },
 			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
 			LABEL         : { "font-size": 12, "font-color": "black" },
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
