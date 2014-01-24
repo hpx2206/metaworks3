@@ -9841,7 +9841,12 @@ OG.shape.IShape.prototype = {
 		throw new OG.NotImplementedException("OG.shape.IShape.clone");
 	},
 	addEve : function(){
+	},
+	
+	// (void) 특수한 컨트롤을 생성하기 위한 함수
+	drawCustomControl: function(){
 	}
+	
 };
 OG.shape.IShape.prototype.constructor = OG.shape.IShape;
 OG.IShape = OG.shape.IShape;
@@ -10540,7 +10545,7 @@ OG.shape.bpmn.A_Task.prototype.createShape = function () {
         'fill-opacity': 1,
         r : '10'
 	});
-
+	
 	return this.geom;
 };
 
@@ -10578,7 +10583,188 @@ OG.shape.bpmn.A_Task.prototype.createTerminal = function(){
 		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 1) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
 		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 2) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT)
     ];
-}
+};
+
+//TODO: 커스텀 컨트롤.. 구현 방식을 바꿔둬야 함 ( 함수 => 객체 )
+OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
+	console.log(" ===> call custom control ");
+
+	if(!handler || !element) return;
+
+	var ur_x, ur_y
+		,task, end
+		,group
+		,rElement = handler._RENDERER._getREleById(OG.Util.isElement(element) ? element.id : element)
+	if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+		console.log(" draw custom control ");
+		
+		//찍을 좌표 구하기
+		ur_x = element.shape.geom.boundary._upperLeft.x;
+		ur_y = element.shape.geom.boundary._upperLeft.y;
+		ur_x = element.shape.geom.boundary._width + ur_x;
+	
+		task = handler._RENDERER._PAPER.image("images/opengraph/guide_task.png", ur_x + 10, ur_y, 15, 15);
+		end = handler._RENDERER._PAPER.image("images/opengraph/guide_end.png", ur_x + 10, ur_y + 20, 15, 15);
+		task.attr({
+			cursor : "pointer"
+		});
+		end.attr({
+			cursor : "pointer"
+		});
+
+		task.setTooltip('task - Click or Drag');
+		end.setTooltip('end event - Click or Drag');
+		
+		group = handler._RENDERER._PAPER.group();
+		
+		group.appendChild(task);
+		group.appendChild(end);
+		
+		group.insertAfter(rElement);
+		
+		/********************************************
+			이벤트 설정 시작
+		********************************************/
+		$(task.node).draggable({
+			start: function (event) {
+				console.log("drag");
+				event.stopPropagation();
+				var eventOffset = handler._getOffset(event), guide;
+
+				// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
+				if (handler._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
+					$(handler._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
+						if (OG.Util.isElement(item) && item.id) {
+							handler._RENDERER.removeGuide(item);
+						}
+					});
+					handler._RENDERER.removeTerminal(element);
+				}
+				$(handler._RENDERER.getRootElement()).data("bBoxArray", handler._getMoveTargets());
+				handler._RENDERER.removeRubberBand(handler._RENDERER.getRootElement());
+				handler._RENDERER.removeAllTerminal();
+			},
+			drag : function (event) {
+				event.stopPropagation();
+				var eventOffset = handler._getOffset(event),
+				bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray"),
+				dx = handler._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
+				dy = handler._grid(eventOffset.y - element.shape.geom.getBoundary().getCentroid().y);
+
+				// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
+				handler._autoExtend(eventOffset.x, eventOffset.y);
+				$(task).css({"position": "", "left": "", "top": ""});
+				$.each(bBoxArray, function (k, item) {
+					handler._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
+				});
+				handler._RENDERER.removeAllTerminal();
+			},
+			stop : function (event) {
+				event.stopPropagation();
+				var eventOffset = handler._getOffset(event), shape, newElement, boundary,
+				bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray");
+				boundary = element.shape.geom.getBoundary();
+				shape = new OG.shape.bpmn.A_Task();
+				$(shape).attr('auto_draw', 'yes');
+				newElement = handler._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [boundary.getWidth(), boundary.getHeight()]);
+				handler._RENDERER._CANVAS.connect(element, newElement);
+				handler.selectShape(newElement);
+				$.each(bBoxArray, function (k, item) {
+					handler._RENDERER.remove(item.box);
+				});
+				$(handler._RENDERER.getRootElement()).removeData("bBoxArray");
+			}
+		});
+		$(task.node).bind({
+			click : function (event) {
+				var newElement,
+				shape = new OG.shape.bpmn.A_Task(),
+				envelope = element.shape.geom.getBoundary();
+				$(shape).attr('auto_draw', 'yes');
+				newElement = handler._RENDERER._CANVAS.drawShape([envelope.getCentroid().x + 100, envelope.getCentroid().y], shape, [70, 50]);
+				handler._RENDERER._CANVAS.connect(element, newElement);
+				handler.selectShape(newElement);
+			}
+		});
+		$(end.node).draggable({
+			start: function (event) {
+				var eventOffset = handler._getOffset(event), guide;
+
+				// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
+				if (handler._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
+					$(handler._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
+						if (OG.Util.isElement(item) && item.id) {
+							handler._RENDERER.removeGuide(item);
+						}
+					});
+					handler._RENDERER.removeAllTerminal();
+				}
+
+				$(handler._RENDERER.getRootElement()).data("bBoxArray", handler._getMoveTargets());
+				handler._RENDERER.removeRubberBand(handler._RENDERER.getRootElement());
+				handler._RENDERER.removeAllTerminal();
+			},
+			drag : function (event) {
+				var eventOffset = handler._getOffset(event),
+				start = $(this).data("start"),
+				bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray"),
+				dx = handler._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
+				dy = handler._grid(eventOffset.y - element.shape.geom.getBoundary().getCentroid().y);
+
+			// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
+				handler._autoExtend(eventOffset.x, eventOffset.y);
+
+				$(this).css({"position": "", "left": "", "top": ""});
+				$.each(bBoxArray, function (k, item) {
+					handler._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
+				});
+				handler._RENDERER.removeAllTerminal();
+			},
+			stop : function (event) {
+				var eventOffset = handler._getOffset(event), shape, newElement,
+				bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray");
+				shape = new OG.shape.bpmn.E_End();
+				$(shape).attr('auto_draw', 'yes');
+				newElement = handler._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
+				handler._RENDERER._CANVAS.connect(element, newElement);
+				$.each(bBoxArray, function (k, item) {
+					handler._RENDERER.remove(item.box);
+				});
+				$(handler._RENDERER.getRootElement()).removeData("bBoxArray");
+				handler.selectShape(newElement);
+			}
+		});
+		$(end.node).bind({
+			mouseover: function (event) {
+
+			},
+			click : function (event) {
+				var newElement,
+				shape = new OG.shape.bpmn.E_End(),
+				envelope = element.shape.geom.getBoundary();
+				$(shape).attr('auto_draw', 'yes');
+				newElement = handler._RENDERER._CANVAS.drawShape([envelope.getUpperRight().x + 50, envelope.getCentroid().y], shape, [30, 30]);
+				handler._RENDERER._CANVAS.connect(element, newElement);
+			},
+			mouseout : function (event) {
+
+			}
+		});
+		/********************************************
+			이벤트 설정 종료
+		********************************************/
+		
+		$(group).bind({
+			remove: function(event){
+				element.shape.geom["custom_control"] = undefined;
+				handler._RENDERER._remove(group);
+			}
+		});
+		
+		// addto element
+		element.shape.geom["custom_control"] = group;
+	}
+};
 
 /**
  * BPMN : Human Task Shape
@@ -16950,23 +17136,6 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			_rcRect = this._PAPER.rect(_rightCenter.x - _hSize, _rightCenter.y - _hSize, _size, _size);
 			_lwcRect = this._PAPER.rect(_lowerCenter.x - _hSize, _lowerCenter.y - _hSize, _size, _size);
 
-            if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
-            task = this._PAPER.image("images/opengraph/guide_task.png", _upperRight.x + 10, _upperRight.y, 15, 15);
-            end = this._PAPER.image("images/opengraph/guide_end.png", _upperRight.x + 10, _upperRight.y + 20, 15, 15);
-            task.attr({
-                cursor : "pointer"
-            });
-            end.attr({
-                cursor : "pointer"
-            });
-		
-            task.setTooltip('task - Click or Drag');
-            end.setTooltip('end event - Click or Drag');
-			
-            group.appendChild(task);
-            group.appendChild(end);
-            }
-
 			_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 			_ulRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UL);
 			_urRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UR);
@@ -16999,38 +17168,18 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			this._add(_rcRect, rElement.id + OG.Constants.GUIDE_SUFFIX.RC);
 			this._add(_lwcRect, rElement.id + OG.Constants.GUIDE_SUFFIX.LWC);
 
-            if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
-			    // guide 정의
-                guide = {
-                    bBox : _bBoxRect.node,
-                    group: group.node,
-                    ul   : _ulRect.node,
-                    ur   : _urRect.node,
-                    ll   : _llRect.node,
-                    lr   : _lrRect.node,
-                    lc   : _lcRect.node,
-                    uc   : _ucRect.node,
-                    rc   : _rcRect.node,
-                    lwc  : _lwcRect.node,
-                    task : task.node,
-                    end  : end.node
-                };
-			}
-			else
-			{
-                guide = {
-                    bBox : _bBoxRect.node,
-                    group: group.node,
-                    ul   : _ulRect.node,
-                    ur   : _urRect.node,
-                    ll   : _llRect.node,
-                    lr   : _lrRect.node,
-                    lc   : _lcRect.node,
-                    uc   : _ucRect.node,
-                    rc   : _rcRect.node,
-                    lwc  : _lwcRect.node
-                };
-			}
+			guide = {
+				bBox : _bBoxRect.node,
+				group: group.node,
+				ul   : _ulRect.node,
+				ur   : _urRect.node,
+				ll   : _llRect.node,
+				lr   : _lrRect.node,
+				lc   : _lcRect.node,
+				uc   : _ucRect.node,
+				rc   : _rcRect.node,
+				lwc  : _lwcRect.node
+			};
 
 			// layer 위치 조정
 			_bBoxRect.insertBefore(rElement);
@@ -18841,9 +18990,9 @@ OG.handler.EventHandler.prototype = {
 						
 						$(terminalGroup.bBox).bind({
 							mousedown: function(event){
-								me._RENDERER.removeTerminal(element);
 								//console.log($(element).data("status"));
-								$(element).trigger("click");
+								event.stopPropagation();
+								me.selectShape(element,event);
 								//console.log($(element).data("status"));
 							},
 							mouseover: function (event) {
@@ -18885,7 +19034,7 @@ OG.handler.EventHandler.prototype = {
 									var status = $(element).data("status");
 									if("connect_start" != status){
 										//console.log("-terminalGroup.bBox : remove-terminal");
-										me._RENDERER.removeAllTerminal();
+										me._RENDERER.removeTerminal(element);
 									}
 								}
 							},
@@ -19051,7 +19200,7 @@ OG.handler.EventHandler.prototype = {
 											
 											// select target element
 											var _toElement = me._getShapeFromTerminal(toTerminal)
-											$(_toElement).trigger("click");
+											me.selectShape(_toElement);
 										} else {
 											me._RENDERER.removeShape(edge);
 										}
@@ -19077,9 +19226,6 @@ OG.handler.EventHandler.prototype = {
 						me._RENDERER.removeTerminal(element);
 					}
 				}
-			},
-			mouseout : function (event) {
-
 			}
 		});
 	},
@@ -19194,7 +19340,6 @@ OG.handler.EventHandler.prototype = {
 			// move handle
 			$(element).draggable({
 				start: function (event) {
-					//console.log(" element move ");
 					var eventOffset = me._getOffset(event), guide;
 
 					// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
@@ -19207,6 +19352,12 @@ OG.handler.EventHandler.prototype = {
 						me._RENDERER.removeAllTerminal();
 					}
 
+					//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
+					// remove custom control
+					if(element.shape.geom.custom_control){
+						$(element.shape.geom.custom_control).trigger("remove");
+					}
+					
 					// redraw guide
 					me._RENDERER.removeGuide(element);
 					guide = me._RENDERER.drawGuide(element);
@@ -19251,8 +19402,14 @@ OG.handler.EventHandler.prototype = {
 					$(this).css({"position": "", "left": "", "top": ""});
 					eleArray = me._moveElements(bBoxArray, dx, dy);
 
-                    eleArray.push(element);
-                    me._RENDERER.addToGroup(root, eleArray);
+					//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
+					// remove custom control
+					if(me._getSelectedElement().length == 1){
+						element.shape.drawCustomControl(me, element);
+					}
+					
+                    //eleArray.push(element);
+                    //me._RENDERER.addToGroup(root, eleArray);
 
 					// group target 이 있는 경우 grouping 처리
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
@@ -19654,7 +19811,7 @@ OG.handler.EventHandler.prototype = {
 							me._RENDERER.setAttr(guide.lwc, {x: OG.Util.round((me._num(me._RENDERER.getAttr(guide.lc, "x")) + newX) / 2)});
 							me._RENDERER.setAttr(guide.bBox, {width: newWidth});
 						}
-						me._RENDERER.removeAllTerminal();
+						//me._RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
 						var eventOffset = me._getOffset(event),
@@ -19667,7 +19824,7 @@ OG.handler.EventHandler.prototype = {
 								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
-							me._RENDERER.removeGuide(element);
+							//me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -20034,154 +20191,6 @@ OG.handler.EventHandler.prototype = {
 					}
 				});
 				
-                $(guide.task).draggable({
-					start: function (event) {
-                        var eventOffset = me._getOffset(event), guide;
-
-                        // 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
-                        if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
-                            $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
-                                if (OG.Util.isElement(item) && item.id) {
-                                    me._RENDERER.removeGuide(item);
-                                }
-                            });
-                            me._RENDERER.removeAllTerminal();
-                        }
-
-//                        // redraw guide
-//                        me._RENDERER.removeGuide(element);
-//                        guide = me._RENDERER.drawGuide(element);
-//
-//                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-//                        $(this).data("offset", {
-//                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
-//                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
-//                        });
-
-                        $(root).data("bBoxArray", me._getMoveTargets());
-                        me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-                        me._RENDERER.removeAllTerminal();
-					},
-					drag : function (event) {
-                        var eventOffset = me._getOffset(event),
-						start = $(this).data("start"),
-						bBoxArray = $(root).data("bBoxArray"),
-						dx = me._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
-						dy = me._grid(eventOffset.y - element.shape.geom.getBoundary().getCentroid().y);
-
-					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
-                        me._autoExtend(eventOffset.x, eventOffset.y);
-
-                        $(this).css({"position": "", "left": "", "top": ""});
-                        $.each(bBoxArray, function (k, item) {
-                            me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
-                        });
-                        me._RENDERER.removeAllTerminal();
-					},
-					stop : function (event) {
-					    var eventOffset = me._getOffset(event), shape, newElement, boundary,
-					    bBoxArray = $(root).data("bBoxArray");
-					    boundary = element.shape.geom.getBoundary();
-                        shape = new OG.shape.bpmn.A_Task();
-                        $(shape).attr('auto_draw', 'yes');
-                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [boundary.getWidth(), boundary.getHeight()]);
-                        me._RENDERER._CANVAS.connect(element, newElement);
-                        $.each(bBoxArray, function (k, item) {
-                            me._RENDERER.remove(item.box);
-                        });
-                        $(root).removeData("bBoxArray");
-					}
-				});
-                $(guide.task).bind({
-					mouseover: function (event) {
-                        $(element).trigger('abcd');
-					},
-					click : function (event) {
-					    var newElement,
-                        shape = new OG.shape.bpmn.A_Task(),
-                        envelope = element.shape.geom.getBoundary();
-					    $(shape).attr('auto_draw', 'yes');
-                        newElement = me._RENDERER._CANVAS.drawShape([envelope.getCentroid().x + 100, envelope.getCentroid().y], shape, [70, 50]);
-                        me._RENDERER._CANVAS.connect(element, newElement);
-					},
-					mouseout : function (event) {
-
-					}
-				});
-                $(guide.end).draggable({
-					start: function (event) {
-                        var eventOffset = me._getOffset(event), guide;
-
-                        // 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
-                        if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
-                            $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
-                                if (OG.Util.isElement(item) && item.id) {
-                                    me._RENDERER.removeGuide(item);
-                                }
-                            });
-                            me._RENDERER.removeAllTerminal();
-                        }
-
-                        // redraw guide
-//                        me._RENDERER.removeGuide(element);
-//                        guide = me._RENDERER.drawGuide(element);
-//
-//                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-//                        $(this).data("offset", {
-//                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
-//                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
-//                        });
-
-                        $(root).data("bBoxArray", me._getMoveTargets());
-                        me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
-                        me._RENDERER.removeAllTerminal();
-					},
-					drag : function (event) {
-                        var eventOffset = me._getOffset(event),
-						start = $(this).data("start"),
-						bBoxArray = $(root).data("bBoxArray"),
-						dx = me._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
-						dy = me._grid(eventOffset.y - element.shape.geom.getBoundary().getCentroid().y);
-
-					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
-                        me._autoExtend(eventOffset.x, eventOffset.y);
-
-                        $(this).css({"position": "", "left": "", "top": ""});
-                        $.each(bBoxArray, function (k, item) {
-                            me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
-                        });
-                        me._RENDERER.removeAllTerminal();
-					},
-					stop : function (event) {
-					    var eventOffset = me._getOffset(event), shape, newElement,
-					    bBoxArray = $(root).data("bBoxArray");
-                        shape = new OG.shape.bpmn.E_End();
-                        $(shape).attr('auto_draw', 'yes');
-                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
-                        me._RENDERER._CANVAS.connect(element, newElement);
-                        $.each(bBoxArray, function (k, item) {
-                            me._RENDERER.remove(item.box);
-                        });
-                        $(root).removeData("bBoxArray");
-					}
-				});
-                $(guide.end).bind({
-					mouseover: function (event) {
-
-					},
-					click : function (event) {
-					    var newElement,
-                        shape = new OG.shape.bpmn.E_End(),
-                        envelope = element.shape.geom.getBoundary();
-					    $(shape).attr('auto_draw', 'yes');
-                        newElement = me._RENDERER._CANVAS.drawShape([envelope.getUpperRight().x + 50, envelope.getCentroid().y], shape, [30, 30]);
-                        me._RENDERER._CANVAS.connect(element, newElement);
-					},
-					mouseout : function (event) {
-
-					}
-				});
-
                 // add tooltip for guide activity icon
                 for(var item in guide){
                     if($(guide[item]).attr('tooltip') == 'enable')
@@ -20221,19 +20230,22 @@ OG.handler.EventHandler.prototype = {
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
 			$(element).bind("click", function (event) {
-			    event.stopPropagation
+				console.log(" click and select");
+				event.stopPropagation();
 				var guide;
 				$(me._RENDERER.getContainer()).focus();
 
 				if (element.shape) {
-					if (!event.shiftKey && !event.ctrlKey) {
-						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
-							if (item.id) {
-								me._RENDERER.removeGuide(item);
-							}
-						});
+					if ($(element).attr("_selected") === "true") {
+						me.deselectShape(element);
+						if (!event.shiftKey && !event.ctrlKey) {
+							me.selectShape(element);
+						}
+					}else{
+						me.selectShape(element, event);
 					}
 
+					/*
 					if ($(element).attr("_selected") === "true") {
 						if (event.shiftKey || event.ctrlKey) {
 							me._RENDERER.removeGuide(element);
@@ -20250,6 +20262,7 @@ OG.handler.EventHandler.prototype = {
 							}
 						}
 					}
+					*/
 					return false;
 				}
 			});
@@ -20308,16 +20321,7 @@ OG.handler.EventHandler.prototype = {
 
 		// 배경클릭한 경우 deselect 하도록
 		$(rootEle).bind("click", function (event) {
-			var dragBox = $(this).data("dragBox");
-			$(me._RENDERER.getContainer()).focus();
-			if (!dragBox || (dragBox && dragBox.width < 1 && dragBox.height < 1)) {
-				$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
-					if (OG.Util.isElement(item) && item.id) {
-						me._RENDERER.removeGuide(item);
-					}
-				});
-				me._RENDERER.removeAllTerminal();
-			}
+			me.deselectAll();
 		});
 
 		if (isSelectable === true) {
@@ -20336,12 +20340,12 @@ OG.handler.EventHandler.prototype = {
 					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
-					me._RENDERER.drawRubberBand([x, y], [Math.abs(width), Math.abs(height)]);
+					me._RENDERER.drawRubberBand([x-1, y-1], [Math.abs(width), Math.abs(height)]);
 				}
 			});
-			$(rootEle).bind("mouseup", function (event) {
+			$(rootEle).bind("mouseup", function (event) {			
 				var first = $(this).data("dragBox_first"),
-					eventOffset, width, height, x, y, envelope, guide;
+					eventOffset, width, height, x, y, envelope, guide, elements = [];
 				me._RENDERER.removeRubberBand(rootEle);
 				if (first) {
 					eventOffset = me._getOffset(event);
@@ -20350,18 +20354,23 @@ OG.handler.EventHandler.prototype = {
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
 					envelope = new OG.Envelope([x, y], Math.abs(width), Math.abs(height));
+					
 					$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
 						if (element.shape.geom && envelope.isContainsAll(element.shape.geom.getVertices())) {
-							me._deselectChildren(element);
-							if (!me._isParentSelected(element)) {
-								guide = me._RENDERER.drawGuide(element);
-								if (guide) {
-									// enable event
-									me.setResizable(element, guide, me._isResizable(element.shape));
-								}
-							}
+							elements.push(element);
+//							if (!me._isParentSelected(element)) {
+//								guide = me._RENDERER.drawGuide(element);
+//								if (guide) {
+//									// enable event
+//									me.setResizable(element, guide, me._isResizable(element.shape));
+//								}
+//							}
 						}
 					});
+					me.selectShapes(elements);
+					
+					/*
+					*/
 					me._RENDERER.removeAllTerminal();
 					$(this).data("dragBox", {"width": width, "height": height, "x": x, "y": y});
 				}
@@ -21630,9 +21639,24 @@ OG.handler.EventHandler.prototype = {
 	 *
 	 * @param {Element} element Shape 엘리먼트
 	 */
-	selectShape: function (element) {
-		//console.log(" => selectShape call!! ");
-		var me = this, guide;
+	selectShape: function (element, event) {
+		console.log(" => selectShape call!! ");
+		
+		var me = this, guide, root = me._RENDERER.getRootGroup();
+		
+		//단일 선택 다중 선택 여부 판단
+		if(event){
+			if (!event.shiftKey && !event.ctrlKey) {
+				console.log(" -=========> single select mode ");
+				me.deselectAll();
+			}else{
+				console.log(" -=========> multiple select mode ");
+			}
+		}else{
+			//기본 단일 선택
+			me.deselectAll();
+		}
+
 		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
 			guide = me._RENDERER.drawGuide(element);
 			if (guide) {
@@ -21640,13 +21664,121 @@ OG.handler.EventHandler.prototype = {
 				me.setResizable(element, guide, me._isResizable(element.shape));
 				me._RENDERER.removeTerminal(element);
 			}
+			
+			//선택상태 설정
+			$(element).attr("_selected", "true");
+			
+			//선택요소배열 추가
+			me._addSelectedElement(element);
+			
+			console.log(me._getSelectedElement());
+			
+			//하나만 선택된 경우 : 후행 처리 ( drawCustomControl );
+			if(me._getSelectedElement().length == 1){
+				console.log(" ======> call !! custom control ");
+				element.shape.drawCustomControl(this, element);
+			}else if(me._getSelectedElement().length > 1){
+				var i, n, selectedElements = me._getSelectedElement();
+				
+				for(i=0,n=selectedElements.length; i<n; i++){
+					//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
+					// remove custom control
+					if(selectedElements[i].shape.geom.custom_control){
+						$(selectedElements[i].shape.geom.custom_control).trigger("remove");
+					}
+				}
+			}
 		}
 	},
 
 	/**
+	 * 주어진 다수의 Shape Element 를 선택된 상태로 되게 한다.
+	 *
+	 * @param {Element} element Shape 엘리먼트
+	 */
+	selectShapes: function (elementArray) {
+		//console.log(" => selectShapes~ call!! ");
+		var me = this, guide, _element;
+		
+		if(!elementArray) return;
+				
+		while(elementArray.length > 0){
+			_element = elementArray.pop();
+			me._deselectChildren(_element);
+			
+			$(_element).attr("_selected", "true");
+			if (!me._isParentSelected(_element)) {
+				guide = me._RENDERER.drawGuide(_element);
+				if (guide) {
+					// enable event
+					me.setResizable(_element, guide, me._isResizable(_element.shape));
+				}
+			}
+			
+			//선택요소배열 추가
+			me._addSelectedElement(_element);
+		}
+	},
+	
+		//TODO : 선택된 모든 Shape를 선택 해제
+	deselectShape: function (element) {
+		var me = this;
+		
+		if (OG.Util.isElement(element) && element.id) {
+			$(element).attr("_selected", "");
+			me._RENDERER.removeGuide(element);
+			me._RENDERER.removeTerminal(element);
+			
+			//선택요소배열 삭제
+			me._delSelectedElement(element);
+			
+			//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
+			// remove custom control
+			if(element.shape.geom.custom_control){
+				$(element.shape.geom.custom_control).trigger("remove");
+			}			
+		}
+	},
+	
+	//TODO : 선택된 모든 Shape를 선택 해제
+	deselectAll: function () {
+		//console.log(" => selectShapes~ call!! ");
+		var me = this;
+		
+		var dragBox = $(this).data("dragBox");
+		$(me._RENDERER.getContainer()).focus();
+		if (!dragBox || (dragBox && dragBox.width < 1 && dragBox.height < 1)) {
+			$(me._RENDERER.getRootElement())
+				.find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(
+				function (index, item) {
+					if (OG.Util.isElement(item) && item.id) {
+						$(item).attr("_selected", "");
+						me._RENDERER.removeGuide(item);
+						
+						//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
+						// remove custom control
+						if(item.shape.geom.custom_control){
+							$(item.shape.geom.custom_control).trigger("remove");
+						}
+						
+					}
+				}
+			);
+			me._RENDERER.removeAllTerminal();
+			
+			//선택요소배열 모두삭제 (초기화)
+			me._removeAllSelectedElement();
+			
+
+		}
+	},
+	
+	/**
 	 * 메뉴 : 선택된 Shape 들을 삭제한다.
 	 */
-	deleteSelectedShape: function () {
+	deleteSelectedShape: function (event) {
+		console.log(" deleteSelectedShape call !! ");
+	
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=EDGE][_selected=true]").each(function (index, item) {
 			if (item.id) {
@@ -21656,6 +21788,11 @@ OG.handler.EventHandler.prototype = {
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
 			if (item.id) {
 				me._RENDERER.removeShape(item);
+				//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
+				// remove custom control
+				if(item.shape.geom.custom_control){
+					$(item.shape.geom.custom_control).trigger("remove");
+				}
 			}
 		});
 	},
@@ -21664,10 +21801,12 @@ OG.handler.EventHandler.prototype = {
 	 * 메뉴 : 모든 Shape 들을 선택한다.
 	 */
 	selectAll: function () {
-		var me = this;
+		var me = this, elements = [];
+		//TODO: multiple select
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
-			me.selectShape(element);
+			elements.push(element);
 		});
+		me.selectShapes(elements);
 	},
 
 	/**
@@ -22510,6 +22649,7 @@ OG.handler.EventHandler.prototype = {
 			if ($(item).attr("_type") === OG.Constants.NODE_TYPE.SHAPE) {
 				if (item.childNodes.length > 0) {
 					me._deselectChildren(item);
+					me._delSelectedElement(item);
 				}
 
 				if ($(item).attr("_selected") === "true") {
@@ -22592,6 +22732,31 @@ OG.handler.EventHandler.prototype = {
 	_isLabelEditable: function (shape) {
 		var me = this;
 		return me._CONFIG.LABEL_EDITABLE && me._CONFIG.LABEL_EDITABLE_[shape.TYPE] && shape.LABEL_EDITABLE;
+	},
+	
+	//TODO : 선택된 요소를 선택요소배열에 추가
+	_addSelectedElement: function (element) {
+		if(undefined == this.selectedElements){
+			this.selectedElements = [];
+		}
+		this.selectedElements.push(element);
+	},
+	
+	//TODO : 선택된 요소를 선택요소배열에 추가
+	_delSelectedElement: function (element) {
+		var removeIndex = this.selectedElements.indexOf(element);
+		this.selectedElements.splice(removeIndex, 1);
+	},
+	
+	//TODO : 선택요소배열 반환
+	_getSelectedElement: function (){
+		return this.selectedElements;
+	},
+	
+	//TODO : 선택된 요소를 모두 제거
+	_removeAllSelectedElement: function(){
+		//init
+		this.selectedElements = [];
 	}
 };
 OG.handler.EventHandler.prototype.constructor = OG.handler.EventHandler;
