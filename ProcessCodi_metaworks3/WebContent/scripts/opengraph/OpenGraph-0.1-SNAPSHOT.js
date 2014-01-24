@@ -12948,7 +12948,7 @@ OG.shape.bpmn.M_Annotation.prototype.createShape = function () {
 OG.shape.bpmn.M_Group = function (label) {
 	OG.shape.bpmn.M_Group.superclass.call(this);
 
-	
+
 	this.CONNECTABLE = true;
 
 
@@ -12988,7 +12988,7 @@ OG.shape.bpmn.M_Group.prototype.createShape = function () {
 	this.geom.style = new OG.geometry.Style({
 		'stroke-dasharray': '-',
 		"r"               : 6,
-		fill : 'none'     
+		fill : 'white'     
 
 	});
 	
@@ -14850,7 +14850,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 
 		rect = this._PAPER.rect(bBox.x - LABEL_PADDING / 2, bBox.y - LABEL_PADDING / 2,
 			bBox.width + LABEL_PADDING, bBox.height + LABEL_PADDING);
-		rect.attr({stroke: "none", fill: this._CANVAS_COLOR, 'fill-opacity': 1});
+		rect.attr({stroke: "none", fill: this._CANVAS_COLOR, 'fill-opacity': 0});
 		this._add(rect);
 		group.node.appendChild(rect.node);
 	}
@@ -16873,6 +16873,10 @@ OG.renderer.RaphaelRenderer.prototype.drawDropOverGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
+
+	// element selected
+	$(element).data("status","element_selected");
+	
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope,
@@ -17049,6 +17053,9 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.removeGuide = function (element) {
+	// element selected
+	$(element).removeData("status");
+
 	var rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		guide = this._getREleById(rElement.id + OG.Constants.GUIDE_SUFFIX.GUIDE),
 		bBox = this._getREleById(rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
@@ -17309,10 +17316,10 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 
 	if (rElement && terminals && terminals.length > 0) {
 		group = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.GROUP);
-		rect = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
-		if (group || rect) {
+		//rect = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
+		if (group /*|| rect*/) {
 			return {
-				bBox    : rect.node,
+				//bBox    : rect.node,
 				terminal: group.node
 			};
 		}
@@ -17321,11 +17328,13 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 		group = this._PAPER.group();
 
 		// hidden box
+		/*
 		rect = this._PAPER.rect(envelope.getUpperLeft().x - rect_gap, envelope.getUpperLeft().y - rect_gap,
 			envelope.getWidth() + rect_gap * 2, envelope.getHeight() + rect_gap * 2);
 		rect.attr(me._CONFIG.DEFAULT_STYLE.TERMINAL_BBOX);
 		this._add(rect, rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
-
+		*/
+		
 		// terminal
 		$.each(terminals, function (idx, item) {
 			if (!terminalType || item.inout.indexOf(terminalType) >= 0) {
@@ -17344,11 +17353,12 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 		this._add(group, rElement.id + OG.Constants.TERMINAL_SUFFIX.GROUP);
 
 		// layer 위치 조정
-		rect.insertBefore(rElement);
+		//rect.insertBefore(rElement);
 		group.insertAfter(rElement);
+		//rElement.appendChild(group);
 
 		return {
-			bBox    : rect.node,
+			//bBox    : rect.node,
 			terminal: group.node
 		};
 	}
@@ -17372,10 +17382,12 @@ OG.renderer.RaphaelRenderer.prototype.removeTerminal = function (element) {
 		if (group) {
 			this._remove(group);
 		}
+		/*
 		rect = this._getREleById(rElement.id + OG.Constants.TERMINAL_SUFFIX.BOX);
 		if (rect) {
 			this._remove(rect);
 		}
+		*/
 	}
 };
 
@@ -18789,9 +18801,14 @@ OG.handler.EventHandler.prototype = {
 	 */
 	enableConnect: function (element) {
 		var me = this, terminalGroup, root = me._RENDERER.getRootGroup();
-
+	
 		$(element).bind({
 			mouseover: function () {
+				if("element_selected" == $(element).data("status")){
+					return false;
+				}
+				
+				console.log("-element-mouseover");
 				if (element.shape.isCollapsed === false) {
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
@@ -18814,23 +18831,28 @@ OG.handler.EventHandler.prototype = {
 								}
 							});
 						}
-
+						
 						$(terminalGroup.bBox).bind({
-							mouseout: function () {
+							mouseover: function (event) {
+								console.log("-terminalGroup.bBox-mouseover");
+							},
+							mouseout: function (event) {
+								console.log("-terminalGroup.bBox-mouseout");
+							
 								if (!$(root).data("edge")) {
 									me._RENDERER.removeTerminal(element);
 								}
-							}
+							},
 						});
 
 						$.each(terminalGroup.terminal.childNodes, function (idx, item) {
 							if (item.terminal) {
 								$(item).bind({
 									mouseover: function (event) {
+										console.log("-terminal-mouseover");
 										var fromTerminal = $(root).data("from_terminal"),
 											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
 											isSelf = element && fromShape && element.id === fromShape.id;
-
 
 										if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
 											($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
@@ -18840,14 +18862,16 @@ OG.handler.EventHandler.prototype = {
 											$(root).data("edge_terminal", item);
 										}
 									},
-									mouseout : function () {
+									mouseout : function (event) {
+										console.log("-terminal-mouseout");
 										me._RENDERER.setAttr(item, me._CONFIG.DEFAULT_STYLE.TERMINAL);
 										$(root).removeData("edge_terminal");
 									}
 								});
-
+								
 								$(item).draggable({
 									start: function (event) {
+										$(element).data("status", "connect_start");
 										var x = item.terminal.position.x, y = item.terminal.position.y,
 											edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
 												me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW);
@@ -18864,6 +18888,7 @@ OG.handler.EventHandler.prototype = {
 										});
 									},
 									drag : function (event) {
+										console.log('drag');
 										var eventOffset = me._getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
@@ -18910,6 +18935,9 @@ OG.handler.EventHandler.prototype = {
 										}
 									},
 									stop : function (event) {
+										$(element).data("status", "connect_end");
+										console.log('stop');
+										
 										var to = me._getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
@@ -18974,6 +19002,10 @@ OG.handler.EventHandler.prototype = {
 													//me._RENDERER.toFront(guide.group);
 												//}
 											}
+											
+											// select target element
+											var _toElement = me._getShapeFromTerminal(toTerminal)
+											$(_toElement).trigger("click");
 										} else {
 											me._RENDERER.removeShape(edge);
 										}
@@ -18983,6 +19015,11 @@ OG.handler.EventHandler.prototype = {
 										$(root).removeData("from_terminal");
 										$(root).removeData("edge_terminal");
 										$(root).removeData("dragged_guide");
+										
+										// end connect : reset
+										$(element).removeData("status");
+										me._RENDERER.removeAllTerminal();
+										
 										if (toShape) {
 											me._RENDERER.remove(toShape.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 										}
@@ -18995,10 +19032,58 @@ OG.handler.EventHandler.prototype = {
 					}
 				}
 			},
-			mouseout : function (event) {;
+			mouseout : function (event) {
+				if("element_selected" == $(element).data("status")){
+					return false;
+				}
+			
+				console.log("-element-mouseout-execute");
 				if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
 					me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 					$(root).removeData("edge_terminal");
+				}
+				
+				
+				// if(도형 위에 있는지)
+				var el_ul_x = element.shape.geom.boundary._upperLeft.x;
+				var el_ul_y = element.shape.geom.boundary._upperLeft.y;
+				var el_lr_x = element.shape.geom.boundary._width + el_ul_x;
+				var el_lr_y = element.shape.geom.boundary._height + el_ul_y;
+				
+				/*
+				console.log("====> event.offsetX : "+event.offsetX);
+				console.log("====> event.offsetY : "+event.offsetY);
+				console.log("====> el_ul_x : "+el_ul_x);
+				console.log("====> el_ul_y : "+el_ul_y);
+				console.log("====> el_lr_x : "+el_lr_x);
+				console.log("====> el_lr_y : "+el_lr_y);
+				*/
+				
+				if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
+					&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
+					console.log("-delegate event => terminal");
+					//delegate event => terminal
+					var _re_event = event.relatedTarget;
+					$(_re_event).bind("mouseout", function(event){
+						if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
+							&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
+							console.log("-terminal-unbind-event");
+							//unbind event
+							$(_re_event).unbind("mouseout");
+						}else{
+							var status = $(element).data("status");
+							if("connect_start" != status){
+								console.log("-terminal-call : remove-terminal");
+								me._RENDERER.removeTerminal(element);
+							}
+						}
+					});
+				}else{
+					var status = $(element).data("status");
+					if("connect_start" != status){
+						console.log("-element-call : remove-terminal");
+						me._RENDERER.removeTerminal(element);
+					}
 				}
 			}
 		});
@@ -19232,7 +19317,7 @@ OG.handler.EventHandler.prototype = {
 			return;
 		}
 
-		if (isResizable === true) {
+		if (isResizable === true) {		
 			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
 				// resize handle
                 $(guide.from).draggable({
@@ -20277,13 +20362,12 @@ OG.handler.EventHandler.prototype = {
 								if (guide) {
 									// enable event
 									me.setResizable(element, guide, me._isResizable(element.shape));
-									me._RENDERER.removeAllTerminal();
 								}
 							}
 						}
 					});
-
-					$(this).data("dragBox", {width: width, height: height, x: x, y: y});
+					me._RENDERER.removeAllTerminal();
+					$(this).data("dragBox", {"width": width, "height": height, "x": x, "y": y});
 				}
 			});
 
@@ -21551,6 +21635,7 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape 엘리먼트
 	 */
 	selectShape: function (element) {
+		console.log(" => selectShape call!! ");
 		var me = this, guide;
 		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
 			guide = me._RENDERER.drawGuide(element);
@@ -22735,12 +22820,12 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		/**
 		 * Shape Move & Resize 시 이동 간격
 		 */
-		MOVE_SNAP_SIZE: 5,
+		MOVE_SNAP_SIZE: 8,
 
 		/**
 		 * 터미널 cross 사이즈
 		 */
-		TERMINAL_SIZE: 3,
+		TERMINAL_SIZE: 5,
 
 		/**
 		 * Shape 복사시 패딩 사이즈
@@ -22798,7 +22883,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
 			TERMINAL      : { stroke: "#03689A", "stroke-width": 0.5, fill: "r(0.5, 0.5)#FFFFFF-#03689A", "fill-opacity": 0.1, cursor: "pointer" },
 			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
-			TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
+			TERMINAL_BBOX : { stroke: "none", fill: "yellow", "fill-opacity": 0.5 },
 			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
 			LABEL         : { "font-size": 12, "font-color": "black" },
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
