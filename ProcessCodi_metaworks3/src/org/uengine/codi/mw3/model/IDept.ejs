@@ -16,7 +16,7 @@
 						</div>
 						<div class="user_detail">
 							<span class="fontbold"><%=fields.partName.here()%></span>
-							<span class="fontgray">dsd</span>
+							<span class="fontgray"><%=fields.deptPath.here()%></span>
 						</div>
 		                <%  if(value.followed) {    %>
 		                        <button type="button" class="btn btn-default btn-xs"  onClick="<%=methods.removeFollower.caller()%>" style="float:right; margin:7px 7px 0 0">삭제</button>

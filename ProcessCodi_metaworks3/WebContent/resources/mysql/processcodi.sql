@@ -1058,3 +1058,40 @@ alter table roletable add column roleName varchar(100);
 -- 부서테이블에 url , thumbnail 제거 (김형국)
 alter table PARTTABLE drop url ;
 alter table PARTTABLE drop thumbnail;
+
+-- 부서path를 가져오는 function 생성 (김형국) (14.1.27) 
+-- GetDeptPathAncestry(partcode, '->') 이렇게 사용
+DELIMITER $$
+DROP FUNCTION IF EXISTS `GetDeptPathAncestry` $$
+CREATE FUNCTION
+`GetDeptPathAncestry` (GivenID VARCHAR(20), comma VARCHAR(20)) RETURNS VARCHAR(1024)
+DETERMINISTIC
+BEGIN
+ DECLARE rv VARCHAR(1024);
+ DECLARE cm VARCHAR(20);
+ DECLARE pt VARCHAR(20);
+ DECLARE ch VARCHAR(20);
+ DECLARE pn VARCHAR(20);
+ DECLARE cnt INT;
+  
+ SET rv = '';
+ SET cm = '';
+ SET ch = GivenID;
+ 
+ myloop : WHILE ch is not null DO
+  SELECT count('x'), partcode, parent_partcode, partname INTO cnt, pt, ch, pn FROM
+   (SELECT partcode, parent_partcode, partname FROM parttable WHERE partcode = ch) A;
+ IF cnt = 0 THEN
+  LEAVE myloop;
+  RETURN rv;
+ END IF;
+
+ IF pt is not null THEN
+  SET rv = CONCAT(pn,cm,rv);
+  SET cm = comma;
+ END IF;
+ END WHILE;
+
+ 
+ RETURN rv;
+END $$
