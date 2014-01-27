@@ -405,10 +405,13 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 			var value = mw3.objects[this.objectId];
 			
 			if(value.instId){
-				var instanceView = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView@' + value.instId);
-				if( instanceView != null && instanceView.followers != null && instanceView.followers.followers != null){
-					for(var i=0; i<instanceView.followers.followers.length; i++){
-						exisingFollowers[instanceView.followers.followers[i].userId] = true;
+				var followers = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Followers@instance_' + value.instId);
+				if( followers != null && followers.followers != null){ 
+					for(var i=0; i<followers.followers.length; i++){
+						var follower = followers.followers[i];
+						
+						if(follower.assigntype == 0)
+							exisingFollowers[follower.endpoint] = true;
 					}
 				}
 			}
