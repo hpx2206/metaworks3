@@ -230,7 +230,11 @@
 								<%if(value.ext4 != null){%>
 									<td><iframe src="<%=value.ext4%>" frameborder="0" scrolling="no" width="100%" height="300px"/></td>
 								<%}else{%>
-									<td><%=fields.conference.here()%>
+									
+									<td>
+									<button type="button" class="btn btn-default" onClick="<%=methods.palyBack.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"> <%=mw3.localize('$PlayModalwindow')%></button>
+									
+									<%=fields.conference.here()%>
 									</td>
 								<%}%>
 							<%}%>
