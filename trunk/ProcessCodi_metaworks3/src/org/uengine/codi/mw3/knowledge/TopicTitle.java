@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
@@ -21,6 +21,9 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -81,7 +84,11 @@ public class TopicTitle  implements ContextAware{
 
 	String topicTitle;
 		@Face(displayName="$topicTitle")
-		@NotNull(message="주제 이름을 입력해주세요.")
+		@ValidatorSet({
+			@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="주제 이름을 입력해주세요."),
+			@Validator(name=ValidatorContext.VALIDATE_MAX , options={"10"}, message="10자 이하로 입력해주세요."),
+			@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[^~!@\\#$%^&*\\()\\-=+_\'\"]+$/"}, message="특수 문자는 입력 할 수 없습니다.")
+		})
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getTopicTitle() {
 			return topicTitle;
@@ -145,16 +152,7 @@ public class TopicTitle  implements ContextAware{
 	
 	public void saveMe() throws Exception {
 		WfNode wfNode = new WfNode();
-		
-		if(this.getTopicTitle().length() > 10){
-			throw new MetaworksException("10자 이상 입력 불가");
-		}
-		
-		if(!this.getTopicTitle().matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*"))
-		{
-		    throw new MetaworksException("$SpecialLettersCannotInput");
-		}
-		
+
 		if(this.getLogoFile().getFileTransfer() != null &&
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0){			
@@ -350,8 +348,6 @@ public class TopicTitle  implements ContextAware{
 		*/
 		
 	//	this.notiToCompany();
-		
-		
 		
 		Locale locale = new Locale(session);
 		locale.load();
