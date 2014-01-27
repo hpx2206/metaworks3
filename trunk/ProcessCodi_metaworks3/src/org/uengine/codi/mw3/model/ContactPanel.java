@@ -114,7 +114,7 @@ public class ContactPanel implements ContextAware {
 		}
 		
 		if(this.isPicker())
-			contacts.getMetaworksContext().setHow(IUser.HOW_PICKERLIST);
+			contacts.getMetaworksContext().setWhere(IUser.WHERE_PICKERLIST);
 		
 		this.setList(contacts);
 		this.setCount(contacts.size());
