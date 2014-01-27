@@ -110,10 +110,19 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		sb.append("select * from bpm_knol knol");
 		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
 		sb.append(" where knol.type = ?type");
-		sb.append(" and knol.companyId = ?companyId");
-		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
-		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
-		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
+		
+		sb.append("   and exists ( ");
+		sb.append("			select 1 from bpm_knol	 ");
+		sb.append("		 	 where knol.id = id	 ");
+		sb.append("		 	   and secuopt = 0 and companyId = ?initComCd ");
+		sb.append("			 union all 	 ");
+		sb.append("			select 1 from bpm_topicmapping tm	 ");
+		sb.append("			 where knol.id = tm.topicId	 ");
+		sb.append("			   and knol.secuopt < 2 ");
+		sb.append("			   and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ");
+		sb.append("					 or ( assigntype = 2 and tm.userid = ?partcode ) ) ");
+		sb.append("		  )	 ");
+		
 		sb.append(" order by updateDate desc");
 		
 		if(!isMore)
@@ -121,8 +130,9 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
 		dao.set("type", "topic");
-		dao.set("userid", session.getEmployee().getEmpCode());
-		dao.set("companyId", session.getCompany().getComCode());
+		dao.set("endpoint", session.getEmployee().getEmpCode());
+		dao.set("partcode", session.getEmployee().getPartCode());
+		dao.set("initComCd", session.getCompany().getComCode());
 		dao.select();
 		
 		return dao; 
