@@ -82,14 +82,14 @@ public class StartCodi {
 			return login();			
 
 		
-		if("login".equals(this.getKey())){
+		if("login".equals(this.getKey()) || this.getLastVisitPage() != null){
 			
 			Login login = new Login();
 			login.setMetaworksContext(new MetaworksContext());
 			login.getMetaworksContext().setHow("login");
 			login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			
-			return login;
+			return new Refresh(login, false, true);
 			
 		}else{
 			return new Refresh(new SignUp(), false, true);
@@ -163,7 +163,7 @@ public class StartCodi {
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-	public Login logout() throws Exception {
+	public SignUp logout() throws Exception {
 		this.getSession().removeUserInfoFromHttpSession();
 		
 		Login login = new Login();
@@ -183,7 +183,7 @@ public class StartCodi {
         log.setIp(ipAddress);
         log.createDatabaseMe();
         
-        return login;
+        return new SignUp();
 	}
 	
 	@ServiceMethod(callByContent=true)
