@@ -433,8 +433,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return new Popup(employeePicker);
 	}
 
-	@Override
-	public Object editEmployeeInfo() throws Exception {
+	public IEmployee editEmployeeInfo() throws Exception {
 		IEmployee employee = findMe();
 		
 		employee.getMetaworksContext().setHow("detail");
@@ -444,11 +443,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		employee.setImageFile(new PortraitImageFile());
 		employee.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
 		
-		return new EmployeeInfo(employee);
+		return employee;
 	}	
 	
-	@Override
-	public Object editNotiSetting() throws Exception {
+	public INotiSetting editNotiSetting() throws Exception {
 		NotiSetting notiSetting = new NotiSetting();
 		notiSetting.getMetaworksContext().setWhen(WHEN_EDIT);
 		INotiSetting result = notiSetting.findByUserId(this.getEmpCode());
@@ -1126,15 +1124,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			throw new Exception("$AlreadyExistingUser");
 	}
 	
-	@Override
-	public Object[] showDetail() throws Exception {
-		return new Object[]{new Remover(new Popup(), true), new ModalWindow(this.editEmployeeInfo(), 700, 580, "$EditProfile")};
-	}
-	
-	@Override
-	public Object[] showNotiSetting() throws Exception {
-		return new Object[]{new Remover(new Popup(), true), new ModalWindow(this.editNotiSetting(), 700, 550, "$NotiSetting")};
-	}
 	
 	@Override
 	public void addTopicUser() throws Exception {
@@ -1258,10 +1247,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		else
 			throw new Exception("관리자나 본인이 아니면 탈퇴할 수 없습니다");		
 	}	
-	
-	public Object[] logout() throws Exception{
-		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE), new Refresh(session.logout())};
-	}
 	
 	@Override
 	public Session drag() throws Exception {
@@ -1476,25 +1461,5 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return new StartCodi(session);
 	}
 	
-	public Object[] showAdmin() throws Exception {
-		Company company = new Company();
-		company.setComCode(session.getEmployee().getGlobalCom());
-		company.copyFrom(company.findByCode());
-		company.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		company.setLogo(new MetaworksFile());
 
-		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setPanel(company);
-		modalWindow.setWidth(400);
-		modalWindow.setHeight(220);
-		modalWindow.setTitle("관리자");
-
-		return new Object[]{ modalWindow, new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE)};
-		
-		/*
-		modalWindow.setMetaworksContext(new MetaworksContext());
-		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		return modalWindow;
-		*/
-	}
 }
