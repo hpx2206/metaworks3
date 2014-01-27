@@ -4079,7 +4079,7 @@ legend {display:none;}
 .security_hidden_radio{opacity: 0;   -moz-opacity: 0;   -khtml-opacity: 0;  filter:alpha(opacity=0);height:60px; width:60px; line-height:0; margin:0px; }
 .security_image_radio{ position:absolute;display:block; width:60px; height:60px; top:0px;  }
 
-.moreFollowerBtn{width: 100px;height: 12px;bottom:1px;left:50%; margin-left:-50px;background: #C9E2FC;position: relative;z-index: 9999999; display:none; text-align:center; font-size:9px; box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
-.closeFollowerBtn{width: 100px;height: 12px;bottom:-12px;left:50%; margin-left:-50px;background: #C9E2FC;position: absolute;z-index: 9999999;display:none; text-align:center; font-size:9px;box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
+.moreFollowerBtn{width: 40px;height: 12px;bottom:1px;left:50%; margin-left:-20px;background: #C9E2FC;position: relative;z-index: 9999999; display:none; text-align:center; font-size:9px; box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
+.closeFollowerBtn{width: 40px;height: 12px;bottom:-12px;left:50%; margin-left:-20px;background: #C9E2FC;position: absolute;z-index: 9999999;display:none; text-align:center; font-size:9px;box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
 .view_more_dl{position:absolute; background:#C9E2FC; z-index:999999; box-shadow:0 2px 10px rgba(0, 0, 0, 0.2)}
 .view_more_line{height:auto; overflow:auto}
