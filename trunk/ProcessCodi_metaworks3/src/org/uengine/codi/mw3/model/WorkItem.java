@@ -23,6 +23,8 @@ import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
@@ -34,7 +36,6 @@ import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.kernel.Role;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
@@ -47,6 +48,8 @@ import org.uengine.webservices.worklist.DefaultWorkList;
 
 
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
+
+	private Logger logger = LoggerFactory.getLogger(WorkItem.class);
 	
 	public final static String USE_BBB = GlobalContext.getPropertyString("bbb.use", "0");
 	
@@ -1097,14 +1100,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(instance.getTopicId() != null){
 			TopicNode topic = new TopicNode();
 			topic.setId(instance.getTopicId());
-			instance.setTopicName(topic.databaseMe().getName());
-			String topicSecuopt = topic.databaseMe().getSecuopt();
-			if( "1".equals( topicSecuopt )){
-				securityPush = true;
+			
+			try{
+				topic.copyFrom(topic.databaseMe());
 				
-				Notification notification = new Notification();
-				notification.session = session;
-				pushUserMap = notification.findTopicNotiUser(topic.getId());
+				instance.setTopicName(topic.getName());
+				String topicSecuopt = topic.getSecuopt();
+				if( "1".equals( topicSecuopt )){
+					securityPush = true;
+					Notification notification = new Notification();
+					notification.session = session;
+					pushUserMap = notification.findTopicNotiUser(topic.getId());
+				}
+			}catch(Exception e){
+				logger.info("topicId 는 존재하나 해당  Topic 이 존재하지 않음. (" + instance.getTopicId() +")");
 			}
 		}
 		
