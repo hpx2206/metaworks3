@@ -3718,7 +3718,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				    if(mw3.isHiddenMethodContext(methodContext, object) && !methodContext.bindingHidden)
 					   continue;
 
-				    console.log('pass : ' + methodName);
+				    //console.log('pass : ' + methodName);
 				    //console.log(methodContext);
 				    
 				    // make call method
@@ -3805,8 +3805,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   					eval(this['dragCommand']);
 					   			      },
 					   			      drag: function(event, ui) {
+					   			      	console.log('drag');
 					   			      },
 					   			      stop: function() {
+					   			      	console.log('stop');
 						   					var className = $(this).attr('className');
 						   					
 						   					$(".onDrop_" + className.split('.').join('_')).css("border-width", "").css("border-style", "").css("border-color", "");
@@ -3856,19 +3858,19 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   			 		theDiv[0].oncontextmenu = function() { return false; };
 			   			 	}
 			   			 				
-		   					var mouseup = function(e) {
+		   					var mouseclick = function(e) {
 		   			 			
 		   			 			if(e.which == e.data.which){
+		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+
 			   				    	mw3.mouseX = e.pageX;
 			   		    			mw3.mouseY = e.pageY;
 		   			 			
 			   						eval(this['mouseCommand' + e.which]);
-			   									   						
-		   			 				//e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
 		   			 			}
 		   			 		};
 		   			 		
-		   			 		$(theDiv[0]).bind('mouseup', {which: which}, mouseup);
+		   			 		$(theDiv[0]).bind('click', {which: which}, mouseclick);
 		   				}
 		   				
 		   				
@@ -3932,21 +3934,26 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //				   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
 				   
 				   if(menuItems.length){
-					   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
-						   YAHOO.util.Event.onContentReady(targetDivId, function () {
-							    var menu = new YAHOO.widget.ContextMenu(
-									"_contextmenu_" + objectId,
-									{
-										zindex: 2000,
-										trigger: theDiv[0],
-										itemdata: menuItems,
-										lazyload: true
-									}
-								);
-						   });
-						   
-						   $('#' + targetDivId).attr('contextMenu', 'true');
-					   }
+				   		// 생성된 context menu 제거
+						if($('#' + targetDivId).attr('contextMenu')){
+					   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objectId);
+					   
+					   		menu.destroy();
+					   	}
+					   	
+					   YAHOO.util.Event.onContentReady(targetDivId, function () {
+						    var menu = new YAHOO.widget.ContextMenu(
+								"_contextmenu_" + objectId,
+								{
+									zindex: 2000,
+									trigger: theDiv[0],
+									itemdata: menuItems,
+									lazyload: true
+								}
+							);
+					   });
+					   
+					   $('#' + targetDivId).attr('contextMenu', 'true');
 				   }
 			   }		
 			}
@@ -3956,7 +3963,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		   		
 		   		var xy = YAHOO.util.Event.getXY(event);
 		   		menu.cfg.setProperty("xy", xy);
-				menu.show();													
+				menu.show();
 			}
 						
 			Metaworks3.prototype.showPopop = function(objId, serviceMethodContext, result){
