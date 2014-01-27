@@ -49,17 +49,18 @@ public class TodoBadge{
 		}
 	}
 	
-	@ServiceMethod
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, loader="org.uengine.codi.mw3.model.Popup")
 	public Object[] showList() throws Exception{
 
+		/*	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		return personalPerspective.loadInbox();
-		/*	
+		 */		
 		session.setLastPerspecteType("inbox");
 		session.setSearchKeyword(null);
 		
-		InstanceList instList = new InstanceList(session);
+		TodoBadgeInstanceList instList = new TodoBadgeInstanceList(session); 
 		instList.setMetaworksContext(new MetaworksContext());
 		instList.getMetaworksContext().setWhen("TodoBadge");
 		instList.load();
@@ -70,7 +71,6 @@ public class TodoBadge{
 		
 		this.refresh();
 		
-		return new Object[]{new Refresh(session), new Refresh(this), popup};
- */		
+		return new Object[]{new Refresh(this), popup};
 	}
 }
