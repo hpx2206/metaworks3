@@ -18,6 +18,8 @@ import org.metaworks.common.MetaworksUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -103,6 +105,8 @@ public class User extends Database<IUser> implements IUser {
 		
 	@Override
 	public Object[] pickUp() throws Exception {
+		this.getMetaworksContext().setHow(HOW_PICKER);
+		
 		return new Object[]{new ToOpener(this), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
@@ -468,20 +472,6 @@ public class User extends Database<IUser> implements IUser {
 		
 		return instance;
 	}
-
-	public Object[] showMenu() throws Exception {
-		
-		IEmployee employee = session.getEmployee();
-		
-		employee.setMetaworksContext(new MetaworksContext());
-		employee.getMetaworksContext().setWhere("user_menu_option");
-		
-		int height = 87;
-		if(employee.getIsAdmin())
-			height = 116;
-
-		return new Object[]{new Popup(200, height, employee)};
-	}
 	
 	public static void updateRecentItem(Session session, IUser user) throws Exception {
 		//선택한 유저 recentItem에 add
@@ -551,6 +541,45 @@ public class User extends Database<IUser> implements IUser {
 		
 		return popup;
 	}
+	
+	public Object[] popupProfile() throws Exception {
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(this.getUserId());
+		employee.copyFrom(employee.findMe());
+		
+		return new Object[]{new ModalWindow(employee.editEmployeeInfo(), 700, 580, "$EditProfile"), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
+	public Object[] popupConfigNoti() throws Exception {
+		Employee employee = new Employee();
+		employee.setEmpCode(this.getUserId());
+		employee.copyFrom(employee.findMe());
+
+		return new Object[]{new ModalWindow(employee.editNotiSetting(), 700, 550, "$NotiSetting"), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};		
+	}
+
+	public Object[] popupConfigCompany() throws Exception {
+		Company company = new Company();
+		company.setComCode(session.getEmployee().getGlobalCom());
+		company.copyFrom(company.findByCode());
+		company.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		company.setLogo(new MetaworksFile());
+
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setPanel(company);
+		modalWindow.setWidth(400);
+		modalWindow.setHeight(220);
+		modalWindow.setTitle("관리자");
+
+		return new Object[]{modalWindow, new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE)};
+	}
+	
+	public Object[] logout() throws Exception {
+		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE), new Refresh(session.logout())};		
+	}
+
+	
 }
 
 
