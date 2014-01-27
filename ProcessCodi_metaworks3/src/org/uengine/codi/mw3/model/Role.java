@@ -193,16 +193,6 @@ public class Role extends Database<IRole> implements IRole {
 	@Override
 	public Object[] saveMe() throws Exception {
 		
-		if(this.getRoleName().length() > 10){
-			throw new MetaworksException("10자 이상 입력 불가");
-		}
-		
-		if(!this.getRoleName().matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*"))
-		{
-		    throw new MetaworksException("$SpecialLettersCannotInput");
-		}
-		
-		
 		if(this.getLogoFile().getFileTransfer() != null &&
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0){			

@@ -11,6 +11,9 @@ import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 
@@ -49,7 +52,11 @@ public interface IRole extends IDAO {
 	public void setSelected(boolean selected);
 	
 	
-	@NotNull(message="역할 이름을 입력해주세요.")
+	@ValidatorSet({
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="역할 이름을 입력해주세요."),
+		@Validator(name=ValidatorContext.VALIDATE_MAX , options={"10"}, message="10자 이하로 입력해주세요."),
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[^~!@\\#$%^&*\\()\\-=+_\'\"]+$/"}, message="특수 문자는 입력 할 수 없습니다.")
+	})
 	public String getRoleName();
 	public void setRoleName(String roleName);
 	
