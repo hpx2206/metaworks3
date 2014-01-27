@@ -12,10 +12,12 @@ import java.util.UUID;
 import javax.validation.constraints.Pattern;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
-import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -184,7 +186,7 @@ public class Invitation implements ContextAware{
 		this.setInvitedMessage("친구초대 메일을 보냈습니다.");
 		this.getMetaworksContext().setHow("afterinvite");
 		
-		return new Object[]{new Refresh(this)};
+		return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
         //return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
 	}
 	
