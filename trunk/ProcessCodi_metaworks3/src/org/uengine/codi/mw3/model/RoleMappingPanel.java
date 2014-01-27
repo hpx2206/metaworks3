@@ -50,6 +50,8 @@ public class RoleMappingPanel implements ContextAware{
 			
 			try{
 				IRoleMappingDefinition roleMappingDef = roleMappingDefinition.databaseMe();
+				roleMappingDef.getMappedUser().getMetaworksContext().setHow(IUser.HOW_PICKER);
+				
 //				if( roleMappingDef.getMappedUser() != null && roleMappingDef.getMappedUser().getUserId() != null ){
 //					Employee user = new Employee();
 //					user.setEmpCode(roleMappingDef.getMappedUser().getUserId());

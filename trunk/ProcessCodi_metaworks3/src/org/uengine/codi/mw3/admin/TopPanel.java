@@ -32,7 +32,7 @@ public class TopPanel {
 			e.printStackTrace();
 		}
 		setLoginUser(topPanelUser);
-		this.getLoginUser().getMetaworksContext().setWhere(IUser.WHERE_SELF);
+		this.getLoginUser().getMetaworksContext().setHow(IUser.HOW_SELF);
 		
 		TopMenuPanel topMenuPanel = new TopMenuPanel();
 		this.setTopMenuPanel(topMenuPanel);
