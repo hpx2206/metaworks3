@@ -332,8 +332,9 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		IFrame iframe = new IFrame();
 		iframe.setSrc(url);
 		iframe.setWidth("100%");
+		iframe.setHeight("100%");
 		
-		return new ModalWindow(iframe, 1000, 550, databaseMe().getTitle());
+		return new ModalWindow(iframe, 1500, 750, databaseMe().getTitle());
 		
 	}
 	
