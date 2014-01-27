@@ -2842,6 +2842,7 @@ select.select[class] {
 	line-height:25px;
 	padding-top:60px;
 	padding-bottom:30px;
+	padding-left:30px;
 	font-size:14px;
 }
 .row .col7 h1 {
@@ -3114,7 +3115,7 @@ font-size:20px;
 .index_signup .index_signup_inner { width:370px; }
 .index_signup .index_signup_inner input { width:240px; }
 .row .col3 { display:none }
-.row .col7 { width:100%; }
+.row .col7 { width:100%; padding:30px}
 #signup_popup { width:380px; }
 #signup_popup .popup_step .stepbar { width:295px; }
 #signup_popup .popup_content .signup_info { width:280px }
