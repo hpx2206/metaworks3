@@ -125,6 +125,14 @@ public class Dept extends Database<IDept> implements IDept {
 		public void setFollowed(boolean followed) {
 			this.followed = followed;
 		}
+		
+	String deptPath;
+		public String getDeptPath() {
+			return deptPath;
+		}
+		public void setDeptPath(String deptPath) {
+			this.deptPath = deptPath;
+		}
 
 	DeptList children;
 		public DeptList getChildren() {
@@ -236,7 +244,7 @@ public class Dept extends Database<IDept> implements IDept {
 	public IDept findDeptForInstance(String instanceId, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed, GetDeptPathAncestry(partcode, '->') as deptPath from ( ");
 		
 		sb.append("select pt.*  ");
 		sb.append(" , (select count('x') from bpm_rolemapping rm   ");
@@ -247,11 +255,11 @@ public class Dept extends Database<IDept> implements IDept {
 		sb.append("from parttable pt ");
 		sb.append("where pt.globalcom=?globalCom ");
 		sb.append("  and pt.isDeleted='0' ");
-		if(getPartCode() != null) {
-			sb.append("and pt.parent_partcode=?parent_PartCode ");
-		} else {
-			sb.append("and pt.parent_partcode is null ");
-		}
+//		if(getPartCode() != null) {
+//			sb.append("and pt.parent_partcode=?parent_PartCode ");
+//		} else {
+//			sb.append("and pt.parent_partcode is null ");
+//		}
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND pt.partname LIKE ?deptname");
 		
@@ -270,7 +278,7 @@ public class Dept extends Database<IDept> implements IDept {
 	public IDept findDeptForTopic(String topicId, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed , GetDeptPathAncestry(partcode, '->') as deptPath from ( ");
 		
 		sb.append("select pt.*  ");
 		sb.append(" , (select count('x') from bpm_topicmapping tm   ");
@@ -281,11 +289,11 @@ public class Dept extends Database<IDept> implements IDept {
 		sb.append("from parttable pt ");
 		sb.append("where pt.globalcom=?globalCom ");
 		sb.append("  and pt.isDeleted='0' ");
-		if(getPartCode() != null) {
-			sb.append("and pt.parent_partcode=?parent_PartCode ");
-		} else {
-			sb.append("and pt.parent_partcode is null ");
-		}
+//		if(getPartCode() != null) {
+//			sb.append("and pt.parent_partcode=?parent_PartCode ");
+//		} else {
+//			sb.append("and pt.parent_partcode is null ");
+//		}
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND pt.partname LIKE ?deptname");

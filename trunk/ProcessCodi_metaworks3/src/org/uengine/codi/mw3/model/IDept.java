@@ -14,7 +14,6 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
-import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
 
 @Table(name = "PARTTABLE")
@@ -64,7 +63,11 @@ public interface IDept extends IDAO {
 	@NonSavable
 	public boolean isFollowed();
 	public void setFollowed(boolean followed);
-
+	
+	@NonSavable
+	public String getDeptPath();
+	public void setDeptPath(String deptPath);
+	
 	@NonSavable
 	@NonLoadable
 	public EmployeeList getDeptEmployee() throws Exception;
