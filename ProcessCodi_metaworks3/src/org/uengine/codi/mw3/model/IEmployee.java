@@ -194,12 +194,6 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(target="popup")
 	public Popup openPicker();
 	
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
-	public Object editEmployeeInfo() throws Exception;
-	
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
-	public Object editNotiSetting() throws Exception;
-	
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW)
 	public Object[] subscribeStep1() throws Exception;
 	
@@ -223,13 +217,7 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	void createCodiThumNail(String target) throws Exception;
-	
-	@ServiceMethod(target="popup", callByContent=true)
-	public Object showDetail() throws Exception;
-	
-	@ServiceMethod(target="popup", callByContent=true)
-	public Object[] showNotiSetting() throws Exception;
-	
+		
 	@ServiceMethod(callByContent=true, target="popup")
 	public void addTopicUser() throws Exception;
 	
@@ -243,9 +231,6 @@ public interface IEmployee extends IDAO {
 	@Face(displayName="$Unsubscribe")
 	@Available(where={"inDetailWindow", "inDetailPopup"})
 	public Object[] unsubscribe() throws Exception;
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] logout() throws Exception;
 	
 	@Available(how={"tree"}) // 상황에 맞춰서 넣어 줘야 한다.
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
@@ -269,7 +254,4 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public Object facebookSSO() throws Exception;
-
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	public Object[] showAdmin() throws Exception;
 }

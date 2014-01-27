@@ -312,19 +312,6 @@ if(value){
 	<a onClick="<%=methods.addTopicUser.caller() %>" class="iemployee" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
 	
 	<%
-	} else if(mw3.where == 'user_menu_option') {
-	%>
-		<div class="info_top_show_detail" onClick="<%=methods.showDetail.caller() %>" style="cursor:pointer;"><span class="icon-profile" style="margin-right:8px;"></span><%=mw3.localize('$Profile')%></div>
-	<%
-		if(value.isAdmin){
-	%>
-		<div class="info_top_show_detail" onClick="<%=methods.showAdmin.caller() %>" style=" cursor:pointer;"><span class="icon-user4" style="margin-right:8px;"></span>관리자</div>
-	<%
-		}
-	%>
-		<div class="info_top_show_detail" onClick="<%=methods.showNotiSetting.caller() %>" style="cursor:pointer;"><span class="icon-cog2" style="margin-right:8px;"></span><%=mw3.localize('$NotiSetting')%></div>
-		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><span class="icon-unlocked" style="margin-right:8px;"></span><%=mw3.localize('$Logout')%></div>
-	<%
 	} else {
 	%>
 	IEmployee Object where context value : <%=mw3.where %> <%=fields.empCode.here() %>
