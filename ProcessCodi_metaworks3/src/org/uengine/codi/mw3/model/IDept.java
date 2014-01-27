@@ -13,6 +13,9 @@ import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
 
@@ -27,7 +30,11 @@ public interface IDept extends IDAO {
 	public void setPartCode(String partCode);
 
 	@Name
-	@NotNull(message="부서 이름을 입력해주세요.")
+	@ValidatorSet({
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="부서 이름을 입력해주세요."),
+		@Validator(name=ValidatorContext.VALIDATE_MAX , options={"10"}, message="10자 이하로 입력해주세요."),
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[^~!@\\#$%^&*\\()\\-=+_\'\"]+$/"}, message="특수 문자는 입력 할 수 없습니다.")
+	})
 	public String getPartName();
 	public void setPartName(String partName);
 
