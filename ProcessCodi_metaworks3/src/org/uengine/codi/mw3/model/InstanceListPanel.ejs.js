@@ -11,7 +11,8 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	this.objectDiv
 		.css({
 			position: 'relative',
-			height:   '100%'
+			height:   '100%',
+			overflow: 'auto'
 		});
 	
 	this.divId = mw3._getObjectDivId(this.objectId);
@@ -42,7 +43,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	
 	if(this.object){
 
-		var scrollDiv = $('#objDiv_' + this.objectId).parent();
+		var scrollDiv = $('#objDiv_' + this.objectId);
 		var instanceList = this.object.instanceList;
 		var prelastMore = lastMore;
 		scrollDiv.scroll(function(e) {
@@ -89,7 +90,7 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 		
 	},
 	destroy : function(){
-		$('#objDiv_' + this.objectId).parent().unbind();
-		$('#objDiv_' + this.objectId).parent().scrollTop(0);
+		$('#objDiv_' + this.objectId).unbind();
+		$('#objDiv_' + this.objectId).scrollTop(0);
 	}
 };
