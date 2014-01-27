@@ -36,26 +36,20 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		
 		popupObj.css({left:(bodyWidth-popupObj.width())/2 + 'px', top: (bodyHeight-popupObj.height())/2-50 + 'px'});
 	}
-		
-	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'logout'){
-		// 존재하는 팝업 제거
-		$('.target_popup,.target_stick').remove();
 
-		delCookie("codi.rememberMe", "/","");
-		delCookie("codi.facebookSSO", "/","");
-	}
+	var id = getCookie("codi.id");
+
+	var input_email = mw3.getInputElement(objectId, "email");
+	if(input_email)
+		input_email.value = id;			
+
 
 	var rememberMe = getCookie("codi.rememberMe");
 	if(rememberMe!=null && rememberMe){
-		var id = getCookie("codi.id");
 		var password = getCookie("codi.password");
 		
-		var input_email = mw3.getInputElement(objectId, "email");
 		var input_password = mw3.getInputElement(objectId, "password");
 		
-		
-		if(input_email)
-			input_email.value = id;			
 		if(input_password)
 			input_password.value = password;
 	}

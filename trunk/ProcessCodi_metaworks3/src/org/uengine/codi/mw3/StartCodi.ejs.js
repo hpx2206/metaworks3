@@ -24,9 +24,17 @@ org_uengine_codi_mw3_StartCodi.prototype = {
 		
 		if(this.object.key == 'loader'){
 			this.object.load();
-		}else if(this.object.key == 'logout')
+		}else if(this.object.key == 'logout'){
+			delCookie("codi.lastVisit");
+		
+			// 존재하는 팝업 제거
+			$('.target_popup,.target_stick').remove();
+	
+			delCookie("codi.rememberMe", "/","");
+			delCookie("codi.facebookSSO", "/","");
+		
 			this.object.logout();
-		else if(this.object.key == 'login')
+		}else if(this.object.key == 'login')
 			this.object.login();
 	}, 
 	startLoading : function(){
