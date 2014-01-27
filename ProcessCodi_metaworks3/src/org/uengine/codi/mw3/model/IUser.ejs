@@ -10,33 +10,17 @@
 			if(value.userId)
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}		
-	
-		if(mw3.how == 'picker' || mw3.how == 'pickerlist'){
-			if(value.userId){
-%>
-			<div class="user">	
-				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-					<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
-				</div>
-					
-				<div class="user_compact">
-					<%=value.name%>
-				</div>
-				<div style="clear:both"></div>
-			</div>
-<%		
-			}
-%>
-			<%=methods.popupPicker.here()%>
-			<div style="clear:both"></div>
-<%
-		}else{			
 %>
 			<div class="user">		
 				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 					<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 <%	
-			if(mw3.where == 'friends' || mw3.where == 'followers' || mw3.where == 'worklist'){
+			var isOverlayName = true;
+			
+			if(mw3.where == 'addcontact' || mw3.where == 'addfollower' || mw3.how == 'pickerlist')
+				isOverlayName = false;
+			
+			if(isOverlayName && mw3.where != 'self'){
 %>
 					<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
 <%
@@ -45,7 +29,7 @@
 				</div>
 			
 <%
-			if(mw3.where == 'addcontact' || mw3.where == 'addfollower'){
+			if(!isOverlayName){
 %>			
 				<div class="user_detail">
 					<span class="fontbold"><%=value.name%></span>
@@ -64,7 +48,8 @@
 			}
 %>			
 			</div>
+			
+			<%=methods.popupPicker.here()%>
 <%		 
-		}
 	}
 %>
