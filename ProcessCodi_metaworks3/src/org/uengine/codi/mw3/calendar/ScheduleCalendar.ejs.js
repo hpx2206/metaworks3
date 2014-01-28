@@ -63,7 +63,7 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
 						left: 'prevYear,prev,next,nextYear today' ,
 						center: 'title',
 						//right: 'month,agendaWeek,agendaDay'
-						right: 'month,agendaWeek'
+						right: 'month'
 					},
 					selectable: true,
 					selectHelper: true,
