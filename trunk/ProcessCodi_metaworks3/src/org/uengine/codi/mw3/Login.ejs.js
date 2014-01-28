@@ -37,76 +37,77 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		popupObj.css({left:(bodyWidth-popupObj.width())/2 + 'px', top: (bodyHeight-popupObj.height())/2-50 + 'px'});
 	}
 
-	var id = getCookie("codi.id");
-
-	var input_email = mw3.getInputElement(objectId, "email");
-	if(input_email)
-		input_email.value = id;			
-
-
-	var rememberMe = getCookie("codi.rememberMe");
-	if(rememberMe!=null && rememberMe){
-		var password = getCookie("codi.password");
-		
-		var input_password = mw3.getInputElement(objectId, "password");
-		
-		if(input_password)
-			input_password.value = password;
-	}
-
-	var input_rememberMe = mw3.getInputElement(objectId, "rememberMe");
-	if(input_rememberMe)
-		input_rememberMe.checked = true;
-
+	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'login'){
+		var id = getCookie("codi.id");
 	
-	mw3.getInputElement(objectId, "email").focus();
- 	
-	$('#' + this.divId).bind('keydown', function(event){
-		mw3.getFaceHelper(objectId).keydown(event);
-	});			
+		var input_email = mw3.getInputElement(objectId, "email");
+		if(input_email)
+			input_email.value = id;			
 	
 	
-	var login = mw3.getObjectFromUI(this.objectId);
-		var facebookSSO = getCookie("codi.facebookSSO");
-		
-		if(login.email && login.password && login.rememberMe){
-			login.login();
-		}else{
-			var objectId = this.objectId;
+		var rememberMe = getCookie("codi.rememberMe");
+		if(rememberMe!=null && rememberMe){
+			var password = getCookie("codi.password");
 			
-			if(typeof FB == 'object'){
-				$('#method_facebook_' + this.objectId).show();
-			}else{
-				window.fbAsyncInit = function() {
-				    // init the FB JS SDK
-				    FB.init({
-				      appId      : '119159701538006', // App ID from the App Dashboard
-				      //channelUrl : '//localhost:8080/uengine-web/index.html', // Channel File for x-domain communication
-				      status     : true, // check the login status upon init?
-				      cookie     : true, // set sessions cookies to allow your server to access the session?
-				      xfbml      : true  // parse XFBML tags on this page?
-				    });
-	
-				    $('#method_facebook_' + objectId).show();
-				    
-				    // Additional initialization code such as adding Event Listeners goes here
-					// facebook login status
-					FB.getLoginStatus(function(response) {
-						if (response.status == 'connected'){
-						    var uid = response.authResponse.userID;
-							
-							FB.api('/' + uid, function(response) {
-								if(login.email && login.rememberMe && facebookSSO)
-									login.getFaceHelper().facebookSSO(response);
-							});
-						}else if('not_authorized' == response.status){
-							login.getFaceHelper().loginFacebook();
-						}	
-	
-					}, true);
-				};
-			}
+			var input_password = mw3.getInputElement(objectId, "password");
+			
+			if(input_password)
+				input_password.value = password;
 		}
+	
+		var input_rememberMe = mw3.getInputElement(objectId, "rememberMe");
+		if(input_rememberMe)
+			input_rememberMe.checked = true;
+	
+			mw3.getInputElement(objectId, "email").focus();
+	 	
+		$('#' + this.divId).bind('keydown', function(event){
+			mw3.getFaceHelper(objectId).keydown(event);
+		});			
+	
+	
+		var login = mw3.getObjectFromUI(this.objectId);
+			var facebookSSO = getCookie("codi.facebookSSO");
+			
+			if(login.email && login.password && login.rememberMe){
+				login.login();
+			}else{
+				var objectId = this.objectId;
+				
+				if(typeof FB == 'object'){
+					$('#method_facebook_' + this.objectId).show();
+				}else{
+					window.fbAsyncInit = function() {
+					    // init the FB JS SDK
+					    FB.init({
+					      appId      : '119159701538006', // App ID from the App Dashboard
+					      //channelUrl : '//localhost:8080/uengine-web/index.html', // Channel File for x-domain communication
+					      status     : true, // check the login status upon init?
+					      cookie     : true, // set sessions cookies to allow your server to access the session?
+					      xfbml      : true  // parse XFBML tags on this page?
+					    });
+		
+					    $('#method_facebook_' + objectId).show();
+					    
+					    // Additional initialization code such as adding Event Listeners goes here
+						// facebook login status
+						FB.getLoginStatus(function(response) {
+							if (response.status == 'connected'){
+							    var uid = response.authResponse.userID;
+								
+								FB.api('/' + uid, function(response) {
+									if(login.email && login.rememberMe && facebookSSO)
+										login.getFaceHelper().facebookSSO(response);
+								});
+							}else if('not_authorized' == response.status){
+								login.getFaceHelper().loginFacebook();
+							}	
+		
+						}, true);
+					};
+				}
+			}
+	}
 };
 
 org_uengine_codi_mw3_Login.prototype = {
