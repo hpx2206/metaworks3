@@ -469,6 +469,7 @@ height: 40px;
 	float: right !important; 
 	border-left: 1px solid #b5b9bf !important;
 	padding: 0 3px 0 3px !important;
+	border-right:none;
 }
 
 .toolbar span {
