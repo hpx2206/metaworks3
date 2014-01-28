@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
-
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -12,7 +13,7 @@ import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
 options={"fieldOrder"}, values={"title,contents"})
-public class ContactUs {
+public class ContactUs implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 	
@@ -36,9 +37,19 @@ public class ContactUs {
 			this.contents = contents;
 		}
 		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
 	
 	public ContactUs(){
-		setContents(new WebEditor());
+		this.setContents(new WebEditor());
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
 
@@ -57,7 +68,7 @@ public class ContactUs {
 			iCompany = company.findByCode();
 //			String mailto = iCompany.getRepMail();
 			emailServerSoapBindingImpl.sendMail(session.getEmployee().getEmail(), //송신자
-					session.getUser().getUserId(),
+					session.getUser().getName(),
 					adminEmail, //수신자
 					this.getTitle(), 
 					contents,
