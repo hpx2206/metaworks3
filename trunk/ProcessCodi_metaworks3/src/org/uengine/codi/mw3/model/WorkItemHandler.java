@@ -1,10 +1,11 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.File;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
@@ -434,12 +436,76 @@ public class WorkItemHandler implements ContextAware{
 		// TODO pushTargetClientObjects 를 하고 나면 copyOfInstance 가 변경이 되는 상황이 발생하여 새로운 객체를 생성하여줌
 		Instance inst = new Instance();
 		inst.copyFrom(copyOfInstance);
+		inst.flushDatabaseMe();
+		
+		WorkItem workItemMe = new WorkItem();
+		workItemMe.setTaskId(this.getTaskId());
+		workItemMe.copyFrom(workItemMe.databaseMe());
+		workItemMe.setMetaworksContext(new MetaworksContext());
+		/**
+		 *  === noti push 부분 ===
+		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
+		 */
+		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		Notification notification = new Notification();
+		notification.session = session;
+		notiUsers = notification.findInstanceNotiUser(copyOfInstance.getInstId().toString());
+		if(inst.getTopicId() != null){
+			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(inst.getTopicId());
+			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
+			}
+		}
+		
+		// noti 저장
+		Iterator<String> iterator = notiUsers.keySet().iterator();
+		while(iterator.hasNext()){
+			String followerUserId = (String)iterator.next();
+			Notification noti = new Notification();
+			INotiSetting notiSetting = new NotiSetting();
+			INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+			if(!findResult.next() || findResult.isWriteInstance()){
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(followerUserId);
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setTaskId(getTaskId());
+				noti.setInstId(new Long(getInstanceId()));					
+				noti.setActAbstract(session.getUser().getName() + " completed workItem : " + copyOfInstance.getName());
+				noti.add(copyOfInstance);
+			}
+		}
+		
+		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+				new Object[]{});
+		
+		/**
+		 *  === instance push 부분 ===
+		 */
+		notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
+		
 		// 본인의 instanceList 에 push
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
+		
 		// 본인 이외에 다른 사용자에게 push			
+		// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다
+		if( newlyAddedWorkItems.size() > 0 ){
+			for(int j=0; j < newlyAddedWorkItems.size(); j++){
+				WorkItem wt = newlyAddedWorkItems.get(j);
+				wt.setMetaworksContext(new MetaworksContext());
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+						new Object[]{new WorkItemListener(WorkItemListener.COMMAND_APPEND , wt)});
+			}
+		}
+		// 새로 추가되는 workItem이 없는 경우 1. 완료시킨 워크아이템은 리프레쉬를 시킨다
 		MetaworksRemoteService.pushClientObjectsFiltered(
-				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-				new Object[]{new InstanceListener(inst)});			
+				new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+				new Object[]{new InstanceListener(inst) ,  new WorkItemListener(WorkItemListener.COMMAND_REFRESH , workItemMe)});			
 		
 		
 		//refreshes the instanceview so that the next workitem can be show up
@@ -458,10 +524,6 @@ public class WorkItemHandler implements ContextAware{
 			 */
 			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 			instanceViewThreadPanel.setInstanceId(this.getInstanceId());
-
-			WorkItem workItemMe = new WorkItem();
-			workItemMe.setTaskId(this.getTaskId());
-			workItemMe.copyFrom(workItemMe.databaseMe());
 			
 			return new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(workItemMe)};
 
@@ -481,46 +543,27 @@ public class WorkItemHandler implements ContextAware{
 		instance.setInstId(this.getRootInstId());
 		IInstance instanceRef = instance.databaseMe();
 		
-		/*
-		 * 2013/06/10 cjw
-		 * complete 시에 마지막 코멘트 정보의 writer 가 null 이 되는 현상 수정
-		 */
-		if(instanceRef.getLastCmnt() ==null){
+		//마지막 워크아이템의 제목을 인스턴스의 적용
+		if(instanceRef.getLastCmnt() == null){
 			instanceRef.setLastCmnt(title);
 			instanceRef.setLastCmntUser(session.getUser());
-		}else{
-			instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
-			instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
-			
-			instanceRef.setLastCmnt2(title);
-			instanceRef.setLastCmnt2User(session.getUser());
-		}
-
-		/*
-		ActivityReference actRef = processInstance.getProcessDefinition().getInitiatorHumanActivityReference(processInstance.getProcessTransactionContext());
-		boolean thisIsInitiationActivity = (actRef.getActivity() == humanActivity);
-		
-		if(thisIsInitiationActivity){
-			if(instanceRef.getLastCmnt() !=null && instanceRef.getLastCmnt().equals(title) ){
-				instanceRef.setLastCmnt(title);
-				instanceRef.setLastCmntUser(session.getUser());
-			}
+			instanceRef.setLastcmntTaskId(this.getTaskId());
 		}else{
 			if(instanceRef.getLastCmnt2() == null){
 				instanceRef.setLastCmnt2(title);
 				instanceRef.setLastCmnt2User(session.getUser());
+				instanceRef.setLastcmnt2TaskId(this.getTaskId());
 			}else {
 				instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
 				instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+				instanceRef.setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
 				
 				instanceRef.setLastCmnt2(title);
 				instanceRef.setLastCmnt2User(session.getUser());
+				instanceRef.setLastcmnt2TaskId(this.getTaskId());
 			}
 		}
-		*/
-		
-//		instance.copyFrom(instanceRef);
-//		instance.databaseMe();
+
 		return instanceRef;
 	}
 	@Autowired

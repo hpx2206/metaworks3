@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
@@ -496,6 +497,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			
 			IInstance copyOfInstance = ((Instance)instanceRef).databaseMe();
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
+			
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});	
 			
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new Refresh(instanceView)};

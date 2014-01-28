@@ -30,14 +30,14 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 		var instanceThreadObject = mw3.getAutowiredObject("org.uengine.codi.mw3.model.InstanceViewThreadPanel@"+instanceId);
 		if( instanceThreadObject != null && instanceThreadObject.instanceId == instanceId){
 			// InstanceViewThreadPanel 이 열려있는경우
-			if( type == "ovryCmnt"){
+			if( type == "ovryCmnt" && this.object.command != 'remove'){
 				var html = mw3.locateObject(value, null);
 				
 				// 댓글의 커맨트를 다는 경우
 				var parentTaskId = value.overlayCommentOption.parentTaskId;
 				var parentWorkitemObject = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItem@"+parentTaskId);
 				$("#objDiv_" + parentWorkitemObject.__objectId ).append(html);	
-			}else if( type == "replyCmnt"){
+			}else if( type == "replyCmnt" && this.object.command != 'remove'){
 				if( value.prtTskId && !value.contentLoaded ){
 					var fieldName = value.ext1;
 					var parentWorkItem = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItemHandler@"+ value.prtTskId , true);
