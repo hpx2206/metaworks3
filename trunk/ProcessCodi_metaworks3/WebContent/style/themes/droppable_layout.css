@@ -834,6 +834,7 @@ height: 40px;
 	text-overflow: ellipsis;
 	-o-text-overow: ellipsis;
 	float: left;
+	max-width:85%;
 }
 .boxtoprightTab #navigationTitle span { margin-right: 0px; }
 #navigationTitle span div {
