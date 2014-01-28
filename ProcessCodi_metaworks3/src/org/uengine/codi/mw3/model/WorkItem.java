@@ -1246,7 +1246,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				// 본인 이외에 다른 사용자에게 push
 				MetaworksRemoteService.pushClientObjectsFiltered(
 						new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
-						new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_APPEND , copyOfThis)});	
+						new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND,copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_APPEND , copyOfThis)});	
 				
 			}else if(WHEN_EDIT.equals(getMetaworksContext().getWhen())){
 				// edit는 refresh 로 붙어야함
@@ -1256,7 +1256,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				// 본인 이외에 다른 사용자에게 push
 				MetaworksRemoteService.pushClientObjectsFiltered(
 						new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
-						new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
+						new Object[]{new InstanceListener(WorkItemListener.COMMAND_REFRESH, copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
 				
 			}
 		}
@@ -1291,6 +1291,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public Object remove() throws Exception{
 		if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
+			throw new Exception("$CanNotDelete");
+		}else if( this.getTool() != null && this.getTrcTag() != null && this.getType() == null ){
+			// 프로세스의 workItem 이 닫혀있을 경우 이렇게 들어오는 경우가 있어서 삭제를 막는다.
 			throw new Exception("$CanNotDelete");
 		}
 		Instance theInstance = new Instance();
