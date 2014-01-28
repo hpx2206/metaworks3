@@ -58,6 +58,8 @@ public class TodoBadge{
 		return personalPerspective.loadInbox();
 		 */		
 		session.setLastPerspecteType("inbox");
+		session.setLastSelectedItem(session.getEmployee().getEmpCode());
+		session.setLastPerspecteMode("personal");
 		session.setSearchKeyword(null);
 		
 		TodoBadgeInstanceList instList = new TodoBadgeInstanceList(session); 
