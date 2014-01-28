@@ -30,6 +30,8 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 )
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
+	
+	public final static String WHERE_INSTANCELIST = "instancelist";
 
 	@ServiceMethod(callByContent=true)
 	public Object view() throws Exception;
