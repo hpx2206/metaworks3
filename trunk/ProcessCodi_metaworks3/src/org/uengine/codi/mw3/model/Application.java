@@ -12,8 +12,17 @@ public class Application {
 			this.topCenterPanelType = topCenterPanelType;
 		}
 
+	Feedback feedback;
+		public Feedback getFeedback() {
+			return feedback;
+		}
+		public void setFeedback(Feedback feedback) {
+			this.feedback = feedback;
+		}
+		
 	public Application(){
 		this.setTopCenterPanelType(TopCenterPanel.HOW_TRAY);
+		this.setFeedback(new Feedback());
 	}
 	
 	public TopCenterPanel loadTopCenterPanel(Session session) throws Exception {
