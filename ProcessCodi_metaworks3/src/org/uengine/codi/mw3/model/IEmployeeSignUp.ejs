@@ -98,7 +98,7 @@
 	%>
 	
 	        <div class="popup_btn_line">
-	        	<div class="<%=isPrev?'popup_btn_blue':'popup_btn_gray'%>" onClick="<%=methods.prevStep.caller()%>"><%=mw3.localize("$Prev")%></div>
+	        	<div class="<%=isPrev?'popup_btn_blue':'popup_btn_gray'%>" onClick="<%=isPrev?methods.prevStep.caller():''%>"><%=mw3.localize("$Prev")%></div>
 	        	
 	<%
 			if(!mw3.isHiddenMethod(methods.nextStep)){
