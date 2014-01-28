@@ -36,108 +36,58 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
 		$('#objDiv_' + this.objectId).addClass('mw3_layout').attr('objectId', this.objectId);
 		
 		var calendar = $('#scheduleCalendar_' + this.objectId);
-		if(object.metaworksContext.how == 'small'){
-			calendar.fullCalendar({
-				selectable: true,
-				selectHelper: true,
-				select: function(start, end, allDay) {
-					var calendar = mw3.getObject(objectId);
-					
-					calendar.selDate = start;
-					calendar.linkScheduleCalendar();
-				},
-				eventClick: function(calEvent, jsEvent, view) {	
-					mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
-				},
-				events: object.data,
-				firstDay: 1,
-				dayNamesShort: ["일","월","화","수","목","금","토"],
-				monthNames: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-				monthNamesShort: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]
-			});			
-		}else{
-			if(this.session.employee.locale == this.KOREA){
-				calendar.fullCalendar({
-					height: 650,
-					header: {
-						left: 'prevYear,prev,next,nextYear today' ,
-						center: 'title',
-						//right: 'month,agendaWeek,agendaDay'
-						right: 'month'
-					},
-					selectable: true,
-					selectHelper: true,
-					editable: true,
-					events: object.data,
-//					dayClick: function(date, allDay, jsEvent, view) {
-//						mw3.getFaceHelper(objectId).dayClick(date, view.name);
-//					},
-					select: function(start, end, allDay) {
-						
-						var calendar = mw3.getObject(objectId);
-						calendar.selDate = start;
-						calendar.endDate = end;
-						calendar.allDay = allDay;
-											
-						calendar.linkScheduleDay();
-					},
-					eventClick: function(calEvent, jsEvent, view) {	
-						mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
-					},
-					titleFormat: {
-						month: "yyyy년 MMMM",
-						week: "[yyyy] MMM d일{ [yyyy] MMM d일}",
-						day: "yyyy년 MMM d일 dddd"
-						},
-						allDayDefault: true,
-						firstDay: 1,
-						//defaultView: "basicWeek",
-						//editable: false,
-						//weekends : false,
-						monthNames: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-						monthNamesShort: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-						dayNames: ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"],
-						dayNamesShort: ["일","월","화","수","목","금","토"],
-						buttonText: {
-						today : "today",
-						month : "월별",
-						week : "주별"
-						}
-					
-				});	
-			}else if(this.session.employee.locale == this.ENGLISH){
-				calendar.fullCalendar({
-					height: 650,
-					header: {
-						left: 'prevYear,prev,next,nextYear today' ,
-						center: 'title',
-						//right: 'month,agendaWeek,agendaDay'
-						right: 'month,agendaWeek'
-					},
-					selectable: true,
-					selectHelper: true,
-					editable: true,
-					events: object.data,
-//					dayClick: function(date, allDay, jsEvent, view) {
-//						mw3.getFaceHelper(objectId).dayClick(date, view.name);
-//					},
-					select: function(start, end, allDay) {
-						
-						var calendar = mw3.getObject(objectId);
-						calendar.selDate = start;
-						calendar.endDate = end;
-						calendar.allDay = allDay;
-											
-						calendar.linkScheduleDay();
-					},
-					eventClick: function(calEvent, jsEvent, view) {	
-						mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
-					}
-				});	
-			}
+		var options = {
+			height: 650,
+			header: {
+				left: 'prev,today,next' ,
+				center: '',
+				//right: 'month,agendaWeek,agendaDay,month,prevYear,nextYear'
+				right: 'title'
+			},
+			allDayDefault: true,
+			firstDay: 1,
 			
+			selectable: true,
+			selectHelper: true,
+			editable: true,
+			events: object.data,
+			select: function(start, end, allDay) {
+				var calendar = mw3.getObject(objectId);
+				calendar.selDate = start;
+				calendar.endDate = end;
+				calendar.allDay = allDay;
+									
+				calendar.linkScheduleDay();
+			},
+			eventClick: function(calEvent, jsEvent, view) {	
+				mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
+			},
+			eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view ){
+				console.log('drop');
+				console.log(event);
+			}
+		};
+		
+		if(this.session.employee.locale == this.KOREA){
+			options.titleFormat = {
+				month: "yyyy년 MMMM",
+				week: "[yyyy] MMM d일{ [yyyy] MMM d일}",
+				day: "yyyy년 MMM d일 dddd"
+			};
+			options.monthNames = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+			options.monthNamesShort = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
+			options.dayNames = ["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
+			options.dayNamesShort = ["일","월","화","수","목","금","토"];
+			options.buttonText = {
+				today : "오늘",
+				month : "월별",
+				week : "주별"
+			};
 		}
+		
+		calendar.fullCalendar(options);	
 		calendar.fullCalendar('gotoDate', object.selDate);
+		console.log('3');
 	}
 };
 
