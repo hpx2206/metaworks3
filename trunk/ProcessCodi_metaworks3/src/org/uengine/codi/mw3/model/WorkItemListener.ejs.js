@@ -28,7 +28,10 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 		//
 //		var instanceObject = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Instance@"+instanceId);
 		var instanceThreadObject = mw3.getAutowiredObject("org.uengine.codi.mw3.model.InstanceViewThreadPanel@"+instanceId);
-		if( instanceThreadObject != null && instanceThreadObject.instanceId == instanceId){
+		if( value.rootInstId && value.rootInstId != instanceId){
+			instanceThreadObject = mw3.getAutowiredObject("org.uengine.codi.mw3.model.InstanceViewThreadPanel@"+value.rootInstId);
+		}
+		if( instanceThreadObject != null && ( instanceThreadObject.instanceId == instanceId || instanceThreadObject.instanceId == value.rootInstId)){ 
 			// InstanceViewThreadPanel 이 열려있는경우
 			if( type == "ovryCmnt" && this.object.command != 'remove'){
 				var html = mw3.locateObject(value, null);

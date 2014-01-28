@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
@@ -19,8 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
@@ -390,7 +395,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				 * 서브로 프로세스 실행시에 실행된 워크아이템만 부분 갱신되게 수정
 				 */
 				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-				instanceViewThreadPanel.setInstanceId(instId);
+				instanceViewThreadPanel.setInstanceId(processMapList.getParentInstanceId().toString());
 
 				ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
 				
@@ -398,15 +403,41 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 					WorkItem newlyAppendedWorkItem = new WorkItem();
 					newlyAppendedWorkItem.setTaskId(new Long(taskId));
 					newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
-					
+					newlyAppendedWorkItem.setMetaworksContext(new MetaworksContext());
 					newlyAddedWorkItems.add(newlyAppendedWorkItem);
 				}
 				
+				
+				Instance parentInstance = new Instance();
+				parentInstance.setInstId(processMapList.getParentInstanceId());
+				IInstance copyOfInstance = parentInstance.databaseMe();
+				parentInstance.copyFrom(copyOfInstance);
+				parentInstance.setMetaworksContext(new MetaworksContext()); 
+				
+				// 주제 제목 설정
+				if(copyOfInstance.getTopicId() != null){
+					TopicNode topic = new TopicNode();
+					topic.setId(copyOfInstance.getTopicId());
+					topic.copyFrom(topic.databaseMe());
+					copyOfInstance.setTopicName(topic.getName());
+				}
+				HashMap<String, String> notiUsers = this.processNoti(parentInstance);
+				notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
+				
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(parentInstance)});
+				
+				// 본인 이외에 다른 사용자에게 push			
+				// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 한다
+//						wt.setInstId(processMapList.getParentInstanceId());
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+						new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems)});
+				// 2. 인스턴스 리스트를 위로 올린다.
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+						new Object[]{new InstanceListener(parentInstance)});	
+				
 				return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems)};
-				//instanceView.load(rootInstanceRef);
-				//InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
-				//rootInstanceView.load(rootInstanceRef);
-				//return new Object[]{new Remover(new Popup() , true), new Refresh(instanceView)};
 			}
 		}
 		
@@ -498,15 +529,68 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			IInstance copyOfInstance = ((Instance)instanceRef).databaseMe();
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
 			
-			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
-					new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});	
+			// 주제 제목 설정
+			if(copyOfInstance.getTopicId() != null){
+				TopicNode topic = new TopicNode();
+				topic.setId(copyOfInstance.getTopicId());
+				topic.copyFrom(topic.databaseMe());
+				copyOfInstance.setTopicName(topic.getName());
+			}
+			
+			HashMap<String, String> notiUsers = this.processNoti(copyOfInstance);
+			notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
 			
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
+			
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(notiUsers , session.getUser().getUserId()),
+					new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});	
+			
 			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new Refresh(instanceView)};
 		}
-
+	}
+	
+	public HashMap<String, String> processNoti(IInstance instanceRef) throws Exception{
+		/**
+		 *  === noti push 부분 ===
+		 */
+		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		Notification notification = new Notification();
+		notification.session = session;
+		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+		if(instanceRef.getTopicId() != null){
+			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instanceRef.getTopicId());
+			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
+			}
+		}
 		
+		// noti 저장
+		Iterator<String> iterator = notiUsers.keySet().iterator();
+		while(iterator.hasNext()){
+			String followerUserId = (String)iterator.next();
+			Notification noti = new Notification();
+			INotiSetting notiSetting = new NotiSetting();
+			INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+			if(!findResult.next() || findResult.isWriteInstance()){
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(followerUserId);
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setInstId(instanceRef.getInstId());					
+				noti.setActAbstract(session.getUser().getName() + " completed workItem : " + instanceRef.getName());
+				noti.add(instanceRef);
+			}
+		}
+		
+		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+				new Object[]{});
+		
+		return notiUsers;
 	}
 	
 	@ServiceMethod
@@ -527,7 +611,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			((Instance)instanceRef).databaseMe().setInitiator(session.user);
 			((Instance)instanceRef).databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 		}
-		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
+		if( session != null && session.getLastPerspecteMode().equalsIgnoreCase("topic")){
 			((Instance)instanceRef).databaseMe().setTopicId(session.getLastSelectedItem());
 		}
 		if(newInstancePanel!=null){

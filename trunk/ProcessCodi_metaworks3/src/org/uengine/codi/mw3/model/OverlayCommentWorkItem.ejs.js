@@ -30,6 +30,7 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 		var comment = prompt('Enter Comment : ', title);
 		
 		if(comment){
+			workItem.rootInstId = parentWorkItem.rootInstId;
 			workItem.title = comment;
 			workItem.add();		
 		}				

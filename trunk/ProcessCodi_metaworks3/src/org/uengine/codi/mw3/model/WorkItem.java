@@ -935,6 +935,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				afterInstantiation(instanceRef);				
 			}else{
+				if( this.getRootInstId() != null && this.getRootInstId() != this.getInstId() ){
+					setInstId(this.getRootInstId());
+				}
 				instance = new Instance();
 				instance.setInstId(this.getInstId());
 				
@@ -1450,6 +1453,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		OverlayCommentWorkItem overlayCommentWorkItem = new OverlayCommentWorkItem();
 		overlayCommentWorkItem.setOverlayCommentOption(overlayCommentOption);
 		overlayCommentWorkItem.setInstId(getInstId());
+		overlayCommentWorkItem.setRootInstId(getRootInstId());
 		
 //		overlayCommentWorkItem.session = session;
 //		overlayCommentWorkItem.processManager = processManager;

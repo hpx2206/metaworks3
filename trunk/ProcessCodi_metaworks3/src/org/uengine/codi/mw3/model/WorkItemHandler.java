@@ -488,26 +488,29 @@ public class WorkItemHandler implements ContextAware{
 		 */
 		notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
 		
-		// 본인의 instanceList 에 push
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
-		
-		// 본인 이외에 다른 사용자에게 push			
-		// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다
-		if( newlyAddedWorkItems.size() > 0 ){
-			for(int j=0; j < newlyAddedWorkItems.size(); j++){
-				WorkItem wt = newlyAddedWorkItems.get(j);
-				wt.setMetaworksContext(new MetaworksContext());
-				MetaworksRemoteService.pushClientObjectsFiltered(
-						new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
-						new Object[]{new WorkItemListener(WorkItemListener.COMMAND_APPEND , wt)});
+//		if( this.getRootInstId() != null && this.getRootInstId() != new Long(this.getInstanceId())){
+//			// 상위 인스턴스가 있는 경우
+//		}else{
+			// 본인의 instanceList 에 push
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
+			
+			// 본인 이외에 다른 사용자에게 push			
+			// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다
+			if( newlyAddedWorkItems.size() > 0 ){
+				for(int j=0; j < newlyAddedWorkItems.size(); j++){
+					WorkItem wt = newlyAddedWorkItems.get(j);
+					wt.setMetaworksContext(new MetaworksContext());
+					MetaworksRemoteService.pushClientObjectsFiltered(
+							new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+							new Object[]{new WorkItemListener(WorkItemListener.COMMAND_APPEND , wt)});
+				}
 			}
-		}
-		// 새로 추가되는 workItem이 없는 경우 1. 완료시킨 워크아이템은 리프레쉬를 시킨다
-		MetaworksRemoteService.pushClientObjectsFiltered(
-				new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
-				new Object[]{new InstanceListener(inst) ,  new WorkItemListener(WorkItemListener.COMMAND_REFRESH , workItemMe)});			
-		
-		
+			// 새로 추가되는 workItem이 없는 경우 1. 완료시킨 워크아이템은 리프레쉬를 시킨다
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+					new Object[]{new InstanceListener(inst) ,  new WorkItemListener(WorkItemListener.COMMAND_REFRESH , workItemMe)});			
+			
+//		}
 		//refreshes the instanceview so that the next workitem can be show up
 		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -650,6 +653,7 @@ public class WorkItemHandler implements ContextAware{
 		replyOverlayCommentWorkItem.setExt1(replyFieldName);
 		replyOverlayCommentWorkItem.setPrtTskId(getTaskId());
 		replyOverlayCommentWorkItem.setEndpoint(session.getUser().getUserId());
+		replyOverlayCommentWorkItem.setRootInstId(this.getRootInstId());
 		replyOverlayCommentWorkItem.add();
 		
 		replyOverlayCommentWorkItem.getMetaworksContext().setWhen("edit");
