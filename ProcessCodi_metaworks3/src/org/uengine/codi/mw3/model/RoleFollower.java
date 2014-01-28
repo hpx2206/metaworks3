@@ -38,6 +38,7 @@ public class RoleFollower extends Follower {
 		if(this.find() == null){
 			RoleUser roleUser = this.makeRoleUser();
 			roleUser.createDatabaseMe();
+			roleUser.flushDatabaseMe();
 			
 			this.addPushListener();
 		}

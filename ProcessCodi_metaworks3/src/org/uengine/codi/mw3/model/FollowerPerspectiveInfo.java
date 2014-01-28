@@ -73,19 +73,27 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 	@Face(displayName="$Join")
 	@Available(condition="!joined")
 	@ServiceMethod(callByContent=true, except="followers")
-	public void join() throws Exception {
+	public Object[] join() throws Exception {
 		this.getFollower().session = session;
 		this.getFollower().put(session.getUser());
 		this.load();
+		
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, session.getLastPerspecteMode(), session.getLastPerspecteType(), this.getId());
+		
+		return new Object[]{instanceListPanel, this};
 	}
 	
 	@Face(displayName="$Leave")
 	@Available(condition="joined")
 	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true)
-	public void leave() throws Exception {
+	public Object[] leave() throws Exception {
 		this.getFollower().session = session;
 		this.getFollower().delegate(session.getUser());
 		this.load();
+		
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, session.getLastPerspecteMode(), session.getLastPerspecteType(), this.getId());
+		
+		return new Object[]{instanceListPanel, this};
 	}
 	
 	@Face(displayName="$Modify")
