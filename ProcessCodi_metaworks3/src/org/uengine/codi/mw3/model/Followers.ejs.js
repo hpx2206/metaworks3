@@ -6,7 +6,7 @@ var org_uengine_codi_mw3_model_Followers = function(objectId, className){
 	
 	this.objectDiv.addClass('mw3_resize');
 	
-	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
 	
 	var faceHelper = this;
 	faceHelper.resize();
