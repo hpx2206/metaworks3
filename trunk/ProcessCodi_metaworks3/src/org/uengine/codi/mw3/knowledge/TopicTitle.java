@@ -328,7 +328,7 @@ public class TopicTitle  implements ContextAware{
 	
 	@Face(displayName="$Save")
 	@Available(when={MetaworksContext.WHEN_EDIT})
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, validate=true)
 	public Object[] modify() throws Exception{
 		this.saveMe();
 		
