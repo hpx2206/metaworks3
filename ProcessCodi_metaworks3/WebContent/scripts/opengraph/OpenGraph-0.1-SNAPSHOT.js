@@ -4857,12 +4857,12 @@ window.Raphael.svg && function (R) {
 			res.type = "foreignObject";
 			$(el, res.attrs);
 			if (obj) {
-				var div = document.createElement('div');
+				var div = document.createElement('span');
 				div.innerHTML = obj;
 				res.node.appendChild(div);
 			}
 		} else {
-			var el = $("foreignObject");
+			var el = $("foreignObject");		
 			svg.canvas && svg.canvas.appendChild(el);
 			res = new Element(el, svg);
 			res.attrs = {x: x, y: y, width: w, height: h};
@@ -4871,7 +4871,12 @@ window.Raphael.svg && function (R) {
 			if (obj) {
 				var div = document.createElement('div');
 				div.innerHTML = obj;
-				res.node.appendChild(div);
+				div.style.cssText = [
+					"word-wrap: break-word"
+				].join(";") + ";";
+				res.node.appendChild(div);				
+				res.attrs = {x: x, y: y, width: w, height: div.offsetHeight};
+				$(el, res.attrs);
 			}
 		}
 
@@ -13121,6 +13126,7 @@ OG.shape.bpmn.M_Annotation.prototype.createShape = function () {
 
 	return this.geom;
 };
+
 /**
  * BPMN : Group Shape
  *
@@ -13149,16 +13155,6 @@ OG.shape.bpmn.M_Group.superclass = OG.shape.GroupShape;
 OG.shape.bpmn.M_Group.prototype.constructor = OG.shape.bpmn.M_Group;
 OG.M_Group = OG.shape.bpmn.M_Group;
 
-
-OG.shape.GroupShape.prototype.layoutChild = function () {
-	for(var event in this.Events){
-		//TODO: 
-		//var shapeOfEvent = event.shape;
-		//shapeOfEvent.x = .... ;
-	}
-}
-
-
 /**
  * 드로잉할 Shape 을 생성하여 반환한다.
  *
@@ -13172,7 +13168,7 @@ OG.shape.bpmn.M_Group.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		'stroke-dasharray': '-',
+		//'stroke-dasharray': '-',
 		"r"               : 6,
 		fill : 'white'     
 
@@ -13215,6 +13211,32 @@ OG.shape.bpmn.M_Group.prototype.createTerminal = function(){
 		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 1) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
 		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 2) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT)
     ];
+};
+
+OG.shape.bpmn.ScopeActivity = function (label) {
+	OG.shape.bpmn.ScopeActivity.superclass.call(this);
+
+
+	this.CONNECTABLE = true;
+	this.Events = [];
+
+
+	this.SHAPE_ID = 'OG.shape.bpmn.ScopeActivity';
+	this.label = label;
+};
+
+OG.shape.bpmn.ScopeActivity.prototype = new OG.shape.bpmn.M_Group();
+OG.shape.bpmn.ScopeActivity.superclass = OG.shape.bpmn.M_Group;
+OG.shape.bpmn.ScopeActivity.prototype.constructor = OG.shape.bpmn.ScopeActivity;
+OG.ScopeActivity = OG.shape.bpmn.ScopeActivity;
+
+
+OG.shape.bpmn.ScopeActivity.prototype.layoutChild = function () {
+	for(var event in this.Events){
+		//TODO: 
+		//var shapeOfEvent = event.shape;
+		//shapeOfEvent.x = .... ;
+	}
 }
 
 
@@ -14907,27 +14929,16 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 
 	// text-anchor 리셋
 	text_anchor = _style["text-anchor"] || 'middle';
-	_style["text-anchor"] = 'middle';
+	//_style["text-anchor"] = 'middle';
 
-	// Draw text
-	element = this._PAPER.text(position[0], position[1], text);
 	
-	//FIXME: only support SVG format
-	/*
-	element = $(group).append("foreignObject") 
-		.attr("id", id)
-		.attr("x", position[0])
-		.attr("y", position[1])
-		.attr("width",width)
-		.attr("height",height)
-		.append("xhtml:body")
-		.append("p")
-		.text(text);
-		*/
-	element.attr(_style);
-
+	// Draw text
+	element = this._PAPER.foreignObject(text, position[0], position[1], size[0], size[1]);
+	
 	// real size
 	bBox = element.getBBox();
+	
+	console.log(bBox);
 
 	// calculate width, height, left, top
 	width = width ? (width > bBox.width ? width : bBox.width) : bBox.width;
@@ -14945,29 +14956,29 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 			y = geom.getBoundary().getLowerCenter().y;
 			break;
 		case "end":
-			y = geom.getBoundary().getUpperCenter().y;
+			y = geom.getBoundary().getUpperCenter().y - bBox.height;
 			break;
 		case "middle":
-			y = geom.getBoundary().getCentroid().y;
+			y = OG.Util.round(geom.getBoundary().getCentroid().y - bBox.height / 2);
 			break;
 		default:
-			y = geom.getBoundary().getCentroid().y;
+			y = OG.Util.round(geom.getBoundary().getCentroid().y - bBox.height / 2);
 			break;
 		}
 
 		// Text Vertical Align
 		switch (_style["vertical-align"]) {
 		case "top":
-			x = OG.Util.round(geom.getBoundary().getLeftCenter().x + bBox.height / 2);
+			x = OG.Util.round(geom.getBoundary().getLeftCenter().x - bBox.width / 2) + 10;
 			break;
 		case "bottom":
-			x = OG.Util.round(geom.getBoundary().getRightCenter().x - bBox.height / 2);
+			x = geom.getBoundary().getRightCenter().x - bBox.width;
 			break;
 		case "middle":
-			x = geom.getBoundary().getCentroid().x;
+			x = geom.getBoundary().getCentroid().x - bBox.width;
 			break;
 		default:
-			x = geom.getBoundary().getCentroid().x;
+			x = geom.getBoundary().getCentroid().x - bBox.width;
 			break;
 		}
 
@@ -14979,29 +14990,29 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 			x = geom.getBoundary().getLeftCenter().x;
 			break;
 		case "end":
-			x = geom.getBoundary().getRightCenter().x;
+			x = geom.getBoundary().getRightCenter().x - bBox.width;
 			break;
 		case "middle":
-			x = geom.getBoundary().getCentroid().x;
+			x = OG.Util.round(geom.getBoundary().getCentroid().x - bBox.width / 2);
 			break;
 		default:
-			x = geom.getBoundary().getCentroid().x;
+			x = OG.Util.round(geom.getBoundary().getCentroid().x - bBox.width / 2);
 			break;
 		}
 
 		// Text Vertical Align
 		switch (_style["vertical-align"]) {
 		case "top":
-			y = OG.Util.round(geom.getBoundary().getUpperCenter().y + bBox.height / 2);
+			y = geom.getBoundary().getUpperCenter().y;
 			break;
 		case "bottom":
-			y = OG.Util.round(geom.getBoundary().getLowerCenter().y - bBox.height / 2);
+			y = geom.getBoundary().getLowerCenter().y - bBox.height;
 			break;
 		case "middle":
-			y = geom.getBoundary().getCentroid().y;
+			y = OG.Util.round(geom.getBoundary().getCentroid().y - bBox.height / 2);
 			break;
 		default:
-			y = geom.getBoundary().getCentroid().y;
+			y = OG.Util.round(geom.getBoundary().getCentroid().y - bBox.height / 2);
 			break;
 		}
 	}
@@ -15014,6 +15025,10 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 		fill          : _style["font-color"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-color"],
 		"font-size"   : _style["font-size"] || me._CONFIG.DEFAULT_STYLE.LABEL["font-size"],
 		"fill-opacity": 1
+	});
+	
+	$(element.node).css({
+		"text-align" : "center"
 	});
 
 	// angle 적용
@@ -15047,6 +15062,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 
 	return group.node;
 };
+
 
 /**
  * Shape 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
@@ -21936,7 +21952,7 @@ OG.handler.EventHandler.prototype = {
 		}
 	},
 
-	/**
+	/**group
 	 * 메뉴 : 선택된 Shape 들을 그룹해제한다.
 	 */
 	ungroupSelectedShape: function () {
