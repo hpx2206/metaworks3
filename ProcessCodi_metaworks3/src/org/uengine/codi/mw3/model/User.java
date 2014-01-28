@@ -492,6 +492,7 @@ public class User extends Database<IUser> implements IUser {
 		sb.append("         ON e.partcode=p.partcode");
 		sb.append(" WHERE e.empcode!=?userid");
 		sb.append("   AND e.isdeleted=?isdeleted");
+		sb.append("   AND e.approved=?approved");
 		sb.append("   AND e.globalcom=?globalcom");
 		sb.append("   AND NOT EXISTS");
 		sb.append("    (SELECT 1");
@@ -511,6 +512,7 @@ public class User extends Database<IUser> implements IUser {
 		dao.setUserId(session.getUser().getUserId());		
 		dao.set("empname", "%" + keyword + "%");
 		dao.set("isdeleted", "0");
+		dao.set("approved", "1");
 		dao.set("globalcom", session.getEmployee().getGlobalCom());
 		dao.select();
 
