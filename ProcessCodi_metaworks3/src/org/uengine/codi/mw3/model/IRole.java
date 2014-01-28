@@ -54,8 +54,8 @@ public interface IRole extends IDAO {
 	
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="역할 이름을 입력해주세요."),
-		@Validator(name=ValidatorContext.VALIDATE_MAX , options={"10"}, message="10자 이하로 입력해주세요."),
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[^~!@\\#$%^&*\\()\\-=+_\'\"]+$/"}, message="특수 문자는 입력 할 수 없습니다.")
+		@Validator(name=ValidatorContext.VALIDATE_MAX , options={"20"}, message="20자 이내로 입력해주세요."),
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[^~!@\\#$%^&*\\()\\-=+_\'\"]+$/"}, message="다음과 같은 문자는 입력 할 수 없습니다. ~!@#$%^&*()\\-=+_\'\"")
 	})
 	public String getRoleName();
 	public void setRoleName(String roleName);
