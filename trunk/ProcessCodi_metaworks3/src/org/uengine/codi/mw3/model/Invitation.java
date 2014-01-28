@@ -134,7 +134,7 @@ public class Invitation implements ContextAware{
 				
 				this.setInvitedMessage("친구가 등록 되었습니다.");
 				this.getMetaworksContext().setHow("afterinvite");
-				return new Object[]{new Refresh(this)};
+				return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
 				//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 			}
 			
@@ -154,7 +154,7 @@ public class Invitation implements ContextAware{
 
 			this.setInvitedMessage("친구가 등록 되었습니다.");
 			this.getMetaworksContext().setHow("afterinvite");
-			return new Object[]{new Refresh(this)};
+			return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
 			//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 		}
 		
