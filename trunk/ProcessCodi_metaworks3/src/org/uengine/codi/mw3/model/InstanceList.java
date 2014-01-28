@@ -144,6 +144,7 @@ public class InstanceList implements ContextAware{
 		
 		IInstance instanceContents = Instance.load(navigation, getPage()-1, count);
 		instanceContents.setMetaworksContext(new MetaworksContext());
+		instanceContents.getMetaworksContext().setWhere(IInstance.WHERE_INSTANCELIST);
 		
 		this.setInstances(instanceContents);
 		

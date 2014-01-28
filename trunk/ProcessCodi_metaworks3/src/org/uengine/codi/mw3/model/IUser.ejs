@@ -17,10 +17,10 @@
 <%	
 			var isOverlayName = true;
 			
-			if(mw3.where == 'addcontact' || mw3.where == 'addfollower' || mw3.how == 'pickerlist')
+			if(mw3.where == 'addcontact' || mw3.where == 'addfollower' || mw3.where == 'pickerlist')
 				isOverlayName = false;
 			
-			if(isOverlayName && mw3.where != 'self'){
+			if(isOverlayName && mw3.where != 'self' && mw3.where != 'instancelist' ){
 %>
 					<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
 <%

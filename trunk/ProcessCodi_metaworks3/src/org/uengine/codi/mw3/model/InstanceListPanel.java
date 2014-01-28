@@ -1,16 +1,7 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.ContextAware;
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.annotation.Test;
-import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
-import org.uengine.codi.mw3.knowledge.ProjectInfo;
-import org.uengine.codi.mw3.knowledge.WfPanel;
 
 //@Face(
 //		ejsPathMappingByContext=
