@@ -10592,7 +10592,7 @@ OG.shape.bpmn.A_Task.prototype.createTerminal = function(){
 
 //TODO: 커스텀 컨트롤.. 구현 방식을 바꿔둬야 함 ( 함수 => 객체 )
 OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
-	console.log(" ===> call custom control ");
+	//console.log(" ===> call custom control ");
 
 	if(!handler || !element) return;
 
@@ -10600,8 +10600,15 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 		,task, end
 		,group
 		,rElement = handler._RENDERER._getREleById(OG.Util.isElement(element) ? element.id : element)
+		
+	
+	// remove all custom control
+	$(handler._RENDERER.getRootElement()).find("[_type=CUSTOM_CONTROL]").each(function(n, selectedItem){
+		selectedItem.remove();
+	});
+	
 	if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
-		console.log(" draw custom control ");
+		//console.log(" draw custom control ");
 		
 		//찍을 좌표 구하기
 		ur_x = element.shape.geom.boundary._upperLeft.x;
@@ -10621,6 +10628,7 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 		end.setTooltip('end event - Click or Drag');
 		
 		group = handler._RENDERER._PAPER.group();
+		$(group.node).attr("_type","CUSTOM_CONTROL");
 		
 		group.appendChild(task);
 		group.appendChild(end);
@@ -10632,7 +10640,7 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 		********************************************/
 		$(task.node).draggable({
 			start: function (event) {
-				console.log("drag");
+				//console.log("drag");
 				event.stopPropagation();
 				var eventOffset = handler._getOffset(event), guide;
 
@@ -10759,6 +10767,7 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 			이벤트 설정 종료
 		********************************************/
 		
+		//FIXME 삭제
 		$(group).bind({
 			remove: function(event){
 				element.shape.geom["custom_control"] = undefined;
@@ -14938,7 +14947,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	// real size
 	bBox = element.getBBox();
 	
-	console.log(bBox);
+	//console.log(bBox);
 
 	// calculate width, height, left, top
 	width = width ? (width > bBox.width ? width : bBox.width) : bBox.width;
@@ -19007,8 +19016,7 @@ OG.handler.EventHandler.prototype = {
 						$(terminalGroup.bBox).bind({
 							mousedown: function(event){
 								//console.log($(element).data("status"));
-								event.stopPropagation();
-								me.selectShape(element,event);
+								//event.stopPropagation();
 								//console.log($(element).data("status"));
 							},
 							mouseover: function (event) {
@@ -19373,6 +19381,7 @@ OG.handler.EventHandler.prototype = {
 					if(element.shape.geom.custom_control){
 						$(element.shape.geom.custom_control).trigger("remove");
 					}
+					me.selectShape(element,event);
 					
 					// redraw guide
 					me._RENDERER.removeGuide(element);
@@ -19458,6 +19467,8 @@ OG.handler.EventHandler.prototype = {
                             }
                         });
 					}
+					
+					me.selectShape(element,event);
 
                     //me._RENDERER.removeGuide(element);
 					$(root).removeData("bBoxArray");
@@ -20246,7 +20257,7 @@ OG.handler.EventHandler.prototype = {
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
 			$(element).bind("click", function (event) {
-				console.log(" click and select");
+				//console.log(" click and select");
 				event.stopPropagation();
 				var guide;
 				$(me._RENDERER.getContainer()).focus();
@@ -20356,7 +20367,7 @@ OG.handler.EventHandler.prototype = {
 					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
-					me._RENDERER.drawRubberBand([x-1, y-1], [Math.abs(width), Math.abs(height)]);
+					me._RENDERER.drawRubberBand([x, y], [Math.abs(width+1), Math.abs(height+1)]);
 				}
 			});
 			$(rootEle).bind("mouseup", function (event) {			
@@ -21656,24 +21667,26 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape 엘리먼트
 	 */
 	selectShape: function (element, event) {
-		console.log(" => selectShape call!! ");
+		//console.log(" => selectShape call!! ");
 		
 		var me = this, guide, root = me._RENDERER.getRootGroup();
 		
 		//단일 선택 다중 선택 여부 판단
 		if(event){
 			if (!event.shiftKey && !event.ctrlKey) {
-				console.log(" -=========> single select mode ");
+				//console.log(" -=========> single select mode ");
 				me.deselectAll();
+				me._RENDERER.removeAllGuide();
 			}else{
-				console.log(" -=========> multiple select mode ");
+				//console.log(" -=========> multiple select mode ");
 			}
 		}else{
 			//기본 단일 선택
 			me.deselectAll();
+			me._RENDERER.removeAllGuide();
 		}
 
-		if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
+		if (/*$(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && */me._isSelectable(element.shape)) {
 			guide = me._RENDERER.drawGuide(element);
 			if (guide) {
 				// enable event
@@ -21687,11 +21700,11 @@ OG.handler.EventHandler.prototype = {
 			//선택요소배열 추가
 			me._addSelectedElement(element);
 			
-			console.log(me._getSelectedElement());
+			//console.log(me._getSelectedElement());
 			
 			//하나만 선택된 경우 : 후행 처리 ( drawCustomControl );
 			if(me._getSelectedElement().length == 1){
-				console.log(" ======> call !! custom control ");
+				//console.log(" ======> call !! custom control ");
 				element.shape.drawCustomControl(this, element);
 			}else if(me._getSelectedElement().length > 1){
 				var i, n, selectedElements = me._getSelectedElement();
@@ -21793,7 +21806,7 @@ OG.handler.EventHandler.prototype = {
 	 * 메뉴 : 선택된 Shape 들을 삭제한다.
 	 */
 	deleteSelectedShape: function (event) {
-		console.log(" deleteSelectedShape call !! ");
+		//console.log(" deleteSelectedShape call !! ");
 	
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=EDGE][_selected=true]").each(function (index, item) {
@@ -23041,7 +23054,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1.5, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center", "stroke-linejoin" : "round" },
 			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- ", "edge-type": "plain" },
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0 },
-			GROUP         : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 ,cursor: "move" },
 			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
@@ -23060,8 +23073,8 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
 			TERMINAL      : { stroke: "#03689A", "stroke-width": 0.5, fill: "r(0.5, 0.5)#FFFFFF-#03689A", "fill-opacity": 0.1, cursor: "pointer" },
 			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
-			TERMINAL_BBOX : { stroke: "none", fill: "yellow", "fill-opacity": 0 },
-			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
+			TERMINAL_BBOX : { stroke: "none", fill: "none", "fill-opacity": 0 },
+			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.3, "shape-rendering": "crispEdges" },
 			LABEL         : { "font-size": 12, "font-color": "black" },
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
 			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
