@@ -74,7 +74,7 @@ public interface IEmployee extends IDAO {
 	@Face(options="type", values="password")
 	@NonLoadable
 	@NonSavable
-	@Validator(name=ValidatorContext.VALIDATE_CONDITION, options="(password != confirmPassword)", message="패스워드와 동일하게 다시 입력해 주세요.")
+	@Validator(name=ValidatorContext.VALIDATE_CONDITION, condition="metaworksContext.where == 'inDetailWindow'", options="(password != confirmPassword)", message="패스워드와 동일하게 다시 입력해 주세요.")
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
 	
