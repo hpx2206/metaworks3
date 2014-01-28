@@ -18,7 +18,8 @@ public class DeptFollower extends Follower {
 		if(emp.getPartCode() == null || !emp.getPartCode().equals(this.getParentId())){
 			emp.setPartCode(this.getParentId());
 			emp.syncToDatabaseMe();
-						
+			emp.flushDatabaseMe();
+			
 			this.addPushListener();
 		}
 	}
