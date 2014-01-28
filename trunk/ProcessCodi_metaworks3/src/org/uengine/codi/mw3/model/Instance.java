@@ -72,8 +72,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		Employee employee = null;
 		
 		if(navigation.getPerspectiveValue() != null && 
-		   Perspective.MODE_PERSONAL.equals(navigation.getPerspectiveMode()) &&
-		   !navigation.getPerspectiveValue().equals(navigation.getEmployee().getEmpCode())){
+		   Perspective.MODE_PERSONAL.equals(navigation.getPerspectiveMode())){
 			
 			employee = new Employee();
 			employee.setEmpCode(navigation.getPerspectiveValue());
@@ -152,25 +151,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 		System.out.println(bottomList.toString());
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		
+		if(!Perspective.MODE_PERSONAL.equals(navigation.getPerspectiveMode()))
+			employee = navigation.getEmployee();
+			
+		if(employee == null)
+			throw new Exception("can't load employee. perspective mode personal!");
+		
+		criteria.put("self_endpoint", employee.getEmpCode());
+		criteria.put("self_partcode", employee.getPartCode());
+		criteria.put("initComCd", employee.getGlobalCom());
+		criteria.put("endpoint", employee.getEmpCode());
+		criteria.put("partcode", employee.getPartCode());
+
 		if(navigation.isDiffrentCompany){
-			if(employee == null)
-				throw new Exception("can't load employee. it is diffrent company");
-			
-			criteria.put("partcode", employee.getPartCode());
-			criteria.put("endpoint", employee.getEmpCode());
-			
 			criteria.put("self_endpoint", navigation.getEmployee().getEmpCode());
 			criteria.put("self_partcode", navigation.getEmployee().getPartCode());			
-			
-		}else{
-			criteria.put("self_endpoint", navigation.getPerspectiveValue());
-			criteria.put("self_partcode", navigation.getEmployee().getPartCode());
-			
-			criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
-			criteria.put("partcode", navigation.getEmployee().getPartCode());
-			criteria.put("endpoint", navigation.getPerspectiveValue());
 		}
-	
+		
 		// TODO add criteria
 		Set<String> keys = criteria.keySet();
 		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
@@ -351,7 +348,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 				instanceSql
 				.append("			select 1 from bpm_procinst	 ")
 				.append("			where inst.instid = instid	 ")
-				.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
+				.append("			and secuopt = 0	and topicId is null and inst.initcomcd = ?initComCd ")
 				.append("			union all	 ");		
 			}
 			
@@ -364,7 +361,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			union all 	 ")
 			.append("			select 1 from bpm_topicmapping tm	 ")
 			.append("			where inst.topicId = tm.topicId	 ")
-			.append("			and inst.secuopt = 3	 ")
+			.append("			and inst.secuopt <= 1	 ")
 			.append("			and ( 	( assigntype = 0 and tm.userid = ?self_endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and tm.userid = ?self_partcode ) ) ")
 			.append("		)	 ");
