@@ -46,9 +46,12 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 		
 		return object;
 	},
+	/*
 	startLoading : function(){
+		alert("d");
 		$('.logo').after('<div id=\"mw3_progress\" style=\"width:128px; height:15px; float:left; margin-top:20px;  margin-right:20px;"><img src=\"images/waveStyle/ajax-loader_t.gif\" /></div>');
 	},
+	
 	endLoading : function(){
 		setTimeout(function(){
 			$('#mw3_progress').remove();
@@ -60,6 +63,7 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 		}, 500);		
 		
 	},
+	*/
 	showStatus : function(status){
 		var arrStatus = status.split(' ');
 		

@@ -827,11 +827,12 @@ height: 40px;
 #navigationTitle { position:relative; }
 #navigationTitle span {
 	line-height: 21px;
-	margin-right: 80px;
-	overflow:hidden;
-	white-space:nowrap;
-	text-overflow:ellipsis;
+	margin-right: 10px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 	-o-text-overow: ellipsis;
+	float: left;
 }
 .boxtoprightTab #navigationTitle span { margin-right: 0px; }
 #navigationTitle span div {
@@ -842,9 +843,13 @@ height: 40px;
 	-o-text-overow: ellipsis;
 }
 .loadingarea {
-	position:absolute;
+	float:left;
+	margin-top:2px;
+	/*
+position:absolute;
 	left:150px;
 	top:2px;
+*/
 }
 #Outside_person {
 	position: absolute;
@@ -4083,3 +4088,4 @@ legend {display:none;}
 .closeFollowerBtn{width: 40px;height: 8px;bottom:-8px;left:50%; margin-left:-20px;background: #C9E2FC;position: absolute;z-index: 9999999;display:none; text-align:center; font-size:6px; line-height:7px; box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
 .view_more_dl{position:absolute; background:#C9E2FC; z-index:999999; box-shadow:0 2px 10px rgba(0, 0, 0, 0.2)}
 .view_more_line{height:auto; overflow:auto}
+.followers_addbtn img {cursor:pointer;}
