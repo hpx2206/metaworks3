@@ -3882,6 +3882,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			   }
 			   
+	   			// 생성된 context menu 제거
+				if($('#' + targetDivId).attr('contextMenu')){
+			   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objectId);
+			   
+			   		menu.destroy();
+			   	}
+			   
 			   //install context menu
 			   if(contextMenuMethods.length > 0){				   
 				   var menuItems = [];
@@ -3934,13 +3941,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //				   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
 				   
 				   if(menuItems.length){
-				   		// 생성된 context menu 제거
-						if($('#' + targetDivId).attr('contextMenu')){
-					   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objectId);
-					   
-					   		menu.destroy();
-					   	}
-					   	
 					   YAHOO.util.Event.onContentReady(targetDivId, function () {
 						    var menu = new YAHOO.widget.ContextMenu(
 								"_contextmenu_" + objectId,
@@ -3958,14 +3958,50 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   }		
 			}
 
-			Metaworks3.prototype.showContextMenu = function(objId){
-		   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objId);
+			Metaworks3.prototype.getServiceMethodByGroup = function(objectId, groupId){
+				var serviceMethods = [];
+				var object = mw3.objects[objectId];
+				var metadata = mw3.getMetadata(object.__className);
+				
+			    for(var methodName in metadata.serviceMethodContextMap){
+			   		var methodContext = metadata.serviceMethodContextMap[methodName];
+			   	
+				    if(mw3.isHiddenMethodContext(methodContext, object) && !methodContext.bindingHidden)
+					   continue;
+
+		   			if(methodContext.group == groupId){
+		   				serviceMethods[serviceMethods.length] = new MethodRef(object, objectId, methodContext);;
+		   			}
+		   		}
 		   		
-		   		var xy = YAHOO.util.Event.getXY(event);
-		   		menu.cfg.setProperty("xy", xy);
-				menu.show();
-			}
-						
+		   		return serviceMethods;
+			};
+			
+			Metaworks3.prototype.makeMenuItemsByServiceMethod = function(serviceMethods){
+				var menuItems = [];
+				
+				for(var i=0; i<serviceMethods.length; i++){
+					var serviceMethod = serviceMethods[i];
+					var command = serviceMethod.caller();
+					
+					console.log(command);
+					
+					var menuItem = { 
+			   			text: mw3.localize(serviceMethod.methodContext.displayName) + (serviceMethod.methodContext.keyBinding ? '(' + serviceMethod.methodContext.keyBinding[0] + ')' : ''),
+						onclick: { fn: 
+							function(){
+								eval(this._oOnclickAttributeValue.command);
+							},
+							command: command
+						} 
+				   	};
+				   	
+				   	menuItems[menuItems.length] = menuItem;
+			   }
+			   
+			   return menuItems;
+		   };
+	   
 			Metaworks3.prototype.showPopop = function(objId, serviceMethodContext, result){
 				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='position: absolute; z-index:10; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 				
