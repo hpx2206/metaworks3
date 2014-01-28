@@ -1059,6 +1059,9 @@ alter table roletable add column roleName varchar(100);
 alter table PARTTABLE drop url ;
 alter table PARTTABLE drop thumbnail;
 
+
+alter database uengine default CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE parttable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
 -- 부서path를 가져오는 function 생성 (김형국) (14.1.27) 
 -- GetDeptPathAncestry(partcode, '->') 이렇게 사용
 DELIMITER $$
