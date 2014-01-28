@@ -4,6 +4,7 @@ import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Group;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -83,9 +84,10 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 		return new Object[]{instanceListPanel, this};
 	}
 	
+	@Group(name="menu")
 	@Face(displayName="$Leave")
 	@Available(condition="joined")
-	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true)
+	@ServiceMethod(callByContent=true, except="followers")
 	public Object[] leave() throws Exception {
 		this.getFollower().session = session;
 		this.getFollower().delegate(session.getUser());
@@ -96,14 +98,16 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 		return new Object[]{instanceListPanel, this};
 	}
 	
+	@Group(name="menu")
 	@Face(displayName="$Modify")
-	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true, target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(callByContent=true, except="followers", target=ServiceMethodContext.TARGET_STICK)
 	public Popup modify() throws Exception {
 		throw new Exception("not defined modify method");
 	}
 	
+	@Group(name="menu")
 	@Face(displayName="$Remove")
-	@ServiceMethod(callByContent=true, except="followers", inContextMenu=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, except="followers", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
@@ -112,7 +116,7 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 	}
 
 	@Hidden
-	@ServiceMethod(callByContent=true, except="followers", bindingHidden=true, eventBinding=EventContext.EVENT_CHANGE)
+	@ServiceMethod(callByContent=true, except="followers", eventBinding=EventContext.EVENT_CHANGE)
 	public void refresh() throws Exception{
 		this.load();
 	}
