@@ -393,7 +393,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newRemoteConference() throws Exception;
 		
-		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
+		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, payload={"instId", "taskId", "rootInstId"}, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="$Comment")
 		public OverlayCommentWorkItem comment() throws Exception;
 		
