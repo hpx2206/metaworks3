@@ -1170,7 +1170,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		Notification notification = new Notification();
 		notification.session = session;
 		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
-		if(instance.getTopicId() != null){
+		if(instance.getTopicId() != null && "0".equals(instance.getSecuopt())){
 			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instance.getTopicId());
 			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
 			while(iterator.hasNext()){
