@@ -80,46 +80,48 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				
 				object.element = null;
 			}
-        	
-        	$(element).unbind('dblclick');
-        	$(element).on({
-        		dblclick: function (event) {	
-        			if(event.stopPropagation){
-        				event.stopPropagation();
-        			}
-        			var divId = 'properties_' + this.objectId;
-        			$('body').append("<div id='" + divId + "'></div>");
-        			var metaworksContext = {
-        					__className : 'org.metaworks.MetaworksContext',
-        					when : 'edit'
-        			};
-        			
-        			var propertiesWindow = {
-        					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
-        					open : true,
-        					width : 860,
-        					height : 600,
-        					panel : $(this).data('activity'),
-        					metaworksContext : metaworksContext
-        			};
-        			
-        			object['propertiesWindow'] = propertiesWindow;
-        			object.id = $(this).attr('id');
-        			
-    				var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel');
-    				if( processVariablePanel ){
-        				object.wholeVariableList = processVariablePanel.variableList;
-        			}
-        			
-        			object.showProperties();
-        			
-        		},
-        		btnclick : function(event) {
-        			object.id = $(this).attr('id');
-        			object.activity = $(this).data('activity');
-        			object.showDefinitionMonitor();
-        		}
-        	});
+			
+        	if( typeof object.activityClass != 'undefined'){
+	        	$(element).unbind('dblclick');
+	        	$(element).on({
+	        		dblclick: function (event) {	
+	        			if(event.stopPropagation){
+	        				event.stopPropagation();
+	        			}
+	        			var divId = 'properties_' + this.objectId;
+	        			$('body').append("<div id='" + divId + "'></div>");
+	        			var metaworksContext = {
+	        					__className : 'org.metaworks.MetaworksContext',
+	        					when : 'edit'
+	        			};
+	        			
+	        			var propertiesWindow = {
+	        					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
+	        					open : true,
+	        					width : 860,
+	        					height : 600,
+	        					panel : $(this).data('activity'),
+	        					metaworksContext : metaworksContext
+	        			};
+	        			
+	        			object['propertiesWindow'] = propertiesWindow;
+	        			object.id = $(this).attr('id');
+	        			
+	    				var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel');
+	    				if( processVariablePanel ){
+	        				object.wholeVariableList = processVariablePanel.variableList;
+	        			}
+	        			
+	        			object.showProperties();
+	        			
+	        		},
+	        		btnclick : function(event) {
+	        			object.id = $(this).attr('id');
+	        			object.activity = $(this).data('activity');
+	        			object.showDefinitionMonitor();
+	        		}
+	        	});
+			}
         	$(element).droppable({
         		greedy: true,		
         		tolerance: 'geom',
