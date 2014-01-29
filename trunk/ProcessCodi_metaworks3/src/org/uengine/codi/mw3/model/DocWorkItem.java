@@ -38,11 +38,14 @@ public class DocWorkItem extends WorkItem {
 		if(!UEngineUtil.isNotEmpty(getTitle())){
 			setTitle(new String(this.getFile().getFilename()));
 		}
+		
 		Object[] returnObj = null;
+		
 		FileWorkItem fileWorkItem = new FileWorkItem();
 		fileWorkItem.session = session;
 		fileWorkItem.processManager = this.processManager;
 		fileWorkItem.instanceViewContent = this.instanceViewContent;
+		fileWorkItem.newInstancePanel = this.newInstancePanel;
 		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
 		fileWorkItem.setWriter(session.getUser());
@@ -70,6 +73,7 @@ public class DocWorkItem extends WorkItem {
 		genericWI.session = session;
 		genericWI.processManager = this.processManager;
 		genericWI.instanceViewContent = this.instanceViewContent;
+		genericWI.newInstancePanel = this.newInstancePanel;
 		genericWI.setInstId(this.getInstId());
 		genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 //			if("normal".equals(this.getMetaworksContext().getHow())){
