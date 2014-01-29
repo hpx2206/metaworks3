@@ -24,6 +24,10 @@ public class Followers implements ContextAware {
 	static final String ADD_DEPTFOLLOWERS = "addDeptFollower";
 	static final String ADD_DOCUMENTFOLLOWERS = "addDocumentFollower";
 	static final String ADD_ETCFOLLOWERS = "addEtcFollower";
+	
+	static final String ADD_NOTI = "add";
+	static final String REMOVE_NOTI = "remove";
+	
 
 	String id;
 		@Id
