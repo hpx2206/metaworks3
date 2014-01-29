@@ -129,17 +129,6 @@ public class InstanceList implements ContextAware{
 	}
 	
 	public InstanceList load(Navigation navigation) throws Exception {
-		if(navigation.getPerspectiveType() != null && navigation.getPerspectiveType().equals("inbox")){			
-			//NEW WAY IS GOOD
-			Browser.withSession(Login.getSessionIdWithUserId(navigation.getEmployee().getEmpCode()), new Runnable(){
-				@Override
-				public void run() {
-					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + TodoBadge.class.getName() + "').refresh", new Object[]{});					
-				}
-				
-			});
-		}
-		
 		int count =  ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
 		
 		IInstance instanceContents = Instance.load(navigation, getPage()-1, count);

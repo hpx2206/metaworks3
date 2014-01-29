@@ -73,6 +73,6 @@ public class TodoBadge{
 		
 		this.refresh();
 		
-		return new Object[]{new Refresh(this), popup};
+		return new Object[]{popup, new Refresh(this)};
 	}
 }

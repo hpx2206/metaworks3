@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredToClient;
@@ -10,7 +8,6 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.MetaworksDAO;
-import org.uengine.codi.mw3.Login;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/InstanceList.ejs")
 public class TodoBadgeInstanceList implements ContextAware{
@@ -74,17 +71,6 @@ public class TodoBadgeInstanceList implements ContextAware{
 	}
 	
 	public TodoBadgeInstanceList load(Navigation navigation) throws Exception {
-		if(navigation.getPerspectiveType() != null && navigation.getPerspectiveType().equals("inbox")){			
-			//NEW WAY IS GOOD
-			Browser.withSession(Login.getSessionIdWithUserId(navigation.getEmployee().getEmpCode()), new Runnable(){
-				@Override
-				public void run() {
-					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + TodoBadge.class.getName() + "').refresh", new Object[]{});					
-				}
-				
-			});
-		}
-		
 		int count =  ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
 		
 		IInstance instanceContents = Instance.load(navigation, getPage()-1, count);
