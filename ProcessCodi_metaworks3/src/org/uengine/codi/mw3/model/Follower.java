@@ -149,6 +149,12 @@ public class Follower extends Database<IFollower> implements IFollower {
 			convertUser.session =  session;
 			
 			return new Object[]{new Refresh(session), convertUser.detail()};
+		}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+			Dept convertDept = new Dept();
+			convertDept.copyFrom(this.getDept());
+			convertDept.session = session;
+			
+			return new Object[]{new Refresh(session), convertDept.detail()};
 		}else
 			return null;
 	}
