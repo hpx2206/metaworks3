@@ -16,27 +16,25 @@ var org_uengine_codi_mw3_model_InstanceListener = function(objectId, className){
 			value.instanceViewThreadPanel = null;
 			
 			// 토픽을 보고있는 경우, 해당 토픽에 올라온 글만 보여야 함
-			if( value.topicId && session.lastPerspecteMode == 'topic' && session.lastSelectedItem != value.topicId ){
-				return;
-			}
-			
-			// 참여중을 보고있는 경우 자신이 follower 된 글만 보여진다.
-			if( session.lastPerspecteType == 'following' && !faceHelper.checkFollower(value.followers , session) ){
-				return;
-			}
-			
-			// 할일을 보고있는 경우에는 status가 Completed 가 아니고, duedate 가 있는 경우에만 추가가 된다.
-            if( session.lastPerspecteType == 'inbox' ){
-				if( faceHelper.checkFollower(value.followers , session) && value.dueDate ){
-					if( value.status && value.status == 'Completed' ){
-	                    // 할일을 보고있고, 완료가 된 글이 넘어온다면 할일에서 지운다.
-	                    command = 'remove';
-                    }
-				}else{
-					return;
-				}
-                
-            }
+ 			if( session.lastPerspecteMode == 'topic' && session.lastSelectedItem != value.topicId ){
+ 				return;
+ 			}
+   
+ 			// 참여중을 보고있는 경우 자신이 follower 된 글만 보여진다.
+ 			if( session.lastPerspecteType == 'following' || session.lastPerspecteType == 'inbox' ){
+ 				var isFollower = faceHelper.checkFollower(value.followers , session);
+    
+ 				if(!isFollower)
+ 					return;
+
+ 				if(session.lastPerspecteType == 'inbox'){
+ 					if(!value.dueDate)
+ 						return;
+ 
+ 					if(value.status == 'Completed' || value.status == 'Stopped'  || value.status == 'Failed')
+ 						return;
+ 				}
+ 			}
 			
 			var preferUx = mw3.fn.getPreferUx();		
 			var instId = value.instId;

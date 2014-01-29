@@ -64,6 +64,8 @@ public class InstanceFollower extends Follower {
 		if( findObj == null ){
 			RoleMapping rm = this.makeRoleMapping();
 			rm.saveMe();
+			rm.flushDatabaseMe();
+			
 			this.noti(Followers.ADD_NOTI);
 			this.addPushListener();
 		}
