@@ -16,25 +16,10 @@ var org_uengine_codi_mw3_model_NotificationBadge = function(objectId, className)
 			mw3.objects[objectId].refresh();
 		
 		window.document.title = (badge.newItemCount > 0 ? "("+ badge.newItemCount + ")":"") + " Codi"; 
-		//	this.callNoti(true);
 	}
 };
 
 org_uengine_codi_mw3_model_NotificationBadge.prototype = {
-	startLoading : function(){
-		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
-			mw3.getFaceHelper(this.windowObjectId).startLoading();
-		else
-			mw3.startLoading(this.objectId);
-	},
-	endLoading : function(){
-		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
-			mw3.getFaceHelper(this.windowObjectId).endLoading();
-		else
-			mw3.endLoading(this.objectId);
-	},
-	showStatus : function(message){
-	},
 	callNoti : function(notify){
 		if(typeof notify != 'undefined' && notify){
 			if(!mw3.windowFocus){
