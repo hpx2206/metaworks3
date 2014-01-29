@@ -290,7 +290,6 @@ public class User extends Database<IUser> implements IUser {
 		this.getMetaworksContext().setWhere(WHERE_ADDFOLLOWER);
 		// refresh self
 		return new Object[]{new Refresh(this, false, true)};
-//		return new Object[]{new Remover(ServiceMethodContext.TARGET_SELF)};
 	}
 	
 	public Object[] removeFollower() throws Exception {
@@ -371,6 +370,12 @@ public class User extends Database<IUser> implements IUser {
 		
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
+		
+		Locale locale = new Locale(session);
+		locale.load();
+		
+		String title = locale.getString("$Contact") + " - " + getName();
+		session.setWindowTitle(title);
 		
 		return new Object[]{MetaworksUtil.makeRefreshObjectArray(personalPerspective.load(Perspective.TYPE_STARTEDBYME))};
 	}
