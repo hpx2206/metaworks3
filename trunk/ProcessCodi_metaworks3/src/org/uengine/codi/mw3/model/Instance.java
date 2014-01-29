@@ -64,10 +64,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 	static public IInstance load(Navigation navigation, int page, int count)
 			throws Exception {
 		
-		System.out.println("navigation.getPerspectiveMode() : " + navigation.getPerspectiveMode());
-		System.out.println("navigation.getPerspectiveType() : " + navigation.getPerspectiveType());
-		System.out.println("navigation.getPerspectiveValue() : " + navigation.getPerspectiveValue());
-		
 		// 다른 회사 사람 확인
 		Employee employee = null;
 		
@@ -148,7 +144,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
 		}
-		System.out.println(bottomList.toString());
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		
 		if(!Perspective.MODE_PERSONAL.equals(navigation.getPerspectiveMode()))
@@ -175,7 +170,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
-				System.out.println(key + " : " + criteria.get(key) );
+				//System.out.println(key + " : " + criteria.get(key) );
 				instanceContents.set(key, criteria.get(key));
 			}
 		}
@@ -358,10 +353,20 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and inst.secuopt <= 1	 ")
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?self_endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?self_partcode ) ) ")
-			.append("			union all 	 ")
-			.append("			select 1 from bpm_topicmapping tm	 ")
+			.append("			union all	 ")
+			.append("			select 1 from bpm_topicmapping tm, bpm_knol topic ")
+			.append("			where tm.topicId = topic.id	 ")
+			.append("			and topic.secuopt = 0 ")
+			.append("			and topic.type = 'topic'	 ")
+			.append("			and inst.secuopt = 0	 ")
+			.append("			and inst.topicId = tm.topicId	 ")
+			.append("			union all	 ")
+			.append("			select 1 from bpm_topicmapping tm, bpm_knol topic ")
 			.append("			where inst.topicId = tm.topicId	 ")
-			.append("			and inst.secuopt <= 1	 ")
+			.append("			and topic.secuopt = 1")
+			.append("			and topic.type = 'topic'	 ")
+			.append("			and inst.secuopt = 0")
+			.append("			and inst.topicId = tm.topicId	 ")
 			.append("			and ( 	( assigntype = 0 and tm.userid = ?self_endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and tm.userid = ?self_partcode ) ) ")
 			.append("		)	 ");
