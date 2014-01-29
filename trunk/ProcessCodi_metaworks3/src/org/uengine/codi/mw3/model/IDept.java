@@ -104,44 +104,55 @@ public interface IDept extends IDAO {
 	public Object[] removeFollower() throws Exception;
 
 	// service methods
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(target="self", callByContent = true, payload = { "partCode", "selected" })
 	public void drillDown() throws Exception;
 	
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@Hidden(how={IUser.HOW_INFO, IUser.HOW_PICKER}, where={IUser.WHERE_ADDFOLLOWER, IUser.WHERE_FOLLOWERS})
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Popup detail() throws Exception;
 
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object editDeptInfo() throws Exception;
 
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND, validate=true) 
 	public Object[] saveDeptInfo() throws Exception;
 
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(needToConfirm=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] deleteDept() throws Exception;
 	
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(callByContent = true)
 	public Object[] restoreDept() throws Exception;
 			
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object addNewChildDept() throws Exception;
 
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, needToConfirm=true)
 	public Object[] subscribe() throws Exception;
 
 	
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod
 	public AdminEastPanel addNewEmployee() throws Exception;
 	
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(target="popup")
 	public Popup openPicker() throws Exception;
 	
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(target="append", where="picker")
 	public Object pickup() throws Exception;
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] drop() throws Exception;
 
+	@Available(condition="(typeof self == 'undefined' || !self)")
 	@ServiceMethod(payload={"partCode", "partName"})
 	public Object[] loadDeptList() throws Exception;
 	

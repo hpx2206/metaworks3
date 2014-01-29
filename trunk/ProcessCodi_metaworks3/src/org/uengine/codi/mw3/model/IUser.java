@@ -10,7 +10,6 @@ import org.metaworks.annotation.Group;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
-import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
