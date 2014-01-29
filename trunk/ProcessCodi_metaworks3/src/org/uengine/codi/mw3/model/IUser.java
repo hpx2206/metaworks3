@@ -128,7 +128,8 @@ public interface IUser extends IDAO{
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] popupProfile() throws Exception;
 	
-	@Available(condition="(typeof self != 'undefined' && self)")
+	@Hidden
+	//@Available(condition="(typeof self != 'undefined' && self)")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] popupConfigNoti() throws Exception;
 
