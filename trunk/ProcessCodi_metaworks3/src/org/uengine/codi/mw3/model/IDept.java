@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -19,6 +20,8 @@ import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
 
+@Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/IDept.ejs",
+		ejsPathMappingByContext={"{how: '" + IUser.HOW_INFO + "', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IDeptInfo.ejs'}"})
 @Table(name = "PARTTABLE")
 public interface IDept extends IDAO {
 	public static final String CUSTOMER_DEPT_PARTCODE = "CUSTOMER_DEP";
@@ -103,6 +106,10 @@ public interface IDept extends IDAO {
 	// service methods
 	@ServiceMethod(target="self", callByContent = true, payload = { "partCode", "selected" })
 	public void drillDown() throws Exception;
+	
+	@Hidden(how={IUser.HOW_INFO, IUser.HOW_PICKER}, where={IUser.WHERE_ADDFOLLOWER, IUser.WHERE_FOLLOWERS})
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
+	public Popup detail() throws Exception;
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object editDeptInfo() throws Exception;
