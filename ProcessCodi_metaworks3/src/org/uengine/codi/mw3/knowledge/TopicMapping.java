@@ -166,9 +166,11 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 	}
 	
 	public IFollower findFollowers() throws Exception{
+		
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT distinct tm.userId endpoint, tm.userName resname, tm.assigntype, tm.topicId parentId, '" + Follower.TYPE_TOPIC + "' parentType");
+		sql.append("SELECT distinct tm.userId endpoint, ifnull(e.empname,tm.userName) resname, tm.assigntype, tm.topicId parentId, '" + Follower.TYPE_TOPIC + "' parentType");
 		sql.append("  FROM bpm_topicmapping tm");
+		sql.append("  LEFT JOIN emptable e on tm.userId = e.empcode and tm.assigntype = 0");
 		sql.append(" WHERE tm.topicid = ?topicId");
 		
 		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());

@@ -202,8 +202,9 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 	
 	public IFollower findFollowers() throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT distinct rm.endpoint, rm.resname, rm.assigntype, CAST(rm.rootinstid as char) parentId, '" + Follower.TYPE_INSTANCE + "' parentType");
+		sql.append("SELECT distinct rm.endpoint, ifnull(e.empname,rm.resname) resname, rm.assigntype, CAST(rm.rootinstid as char) parentId, '" + Follower.TYPE_INSTANCE + "' parentType");
 		sql.append("  FROM bpm_rolemapping rm");
+		sql.append("  LEFT JOIN emptable e on rm.endpoint = e.empcode and rm.assigntype = 0");
 		sql.append(" WHERE rm.instId=?instId");
 		
 		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
