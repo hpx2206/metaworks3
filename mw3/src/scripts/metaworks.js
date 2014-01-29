@@ -3886,7 +3886,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if($('#' + targetDivId).attr('contextMenu')){
 			   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objectId);
 			   
-			   		menu.destroy();
+			   		if(menu)
+			   			menu.destroy();
 			   	}
 			   
 			   //install context menu
