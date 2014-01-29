@@ -11,7 +11,7 @@
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}		
 %>
-			<div class="user">		
+			<div class="user" style="float:left; width:auto !important;">		
 				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 					<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 <%	
@@ -38,15 +38,8 @@
 <%
 			}
 %>			
-				<div style="clear:both"></div>
 
-<%
-			if(mw3.where == 'addcontact' || mw3.where == 'addfollower'){
-%>							
-				<div style="padding:3px 0px; border-bottom:1px solid #e7e7e7;" />
-<%
-			}
-%>			
+	
 			</div>
 			
 			<%=methods.popupPicker.here()%>
