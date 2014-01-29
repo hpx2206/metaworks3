@@ -11,8 +11,4 @@ var org_uengine_codi_mw3_knowledge_ITopicNode = function(objectId, className){
 };
 
 org_uengine_codi_mw3_knowledge_ITopicNode.prototype = {
-	startLoading : function(){},
-	endLoading : function(){},
-	showStatus : function(message){
-	}
 };
