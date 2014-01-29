@@ -813,6 +813,7 @@ height: 40px;
 	float: left;
 	width: 300px;
 	cursor: pointer;
+	padding-left:10px;
 }
 .notification .notiTxt .notiAbs { }
 .notification .notiTxt .notiDate {
