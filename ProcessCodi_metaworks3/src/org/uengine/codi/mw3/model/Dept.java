@@ -766,6 +766,20 @@ public class Dept extends Database<IDept> implements IDept {
 		// refresh self
 		return new Object[]{new Refresh(this, false, true)};
 	}
+	
+	@Override
+	public Popup detail() throws Exception {
+		int with = 435;
+		int height = 275;
+		
+		this.load();
+		this.getMetaworksContext().setHow(IUser.HOW_INFO);
+
+		Popup popup = new Popup(with, height);
+		popup.setPanel(this);
+
+		return popup;
+	}
 	@Override
 	public Popup openPicker() throws Exception {
 		DeptPicker deptPicker = new DeptPicker(session.getCompany().getComCode());

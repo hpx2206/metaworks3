@@ -19,6 +19,17 @@
 		
 %>
 		<%=fields.friend.here()%>
+		<%
+            if(mw3.where == 'addfollower'){
+        %>                          
+                    <%  if(value.followed) {    %>
+                            <button type="button" class="btn btn-default btn-xs"  onClick="<%=methods.removeFollower.caller()%>" style="float:right; margin:7px 7px 0 0">삭제</button>
+                    <%  } else {    %>
+                            <button type="button" class="btn btn-primary btn-xs"  onClick="<%=methods.addFollower.caller()%>" style="float:right; margin:7px 7px 0 0">추가</button>
+                    <%  }    %>
+        <%
+                    }
+        %>  
 <%
 			if(mw3.how == 'pick'){
 				if(mw3.where == 'roleUserPicker') {

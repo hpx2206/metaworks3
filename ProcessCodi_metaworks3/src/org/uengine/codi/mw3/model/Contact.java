@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -49,7 +50,14 @@ public class Contact extends Database<IContact> implements IContact{
 		public void setChecked(boolean checked) {
 			this.checked = checked;
 		}
-
+		
+	boolean followed;
+		public boolean isFollowed() {
+			return followed;
+		}
+		public void setFollowed(boolean followed) {
+			this.followed = followed;
+		}
 	public void put() throws Exception {
 		if(!this.getUserId().equals(getFriend().getUserId())){
 			
@@ -73,6 +81,29 @@ public class Contact extends Database<IContact> implements IContact{
 		contact.set("friendId", getFriend().getUserId());
 		contact.setUserId(getUserId());
 		contact.update();
+	}
+	
+	@Override
+	public Object[] addFollower() throws Exception {
+		User user = new User();
+		user.setUserId(this.getFriendId());
+		user.session = session;
+		user.addFollower();
+		this.setFollowed(true);
+		this.getMetaworksContext().setWhere(IUser.WHERE_ADDFOLLOWER);
+		
+		return new Object[]{new Refresh(this, false, true)};
+	}
+	
+	public Object[] removeFollower() throws Exception {
+		User user = new User();
+		user.setUserId(this.getFriendId());
+		user.session = session;
+		user.removeFollower();
+		this.setFollowed(false);
+		this.getMetaworksContext().setWhere(IUser.WHERE_ADDFOLLOWER);
+		
+		return new Object[]{new Refresh(this, false, true)};
 	}
 	
 	public static int calcFriendCount(IUser user) throws Exception {

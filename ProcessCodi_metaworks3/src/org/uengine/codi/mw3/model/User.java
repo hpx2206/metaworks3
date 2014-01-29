@@ -102,13 +102,7 @@ public class User extends Database<IUser> implements IUser {
 		public void setAdmin(boolean admin) {
 			this.admin = admin;
 		}
-	boolean followed;
-		public boolean isFollowed() {
-			return followed;
-		}
-		public void setFollowed(boolean followed) {
-			this.followed = followed;
-		}	
+		
 	@Override
 	public Object[] pickUp() throws Exception {
 		this.getMetaworksContext().setHow(HOW_PICKER);
@@ -293,7 +287,6 @@ public class User extends Database<IUser> implements IUser {
 			follower.session = session;
 			follower.put(this);
 		}
-		this.setFollowed(true);
 		this.getMetaworksContext().setWhere(WHERE_ADDFOLLOWER);
 		// refresh self
 		return new Object[]{new Refresh(this, false, true)};
@@ -310,7 +303,6 @@ public class User extends Database<IUser> implements IUser {
 			follower.session = session;
 			follower.delegate(this);
 		}
-		this.setFollowed(false);
 		this.getMetaworksContext().setWhere(WHERE_ADDFOLLOWER);
 		
 		// refresh self

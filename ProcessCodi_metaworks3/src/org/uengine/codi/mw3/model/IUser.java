@@ -45,10 +45,6 @@ public interface IUser extends IDAO{
 	public String getMood();
 	public void setMood(String mood);
 	
-	@NonSavable
-	public boolean isFollowed();
-	public void setFollowed(boolean followed);
-	
 	@Available(where=WHERE_PICKERLIST)
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object[] pickUp() throws Exception;

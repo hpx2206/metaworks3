@@ -109,6 +109,7 @@ public class ContactPanel implements ContextAware {
 			this.getFollower().session = session;
 			
 			contacts = this.getFollower().findContacts(this.getKeyword());
+			contacts.getMetaworksContext().setWhere(IUser.WHERE_ADDFOLLOWER);
 		}else{
 			contacts = Contact.findContacts(session.getUser(), true);
 		}

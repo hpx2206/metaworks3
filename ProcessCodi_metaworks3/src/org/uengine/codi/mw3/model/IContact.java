@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
+import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -26,13 +27,17 @@ public interface IContact extends IDAO{
 	public String getFriendId();
 	public void setFriendId(String friendId);
 	
-	@ORMapping(databaseFields = {"friendId", "friendName", "network", "mood","followed"}, objectFields = {"userId", "name", "network", "mood","followed"})
+	@ORMapping(databaseFields = {"friendId", "friendName", "network", "mood"}, objectFields = {"userId", "name", "network", "mood"})
 	public IUser getFriend();
 	public void setFriend(IUser friend);
 
 	@Id
 	public String getUserId();
 	public void setUserId(String userId);
+	
+	@NonSavable
+	public boolean isFollowed();
+	public void setFollowed(boolean followed);
 	
 //	@NonSavable
 //	@NonLoadable
@@ -42,4 +47,12 @@ public interface IContact extends IDAO{
 	@Available(how="comitter")
 	@ServiceMethod(callByContent=true, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK, target=ServiceMethodContext.TARGET_SELF)
 	public void check();
+	
+	@Available(where=IUser.WHERE_ADDFOLLOWER)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
+	public Object[] addFollower() throws RemoteException, Exception;
+
+	@Available(where=IUser.WHERE_FOLLOWERS)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
+	public Object[] removeFollower() throws Exception;
 }
