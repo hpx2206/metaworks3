@@ -1234,6 +1234,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(currentUserId),
 						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 						new Object[]{scEvent});
+				
+				TodoBadge todoBadge = new TodoBadge();
+				todoBadge.loader = true;
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new Refresh(todoBadge, true)});
 			}
 			// 새 글일 경우에는 다른사람에게만 push를 하여준다.
 			// 본인 이외에 다른 사용자에게 push
