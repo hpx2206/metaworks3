@@ -1,5 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.kernel.Role;
 
 
@@ -57,7 +64,7 @@ public class InstanceFollower extends Follower {
 		if( findObj == null ){
 			RoleMapping rm = this.makeRoleMapping();
 			rm.saveMe();
-			
+			this.noti(Followers.ADD_NOTI);
 			this.addPushListener();
 		}
 	}
@@ -71,6 +78,8 @@ public class InstanceFollower extends Follower {
 		rm.setRoleName(RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME);
 		
 		rm.removeMe();
+		
+		this.noti(Followers.REMOVE_NOTI);
 		this.push();
 
 	}
@@ -105,5 +114,62 @@ public class InstanceFollower extends Follower {
 		dept.setGlobalCom(session.getEmployee().getGlobalCom());
 		
 		return dept.findDeptForInstance(this.getParentId(), keyword);
+	}
+	
+	public void noti(String command) throws Exception {
+		if(this.isEnablePush()){
+			String actAbstract = null;
+			Instance instance = new Instance();
+			instance.setInstId(new Long(this.getParentId()));
+			if( Followers.ADD_NOTI.equals(command)){
+				// add
+				actAbstract = session.getUser().getName() + " added follower to '" + instance.databaseMe().getName() +"'" ;
+			}else{
+				// remove
+				actAbstract = session.getUser().getName() + " removed follower from '" + instance.databaseMe().getName() +"'" ;
+			}
+			HashMap<String, String> notiUsers = new HashMap<String, String>();
+			
+			// noti 저장
+			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
+				notiUsers.put(user.getUserId(), Login.getSessionIdWithUserId(user.getUserId()));
+			}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+				Dept deptRef = new Dept();
+				deptRef.copyFrom(dept);
+				
+				IEmployee employee = new Employee();
+				employee.setMetaworksContext(this.getMetaworksContext());
+				employee = employee.findByDept(deptRef);
+				if( employee != null ){
+					while(employee.next()){
+						String followerUserId = employee.getEmpCode();
+						if( session.getUser().getUserId().equals(followerUserId)){	// 자기 자신은 제외
+							continue;
+						}
+						notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+					}
+				}
+			}
+			Iterator<String> iterator = notiUsers.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				Notification noti = new Notification();
+				INotiSetting notiSetting = new NotiSetting();
+				INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+				if(!findResult.next() || findResult.isWriteInstance()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(followerUserId);
+					noti.setActorId(session.getUser().getUserId());
+					noti.setConfirm(false);
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setInstId(instance.getInstId());					
+					noti.setActAbstract(actAbstract);
+					noti.add(instance);
+				}
+			}
+			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+					new Object[]{});
+		}
 	}
 }
