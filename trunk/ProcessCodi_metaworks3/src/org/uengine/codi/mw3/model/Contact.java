@@ -158,9 +158,10 @@ public class Contact extends Database<IContact> implements IContact{
 		return dao;
 	}
 	
-	public static String createContactSql() throws Exception {
+	public static String createContactSql(String countQuery) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, IFNULL(c.mood, CONCAT(p.partname,CONCAT(IF(!isnull(p.partname) and !isnull(e.jikname), ', ', ''), e.jikname))) mood");
+		sb.append(countQuery);
 		sb.append("  from contact c ");
 		sb.append("  left join emptable e");
 		sb.append("    on c.friendid = e.empcode");
@@ -175,17 +176,21 @@ public class Contact extends Database<IContact> implements IContact{
 	public static IContact findContactsForTopic(String topicId, IUser user, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(Contact.createContactSql());
-		sb.append("   and not exists");
-		sb.append("    (select t.userid");
-		sb.append("       from bpm_topicmapping t");
-		sb.append("      where topicid=?topicId and t.userid=c.friendId");
-		sb.append("    )");
+		StringBuffer countQuery = new StringBuffer();
+		countQuery.append(" , (select count('x') from bpm_topicmapping t   ");
+		countQuery.append("    where topicid=?topicId and t.userid=c.friendId ");
+		countQuery.append("   ) as cnt ");
+		
+		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		
+		sb.append(Contact.createContactSql(countQuery.toString()));
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by friendName desc ");
+		
+		sb.append("  ) d ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
@@ -204,17 +209,23 @@ public class Contact extends Database<IContact> implements IContact{
 	public static IContact findContactsForInstance(String instanceId, IUser user, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(Contact.createContactSql());
-		sb.append("   and not exists");
-		sb.append("    (select 1");
-		sb.append("       from bpm_rolemapping rm");
-		sb.append("      where rootinstid=?instanceId and rm.endpoint=c.friendId");
-		sb.append("    )");
+		
+		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		
+		StringBuffer countQuery = new StringBuffer();
+		countQuery.append(" , (select count('x') from bpm_rolemapping rm   ");
+		countQuery.append("    where rm.endpoint=c.friendId ");
+		countQuery.append("    and rm.rootinstid=?instanceId ");
+		countQuery.append("   ) as cnt ");
+		
+		sb.append(Contact.createContactSql(countQuery.toString()));
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
+		
+		sb.append("  ) d ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
@@ -233,13 +244,21 @@ public class Contact extends Database<IContact> implements IContact{
 	public static IContact findContactsForDept(String partCode, IUser user, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(Contact.createContactSql());
-		sb.append("   and e.partcode != ?partcode");
+		StringBuffer countQuery = new StringBuffer();
+		countQuery.append(" , (select count('x') from emptable eref   ");
+		countQuery.append("    where partcode = ?partcode ");
+		countQuery.append("   and empcode = c.friendid");
+		countQuery.append("   ) as cnt ");
+		
+		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append(Contact.createContactSql(countQuery.toString()));
+//		sb.append("   and e.partcode != ?partcode");
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
+		sb.append("  ) d ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
@@ -258,17 +277,21 @@ public class Contact extends Database<IContact> implements IContact{
 	public static IContact findContactsForRole(String roleCode, IUser user, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append(Contact.createContactSql());
-		sb.append("   and not exists");
-		sb.append("    (select 1");
-		sb.append("       from roleusertable rst");
-		sb.append("      where roleCode=?roleCode and rst.empcode=c.friendId");
-		sb.append("    )");
+		StringBuffer countQuery = new StringBuffer();
+		countQuery.append(" , (select count('x') from roleusertable rst   ");
+		countQuery.append("    where roleCode=?roleCode and rst.empcode=c.friendId ");
+		countQuery.append("   ) as cnt ");
+		
+		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		
+		sb.append(Contact.createContactSql(countQuery.toString()));
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
+		
+		sb.append("  ) d ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 

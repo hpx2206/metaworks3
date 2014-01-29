@@ -26,7 +26,7 @@ public interface IContact extends IDAO{
 	public String getFriendId();
 	public void setFriendId(String friendId);
 	
-	@ORMapping(databaseFields = {"friendId", "friendName", "network", "mood"}, objectFields = {"userId", "name", "network", "mood"})
+	@ORMapping(databaseFields = {"friendId", "friendName", "network", "mood","followed"}, objectFields = {"userId", "name", "network", "mood","followed"})
 	public IUser getFriend();
 	public void setFriend(IUser friend);
 

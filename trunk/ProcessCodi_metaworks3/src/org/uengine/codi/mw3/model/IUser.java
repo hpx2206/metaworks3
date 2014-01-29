@@ -10,6 +10,7 @@ import org.metaworks.annotation.Group;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
@@ -43,6 +44,10 @@ public interface IUser extends IDAO{
 	
 	public String getMood();
 	public void setMood(String mood);
+	
+	@NonSavable
+	public boolean isFollowed();
+	public void setFollowed(boolean followed);
 	
 	@Available(where=WHERE_PICKERLIST)
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)

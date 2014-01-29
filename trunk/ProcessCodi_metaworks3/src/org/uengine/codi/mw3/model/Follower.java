@@ -115,6 +115,7 @@ public class Follower extends Database<IFollower> implements IFollower {
 	
 	public void delegate(IUser user) throws Exception {
 		this.setUser(user);
+		this.setEndpoint(user.getUserId());
 		this.setAssigntype(Role.ASSIGNTYPE_USER);
 		this.delegate();
 	}
