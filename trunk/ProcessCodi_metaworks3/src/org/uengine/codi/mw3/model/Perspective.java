@@ -122,7 +122,7 @@ public class Perspective {
 		InstanceListPanel instListPanel = new InstanceListPanel();
 		
 		String title = null;
-		if(MODE_PERSONAL.equals(perspectiveMode)){
+		if(MODE_PERSONAL.equals(perspectiveMode) && session.getEmployee().getEmail().equals(selectedItem)){
 			title = "$perspective." + perspectiveType;
 			
 			session.setWindowTitle(title);
