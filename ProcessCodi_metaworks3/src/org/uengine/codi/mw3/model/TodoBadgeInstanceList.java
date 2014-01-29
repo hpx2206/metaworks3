@@ -84,6 +84,8 @@ public class TodoBadgeInstanceList implements ContextAware{
 			}
 		}
 		todoBadgeIInstanceRef.setMetaworksContext(new MetaworksContext());
+		todoBadgeIInstanceRef.getMetaworksContext().setWhere(IInstance.WHERE_INSTANCELIST);
+		
 		this.setInstances(todoBadgeIInstanceRef);
 		
 		// setting moreInstanceList
