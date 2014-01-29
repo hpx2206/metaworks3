@@ -20367,7 +20367,7 @@ OG.handler.EventHandler.prototype = {
 					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
-					me._RENDERER.drawRubberBand([x, y], [Math.abs(width+1), Math.abs(height+1)]);
+					me._RENDERER.drawRubberBand([x-1, y-1], [Math.abs(width), Math.abs(height)]);
 				}
 			});
 			$(rootEle).bind("mouseup", function (event) {			
