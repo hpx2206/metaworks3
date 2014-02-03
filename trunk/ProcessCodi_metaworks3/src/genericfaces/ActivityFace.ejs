@@ -14,7 +14,7 @@
 				var fd = objectMetadata.fieldDescriptors[k];
 	   		   							
 				if(fd.name == 'metaworksContext') continue;							
-				if(mw3.isHidden(fields[fd.name]))) continue;
+				if(mw3.isHidden(fields[fd.name])) continue;
 				if(fieldOrder.indexOf(fd.name) >= 0) continue;	
 				
 				fieldOrder.push(fd.name);
@@ -37,7 +37,7 @@
 					if(fields[tempOrder[j]]){
 						var fd = fields[tempOrder[j]].fieldDescriptor;
 						
-						if(mw3.isHidden(fields[fd.name]))) continue;
+						if(mw3.isHidden(fields[fd.name])) continue;
 						
 						tempField += separator + tempOrder[j];
 						separator = '-';
@@ -56,7 +56,7 @@
 				var fd = objectMetadata.fieldDescriptors[i];
 	   		   							
 				if(fd.name == 'metaworksContext') continue;							
-				if(mw3.isHidden(fields[fd.name]))) continue;
+				if(mw3.isHidden(fields[fd.name])) continue;
 										
 				/*	
 				if(value[fd.name] == null
