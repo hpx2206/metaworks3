@@ -25,10 +25,11 @@ public interface IUser extends IDAO{
 	public final static String HOW_INFO				 		= "info";
 	public final static String HOW_SELF				 		= "self";
 	
-	public final static String WHERE_FRIENDS		 		= "friends";
+	public final static String WHERE_FRIENDS		 				= "friends";
 	public final static String WHERE_FOLLOWERS 	 			= "followers";
-	public final static String WHERE_ADDCONTACT 			= "addcontact";
+	public final static String WHERE_ADDCONTACT 				= "addcontact";
 	public final static String WHERE_ADDFOLLOWER 			= "addfollower";
+	public final static String WHERE_REMOVEFOLLOWER 		= "removefollower";
 	
 	@Id
 	public String getUserId();
