@@ -1,5 +1,10 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
+import org.metaworks.ToEvent;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.kernel.Role;
 
@@ -72,5 +77,22 @@ public class TopicFollower extends Follower {
 		dept.setGlobalCom(session.getEmployee().getGlobalCom());
 		
 		return dept.findDeptForTopic(this.getParentId(), keyword);
+	}
+	
+	@Override
+	public void push() throws Exception {
+		super.push();
+		if(this.isEnablePush()){
+			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
+				MetaworksRemoteService.pushTargetClientObjects(
+						Login.getSessionIdWithUserId(user.getUserId()),
+						new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE)});
+			}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new AllSessionFilter(Login.getSessionIdWithDept(dept.getPartCode())),
+						new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE)});
+			}
+		}
+		
 	}
 }
