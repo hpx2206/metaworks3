@@ -288,6 +288,7 @@ public class User extends Database<IUser> implements IUser {
 			follower.put(this);
 		}
 		this.getMetaworksContext().setWhere(WHERE_ADDFOLLOWER);
+		
 		// refresh self
 		return new Object[]{new Refresh(this, false, true)};
 	}
@@ -302,7 +303,7 @@ public class User extends Database<IUser> implements IUser {
 			follower.session = session;
 			follower.delegate(this);
 		}
-		this.getMetaworksContext().setWhere(WHERE_ADDFOLLOWER);
+		this.getMetaworksContext().setWhere(WHERE_REMOVEFOLLOWER);
 		
 		// refresh self
 		return new Object[]{new Refresh(this, false, true)};
