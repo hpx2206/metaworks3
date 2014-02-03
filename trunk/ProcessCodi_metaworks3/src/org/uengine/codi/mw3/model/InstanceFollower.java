@@ -94,7 +94,7 @@ public class InstanceFollower extends Follower {
 		IFollower follower = roleMapping.findFollowers();
 		follower.getMetaworksContext().setWhere(WHERE_FOLLOWER);
 		
-		System.out.println("follower : " + follower.size());
+//		System.out.println("follower : " + follower.size());
 		return follower;
 	}
 	
@@ -119,7 +119,7 @@ public class InstanceFollower extends Follower {
 	}
 	
 	public void noti(String command) throws Exception {
-		if(this.isEnablePush()){
+		if(this.isEnablePush()){	// TODO 이걸로 체크를 하는게 맞는것인가?? 노티부분이 다르게 있다면 해당노티로 체크해야함
 			String actAbstract = null;
 			Instance instance = new Instance();
 			instance.setInstId(new Long(this.getParentId()));
