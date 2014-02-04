@@ -228,6 +228,12 @@ public class Follower extends Database<IFollower> implements IFollower {
 	public void push() throws Exception {
 		
 		if(this.isEnablePush()){
+			
+			// 자기자신의 follower 에게 push
+			MetaworksRemoteService.pushTargetClientObjects(
+					Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
+				
 			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
 				MetaworksRemoteService.pushTargetClientObjects(
 						Login.getSessionIdWithUserId(user.getUserId()),
