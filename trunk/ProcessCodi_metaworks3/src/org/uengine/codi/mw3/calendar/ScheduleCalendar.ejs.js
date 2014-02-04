@@ -116,12 +116,7 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addEvent = function(eve
 	var calendar = $('#scheduleCalendar_' + this.objectId);
 
 	if(event.complete){
-		event.color = this.EVENT_COLOR_COMPLETE;
-		
-		if(event.userId == this.session.user.userId)
-			event.color = this.EVENT_COLOR_SELF;
-		else
-			event.color = this.EVENT_COLOR_ANOTHER;
+		event.color = this.COLOR_EVENT_COMPLETE;
 	}
 	calendar.fullCalendar( 'renderEvent', event );
 };
