@@ -244,7 +244,8 @@ public class Dept extends Database<IDept> implements IDept {
 	public IDept findDeptForInstance(String instanceId, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed, GetDeptPathAncestry(partcode, '->') as deptPath from ( ");
+//		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed, GetDeptPathAncestry(partcode, '->') as deptPath from ( ");
+		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		
 		sb.append("select pt.*  ");
 		sb.append(" , (select count('x') from bpm_rolemapping rm   ");
@@ -278,7 +279,8 @@ public class Dept extends Database<IDept> implements IDept {
 	public IDept findDeptForTopic(String topicId, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed , GetDeptPathAncestry(partcode, '->') as deptPath from ( ");
+		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+//		sb.append("select c.* , if(cnt > 0 , 1, 0 ) as followed, GetDeptPathAncestry(partcode, '->') as deptPath from ( ");
 		
 		sb.append("select pt.*  ");
 		sb.append(" , (select count('x') from bpm_topicmapping tm   ");
