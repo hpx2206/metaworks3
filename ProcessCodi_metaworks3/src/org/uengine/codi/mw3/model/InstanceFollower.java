@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.metaworks.MetaworksException;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
@@ -84,6 +85,42 @@ public class InstanceFollower extends Follower {
 		this.noti(Followers.REMOVE_NOTI);
 		this.push();
 
+	}
+	
+	@Override
+	public Object[] popupAddFollower() throws Exception {
+
+		Instance instance = new Instance();
+		instance.setInstId(new Long(this.getParentId()));
+		
+		IInstance instanceRef = instance.databaseMe();
+		
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		
+		if( "1".equals(instanceRef.getSecuopt()) ){
+			IFollower follower = this.findFollowers();
+			boolean isExist = false;
+			while(follower.next()){
+				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+						isExist = true;
+						break;
+					}
+				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+						isExist = true;
+						break;
+					}
+				}
+			}
+			if( !isExist ){
+				throw new MetaworksException("$NotPermittedToWork");
+			}
+		}
+		
+		return super.popupAddFollower();
 	}
 	
 	@Override

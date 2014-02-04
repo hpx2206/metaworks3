@@ -180,22 +180,33 @@ public class InstanceDueSetter implements ContextAware{
 					Login.getSessionIdWithUserId(session.getUser().getUserId()),
 					new Object[]{new ToAppend(new InstanceViewThreadPanel(), workItem)});
 			
-			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
-			scEvent.setTitle(instanceRef.getName());
-			scEvent.setId(instanceRef.getInstId().toString());
-			scEvent.setStart(instanceRef.getDueDate());
-			
-			Calendar c = Calendar.getInstance();
-			c.setTime(instanceRef.getDueDate());
-	
-			// TODO : 현재는 무조건 종일로 설정
-			scEvent.setAllDay(true);
-			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
-			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
-			
-			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
-					new Object[]{scEvent});
+			if( instanceRef.getDueDate() != null ){
+				ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+				scEvent.setTitle(instanceRef.getName());
+				scEvent.setId(instanceRef.getInstId().toString());
+				scEvent.setStart(instanceRef.getDueDate());
+				
+				Calendar c = Calendar.getInstance();
+				c.setTime(instanceRef.getDueDate());
+				
+				// TODO : 현재는 무조건 종일로 설정
+				scEvent.setAllDay(true);
+				scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+				scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
+				
+				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+						new Object[]{scEvent});
+			}else{
+				// 일정 취소 일 경우 달력의 이벤트 제거
+				ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+				scEvent.setTitle(instanceRef.getName());
+				scEvent.setId(instanceRef.getInstId().toString());
+				
+				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
+						new Object[]{scEvent});
+			}
 			
 		}
 		

@@ -11,6 +11,7 @@ import javax.sql.RowSet;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -30,6 +31,7 @@ import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.kernel.Role;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.efsol.util.StringUtils;
@@ -1119,10 +1121,33 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		IInstance instanceRef = databaseMe();
 		
-//		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
-//			throw new Exception("$OnlyInitiatorCanSetInstanceInfo");
-//		}
-				
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		// 비공개 글일 경우 본건의 관련자가 아니면 글쓰기를 막음.
+		if( "1".equals(instanceRef.getSecuopt())){
+			InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
+			IFollower follower = findFollower.findFollowers();
+			boolean isExist = false;
+			while(follower.next()){
+				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+						isExist = true;
+						break;
+					}
+				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+						isExist = true;
+						break;
+					}
+				}
+			}
+			if( !isExist ){
+				throw new MetaworksException("$NotPermittedToWork");
+			}
+		}
+		
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(this.getInstId());
 		ids.setDueDate(instanceRef.getDueDate());
@@ -1157,6 +1182,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instanceRef = databaseMe();
 		
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		
 		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
 		}
@@ -1184,12 +1214,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
 				new Object[]{scEvent});
 		
-		// 다른 사용자의 인스턴스 리스트를 제거한다.
-		MetaworksRemoteService.pushClientObjectsFiltered(
-				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-				new Object[]{new InstanceListener(InstanceListener.COMMAND_REMOVE, instanceRef)});
-		
-		
 		/* return 부분 */
 		if(!"sns".equals(session.getEmployee().getPreferUX())){
 			NewInstancePanel instancePanel = new NewInstancePanel();
@@ -1214,12 +1238,38 @@ public class Instance extends Database<IInstance> implements IInstance{
 		instance.copyFrom(instanceRef);
 		instance.fillFollower();
 		
-		// 비공개로 설정할 경우 나를 제외한 다른 사람의 인스턴스목록에서 글 제거
-		if( "1".equals(instanceRef.getSecuopt()) ){
-			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(InstanceListener.COMMAND_REMOVE, instance)});			
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
 		}
+		// 팔로워가 아닌사람의 작업을 막음
+		IFollower follower = instance.getFollowers().getFollowers();
+		boolean isExist = false;
+		while(follower.next()){
+			if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+				if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+					isExist = true;
+					break;
+				}
+			}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+				if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+					isExist = true;
+					break;
+				}
+			}
+		}
+		if( !isExist ){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		
+		// 주제 제목 설정
+		if(instance.getTopicId() != null){
+			TopicNode topic = new TopicNode();
+			topic.setId(instance.getTopicId());
+			topic.copyFrom(topic.databaseMe());
+			instance.setTopicName(topic.getName());
+		}
+		
 		// 자기자신의 인스턴스 상태를 변경함
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 	}
