@@ -228,10 +228,15 @@ public class Follower extends Database<IFollower> implements IFollower {
 	public void push() throws Exception {
 		
 		if(this.isEnablePush()){
-			// 본인 이외에 다른 사용자에게 push
-			MetaworksRemoteService.pushClientObjectsFiltered(
-					new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
-					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
+			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
+				MetaworksRemoteService.pushTargetClientObjects(
+						Login.getSessionIdWithUserId(user.getUserId()),
+						new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
+			}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new AllSessionFilter(Login.getSessionIdWithDept(dept.getPartCode())),
+						new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
+			}
 		}
 		
 	}
