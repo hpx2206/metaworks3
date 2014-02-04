@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
@@ -1284,7 +1286,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		String tobe = null;
 		String title = null;
-		
 		if(getStatus().equals("Completed")){
 			tobe = "Running";
 			title = localeManager.getString("$CancleCompleted");
@@ -1316,7 +1317,26 @@ public class Instance extends Database<IInstance> implements IInstance{
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
 				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
-
+		
+		// workItem.add(); 에서 비슷한 일을 하는것처럼 보이나, 완료시점에만 동작하기 위해서 workItem에 구현하는건 비용이 높아보인다.
+		if(instanceRef.getDueDate() != null){
+			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+			scEvent.setTitle(instanceRef.getName());
+			scEvent.setId(instanceRef.getInstId().toString());
+			scEvent.setStart(instanceRef.getDueDate());
+			
+			Calendar c = Calendar.getInstance();
+			c.setTime(instanceRef.getDueDate());
+	
+			// TODO : 현재는 무조건 종일로 설정
+			scEvent.setAllDay(true);
+			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
+			
+			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+					new Object[]{scEvent});
+		}
 		/* 내가 할일 카운트 다시 계산 */
 		TodoBadge todoBadge = new TodoBadge();
 		todoBadge.session = session;
