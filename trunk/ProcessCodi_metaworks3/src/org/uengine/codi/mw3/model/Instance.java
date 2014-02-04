@@ -389,6 +389,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())){
 			instanceSql.append(" and inst.initep=?instInitep ");
 			criteria.put("instInitep", navigation.getPerspectiveValue());
+			
+			if( !navigation.getEmployee().getEmpCode().equals(navigation.getPerspectiveValue())){
+				// 아래경우는 다른사람의 담벼락을 보는 경우이다. 이때 보안대화는 제거한다.
+				instanceSql.append(" and inst.secuopt= 0 ");
+			}
 		}else{
 			throw new Exception("wrong perspective");
 		}
