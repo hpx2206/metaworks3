@@ -1,9 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Date;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -54,11 +57,19 @@ public class InstanceTooltip implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 		
+	Date dueDate;
+		public Date getDueDate() {
+			return dueDate;
+		}
+		public void setDueDate(Date dueDate) {
+			this.dueDate = dueDate;
+		}
+		
 	public InstanceTooltip() throws Exception{
 		setMetaworksContext(new MetaworksContext());
 	}
 	
-	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow monitor() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;
@@ -69,7 +80,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.monitor();
 	}
 	
-	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
 	public Popup schedule() throws Exception{
 		
 		Instance instance = new Instance();
@@ -81,7 +92,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.schedule();
 	}
 	
-	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
 	public Popup newSubInstance() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;
@@ -92,7 +103,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.newSubInstance();
 	}
 
-	@ServiceMethod(payload={"instanceId"}, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;
@@ -103,7 +114,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.remove();
 	}
 	
-	@ServiceMethod(payload={"instanceId", "secuopt", "status"}, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public void toggleSecurityConversation() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;
@@ -116,7 +127,8 @@ public class InstanceTooltip implements ContextAware {
 		this.setSecuopt(instance.getSecuopt());
 	}
 	
-	@ServiceMethod(payload={"instanceId", "secuopt", "status"}, target=ServiceMethodContext.TARGET_SELF)
+	@Available(condition="(dueDate)")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public void complete() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;

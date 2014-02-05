@@ -69,27 +69,21 @@
 <%
 			}
 
-			if(value.status != 'Stopped' && value.status != 'Completed'){
+			var isCompleted = false;
+			var enableComplete = !mw3.isHiddenMethod(methods.complete);
+			
+			
+			
+			if(enableComplete)
+				isCompleted = !(value.status != 'Stopped' && value.status != 'Completed');
 %>						        
-			        <li id="wih_btn_complete">
-			        	<a href="#" onClick="<%=methods.complete.caller()%>">
-			        		<span class="toolbarIcon icon-checkmark"></span>
-			        		<span><%=mw3.localize("$Completing")%></span>
+			        <li id="wih_btn_complete" class="<%=isCompleted?'toolbar_current':''%>">
+			        	<a href="#" onClick="<%=enableComplete?methods.complete.caller():''%>">
+			        		<span class="<%=!enableComplete?'disable':''%> <%=isCompleted?'icon-checkmark-circle':'icon-checkmark'%> toolbarIcon"></span>
+			        		<span class="<%=!enableComplete?'disable':''%>"><%=mw3.localize("$Completing")%></span>
 			        	</a>
 			        </li>
-
-<%
-			}else{
-%>						        
-			        <li id="wih_btn_complete" class="toolbar_current">
-			        	<a href="#" onClick="<%=methods.complete.caller()%>">
-			        		<span class="toolbarIcon icon-checkmark-circle"></span>
-			        		<span><%=mw3.localize("$Complete")%></span>
-			        	</a>
-			        </li>
-<%
-			}
-%>
+			        
 			    </ul>
 			</div>
 <%		
