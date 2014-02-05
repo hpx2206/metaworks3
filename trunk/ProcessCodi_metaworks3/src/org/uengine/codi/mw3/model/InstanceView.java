@@ -54,6 +54,7 @@ public class InstanceView {
 		instanceTooltip.setInstanceId(instance.getInstId());
 		instanceTooltip.setStatus(instance.getStatus());
 		instanceTooltip.setSecuopt(instance.getSecuopt());
+		instanceTooltip.setDueDate(instance.getDueDate());
 		
 		this.setInstanceAction(instanceTooltip);
 		
