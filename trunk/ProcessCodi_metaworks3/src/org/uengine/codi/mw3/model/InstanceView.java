@@ -92,7 +92,7 @@ public class InstanceView {
 		setDueDate(inst.getDueDate());
 		
 		Follower follower = new InstanceFollower();
-		follower.setParentId(this.getInstanceId());
+		follower.setParentId(instance.getInstId().toString());
 		
 		Followers followers = new Followers(follower);
 		followers.load();
