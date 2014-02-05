@@ -18,7 +18,6 @@ import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
@@ -440,49 +439,88 @@ public class Instance extends Database<IInstance> implements IInstance{
 	}
 	
 	public Object detail() throws Exception{
-
-		/*
-		 * DB 저장된 인스턴스 정보로 다시 읽어오기
-		 */	
-		// 2013-08-19 performance tuning
-		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT instid, name, defid, initep ,status, secuopt, dueDate");
-		sb.append("  FROM bpm_procinst");
-		sb.append(" WHERE instid = ?instid");
 		
-		IInstance dao = (IInstance)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IInstance.class);
-		dao.setInstId(this.getInstId());
-		dao.select();		
+		IInstance instanceRef = this.databaseMe();
 		
-		if(!dao.next()){
-			throw new Exception("not exists instance");	
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		// 팔로워가 아닌사람의 작업을 막음
+		if( "1".equals(instanceRef.getSecuopt())){
+			this.fillFollower();
+			IFollower follower = this.getFollowers().getFollowers();
+			boolean isExist = false;
+			while(follower.next()){
+				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+						isExist = true;
+						break;
+					}
+				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+						isExist = true;
+						break;
+					}
+				}
+			}
+			if( !isExist ){
+				throw new MetaworksException("$NotPermittedToWork");
+			}
 		}
 		
-		this.copyFrom(dao);
-
-		if(this.getIsDeleted()){
-			throw new Exception("Deleted Instance");
+		
+		if(getMetaworksContext()==null){
+			setMetaworksContext(new MetaworksContext());
 		}
 		
-		// TODO: 이 글을 볼수 있는 사람인지 검사 여부
-		if(!this.verifyiCanSeePermissions()){
-			throw new Exception("$NotPermittedToSee");
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			getMetaworksContext().setHow("sns");
+			
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("sns");
+			
+			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+				panel.session = session;
+				panel.load(this.getInstId().toString());
+				
+//				followers = new InstanceFollowers();
+//				followers.setInstanceId(this.getInstId().toString());
+//				followers.load();
+				this.fillFollower();
+					
+//				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+//				processInstanceMonitorPanel.processManager = processManager;
+//				processInstanceMonitorPanel.session = session;
+//				processInstanceMonitorPanel.load(this.getInstId().toString());
+//				FollowerPanel followerPanel = new FollowerPanel("instance", this.getFollowers());			
+//				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};				
+//				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
+			}
+			
+			setInstanceViewThreadPanel(panel);
+			
+			return this;
+		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
+			
+			return this;
 		}
-	
-		this.setMetaworksContext(getMetaworksContext());
+		else{
+			getMetaworksContext().setHow("");
+			getMetaworksContext().setWhere("");
+			TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
+			
+			if(instanceViewContent == null)
+				instanceViewContent = new InstanceViewContent();
+			
+			instanceViewContent.setTitle(this.getName());
+			instanceViewContent.session = session;
+			instanceViewContent.setMetaworksContext(getMetaworksContext());
+			instanceViewContent.load(this);
+			
+			return instanceViewContent;
+		}
 		
-		getMetaworksContext().setHow("");
-		getMetaworksContext().setWhere("");
-		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
-		
-		if(instanceViewContent == null)
-			instanceViewContent = new InstanceViewContent();
-		
-		instanceViewContent.session = session;
-		instanceViewContent.setMetaworksContext(getMetaworksContext());
-		instanceViewContent.load(this);
-		
-		return instanceViewContent;
 	}
 	
 	public ModalWindow popupDetail() throws Exception{
@@ -1249,7 +1287,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}
 		}
 		if( !isExist ){
-			throw new MetaworksException("$NotPermittedToWork");
+			if (secuopt.charAt(0) != '0') {
+				databaseMe().setSecuopt("0");
+				throw new MetaworksException("$NotPermittedToWork");
+			} else {
+				databaseMe().setSecuopt("1");
+				throw new MetaworksException("$NotPermittedToWork2");
+			}
 		}
 		
 		// 주제 제목 설정
@@ -1260,8 +1304,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instance.setTopicName(topic.getName());
 		}
 		
+		// 모든 사람의 인스턴스 상태를 변경함
+		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		// 자기자신의 인스턴스 상태를 변경함
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+//		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 	}
 	
 	public void complete() throws Exception{
@@ -1446,41 +1492,5 @@ public class Instance extends Database<IInstance> implements IInstance{
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicName());
 		return topicNode.loadTopic();
-	}
-	
-	public boolean verifyiCanSeePermissions() throws Exception {
-		
-		boolean iCanSee = true;
-		
-		/*
-		if("1".equals(getSecuopt())){ //means secured conversation
-			iCanSee = false;
-			
-			IUser followers = getFollowers().getFollowers();
-			followers.beforeFirst();			
-			while(followers.next()){
-				if(session.getUser().getUserId().equals(followers.getUserId())){
-					iCanSee = true;
-					break;
-				}
-			}
-			
-			IDept deptFollower = getFollowers().getDeptFollowers();
-			if( deptFollower.getImplementationObject().getCachedRows() != null ){
-				deptFollower.beforeFirst();
-				while( deptFollower.next() ){
-					if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
-						iCanSee = true;
-						break;
-					}
-				}
-				deptFollower.beforeFirst();
-			}
-			
-			followers.beforeFirst();
-		}
-		*/
-		
-		return iCanSee;
 	}
 }
