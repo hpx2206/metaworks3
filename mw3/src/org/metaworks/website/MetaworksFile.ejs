@@ -13,21 +13,7 @@
 			<div><img src="dwr/metaworks/images/circleloading.gif" width="16" height="16" style="width:16px !important; height:16px !important; margin:0px"/></div>
 		</div>
 		<div id="image_<%=objectId%>">&nbsp;</div> 
-			
-			<% if(mw3.how == 'minimised'){ %>
-				<div style="margin-top:15px;">
-				<span style="float:left;font-size: 14px;line-height: 23px" class="icon-attachment"></span>
-				<% if(showText){ %>
-					<a href="#" style="cursor: pointer; float: left;" onclick="<%=methods.download.caller()%>" title="<%=mw3.localize('$Download')%>">
-						<span style=" line-height:1.8em; margin-left:10px; margin-right:10px;" id="filename_<%=objectId%>"></span>
-					</a>
-					<a style="cursor: pointer; float: left; margin-left:30px;font-size: 14px;line-height: 23px" onclick="<%=methods.download.caller()%>" >저장</a>
-					
-				<% } %>
-				<div class="clear"></div>
-				</div>
-			<% } %>
-
+		
 <%
 		}else{
 		
@@ -48,26 +34,7 @@
 	<span style="float: left; line-height:1.8em; margin-left:10px; width:140px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;" id="filename_<%=objectId%>"><%=mw3.localize('$NoFileAttached')%></span>
 <%
 				}
-			}else{
-				if(value.uploadedPath){		
-%>
-	
-	<span style="float:left;font-size: 14px;line-height: 23px" class="icon-download"></span>
-<%		
-				}
-				
-				if(showText){
-			
-%>
-	<a href="#" style="cursor: pointer; float: left;" onclick="<%=methods.download.caller()%>" title="<%=mw3.localize('$Download')%>">
-		<span style="line-height:1.8em; margin-left:10px; margin-right:10px;" id="filename_<%=objectId%>">등록된 파일이 없습니다</span>
-	</a>
-<%			
-				}
 			}
-%>
-	<div class="clear"></div>
-<%				
 		}
 	}
 %>
