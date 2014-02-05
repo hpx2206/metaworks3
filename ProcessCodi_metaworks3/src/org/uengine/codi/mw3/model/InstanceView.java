@@ -49,47 +49,19 @@ public class InstanceView {
 		
 	public void load(IInstance instance) throws Exception{
 
-		/*
-		 * DB 저장된 인스턴스 정보로 다시 읽어오기
-		 */
-		
-		// 2013-08-19 performance tuning
-		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT instid, name, defid, initep ,status, secuopt, dueDate");
-		sb.append("  FROM bpm_procinst");
-		sb.append(" WHERE instid = ?instid");
-		
-		IInstance dao = (IInstance)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IInstance.class);
-		dao.setInstId(instance.getInstId());
-		dao.select();		
-		
-		if(!dao.next()){
-			throw new Exception("not exists instance");
-		}
-		
-		Instance inst = null;
-		inst = new Instance();	
-		inst.copyFrom(dao);
-
-		if(inst.getIsDeleted()){
-			throw new Exception("Deleted Instance");
-		}
-		
-		inst.setMetaworksContext(getMetaworksContext());
-		
 		InstanceTooltip instanceTooltip = new InstanceTooltip();
 		instanceTooltip.getMetaworksContext().setHow("action");		
 		instanceTooltip.setInstanceId(instance.getInstId());
-		instanceTooltip.setStatus(inst.getStatus());
-		instanceTooltip.setSecuopt(inst.getSecuopt());
+		instanceTooltip.setStatus(instance.getStatus());
+		instanceTooltip.setSecuopt(instance.getSecuopt());
 		
 		this.setInstanceAction(instanceTooltip);
 		
-		setInstanceName(instance.getName()==null?inst.getName() : instance.getName());
+		setInstanceName(instance.getName());
 		setInstanceId(instance.getInstId().toString());
-		setStatus(inst.getStatus());
-		setSecuopt(inst.getSecuopt());
-		setDueDate(inst.getDueDate());
+		setStatus(instance.getStatus());
+		setSecuopt(instance.getSecuopt());
+		setDueDate(instance.getDueDate());
 		
 		Follower follower = new InstanceFollower();
 		follower.setParentId(instance.getInstId().toString());
@@ -100,11 +72,7 @@ public class InstanceView {
 		this.setFollowers(followers);
 		
 		// InstanceView 기본 설정
-		this.loadDefault(inst);
-		
-		if(!this.verifyiCanSeePermissions()){
-			throw new Exception("$NotPermittedToSee");
-		}
+		this.loadDefault(instance);
 		
 		
 		/*
@@ -270,7 +238,7 @@ public class InstanceView {
 		public void setTaskId(Long taskId) {
 			this.taskId = taskId;
 		}
-	protected void loadDefault(Instance inst) throws Exception{
+	protected void loadDefault(IInstance inst) throws Exception{
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(-1));
@@ -690,42 +658,6 @@ public class InstanceView {
 		instanceViewThreadPanel.load(instanceId);
 		
 		return instanceViewThreadPanel;
-	}
-	
-	public boolean verifyiCanSeePermissions() throws Exception {
-		
-		boolean iCanSee = true;
-		
-		/*
-		if("1".equals(getSecuopt())){ //means secured conversation
-			iCanSee = false;
-			
-			IUser followers = getFollowers().getFollowers();
-			followers.beforeFirst();			
-			while(followers.next()){
-				if(session.getUser().getUserId().equals(followers.getUserId())){
-					iCanSee = true;
-					break;
-				}
-			}
-			
-			IDept deptFollower = getFollowers().getDeptFollowers();
-			if( deptFollower.getImplementationObject().getCachedRows() != null ){
-				deptFollower.beforeFirst();
-				while( deptFollower.next() ){
-					if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
-						iCanSee = true;
-						break;
-					}
-				}
-				deptFollower.beforeFirst();
-			}
-			
-			followers.beforeFirst();
-		}
-		*/
-		
-		return iCanSee;
 	}
 	
 	transient MetaworksContext metaworksContext;

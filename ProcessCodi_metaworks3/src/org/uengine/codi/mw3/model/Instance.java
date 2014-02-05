@@ -18,6 +18,7 @@ import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
@@ -440,72 +441,48 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public Object detail() throws Exception{
 
-		if(getMetaworksContext()==null){
-			setMetaworksContext(new MetaworksContext());
+		/*
+		 * DB 저장된 인스턴스 정보로 다시 읽어오기
+		 */	
+		// 2013-08-19 performance tuning
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT instid, name, defid, initep ,status, secuopt, dueDate");
+		sb.append("  FROM bpm_procinst");
+		sb.append(" WHERE instid = ?instid");
+		
+		IInstance dao = (IInstance)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IInstance.class);
+		dao.setInstId(this.getInstId());
+		dao.select();		
+		
+		if(!dao.next()){
+			throw new Exception("not exists instance");	
 		}
 		
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			getMetaworksContext().setHow("sns");
-			
-			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-			panel.getMetaworksContext().setHow("sns");
-			
-			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
-				panel.session = session;
-				panel.load(this.getInstId().toString());
-				
-//				followers = new InstanceFollowers();
-//				followers.setInstanceId(this.getInstId().toString());
-//				followers.load();
-				this.fillFollower();
-					
-//				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-//				processInstanceMonitorPanel.processManager = processManager;
-//				processInstanceMonitorPanel.session = session;
-//				processInstanceMonitorPanel.load(this.getInstId().toString());
-//				FollowerPanel followerPanel = new FollowerPanel("instance", this.getFollowers());			
-//				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};				
-//				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
-			}
-			
-			setInstanceViewThreadPanel(panel);
-			
-			return this;
-		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
-//			getMetaworksContext().setHow("sns");
-//			
-//			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-//			panel.getMetaworksContext().setHow("sns");
-//			
-//			
-//			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
-//				panel.session = session;
-//				panel.load(this.getInstId().toString());
-//				
-//				this.fillFollower();
-//					
-//			}
-//
-//			setInstanceViewThreadPanel(panel);
-			
-			return this;
-		}
-		else{
-			getMetaworksContext().setHow("");
-			getMetaworksContext().setWhere("");
-			TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
-			
-			if(instanceViewContent == null)
-				instanceViewContent = new InstanceViewContent();
-			
-			instanceViewContent.setTitle(this.getName());
-			instanceViewContent.session = session;
-			instanceViewContent.setMetaworksContext(getMetaworksContext());
-			instanceViewContent.load(this);
-			
-			return instanceViewContent;
+		this.copyFrom(dao);
+
+		if(this.getIsDeleted()){
+			throw new Exception("Deleted Instance");
 		}
 		
+		// TODO: 이 글을 볼수 있는 사람인지 검사 여부
+		if(!this.verifyiCanSeePermissions()){
+			throw new Exception("$NotPermittedToSee");
+		}
+	
+		this.setMetaworksContext(getMetaworksContext());
+		
+		getMetaworksContext().setHow("");
+		getMetaworksContext().setWhere("");
+		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
+		
+		if(instanceViewContent == null)
+			instanceViewContent = new InstanceViewContent();
+		
+		instanceViewContent.session = session;
+		instanceViewContent.setMetaworksContext(getMetaworksContext());
+		instanceViewContent.load(this);
+		
+		return instanceViewContent;
 	}
 	
 	public ModalWindow popupDetail() throws Exception{
@@ -1469,5 +1446,41 @@ public class Instance extends Database<IInstance> implements IInstance{
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicName());
 		return topicNode.loadTopic();
+	}
+	
+	public boolean verifyiCanSeePermissions() throws Exception {
+		
+		boolean iCanSee = true;
+		
+		/*
+		if("1".equals(getSecuopt())){ //means secured conversation
+			iCanSee = false;
+			
+			IUser followers = getFollowers().getFollowers();
+			followers.beforeFirst();			
+			while(followers.next()){
+				if(session.getUser().getUserId().equals(followers.getUserId())){
+					iCanSee = true;
+					break;
+				}
+			}
+			
+			IDept deptFollower = getFollowers().getDeptFollowers();
+			if( deptFollower.getImplementationObject().getCachedRows() != null ){
+				deptFollower.beforeFirst();
+				while( deptFollower.next() ){
+					if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
+						iCanSee = true;
+						break;
+					}
+				}
+				deptFollower.beforeFirst();
+			}
+			
+			followers.beforeFirst();
+		}
+		*/
+		
+		return iCanSee;
 	}
 }

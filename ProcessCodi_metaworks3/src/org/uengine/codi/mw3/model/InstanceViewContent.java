@@ -24,16 +24,6 @@ public class InstanceViewContent extends ContentWindow {
 			this.instanceView = instanceView;
 		}
 	
-	String instanceName;
-	@Name
-	@Hidden
-		public String getInstanceName() {
-			return instanceName;
-		}
-		public void setInstanceName(String instanceName) {
-			this.instanceName = instanceName;
-		}
-
 	Long taskId;
 		@Hidden
 		public Long getTaskId() {
@@ -68,7 +58,6 @@ public class InstanceViewContent extends ContentWindow {
 	}
 	
 	public void load(IInstance instance) throws Exception{
-		//this.setInstanceName(instance.getName());
 		if(instanceView == null)
 			instanceView = new InstanceView();
 		instanceView.session = session;
