@@ -45,6 +45,9 @@ public interface IUser extends IDAO{
 	public String getMood();
 	public void setMood(String mood);
 	
+	public String getEmail();
+	public void setEmail(String email);
+	
 	@Available(where=WHERE_PICKERLIST)
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object[] pickUp() throws Exception;
@@ -86,7 +89,7 @@ public interface IUser extends IDAO{
 	public Object[] removeFollower() throws Exception;
 	
 	@Hidden
-	@ServiceMethod(payload={"userId", "network", "name", "mood"})
+	@ServiceMethod(payload={"userId", "network", "name", "mood", "email", "self"})
 	public void changeMood() throws Exception;
 
 	@Hidden
