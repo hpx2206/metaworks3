@@ -19,9 +19,9 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
 	
 	var object = mw3.objects[this.objectId];
-	if(object && object.title){
+	if(object && object.instanceName){
 		if(this.windowObjectId){
-			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
+			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.instanceName));
 		}
 	}
 	
