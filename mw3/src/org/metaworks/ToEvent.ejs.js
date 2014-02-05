@@ -16,7 +16,14 @@ var org_metaworks_ToEvent = function(objectId, className){
 			var objKeys = mw3._createObjectKey(object.target, true);
 				
 			if(objKeys && objKeys.length){
+				var matchKeyCnt = 0;
+                if(object.match)
+                    matchKeyCnt= objKeys[0].split('@').length;
+					
 				for(var i=0; i<objKeys.length; i++){
+					if(object.match && (matchKeyCnt > objKeys[i].split('@').length))
+                        break;
+							
 					var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 		
 					if(mappedObjId){
