@@ -28,7 +28,6 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
-import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
@@ -357,6 +356,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and inst.secuopt <= 1	 ")
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?self_endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?self_partcode ) ) ")
+			
 			.append("			union all	 ")
 			.append("			select 1 from bpm_topicmapping tm, bpm_knol topic ")
 			.append("			where tm.topicId = topic.id	 ")
@@ -364,6 +364,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and topic.type = 'topic'	 ")
 			.append("			and inst.secuopt = 0	 ")
 			.append("			and inst.topicId = tm.topicId	 ")
+			.append("			and ( ")
+			.append("				topic.companyId = ?initComCd or  ")
+			.append("					(  ")
+			.append("						topic.companyId != ?initComCd  ")
+			.append("						and ( 	( assigntype = 0 and tm.userid = ?self_endpoint ) 	 		 ")			
+			.append("								or ( assigntype = 2 and tm.userid = ?self_partcode ) )  ")
+			.append("					) ")
+			.append("				) ")
+				
 			.append("			union all	 ")
 			.append("			select 1 from bpm_topicmapping tm, bpm_knol topic ")
 			.append("			where inst.topicId = tm.topicId	 ")
@@ -513,10 +522,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(instanceViewContent == null)
 				instanceViewContent = new InstanceViewContent();
 			
-			instanceViewContent.setTitle(this.getName());
+			instanceViewContent.setTitle(instanceRef.getName());
 			instanceViewContent.session = session;
 			instanceViewContent.setMetaworksContext(getMetaworksContext());
-			instanceViewContent.load(this);
+			instanceViewContent.load(instanceRef);
 			
 			return instanceViewContent;
 		}
