@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -119,20 +120,28 @@ public class InstanceDueSetter implements ContextAware{
 	@Face(displayName="$Apply")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] apply() throws Exception{
-		
+		boolean checkChanged = false;
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
 
 		IInstance instanceRef = instance.databaseMe();
 		
-		if(instanceRef.isInitCmpl() != isOnlyInitiatorCanComplete())
+		if(instanceRef.isInitCmpl() != isOnlyInitiatorCanComplete()){
 			instanceRef.setInitCmpl(isOnlyInitiatorCanComplete());		// 시작자만 완료 가능
-		if(instanceRef.getBenefit() != getBenefit())
+			checkChanged = true;
+		}
+		if(instanceRef.getBenefit() != getBenefit()){
 			instanceRef.setBenefit(getBenefit());			// benefit
-		if(instanceRef.getPenalty() != getPenalty())
+			checkChanged = true;
+		}
+		if(instanceRef.getPenalty() != getPenalty()){
 			instanceRef.setPenalty(getPenalty());			// penalty
-		if(instanceRef.getEffort() != getEffort())
+			checkChanged = true;
+		}
+		if(instanceRef.getEffort() != getEffort()){
 			instanceRef.setEffort(getEffort());				// effort
+			checkChanged = true;
+		}
 		
 		instanceRef.getMetaworksContext().setWhen("blinking");
 		
@@ -180,6 +189,11 @@ public class InstanceDueSetter implements ContextAware{
 		*/
 		
 		if(databaseDueTime != dueTime){
+			/*
+			 * 워크아이템 발행 부분 주석 처리
+			 * 2014.02.05
+			 * 민수환
+			 * 
 			//if schedule changed
 			CommentWorkItem workItem = new CommentWorkItem();
 			workItem.getMetaworksContext().setHow("changeSchedule");
@@ -204,6 +218,16 @@ public class InstanceDueSetter implements ContextAware{
 			MetaworksRemoteService.pushTargetClientObjects(
 					Login.getSessionIdWithUserId(session.getUser().getUserId()),
 					new Object[]{new ToAppend(new InstanceViewThreadPanel(), workItem)});
+			*/
+			
+			
+			checkChanged = true;
+			
+			if(dueTime == 0){
+				instanceRef.setDueDate(null);
+			}else{				
+				instanceRef.setDueDate(new Date(dueTime));
+			}
 			
 			if( instanceRef.getDueDate() != null ){
 				ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
@@ -236,11 +260,11 @@ public class InstanceDueSetter implements ContextAware{
 		}
 		
 
-		if(instanceRef.getImplementationObject().isDirty()){
-			MetaworksRemoteService.pushClientObjectsFiltered(
-				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
-				new Object[]{new InstanceListener(instanceRef)});		
-		}
+//		if(instanceRef.getImplementationObject().isDirty()){
+//			MetaworksRemoteService.pushClientObjectsFiltered(
+//				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+//				new Object[]{new InstanceListener(instanceRef)});		
+//		}
 		
 		//todobadge count real-time
 		instance.flushDatabaseMe();
@@ -250,7 +274,15 @@ public class InstanceDueSetter implements ContextAware{
 		todoBadge.refresh();
 		
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
-		  
+		
+		
+		if(checkChanged == true){
+			InstanceFollower findFollower = new InstanceFollower(instance.getInstId().toString());
+			findFollower.session = session;
+			findFollower.setUser(session.getUser());
+			findFollower.put();
+		}
+		
 		return new Object[]{new Remover(new Popup(), true), new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)};
 	}
 
