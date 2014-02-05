@@ -228,21 +228,19 @@ public class Follower extends Database<IFollower> implements IFollower {
 	public void push() throws Exception {
 		
 		if(this.isEnablePush()){
+			// 본인 이외에 다른 사용자에게 push
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE , true)});
 			
-			// 자기자신의 follower 에게 push
-			MetaworksRemoteService.pushTargetClientObjects(
-					Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
-				
-			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
-				MetaworksRemoteService.pushTargetClientObjects(
-						Login.getSessionIdWithUserId(user.getUserId()),
-						new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
-			}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
-				MetaworksRemoteService.pushClientObjectsFiltered(
-						new AllSessionFilter(Login.getSessionIdWithDept(dept.getPartCode())),
-						new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE)});
-			}
+			// TODO 다른 테넌트일 경우는?? 체크하는 로직이 필요할듯
+			// user 에 회사정보가 없어서 체크를 할 수가 없음
+			// - 부서는 다른 회사를 넣을수가 없으니 빼야함
+//			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
+//				MetaworksRemoteService.pushTargetClientObjects(
+//						Login.getSessionIdWithUserId(user.getUserId()),
+//						new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE)});
+//			}
 		}
 		
 	}
