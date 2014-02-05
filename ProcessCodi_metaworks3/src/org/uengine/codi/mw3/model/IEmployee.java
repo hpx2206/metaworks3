@@ -54,7 +54,7 @@ public interface IEmployee extends IDAO {
 	public String getAuthKey();
 	public void setAuthKey(String authKey);
 	
-	//@Hidden
+	@Hidden
 	public String getFacebookId();
 	public void setFacebookId(String facebookId);
 	
@@ -79,6 +79,7 @@ public interface IEmployee extends IDAO {
 	public void setConfirmPassword(String confirmPassword);
 	
 	@Face(displayName="$Position")
+	@Validator(name=ValidatorContext.VALIDATE_MAX , options={"20"}, message="직급/직책은 20자 이내로 입력하셔야 합니다.")
 	public String getJikName();
 	public void setJikName(String jikName);
 
@@ -105,6 +106,7 @@ public interface IEmployee extends IDAO {
 	public String getIsDeleted();	
 	public void setIsDeleted(String deleted);
 
+	@Validator(name=ValidatorContext.VALIDATE_MAX , options={"20"}, message="전화번호는 20자 이내로 입력하셔야 합니다.")
 	public String getMobileNo();
 	public void setMobileNo(String mobileNo);
 	
@@ -113,7 +115,8 @@ public interface IEmployee extends IDAO {
 	@Face(displayName="$Email")
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이메일을 입력하세요."),
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다"),
+		@Validator(name=ValidatorContext.VALIDATE_MAX , options={"50"}, message="이메일은 50자 이내로 입력하셔야 합니다.")
 	})
 	//@Pattern(regexp="/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/", message="이메일 형식이 잘못되었습니다")
 	public String getEmail();
@@ -165,6 +168,7 @@ public interface IEmployee extends IDAO {
 	public boolean isGuest();
 	public void setGuest(boolean guest);
 	
+	@Hidden
 	public boolean isMailNoti();
 	public void setMailNoti(boolean mailNoti);
 	
