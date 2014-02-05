@@ -120,8 +120,6 @@ public class InstanceDueSetter implements ContextAware{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] apply() throws Exception{
 		
-		boolean checkChange = false;
-		
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
 
@@ -129,18 +127,12 @@ public class InstanceDueSetter implements ContextAware{
 		
 		if(instanceRef.isInitCmpl() != isOnlyInitiatorCanComplete())
 			instanceRef.setInitCmpl(isOnlyInitiatorCanComplete());		// 시작자만 완료 가능
-		if(instanceRef.getBenefit() != getBenefit()){
+		if(instanceRef.getBenefit() != getBenefit())
 			instanceRef.setBenefit(getBenefit());			// benefit
-			checkChange = true;
-		}
-		if(instanceRef.getPenalty() != getPenalty()){
+		if(instanceRef.getPenalty() != getPenalty())
 			instanceRef.setPenalty(getPenalty());			// penalty
-			checkChange = true;
-		}
-		if(instanceRef.getEffort() != getEffort()){
+		if(instanceRef.getEffort() != getEffort())
 			instanceRef.setEffort(getEffort());				// effort
-			checkChange = true;
-		}
 		
 		instanceRef.getMetaworksContext().setWhen("blinking");
 		
@@ -161,6 +153,11 @@ public class InstanceDueSetter implements ContextAware{
 			dueTime = (cal.getTime()).getTime();
 		}
 		
+		/*
+		 * 다음 릴리즈로 분류 됨
+		 * 2014.02.05
+		 * 민수환
+		 *
 		//업무정보가 변한 경우 워크아이템 발행
 		if(checkChange == true){
 			CommentWorkItem workItem = new CommentWorkItem();
@@ -180,6 +177,7 @@ public class InstanceDueSetter implements ContextAware{
 					Login.getSessionIdWithUserId(session.getUser().getUserId()),
 					new Object[]{new ToAppend(new InstanceViewThreadPanel(), workItem)});
 		}
+		*/
 		
 		if(databaseDueTime != dueTime){
 			//if schedule changed
