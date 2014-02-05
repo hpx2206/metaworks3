@@ -127,7 +127,7 @@
 										</span>
 								<% }%>
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic' || value.type=='remoteConf' || value.type=='system'){%>
-									<span>
+									<span style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;-o-text-overow: ellipsis;max-width: 70%;">
 											<%=value.title.replace('\n','<br>')%> 
 											<%if(value.type=='file'){%>
 											(ver <%=value.majorVer%>.<%=value.minorVer%>)
