@@ -3646,7 +3646,7 @@ legend {display:none;}
     -webkit-box-shadow:0 3px 4px #ccc;
     -webkit-border-radius:14px;
     -moz-border-radius:14px;
-    border-radius:6px;
+    border-radius:14px;
     box-shadow:0 3px 4px #ccc;
 }
 
@@ -3799,6 +3799,7 @@ legend {display:none;}
     -webkit-box-shadow:0 3px 4px #ccc;
     -webkit-border-radius:14px;
     -moz-border-radius:14px;
+	border-radius:14px;
 }
 
 .view_box4 .innerBox {
