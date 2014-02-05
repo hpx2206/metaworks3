@@ -3360,7 +3360,7 @@ legend {display:none;}
 .cb_lstcomment li li .cb_comment_area{margin-top:1px}
 
 .formcontexttitle { position:relative; padding:0px;  font-size:13px;  border-bottom:1px dotted #ccc;margin-top:2px; margin-bottom:5px; font-weight:bold;}
-.formcontexttitle span{float:left; vertical-align: middle; line-height:24px; }
+.formcontexttitle span{float:left; vertical-align: middle; line-height:30px; }
 
 .commentTailRight {position:absolute; top:5px; right:0px;}
 .commentTailLeft {position:absolute; top:5px; left:0px;}
@@ -4032,9 +4032,9 @@ legend {display:none;}
           border-bottom:1px solid #BCD2E6;
       }
     .workItem_tabs ul {
-          margin:0;
-          
+          margin:0;          
           list-style:none;
+		  padding-left:0px !important;
       }
     .workItem_tabs li {
       display:inline;
