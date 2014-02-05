@@ -103,6 +103,15 @@ public class User extends Database<IUser> implements IUser {
 			this.admin = admin;
 		}
 		
+	String email;
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
+		
+		
 	@Override
 	public Object[] pickUp() throws Exception {
 		this.getMetaworksContext().setHow(HOW_PICKER);
@@ -137,6 +146,14 @@ public class User extends Database<IUser> implements IUser {
 		boolean isSelf = this.getUserId().equals(session.getUser().getUserId());
 		boolean isFriend = false;
 		
+		Employee emp = new Employee();
+		emp.setEmpCode(this.getUserId());
+		emp.copyFrom(emp.findMe());
+		
+		// reload data
+		this.setName(this.getName());
+		this.setMood(emp.getMood());
+		this.setEmail(emp.getEmail());		  
 		this.setSelf(isSelf);
 		
 		if(!isSelf){
@@ -172,30 +189,18 @@ public class User extends Database<IUser> implements IUser {
 		
 		
 		// TODO: User 가 로드되고 나서 나중에 로드 되게 수정해야함
-		/*
-		try{
-			Employee employee = new Employee();
-			employee.setEmpCode(getUserId());
-			setMood(employee.databaseMe().getMood());
-			setName(employee.databaseMe().getEmpName());
-			setGuest(employee.databaseMe().isGuest());
-			setInviteUser(employee.databaseMe().getInviteUser());			
-			
-			//선택된 유저의 business value를 보인다.
-			int myBV = getBV(getUserId());
-			setBusinessValue(myBV);
-			
-			//선택된 유저가 해야 할 일의 개수를 보인다.
-			int todoCount = Instance.countTodo(getUserId(), employee.databaseMe().getGlobalCom());
-			setTodoCount(todoCount);
-			
-			setNetwork("local");
-			
-			
-		}catch(Exception e){
-		//	e.printStackTrace();
-		}
-		*/
+		Employee employee = new Employee();
+		employee.setEmpCode(getUserId());
+		setMood(employee.databaseMe().getMood());
+		setName(employee.databaseMe().getEmpName());
+		
+		//선택된 유저의 business value를 보인다.
+		int myBV = getBV(getUserId());
+		setBusinessValue(myBV);
+		
+		//선택된 유저가 해야 할 일의 개수를 보인다.
+		int todoCount = Instance.countTodo(getUserId(), employee.databaseMe().getGlobalCom());
+		setTodoCount(todoCount);
 
 		Popup popup = new Popup(with, height);
 		popup.setPanel(this);

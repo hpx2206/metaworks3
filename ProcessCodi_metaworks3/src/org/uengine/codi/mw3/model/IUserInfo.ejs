@@ -21,20 +21,26 @@
 					</dd>
 					<dd class="tit">
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
+						<div id="popupInfoNameWih"><b><%=value.email%></b></div>
 						<%
 							if(value.self){
 						%>
+						
+						<!-- 다음 릴리즈로 분류 됨  2014.02.05 민수환
 						<div>
 							<%=fields.mood.here({when:'edit'})%>
 						</div>
 						<div style="margin-top:5px;">
 							<a id="wBtn" href="#" onClick="<%=methods.changeMood.caller()%>"><span style="color:#000; margin-right:0px"><%=mw3.localize("$ChangeMood")%></span></a>
 						</div>
-						
+						-->	
+												
 						<%	}else{%>
-							<%=value.mood ? value.mood : ''%>
+							<!-- 다음 릴리즈로 분류 됨  2014.02.05 민수환 
+								<%=value.mood ? fields.mood.here({when:'view'}) : ''%> 
+							-->
 						<%	}%>	
-		
+						
 					</dd>
 					<div class="clear"></div>
 					<div style="width:100%;margin-top:15px;">
