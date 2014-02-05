@@ -3,13 +3,11 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.MetaworksDAO;
 
-@Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/InstanceList.ejs")
 public class TodoBadgeInstanceList implements ContextAware{
 
 	int page;

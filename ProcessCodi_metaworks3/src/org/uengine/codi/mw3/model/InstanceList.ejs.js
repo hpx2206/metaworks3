@@ -10,9 +10,9 @@ var org_uengine_codi_mw3_model_InstanceList = function(objectId, className) {
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 
 	var object = mw3.objects[objectId];
-	
-	if(object && object.instances == null)
+	if(object && object.instances == null && className == 'org.uengine.codi.mw3.model.InstanceList'){
 		lastMore = objectId;
+	}
 };
 
 org_uengine_codi_mw3_model_InstanceList.prototype = {

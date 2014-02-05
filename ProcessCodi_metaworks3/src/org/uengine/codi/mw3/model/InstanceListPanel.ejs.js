@@ -51,7 +51,6 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 				var instanceListObjectId = instanceList.__objectId;
 				var instanceListObjectDivId = mw3._getObjectDivId(instanceListObjectId);
 				if(scrollDiv.scrollTop() > $('#' + instanceListObjectDivId).height() - scrollDiv.height()-100){
-					//alert(scrollDiv.scrollTop()+","+ instanceListObjectDivId +","+scrollDiv.height())
 					if( prelastMore != lastMore){
 						prelastMore = lastMore;
     	                mw3.objects[lastMore].more();
