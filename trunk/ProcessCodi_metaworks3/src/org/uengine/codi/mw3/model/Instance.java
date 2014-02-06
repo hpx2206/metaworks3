@@ -68,7 +68,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	static public IInstance load(Navigation navigation, int page, int count)
 			throws Exception {
 		
-		// �ㅻⅨ �뚯궗 �щ엺 �뺤씤
+		// 다른 회사 사람 확인
 		Employee employee = null;
 		
 		if(navigation.getPerspectiveValue() != null && 
@@ -243,7 +243,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		
 /*		if("inbox".equals(navigation.getPerspectiveType())) {
-//			2012-10-25 �닿��좎씪 諛�李몄뿬以�荑쇰━ 蹂�꼍
+//			2012-10-25 내가할일 및 참여중 쿼리 변경
 			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 			stmt.append("from bpm_worklist worklist INNER JOIN bpm_rolemapping rolemapping ");
 			stmt.append("ON (worklist.rolename = rolemapping.rolename OR worklist.refrolename=rolemapping.rolename) ");
@@ -401,7 +401,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instInitep", navigation.getPerspectiveValue());
 			
 			if( !navigation.getEmployee().getEmpCode().equals(navigation.getPerspectiveValue())){
-				// �꾨옒寃쎌슦���ㅻⅨ�щ엺���대꼈�쎌쓣 蹂대뒗 寃쎌슦�대떎. 
+				// 아래경우는 다른사람의 담벼락을 보는 경우이다. 
 				instanceSql.append(" and	exists ( ")
 							.append("			select 1 from bpm_rolemapping rm	 ")
 							.append("			where inst.instid = rm.rootinstid	 ")
@@ -452,11 +452,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		IInstance instanceRef = this.databaseMe();
 		
-		// �대� ��젣�섏뼱 �덈뒗 由ъ뒪�몃� �대┃��寃쎌슦
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
-		// �붾줈�뚭� �꾨땶�щ엺���묒뾽��留됱쓬
+		// 팔로워가 아닌사람의 작업을 막음
 		if( "1".equals(instanceRef.getSecuopt())){
 			this.fillFollower();
 			IFollower follower = this.getFollowers().getFollowers();
@@ -966,7 +966,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 	/*
 	 * 2013-01-10 cjw
-	 * push client ��蹂댁븞 泥섎━
+	 * push client 의 보안 처리
 	 */
 	Followers followers;
 		public Followers getFollowers() {
@@ -1010,7 +1010,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public void fillFollower(){
 		/*
 		 * 2013-01-10 cjw
-		 * push client ��蹂댁븞 泥섎━
+		 * push client 의 보안 처리
 		 */
 		try{
 			InstanceFollower follower = new InstanceFollower();
@@ -1141,7 +1141,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			return new ModalWindow(processInstanceMonitorPanel, 1024, 768, "Process Monitoring");
 		}else{
 			ErrorPage errorPage = new ErrorPage();
-			errorPage.setErrorMessage("�꾨줈�몄뒪媛�議댁옱�섏� �딆뒿�덈떎.");
+			errorPage.setErrorMessage("프로세스가 존재하지 않습니다.");
 			return new ModalWindow(errorPage, 300, 150, "");
 		}
 		
@@ -1159,11 +1159,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		IInstance instanceRef = databaseMe();
 		
-		// �대� ��젣�섏뼱 �덈뒗 由ъ뒪�몃� �대┃��寃쎌슦
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
-		// 鍮꾧났媛�湲�씪 寃쎌슦 蹂멸굔��愿�젴�먭� �꾨땲硫�湲�벐湲곕� 留됱쓬.
+		// 비공개 글일 경우 본건의 관련자가 아니면 글쓰기를 막음.
 		if( "1".equals(instanceRef.getSecuopt())){
 			InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
 			IFollower follower = findFollower.findFollowers();
@@ -1220,7 +1220,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instanceRef = databaseMe();
 		
-		// �대� ��젣�섏뼱 �덈뒗 由ъ뒪�몃� �대┃��寃쎌슦
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
@@ -1234,25 +1234,25 @@ public class Instance extends Database<IInstance> implements IInstance{
 		databaseMe().setIsDeleted(true);
 		flushDatabaseMe();
 		
-		/* �닿� �좎씪 移댁슫���ㅼ떆 怨꾩궛 */
+		/* 내가 할일 카운트 다시 계산 */
 		TodoBadge todoBadge = new TodoBadge();
 		todoBadge.session = session;
 		todoBadge.refresh();
 		
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 		
-		/* push 遺�텇 */
-		// �먭린�먯떊��todoBadge ���ㅺ��ㅻ뒗 �쇱젙��refresh �쒗궓��
+		/* push 부분 */
+		// 자기자신의 todoBadge 와 다가오는 일정을 refresh 시킨다.
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});			
 		
-		// �먭린�먯떊���щ젰�붾㈃���대젮�덈떎硫��щ젰��湲�쓣 �쒓굅�쒕떎.
+		// 자기자신의 달력화면이 열려있다면 달력의 글을 제거한다.
 		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
 		scEvent.setId(instanceRef.getInstId().toString());
 		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
 				new Object[]{scEvent});
 		
-		/* return 遺�텇 */
+		/* return 부분 */
 		if(!"sns".equals(session.getEmployee().getPreferUX())){
 			NewInstancePanel instancePanel = new NewInstancePanel();
 			instancePanel.load(session);
@@ -1276,14 +1276,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		instance.copyFrom(instanceRef);
 		instance.fillFollower();
 		
-		// �대� ��젣�섏뼱 �덈뒗 由ъ뒪�몃� �대┃��寃쎌슦
+		// 이미 삭제되어 있는 리스트를 클릭한 경우
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
 		
-		// 怨듦컻 �곹깭�먯꽌 鍮꾧났媛쒕줈���꾨Т���좎닔 �덉�留�鍮꾧났媛쒖뿉��怨듦컻���붾줈�뚮쭔 �섎룄濡��섏젙
+		// 공개 상태에서 비공개로는 아무나 할수 있지만 비공개에서 공개는 팔로워만 되도록 수정
 		if("0".equals(this.getSecuopt())){
-			// �붾줈�뚭� �꾨땶�щ엺���묒뾽��留됱쓬
+			// 팔로워가 아닌사람의 작업을 막음
 			IFollower follower = instance.getFollowers().getFollowers();
 			boolean isExist = false;
 			while(follower.next()){
@@ -1304,7 +1304,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}
 		}
 				
-		// 二쇱젣 �쒕ぉ �ㅼ젙
+		// 주제 제목 설정
 		if(instance.getTopicId() != null){
 			TopicNode topic = new TopicNode();
 			topic.setId(instance.getTopicId());
@@ -1312,8 +1312,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instance.setTopicName(topic.getName());
 		}
 		
-		// 紐⑤뱺 �щ엺���몄뒪�댁뒪 �곹깭瑜�蹂�꼍��		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
-		// �먭린�먯떊���몄뒪�댁뒪 �곹깭瑜�蹂�꼍��//		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+		// 모든 사람의 인스턴스 상태를 변경함
+		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+		// 자기자신의 인스턴스 상태를 변경함
+//		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		
 		InstanceFollower findFollower = new InstanceFollower(instance.getInstId().toString());
 		findFollower.session = session;
@@ -1341,9 +1343,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 		
 		/*
-		 * �뚰겕�꾩씠��諛쒗뻾 遺�텇 二쇱꽍 泥섎━
+		 * 워크아이템 발행 부분 주석 처리
 		 * 2014.02.05
-		 * 誘쇱닔��		 * 
+		 * 민수환
+		 * 
 		// add comment schedule changed
 		CommentWorkItem workItem = new CommentWorkItem();
 		workItem.getMetaworksContext().setHow("changeSchedule");
@@ -1369,7 +1372,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
 				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		
-		// workItem.add(); �먯꽌 鍮꾩듂���쇱쓣 �섎뒗寃껋쿂��蹂댁씠�� �꾨즺�쒖젏�먮쭔 �숈옉�섍린 �꾪빐��workItem��援ы쁽�섎뒗嫄�鍮꾩슜���믪븘蹂댁씤��
+		// workItem.add(); 에서 비슷한 일을 하는것처럼 보이나, 완료시점에만 동작하기 위해서 workItem에 구현하는건 비용이 높아보인다.
 		if(instanceRef.getDueDate() != null){
 			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
 			scEvent.setTitle(instanceRef.getName());
@@ -1379,7 +1382,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			Calendar c = Calendar.getInstance();
 			c.setTime(instanceRef.getDueDate());
 	
-			// TODO : �꾩옱��臾댁“嫄�醫낆씪濡��ㅼ젙
+			// TODO : 현재는 무조건 종일로 설정
 			scEvent.setAllDay(true);
 			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
@@ -1388,7 +1391,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 					new Object[]{scEvent});
 		}
-		/* �닿� �좎씪 移댁슫���ㅼ떆 怨꾩궛 */
+		/* 내가 할일 카운트 다시 계산 */
 		TodoBadge todoBadge = new TodoBadge();
 		todoBadge.session = session;
 		todoBadge.refresh();
@@ -1396,14 +1399,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 
 		/*
-		 * �뚰겕�꾩씠��諛쒗뻾 遺�텇 二쇱꽍 泥섎━
+		 * 워크아이템 발행 부분 주석 처리
 		 * 2014.02.05
-		 * 誘쇱닔��		 * 
+		 * 민수환
+		 * 
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(upcommingTodoPerspective)});			
 		*/
 		
-		//inst_emp_perf �뚯씠釉붿뿉 �깃낵�뺣낫 ��옣 insert
+		//inst_emp_perf 테이블에 성과정보 저장 insert
 		int businessValue = instanceRef.getBenefit() + instanceRef.getPenalty();
 		
 		if(tobe.equals("Running")){
@@ -1447,7 +1451,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		bizVal.setInstId(this.getInstId());
 				
 		try {
-			// TODO: WorkItem ���섑븳 Completed ��insertBV 媛��ㅽ뻾�섏� �딆븘 �ㅻ쪟 諛쒖깮�� 李⑦썑 泥섎━ 			
+			// TODO: WorkItem 에 의한 Completed 시 insertBV 가 실행되지 않아 오류 발생함. 차후 처리 			
 			bizVal.deleteDatabaseMe();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
