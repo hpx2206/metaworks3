@@ -435,6 +435,17 @@ public class ScheduleCalendar implements ContextAware {
 		
 	}
 	
+	@ServiceMethod(callByContent=true, except={"data"})
+	public Object[] moveScheduleEvent(){
+		System.out.println("============");
+		System.out.println(this.getSchdId());
+		System.out.println(this.getCallType());
+		System.out.println(this.getSelDate());
+		System.out.println(this.getViewMode());
+		
+		return null;
+	}
+	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 	
