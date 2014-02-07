@@ -5408,8 +5408,6 @@ window.Raphael.vml && function (R) {
         // res.paper.canvas.style.display = E;
     },
     addGradientFill = function (o, gradient, fill) {
-        ////console.log('addGradientFill 3');
-
         o.attrs = o.attrs || {};
         var attrs = o.attrs,
             pow = Math.pow,
@@ -7185,13 +7183,10 @@ OG.ParamError = OG.common.ParamError;
  *     'key2': 'value2'
  * });
  *
- * //console.log(map1.get('key1'));
- *
  * var map2 = new OG.common.HashMap();
  * map2.put('key1', 'value1');
  * map2.put('key2', 'value2');
  *
- * //console.log(map2.get('key1'));
  *
  * @param {Object} jsonObject key:value 매핑 JSON 오브젝트
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
@@ -10280,7 +10275,7 @@ OG.shape.GroupShape.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-	    'fill' : 'red',
+	    'fill' : 'none',
 	    "stroke": 'none'
 	});
 
@@ -10335,7 +10330,7 @@ OG.shape.HorizontalLaneShape.prototype.createShape = function () {
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'vertical',
 		'vertical-align' : 'top',
-		fill : 'none'
+		'fill' : 'none'
 	});
 
     return this.geom;
@@ -10609,8 +10604,6 @@ OG.shape.bpmn.A_Task.prototype.createTerminal = function(){
 
 //TODO: 커스텀 컨트롤.. 구현 방식을 바꿔둬야 함 ( 함수 => 객체 )
 OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
-	//console.log(" ===> call custom control ");
-
 	if(!handler || !element) return;
 
 	var ur_x, ur_y
@@ -10625,7 +10618,6 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 	});
 	
 	if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
-		//console.log(" draw custom control ");
 		
 		//찍을 좌표 구하기
 		ur_x = element.shape.geom.boundary._upperLeft.x;
@@ -10657,7 +10649,6 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 		********************************************/
 		$(task.node).draggable({
 			start: function (event) {
-				//console.log("drag");
 				event.stopPropagation();
 				var eventOffset = handler._getOffset(event), guide;
 
@@ -14985,8 +14976,6 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	// real size
 	bBox = element.getBBox();
 	
-	//console.log(bBox);
-
 	// calculate width, height, left, top
 	width = width ? (width > bBox.width ? width : bBox.width) : bBox.width;
 	height = height ? (height > bBox.height ? height : bBox.height) : bBox.height;
@@ -15183,12 +15172,16 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 	groupNode.shapeStyle = (style instanceof OG.geometry.Style) ? style.map : style;
 	$(groupNode).attr("_shape_id", shape.SHAPE_ID);
     
-    
     // Draw for Task
     if(shape instanceof OG.shape.bpmn.A_Task){
-           this.drawLoopType(groupNode);
-           this.drawTaskType(groupNode);
+		this.drawLoopType(groupNode);
+		this.drawTaskType(groupNode);
     }
+	
+	if(shape instanceof OG.shape.HorizontalLaneShape
+		|| shape instanceof OG.shape.VerticalLaneShape){	
+		groupNode.parentNode.insertBefore(groupNode, groupNode.parentNode.firstChild);
+	}
 
 	// Draw Label
 	if (!(shape instanceof OG.shape.TextShape)) {
@@ -15228,20 +15221,21 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 		}
 	}
     
+	/*
     $(me.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, element) {
         var elements, i;
         elements = me.getElementsByBBox(element.shape.geom.getBoundary());
         for(i=0; i<elements.length; i++){
             if(element.id != elements[i].id){
                 if(!$(elements[i]).parent().get(0).shape){
-                    ////console.log(element);
-
 					//FIXME : remove this
                     //element.appendChild(elements[i]);
                 }
             }
         }
     });
+	*/
+	
     if($(shape).attr('auto_draw') == 'yes'){
         $(groupNode).attr('auto_draw', 'yes');
     }
@@ -15683,7 +15677,6 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 		points = [], edge, edge_direction,
 		getArrayOfOrthogonal_1 = function (from, to, isHorizontal) {
 			//TODO: 유저가 선택한 변곡점은 계속 유지되어야 함
-			////console.log("call getArrayOfOrthogonal_1");
 			if (isHorizontal) {
 				return [
 					[from[0], from[1]],
@@ -19021,14 +19014,10 @@ OG.handler.EventHandler.prototype = {
 	
 		$(element).bind({
 			mouseover: function (event) {
-				//console.log("-element-mouseover");
 				if("element_selected" == $(element).data("status")){
-					//console.log("-element-mouseover : element-status => "+$(element).data("status"));
 					return;
 				}
-				
-				//console.log("-element-mouseover : set terminal");
-				
+								
 				if (element.shape.isCollapsed === false) {
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
@@ -19054,15 +19043,11 @@ OG.handler.EventHandler.prototype = {
 						
 						$(terminalGroup.bBox).bind({
 							mousedown: function(event){
-								//console.log($(element).data("status"));
 								//event.stopPropagation();
-								//console.log($(element).data("status"));
 							},
 							mouseover: function (event) {
-								//console.log("-terminalGroup.bBox-mouseover");
 							},
 							mouseout: function (event) {
-								//console.log("-terminalGroup.bBox-mouseout");
 								if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
 									me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 									$(root).removeData("edge_terminal");
@@ -19076,19 +19061,16 @@ OG.handler.EventHandler.prototype = {
 												
 								if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
 									&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
-									//console.log("-delegate event => terminal");
 									//delegate event => terminal
 									var _re_event = event.relatedTarget;
 									$(_re_event).bind("mouseout", function(event){
 										if( ((el_ul_x < event.offsetX) && (el_lr_x > event.offsetX))
 											&& ((el_ul_y < event.offsetY) && (el_lr_y > event.offsetY))){
-											//console.log("-terminal-unbind-event");
 											//unbind event
 											$(_re_event).unbind("mouseout");
 										}else{
 											var status = $(element).data("status");
 											if("connect_start" != status){
-												//console.log("-terminal-call : element mouseout");
 												$(terminalGroup.bBox).trigger("mouseout");
 											}
 										}
@@ -19096,7 +19078,6 @@ OG.handler.EventHandler.prototype = {
 								}else{
 									var status = $(element).data("status");
 									if("connect_start" != status){
-										//console.log("-terminalGroup.bBox : remove-terminal");
 										me._RENDERER.removeTerminal(element);
 									}
 								}
@@ -19107,7 +19088,6 @@ OG.handler.EventHandler.prototype = {
 							if (item.terminal) {
 								$(item).bind({
 									mouseover: function (event) {
-										//console.log("-terminal-mouseover");
 										var fromTerminal = $(root).data("from_terminal"),
 											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
 											isSelf = element && fromShape && element.id === fromShape.id;
@@ -19121,7 +19101,6 @@ OG.handler.EventHandler.prototype = {
 										}
 									},
 									mouseout : function (event) {
-										//console.log("-terminal-mouseout");
 										me._RENDERER.setAttr(item, me._CONFIG.DEFAULT_STYLE.TERMINAL);
 										$(root).removeData("edge_terminal");
 									}
@@ -19146,7 +19125,6 @@ OG.handler.EventHandler.prototype = {
 										});
 									},
 									drag : function (event) {
-										//console.log('drag');
 										var eventOffset = me._getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
@@ -19194,7 +19172,6 @@ OG.handler.EventHandler.prototype = {
 									},
 									stop : function (event) {
 										$(element).data("status", "connect_end");
-										//console.log('stop');
 										
 										var to = me._getOffset(event),
 											edge = $(root).data("edge"),
@@ -19498,7 +19475,6 @@ OG.handler.EventHandler.prototype = {
                             for(i=0; i<elements.length; i++){
                                 if(ele.id != elements[i].id){
                                     if(!$(elements[i]).parent().get(0).shape){
-                                        //console.log(ele);
 
                                         //ele.appendChild(elements[i]);
                                     }
@@ -20296,8 +20272,7 @@ OG.handler.EventHandler.prototype = {
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
 			$(element).bind("click", function (event) {
-				//console.log(" click and select");
-				event.stopPropagation();
+				//event.stopPropagation();
 				var guide;
 				$(me._RENDERER.getContainer()).focus();
 
@@ -21706,18 +21681,15 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape 엘리먼트
 	 */
 	selectShape: function (element, event) {
-		//console.log(" => selectShape call!! ");
-		
+	
 		var me = this, guide, root = me._RENDERER.getRootGroup();
 		
 		//단일 선택 다중 선택 여부 판단
 		if(event){
 			if (!event.shiftKey && !event.ctrlKey) {
-				//console.log(" -=========> single select mode ");
 				me.deselectAll();
 				me._RENDERER.removeAllGuide();
 			}else{
-				//console.log(" -=========> multiple select mode ");
 			}
 		}else{
 			//기본 단일 선택
@@ -21738,12 +21710,9 @@ OG.handler.EventHandler.prototype = {
 			
 			//선택요소배열 추가
 			me._addSelectedElement(element);
-			
-			//console.log(me._getSelectedElement());
-			
+					
 			//하나만 선택된 경우 : 후행 처리 ( drawCustomControl );
 			if(me._getSelectedElement().length == 1){
-				//console.log(" ======> call !! custom control ");
 				element.shape.drawCustomControl(this, element);
 			}else if(me._getSelectedElement().length > 1){
 				var i, n, selectedElements = me._getSelectedElement();
@@ -21765,7 +21734,6 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape 엘리먼트
 	 */
 	selectShapes: function (elementArray) {
-		//console.log(" => selectShapes~ call!! ");
 		var me = this, guide, _element;
 		
 		if(!elementArray) return;
@@ -21810,7 +21778,6 @@ OG.handler.EventHandler.prototype = {
 	
 	//TODO : 선택된 모든 Shape를 선택 해제
 	deselectAll: function () {
-		//console.log(" => selectShapes~ call!! ");
 		var me = this;
 		
 		var dragBox = $(this).data("dragBox");
@@ -21845,7 +21812,6 @@ OG.handler.EventHandler.prototype = {
 	 * 메뉴 : 선택된 Shape 들을 삭제한다.
 	 */
 	deleteSelectedShape: function (event) {
-		//console.log(" deleteSelectedShape call !! ");
 	
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=EDGE][_selected=true]").each(function (index, item) {
@@ -23086,7 +23052,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		 */
 		DEFAULT_STYLE: {
 			SHAPE         : { cursor: "default" },
-			GEOM          : { stroke: "black", "fill-r": ".5", "fill-cx": ".5", "fill-cy": ".5", fill: "none", "fill-opacity": 0, "label-position": "center"  },
+			GEOM          : { stroke: "black", "fill-r": ".5", "fill-cx": ".5", "fill-cy": ".5", fill: "white", "fill-opacity": 0, "label-position": "center"  },
 			TEXT          : { stroke: "none", "text-anchor": "middle" },
 			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
@@ -23094,7 +23060,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- ", "edge-type": "plain" },
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0 },
 			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-			GROUP_HIDDEN  : { stroke: "black", fill: "none", "fill-opacity" :0 , "stroke-opacity": 0 ,cursor: "move" },
+			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 ,cursor: "move" },
 			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
 			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
@@ -23116,8 +23082,8 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.3, "shape-rendering": "crispEdges" },
 			LABEL         : { "font-size": 12, "font-color": "black" },
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
-			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
-			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
+			COLLAPSE      : { stroke: "black", fill: "none", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
+			COLLAPSE_BBOX : { stroke: "none", fill: "none", "fill-opacity": 0 },
 			BUTTON        : { stroke: "#9FD7FF", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" }
 		}
 	};
@@ -23285,7 +23251,6 @@ OG.graph.Canvas.prototype = {
 		if (this._CONFIG.GROUP_COLLAPSIBLE && element.shape.GROUP_COLLAPSIBLE) {
 			this._HANDLER.enableCollapse(element);
 		}
-
 
 		return element;
 	},
@@ -24020,7 +23985,7 @@ OG.graph.Canvas.prototype = {
 					
 					if(childNode.shape instanceof OG.shape.bpmn.ScopeActivity){
 						childGroupNode = childNode;
-						cellMap[$(childGroupNode).attr('id')]['@parentId'] = groupId;
+						cellMap[$(childGroupNode).attr('id')]['@parent'] = groupId;
 						
 						filteredChildNodes = CANVAS._RENDERER.getElementMapByBBox(
 													childGroupNode.shape.geom.getBoundary());
@@ -24040,10 +24005,8 @@ OG.graph.Canvas.prototype = {
 					if(childNode.shape instanceof OG.shape.HorizontalLaneShape
 						|| childNode.shape instanceof OG.shape.VerticalLaneShape){
 						// no operation
-						console.log("is Swimlane");
-						console.log(childNode);
 					}else{
-						cellMap[$(childNode).attr('id')]['@parentId'] = groupId;	
+						cellMap[$(childNode).attr('id')]['@parent'] = groupId;	
 					}
 				}				
 			} //end of for
@@ -24068,7 +24031,7 @@ OG.graph.Canvas.prototype = {
 				for(var childNodeKey in childNodes){
 					childNode = childNodes[childNodeKey];
 					if(childNode.shape instanceof OG.shape.bpmn.A_Task){
-						cellMap[$(childNode).attr('id')]['@swimlaneId'] = swimlaneId;
+						cellMap[$(childNode).attr('id')]['@swimlane'] = swimlaneId;
 					}
 				}
 			}
@@ -24096,9 +24059,7 @@ OG.graph.Canvas.prototype = {
 					|| item.shape instanceof OG.shape.VerticalLaneShape){
 					swimlaneNodes.push(item);
 				}
-				
-				console.log(item);
-				
+							
 				// push cell to array
 				cell = NodeToCell(item);
 				jsonObj.opengraph.cell.push(cell);
@@ -24147,7 +24108,7 @@ OG.graph.Canvas.prototype = {
 		var canvasWidth, canvasHeight, rootGroup,
 			minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE,
 			i, cell, shape, id, parent, shapeType, shapeId, x, y, width, height, style, geom, from, to,
-			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element, loopType, taskType;
+			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element, loopType, taskType, swimlane;
 
 		this._RENDERER.clear();
 
@@ -24165,6 +24126,7 @@ OG.graph.Canvas.prototype = {
 			for (i = 0; i < cell.length; i++) {
 				id = cell[i]['@id'];
 				parent = cell[i]['@parent'];
+				swimlane = cell[i]['@swimlane'];
 				shapeType = cell[i]['@shapeType'];
 				shapeId = cell[i]['@shapeId'];
 				x = parseInt(cell[i]['@x'], 10);
@@ -24202,7 +24164,9 @@ OG.graph.Canvas.prototype = {
 						shape.label = label;
 					}
 					element = this.drawShape([x, y], shape, [width, height], OG.JSON.decode(style), id, parent, false);
-					if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+					if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"
+						|| element.shape.SHAPE_ID == "OG.shape.bpmn.A_HumanTask"
+						|| element.shape.SHAPE_ID == "OG.shape.bpmn.A_SystemTask"){
 					    element.shape.LoopType = loopType;
 					    element.shape.TaskType = taskType;
 					}
