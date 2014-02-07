@@ -52,19 +52,13 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
 			editable: true,
 			events: object.data,
 			select: function(start, end, allDay) {
-				var calendar = mw3.getObject(objectId);
-				calendar.selDate = start;
-				calendar.endDate = end;
-				calendar.allDay = allDay;
-									
-				calendar.linkScheduleDay();
+				mw3.getFaceHelper(objectId).dayClick(start, end, allDay);
 			},
 			eventClick: function(calEvent, jsEvent, view) {	
 				mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
 			},
 			eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view ){
-				console.log('drop');
-				console.log(event);
+				mw3.getFaceHelper(objectId).moveEvent(event.id, event.callType, view.name, dayDelta);
 			}
 		};
 		
@@ -87,17 +81,16 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
 		
 		calendar.fullCalendar(options);	
 		calendar.fullCalendar('gotoDate', object.selDate);
-		console.log('3');
 	}
 };
 
-org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.dayClick = function(selDate, viewMode){
-	var object = mw3.getObject(this.objectId);
-	
-	object.selDate = selDate;
-	object.viewMode = viewMode;
-
-	object.linkScheduleDay();
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.dayClick = function(start, end, allDay){
+	var calendar = mw3.getObject(this.objectId);
+	calendar.selDate = start;
+	calendar.endDate = end;
+	calendar.allDay = allDay;
+						
+	calendar.linkScheduleDay();
 };
 
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(schdId, callType, viewMode){
@@ -108,6 +101,20 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(s
 
 	object.linkScheduleEvent();
 };
+
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.moveEvent = function(schdId, callType, viewMode, moveDay){
+	var calendar = mw3.getObject(this.objectId);
+	calendar.schdId = schdId;
+	calendar.selDate = moveDay;
+	calendar.callType = callType;
+	calendar.viewMode = viewMode;
+
+console.log(calendar);
+
+	calendar.moveScheduleEvent();
+
+};
+
 
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addEvent = function(event){
 
