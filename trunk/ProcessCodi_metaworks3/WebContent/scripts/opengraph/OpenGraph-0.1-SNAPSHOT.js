@@ -23953,6 +23953,8 @@ OG.graph.Canvas.prototype = {
 			if (shape.TaskType) {
 				cell['@taskType'] = shape.TaskType;
 			}
+			
+			cell['@childs'] = [];
 
 			return cell;
 		};
@@ -23986,6 +23988,7 @@ OG.graph.Canvas.prototype = {
 					if(childNode.shape instanceof OG.shape.bpmn.ScopeActivity){
 						childGroupNode = childNode;
 						cellMap[$(childGroupNode).attr('id')]['@parent'] = groupId;
+						cellMap[groupId]['@childs'].push($(childGroupNode).attr('id'));
 						
 						filteredChildNodes = CANVAS._RENDERER.getElementMapByBBox(
 													childGroupNode.shape.geom.getBoundary());
@@ -24007,6 +24010,7 @@ OG.graph.Canvas.prototype = {
 						// no operation
 					}else{
 						cellMap[$(childNode).attr('id')]['@parent'] = groupId;	
+						cellMap[groupId]['@childs'].push($(childNode).attr('id'));
 					}
 				}				
 			} //end of for
