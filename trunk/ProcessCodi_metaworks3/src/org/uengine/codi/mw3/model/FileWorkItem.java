@@ -255,7 +255,7 @@ public class FileWorkItem extends WorkItem{
 
 		int lastPageNumber = pdfFile.getNumPages();
 
-		for(int i=0;i<lastPageNumber; i++){
+		for(int i=1;i<lastPageNumber+1; i++){
 			page = pdfFile.getPage(i);
 
 			Rectangle rect = new Rectangle(
