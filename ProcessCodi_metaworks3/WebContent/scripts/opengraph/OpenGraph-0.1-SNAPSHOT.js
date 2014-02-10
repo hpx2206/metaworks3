@@ -23970,6 +23970,8 @@ OG.graph.Canvas.prototype = {
 				i=0,n=groupNodes.length;
 				
 			for(;i<n;i++){
+				
+			
 				groupNode = groupNodes[i];
 				filteredChildNodes = {};
 				
@@ -24010,7 +24012,10 @@ OG.graph.Canvas.prototype = {
 						// no operation
 					}else{
 						cellMap[$(childNode).attr('id')]['@parent'] = groupId;	
-						cellMap[groupId]['@childs'].push($(childNode).attr('id'));
+						
+						if(!(childNode.shape instanceof OG.shape.EdgeShape)){
+							cellMap[groupId]['@childs'].push($(childNode).attr('id'));
+						}
 					}
 				}				
 			} //end of for
