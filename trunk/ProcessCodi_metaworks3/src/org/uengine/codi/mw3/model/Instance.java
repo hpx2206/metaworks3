@@ -1399,13 +1399,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 
 		/*
-		 * 워크아이템 발행 부분 주석 처리
-		 * 2014.02.05
+		 * 워크아이템 발행 부분 변경 처리
+		 * 2014.02.10
 		 * 민수환
 		 * 
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(upcommingTodoPerspective)});			
 		*/
+		
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});	
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
 		int businessValue = instanceRef.getBenefit() + instanceRef.getPenalty();
