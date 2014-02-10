@@ -395,6 +395,12 @@ public class User extends Database<IUser> implements IUser {
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		
+		Locale locale = new Locale(session);
+		locale.load();
+		
+		String title = locale.getString("$Contact") + " - " + getName();
+		session.setWindowTitle(title);
+		
 		Object [] returnObject = MetaworksUtil.makeRefreshObjectArray(personalPerspective.load(Perspective.TYPE_CALENDAR));
 		returnObject = MetaworksUtil.putObjectArray(returnObject, new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE));
 		
