@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -15,7 +16,12 @@ public class InstanceDrag {
 		}
 	
 	@ServiceMethod(mouseBinding="drag")
-	public Session cut(){
+	public Session cut() throws Exception{
+		Instance instance = new Instance();
+		instance.setInstId(this.instanceId);
+		if(instance.databaseMe().getIsDeleted()){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
 		session.setClipboard(this);
 		return session;
 	}
