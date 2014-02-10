@@ -1326,7 +1326,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public void complete() throws Exception{
 
 		IInstance instanceRef = databaseMe();
-				
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}		
 		if(instanceRef.isInitCmpl() && !session.getUser().getUserId().equals(instanceRef.getInitEp())){
 			throw new Exception("$OnlyInitiatorCanComplete");
 		}
