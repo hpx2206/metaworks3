@@ -7,6 +7,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -103,6 +104,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.newSubInstance();
 	}
 
+	@Face(displayName="$Remove")
 	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception{
 		Instance instance = new Instance();
