@@ -593,14 +593,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return notiUsers;
 	}
 	
-	@ServiceMethod
 	public Object[] processListFilter() throws Exception{
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PROCESS, Perspective.TYPE_NEWSFEED, this.getDefId());
-		
+
 		Locale locale = new Locale(session);
 		locale.load();
 
-		String title = locale.getString("$Process") + " - " + getName();
+		String title = locale.getString("$Process") + " - " + this.getName();
 		session.setWindowTitle(title);
 
 		return new Object[]{ session, new ListPanel(instanceListPanel, new ProcessInfo(session)) };
