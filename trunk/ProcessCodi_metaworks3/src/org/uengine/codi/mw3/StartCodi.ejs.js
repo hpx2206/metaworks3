@@ -16,10 +16,10 @@ org_uengine_codi_mw3_StartCodi.prototype = {
 		if(lastVisitPage){ 
 			this.object.lastVisitPage = lastVisitPage;
 			
-			var lastVisitPage = getCookie("codi.lastVisitValue");
+			var lastVisitValue = getCookie("codi.lastVisitValue");
 			
-			if(lastVisitPage)
-				this.object.lastVisitValue = lastVisitPage;	
+			if(lastVisitValue)
+				this.object.lastVisitValue = lastVisitValue;	
 		}
 		
 		if(this.object.key == 'loader'){

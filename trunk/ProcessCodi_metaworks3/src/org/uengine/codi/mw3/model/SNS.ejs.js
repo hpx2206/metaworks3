@@ -11,5 +11,5 @@ var org_uengine_codi_mw3_model_SNS = function(objectId, className){
 	}
 	
 	setCookie("codi.lastVisit", "process", 10, "/", "", "");
-	setCookie("codi.lastVisit", "", 10, "/", "", "");
+	setCookie("codi.lastVisitValue", "", 10, "/", "", "");
 };
