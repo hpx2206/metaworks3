@@ -169,7 +169,7 @@ public class User extends Database<IUser> implements IUser {
 	@Override
 	public Popup detail() throws Exception {
 		int with = 435;
-		int height = 275;
+		int height = 279;
 		
 		this.load();
 		
