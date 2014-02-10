@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.metaworks.Type;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.uengine.kernel.graph.FlowActivity;
 import org.uengine.util.UEngineUtil;
 
 
@@ -28,6 +26,7 @@ public class ScopeActivity extends FlowActivity implements MessageListener{
 		public ProcessVariable[] getProcessVariables(){
 			return processVariableDescriptors;
 		}		
+		@Hidden
 		public ProcessVariable getProcessVariable(String pvName) {
 			String pvNameLower = pvName.toLowerCase();
 			if(pvName.indexOf('.') > -1){
@@ -52,14 +51,14 @@ public class ScopeActivity extends FlowActivity implements MessageListener{
 		public void setProcessVariables(ProcessVariable[] pvds){
 			this.processVariableDescriptors = pvds;
 			processVariableDescriptorsHT = new Hashtable();
-			
-			for(int i=0; i<processVariableDescriptors.length; i++)
-				processVariableDescriptorsHT.put(
-					processVariableDescriptors[i].getName().toLowerCase(),
-					processVariableDescriptors[i]
-				);
-			
-			firePropertyChangeEvent(new PropertyChangeEvent(this, "processVariables", pvds, pvds));
+			if( processVariableDescriptors != null ){
+				for(int i=0; i<processVariableDescriptors.length; i++)
+					processVariableDescriptorsHT.put(
+						processVariableDescriptors[i].getName().toLowerCase(),
+						processVariableDescriptors[i]
+					);
+				firePropertyChangeEvent(new PropertyChangeEvent(this, "processVariables", pvds, pvds));
+			}
 		}
 
 	EventHandlerPanel eventHandlerPanel;
@@ -72,16 +71,17 @@ public class ScopeActivity extends FlowActivity implements MessageListener{
 		public void setEventHandlers(EventHandler[] eventHandlers) {
 			
 			this.eventHandlers = eventHandlers;
-
-			for(int i=0; i<eventHandlers.length; i++){
-				Activity eventHandlingActivity = eventHandlers[i].getHandlerActivity(); 
-				
-				eventHandlingActivity.setParentActivity(this);
-				autoTag(eventHandlingActivity);
-				
-				if(getProcessDefinition()!=null)
-					getProcessDefinition().registerActivity(eventHandlingActivity);
-			}			
+			if( eventHandlers != null ){
+				for(int i=0; i<eventHandlers.length; i++){
+					Activity eventHandlingActivity = eventHandlers[i].getHandlerActivity(); 
+					
+					eventHandlingActivity.setParentActivity(this);
+					autoTag(eventHandlingActivity);
+					
+					if(getProcessDefinition()!=null)
+						getProcessDefinition().registerActivity(eventHandlingActivity);
+				}			
+			}
 		}	
 	
 	boolean leaveEventListenersEvenIfOutOfScope;

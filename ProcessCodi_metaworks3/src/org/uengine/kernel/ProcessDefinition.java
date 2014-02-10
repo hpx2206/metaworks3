@@ -17,11 +17,8 @@ import javax.wsdl.Message;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.viewer.ViewerOptions;
 import org.uengine.processdesigner.ActivityDesigner;
-import org.uengine.processdesigner.ProcessDesigner;
-import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerFactoryBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.processmanager.ProcessTransactionContext;

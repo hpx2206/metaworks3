@@ -4,34 +4,21 @@ import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.rmi.RemoteException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
+import javax.ejb.RemoveException;
 
 import org.metaworks.annotation.Hidden;
-import org.uengine.kernel.DefaultActivity;
-import org.uengine.processdesigner.ProcessDesigner;
 import org.uengine.processdesigner.SimulatorProcessInstance;
-import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerFactoryBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.processmanager.ProcessTransactionContext;
 import org.uengine.processmanager.TransactionContext;
 import org.uengine.queue.workqueue.WorkProcessorBean;
 import org.uengine.util.ActivityForLoop;
-
-//JMS queuing concerned
-/*import javax.naming.InitialContext;
-import javax.jms.MapMessage;
-import javax.jms.Session;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueConnection;
-import javax.jms.QueueSession;
-import javax.jms.Queue;
-import javax.jms.QueueSender;
-*///end
-import javax.ejb.RemoveException;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.transaction.*;
 
 /**
  * @author Jinyoung Jang
@@ -46,7 +33,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	
 	private static long ERROR_LEVEL_TIMEINMS = 20000;
 
-	private Vector childActivities;
+	private ArrayList<Activity> childActivities;
 
 	private Role[] roles;
 		@Hidden
@@ -57,6 +44,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			this.roles = roles;
 			firePropertyChangeEvent(new PropertyChangeEvent(this, "roles", roles, roles));
 		}
+		@Hidden
 		public Role getRole(String roleName){
 			
 			if(roles != null)
@@ -118,23 +106,22 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	public ComplexActivity(){
 		super("seq");
 		
-		childActivities = new ActivityRepository(this);
+//		childActivities = new ActivityRepository(this);
+		// 2014.02.06 hyungkook childActivities = new ActivityRepository(this); 이렇게 설정시에 dwr collectionConverter 변환 문제
+		childActivities = new ArrayList<Activity>();
 	}
 
 	@Hidden
-	public Vector getChildActivities() {
+	public ArrayList<Activity> getChildActivities() {
 		return childActivities;
 	}
 
-	public void setChildActivities(Vector value) {
+	public void setChildActivities( ArrayList<Activity> value) {
 		childActivities = value;
 	}
 
 	public synchronized void setChildActivities(Activity[] childActivities){
 		setChildActivities(childActivities, true);
-	}
-	public synchronized void addChildActivity(Activity child, int index){
-		addChildActivity(child, index, true);
 	}
 	public synchronized void addChildActivity(Activity child){
 		addChildActivity(child, true);
@@ -150,25 +137,17 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			addChildActivity(childActivities[i], autoTagging);
 		}
 	}
-	public synchronized void addChildActivity(Activity child, int index, boolean autoTagging){
-		//if(autoTagging)
-		autoTag(child);
-		
-//		if(this.childActivities==null) 
-//			this.childActivities = new Vector();
-		this.childActivities.add(index, child);
+	public synchronized void addChildActivity(Activity child, boolean autoTagging){
+		if(autoTagging)
+			autoTag(child);
+
+		this.childActivities.add(child);
 		
 		//TODO not sure
 		child.setParentActivity(this);
 
 		if(getProcessDefinition()!=null)
 			getProcessDefinition().registerActivity(child);
-	}
-	public synchronized void addChildActivity(Activity child, boolean autoTagging){
-		if(autoTagging)
-			autoTag(child);
-
-		addChildActivity(child, -1);
 	}
 
 	public ProcessInstance createInstance(ProcessInstance instanceInCreating) throws Exception{
@@ -179,9 +158,8 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 		setCurrentStep(instanceInCreating, 0);
 		
 		//Lets each child activity initialize process instance
-		Vector childActivities = getChildActivities();	 			
-		for(Enumeration enumeration = childActivities.elements(); enumeration.hasMoreElements(); ){
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();	 			
+		for(Activity child : childActivities){
 			child.createInstance(instanceInCreating);
 		}
 		
@@ -256,7 +234,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			currStep--;
 			if(currStep>=0){
 				setCurrentStep(instance, currStep);
-				Activity activityInTheBackOrder = (Activity)getChildActivities().elementAt(currStep);
+				Activity activityInTheBackOrder = getChildActivities().get(currStep);
 				
 				activityInTheBackOrder.compensateOneStep(instance);
 //				childActivity.suspend(instance);
@@ -269,7 +247,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			currStep++;
 			if(currStep<getChildActivities().size()){
 				setCurrentStep(instance, currStep);
-				Activity childActivity = (Activity)getChildActivities().elementAt(currStep);
+				Activity childActivity = getChildActivities().get(currStep);
 				childActivity.reset(instance);
 				childActivity.suspend(instance);
 			}else{		
@@ -313,7 +291,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			 * This job should be prior than 'super.onEvent()' since sometimes (in case of 'Loop') the child's status can be updated by super.onEvent()
 			 */
 			for(int i=0; i<getChildActivities().size(); i++){
-				Activity activity = (Activity)getChildActivities().elementAt(i);				
+				Activity activity = getChildActivities().get(i);				
 				if(instance.isRunning(activity.getTracingTag())) 
 					instance.setStatus(activity.getTracingTag(), Activity.STATUS_COMPLETED);				
 			}
@@ -330,7 +308,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			return;
 		}
 		
-		Activity childActivity = (Activity)getChildActivities().elementAt(currStep);
+		Activity childActivity = getChildActivities().get(currStep);
 //		if(!childActivity.isBackwardActivity()){
 			queueActivity(childActivity, instance);
 //		}else{//if the activity is a backward activity, which is for compensating and 
@@ -345,8 +323,8 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	//TODO: hotspot. replicate the serialization event
 	
 	public void beforeSerialization(){
-		for(Enumeration enumeration = getChildActivities().elements(); enumeration.hasMoreElements(); ){			
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();	 			
+		for(Activity child : childActivities){
 			if(child instanceof NeedArrangementToSerialize)
 				((NeedArrangementToSerialize)child).beforeSerialization();		
 		}
@@ -364,14 +342,14 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 //			processVariables[i].afterDeserialization();			
 //		}
 		//TODO: This conversion job is only needed in design time. Remove these codes someday for performace enhancement.
-		if(!(childActivities instanceof ActivityRepository)){
-			ActivityRepository actRepository = new ActivityRepository(this);
-			actRepository.addAll(childActivities);
-			childActivities = actRepository;
-		}
+//		if(!(childActivities instanceof ActivityRepository)){
+//			ActivityRepository actRepository = new ActivityRepository(this);
+//			actRepository.addAll(childActivities);
+//			childActivities = actRepository;
+//		}
 		
-		for(Enumeration enumeration = getChildActivities().elements(); enumeration.hasMoreElements(); ){			
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();	 			
+		for(Activity child : childActivities){
 			child.setParentActivity(this);
 			
 			if(child instanceof NeedArrangementToSerialize)
@@ -698,10 +676,11 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 				}
 			}
 			
-			if(options==null || (options!=null && !options.containsKey(ValidationContext.OPTIONKEY_DISABLE_REPLICATION)))
-			for(Enumeration enumeration = getChildActivities().elements(); enumeration.hasMoreElements(); ){
-				Activity child = (Activity)enumeration.nextElement();
-				valCtx.addAll(child.validate(options));
+			if(options==null || (options!=null && !options.containsKey(ValidationContext.OPTIONKEY_DISABLE_REPLICATION))){
+				ArrayList<Activity> childActivities = getChildActivities();	 			
+				for(Activity child : childActivities){
+					valCtx.addAll(child.validate(options));
+				}
 			}
 		}else{
 //System.out.println("valCtx:"+valCtx);
@@ -712,10 +691,9 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	}
 	
 	public void skip(ProcessInstance instance) throws Exception{
-		Vector childActivities = getChildActivities();
 		int currStep = getCurrentStep(instance);
-		for(int i = currStep; i<childActivities.size(); i++){
-			Activity child = (Activity)childActivities.elementAt(i);
+		ArrayList<Activity> childActivities = getChildActivities();
+		for(Activity child : childActivities){
 			child.skip(instance);
 		}
 //		super.skip(instance);//the last child will invoke this
@@ -729,7 +707,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 //		System.out.println("Rolling back activity: " + getTracingTag());
 
 		//int currStep = getCurrentStep(instance);
-		Vector childActivities = getChildActivities();
+		ArrayList<Activity> childActivities = getChildActivities();
 		
 		//Actually complex activity (basically sequence activity's behavior) only need to compensate from the first child to the currently running child,
 		// In the other hand, other complex activities like SwitchActivity or AllActivity should check their child activities entirely and compensate only the child in running (compensatable) state.
@@ -737,7 +715,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 		int compensatedCnt = 0;
 		if(childActivities.size() > 0){
 			for(int i = /*currStep*/ childActivities.size()-1; i>=0; i--){  
-				Activity child = (Activity)childActivities.elementAt(i);
+				Activity child = childActivities.get(i);
 				if(Activity.isCompensatable(child.getStatus(instance))){
 					child.compensate(instance);
 					neverAffected = false;
@@ -815,10 +793,8 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	public void reset(ProcessInstance instance) throws Exception{
 		setCurrentStep(instance, 0);
 		
-		//Lets each child activity reset instance
-		Vector childActivities = getChildActivities();	 			
-		for(Enumeration enumeration = childActivities.elements(); enumeration.hasMoreElements(); ){
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();
+		for(Activity child : childActivities){
 			child.reset(instance);
 		}
 		
@@ -831,7 +807,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			currStep = getChildActivities().size()-1;
 		}
 		
-		Activity child = (Activity)getChildActivities().elementAt(currStep);
+		Activity child = getChildActivities().get(currStep);
 		child.suspend(instance);
 	}		
 	
@@ -840,9 +816,8 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	}
 
 	public void stop(ProcessInstance instance,String status) throws Exception {
-		Vector childActivities = getChildActivities();	 			
-		for(Enumeration enumeration = childActivities.elements(); enumeration.hasMoreElements(); ){
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();
+		for(Activity child : childActivities){
 //			if(child instanceof ComplexActivity){
 //				child.stop(instance);
 //			}else{
@@ -861,7 +836,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 		//TODO: [bug should be fixed someday: when I uncomment following line, jboss hangs up when try to read the value]
 //		int currStep = getCurrentStep(instance);
 		for(int i=0; i<getChildActivities().size(); i++){
-			Activity child = (Activity)getChildActivities().elementAt(i);
+			Activity child = getChildActivities().get(i);
 			child.fireChanged(instance);
 			
 			//TODO: [performance] [dynamic Change] [disabled] 
@@ -889,7 +864,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 			ComplexActivity complexActivity = (ComplexActivity)child;
 			
 			for(int i=0; i < complexActivity.getChildActivities().size(); i++){
-				Activity childAct = (Activity)complexActivity.getChildActivities().elementAt(i);					
+				Activity childAct = (Activity)complexActivity.getChildActivities().get(i);	
 				autoTag(childAct);
 			}
 		}
@@ -936,7 +911,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 				return null;			
 
 		}else{
-			Activity act = (Activity)getChildActivities().elementAt(where);
+			Activity act = getChildActivities().get(where);
 			
 			if(act instanceof ComplexActivity){				
 				return ((ComplexActivity)act).getLastActivities();				
@@ -953,7 +928,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	public Vector getLastActivities(){
 		if(childActivities.size() == 0) return null;
 		
-		Activity act = (Activity)getChildActivities().lastElement();
+		Activity act = (Activity)getChildActivities().get(childActivities.size()-1);
 		if(act instanceof ComplexActivity)
 			return ((ComplexActivity)act).getLastActivities();
 		else{
@@ -967,7 +942,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 		int where = childActivities.indexOf(child);
 				
 		for(int i=where + 1; i<childActivities.size(); i++){
-			Activity theChild = (Activity)childActivities.elementAt(i);
+			Activity theChild = (Activity)childActivities.get(i);
 			
 			if(theChild.getStatus(instance).equals(Activity.STATUS_READY)){
 				break; //return; //The old version simply return to get out of this method since we've thought the following activities, where after occurrent of any of 'ready' activity, don't need to be compensated.
@@ -986,10 +961,9 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 		if(checkCollision && !ok) return false;
 
 		int i=0;
-		for(Enumeration enumeration = getChildActivities().elements(); enumeration.hasMoreElements(); ){
-			Activity childAct = (Activity)enumeration.nextElement();
-				
-			ok = childAct.registerToProcessDefinition(autoTagging, checkCollision);
+		ArrayList<Activity> childActivities = getChildActivities();
+		for(Activity child : childActivities){
+			ok = child.registerToProcessDefinition(autoTagging, checkCollision);
 			if(checkCollision && !ok) return false;
 		}
 		
@@ -998,7 +972,7 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	
 	protected boolean compensateChild(ProcessInstance instance, Activity child) throws Exception{
 		// this would be invoked only by parallel activity types such as Switch or All.
-		Vector childActivities = getChildActivities();
+		ArrayList<Activity> childActivities = getChildActivities();
 		if(!childActivities.contains(child)) 
 			throw new UEngineException("Illegal compensation request. The activity [" + child + "] is not a child of complex activity [" + this + "].");
 
@@ -1106,8 +1080,8 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 		super.usabilityCheck(values);
 
 		if(getChildActivities()!= null && getChildActivities().size() > 0){
-			for(Enumeration enumeration = getChildActivities().elements(); enumeration.hasMoreElements(); ){
-				Activity child = (Activity)enumeration.nextElement();
+			ArrayList<Activity> childActivities = getChildActivities();
+			for(Activity child : childActivities){
 				child.usabilityCheck(values);	
 			}
 		}

@@ -1,15 +1,11 @@
-package org.uengine.kernel.graph;
+package org.uengine.kernel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.uengine.kernel.Activity;
-import org.uengine.kernel.ActivityReference;
-import org.uengine.kernel.ComplexActivity;
-import org.uengine.kernel.ProcessInstance;
-import org.uengine.kernel.UEngineException;
+import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessTransactionContext;
 
 public class FlowActivity extends ComplexActivity {
@@ -75,6 +71,13 @@ public class FlowActivity extends ComplexActivity {
 
 	@Override
 	protected void executeActivity(ProcessInstance instance) throws Exception {
+		//TODO: find out events and register them as event listeners as follows:
+		// for each events:   getProcessDefinition().addMessageListener(instance, eventActivity);
+		for(Activity childActivity: getChildActivities()){
+			if(childActivity instanceof MessageListener && childActivity.getIncomingTransitions()==null){
+				getProcessDefinition().addMessageListener(instance, (MessageListener)childActivity);
+			}
+		}
 		if (getTransitions().size() == 0) {
 //			System.out.println("This is conventional uengine process - 2");
 			super.executeActivity(instance);

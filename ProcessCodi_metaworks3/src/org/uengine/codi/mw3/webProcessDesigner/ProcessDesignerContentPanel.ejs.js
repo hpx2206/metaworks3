@@ -39,7 +39,6 @@ $.ui.intersect = function(draggable, droppable, toleranceMode) {
 			var draggableLeft = ((draggable.positionAbs || draggable.position.absolute).left + (draggable.clickOffset || draggable.offset.click).left),
 			draggableTop = ((draggable.positionAbs || draggable.position.absolute).top + (draggable.clickOffset || draggable.offset.click).top),
 			isOver = $.ui.isOver(draggableTop, draggableLeft, t, l, boundary._height, boundary._width);
-			
 			return isOver;
 			
 			break;
@@ -415,7 +414,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.sh
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.clear = function(){
 	this.icanvas.clear();
 };
-//TODO delete test code 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.findSwimlane = function(parentId){
 	var $parentId = $('#'+parentId);
 	if( $parentId ){
@@ -423,13 +421,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.fi
 		if( classType == 'Role'){
 			return parentId;
 		}else{
-			return this.findSwimlane();
+			// parent를 찾아가는 로직이 필요함...
+			//return this.findSwimlane();
 		}
 	}
 	return null;
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.getValue = function(){
 	var graphJson = this.icanvas.toJSON();
+	console.log(graphJson);
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
 	var activityList = [];
@@ -495,58 +495,96 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			if(key == '@style'){
 				cellForDwr['style'] = og[key];
 			}
+			if(key == '@swimlane'){
+				cellForDwr['swimlane'] = og[key];
+			}
+			if(key == '@childs'){
+				cellForDwr['childs'] = og[key];
+			}
 		}
-//		cellsForDwr[cellsForDwr.length] = cellForDwr;
 		
 		var $id = $('#'+og['@id']);
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['__className'] = $id.attr('_viewClass');
-			var classname = $id.attr('_classname');
-			var classType = $id.attr('_classType');
-			cellForDwr['activityClass'] = classname;
-			cellForDwr['classType'] = classType;
-			//set Activity, Role
-			var activity = $id.data('activity');
-			if( activity ){
-				activity.activityView = cellForDwr;
-				if(classType == 'Activity'){
-					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
-					if( (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')  && cellForDwr.parent){
-						var parentRoleId = this.findSwimlane(cellForDwr.parent);
-						if( parentRoleId != null ){
-							var role = $('#'+parentRoleId).data('role');
-							activity.role = role;
-						}
-					}
-					activityList[activityIdx++] = activity;
-				}
-			}
+//			var classname = $id.attr('_classname');
+//			var classType = $id.attr('_classType');
+			cellForDwr['activityClass'] = $id.attr('_classname');
+			cellForDwr['classType'] = $id.attr('_classType');
+			//set Activity
+			activityList = this.activitySetting($id, cellForDwr, activityList, activityIdx);
+			//set ValueChain
+			roleList     = this.roleSetting($id, cellForDwr, roleList, roleIdx);
+			//set ValueChain
+			valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList, valueChainIdx);
+			
+//			var activity = $id.data('activity');
+//			if( activity ){
+//				activity.activityView = cellForDwr;
+//				if(classType == 'Activity' ){
+//					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
+//					if( cellForDwr.swimlane && (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')){
+//						var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
+//						if( parentRoleId != null ){
+//							var role = $('#'+parentRoleId).data('role');
+//							activity.role = role;
+//						}
+//					}
+//					if(cellForDwr.parent){
+//						// 스콥에만 해당시키고 definition 에는 포함안시키기 위하여 
+//						// 음.. 이렇게 하면 scope 안쪽의 humanActivity 에 롤이 셋팅 안되는 경우가 발생할수 있을듯한데..
+//						continue;
+//					}
+//					if(cellForDwr.childs){
+//						// 두번째 로드를 하였을때 값이 셋팅이 되어있지 않다.
+////						console.log(cellForDwr.childs);
+//						if (classname == 'org.uengine.kernel.ScopeActivity') {
+//							var childLen = 0;
+//							for(var k = 0; k < cellForDwr.childs.length; k++){
+//								var $childId = $('#'+cellForDwr.childs[k]);
+//								var childClassType = $childId.attr('_classType');
+//								if (childClassType == 'Activity') {
+////									console.log(activity.childActivities);
+//									if( activity.childActivities ){
+//										// 여기서 에러 발생
+//										activity.childActivities[childLen++] = $childId.data('activity');
+////                                        console.log($childId.data('activity'));
+//
+//									}
+//								}
+//							}
+//						}
+//					}
+//					activityList[activityIdx++] = activity;
+//				}
+//			}
 			
 			//set Role
-			var role = $id.data('role');
-			if(role){
-				role.roleView = cellForDwr;
-				if(classType == 'Role'){
-					roleList[roleIdx++] = role;
-				}
-			}
+//			var role = $id.data('role');
+//			if(role){
+//				role.roleView = cellForDwr;
+//				if(classType == 'Role'){
+//					roleList[roleIdx++] = role;
+//				}
+//			}
 			
 			//set ValueChain
-			var valuechain = $id.data('valuechain');
-			if(valuechain){
-				valuechain.valueChainView = cellForDwr;
-				if(classType == 'ValueChain'){
-					valueChainList[valueChainIdx++] = valuechain;
-				}
-			}
+//			var valuechain = $id.data('valuechain');
+//			if(valuechain){
+//				valuechain.valueChainView = cellForDwr;i9p
+
+//				if(classType == 'ValueChain'){
+//					valueChainList[valueChainIdx++] = valuechain;
+//				}
+//			}
 		}
 		if( og['@shapeType'] == 'EDGE'){
-			var transition = $id.data('transition');
-			if( transition ){
-				transitionList[transitionIdx++] = transition;
-				transition.transitionView = cellForDwr;
-			}
+			transitionList = this.transitionSetting($id, cellForDwr, transitionList, transitionIdx);
+//			var transition = $id.data('transition');
+//			if( transition ){
+//				transitionList[transitionIdx++] = transition;
+//				transition.transitionView = cellForDwr;
+//			}
 		}
 	}
 	var object = mw3.objects[this.objectId];
@@ -567,6 +605,84 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	return object;
 };
 
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.activitySetting = function(idDiv, cellForDwr, list, count){
+	var activity = idDiv.data('activity');
+    if( activity ){
+		var classname = idDiv.attr('_classname');
+        var classType = idDiv.attr('_classType');
+        activity.activityView = cellForDwr;
+        if(classType == 'Activity' ){
+            // TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
+            if( cellForDwr.swimlane && (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')){
+                var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
+                if( parentRoleId != null ){
+                    var role = $('#'+parentRoleId).data('role');
+                    activity.role = role;
+                }
+            }
+            if(cellForDwr.parent){
+                // 스콥에만 해당시키고 definition 에는 포함안시키기 위하여 
+                // 음.. 이렇게 하면 scope 안쪽의 humanActivity 에 롤이 셋팅 안되는 경우가 발생할수 있을듯한데..
+				return list;
+            }
+            if(cellForDwr.childs){
+                // 두번째 로드를 하였을때 값이 셋팅이 되어있지 않다.
+                  console.log(cellForDwr.childs);
+                if (classname == 'org.uengine.kernel.ScopeActivity') {
+                    var childLen = 0;
+					var childTransitionList = [];
+					var childTransitionIdx = 0;
+                    for(var k = 0; k < cellForDwr.childs.length; k++){
+                        var $childId = $('#'+cellForDwr.childs[k]);
+                        var childClassType = $childId.attr('_classType');
+						var childShapType = $childId.attr('_shape');
+                        if(childShapType != 'EDGE' && childClassType == 'Activity') {
+                            if( activity.childActivities ){
+                                activity.childActivities[childLen++] = $childId.data('activity');
+                            }
+                        }
+						if(childShapType == 'EDGE') {
+							childTransitionList = this.transitionSetting($childId, null, childTransitionList, childTransitionIdx);
+						}
+                    }
+					activity.transitions = childTransitionList;
+                }
+            }
+            list[list.length] = activity;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.roleSetting = function(idDiv, cellForDwr, list, count){
+	var role = idDiv.data('role');
+    if(role){
+        role.roleView = cellForDwr;
+		var classType = idDiv.attr('_classType');
+        if(classType == 'Role'){
+            list[list.length] = role;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.valueChainSetting = function(idDiv, cellForDwr, list, count){
+	var valuechain = idDiv.data('valuechain');
+    if(valuechain){
+        valuechain.valueChainView = cellForDwr;
+		var classType = idDiv.attr('_classType');
+        if(classType == 'ValueChain'){
+            list[list.length] = valuechain;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.transitionSetting = function(idDiv, cellForDwr, list, count){
+	var transition = idDiv.data('transition');
+    if( transition ){
+        list[list.length] = transition;
+        transition.transitionView = cellForDwr;
+    }
+	return list;
+};
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.startLoading = function(){
 	this.divObj.trigger('startLoading');

@@ -128,6 +128,13 @@ public class CanvasDTO implements Serializable{
 			public void setData(String data) {
 				this.data = data;
 			}
+		String swimlane;
+			public String getSwimlane() {
+				return swimlane;
+			}
+			public void setSwimlane(String swimlane) {
+				this.swimlane = swimlane;
+			}
 		boolean drawByObject;
 			public boolean isDrawByObject() {
 				return drawByObject;
