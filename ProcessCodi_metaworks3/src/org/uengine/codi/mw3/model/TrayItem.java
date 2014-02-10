@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -57,6 +58,10 @@ public class TrayItem implements ContextAware {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
 		
+		if(instance.databaseMe().getIsDeleted()){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		
 		instanceView.session = session;
 		instanceView.load(instance);
 		
@@ -87,6 +92,9 @@ public class TrayItem implements ContextAware {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
 		
+		if(instance.databaseMe().getIsDeleted()){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance.databaseMe());
 		
