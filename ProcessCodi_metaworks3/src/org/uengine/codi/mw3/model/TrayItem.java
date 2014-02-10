@@ -87,6 +87,7 @@ public class TrayItem implements ContextAware {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
 		
+		instanceViewContent.session = session;
 		instanceViewContent.load(instance.databaseMe());
 		
 		return instanceViewContent;
