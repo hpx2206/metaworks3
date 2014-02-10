@@ -19,10 +19,19 @@ org_uengine_codi_mw3_model_InstanceList.prototype = {
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();
+		else{
+			$('.moreBtn5').hide();
+			$('.moreBtn6').show();		
+		}		
 	},
 	endLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
+		else{
+			$('.moreBtn5').show();
+			$('.moreBtn6').hide();
+			
+		}		
 	},
 	showStatus : function(message){
 		
