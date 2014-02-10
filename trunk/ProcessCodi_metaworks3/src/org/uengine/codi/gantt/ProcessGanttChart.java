@@ -2,6 +2,7 @@ package org.uengine.codi.gantt;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -196,10 +197,10 @@ public class ProcessGanttChart {
 		ProcessDefinition processDefinition = instance.getProcessDefinition();
 
 		// taskData 맵핑
-		Vector childActivities = ((ComplexActivity) processDefinition).getChildActivities();
+		ArrayList<Activity> childActivities = ((ComplexActivity) processDefinition).getChildActivities();
 
 		for (int i = 0; i < childActivities.size(); i++) {
-			Activity act = (Activity) childActivities.elementAt(i);
+			Activity act = (Activity) childActivities.get(i);
 
 				taskData = new TaskData();
 				
@@ -226,7 +227,7 @@ public class ProcessGanttChart {
 				getTasks().taskList.add(taskData);
 
 				//for subActivities
-				Vector subActs = pd.getChildActivities();
+				ArrayList<Activity> subActs = pd.getChildActivities();
 				
 				Iterator itr = subActs.iterator();
 				

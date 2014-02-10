@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.EmptyActivity;
+import org.uengine.kernel.FlowActivity;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessInstance;

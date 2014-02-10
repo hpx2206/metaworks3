@@ -1,10 +1,19 @@
 package com.defaultcompany.wih.approvalhandler;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
-import org.uengine.kernel.*;
-import org.uengine.util.ActivityForLoop;
+import org.uengine.kernel.Activity;
+import org.uengine.kernel.AllActivity;
+import org.uengine.kernel.ComplexActivity;
+import org.uengine.kernel.FormApprovalActivity;
+import org.uengine.kernel.FormApprovalLineActivity;
+import org.uengine.kernel.ProcessInstance;
+import org.uengine.kernel.RoleMapping;
+import org.uengine.kernel.SwitchActivity;
 import org.uengine.util.dao.ConnectiveDAO;
 import org.uengine.util.dao.IDAO;
 
@@ -124,7 +133,7 @@ public class ApprovalLineService {
 		
 		List<HashMap> approverList = new ArrayList<HashMap>();
 		
-		Vector<Activity> vChildActivities = formApprovalLineActivity.getChildActivities();
+		ArrayList<Activity> vChildActivities = formApprovalLineActivity.getChildActivities();
 
 		for(int i=0; i<vChildActivities.size(); i++){
 			boolean isDraft =false;

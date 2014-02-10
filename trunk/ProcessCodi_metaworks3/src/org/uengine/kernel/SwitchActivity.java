@@ -31,7 +31,7 @@ public class SwitchActivity extends ComplexActivity{
 
 	Activity defaultActivity;
 		public Activity getDefaultActivity() {
-			Vector childs = getChildActivities();
+			ArrayList<Activity> childs = getChildActivities();
 			
 			if(childs.size()==1)
 				return null;
@@ -39,7 +39,7 @@ public class SwitchActivity extends ComplexActivity{
 			// 01.16 김형국 - 디자이너에서 더블클릭시 child가 없기때문에.. 우선 추가함 TODO 삭제
 			if(childs.size()==0)
 				return null;
-			defaultActivity = (Activity) childs.elementAt(childs.size() - 1);
+			defaultActivity = childs.get(childs.size() - 1);
 
 			return defaultActivity;
 		}
@@ -85,7 +85,13 @@ public class SwitchActivity extends ComplexActivity{
 	
 	public SwitchActivity(Condition[] conditions, Activity[] childActivities){
 		super();
-		setChildActivities(childActivities);
+		ArrayList<Activity> chidActivity = new ArrayList<Activity>();
+		if( childActivities != null ){
+			for(int i =0; i < childActivities.length; i++){
+				chidActivity.add(childActivities[i]);
+			}
+		}
+		setChildActivities(chidActivity);
 		this.conditions = conditions;
 	}
 
@@ -95,10 +101,8 @@ public class SwitchActivity extends ComplexActivity{
 				
 		int i=0;
 		List queuingActivities = new ArrayList();
-		Vector childActivities = getChildActivities();	 			
-System.out.println("SwitchActivity::conditions: "+conditions);
-		for(Enumeration enumeration = childActivities.elements(); enumeration.hasMoreElements(); ){
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();
+		for(Activity child : childActivities){
 //			if(!enum.hasMoreElements()) break;
 			
 System.out.println("	conditions[i]: "+conditions[i]);
@@ -144,7 +148,7 @@ System.out.println("	conditions[i]: "+conditions[i]);
 	
 	protected void onEvent(String command, ProcessInstance instance, Object payload) throws Exception{
 		if(command.equals(CHILD_COMPENSATED)){
-			Vector childs = getChildActivities();
+			ArrayList<Activity> childs = getChildActivities();
 			boolean stillRunning = false;
 			for(int i=0; i<childs.size(); i++){
 				Activity theChild = (Activity)childs.get(i);
@@ -166,7 +170,7 @@ System.out.println("	conditions[i]: "+conditions[i]);
 			fireSkipped(instance);
 		}else 
 		if(command.equals(CHILD_DONE)){
-			Vector childs = getChildActivities();
+			ArrayList<Activity> childs = getChildActivities();
 			boolean stillRunning = false;
 			
 			int finishedPathCnt = getFinishedPathCount(instance) + 1;
@@ -259,9 +263,8 @@ System.out.println("	conditions[i]: "+conditions[i]);
 		//Lets each child activity reset instance
 		boolean allChildReset = true;
 
-		Vector childActivities = getChildActivities();	 			
-		for(Enumeration enumeration = childActivities.elements(); enumeration.hasMoreElements(); ){
-			Activity child = (Activity)enumeration.nextElement();
+		ArrayList<Activity> childActivities = getChildActivities();
+		for(Activity child : childActivities){
 			
 			String status = child.getStatus(instance);
 			

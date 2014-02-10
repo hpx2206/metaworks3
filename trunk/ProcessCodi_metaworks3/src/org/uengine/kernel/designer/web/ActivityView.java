@@ -118,7 +118,10 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 					}
 				}
 			}
-			
+//			if( activity instanceof ScopeActivity){
+//				((ScopeActivity)activity).setProcessVariables(new ProcessVariable[0]);
+//				((ScopeActivity)activity).setEventHandlers(new EventHandler[0]);
+//			}
 		}
 		activity.setActivityView(this);
 		

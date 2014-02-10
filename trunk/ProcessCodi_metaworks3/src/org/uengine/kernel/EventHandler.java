@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.inputter.AbstractComponentInputter;
@@ -108,6 +109,7 @@ public class EventHandler implements Serializable{
 	Role openRoles;
 	int triggeringMethod = TRIGGERING_BY_EVENTBUTTON;
 	
+	@Hidden
 	public Activity getHandlerActivity() {
 		return handlerActivity;
 	}

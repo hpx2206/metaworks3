@@ -11,6 +11,7 @@ import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
 import org.uengine.kernel.Role;
+import org.uengine.kernel.ScopeActivity;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.designer.web.ActivityView;
@@ -127,28 +128,7 @@ public class ProcessDesignerContainer {
 		int tagCnt = 0;
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
 			Activity activity = (Activity)def.getChildActivities().get(l);
-			activity = this.ignoreVariableType(activity);
-			ActivityView view = activity.getActivityView();
-			if( view != null ){
-				view.setViewType(viewType);
-				view.setEditorId(getEditorId());
-				view.setActivity(activity);
-				// 엑티비티의 max 좌표 구하기
-				int viewX = view.getX() != null ? Integer.parseInt(view.getX()) : 0 ;
-				int viewY = view.getY() != null ? Integer.parseInt(view.getY()) : 0 ;
-				int viewWidth = view.getWidth() != null ? Integer.parseInt(view.getWidth()) : 0 ;
-				int viewHeight = view.getHeight() != null ? Integer.parseInt(view.getHeight()) : 0 ;
-				if( viewX > maxX ){
-					maxX = viewX + viewWidth;
-				}
-				if( viewY > maxY ){
-					maxY = viewY + viewHeight;
-				}
-			}
-			if( Integer.parseInt(activity.getTracingTag()) > tagCnt )
-				tagCnt = Integer.parseInt(activity.getTracingTag());
-			
-			activityList.add(activity);
+			tagCnt = this.loadActivity(tagCnt, activity);
 		}
 		lastTracingTag = String.valueOf(tagCnt + 1);
 		
@@ -187,6 +167,42 @@ public class ProcessDesignerContainer {
 			pvList.add(this.ignoreVariableType(processVariable));
 		}
 		processVariablePanel.setVariableList(pvList);
+	}
+	
+	public int loadActivity(int lastTagcount , Activity activity){
+		
+		activity = this.ignoreVariableType(activity);
+		ActivityView view = activity.getActivityView();
+		if( view != null ){
+			view.setViewType(viewType);
+			view.setEditorId(getEditorId());
+			view.setActivity(activity);
+			// 엑티비티의 max 좌표 구하기
+			int viewX = view.getX() != null ? Integer.parseInt(view.getX()) : 0 ;
+			int viewY = view.getY() != null ? Integer.parseInt(view.getY()) : 0 ;
+			int viewWidth = view.getWidth() != null ? Integer.parseInt(view.getWidth()) : 0 ;
+			int viewHeight = view.getHeight() != null ? Integer.parseInt(view.getHeight()) : 0 ;
+			if( viewX > maxX ){
+				maxX = viewX + viewWidth;
+			}
+			if( viewY > maxY ){
+				maxY = viewY + viewHeight;
+			}
+		}
+		if( Integer.parseInt(activity.getTracingTag()) > lastTagcount )
+			lastTagcount = Integer.parseInt(activity.getTracingTag());
+		
+		activityList.add(activity);
+		
+		if( activity instanceof ScopeActivity){
+			ArrayList<Activity> childActivities = ((ScopeActivity) activity).getChildActivities();
+			if( childActivities != null){
+				for( int i=0; i < childActivities.size(); i++){
+					lastTagcount = loadActivity(lastTagcount , childActivities.get(i));
+				}
+			}
+		}
+		return lastTagcount;
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container) throws Exception{
