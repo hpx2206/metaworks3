@@ -426,7 +426,7 @@ public class ScheduleCalendar implements ContextAware {
 			} else {
 
 				instanceViewContent.session = session;
-				instanceViewContent.load(instance);
+				instanceViewContent.load(instance.databaseMe());
 				
 				return new Object[]{new Refresh(instanceViewContent)};
 				
