@@ -170,7 +170,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			
 			return this.initiate(); //new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
 		}else
-			return new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
+			return new Object[]{new Remover(new Popup(), true), new Refresh(processMapList)};
 	}
 	
 	public Object[] remove() throws Exception {
