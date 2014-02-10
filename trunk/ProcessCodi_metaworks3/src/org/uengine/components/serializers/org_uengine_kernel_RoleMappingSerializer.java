@@ -133,22 +133,22 @@ public class org_uengine_kernel_RoleMappingSerializer implements Serializer{
 	}
 	
 	public static void main(String[] args) throws Exception{
-		RoleMapping rm = RoleMapping.create();
-		
-		rm.setName("drafter");
-		rm.setEndpoint("aaa");
-		rm.setEmailAddress("aaa@abc.com");
-		rm.setResourceName("ÀåÁø¿µ");
-		rm.setExtendedProperty("loginName", "uengine");
-		rm.setExtendedProperty("deptId", "±â¼ú¿¬±¸¼Ò");
-		
-		GlobalContext.serialize(rm, System.out, RoleMapping.class);
-		
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		GlobalContext.serialize(rm, bao, RoleMapping.class);
-		
-		ByteArrayInputStream bis = new ByteArrayInputStream(bao.toString().getBytes(GlobalContext.DATABASE_ENCODING));
-		RoleMapping rm2 = (RoleMapping)GlobalContext.deserialize(bis, RoleMapping.class);
+//		RoleMapping rm = RoleMapping.create();
+//		
+//		rm.setName("drafter");
+//		rm.setEndpoint("aaa");
+//		rm.setEmailAddress("aaa@abc.com");
+//		rm.setResourceName("ï¿½ï¿½ï¿½ï¿½");
+//		rm.setExtendedProperty("loginName", "uengine");
+//		rm.setExtendedProperty("deptId", "ï¿½ï¿½ï¿½ï¿½ï¿½");
+//		
+//		GlobalContext.serialize(rm, System.out, RoleMapping.class);
+//		
+//		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+//		GlobalContext.serialize(rm, bao, RoleMapping.class);
+//		
+//		ByteArrayInputStream bis = new ByteArrayInputStream(bao.toString().getBytes(GlobalContext.DATABASE_ENCODING));
+//		RoleMapping rm2 = (RoleMapping)GlobalContext.deserialize(bis, RoleMapping.class);
 		
 	}
 	
