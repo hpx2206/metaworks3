@@ -27,7 +27,7 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 		}		
 
 		var title = (workItem.metaworksContext.when == mw3.WHEN_EDIT) ? workItem.title :'';
-		var comment = prompt('Enter Comment : ', title);
+		var comment = prompt('설명을 입력해주세요 : ', title);
 		
 		if(comment){
 			workItem.rootInstId = parentWorkItem.rootInstId;
