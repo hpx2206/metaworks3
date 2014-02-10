@@ -80,11 +80,13 @@ public class TodoBadgeInstanceList implements ContextAware{
 				todoBadgeIInstanceRef.moveToInsertRow();
 				todoBadgeIInstanceRef.getImplementationObject().copyFrom(instanceContents);
 			}
+			todoBadgeIInstanceRef.setMetaworksContext(new MetaworksContext());
+			todoBadgeIInstanceRef.getMetaworksContext().setWhere(IInstance.WHERE_INSTANCELIST);
+			this.setInstances(todoBadgeIInstanceRef);
+		}else{
+			this.setInstances(null);
 		}
-		todoBadgeIInstanceRef.setMetaworksContext(new MetaworksContext());
-		todoBadgeIInstanceRef.getMetaworksContext().setWhere(IInstance.WHERE_INSTANCELIST);
 		
-		this.setInstances(todoBadgeIInstanceRef);
 		
 		// setting moreInstanceList
 		if( instanceContents.size() >= InstanceList.PAGE_CNT){
