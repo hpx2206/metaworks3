@@ -13968,7 +13968,7 @@ OG.renderer.IRenderer.prototype = {
 	 * @param {OG.geometry.Envelope} envelope Boundary Box 영역
 	 * @return {Element[]} Element
 	 */
-	getElementMapByBBox: function (envelope, _elements) {
+	getElementMapByBBox: function (envelope, _elements, groupId) {
 		var elements = {};
 		if(_elements){
 			elements = _elements;
@@ -13976,7 +13976,15 @@ OG.renderer.IRenderer.prototype = {
 		
 		$(this.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
 			if (element.shape.geom && envelope.isContainsOnce(element.shape.geom.getVertices())) {
-				elements[element.id] = element;
+				if(element.shape instanceof OG.shape.EdgeShape){
+					if( ($(element).attr("_from") + "").indexOf(groupId) < 0 
+						&& ($(element).attr("_to") + "").indexOf(groupId) < 0 )
+					{
+						elements[element.id] = element;
+					}
+				}else{
+					elements[element.id] = element;
+				}
 			}
 		});
 
@@ -23946,7 +23954,9 @@ OG.graph.Canvas.prototype = {
 						cellMap[groupId]['@childs'].push($(childGroupNode).attr('id'));
 						
 						filteredChildNodes = CANVAS._RENDERER.getElementMapByBBox(
-													childGroupNode.shape.geom.getBoundary());
+													childGroupNode.shape.geom.getBoundary()
+													, filteredChildNodes
+													, $(childGroupNode).attr('id'));
 					}
 				}
 				
@@ -23955,7 +23965,8 @@ OG.graph.Canvas.prototype = {
 					filteredChildNode = filteredChildNodes[fcKey];				
 					delete childNodes[$(filteredChildNode).attr('id')];
 				}
-					
+				
+				//console.log("group Id : "+groupId);
 				//set child parent
 				for(var childNodeKey in childNodes){
 					childNode = childNodes[childNodeKey];
@@ -23964,16 +23975,22 @@ OG.graph.Canvas.prototype = {
 						|| childNode.shape instanceof OG.shape.VerticalLaneShape){
 						// no operation
 					}else{
-						cellMap[$(childNode).attr('id')]['@parent'] = groupId;	
-						
-						//if(!(childNode.shape instanceof OG.shape.EdgeShape)){
+						if(childNode.shape instanceof OG.shape.EdgeShape){
+							if( ($(childNode).attr("_from") + "").indexOf(groupId) < 0 
+								&& ($(childNode).attr("_to") + "").indexOf(groupId) < 0 )
+							{
+								cellMap[$(childNode).attr('id')]['@parent'] = groupId;	
+								cellMap[groupId]['@childs'].push($(childNode).attr('id'));							
+							}
+						}else{
+							cellMap[$(childNode).attr('id')]['@parent'] = groupId;	
 							cellMap[groupId]['@childs'].push($(childNode).attr('id'));
-						//}
+						}
 					}
 				}				
 			} //end of for
 		};
-		
+	
 		var swimlaneNodes = [];
 		var CheckRoleFromArea = function(swimlaneNodes){
 			//get area
@@ -24125,7 +24142,7 @@ OG.graph.Canvas.prototype = {
 					if (label) {
 						shape.label = label;
 					}
-					element = this.drawShape([x, y], shape, [width, height], OG.JSON.decode(style), id, parent, false);
+					element = this.drawShape([x, y], shape, [width, height], OG.JSON.decode(style), id, null, false);
 					if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"
 						|| element.shape.SHAPE_ID == "OG.shape.bpmn.A_HumanTask"
 						|| element.shape.SHAPE_ID == "OG.shape.bpmn.A_SystemTask"){
@@ -24154,7 +24171,7 @@ OG.graph.Canvas.prototype = {
 							shape.geom = geom;
 						}
 					}
-					element = this.drawShape(null, shape, null, OG.JSON.decode(style), id, parent, false);
+					element = this.drawShape(null, shape, null, OG.JSON.decode(style), id, null, false);
 					break;
 				case OG.Constants.SHAPE_TYPE.HTML:
 					shape = eval('new ' + shapeId + '()');
@@ -24164,21 +24181,21 @@ OG.graph.Canvas.prototype = {
 					if (label) {
 						shape.label = label;
 					}
-					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent, false);
+					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, null, false);
 					break;
 				case OG.Constants.SHAPE_TYPE.IMAGE:
 					shape = eval('new ' + shapeId + '(\'' + value + '\')');
 					if (label) {
 						shape.label = label;
 					}
-					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent, false);
+					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, null, false);
 					break;
 				case OG.Constants.SHAPE_TYPE.TEXT:
 					shape = eval('new ' + shapeId + '()');
 					if (value) {
 						shape.text = unescape(value);
 					}
-					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent, false);
+					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, null, false);
 					break;
 				}
 
