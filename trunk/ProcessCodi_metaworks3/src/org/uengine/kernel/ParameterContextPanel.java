@@ -46,13 +46,14 @@ public class ParameterContextPanel  implements ContextAware{
 		public void setParameterContext(ParameterContext[] parameterContext) {
 			this.parameterContext = parameterContext;
 		}
-	int selectedIndex; 
-		public int getSelectedIndex() {
-			return selectedIndex;
+	ParameterContext selectedContext;
+		public ParameterContext getSelectedContext() {
+			return selectedContext;
 		}
-		public void setSelectedIndex(int selectedIndex) {
-			this.selectedIndex = selectedIndex;
+		public void setSelectedContext(ParameterContext selectedContext) {
+			this.selectedContext = selectedContext;
 		}
+		
 	public ParameterContextPanel(){
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen("edit");
@@ -95,9 +96,13 @@ public class ParameterContextPanel  implements ContextAware{
 	}
 	@ServiceMethod(callByContent=true)
 	public void removeActivityVariable() throws Exception{
-		if( selectedIndex >= 0){
+		if( selectedContext != null){
 			ParameterContext[] parameterContexts = this.getParameterContext();
-			parameterContexts[selectedIndex] = null;
+			for(int i=0; i < parameterContexts.length; i++){
+				if( selectedContext == parameterContexts[i] ){
+					parameterContexts[i] = null;
+				}
+			}
 			
 			// array null remove
 			ArrayList<ParameterContext> removed = new ArrayList<ParameterContext>();

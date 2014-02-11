@@ -507,8 +507,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['__className'] = $id.attr('_viewClass');
-//			var classname = $id.attr('_classname');
-//			var classType = $id.attr('_classType');
 			cellForDwr['activityClass'] = $id.attr('_classname');
 			cellForDwr['classType'] = $id.attr('_classType');
 			//set Activity
@@ -517,74 +515,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			roleList     = this.roleSetting($id, cellForDwr, roleList);
 			//set ValueChain
 			valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList);
-			
-//			var activity = $id.data('activity');
-//			if( activity ){
-//				activity.activityView = cellForDwr;
-//				if(classType == 'Activity' ){
-//					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
-//					if( cellForDwr.swimlane && (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')){
-//						var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
-//						if( parentRoleId != null ){
-//							var role = $('#'+parentRoleId).data('role');
-//							activity.role = role;
-//						}
-//					}
-//					if(cellForDwr.parent){
-//						// 스콥에만 해당시키고 definition 에는 포함안시키기 위하여 
-//						// 음.. 이렇게 하면 scope 안쪽의 humanActivity 에 롤이 셋팅 안되는 경우가 발생할수 있을듯한데..
-//						continue;
-//					}
-//					if(cellForDwr.childs){
-//						// 두번째 로드를 하였을때 값이 셋팅이 되어있지 않다.
-////						console.log(cellForDwr.childs);
-//						if (classname == 'org.uengine.kernel.ScopeActivity') {
-//							var childLen = 0;
-//							for(var k = 0; k < cellForDwr.childs.length; k++){
-//								var $childId = $('#'+cellForDwr.childs[k]);
-//								var childClassType = $childId.attr('_classType');
-//								if (childClassType == 'Activity') {
-////									console.log(activity.childActivities);
-//									if( activity.childActivities ){
-//										// 여기서 에러 발생
-//										activity.childActivities[childLen++] = $childId.data('activity');
-////                                        console.log($childId.data('activity'));
-//
-//									}
-//								}
-//							}
-//						}
-//					}
-//					activityList[activityIdx++] = activity;
-//				}
-//			}
-			
-			//set Role
-//			var role = $id.data('role');
-//			if(role){
-//				role.roleView = cellForDwr;
-//				if(classType == 'Role'){
-//					roleList[roleIdx++] = role;
-//				}
-//			}
-			
-			//set ValueChain
-//			var valuechain = $id.data('valuechain');
-//			if(valuechain){
-//				valuechain.valueChainView = cellForDwr;i9p
-
-//				if(classType == 'ValueChain'){
-//					valueChainList[valueChainIdx++] = valuechain;
-//				}
-//			}
 		}
 		if( og['@shapeType'] == 'EDGE'){
 			transitionList = this.transitionSetting($id, cellForDwr, transitionList);
-//			var transition = $id.data('transition');
-//			if( transition ){
-//				transitionList[transitionIdx++] = transition;
-//				transition.transitionView = cellForDwr;
-//			}
 		}
 	}
 	var object = mw3.objects[this.objectId];

@@ -3,21 +3,15 @@ var org_uengine_kernel_ParameterContextPanel = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
-	this.clickedIdx = -1;
-	
 };
 
 org_uengine_kernel_ParameterContextPanel.prototype = {
-		clickedItem : function(index){
-			this.clickedIdx = index;
-		},
 		removeItem : function(){
-			if( this.clickedIdx >= 0 ){
-				var object = mw3.objects[this.objectId];
-				object.selectedIndex = this.clickedIdx;
-				object.removeActivityVariable();
-			}else{
+			var object = mw3.objects[this.objectId];
+			if( object.selectedContext == null ){
 				alert('선택된 변수가 없습니다.');
+			}else{
+				object.removeActivityVariable();
 			}
 		}
 };

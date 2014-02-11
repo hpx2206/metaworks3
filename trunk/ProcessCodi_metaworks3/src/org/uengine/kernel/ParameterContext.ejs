@@ -10,9 +10,9 @@
                 variableName = value.variable.name;
             }
 %>      
-                <td><%= variableName %></td>
-                <td style="width:100"><%= value.argument != null ?  value.argument.text : '' %></td>
-                <td><%= value.variable.typeInputter %></td>
+                <td class="parameterContext_td"><%= variableName %></td>
+                <td class="parameterContext_td" style="width:100"><%= value.argument != null ?  value.argument.text : '' %></td>
+                <td class="parameterContext_td"><%= value.variable.typeInputter %></td>
 <%
         }else if(mw3.how == 'add'){
 %>
