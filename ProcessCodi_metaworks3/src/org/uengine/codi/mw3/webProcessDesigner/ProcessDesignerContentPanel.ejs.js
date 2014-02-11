@@ -250,7 +250,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    		}else if( $(shapeElement).attr('_shape_id') == 'OG.shape.bpmn.E_End' ){
 	    			$(shapeElement).attr('_width', '30');
 	    			$(shapeElement).attr('_height', '30');
-	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.StartActivity');
+	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.EndEventActivity');
 	    			$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.ActivityView');
 	    		}
 	    		$(shapeElement).attr('_classType', 'Activity');
@@ -512,11 +512,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			cellForDwr['activityClass'] = $id.attr('_classname');
 			cellForDwr['classType'] = $id.attr('_classType');
 			//set Activity
-			activityList = this.activitySetting($id, cellForDwr, activityList, activityIdx);
+			activityList = this.activitySetting($id, cellForDwr, activityList);
 			//set ValueChain
-			roleList     = this.roleSetting($id, cellForDwr, roleList, roleIdx);
+			roleList     = this.roleSetting($id, cellForDwr, roleList);
 			//set ValueChain
-			valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList, valueChainIdx);
+			valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList);
 			
 //			var activity = $id.data('activity');
 //			if( activity ){
@@ -579,7 +579,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 //			}
 		}
 		if( og['@shapeType'] == 'EDGE'){
-			transitionList = this.transitionSetting($id, cellForDwr, transitionList, transitionIdx);
+			transitionList = this.transitionSetting($id, cellForDwr, transitionList);
 //			var transition = $id.data('transition');
 //			if( transition ){
 //				transitionList[transitionIdx++] = transition;
@@ -605,7 +605,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	return object;
 };
 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.activitySetting = function(idDiv, cellForDwr, list, count){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.activitySetting = function(idDiv, cellForDwr, list){
 	var activity = idDiv.data('activity');
     if( activity ){
 		var classname = idDiv.attr('_classname');
@@ -626,11 +626,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
 				return list;
             }
             if(cellForDwr.childs){
-                // 두번째 로드를 하였을때 값이 셋팅이 되어있지 않다.
-                  console.log(cellForDwr.childs);
                 if (classname == 'org.uengine.kernel.ScopeActivity') {
                     var childLen = 0;
-					var childTransitionList = [];
 					var childTransitionIdx = 0;
                     for(var k = 0; k < cellForDwr.childs.length; k++){
                         var $childId = $('#'+cellForDwr.childs[k]);
@@ -642,10 +639,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
                             }
                         }
 						if(childShapType == 'EDGE') {
-							childTransitionList = this.transitionSetting($childId, null, childTransitionList, childTransitionIdx);
+							if( activity.transitions ){
+                                activity.transitions[childTransitionIdx++] = $childId.data('transition');
+                            }
 						}
                     }
-					activity.transitions = childTransitionList;
                 }
             }
             list[list.length] = activity;
@@ -653,7 +651,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
     }
 	return list;
 };
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.roleSetting = function(idDiv, cellForDwr, list, count){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.roleSetting = function(idDiv, cellForDwr, list){
 	var role = idDiv.data('role');
     if(role){
         role.roleView = cellForDwr;
@@ -664,7 +662,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ro
     }
 	return list;
 };
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.valueChainSetting = function(idDiv, cellForDwr, list, count){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.valueChainSetting = function(idDiv, cellForDwr, list){
 	var valuechain = idDiv.data('valuechain');
     if(valuechain){
         valuechain.valueChainView = cellForDwr;
@@ -675,7 +673,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.va
     }
 	return list;
 };
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.transitionSetting = function(idDiv, cellForDwr, list, count){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.transitionSetting = function(idDiv, cellForDwr, list){
 	var transition = idDiv.data('transition');
     if( transition ){
         list[list.length] = transition;

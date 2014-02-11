@@ -12,14 +12,14 @@ public class FlowActivity extends ComplexActivity {
 	
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 
-	private ArrayList<Transition> transitions = new ArrayList<Transition>();
+	public ArrayList<Transition> transitions;
 		public ArrayList<Transition> getTransitions() {
 			if (this.transitions == null) {
 				this.setTransitions(new ArrayList<Transition>());
 			}
 			return transitions;
 		}
-		private void setTransitions(ArrayList<Transition> transitions) {
+		public void setTransitions(ArrayList<Transition> transitions) {
 			this.transitions = transitions;
 		}
 		public void addTransition(Transition trasition) {
@@ -58,6 +58,9 @@ public class FlowActivity extends ComplexActivity {
 				// null 로 리턴될 경우 super 로직을 태움
 				return null;
 			}else	if (child.getIncomingTransitions().size() == 0) {
+				if( child instanceof EventActivity && child instanceof MessageListener ){
+					continue;
+				}
 				return child;
 			}
 		}
@@ -74,7 +77,8 @@ public class FlowActivity extends ComplexActivity {
 		//TODO: find out events and register them as event listeners as follows:
 		// for each events:   getProcessDefinition().addMessageListener(instance, eventActivity);
 		for(Activity childActivity: getChildActivities()){
-			if(childActivity instanceof MessageListener && childActivity.getIncomingTransitions()==null){
+			if(childActivity instanceof EventActivity && childActivity instanceof MessageListener 
+					&& childActivity.getIncomingTransitions() != null && childActivity.getIncomingTransitions().size() == 0){
 				getProcessDefinition().addMessageListener(instance, (MessageListener)childActivity);
 			}
 		}
@@ -99,42 +103,57 @@ public class FlowActivity extends ComplexActivity {
 		if (getTransitions().size() == 0) {
 //			System.out.println("This is conventional uengine process - 1");
 			super.onEvent(command, instance, payload);
-		}else{
-//			System.out.println("This is graph-based process");
-			if (command.equals(CHILD_DONE)) {
+			
+			return;
+		}
+		
+		
+		if (command.equals(CHILD_DONE)) {
 
-				// when we finish??
-				// boolean stillRunning = false;
-				Activity currentActivity = (Activity) payload;
-				List<Activity> possibleNextActivities = currentActivity.getPossibleNextActivities(instance, "");
-				
-				if (possibleNextActivities.size() == 0) {
-					// fireComplete(instance);
-					 setStatus(instance, STATUS_COMPLETED);
-					 // change the status to be completed 
-					 //after the completion of all the activities
-					 if (instance != null && instance.isSubProcess()) {
-						instance.getProcessDefinition().returnToMainProcess(instance);
-					 }
-				}
-
-				// register token before queueActivity()
-				for (int i = 0; i < possibleNextActivities.size(); i++) {
-					Activity child = possibleNextActivities.get(i);
-					
-					child.reset(instance);
-					child.setStartedTime(instance, (Calendar)null);
-					
-					int tokenCount = child.getTokenCount(instance);
-					child.setTokenCount(instance, ++tokenCount);
-				}
-
-				for (int i = 0; i < possibleNextActivities.size(); i++) {
-					queueActivity(possibleNextActivities.get(i), instance);
-				}
+			// when we finish??
+			// boolean stillRunning = false;
+			Activity currentActivity = (Activity) payload;
+			List<Activity> possibleNextActivities = currentActivity.getPossibleNextActivities(instance, "");
+			
+			if (possibleNextActivities.size() == 0) {
+				// fireComplete(instance);
+				 setStatus(instance, STATUS_COMPLETED);
+				 // change the status to be completed 
+				 //after the completion of all the activities
+				 if (instance != null && instance.isSubProcess()) {
+					instance.getProcessDefinition().returnToMainProcess(instance);
+				 }
+				 
+				 fireComplete(instance);
 			}
+
+			// register token before queueActivity()
+			for (int i = 0; i < possibleNextActivities.size(); i++) {
+				Activity child = possibleNextActivities.get(i);
+				
+				child.reset(instance);
+				child.setStartedTime(instance, (Calendar)null);
+				
+				int tokenCount = child.getTokenCount(instance);
+				child.setTokenCount(instance, ++tokenCount);
+			}
+
+			for (int i = 0; i < possibleNextActivities.size(); i++) {
+				queueActivity(possibleNextActivities.get(i), instance);
+			}
+		}else if(command.equals(ACTIVITY_DONE)){			
+			
+			setStatus(instance, STATUS_COMPLETED);
+			//review: Ensure subclasses are not overrided this method.
+			afterComplete(instance);
+			
+			if(!isFaultTolerant() && getParentActivity()!=null)
+				getParentActivity().onEvent(CHILD_DONE, instance, this);
+		}else{
+			onEvent(command, instance, payload);
 		}
 	}
+		
 	@Override
 	public ActivityReference getInitiatorHumanActivityReference(
 			ProcessTransactionContext ptc) {
