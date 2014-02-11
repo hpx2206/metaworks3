@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -24,6 +25,7 @@ import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
+import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -322,9 +324,22 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		
 			lateBindProperties(getStatement(), pstmt);
 			rowSet = new CachedRowSet();
-//			ResultSet rs = pstmt.executeQuery();
-//			rs.next();
-			rowSet.populate(pstmt.executeQuery());
+			
+			System.out.println("=====>");
+			System.out.println(getStatement());
+			
+			Long startTime = System.nanoTime();
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			System.out.println("query : " + String.valueOf((System.nanoTime() - startTime) / 1000000));
+			
+			rowSet.populate(rs);
+			
+			startTime = System.nanoTime();
+			
+			System.out.println("populate : " + String.valueOf((System.nanoTime() - startTime) / 1000000));
+			
 			rowSet.beforeFirst();
 			
 			isDirty = false;
@@ -1322,9 +1337,17 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						}
 						
 						returnValue = cache.get(propertyName);
-						
 					}
-					
+
+					// processing default value
+					if(null == returnValue){
+						
+						WebFieldDescriptor fd = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName()).getFieldDescriptor(propertyName.toLowerCase());
+						
+						if(fd!=null)
+							returnValue = fd.getDefaultValue();
+					}
+
 					Object converted = desireToConvert(m.getReturnType(), returnValue);
 					
 					if(!(converted instanceof NoReturn))
@@ -1333,8 +1356,6 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 					if(returnValue!=null && !m.getReturnType().isAssignableFrom(returnValue.getClass())){
 						throw new Exception(daoClass.getName() + " DAO's field type of '"+propertyName+"' is mismatch with the actual table's field.");
 					}
-					
-					
 					
 					return returnValue;
 				}

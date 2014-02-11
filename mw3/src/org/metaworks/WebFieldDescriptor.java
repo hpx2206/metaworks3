@@ -120,6 +120,15 @@ public class WebFieldDescriptor {
 		public void setValues(Object[] values) {
 			this.values = values;
 		}
+		
+	String defaultValue;
+		public String getDefaultValue() {
+			return defaultValue;
+		}
+	
+		public void setDefaultValue(String defaultValue) {
+			this.defaultValue = defaultValue;
+		}
 
 //	Map<String, Boolean> boolOptions;
 //		public Map<String, Boolean> getBoolOptions() {
@@ -129,6 +138,7 @@ public class WebFieldDescriptor {
 //			this.boolOptions = boolOptions;
 //		}
 		
+
 	Map<String, Object> attributes;
 		public Map<String, Object> getAttributes() {
 			return attributes;
@@ -136,5 +146,11 @@ public class WebFieldDescriptor {
 		public void setAttributes(Map<String, Object> attributes) {
 			this.attributes = attributes;
 		}
+
+	public Object getAttribute(String name){
+		if(attributes != null)
+			return attributes.get(name);
 		
+		return null;
+	}
 }
