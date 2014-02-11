@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.Date;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Default;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -22,6 +23,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
 @Table(name = "bpm_worklist")
 @Face(
+		ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/IWorkItem.ejs",
 		ejsPathForArray="dwr/metaworks/org/uengine/codi/mw3/model/IWorkItem_array.ejs",
 		ejsPathMappingByContext=
 	{
@@ -117,7 +119,7 @@ public interface IWorkItem extends IDAO{
 			databaseFields = { "content", "instId", "taskId", "trcTag" , "status" }, 
 			objectFields = { "serializedTool", "instanceId", "taskId", "tracingTag" , "status" },
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen= "type=='generic'"
+			availableWhen= {"type=='generic'", "type=='document'"}
 		)
 		public GenericWorkItemHandler getGenericWorkItemHandler();
 		public void setGenericWorkItemHandler(
@@ -136,6 +138,7 @@ public interface IWorkItem extends IDAO{
 				options={"WorkItem","document", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
 				values ={"wih", "document",	 "comment",	"img",		"mov",		"src", 			"file", "schedule" , "postings", "ovryCmnt"}
 		)
+		@Default(value="process")
 		@TypeSelector(
 				values = 		{ 
 						"wih",			
@@ -152,7 +155,8 @@ public interface IWorkItem extends IDAO{
 						"email",
 						"ovryCmnt",
 						"replyCmnt",
-						"remoteConf"
+						"remoteConf",
+						"process"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -169,7 +173,8 @@ public interface IWorkItem extends IDAO{
 						EmailWorkItem.class,
 						OverlayCommentWorkItem.class,
 						ReplyOverlayCommentWorkItem.class,
-						RemoteConferenceWorkItem.class
+						RemoteConferenceWorkItem.class,
+						ProcessWorkItem.class
 					} 
 		)
 		public String getType();
@@ -202,7 +207,7 @@ public interface IWorkItem extends IDAO{
 			databaseFields = {"taskId", "grpTaskId","ext1", "ext2"}, 
 			objectFields = {"taskId", "grpTaskId","convertStatus", "pageCount"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen = {"type=='file'","type=='document'","type=='generic'"}		
+			availableWhen = {"type=='file'"}		
 		)
 		public Preview getPreview();
 		public void setPreview(Preview file);

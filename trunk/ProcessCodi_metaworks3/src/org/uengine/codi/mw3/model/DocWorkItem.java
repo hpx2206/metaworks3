@@ -3,12 +3,23 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Table;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.util.UEngineUtil;
 
-public class DocWorkItem extends WorkItem {
+@Table(name = "bpm_worklist")
+@Face(
+		ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/DocWorkItem.ejs",
+		ejsPathMappingByContext=
+	{
+		"{when: 'new', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IWorkItem_edit.ejs'}",
+		"{when: 'edit', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IWorkItem_edit.ejs'}",
+	}		
+)
+public class DocWorkItem extends GenericWorkItem {
 	
 	
 	public DocWorkItem(){
@@ -30,14 +41,6 @@ public class DocWorkItem extends WorkItem {
 	
 	@Override
 	public Object[] add() throws Exception{
-		if (this.getFile() == null || this.getFile().getFileTransfer() == null
-				|| this.getFile().getFileTransfer().getFilename() == null)
-			throw new MetaworksException("파일을 첨부해주세요.");
-		
-		// 제목이 없으면 파일명을 제목으로
-		if(!UEngineUtil.isNotEmpty(getTitle())){
-			setTitle(new String(this.getFile().getFilename()));
-		}
 		
 		Object[] returnObj = null;
 		
@@ -57,7 +60,7 @@ public class DocWorkItem extends WorkItem {
 		fileWorkItem.setNotReturn(true);
 		fileWorkItem.add();
 
-		
+
 		DocumentTool tool = new DocumentTool();
 		tool.session = session;
 		tool.setInstId(fileWorkItem.getInstId().toString());
@@ -71,23 +74,17 @@ public class DocWorkItem extends WorkItem {
 		
 		GenericWorkItem genericWI = new GenericWorkItem();
 		genericWI.session = session;
-		genericWI.processManager = this.processManager;
-		genericWI.instanceViewContent = this.instanceViewContent;
-		genericWI.newInstancePanel = this.newInstancePanel;
-		genericWI.setInstId(this.getInstId());
-		genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 //			if("normal".equals(this.getMetaworksContext().getHow())){
 //				genericWI.setInstId(this.getInstId());
 //			}else{
 //				genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 //			}
-		genericWI.setWriter(session.getUser());
-		genericWI.setTitle(this.getTitle());//parent.getName());
-		genericWI.setDueDate(this.getDueDate());
-		genericWI.setGrpTaskId(fileWorkItem.getTaskId());
-		genericWI.setGenericWorkItemHandler(genericWIH);
+		this.setWriter(session.getUser());
+		this.setGrpTaskId(fileWorkItem.getTaskId());
+		this.setGenericWorkItemHandler(genericWIH);
 		
-		returnObj = genericWI.add();
+		super.add();
 		
 		// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
 		// 수정처리 해야함

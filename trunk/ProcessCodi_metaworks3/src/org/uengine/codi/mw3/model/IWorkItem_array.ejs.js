@@ -8,7 +8,7 @@ var org_uengine_codi_mw3_model_IWorkItem_array = function(objectId, className){
 	for(var i=0; i<this.object.length; i++){
 		var workItem = this.object[i];
 		
-		if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && (workItem.status == 'NEW' || workItem.status == 'CONFIRMED' || workItem.status == 'DRAFT') && workItem.tool != 'formApprovalHandler')
+		if(workItem.type == 'process' && workItem.tool != 'formApprovalHandler' && (workItem.status == 'NEW' || workItem.status == 'CONFIRMED' || workItem.status == 'DRAFT'))
 			workItem.detail();
 		
 		if(workItem){
