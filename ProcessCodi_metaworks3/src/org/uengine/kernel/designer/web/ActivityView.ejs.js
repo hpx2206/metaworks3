@@ -131,7 +131,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         		drop: function(event, ui){
         			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
         	 		var clipboardNode = session.clipboard;
-//					console.log(clipboardNode);
+					//console.log(clipboardNode);
         			if(clipboardNode){
         				switch (clipboardNode.__className){
         				case 'org.uengine.codi.mw3.knowledge.WfNode':
@@ -144,12 +144,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         				case 'org.uengine.codi.mw3.ide.ResourceNode':
         					switch (clipboardNode.type) {
         					case 'java':
-        						var id = clipboardNode.id;
-        						var projectId = clipboardNode.projectId;
-								
-//								console.log(id.indexOf(projectId));
-//								console.log(id.);
-        						var dragObjMetadata = mw3.getMetadata(clipboardNode.name);
+        						var dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
 								console.log(dragObjMetadata);
         						canvas.drawLabel(element, dragObjMetadata.displayName);
     	    		    		
