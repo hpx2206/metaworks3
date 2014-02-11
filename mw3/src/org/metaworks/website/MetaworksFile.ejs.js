@@ -153,3 +153,6 @@ org_metaworks_website_MetaworksFile.prototype.del = function(event){
 org_metaworks_website_MetaworksFile.prototype.download = function(){		
 	mw3.call(this.objectId, 'download');
 }
+org_metaworks_website_MetaworksFile.prototype.getImage = function(){		
+	mw3.call(this.objectId, 'download');
+}
