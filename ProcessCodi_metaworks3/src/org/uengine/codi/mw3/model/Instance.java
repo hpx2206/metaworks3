@@ -1369,6 +1369,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		instance.flushDatabaseMe();
 		instance.fillFollower();
 
+		instance.getMetaworksContext().setWhere("instancelist");
+		
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
