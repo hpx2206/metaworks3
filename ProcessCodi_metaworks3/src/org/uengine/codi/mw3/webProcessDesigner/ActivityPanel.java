@@ -1,14 +1,27 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Order;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
 
 
 @Face(	ejsPath="genericfaces/Tab.ejs")
-public class ActivityPanel {
+public class ActivityPanel  implements ContextAware{
 
+	MetaworksContext metaworksContext;
+	@Hidden
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+	
 	Activity activity;
 		@Face(displayName="$Properties")
 		@Order(1)
@@ -32,6 +45,7 @@ public class ActivityPanel {
 	ParameterContextPanel parameterContextPanel;
 	@Face(displayName="$ParameterSetting")
 	@Order(3)
+	@Available(where="isReceiveActivity")
 		public ParameterContextPanel getParameterContextPanel() {
 			return parameterContextPanel;
 		}
@@ -40,6 +54,6 @@ public class ActivityPanel {
 		}
 
 	public ActivityPanel(){
-		
+		this.setMetaworksContext(new MetaworksContext());
 	}
 }

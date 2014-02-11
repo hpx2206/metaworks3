@@ -98,6 +98,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		ActivityWindow activityWindow = new ActivityWindow();
 		Activity activity = (Activity)propertiesWindow.getPanel();
 		
+		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
 		ParameterContext[] contexts = null;
 		if( activity != null ){
 			Class paramClass = activity.getClass();
@@ -110,6 +111,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			
 			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
 			if( isReceiveActivity ){
+				activityWindow.getActivityPanel().getMetaworksContext().setWhere("isReceiveActivity");
 				contexts = ((ReceiveActivity)activity).getParameters();
 				if( contexts != null ){
 					for(int i=0; i < contexts.length; i++){
@@ -117,11 +119,13 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 						contexts[i].getMetaworksContext().setHow("list");
 					}
 				}
+				
+				// 변수설정
+				parameterContextPanel.setParameterContext(contexts);
+				parameterContextPanel.setEditorId(activity.getName() + "_" + activity.getTracingTag());
+				parameterContextPanel.setParentEditorId(this.getEditorId());
+				parameterContextPanel.load();
 			}
-//			if( activity instanceof ScopeActivity){
-//				((ScopeActivity)activity).setProcessVariables(new ProcessVariable[0]);
-//				((ScopeActivity)activity).setEventHandlers(new EventHandler[0]);
-//			}
 		}
 		activity.setActivityView(this);
 		
@@ -134,12 +138,6 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			activity.getDocumentation().setMetaworksContext(new MetaworksContext());
 			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
-		// 변수설정
-		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
-		parameterContextPanel.setParameterContext(contexts);
-		parameterContextPanel.setEditorId(activity.getName() + "_" + activity.getTracingTag());
-		parameterContextPanel.setParentEditorId(this.getEditorId());
-		parameterContextPanel.load();
 		
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
