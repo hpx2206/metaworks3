@@ -187,13 +187,13 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		sql.append(" WHERE instid=?instid");
 		sql.append("   AND endpoint=?endpoint");
 		sql.append("   AND assigntype=?assigntype");
-		sql.append("   AND rolename=?rolename");
+		//sql.append("   AND rolename=?rolename");
 		
 		IFollower follower = (IFollower) Database.sql(IFollower.class, sql.toString());
 		follower.set("instid", this.getInstId());
 		follower.set("endpoint", this.getEndpoint());
 		follower.set("assigntype", this.getAssignType());
-		follower.set("rolename", this.getRoleName());
+		//follower.set("rolename", this.getRoleName());
 		
 		follower.select();	
 		
