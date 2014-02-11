@@ -64,6 +64,14 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 		public void setFilename(String filename) {
 			this.filename = filename;
 		}
+		
+	Long filesize;
+		public Long getFilesize() {
+			return filesize;
+		}
+		public void setFilesize(Long filesize) {
+			this.filesize = filesize;
+		}
 
 	String uploadedPath;
 		@Id
@@ -130,8 +138,14 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 		
 		if(useClassLoader)
 			image = javax.imageio.ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getUploadedPath()));
-		else
-			image = javax.imageio.ImageIO.read(new File(overrideUploadPathPrefix() + "/" + uploadedPath));
+		else{
+			File downloadImage = new File(overrideUploadPathPrefix() + "/" + uploadedPath);
+			
+			if(downloadImage.exists())
+				image = javax.imageio.ImageIO.read(downloadImage);
+			else
+				System.out.println("not exist file : " + downloadImage.getAbsolutePath());
+		}
 		
 		return image;
 	}
@@ -185,6 +199,7 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 		
 		setUploadedPath(uploadFileName); //only when the file has been successfully uploaded, this value is set, that means your can download later
 		setMimeType(fileTransfer.getMimeType());
+		setFilesize(fileTransfer.getSize());
 		
 		fileTransfer = null; //ensure to clear the data
 	}
