@@ -84,6 +84,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
     this.canvasId = object.canvasId;
     canvas = new OG.Canvas(this.canvasId);
     canvas._CONFIG.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
+    canvas._CONFIG.DEFAULT_STYLE.EDGE_SHADOW["edge-type"] = "straight";
     canvas.initConfig({
         selectable      : true,
         dragSelectable  : false,
@@ -194,7 +195,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 		                    [(isLeft ? 5 : 275), ( $(this).offset().top - $('#'+canvasId).offset().top ) + item.offsetHeight / 2],
 		                    (isLeft ? new OG.From() : new OG.To()),
 		                    [5, 5],
-		                    {},
+		                    {"r":5},
 		                    shapeId
 						);
 
@@ -217,7 +218,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 									[(isLeft ? 5 : 275), ( parentNode.offset().top - $('#'+canvasId).offset().top ) + parentNode[0].offsetHeight / 2],
 									(isLeft ? new OG.From() : new OG.To()),
 									[5, 5],
-									{},
+									{"r":5},
 									shapeId
 							);
 
@@ -258,7 +259,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					[(isLeft ? 5 : 275), ($(parentElement).offset().top - $('#'+this.canvasId).offset().top ) + 4 ],
 					(isLeft ? new OG.From() : new OG.To()),
 					[5, 5],
-					{},
+					{"r":5},
 					shapeId
 			);
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ObjectType;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -17,11 +16,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
 import org.uengine.contexts.TextContext;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.processdesigner.mapper.Transformer;
 import org.uengine.processdesigner.mapper.TransformerMapping;
 
 /**
