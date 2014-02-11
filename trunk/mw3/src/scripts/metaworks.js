@@ -3805,10 +3805,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   					eval(this['dragCommand']);
 					   			      },
 					   			      drag: function(event, ui) {
-					   			      	console.log('drag');
 					   			      },
 					   			      stop: function() {
-					   			      	console.log('stop');
 						   					var className = $(this).attr('className');
 						   					
 						   					$(".onDrop_" + className.split('.').join('_')).css("border-width", "").css("border-style", "").css("border-color", "");
@@ -3882,14 +3880,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			   }
 			   
-	   			// 생성된 context menu 제거
-				if($('#' + targetDivId).attr('contextMenu')){
-			   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objectId);
-			   
-			   		if(menu)
-			   			menu.destroy();
-			   	}
-			   
 			   //install context menu
 			   if(contextMenuMethods.length > 0){				   
 				   var menuItems = [];
@@ -3943,7 +3933,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   
 				   if(menuItems.length){
 					   YAHOO.util.Event.onContentReady(targetDivId, function () {
-						    var menu = new YAHOO.widget.ContextMenu(
+					   		var menu = YAHOO.widget.MenuManager.getMenu("_contextmenu_" + objectId);
+					   		if(menu)
+					   			menu.destroy();
+					   		
+						    menu = new YAHOO.widget.ContextMenu(
 								"_contextmenu_" + objectId,
 								{
 									zindex: 2000,
