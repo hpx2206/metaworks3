@@ -109,8 +109,6 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.moveEvent = function(sc
 	calendar.callType = callType;
 	calendar.viewMode = viewMode;
 
-console.log(calendar);
-
 	calendar.moveScheduleEvent();
 
 };
