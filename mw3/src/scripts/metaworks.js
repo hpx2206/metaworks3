@@ -3856,11 +3856,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   			 		theDiv[0].oncontextmenu = function() { return false; };
 			   			 	}
 			   			 				
-		   					var mouseclick = function(e) {
-		   			 			
+		   					var mouseEvent = function(e) {
 		   			 			if(e.which == e.data.which){
 		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
-
 			   				    	mw3.mouseX = e.pageX;
 			   		    			mw3.mouseY = e.pageY;
 		   			 			
@@ -3868,7 +3866,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		   			 			}
 		   			 		};
 		   			 		
-		   			 		$(theDiv[0]).bind('click', {which: which}, mouseclick);
+		   			 		$(theDiv[0]).bind(which==3?'mouseup':'click', {which: which}, mouseEvent);
 		   				}
 		   				
 		   				
