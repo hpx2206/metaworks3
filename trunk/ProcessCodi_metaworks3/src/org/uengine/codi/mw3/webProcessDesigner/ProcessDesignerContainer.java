@@ -134,7 +134,7 @@ public class ProcessDesignerContainer {
 		
 		this.setMaxX(maxX);
 		this.setMaxY(maxY);
-		transitionList = def.getTransitions();
+		transitionList.addAll(def.getTransitions());
 		for(Transition ts : transitionList){
 			ts.getTransitionView().setViewType(viewType);
 			ts.getTransitionView().setEditorId(getEditorId());
@@ -201,6 +201,10 @@ public class ProcessDesignerContainer {
 					lastTagcount = loadActivity(lastTagcount , childActivities.get(i));
 				}
 			}
+			ArrayList<Transition> childTransitions = ((ScopeActivity) activity).getTransitions();
+			if( childTransitions != null){
+				transitionList.addAll(childTransitions);
+			}
 		}
 		return lastTagcount;
 	}
@@ -216,6 +220,15 @@ public class ProcessDesignerContainer {
 		if( activityList != null ){
 			for(Activity act : activityList){
 				def.addChildActivity(this.fillVariableType(act));
+				if( act instanceof ScopeActivity){
+					if( ((ScopeActivity) act).getTransitions() != null ){
+						for(Transition ts : ((ScopeActivity) act).getTransitions()){
+							if(transitionList.contains(ts)){
+								transitionList.remove(ts);
+							}
+						}
+					}
+				}
 			}
 		}
 		if( roleList != null ){

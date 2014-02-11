@@ -39,13 +39,12 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
 			}
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
-			var parent = object.parent;
 			var style = object.style;
 			
         	element = canvas.drawShape([
         	                                 object.x, object.y 
         	                                 ], 
-        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
+        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, null, false);
         	
         	// object.activityClass : Activity , object.__className : ActivityView
         	$(element).attr("_classname", object.activityClass);

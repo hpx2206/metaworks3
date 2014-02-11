@@ -87,7 +87,7 @@ public class EndActivity extends DefaultActivity{
 	int status;
 		public int getStatus() {
 			if (this.status == 0 ) {
-				return EndActivity.STATUS_STOPPED;
+				return EndActivity.STATUS_COMPLETED;
 			}
 			return status;
 		}

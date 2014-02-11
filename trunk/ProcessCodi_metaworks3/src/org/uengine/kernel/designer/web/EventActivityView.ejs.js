@@ -37,13 +37,12 @@ org_uengine_kernel_designer_web_EventActivityView.prototype = {
 			}
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
-			var parent = object.parent;
 			var style = object.style;
 			
         	element = canvas.drawShape([
         	                                 object.x, object.y 
         	                                 ], 
-        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
+        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, null, false);
         	
         	$(element).attr("_classname", object.activityClass);
         	$(element).attr("_viewClass", object.__className);

@@ -4,14 +4,14 @@ public class SignalEventActivity  extends EventActivity implements MessageListen
 
 	@Override
 	protected void executeActivity(ProcessInstance instance) throws Exception {
-		
+		System.out.println("///////////////////////////////////////////////////////// 이벤트 실행 //////////////////////////////////////////////// ");
 		//start listens...
 		
 	}
 	@Override
 	public boolean onMessage(ProcessInstance instance, Object payload)
 			throws Exception {
-		
+		System.out.println("///////////////////////////////////////////////////////// 이벤트 실행2222222222 //////////////////////////////////////////////// ");
 //		..... 여기서 다음 액티비티를 실행할 수 있도록 해주거나, 그냥 이 액티비티를 실행완료 이벤트를 주면 상위에 전달되어, 다음 트랜지션에 연결된 액티비티가 실행될까?
 //		fireCompleted(payload); //??? 될까... 이렇게만 해도??
 				
