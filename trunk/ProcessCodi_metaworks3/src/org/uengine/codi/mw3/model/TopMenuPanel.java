@@ -39,6 +39,6 @@ public class TopMenuPanel {
 	public Object[] showSelfService() throws Exception{
 		CloudIDE cloudIDE = new CloudIDE(session, new DefaultProject());
 		
-		return new Object[]{new Refresh(cloudIDE)};
+		return new Object[]{new Refresh(cloudIDE), new Refresh(cloudIDE.loadTopCenterPanel(session))};
 	}
 }
