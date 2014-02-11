@@ -331,9 +331,14 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		
 		//Project project = workspace.findProject(this.getProjectId());
 
-		//this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
-		
-		//session.setClipboard(this);
+//		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
+		if( this.getProjectId() != null ){
+			String id = this.getId();
+//			String alias = id.substring(this.getProjectId().length()+1); 
+			alias = ResourceNode.makeResourceName(id);
+			this.setAlias(alias);
+		}
+		session.setClipboard(this);
 		
 		return session;
 	}
@@ -378,6 +383,22 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		this.setId(null);
 	}
 	
+	public static String makeResourceName(String resourceName){
+		if(resourceName != null){
+			if(resourceName.endsWith(".java")){
+				resourceName = resourceName.substring(0, resourceName.length()-5);
+			}
+			if(resourceName.indexOf(File.separatorChar) > -1)
+				resourceName = resourceName.substring(resourceName.indexOf(File.separatorChar)+1);
+			else
+				resourceName = null;
+		}
+		
+		if(resourceName != null)
+			resourceName = resourceName.replace(File.separatorChar, '.');
+		
+		return resourceName;
+	}
 	public static String makePackageName(String packageName){
 		
 		if(packageName != null){
