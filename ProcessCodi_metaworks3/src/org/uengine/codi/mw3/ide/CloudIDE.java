@@ -67,6 +67,8 @@ public class CloudIDE extends Application {
 	}
 
 	public CloudIDE(Session session, Project project) throws Exception {
+		setTopCenterPanelType(TopCenterPanel.HOW_MENU);
+		
 		this.load(session, project);
 	}
 	
