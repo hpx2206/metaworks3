@@ -1,0 +1,23 @@
+<%
+	if(value){
+		if(value.status != 'Completed' && value.status != 'Waited'){
+%>
+	<button type="button" class="btn btn-default" onClick="<%=methods.join.caller()%>"><span class="glyphicon glyphicon-log-in"></span> <%=mw3.localize('$GoJoin')%></button> 
+	<button type="button" class="btn btn-default" onClick="<%=methods.end.caller()%>"><span class="glyphicon glyphicon-off"></span> <%=mw3.localize('$EndMeeting')%></button>
+<%
+		}else{
+			if(value.ext4 != null){
+%>
+	<iframe src="<%=value.ext4%>" frameborder="0" scrolling="no" width="100%" height="300px"/>
+<%
+			}else{
+%>
+									
+	<button type="button" class="btn btn-default" onClick="<%=methods.palyBack.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"> <%=mw3.localize('$PlayModalwindow')%></button>
+	
+	<%=fields.conference.here()%>
+<%
+			}
+		}
+	}
+%>
