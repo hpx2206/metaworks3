@@ -473,10 +473,13 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 //		IDAO dbMe = databaseMe();
 		
 		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(dao.getImplementationObject().getDaoClass().getName());
-		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
-			Map<String, String> typeSelector = (Map<String, String>) fd.getAttribute("typeSelector");
+		for(WebFieldDescriptor fd : webObjectType.getFieldDescriptors()){
+			Map<String, String> typeSelector = (Map<String, String>) fd.getAttribute("typeselector");
 			if(typeSelector!=null){
 				String typeName = (String) dao.get(fd.getName());
+				if(typeName == null)
+					typeName = fd.getDefaultValue();
+				
 				String selectedTypeClassName = typeSelector.get(typeName);
 				
 				if(selectedTypeClassName==null)

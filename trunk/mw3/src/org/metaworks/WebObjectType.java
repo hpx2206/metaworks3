@@ -27,6 +27,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Children;
+import org.metaworks.annotation.Default;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Group;
 import org.metaworks.annotation.Hidden;
@@ -894,6 +895,11 @@ public class WebObjectType{
 			
 			if(isKeyField)
 				setKeyFieldDescriptor(webFieldDescriptors[i]);
+			
+			Default defaultValue =  (Default) getAnnotationDeeply(tryingClasses, fd.getName(), Default.class);
+			if(defaultValue != null){
+				webFieldDescriptors[i].setDefaultValue(defaultValue.value());
+			}
 		}
 		
 		
@@ -1273,87 +1279,92 @@ public class WebObjectType{
 			}else{//in case that class level's annotation
 				annotation = clazz.getAnnotation(annotationCls);
 
-				if(annotationCls == Face.class){
-					final Face face = (Face)annotation;
-					
-					boolean componentPathHashBeenChanged = false;
-					String componentPath = face != null ? face.ejsPath() : ""; 
-							
-					if(componentPath.length() == 0){
-						componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
-						componentPathHashBeenChanged = true;
-					}
-					
-					if(componentPath.startsWith("faces"))
-						componentPath = componentPath.substring("faces".length()+1);
-					
-					if(tryToFindComponent("dwr/metaworks/" + componentPath)){
-						componentPathHashBeenChanged = true;
-
-						componentPath = "dwr/metaworks/" + componentPath;
-					}else if(!tryToFindComponent(componentPath)){
-						componentPath = null;
-					}
-					
-					if(!componentPathHashBeenChanged && face!=null)
-						return face;
-					
-					if(componentPath!=null){
-						
-						final String ejsPath = componentPath;
-	
-						return new Face() {
-							
-							@Override
-							public Class<? extends Annotation> annotationType() {
-								return null;
-							}
-							
-							@Override
-							public String[] values() {
-								return face!=null ? face.values() : new String[]{};
-							}
-							
-							@Override
-							public String[] options() {
-								return face!=null ? face.options() : new String[]{};
-							}
-							
-							@Override
-							public String[] ejsPathMappingByContext() {
-								return face!=null ? face.ejsPathMappingByContext() : new String[]{};
-							}
-							
-							@Override
-							public String ejsPathForArray() {
-								return face!=null ? face.ejsPathForArray() : "";
-							}
-							
-							@Override
-							public String ejsPath() {
-								return ejsPath;
-							}
-							
-							@Override
-							public String displayName() {
-								return face!=null ? face.displayName() : "";
-							}
-						};
-					}
-				}
-				
-				
-				
 				if(annotation!=null){
-					
-					return annotation;
+					break;
 				}
 					
 
 			}
 		}
 
-		return null;
+		if(symbol==null && tryingClasses.size() > 0){
+		if(annotationCls == Face.class){
+			final Face face = (Face)annotation;
+			
+			for(int i=0; i<tryingClasses.size(); i++){
+				boolean componentPathHashBeenChanged = false;
+				String componentPath = face != null ? face.ejsPath() : ""; 
+
+				if(componentPath.length() == 0){
+					componentPath = getComponentLocation(tryingClasses.get(i), "faces", false, false, "ejs");
+					componentPathHashBeenChanged = true;
+				}
+				
+				if(componentPath.startsWith("faces"))
+					componentPath = componentPath.substring("faces".length()+1);
+				
+				if(tryToFindComponent("dwr/metaworks/" + componentPath)){
+					componentPathHashBeenChanged = true;
+
+					componentPath = "dwr/metaworks/" + componentPath;
+				}else if(!tryToFindComponent(componentPath)){
+					componentPath = null;
+				}
+				
+				if(!componentPathHashBeenChanged && face!=null)
+					return face;
+				
+				if(componentPath!=null){
+					
+					final String ejsPath = componentPath;
+
+					return new Face() {
+						
+						@Override
+						public Class<? extends Annotation> annotationType() {
+							return null;
+						}
+						
+						@Override
+						public String[] values() {
+							return face!=null ? face.values() : new String[]{};
+						}
+						
+						@Override
+						public String[] options() {
+							return face!=null ? face.options() : new String[]{};
+						}
+						
+						@Override
+						public String[] ejsPathMappingByContext() {
+							return face!=null ? face.ejsPathMappingByContext() : new String[]{};
+						}
+						
+						@Override
+						public String ejsPathForArray() {
+							return face!=null ? face.ejsPathForArray() : "";
+						}
+						
+						@Override
+						public String ejsPath() {
+							return ejsPath;
+						}
+						
+						@Override
+						public String displayName() {
+							return face!=null ? face.displayName() : "";
+						}
+					};
+				}				
+			}
+		}
+		}
+		
+		
+		
+		
+		
+		return annotation;
 	}
 
 	static public String getClassNameOnly(Class activityCls){
@@ -1458,5 +1469,14 @@ public class WebObjectType{
 	
 	static public String toUpperStartedPropertyName(String propertyName){
 		return propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+	}
+	
+	public WebFieldDescriptor getFieldDescriptor(String propertyName){
+		for(WebFieldDescriptor fd : fieldDescriptors){
+			if(fd.getName().equals(propertyName))
+				return fd;
+		}
+		
+		return null;
 	}
 }
