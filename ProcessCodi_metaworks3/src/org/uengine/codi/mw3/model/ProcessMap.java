@@ -170,7 +170,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			
 			return this.initiate(); //new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
 		}else
-			return new Object[]{new Remover(new Popup(), true), new Refresh(processMapList)};
+			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	public Object[] remove() throws Exception {
@@ -214,8 +214,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return popup;		
 	}
 
-	public Remover close() throws Exception {		
-		return new Remover(new Popup(this));
+	public ToEvent close() throws Exception {		
+		return new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE);
 	}
 		
 	public boolean confirmExist() {

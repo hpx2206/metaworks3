@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
@@ -65,7 +66,7 @@ public interface IProcessMap extends IDAO {
 	
 	@Available(when={WHEN_NEW})
 	@ServiceMethod
-	public Remover close() throws Exception;
+	public ToEvent close() throws Exception;
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP) 
 	@Test(scenario="first", starter=true, instruction="$first.ProcessStart", next="autowiredObject.org.uengine.codi.mw3.model.CommentWorkItem@-1.add()")
