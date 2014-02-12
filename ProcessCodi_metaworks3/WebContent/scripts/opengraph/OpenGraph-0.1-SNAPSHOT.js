@@ -13997,7 +13997,7 @@ OG.renderer.IRenderer.prototype = {
 			if (element.shape.geom && times > 0) {
 				if($(element).attr("id") === groupId){
 					//no operation
-				}else{				
+				}else{
 					if(element.shape instanceof OG.shape.EdgeShape){
 						if( ($(element).attr("_from") + "").indexOf(groupId) < 0 
 							&& ($(element).attr("_to") + "").indexOf(groupId) < 0 )
@@ -15126,7 +15126,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	}
 
 	// Add to group
-	this._add(element);
+	this._add(element, id + "FO");
 	group.node.appendChild(element.node);
 
 	return group.node;
@@ -17639,10 +17639,16 @@ OG.renderer.RaphaelRenderer.prototype.removeTerminal = function (element) {
  *
  * @override
  */
-OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function () {
-	var me = this;
+OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function (element) {
+	var elementId = $(element).attr("id")
+		,me = this;	
 	$.each(this._ELE_MAP.keys(), function (idx, item) {
-		me.removeTerminal(item);
+		if(element){
+			console.log(item + " " + item.indexOf(elementId));
+			
+		}else{
+			me.removeTerminal(item);
+		}
 	});
 };
 
@@ -19052,6 +19058,7 @@ OG.handler.EventHandler.prototype = {
 				}
 								
 				if (element.shape.isCollapsed === false) {
+					me._RENDERER.removeAllTerminal(element);
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
 
