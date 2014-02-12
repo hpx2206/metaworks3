@@ -13,7 +13,11 @@ var org_uengine_codi_mw3_model_IWorkItem_array = function(objectId, className){
 		
 		if(workItem){
 			if(workItem.type == 'ovryCmnt'){
-				this.objectDiv.one('loaded.workitem_' + workItem.overlayCommentOption.parentTaskId, {workItem: workItem}, function(event){				
+				/*
+				console.log('listen loaded.workitem_' + workItem.overlayCommentOption.parentTaskId);
+				
+				$('#' + mw3._getObjectDivId(workItem.overlayCommentOption.parentTaskId)).one('loaded.workitem_' + workItem.overlayCommentOption.parentTaskId, {workItem: workItem}, function(event){
+					console.log('in');				
 					var workItem = event.data.workItem;
 					
 					var ovryCmntTarget = {
@@ -32,6 +36,7 @@ var org_uengine_codi_mw3_model_IWorkItem_array = function(objectId, className){
 					
 					mw3.onLoadFaceHelperScript();
 				});
+				*/
 			}
 		}
 	}

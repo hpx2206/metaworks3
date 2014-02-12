@@ -51,6 +51,7 @@ public class DocWorkItem extends GenericWorkItem {
 		fileWorkItem.newInstancePanel = this.newInstancePanel;
 		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
+		fileWorkItem.setRootInstId(this.getRootInstId());
 		fileWorkItem.setWriter(session.getUser());
 		fileWorkItem.setFile(this.getFile());
 		fileWorkItem.setTitle(this.getTitle());
@@ -85,11 +86,13 @@ public class DocWorkItem extends GenericWorkItem {
 		
 		returnObj = super.add();
 		
+		Instance fileInstance = new Instance();
+		fileInstance.setInstId(fileWorkItem.getInstId());
+		fileInstance.databaseMe().setRootInstId(this.getRootInstId());
+
 		// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
 		// 수정처리 해야함
-		Instance tempInstance = new Instance();
-		tempInstance.setInstId(fileWorkItem.getInstId());
-		tempInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
+		//fileInstance.databaseMe().setStatus(WORKITEM_STATUS_RUNNING);
 		
 		return returnObj;
 	}

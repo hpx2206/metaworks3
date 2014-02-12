@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.ORMappingListener;
+import org.metaworks.widget.Window;
 
 public class WorkItemVersionChooser implements ORMappingListener{
 	
@@ -64,8 +67,8 @@ public class WorkItemVersionChooser implements ORMappingListener{
 			this.selectedVersion = selectedVersion;
 		}
 
-	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE)
-	public IWorkItem choose() throws Exception{
+	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] choose() throws Exception{
 		FileWorkItem workItem = null;
 		int i=0;
 		for(String value : getVersionSelector().getOptionValues()){
@@ -75,12 +78,13 @@ public class WorkItemVersionChooser implements ORMappingListener{
 				workItem.copyFrom(workItem.databaseMe());
 				workItem.setMetaworksContext(new MetaworksContext());
 				workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+				
+				break;
 			}
 			i++;
 		}
-		
-		
-		return workItem;
+
+		return new Object[]{new OverlayCommentReloadPanel(WorkItem.findCommentByTaskId(workItem.getTaskId().toString())), new Refresh(workItem)};
 	}
 
 	@Override

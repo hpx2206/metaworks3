@@ -26,4 +26,6 @@ var org_uengine_codi_mw3_model_FileWorkItem = function(objectId, className){
 			$(this).show();
 		});
 	}
+	
+	this.objectDiv.trigger('loaded.workitem_' + this.object.taskId);
 }
