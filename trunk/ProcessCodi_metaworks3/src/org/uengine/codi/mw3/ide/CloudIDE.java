@@ -20,6 +20,9 @@ public class CloudIDE extends Application {
 	
 	@AutowiredFromClient
 	public Locale localeManager;
+	
+	@AutowiredFromClient
+	public Session session;
 
 	public CloudIDE() {
 		this.setTopCenterPanelType(TopCenterPanel.HOW_MENU);
@@ -345,6 +348,8 @@ public class CloudIDE extends Application {
 	
 	@ServiceMethod(payload={"currentEditorId", "project"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object run() throws Exception{
+		
+		editor.session = session;
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);

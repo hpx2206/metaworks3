@@ -272,7 +272,7 @@ public class Editor {
 	}
 	
 	@ServiceMethod(payload={"resourceNode"})
-	public Object run(){
+	public Object run() throws Exception {
 		return null;
 	}
 }

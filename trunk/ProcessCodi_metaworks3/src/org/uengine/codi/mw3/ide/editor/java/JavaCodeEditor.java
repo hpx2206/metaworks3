@@ -15,15 +15,19 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CodeAssist;
 import org.metaworks.widget.Window;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.JavaCodeAssist;
 import org.uengine.codi.mw3.ide.CompilationChecker;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.form.FormPreview;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.util.UEngineUtil;
@@ -1142,8 +1146,7 @@ public class JavaCodeEditor extends Editor {
 	}
 
 	@Override
-	@ServiceMethod(payload={"resourceNode"}, target=ServiceMethodContext.TARGET_POPUP)
-	public Object run() {
+	public Object run() throws Exception {
 
 		JavaParser parser = new JavaParser();
 		parser.setContent(this.getContent());
@@ -1157,28 +1160,17 @@ public class JavaCodeEditor extends Editor {
 			fullClassName += packageName + ".";
 
 		fullClassName += className;
+		
+		ClassLoader prerCl = Thread.currentThread().getContextClassLoader();
+		CodiClassLoader cl = CodiClassLoader.createClassLoader(this.getResourceNode().getProjectId(), session.getEmployee().getGlobalCom(), false);
+		
+		Thread.currentThread().setContextClassLoader(cl);
+		
+		Object o = Thread.currentThread().getContextClassLoader().loadClass(fullClassName).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
+		
+		Thread.currentThread().setContextClassLoader(prerCl);
 
-		StringBuffer url = new StringBuffer();
-		
-		try {
-			String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-			String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-			
-			URL urlURL = new java.net.URL(base);
-			String host = urlURL.getHost();
-			int port = urlURL.getPort();
-			String protocol = urlURL.getProtocol();
-			
-			url.append(protocol + "://");
-			url.append(host);
-			url.append((port == 80 ? "" : ":"+port));
-			url.append(TransactionContext.getThreadLocalInstance().getRequest().getContextPath());
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return new IFrame(url.toString() + "/index.html?type=runner&projectId=" + this.getResourceNode().getProjectId() + "&className=" + fullClassName);
+		return new FormPreview(o);
 	}
 
 	public ArrayList<JavaCodeError> complie(){

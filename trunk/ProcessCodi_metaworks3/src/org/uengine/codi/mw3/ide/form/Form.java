@@ -168,7 +168,7 @@ public class Form implements ContextAware {
 		String alias = this.getFullClassName();
 		
 		ClassLoader prerCl = Thread.currentThread().getContextClassLoader();
-		CodiClassLoader cl = CodiClassLoader.createClassLoader(this.getProjectId(), null, true);
+		CodiClassLoader cl = CodiClassLoader.createClassLoader(this.getProjectId(), session.getEmployee().getGlobalCom(), false);
 		
 		Thread.currentThread().setContextClassLoader(cl);
 		
