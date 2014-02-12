@@ -34,6 +34,10 @@ public class TenantContext{
 
 	}
 	
+	public static String getURL() throws MalformedURLException {
+		return TenantContext.getURL(null);
+	}
+	
 	public static String getURL(String tenantId) throws MalformedURLException {
 
 		/*
