@@ -4,17 +4,8 @@
 	
 <div class="bottom" style="top: 520px; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px; overflow:auto; border-top:1px solid #ccc;">
 	<div class="positionRight" style="margin:10px">
-<%
-
-        if(objectMetadata.serviceMethodContexts){
-            for(var key in objectMetadata.serviceMethodContexts){
-                var serviceMethod = objectMetadata.serviceMethodContexts[key];                     
-%>
-        <%=methods[serviceMethod.methodName].here()%>
-<%              
-            }
-        }       
-%>
+	   <%= methods.apply.here() %>
+	   <%= methods.cancel.here() %>
 	</div>
 </div>
 	

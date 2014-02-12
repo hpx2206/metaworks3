@@ -54,8 +54,16 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 	        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, null, false);
 	        	
 	        	// object.activityClass : Activity , object.__className : ActivityView
-				if( object.backgroundColor ){
-					canvas.setShapeStyle(element, {"fill": object.backgroundColor , "fill-opacity": 0.5});
+				if( object.instStatus ){
+					console.log(object.instStatus);
+					var lineWidth = 1;
+					if ("Completed" == object.instStatus) {
+						lineWidth = 5;
+					}else	if ("Running" == object.instStatus) {
+						lineWidth = 5;
+					}
+					canvas.setShapeStyle(element, {"stroke": object.backgroundColor , "stroke-width": lineWidth});
+//					canvas.setShapeStyle(element, {"fill": object.backgroundColor , "fill-opacity": 0.5});
 				}
 				
 	        	$(element).attr("_classname", object.activityClass);
