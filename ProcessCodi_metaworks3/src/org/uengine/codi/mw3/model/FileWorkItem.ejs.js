@@ -14,11 +14,14 @@ var org_uengine_codi_mw3_model_FileWorkItem = function(objectId, className){
 	if(imageDiv.length > 0){
 		var fileObjectId = mw3.getChildObjectId(objectId, 'file');
 		var image = mw3.call(fileObjectId, 'downloadImage')
+		var parentwidth = $("#image_" + this.objectId).parent().width();
 		
 		imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>');
 				
 		imageDiv.find('img').load(function(){
-			$(this).width("100%");
+			if($(this).width() > parentwidth){
+				$(this).width("100%");
+			}
 			$("#convertProgress_" + objectId).hide();
 			$(this).show();
 		});
