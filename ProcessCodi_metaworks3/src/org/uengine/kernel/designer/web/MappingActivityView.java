@@ -7,8 +7,6 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigner;
-import org.uengine.kernel.ParameterContext;
-import org.uengine.kernel.ReceiveActivity;
 
 public class MappingActivityView extends ActivityView {
 
@@ -17,9 +15,12 @@ public class MappingActivityView extends ActivityView {
 	public Object showProperties() throws Exception{
 		ModalWindow popup = new ModalWindow();
 		
+		ActivityWindow activityWindow = new ActivityWindow();
 		Activity activity = (Activity)propertiesWindow.getPanel();
-		
-		ParameterContext[] contexts = null;
+		if( activity.getMetaworksContext() == null ){
+			activity.setMetaworksContext(new MetaworksContext());
+			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		}
 		if( activity != null ){
 			Class paramClass = activity.getClass();
 			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
@@ -31,10 +32,10 @@ public class MappingActivityView extends ActivityView {
 			
 		}
 		activity.setActivityView(this);
-		
+		activityWindow.getActivityPanel().setActivity(activity);
 		popup.setTitle(activity.getDescription() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
-		popup.setPanel(activity);
-		popup.setWidth(900);
+		popup.setPanel(activityWindow);
+		popup.setWidth(1000);
 		popup.setHeight(700);
 		
 		return popup;

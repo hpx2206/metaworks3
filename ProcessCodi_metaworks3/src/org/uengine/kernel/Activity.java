@@ -384,10 +384,10 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		
 		documentation = new Documentation();
 		documentation.setMetaworksContext(new MetaworksContext());
-		documentation.getMetaworksContext().setWhen("edit");	
+		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);	
 		
 		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen("edit");	
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);	
 	}
 
 	public Activity(String activityName){	// for manual-coding
@@ -1562,8 +1562,8 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	 */
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] apply(){
-		if( activityPanel != null ){
-			Documentation document = activityPanel.getDocument();
+		Documentation document = activityPanel.getDocument();
+		if( document != null ){
 			MetaworksFile file1 = document.getAttachfile1();
 			if (file1 != null && file1.getFileTransfer() != null
 					&& file1.getFileTransfer().getFilename() != null
@@ -1601,23 +1601,17 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 				file3.setFileTransfer(null);
 			}
 			
-			this.setDocumentation(activityPanel.getDocument());
-			
-			// TODO 변수를 설정가능한 엑티비티에서만 설정할수 있어야함
-			if( this instanceof ReceiveActivity){
-				ParameterContextPanel parameterContextPanel = activityPanel.getParameterContextPanel();
-				if( parameterContextPanel != null ){
-					((ReceiveActivity)this).setParameters(parameterContextPanel.getParameterContext());
-				}
-			}
+			this.setDocumentation(document);
 		}
-//		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
+		ParameterContextPanel parameterContextPanel = activityPanel.getParameterContextPanel();
+		if( parameterContextPanel != null ){
+			((ReceiveActivity)this).setParameters(parameterContextPanel.getParameterContext());
+		}
 		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new ModalWindow() , true)};
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] cancel(){
-//		return new Object[]{new Remover(new PropertiesWindow())};
 		return new Object[]{new Remover(new ModalWindow() , true)};
 		
 	}

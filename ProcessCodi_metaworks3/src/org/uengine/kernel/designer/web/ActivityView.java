@@ -111,7 +111,6 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			
 			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
 			if( isReceiveActivity ){
-				activityWindow.getActivityPanel().getMetaworksContext().setWhere("isReceiveActivity");
 				contexts = ((ReceiveActivity)activity).getParameters();
 				if( contexts != null ){
 					for(int i=0; i < contexts.length; i++){
@@ -125,6 +124,8 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 				parameterContextPanel.setEditorId(activity.getName() + "_" + activity.getTracingTag());
 				parameterContextPanel.setParentEditorId(this.getEditorId());
 				parameterContextPanel.load();
+				
+				activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
 			}
 		}
 		activity.setActivityView(this);
@@ -141,7 +142,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
-		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
+		
 		popup.setTitle(activity.getDescription() != null && activity.getDescription().getText() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
 		popup.setPanel(activityWindow);
 		popup.setWidth(1000);

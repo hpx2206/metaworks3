@@ -1,12 +1,9 @@
 package org.uengine.codi.mw3.ide.libraries;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
-import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.kernel.Activity;
 
 public class ActivityNode extends TreeNode{
@@ -41,19 +38,4 @@ public class ActivityNode extends TreeNode{
 		return session;
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object showProperties() throws Exception{
-		ModalWindow modalWindow = new ModalWindow();
-		
-		ActivityWindow activityWindow = new ActivityWindow();
-		
-		activityWindow.getActivityPanel().setActivity(activity);
-		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
-		modalWindow.setPanel(activityWindow);
-		modalWindow.setWidth(700);
-		modalWindow.setHeight(500);
-		
-		
-		return modalWindow;
-	}	
 }
