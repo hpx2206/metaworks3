@@ -2,12 +2,14 @@ package org.uengine.codi.mw3.ide.editor.form;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
@@ -54,6 +56,7 @@ public class FormEditor extends Editor {
 		String className = ResourceNode.makeClassName(this.getId());
 		
 		Form form = new Form();
+		form.session = resourceNode.session;
 		form.setProjectId(this.getResourceNode().getProjectId());
 		form.setPackageName(packageName);
 		form.setId(className);
@@ -103,25 +106,20 @@ public class FormEditor extends Editor {
 		return super.save();
 	}
 	
-	@Face(displayName="$SaveAndPreview")
-	@ServiceMethod(payload={"resourceNode", "form"}, target=ServiceMethodContext.TARGET_POPUP)
-	@Hidden
-	public Object preview() throws Exception {
+	public Object run() throws Exception{
 		
 		this.save();
 		
-		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
+		ClassLoader prerCl = Thread.currentThread().getContextClassLoader();
+		CodiClassLoader cl = CodiClassLoader.createClassLoader(this.getResourceNode().getProjectId(), session.getEmployee().getGlobalCom(), false);
 		
-		//Thread.currentThread().setContextClassLoader(CodiClassLoader.createClassLoader(project.getBuildPath().getSources().get(0).getPath()));
+		Thread.currentThread().setContextClassLoader(cl);
 		
 		Object o = Thread.currentThread().getContextClassLoader().loadClass(form.getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
-
-		MetaworksRemoteService.getInstance().getMetaworksType(form.getFullClassName());
 		
-		//Window outputWindow = new Window();
-		//outputWindow.setPanel(o);
+		Thread.currentThread().setContextClassLoader(prerCl);
 
-		return new ModalWindow(new FormPreview(o), 0, 0, "$Preview");
+		return new FormPreview(o);
 		
 	}
 }
