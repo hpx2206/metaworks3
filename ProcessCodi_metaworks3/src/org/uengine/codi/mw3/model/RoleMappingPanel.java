@@ -49,8 +49,9 @@ public class RoleMappingPanel implements ContextAware{
 			roleMappingDefinition.setRoleDefId(session.getEmployee().getGlobalCom() + "." + defId + "." + role.getName());
 			
 			try{
-				IRoleMappingDefinition roleMappingDef = roleMappingDefinition.databaseMe();
-				roleMappingDef.getMappedUser().getMetaworksContext().setHow(IUser.HOW_PICKER);
+				roleMappingDefinition.copyFrom(roleMappingDefinition.findRoleMappingDefinition());
+				roleMappingDefinition.getMappedUser().setName(roleMappingDefinition.getMappedUserName());
+				roleMappingDefinition.getMappedUser().getMetaworksContext().setHow(IUser.HOW_PICKER);
 				
 //				if( roleMappingDef.getMappedUser() != null && roleMappingDef.getMappedUser().getUserId() != null ){
 //					Employee user = new Employee();
@@ -64,7 +65,7 @@ public class RoleMappingPanel implements ContextAware{
 //				}
 //				// TODO 요거 유저가 안들어감 ㅠ_ㅠ
 //				System.out.println("roleMappingDef : " + roleMappingDef.getMappedUser().getName());
-				roleMappingDefinitions.add(roleMappingDef);
+				roleMappingDefinitions.add(roleMappingDefinition);
 			}catch(Exception e){
 				IRoleMappingDefinition roleMappingDef = (IRoleMappingDefinition)MetaworksDAO.createDAOImpl(IRoleMappingDefinition.class);
 				roleMappingDef.setRoleDefId(roleMappingDefinition.getRoleDefId());
