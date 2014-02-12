@@ -429,7 +429,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.fi
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.getValue = function(){
 	var graphJson = this.icanvas.toJSON();
-	console.log(graphJson);
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
 	var activityList = [];

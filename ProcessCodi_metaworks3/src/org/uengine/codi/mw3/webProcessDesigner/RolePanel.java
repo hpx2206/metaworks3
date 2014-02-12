@@ -60,7 +60,7 @@ public class RolePanel implements ContextAware{
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setWidth(400);
 		modalWindow.setHeight(400);
-		modalWindow.setTitle("");
+		modalWindow.setTitle("참여자 정의 리스트");
 		modalWindow.setPanel(rolePanel);
 		
 		return modalWindow;

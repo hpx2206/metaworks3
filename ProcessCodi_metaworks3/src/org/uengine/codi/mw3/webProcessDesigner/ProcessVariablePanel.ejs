@@ -2,34 +2,42 @@
     <% if(mw3.how == 'list'){ %>
     <!-- 켄버스의 변수정의 메뉴를 더블 클릭시 나오는 리스트 -->
         <div>
-            <a id="wBtn" style="cursor: pointer" onClick="<%=methods.addVariablePopup.caller()%>"><span><%=mw3.localize("$add")%></span></a>
-            <a id="wBtn" style="cursor: pointer" onClick="mw3.getFaceHelper(<%=objectId%>).removeItem();"><span><%=mw3.localize("$Remove")%></span></a>
-            <table class="form_table2">
-                <tr>
-                    <th>name</th>
-                    <th width="100">데이타형식</th>
-                    <th>프로세스 변수 이름</th>
-                </tr>
-                <%
-                    if( value.variableList ){
-                        for(var i=0; i < value.variableList.length; i++){
-                            var variableName = value.variableList[i].name;
-                %>
-                            <tr class="variableTr <%= variableName %>_<%= objectId %>" onclick="mw3.getFaceHelper(<%=objectId%>).clickedItem('<%= variableName %>');">
-                                <td><%= variableName %></td>
-                                <td><%= value.variableList[i].typeInputter %></td>
-                                <td><%= value.variableList[i].displayName != null ?  value.variableList[i].displayName.text : '' %></td>
-                            </tr>
-                <%
-                        }
-                    }else{
-                %>
-                            <tr>
-                                <td colspan="3">변수가 없습니다</td>
-                            </tr>
-                
-               <% }%>
-            </table>
+            <div class="positionRight" style="margin-top:5px;">
+                <a id="wBtn" style="cursor: pointer" onClick="<%=methods.addVariablePopup.caller()%>"><span><%=mw3.localize("$add")%></span></a>
+                <a id="wBtn" style="cursor: pointer" onClick="mw3.getFaceHelper(<%=objectId%>).removeItem();"><span><%=mw3.localize("$Remove")%></span></a>
+            </div>
+            <div class="clear"></div>
+            <div class="form_table2"> 
+                <table style="width: 100%;" border="1" cellspacing="0" > 
+                    <tbody>
+                    <tr>
+                        <th>name</th>
+                        <th width="100">데이타형식</th>
+                        <th>프로세스 변수 이름</th>
+                    </tr>
+                    <%
+                        if( value.variableList ){
+                            for(var i=0; i < value.variableList.length; i++){
+                                var variableName = value.variableList[i].name;
+                    %>
+                                <tr class="variableTr <%= variableName %>_<%= objectId %>" onclick="mw3.getFaceHelper(<%=objectId%>).clickedItem('<%= variableName %>');">
+                                    <td class="variablePanel_td"><%= variableName %></td>
+                                    <td class="variablePanel_td"><%= value.variableList[i].typeInputter %></td>
+                                    <td class="variablePanel_td"><%= value.variableList[i].displayName != null ?  value.variableList[i].displayName.text : '' %></td>
+                                </tr>
+                    <%
+                            }
+                        }else{
+                    %>
+                                <tr>
+                                    <td colspan="3">변수가 없습니다</td>
+                                </tr>
+                    
+                   <% }%>
+                   
+                    </tbody>
+                </table>
+            </div>
         </div>
      <% }else if(mw3.how == 'menu'){ %>
      <!-- 켄버스의 전체변수 설정 텝-->

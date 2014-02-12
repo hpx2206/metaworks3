@@ -1,26 +1,36 @@
 package org.uengine.kernel;
 
+import java.util.Vector;
+
 public class SignalEventActivity  extends EventActivity implements MessageListener{
 
 	@Override
 	protected void executeActivity(ProcessInstance instance) throws Exception {
-		System.out.println("///////////////////////////////////////////////////////// 이벤트 실행 //////////////////////////////////////////////// ");
 		//start listens...
-		
 	}
 	@Override
-	public boolean onMessage(ProcessInstance instance, Object payload)
-			throws Exception {
-		System.out.println("///////////////////////////////////////////////////////// 이벤트 실행2222222222 //////////////////////////////////////////////// ");
-//		..... 여기서 다음 액티비티를 실행할 수 있도록 해주거나, 그냥 이 액티비티를 실행완료 이벤트를 주면 상위에 전달되어, 다음 트랜지션에 연결된 액티비티가 실행될까?
-//		fireCompleted(payload); //??? 될까... 이렇게만 해도??
-				
-		return false;
+	public boolean onMessage(ProcessInstance instance, Object payload)	throws Exception {
+		Vector activityInstances =  instance.getCurrentRunningActivities();
+		for(int i=0; i<activityInstances.size(); i++){
+			Activity nextAct = (Activity) activityInstances.get(i);
+			nextAct.stop(instance);
+		}
+		
+		fireComplete(instance);
+		
+		return true;
+	}
+	
+	public SignalEventActivity(){
+		super();
+		if( this.getName() == null ){
+			setName(this.getClass().getSimpleName());
+		}
 	}
 
 	@Override
 	public String getMessage() {
-		return getClass().getName();  //just simply return the event name as it's classname.
+		return "event";//getClass().getName();  //just simply return the event name as it's classname.
 	}
 
 }

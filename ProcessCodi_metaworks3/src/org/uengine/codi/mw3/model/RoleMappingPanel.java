@@ -1,15 +1,12 @@
 package org.uengine.codi.mw3.model;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.dao.MetaworksDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -46,26 +43,16 @@ public class RoleMappingPanel implements ContextAware{
 		
 		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(defId);
 		for(org.uengine.kernel.Role role : definition.getRoles()){
+			if( "Initiator".equalsIgnoreCase(role.getName()) ){
+				continue;
+			}
 			RoleMappingDefinition roleMappingDefinition = new RoleMappingDefinition();
-			
 			roleMappingDefinition.setRoleDefId(session.getEmployee().getGlobalCom() + "." + defId + "." + role.getName());
 			try{
 				roleMappingDefinition.copyFrom(roleMappingDefinition.findRoleMappingDefinition());
 				roleMappingDefinition.getMappedUser().setName(roleMappingDefinition.getMappedUserName());
 				roleMappingDefinition.getMappedUser().getMetaworksContext().setHow(IUser.HOW_PICKER);
 				
-//				if( roleMappingDef.getMappedUser() != null && roleMappingDef.getMappedUser().getUserId() != null ){
-//					Employee user = new Employee();
-//					user.setEmpCode(roleMappingDef.getMappedUser().getUserId());
-//					user.copyFrom(user.databaseMe());
-//					System.out.println("user.getEmpName() = " + user.getEmpName());
-//					IUser usr = new User();
-//					usr.setUserId(roleMappingDef.getMappedUser().getUserId());
-//					usr.setName(user.getEmpName());
-//					roleMappingDef.setMappedUser(usr);
-//				}
-//				// TODO 요거 유저가 안들어감 ㅠ_ㅠ
-//				System.out.println("roleMappingDef : " + roleMappingDef.getMappedUser().getName());
 				roleMappingDefinitions.add(roleMappingDefinition);
 			}catch(Exception e){
 				IRoleMappingDefinition roleMappingDef = (IRoleMappingDefinition)MetaworksDAO.createDAOImpl(IRoleMappingDefinition.class);

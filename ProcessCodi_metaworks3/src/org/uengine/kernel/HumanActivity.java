@@ -523,10 +523,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 					}
 				}catch(Exception e){	
 				}
-				if( thisIsInitiationActivity ){
-					roleMapping = currentLogin;
-					instance.putRoleMapping(getRole().getName(), roleMapping);
-				}else if(roleMapping==null){
+				if(roleMapping==null){
 	
 					if(currentLogin==null){
 						throw new UEngineException("Couldn't get the actual user for the role [" + getName() + "]. The reason maybe among these: 1. you didn't assign any role for this activity. 2. you didn't give login information for the current login user");
@@ -675,6 +672,8 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			 * role mapping 이 되어있지 않은 경우에 경합모드로 변경
 			 */
 			//kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+getRole().getDispatchingOption());
+			//roleMapping = new RoleMapping();
+			//roleMapping.setEndpoint(GlobalContext.getPropertyString("codi.user.id"));
 			kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+Role.DISPATCHINGOPTION_RACING);
 		}
 		

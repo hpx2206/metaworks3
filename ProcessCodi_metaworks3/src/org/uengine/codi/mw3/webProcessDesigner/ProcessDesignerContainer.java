@@ -143,6 +143,10 @@ public class ProcessDesignerContainer {
 		Role[] roles = def.getRoles();
 		if( roles != null && roles.length > 0){
 			for(Role role : roles){
+				if( "Initiator".equals(role.getName()) ){
+					continue;
+				}
+				
 				if( role.getRoleView() != null){
 					role.getRoleView().setViewType(viewType);
 					role.getRoleView().setEditorId(getEditorId());

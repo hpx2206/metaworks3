@@ -773,16 +773,21 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 //				if( message == null ){
 //					ack = true;
 //				}
+				//if(message == null || message != null && message.equals(activityAsMessageListener.getMessage())){
 				if(message == null || message != null && message.equals(activityAsMessageListener.getMessage())){
-					try{
-						if(activityAsMessageListener.onMessage(instance, payload))
-							ack = true;
-					}catch(Exception e){
-						
-						targetActivity.fireFault(instance, e);
-						
-						//TODO: what's happening?
-						throw e;
+					if( payload instanceof EventMessagePayload){
+						if(targetActivity.getName().getText().equals(((EventMessagePayload) payload).getEventName())){
+							try{
+								if(activityAsMessageListener.onMessage(instance, payload))
+									ack = true;
+							}catch(Exception e){
+								
+								targetActivity.fireFault(instance, e);
+								
+								//TODO: what's happening?
+								throw e;
+							}
+						}
 					}
 				}
 			}

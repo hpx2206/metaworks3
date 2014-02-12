@@ -278,6 +278,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
 	public Object[] initiate() throws Exception{
 		
+		/* 프로세스를 시작할때, 사용자가 지정이 안되어 있으면 팝업을 띄우는 부분 현재 안쓰여서 주석 처리 - 14.2.12 김형국
 		roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
 		ArrayList<IRoleMappingDefinition> roleDefList = roleMappingPanel.getRoleMappingDefinitions();
 		for(IRoleMappingDefinition roleDef : roleDefList){
@@ -290,7 +291,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				return new Object[]{this.modify()};
 			}
 		}
-		
+		*/
 				
 		// InstanceViewContent instanceView// = new InstanceViewContent();
 		// 프로세스 실행
@@ -503,7 +504,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		*/
 		
 		
-		
+		roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
 		roleMappingPanel.putRoleMappings(processManager, instId);
 		processManager.executeProcess(instId);
 		processManager.applyChanges();
@@ -517,8 +518,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 
 			return new Object[]{new Refresh(instanceListPanel), new Remover(new Popup())};
 		}else{
+			IInstance copyOfInstance = ((Instance)instanceRef).databaseMe();
 			instanceView.session = session;
-			instanceView.load(instanceRef);
+			instanceView.load(copyOfInstance);
 
 			if(processMapList!=null && processMapList.getTitle()!=null){
 				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(title);
@@ -526,7 +528,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				instanceView.getInstanceView().setInstanceName(title);
 			}
 			
-			IInstance copyOfInstance = ((Instance)instanceRef).databaseMe();
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
 			
 			// 주제 제목 설정
