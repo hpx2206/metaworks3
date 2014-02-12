@@ -1,7 +1,24 @@
+<%
+	var type = value.type;
+	var icontype = '';
+			
+	if('process' == type)
+		icontype = "briefcase"
+	if('valuechain' == type)
+		icontype = "link"
+	if('java' == type)
+		icontype = "code"
+	if('navigator' == type)
+		icontype = "menu2"
+	if('page_white_text' == type)
+		icontype = "file"
+
+%>
+
 <div id="navigationTitle" class="tabCurrent">
     <span style="margin-right:0px;padding-right:0px">
 	    <div title="<%=mw3.localize(value.id)%>">
-	    <div style="background:url(images/<%=value.type%>.png) no-repeat 0px 2px; padding-left:18px;margin-right:18px"><%=mw3.localize(value.name)%></div>
+	    <div style="margin-right:18px"><b class="icon-<%=icontype%> tab_icon"></b><%=mw3.localize(value.name)%> <%=value.type%></div>
 	    
 	    </div>
     </span>
