@@ -66,6 +66,14 @@ public class InstanceTooltip implements ContextAware {
 			this.dueDate = dueDate;
 		}
 		
+	EventTrigger[] eventTriggers;
+		public EventTrigger[] getEventTriggers() {
+			return eventTriggers;
+		}
+		public void setEventTriggers(EventTrigger[] eventTriggers) {
+			this.eventTriggers = eventTriggers;
+		}
+		
 	public InstanceTooltip() throws Exception{
 		setMetaworksContext(new MetaworksContext());
 	}

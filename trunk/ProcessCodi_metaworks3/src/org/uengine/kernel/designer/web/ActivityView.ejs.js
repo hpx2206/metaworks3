@@ -55,14 +55,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 	        	
 	        	// object.activityClass : Activity , object.__className : ActivityView
 				if( object.instStatus ){
-					console.log(object.instStatus);
-					var lineWidth = 1;
-					if ("Completed" == object.instStatus) {
-						lineWidth = 5;
-					}else	if ("Running" == object.instStatus) {
-						lineWidth = 5;
+					if ("Completed" == object.instStatus || "Running" == object.instStatus) {
+						var lineWidth = 5;
+						canvas.setShapeStyle(element, {"stroke": object.backgroundColor , "stroke-width": lineWidth});
 					}
-					canvas.setShapeStyle(element, {"stroke": object.backgroundColor , "stroke-width": lineWidth});
 //					canvas.setShapeStyle(element, {"fill": object.backgroundColor , "fill-opacity": 0.5});
 				}
 				

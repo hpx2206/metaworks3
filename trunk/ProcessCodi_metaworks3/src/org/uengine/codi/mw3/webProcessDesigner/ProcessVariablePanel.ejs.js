@@ -20,6 +20,9 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessVariablePanel = function(obje
 org_uengine_codi_mw3_webProcessDesigner_ProcessVariablePanel.prototype = {
 		clickedItem : function(variableName){
 			this.clickedVariable = variableName;
+			
+			$('.variablePanel_td').css('background','none');
+			$('.'+variableName+'_' +this.objectId).find('.variablePanel_td').css('background','#e5e5e5');
 		},
 		removeItem : function(){
 			if( this.clickedVariable != '' ){

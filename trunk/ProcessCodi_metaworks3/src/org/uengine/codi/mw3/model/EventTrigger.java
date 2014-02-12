@@ -54,7 +54,8 @@ public class EventTrigger {
 		//refreshes the instanceview so that the next workitem can be show up
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
-		
+		instance.copyFrom(instance.databaseMe());
+				
 		instanceViewContent.load(instance);
 		
 		return instanceViewContent;

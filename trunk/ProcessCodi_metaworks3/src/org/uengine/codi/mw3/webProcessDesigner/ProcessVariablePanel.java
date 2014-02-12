@@ -94,9 +94,9 @@ public class ProcessVariablePanel implements ContextAware{
 		processVariablePanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setWidth(400);
-		modalWindow.setHeight(400);
-		modalWindow.setTitle("");
+		modalWindow.setWidth(500);
+		modalWindow.setHeight(500);
+		modalWindow.setTitle("변수정의 리스트");
 		modalWindow.setPanel(processVariablePanel);
 		
 		return modalWindow;

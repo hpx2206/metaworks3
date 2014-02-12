@@ -84,6 +84,21 @@
 			        	</a>
 			        </li>
 			        
+<%		
+		if( value.eventTriggers ){
+		     for(var i=0; i < value.eventTriggers.length; i++){
+		          var options; 
+		          var eventTrigger = value.eventTriggers[i];
+                  if(typeof options == 'undefined'){
+                        options = objectMetadata;
+                  }
+                  options['htmlTag'] =  'li';
+%>
+                <%=mw3.locateObject(eventTrigger, eventTrigger.__className, null , options, {objectId: objectId, name: '[' + i + ']'}) %>
+<%		
+            }
+		}
+%>
 			    </ul>
 			</div>
 <%		

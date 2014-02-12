@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.sql.RowSet;
 
@@ -22,6 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
+import org.uengine.kernel.EventActivity;
+import org.uengine.kernel.EventHandler;
+import org.uengine.kernel.ProcessDefinition;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -55,6 +60,29 @@ public class InstanceView {
 		instanceTooltip.setStatus(instance.getStatus());
 		instanceTooltip.setSecuopt(instance.getSecuopt());
 		instanceTooltip.setDueDate(instance.getDueDate());
+		
+		if(instance.getDefVerId()!=null){ //process exists!
+//			EventHandler[] eventHandlers = processManager.getEventHandlersInAction(instance.getInstId().toString());
+			ProcessInstance processInstance = processManager.getProcessInstance(instance.getInstId().toString());
+			Vector mls = processInstance.getMessageListeners("event");
+
+			ProcessDefinition definition = processInstance.getProcessDefinition();
+			EventTrigger[] eventTriggers = new EventTrigger[mls.size()];
+			if(mls!=null){
+				for(int i=0; i<mls.size(); i++){
+					EventActivity scopeAct = (EventActivity)definition.getActivity((String)mls.get(i));
+					
+					EventTrigger eventTrigger = new EventTrigger();
+					eventTrigger.setInstanceId(instance.getInstId().toString());
+					eventTrigger.setDisplayName(scopeAct.getDescription().getText());
+					eventTrigger.setEventName(scopeAct.getName().getText());
+					eventTriggers[i] = eventTrigger;
+					
+				}
+			}
+			
+			instanceTooltip.setEventTriggers(eventTriggers);
+		}
 		
 		this.setInstanceAction(instanceTooltip);
 		
