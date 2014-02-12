@@ -22,10 +22,7 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		if(imageDiv.length > 0){
 			$("#convertProgress_" + objectId).show();
 			try {
-				var image = object.downloadImage(false);
-				
-				if(image == null)
-					if(console) console.log('org_metaworks_website_MetaworksFile : not found image(' + object.uploadedPath + ')');
+				var image = object.downloadImage(false);				
 				
 				var width = 0;
 				var height = 0;
@@ -39,6 +36,12 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 					height = object.__descriptor.getOptionValue('height');
 					
 					$("#objDiv_" + this.objectId).css('width',width+'px').css('height',height+'px');
+				}
+				
+				if(image == null){
+					if(console) console.log('org_metaworks_website_MetaworksFile : not found image(' + object.uploadedPath + ')');
+					$("#convertProgress_" + objectId).hide();
+					imageDiv.html('<img style=\"display:none;\" src=\"images/waveStyle/notfound.png\">');
 				}
 				
 				imageDiv.find('img').load(function(){
