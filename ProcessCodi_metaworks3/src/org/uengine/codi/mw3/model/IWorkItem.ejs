@@ -23,11 +23,11 @@
 			var desc = '';
 			
 			if('file' == type)
-				desc = '(ver ' + value.majorVer + '.' + value.minorVer + ')·';
+				desc = value.majorVer + '.' + value.minorVer;
 			else if('process' == type){
 				title = mw3.localize('$MyTask') + ': ' + title;
 				
-				desc = '[' + value.status + '] · ';
+				desc = value.status
 			}
 											
 			if('file' == type || 'process' == type)
@@ -92,19 +92,15 @@
 %>	
 									
 									<span class="workItemDate" style="margin-right:15px;">
-											<%=desc%>
+											<%=desc%><%=desc?'<div>·</div>':''%>
+											<%=fields.startDate.here({when: 'timeago'})%>
 <%
-			// label - start date
 			if('process' == value.type){	
 %>								
-										<div><%=mw3.localize('$Started')%> :  </div>
-										<%=fields.startDate.here({when: 'timeago'})%>
-										<div>· <%=mw3.localize('$Due')%> : </div>
+										
+										<div>·</div>
 										<%=fields.dueDate.here({when: 'timeago'})%>
-<%
-			}else{
-%>			
-										<%=fields.startDate.here({when: 'timeago'})%>
+										<div> 까지</div>
 <%			
 			}	
 %>								
