@@ -567,6 +567,7 @@ body {
     display:block;
     position:relative;
     height:18px;
+	line-height:18px;
     background-position:3px 1px;
     background-repeat:no-repeat;
     padding-left:0px;
@@ -1423,7 +1424,9 @@ body {
 
 /* 5820 */
 .menu > div.menu_item {
-	height: 13px;
+	/*
+height: 13px;
+*/
 }
 
 /* 5823 */
@@ -1853,3 +1856,5 @@ blockquote {
 	-webkit-margin-start: 40px;
 	-webkit-margin-end: 40px;
 }
+
+.tab_icon{margin-right:10px;font-size: 12px;position: relative;top: 1px; margin-right:10px;}

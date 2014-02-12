@@ -776,11 +776,11 @@ position:absolute;
 	padding-right: 15px;
 }
 .mw3_mainMenu {
-	width: 100%;
-	margin: 0 auto;
 	height: 27px;
 	clear: both;
 	position: absolute;
+	left: 50%;
+	margin-left: -227px;
 }
 #gnb_wrap {
 	float: center;
@@ -1982,8 +1982,7 @@ select.select[class] {
 	cursor:pointer
 }
 .fb_addForm li img {
-	position:relative;
-	top:3px;
+
 	background:#069;
 }
 .fb_addForm li span { padding:5px; }
