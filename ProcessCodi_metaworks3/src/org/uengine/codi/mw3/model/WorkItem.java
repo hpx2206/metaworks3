@@ -86,6 +86,28 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 	}
 	
+	protected static IWorkItem findCommentByTaskId(String taskId) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where prtTskId=?taskId");
+		sql.append("   and isdeleted!=?isDeleted");
+		sql.append("   and type in ('ovryCmnt') ");
+		sql.append(" order by taskId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("taskId", taskId);
+		workitem.set("isDeleted",1);
+		
+		workitem.select();
+		
+		System.out.println("comment size : " + workitem.size());
+		
+		return workitem;
+	}
+	
 	protected static IWorkItem findComment(String instanceId) throws Exception{
 		
 		StringBuffer sql = new StringBuffer();
@@ -1165,6 +1187,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		final IWorkItem copyOfThis = this;
 		final IInstance copyOfInstance = instance;
+		
+		if(this instanceof OverlayCommentWorkItem || this instanceof FileWorkItem)
+			copyOfInstance.setInstId(this.getRootInstId());
 		
 		/**
 		 *  === noti push 부분 ===

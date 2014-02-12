@@ -1,4 +1,4 @@
-<%if(value.taskId!=null){%>
+<%if(value.taskId!=null && 'comment' == mw3.when){%>
 
 	<div class="overlay_comment" style="top:<%=value.overlayCommentOption.y%>%;">
 		<b><%=value.writer.name%></b><br> <%=value.title%>
