@@ -76,14 +76,17 @@ public class Navigator {
 		this.searchBox = new SearchBox();
 	}
 	
-	public void load(Project project){
+	public void load(Project project) throws Exception {
 
 		ResourceNode projectNode = new ResourceNode(project);
-
+		projectNode.setChild(projectNode.loadChild());
+		projectNode.setExpanded(true);
+		projectNode.setLoaded(true);
+		
 		ResourceTree resourceTree = new ResourceTree();
 		resourceTree.setId(projectNode.getId());
 		resourceTree.setNode(projectNode);
-
+		
 		this.setResourceTree(resourceTree);
 
 	}
