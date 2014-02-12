@@ -81,7 +81,7 @@ public interface IUser extends IDAO{
 	public Object[] removeContact() throws Exception;
 	
 	@Available(where=WHERE_ADDFOLLOWER)
-	@ServiceMethod(callByContent=true, target=TARGET_APPEND, eventBinding=EventContext.EVENT_CLICK)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] addFollower() throws RemoteException, Exception;
 
 	@Available(where=WHERE_FOLLOWERS)
