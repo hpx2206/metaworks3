@@ -85,8 +85,13 @@ public class RoleMappingPanel implements ContextAware{
 		for(IRoleMappingDefinition roleMappingDefinition: roleMappingDefinitions){
 			
 			if(roleMappingDefinition.getMappedUser()!=null && roleMappingDefinition.getMappedUser().getUserId()!=null){
+				if(roleMappingDefinition.getRoleDefId() == null){
+					((RoleMappingDefinition) roleMappingDefinition).createDatabaseMe();
+				}else{
+					((RoleMappingDefinition) roleMappingDefinition).syncToDatabaseMe();
+				}
+				/*
 				if(roleMappingDefinition instanceof RoleMappingDefinition){
-					
 					((RoleMappingDefinition) roleMappingDefinition).createDatabaseMe();
 				}else{
 					
@@ -99,6 +104,7 @@ public class RoleMappingPanel implements ContextAware{
 						copy.createDatabaseMe();
 					}
 				}
+				*/
 				
 			}
 		}

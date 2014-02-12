@@ -52,7 +52,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object[] pickUp() throws Exception;
 	
-	@Hidden(how={HOW_INFO, HOW_PICKER}, where={WHERE_ADDCONTACT, WHERE_ADDFOLLOWER, WHERE_FOLLOWERS})
+	@Hidden(how={HOW_INFO, HOW_PICKER}, where={WHERE_ADDCONTACT, WHERE_ADDFOLLOWER, WHERE_FOLLOWERS, WHERE_PICKERLIST})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Popup detail() throws Exception;
 	
