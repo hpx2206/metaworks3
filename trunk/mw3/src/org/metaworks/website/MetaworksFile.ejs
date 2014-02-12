@@ -20,8 +20,9 @@
 	<div  style="margin-top:5px;">
 		<span style="float:left;font-size: 14px;line-height: 23px" class="icon-attachment"></span>
 		<a href="#" style="cursor: pointer; float: left;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;-o-text-overow: ellipsis;width: 150px;" onclick="" title="">
-			<span style=" line-height:1.8em; margin-left:10px; margin-right:10px;" id="filename_" title="<%=value.filename%>"><%=value.filename%> (<%=value.filesize%>)</span>
+			<span style=" line-height:1.8em; margin-left:10px; margin-right:10px;" id="filename_" title="<%=value.filename%>"><%=value.filename%></span>
 		</a>
+		<span style="float: left;" title="<%=value.filesize.commaSeparated()%> Bytes">(<%=formatFilesizeUnits(value.filesize)%>)</span>
 		<a style="cursor: pointer; float: left; margin-left:30px;line-height:1.8em;" onclick="mw3.getFaceHelper(<%=objectId%>).download()" >저장</a>						
 		<div class="clear"></div>
 	</div>	
