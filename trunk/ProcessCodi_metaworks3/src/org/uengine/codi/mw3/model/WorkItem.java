@@ -1154,7 +1154,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// 수정
 		}else{		
 			// 변경된 WorkItem 을 갱신
-			returnObjects = new Object[]{new Refresh(this, true)};
+			returnObjects = new Object[]{new Refresh(this, false, true)};
 		}
 		
 		/**
