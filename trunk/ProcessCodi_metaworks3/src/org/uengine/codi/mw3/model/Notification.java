@@ -10,6 +10,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.Role;
@@ -127,22 +128,15 @@ public class Notification extends Database<INotification> implements INotificati
 		if(userInfo.databaseMe().isMailNoti()){
 			final IEmployee userInfoDB = userInfoTemp;
 			
+			/*
 			final Employee actorUserInfo = new Employee();
 			actorUserInfo.setEmpCode(getActorId());
 			
 			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
+			*/
 			
 			try{
-				
-				String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-		        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-		        
-		        URL urlURL = new java.net.URL(base);
-		       	String host = urlURL.getHost();
-		       	int port = urlURL.getPort();
-		       	String protocol = urlURL.getProtocol();
-		
-		       	url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+		       	url = TenantContext.getURL();
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -152,7 +146,8 @@ public class Notification extends Database<INotification> implements INotificati
 				@Override
 				public void run() {
 					try {
-						
+						// facebook
+						/*
 						if(userInfoDB.getEmpCode()==null && userInfoDB.getFacebookId()!=null){
 							//TODO: this case should be chosen by more deterministic option (e.g. User.network=='facebook') 
 							FacebookClient facebookClient = new DefaultFacebookClient();
@@ -167,17 +162,12 @@ public class Notification extends Database<INotification> implements INotificati
 								userInfoDB.setEmail(user.getEmail());
 							}
 						}
+						*/
+						String from = "help@opencloudengine.org";
+						String title = "[ProcessCodi] " + ( (instance != null && instance.getName() != null) ? instance.getName() : GlobalContext.getLocalizedMessage("$AddFo"));
+						String content = getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>;";
 						
-						(new EMailServerSoapBindingImpl()).sendMail(
-								actorUserInfoDB.getEmail(), 
-								actorUserInfoDB.getEmpName(),
-								userInfoDB.getEmail(), 
-								"[ProcessCodi] " + ( (instance != null && instance.getName() != null) ? instance.getName() : GlobalContext.getLocalizedMessage("$AddFo")), 
-								getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>", 
-								null, 
-								null,
-								"UTF-8"
-						);
+						(new EMailServerSoapBindingImpl()).sendMail(from, userInfoDB.getEmail(), title, content);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
