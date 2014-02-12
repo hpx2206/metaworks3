@@ -121,10 +121,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		setMetaworksContext(new MetaworksContext());
 	}
 
-	@Override
-	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_APPEND)
-	public Object expand() throws Exception {
-
+	public ArrayList<TreeNode> loadChild() throws Exception {
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 
 		System.out.println(this.getPath());
@@ -185,8 +182,14 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				}
 			}
 		}
-
-		return new ToAppend(this, child);
+		
+		return child;
+	}
+	
+	@Override
+	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_APPEND)
+	public Object expand() throws Exception {
+		return new ToAppend(this, this.loadChild());
 	}
 
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_POPUP)
