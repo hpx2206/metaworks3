@@ -194,8 +194,8 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@ORMapping(
-			databaseFields = {"content", "extfile", "tool"}, 
-			objectFields = {"uploadedPath", "filename", "mimeType"},
+			databaseFields = {"content", "extfile", "ext3", "tool"}, 
+			objectFields = {"uploadedPath", "filename", "filesize", "mimeType"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen = {"type=='file'","type=='document'"}	
 		)

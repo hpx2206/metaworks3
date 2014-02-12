@@ -109,7 +109,8 @@ public class FileWorkItem extends WorkItem{
 			this.setContent(this.getFile().getUploadedPath());
 			this.setTool(this.getFile().getMimeType());
 			this.setExtFile(this.getFile().getFilename());
-	
+			this.setExt3(this.getFile().getFilesize().toString());
+			
 			String mimeType = getFile().getMimeType();
 			if(mimeType != null && mimeType.indexOf("image") != 0){
 				Preview preview = new Preview();
