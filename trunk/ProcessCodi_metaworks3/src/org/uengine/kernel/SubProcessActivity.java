@@ -1233,19 +1233,6 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
 			this.parentEditorId = parentEditorId;
 		}
 	@Override
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] apply(){
-		if( subProcessContext != null && subProcessContext.getMappingCanvas() != null ){
-			ParameterContext[] params = subProcessContext.getMappingCanvas().getMappingElements();
-			for (int i = 0; i < params.length; i++) {
-				ParameterContext param = params[i];
-				
-			}
-		}
-		
-		return super.apply();
-	}
-	@Override
 	public void drawInit() throws Exception {
 		String subProcessContextId = "sub";
 		if( subProcessContext == null ){

@@ -82,6 +82,7 @@ public class InstanceMonitor {
 		for (int l = 0; l < activityList.size(); l++) {
 			Activity activity = activityList.get(l);
 			String status = instance.getStatus(activity.getTracingTag());
+			activity.getActivityView().setInstStatus(status);
 			activity.getActivityView().setBackgroundColor(InstanceMonitor.getStatusColor(status));
 		}
 		

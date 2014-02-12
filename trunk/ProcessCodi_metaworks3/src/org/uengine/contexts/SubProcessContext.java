@@ -5,7 +5,6 @@ import java.io.Serializable;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
-import org.uengine.codi.mw3.webProcessDesigner.ClassResourceTree;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.codi.mw3.webProcessDesigner.SubProcessResourceTree;

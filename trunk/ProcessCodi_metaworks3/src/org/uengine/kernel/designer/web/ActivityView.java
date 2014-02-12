@@ -139,10 +139,11 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			activity.getDocumentation().setMetaworksContext(new MetaworksContext());
 			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
-		
+		activityWindow.setId(this.getId());	// 꼭 필요함
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
 		
+		popup.setId(this.getId());				// 꼭 필요함
 		popup.setTitle(activity.getDescription() != null && activity.getDescription().getText() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
 		popup.setPanel(activityWindow);
 		popup.setWidth(1000);
