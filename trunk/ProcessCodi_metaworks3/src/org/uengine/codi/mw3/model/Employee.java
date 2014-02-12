@@ -626,10 +626,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				    "purchasing/process/purchasingreq.process", 
 				    "sales/process/sales.process", 
 				    "troubleticket/process/troubleticket.process",
-				    "spreadSheet/SpreadSheet.process",
-				    "mindmap/MindMap.process",
-				    "ganttchart/GanttChart.process",
-				    "devgoods/process/devgoods.process"};
+//				    "spreadSheet/SpreadSheet.process",
+//				    "mindmap/MindMap.process",
+//				    "ganttchart/GanttChart.process",
+//				    "devgoods/process/devgoods.process"
+				    };
 				  
 		String[] name={
 				    "출장", 
@@ -638,10 +639,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				    "구매", 
 				    "영업", 
 				    "클레임",
-				    "스프레드시트",
-				    "마인드맵",
-				    "간트차트",
-				    "문서"};
+//				    "스프레드시트",
+//				    "마인드맵",
+//				    "간트차트",
+//				    "문서"
+				    };
 		
 		String basePath = "default/process/";
 		String[] upLoadedPath={
@@ -651,10 +653,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				basePath + "purchasing.png",
 				basePath + "sales.png",
 				basePath + "troubleticket.png",
-				basePath + "spreadSheet.png",
-				basePath + "mindmap.png",
-				basePath + "ganttchart.png",
-				basePath + "devgoods.png",
+//				basePath + "spreadSheet.png",
+//				basePath + "mindmap.png",
+//				basePath + "ganttchart.png",
+//				basePath + "devgoods.png",
 		};
 				  
 		for(int i=0; i<defId.length; i++){
