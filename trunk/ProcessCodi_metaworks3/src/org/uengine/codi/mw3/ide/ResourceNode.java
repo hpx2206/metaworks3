@@ -23,8 +23,6 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
-import org.uengine.codi.mw3.ide.view.Navigator;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -170,7 +168,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 					processNode.setParentId(this.getId());
 					processNode.setType(TreeNode.TYPE_FILE_PROCESS);
 					processNode.setMetaworksContext(getMetaworksContext());
-					processNode.setFolder(true);
+//					processNode.setFolder(true);
 					
 					child.add(processNode);
 				

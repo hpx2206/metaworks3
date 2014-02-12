@@ -18,7 +18,6 @@ import org.metaworks.common.MetaworksUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
-import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessNameView;
 import org.uengine.contexts.TextContext;
@@ -27,7 +26,7 @@ import org.uengine.kernel.ProcessDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-public class ProcessDesignerContentPanel extends ContentWindow implements ContextAware {
+public class ProcessDesignerContentPanel implements ContextAware {
 	
 	public ProcessDesignerContentPanel() throws Exception{
 		processDesignerContainer = new ProcessDesignerContainer();

@@ -10,7 +10,7 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
 
 
-@Face(	ejsPath="genericfaces/Tab.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 public class ActivityPanel  implements ContextAware{
 
 	MetaworksContext metaworksContext;
@@ -25,6 +25,7 @@ public class ActivityPanel  implements ContextAware{
 	Activity activity;
 		@Face(displayName="$Properties")
 		@Order(1)
+		@Available(condition="activity")
 		public Activity getActivity() {
 			return activity;
 		}
@@ -35,6 +36,7 @@ public class ActivityPanel  implements ContextAware{
 	Documentation document;
 		@Face(displayName="$Documentation")
 		@Order(2)
+		@Available(condition="document")
 		public Documentation getDocument() {
 			return document;
 		}
@@ -45,7 +47,7 @@ public class ActivityPanel  implements ContextAware{
 	ParameterContextPanel parameterContextPanel;
 	@Face(displayName="$ParameterSetting")
 	@Order(3)
-	@Available(where="isReceiveActivity")
+	@Available(condition="parameterContextPanel")
 		public ParameterContextPanel getParameterContextPanel() {
 			return parameterContextPanel;
 		}

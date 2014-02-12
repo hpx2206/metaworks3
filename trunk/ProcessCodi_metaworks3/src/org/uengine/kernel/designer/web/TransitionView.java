@@ -12,6 +12,8 @@ import org.uengine.codi.mw3.webProcessDesigner.ConditionNode;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionTreeNode;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
+import org.uengine.codi.mw3.webProcessDesigner.RolePanel;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.And;
 import org.uengine.kernel.Condition;
@@ -47,13 +49,16 @@ public class TransitionView extends CanvasDTO{
 		}
 	
 	@AutowiredFromClient
-	public ProcessDesignerContainer processDesignerContainer;
-		
+	transient public RolePanel rolePanel;
+	
+	@AutowiredFromClient
+	transient public ProcessVariablePanel processVariablePanel;
+	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
 		
-		ArrayList<Role>	 roleList = processDesignerContainer.getRolePanel().getRoleList();
-        ArrayList<ProcessVariable> variableList = processDesignerContainer.getProcessVariablePanel().getVariableList();
+		ArrayList<Role>	 roleList = rolePanel.getRoleList();
+        ArrayList<ProcessVariable> variableList = processVariablePanel.getVariableList();
         
 		ConditionPanel conditionPanel = new ConditionPanel();
 		conditionPanel.setMetaworksContext(new MetaworksContext());

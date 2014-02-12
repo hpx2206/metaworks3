@@ -8,28 +8,26 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.ide.CloudInstanceWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
-import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Role;
 
-
+/* child 를 나타내는 폴더형식으로 하려면 아래 주석을 풀어서 ejs를 입혀주세요 - 14.02.11 김형국
 @Face(
 		ejsPath = "dwr/metaworks/org/uengine/codi/mw3/ide/libraries/ProcessNode.ejs",
 		ejsPathMappingByContext = {
 				"{how:	'tree', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/libraries/ProcessNode.ejs'}",
 				"{how:	'resourcePicker', face: 'dwr/metaworks/org/metaworks/metadata/ResourceNodePicker.ejs'}"
 		})
+*/
 public class ProcessNode extends ResourceNode{
 	
 	String parentName;
@@ -125,6 +123,7 @@ public class ProcessNode extends ResourceNode{
 	@Override
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
 	public Object expand() throws Exception{
+		/* child 를 나타내는 폴더형식으로 하려면 아래 주석을 풀어서 엑션을 입혀주세요 - 14.02.11 김형국
 		ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
 		processDesignerContentPanel.setAlias(this.getPath());
 		processDesignerContentPanel.setBasePath("");
@@ -174,6 +173,8 @@ public class ProcessNode extends ResourceNode{
 		}
 		
 		return this;
+		*/
+		return null;
 	}
 	
 }
