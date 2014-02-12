@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.dao.MetaworksDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,8 @@ public class RoleMappingPanel implements ContextAware{
 		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(defId);
 		for(org.uengine.kernel.Role role : definition.getRoles()){
 			RoleMappingDefinition roleMappingDefinition = new RoleMappingDefinition();
-			roleMappingDefinition.setRoleDefId(session.getEmployee().getGlobalCom() + "." + defId + "." + role.getName());
 			
+			roleMappingDefinition.setRoleDefId(session.getEmployee().getGlobalCom() + "." + defId + "." + role.getName());
 			try{
 				roleMappingDefinition.copyFrom(roleMappingDefinition.findRoleMappingDefinition());
 				roleMappingDefinition.getMappedUser().setName(roleMappingDefinition.getMappedUserName());
@@ -83,12 +84,21 @@ public class RoleMappingPanel implements ContextAware{
 	
 	public void save() throws Exception{
 		for(IRoleMappingDefinition roleMappingDefinition: roleMappingDefinitions){
-			
 			if(roleMappingDefinition.getMappedUser()!=null && roleMappingDefinition.getMappedUser().getUserId()!=null){
-				if(roleMappingDefinition.getRoleDefId() == null){
-					((RoleMappingDefinition) roleMappingDefinition).createDatabaseMe();
+				RoleMappingDefinition saveRoleMappingDef = null;
+				
+				if(roleMappingDefinition instanceof RoleMappingDefinition){
+					saveRoleMappingDef = (RoleMappingDefinition)roleMappingDefinition;
 				}else{
-					((RoleMappingDefinition) roleMappingDefinition).syncToDatabaseMe();
+					saveRoleMappingDef = new RoleMappingDefinition();
+					saveRoleMappingDef.copyFrom(roleMappingDefinition);
+				}
+				
+				if(roleMappingDefinition.getRoleDefId() == null){
+					saveRoleMappingDef.setRoleDefId(saveRoleMappingDef.getComCode() + "." + saveRoleMappingDef.getDefId() + "." + saveRoleMappingDef.getRoleName());
+					saveRoleMappingDef.createDatabaseMe();
+				}else{
+					saveRoleMappingDef.syncToDatabaseMe();
 				}
 				/*
 				if(roleMappingDefinition instanceof RoleMappingDefinition){

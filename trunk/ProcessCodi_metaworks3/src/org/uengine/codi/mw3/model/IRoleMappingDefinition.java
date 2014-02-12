@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
@@ -39,7 +40,7 @@ public interface IRoleMappingDefinition extends IDAO{
 	public String getRoleDefType();
 	public void setRoleDefType(String roleDefType);
 	
-	@ServiceMethod(callByContent=true, mouseBinding="drop")
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_SELF)
 	public void drop();
 
 }
