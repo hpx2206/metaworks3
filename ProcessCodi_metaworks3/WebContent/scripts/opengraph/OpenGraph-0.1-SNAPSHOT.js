@@ -7997,7 +7997,24 @@ OG.geometry.Envelope.prototype = {
 		return true;
 	},
 	
-		/**
+	/**
+	 * 주어진 모든 좌표값이 Envelope 영역에 포함되는지 비교한다.
+	 *
+	 * @param {OG.geometry.Coordinate[]} coordinateArray 좌표값 Array
+	 * @return {Boolean} true:포함, false:비포함
+	 */
+	getHowManyContains: function (coordinateArray) {
+		var i, time = 0;
+		for (i = 0; i < coordinateArray.length; i++) {
+			if (this.isContains(coordinateArray[i])) {
+				time += 1;
+			}
+		}
+
+		return time;
+	},
+	
+	/**
 	 * 주어진 모든 좌표값이 Envelope 영역에 포함되는지 비교한다.
 	 *
 	 * @param {OG.geometry.Coordinate[]} coordinateArray 좌표값 Array
@@ -8013,6 +8030,7 @@ OG.geometry.Envelope.prototype = {
 
 		return false;
 	},
+
 
 	/**
 	 * 크기는 고정한 채 가로, 세로 Offset 만큼 Envelope 을 이동한다.
@@ -13969,6 +13987,60 @@ OG.renderer.IRenderer.prototype = {
 	 * @return {Element[]} Element
 	 */
 	getElementMapByBBox: function (envelope, _elements, groupId) {
+		var elements = {}, times;
+		if(_elements){
+			elements = _elements;
+		}
+		
+		$(this.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
+			times = envelope.getHowManyContains(element.shape.geom.getVertices());
+			if (element.shape.geom && times > 0) {
+				if($(element).attr("id") === groupId){
+					//no operation
+				}else{
+					console.log(element);
+					console.log(times);
+					
+					if(element.shape instanceof OG.shape.EdgeShape){
+						if( ($(element).attr("_from") + "").indexOf(groupId) < 0 
+							&& ($(element).attr("_to") + "").indexOf(groupId) < 0 )
+						{
+							elements[element.id] = element;
+						}
+					}else if(element.shape instanceof OG.shape.GroupShape){
+						if(times == 5){
+							elements[element.id] = element;
+						}
+					}else{
+						if(element.shape.geom instanceof OG.geometry.Rectangle){
+							if(times == 5){
+								elements[element.id] = element;
+							}
+						}else if(element.shape.geom instanceof OG.geometry.Circle){
+							if(times >= 21){
+								elements[element.id] = element;
+							}
+						}else if(element.shape.geom instanceof OG.geometry.Polygon){
+							if(times == 5){
+								elements[element.id] = element;
+							}
+						}
+					}
+				}
+			}
+		});
+
+		return elements;
+	},
+	
+	/**
+	 * 주어진 Boundary Box 영역에 포함되는 Shape(GEOM, TEXT, IMAGE) Element 를 반환한다.
+	 *
+	 * @param {OG.geometry.Envelope} envelope Boundary Box 영역
+	 * @return {Element[]} Element
+	 */
+/*
+	getElementMapByBBox: function (envelope, _elements, groupId) {
 		var elements = {};
 		if(_elements){
 			elements = _elements;
@@ -13976,6 +14048,8 @@ OG.renderer.IRenderer.prototype = {
 		
 		$(this.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
 			if (element.shape.geom && envelope.isContainsOnce(element.shape.geom.getVertices())) {
+				
+			
 				if(element.shape instanceof OG.shape.EdgeShape){
 					if( ($(element).attr("_from") + "").indexOf(groupId) < 0 
 						&& ($(element).attr("_to") + "").indexOf(groupId) < 0 )
@@ -13990,6 +14064,7 @@ OG.renderer.IRenderer.prototype = {
 
 		return elements;
 	},
+*/
 
 	/**
 	 * 엘리먼트에 속성값을 설정한다.
@@ -19363,6 +19438,28 @@ OG.handler.EventHandler.prototype = {
 					// redraw guide
 					me._RENDERER.removeGuide(element);
 					guide = me._RENDERER.drawGuide(element);
+					
+					if(element.shape instanceof OG.shape.GroupShape){
+						// gathering redraw targets
+						var childElement
+							,elementId = $(element).attr('id')
+							,key_childElementMap
+							,childElementMap = me._RENDERER.getElementMapByBBox(element.shape.geom.getBoundary()
+														, null
+														, elementId);
+
+						delete childElementMap[elementId];
+										
+						for(var key_childElementMap in childElementMap){
+							childElement = childElementMap[key_childElementMap];
+							if(childElement instanceof OG.shape.EdgeShape){
+								//no operation
+							}else{
+								me._RENDERER.removeGuide(childElement);
+								me._RENDERER.drawGuide(childElement);					
+							}
+						}
+					}
 
 					$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 					$(this).data("offset", {
@@ -19399,10 +19496,21 @@ OG.handler.EventHandler.prototype = {
 						groupTarget = $(root).data("groupTarget"),
 						eleArray,
 						guide;
-
+						
 					// 이동 처리
 					$(this).css({"position": "", "left": "", "top": ""});
-					eleArray = me._moveElements(bBoxArray, dx, dy);
+					
+					// 조건 : 이동지에 그룹이 겹치게 되면 취소
+					
+					if(false){
+						eleArray = me._moveElements(bBoxArray, 0, 0);
+					}else{
+						eleArray = me._moveElements(bBoxArray, dx, dy);
+						
+						me._RENDERER.getElementMapByBBox(element.shape.geom.getBoundary()
+														, null
+														, $(element).attr('id'));
+					}
 
 					//TODO : 이것 또한 없애야 할 것... 의존성을 가지면 안됨.
 					// remove custom control
@@ -19453,7 +19561,7 @@ OG.handler.EventHandler.prototype = {
 			me._RENDERER.setAttr(element, {cursor: 'move'});
 			OG.Util.apply(element.shape.geom.style.map, {cursor: 'move'});
 		} else {
-			$(element).draggable("destroy");
+			//$(element).draggable("destroy");
 			me._RENDERER.setAttr(element, {cursor: me._isSelectable(element.shape) ? 'pointer' : me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
 			OG.Util.apply(element.shape.geom.style.map, {cursor: me._isSelectable(element.shape) ? 'pointer' : me._CONFIG.DEFAULT_STYLE.SHAPE.cursor});
 		}
@@ -22981,7 +23089,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		/**
 		 * 터미널 cross 사이즈
 		 */
-		TERMINAL_SIZE: 5,
+		TERMINAL_SIZE: 3,
 
 		/**
 		 * Shape 복사시 패딩 사이즈
@@ -23021,8 +23129,8 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- ", "edge-type": "plain" },
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0 },
 			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 ,cursor: "move" },
-			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 , cursor: "move" },
+			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
 			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
 			GUIDE_LL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
@@ -23038,7 +23146,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
 			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
 			TERMINAL      : { stroke: "#03689A", "stroke-width": 0.5, fill: "r(0.5, 0.5)#FFFFFF-#03689A", "fill-opacity": 0.1, cursor: "pointer" },
-			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
+			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 0.5, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
 			TERMINAL_BBOX : { stroke: "none", fill: "none", "fill-opacity": 0 },
 			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.3, "shape-rendering": "crispEdges" },
 			LABEL         : { "font-size": 12, "font-color": "black" },
@@ -23950,8 +24058,6 @@ OG.graph.Canvas.prototype = {
 					
 					if(childNode.shape instanceof OG.shape.bpmn.ScopeActivity){
 						childGroupNode = childNode;
-						cellMap[$(childGroupNode).attr('id')]['@parent'] = groupId;
-						cellMap[groupId]['@childs'].push($(childGroupNode).attr('id'));
 						
 						filteredChildNodes = CANVAS._RENDERER.getElementMapByBBox(
 													childGroupNode.shape.geom.getBoundary()
