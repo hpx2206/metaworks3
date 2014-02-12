@@ -159,12 +159,17 @@
 		</tr>			
 		<tr>
 			<td width="50" height="30" style=" padding:10px 15px 0px 10px;">
-				<%if (value.taskId != null){%>
-					<%=fields.versionUpOption.here()%>
-				<%}%>
+				
 			</td>
 			<td style=" padding:10px 15px 0px 0px;">
-				<%=fields.file.here()%>
+				<%if (value.taskId != null){%>
+					<span style="float:left; margin-right:15px;">					
+						<%=fields.versionUpOption.here()%>					
+					</span>
+				<%}%>
+				<span style="float:left; margin-top:4px;">
+					<%=fields.file.here()%>
+				</span>
 			</td>
 			<td style=" padding:10px 0px 0px 0px;">				
 				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
