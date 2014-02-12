@@ -13997,10 +13997,7 @@ OG.renderer.IRenderer.prototype = {
 			if (element.shape.geom && times > 0) {
 				if($(element).attr("id") === groupId){
 					//no operation
-				}else{
-					console.log(element);
-					console.log(times);
-					
+				}else{				
 					if(element.shape instanceof OG.shape.EdgeShape){
 						if( ($(element).attr("_from") + "").indexOf(groupId) < 0 
 							&& ($(element).attr("_to") + "").indexOf(groupId) < 0 )
@@ -24072,7 +24069,6 @@ OG.graph.Canvas.prototype = {
 					delete childNodes[$(filteredChildNode).attr('id')];
 				}
 				
-				//console.log("group Id : "+groupId);
 				//set child parent
 				for(var childNodeKey in childNodes){
 					childNode = childNodes[childNodeKey];
