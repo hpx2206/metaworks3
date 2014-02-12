@@ -44,20 +44,10 @@ import com.sun.pdfview.PDFPage;
 
 public class FileWorkItem extends WorkItem{
 
-	FileTransfer fileTransfer;
-	@Face(ejsPath="dwr/metaworks/org/directwebremoting/io/FileTransfer.ejs")
-	public FileTransfer getFileTransfer() {
-		return fileTransfer;
-	}	
-	public void setFileTransfer(FileTransfer fileTransfer) {
-		this.fileTransfer = fileTransfer;
-	}	
-
 	public FileWorkItem(){
 		setType(WORKITEM_TYPE_FILE);
 		setFile(new MetaworksFile()); 
 	}
-
 
 	String versionUpOption;
 	@Range(
@@ -86,49 +76,20 @@ public class FileWorkItem extends WorkItem{
 		if (this.getFile() == null || this.getFile().getFileTransfer() == null
 				|| this.getFile().getFileTransfer().getFilename() == null)
 			throw new MetaworksException("파일을 첨부해주세요.");
-		//		
 
+		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
+		
 //		// 추가모드 일때
 		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen()))	{
-			this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
-				if(this.getGrpTaskId() == null)
-					this.setGrpTaskId(this.getTaskId());
+			if(this.getGrpTaskId() == null)
+				this.setGrpTaskId(this.getTaskId());
 		
-			if(this.getWorkItemVersionChooser() != null)
-				this.getWorkItemVersionChooser().setTaskId(this.getTaskId());
-	
-			// 제목이 없으면 파일명을 제목으로
-			if(!UEngineUtil.isNotEmpty(getTitle())){
-				setTitle(new String(this.getFile().getFilename()));
-			}
-	
-			this.setFileTransfer(this.getFile().getFileTransfer());
-			// 파일 업로드
-			getFile().upload();
-	
-			this.setContent(this.getFile().getUploadedPath());
-			this.setTool(this.getFile().getMimeType());
-			this.setExtFile(this.getFile().getFilename());
-			this.setExt3(this.getFile().getFilesize().toString());
+			this.setMajorVer(1);
+			this.setMinorVer(0);
 			
-			String mimeType = getFile().getMimeType();
-			if(mimeType != null && mimeType.indexOf("image") != 0){
-				Preview preview = new Preview();
-				preview.setTaskId(getTaskId());
-				preview.setGrpTaskId(this.getGrpTaskId());
-				preview.setMimeType(mimeType);
-				this.setPreview(preview);
-			}else{
-				this.setPreview(null);
-			}
-	
-			// WorkItem 추가
-			returnObject = super.add();
-	
-			this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
-
 		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
 			
+			// TODO : minor version 에 대한 맥스 값 처리도 되어야함
 			int thisMajorVersion = this.getMajorVer();
 			int nextVersion = this.getMajorVer()+1;
 			WorkItem tempWi = getMaxVersion();
@@ -138,74 +99,39 @@ public class FileWorkItem extends WorkItem{
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			this.setMajorVer(nextVersion);
-			String title = this.getFile().getFilename();
-			this.databaseMe().setTitle(title);
-			String originInstId = instanceViewContent.getInstanceView().getInstanceId();
-			
-			FileWorkItem fileWorkItem = new FileWorkItem();
-			
-			this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
-			fileWorkItem.setTaskId(this.getTaskId());
-			fileWorkItem.setInstId(this.getInstId());
-			fileWorkItem.setRootInstId(this.getInstId());
-			fileWorkItem.setStartDate(Calendar.getInstance().getTime());
-			fileWorkItem.setEndDate(getStartDate());
-			this.setFileTransfer(this.getFile().getFileTransfer());
-			getFile().upload();
-			fileWorkItem.setContent(this.getFile().getUploadedPath());
-			fileWorkItem.setTool(this.getFile().getMimeType());
-			fileWorkItem.setExtFile(this.getFile().getFilename());
-			fileWorkItem.setStatus(WORKITEM_STATUS_FEED);
-			fileWorkItem.session = session;
-			fileWorkItem.processManager = this.processManager;
-			fileWorkItem.instanceViewContent = this.instanceViewContent;
-//			fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			fileWorkItem.setWriter(session.getUser());
-			fileWorkItem.setFile(this.getFile());
-			fileWorkItem.setGrpTaskId(this.getGrpTaskId());
-			fileWorkItem.setMajorVer(nextVersion);
-			fileWorkItem.setTitle(title);
-			fileWorkItem.createDatabaseMe();
-			
-			String thisVersion = String.valueOf(nextVersion+ "." + 0);
-			workItemVersionChooser.getVersionSelector().add(thisVersion , thisVersion);
-			workItemVersionChooser.setSelectedVersion(thisVersion);
-			workItemVersionChooser.getTaskIdsPerVersion().add(this.getTaskId());
-			workItemVersionChooser.getVersionSelector().setSelectedValue(workItemVersionChooser.getSelectedVersion());
-			
-			SystemWorkItem SystemWorkItem = new SystemWorkItem();
-			SystemWorkItem.session = session;
-			SystemWorkItem.processManager = this.processManager;
-			SystemWorkItem.instanceViewContent = this.instanceViewContent;
-			SystemWorkItem.setInstId(new Long(originInstId));
-			SystemWorkItem.setSystemMessage("파일이 수정되었습니다. " + title + " version "+ String.valueOf(thisMajorVersion+ "." + 0) +" =>" + thisVersion);
-			SystemWorkItem.add();
-			
-//			WorkItem tempWorkItem = new WorkItem();
-			fileWorkItem.setGrpTaskId(this.getGrpTaskId());
-			fileWorkItem.setType(WORKITEM_TYPE_GENERIC);
-			fileWorkItem.loadCurrentView();
-			
-			if( this.getPreview() != null ){
-				this.getPreview().setTaskId(this.getTaskId());
-				this.getPreview().setConvertStatus(null);
-			}
-			this.setFileTransfer(null);
-			this.getFile().setFileTransfer(null);
-			
-//			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-//			instanceViewThreadPanel.session = session;
-//			instanceViewThreadPanel.setInstanceId(originInstId);
-//			instanceViewThreadPanel.load();
-			
-			return new Object[]{new Refresh(this) , new Refresh(workItemVersionChooser)};
-			
-//			Object[] temReturnObject = fileWorkItem.add();
-//			returnObject = new Object[temReturnObject.length + 1];
-//			System.arraycopy(temReturnObject, 0, returnObject, 0, temReturnObject.length);
-//			
-//			returnObject[temReturnObject.length] = new Remover(this);
 		}
+
+		if(this.getWorkItemVersionChooser() != null)
+			this.getWorkItemVersionChooser().setTaskId(this.getTaskId());
+
+		// 제목이 없으면 파일명을 제목으로
+		if(!UEngineUtil.isNotEmpty(getTitle())){
+			setTitle(new String(this.getFile().getFilename()));
+		}
+
+		// 파일 업로드
+		getFile().upload();
+
+		this.setContent(this.getFile().getUploadedPath());
+		this.setTool(this.getFile().getMimeType());
+		this.setExtFile(this.getFile().getFilename());
+		this.setExt3(this.getFile().getFilesize().toString());
+		
+		String mimeType = getFile().getMimeType();
+		if(mimeType != null && mimeType.indexOf("image") != 0){
+			Preview preview = new Preview();
+			preview.setTaskId(getTaskId());
+			preview.setGrpTaskId(this.getGrpTaskId());
+			preview.setMimeType(mimeType);
+			this.setPreview(preview);
+		}else{
+			this.setPreview(null);
+		}
+
+		// WorkItem 추가
+		returnObject = super.add();
+
+		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
 		
 		return returnObject;
 		

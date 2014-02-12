@@ -125,6 +125,7 @@ public interface IWorkItem extends IDAO{
 		public void setGenericWorkItemHandler(
 				GenericWorkItemHandler genericWorkItemHandler);
 		
+		/*
 		@ORMapping(
 			objectFields={"taskId","instId","content","extFile","tool","startDate","endDate"},
 			databaseFields={"taskId","instId","content","extFile","tool","startDate","endDate"},
@@ -132,6 +133,7 @@ public interface IWorkItem extends IDAO{
 			)
 		public DocumentDrag getDocumentDrag();
 		public void setDocumentDrag(DocumentDrag documentDrag);
+		*/
 		
 		@Hidden
 		@Range(
