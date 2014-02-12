@@ -1,8 +1,8 @@
 
 <div class="view_box3 rolemapping" style="background:<%=value.mappedUser.userId ? "#D9EDF8":"#E8E8E8"%>; padding:8px; margin-bottom:20px;">
 <center>
-<b><%=value.roleName%></b>
-<%=value.mappedUser.userId ? "" : "<font color=gray size=-3><br>(" + mw3.localize("$NotSet") + ")<br></font>"%>
-<%=fields.mappedUser.here()%>
+<span style="display:inline-block"><b><%=value.roleName%></b></span>
+<span style="display:inline-block"><%=value.mappedUser.userId ? "" : "<font color=gray size=-3>(" + mw3.localize("$NotSet") + ")</font>"%></span>
+<div style="margin-top:10px;"><%=fields.mappedUser.here()%></div>
 <div class="clear"></div>
 </div>
