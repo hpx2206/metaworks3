@@ -153,7 +153,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 
 	@ServiceMethod(mouseBinding="drag")
-	@Available(when={MetaworksContext.WHEN_VIEW}, where={"menu"})
+	@Available(where={"menu"})
 	public Session drag() {
 	
 		session.setClipboard(this);
@@ -162,7 +162,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 	
 	@ServiceMethod(eventBinding="click")
-	@Available(when={MetaworksContext.WHEN_VIEW}, where={"menu"})
+	@Available(where={"menu"})
 	public Object click() {
 		CommonFormField formField = this;		
 		formField.setFieldId(form.makeFormFieldId());
