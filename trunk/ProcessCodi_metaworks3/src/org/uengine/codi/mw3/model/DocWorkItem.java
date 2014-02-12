@@ -66,7 +66,6 @@ public class DocWorkItem extends GenericWorkItem {
 		tool.setInstId(fileWorkItem.getInstId().toString());
 		fileWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		fileWorkItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
-		fileWorkItem.setFileTransfer(null);
 		tool.setWorkitem(fileWorkItem);
 		
 		GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
