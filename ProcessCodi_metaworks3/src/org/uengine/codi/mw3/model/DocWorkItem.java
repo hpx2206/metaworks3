@@ -84,7 +84,7 @@ public class DocWorkItem extends GenericWorkItem {
 		this.setGrpTaskId(fileWorkItem.getTaskId());
 		this.setGenericWorkItemHandler(genericWIH);
 		
-		super.add();
+		returnObj = super.add();
 		
 		// TODO: ProcesManagerRemote 의 여러개의 인스턴스에 대해서 applyChange 시 기존 인스턴스에 대한 영향도 존재
 		// 수정처리 해야함
