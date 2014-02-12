@@ -3048,7 +3048,7 @@ font-size:20px;
 
 .user_card_top{height:5px;	background:url('../../images/signIn/login_top.png');}
 .user_card_title{height:30px; border-bottom:1px solid #ededed; padding: 5px 10px;}
-#popupInfoNameWih{font-size:16px; width:290px; overflow:hidden;}
+#popupInfoNameWih{font-size:16px; max-width:290px; overflow:hidden;}
 /* //UI Object */
 
 
@@ -3295,7 +3295,7 @@ legend {display:none;}
 
 
 #editiconpop  { padding:9px; background:#FFF;}
-#editiconpop dl{  overflow:hidden;padding:0 0 10px 10px; margin:0 auto; margin-bottom:20px; border:1px solid #c2c2c2}
+#editiconpop dl{  overflow:hidden;padding:0 0 10px 30px; margin:0 auto; margin-bottom:20px; /*border:1px solid #c2c2c2*/}
 
 #editiconpop dl dt {background:#FFF; padding:3px; font-weight:bold; font-size:12px; margin-top:15px;}
 #editiconpop dl dd{ font-size:12px;text-align:center;list-style:none;  display:inline;float:left;width:66px;margin:20px 20px 0 0;padding:0px;}
@@ -3324,7 +3324,7 @@ legend {display:none;}
 
 .process_map2 li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1; height:50px;}
 .process_map2 li a:hover{text-decoration:underline}
-.process_map2 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;width:40px; max-height:40px;}
+.process_map2 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;width:40px;height:40px;}
 .img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;display: none;}
 .process_map2 li .img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;padding-top: 20px;display: none;}
 
