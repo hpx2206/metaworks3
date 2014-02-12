@@ -42,6 +42,15 @@ String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s
 String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
 Number.prototype.zf = function(len){return this.toString().zf(len);};
 
+Number.prototype.commaSeparated = function() {
+    var n = this,
+        t = ",",
+        s = n < 0 ? "-" : "",
+        i = parseInt(n = Math.abs(+n || 0)) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t);
+};
+
 jQuery.fn.selectRange = function(start, end) {
     return this.each(function() {
         if (this.setSelectionRange) {
@@ -285,3 +294,10 @@ String.prototype.endsWith = function(arg1) {
 	
 	return (pos > -1 && (pos == (this.length - arg1.length)));
 };
+
+function formatFilesizeUnits(bytes){
+	var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+   if (bytes == 0) return '0 Bytes';
+   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+   return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
