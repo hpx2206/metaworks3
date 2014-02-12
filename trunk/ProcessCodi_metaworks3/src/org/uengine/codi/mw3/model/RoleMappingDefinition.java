@@ -41,6 +41,14 @@ public class RoleMappingDefinition extends Database<IRoleMappingDefinition> impl
 		public void setMappedUser(IUser mappedUser) {
 			this.mappedUser = mappedUser;
 		}
+	
+	String mappedUserName;
+		public String getMappedUserName() {
+			return mappedUserName;
+		}
+		public void setMappedUserName(String mappedUserName) {
+			this.mappedUserName = mappedUserName;
+		}
 
 	String comCode;
 		public String getComCode() {
@@ -81,16 +89,15 @@ public class RoleMappingDefinition extends Database<IRoleMappingDefinition> impl
 	
 	}
 	
-	public RoleMappingDefinition findRoleMappingDefinition(String roledefId, String comCode) throws Exception{
+	public RoleMappingDefinition findRoleMappingDefinition() throws Exception{
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT *");
-		sb.append("  FROM bpm_roledef ");
-		sb.append("  where roledefId=?roledefId ");
-		sb.append("  and comCode=?comCode ");
-
+		sb.append("SELECT rd.*, emp.empname mappedUserName");
+		sb.append("  FROM bpm_roledef rd, emptable emp");
+		sb.append("  where rd.mappedUserId = emp.empcode ");
+		sb.append("  and rd.roledefId=?roledefId ");
+		
 		IRoleMappingDefinition roleMappingDefinition = (IRoleMappingDefinition)sql(IRoleMappingDefinition.class, sb.toString());
-		roleMappingDefinition.setRoleDefId(roledefId);
-		roleMappingDefinition.setComCode(comCode);
+		roleMappingDefinition.setRoleDefId(this.getRoleDefId());
 		roleMappingDefinition.select();
 		
 		if( roleMappingDefinition.next() ){

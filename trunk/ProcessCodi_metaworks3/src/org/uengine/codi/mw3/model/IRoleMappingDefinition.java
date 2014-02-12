@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
@@ -26,6 +27,11 @@ public interface IRoleMappingDefinition extends IDAO{
 	@ORMapping(databaseFields="mappedUserId", objectFields="userId")
 	public IUser getMappedUser();
 	public void setMappedUser(IUser mappedUser);
+	
+	@NonSavable
+	public String getMappedUserName();
+	public void setMappedUserName(String mappedUserName);
+	
 	
 	public String getMappedRoleCode();
 	public void setMappedRoleCode(String mappedRoleCode);
