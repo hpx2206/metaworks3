@@ -115,7 +115,7 @@ public class User extends Database<IUser> implements IUser {
 	@Override
 	public Object[] pickUp() throws Exception {
 		this.getMetaworksContext().setHow(HOW_PICKER);
-		
+		this.getMetaworksContext().setWhere(WHERE_EVER);
 		return new Object[]{new ToOpener(this), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	

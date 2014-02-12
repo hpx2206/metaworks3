@@ -83,7 +83,9 @@ public class RoleMappingDefinition extends Database<IRoleMappingDefinition> impl
 		if(clipboard instanceof IUser){
 			
 			IUser user = (IUser) clipboard;
-			
+			user.getMetaworksContext().setWhen(WHEN_EDIT);
+			user.getMetaworksContext().setHow("picker");
+			user.getMetaworksContext().setWhere(WHERE_EVER);
 			setMappedUser(user);
 		}	
 	
