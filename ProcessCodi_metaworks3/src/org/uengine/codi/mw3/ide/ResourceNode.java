@@ -402,7 +402,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		if(packageName != null){
 			if(packageName.endsWith(".java")){
 				packageName = packageName.substring(0, packageName.length()-5);
-				
+
+				if(packageName.lastIndexOf(File.separatorChar) > -1)
+					packageName = packageName.substring(0, packageName.lastIndexOf(File.separatorChar));
+				else
+					packageName = null;
 			}
 			
 			if(packageName.indexOf(File.separatorChar) > -1)
@@ -412,14 +416,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		}
 
-		if(packageName != null){
-			if(packageName.indexOf(File.separatorChar) > -1)
-				packageName = packageName.substring(packageName.lastIndexOf(File.separatorChar));
-			else
-				packageName = null;
-		}
-
-		
 		if(packageName != null)
 			packageName = packageName.replace(File.separatorChar, '.');		
 		
