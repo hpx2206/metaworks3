@@ -316,7 +316,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				nodeType = TreeNode.TYPE_FILE_RULE;
 			}else if(".css".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_CSS;
-			}else if(".jepg".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
+			}else if(".jpeg".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_IMAGE;
 			}else if(".metadata".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_METADATA;
