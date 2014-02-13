@@ -207,10 +207,10 @@ public class Form implements ContextAware {
 		
 		ArrayList<String> importList = new ArrayList<String>();
 		ArrayList<String> constructorList = new ArrayList<String>();
-		String classFaceOrderStr = "";
 		
 		importBuffer.append("import org.uengine.codi.ITool; \n");
 		importBuffer.append("import org.metaworks.annotation.Face;\n");
+		importBuffer.append("import org.metaworks.annotation.Order;\n");
 		
 		constructorBuffer.append("	public " + this.getId() + "() { \n");
 		
@@ -221,12 +221,6 @@ public class Form implements ContextAware {
 			
 			String importStr = "";
 			String constructortStr = "";
-			
-			if( i == 0){
-				classFaceOrderStr = field.getId();
-			}else{
-				classFaceOrderStr += "," + field.getId();
-			}
 			
 			//여기 hidden 부분 어떻게 처리 할까? 암튼 이거 아니야 -________________- 어케해방
 			if(field.getHide()) {
@@ -265,6 +259,7 @@ public class Form implements ContextAware {
 			
 			methodBuffer.append(field.generateVariableCode());
 			methodBuffer.append(field.generateAnnotationCode());
+			methodBuffer.append("		@Order(value=" + String.valueOf(i+1) + ")\n");
 			methodBuffer.append(field.generatePropertyCode());
 		}
 		
@@ -286,6 +281,7 @@ public class Form implements ContextAware {
 		if( userVariable != null){
 			methodBuffer.append(userVariable);
 		}
+		
 		methodBuffer.append("	}\n\n");
 		
 		methodBuffer
@@ -306,7 +302,7 @@ public class Form implements ContextAware {
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
 		sb.append(importBuffer.toString() + "\n");
-		sb.append("@Face(displayName=\"" + this.getName() +"\", ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
+		sb.append("@Face(displayName=\"" + this.getName() +"\", ejsPath=\"genericfaces/FormFace.ejs\")\n");
 		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
 		sb.append(constructorBuffer.toString());
 		sb.append(methodBuffer.toString());	

@@ -300,7 +300,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 		String separatorChar = "";
 
 		StringBuffer face = new StringBuffer();
-		face.append("	@Face(");
+		face.append("		@Face(");
 		if(this.getDisplayName() != null && !this.getDisplayName().equals("")){
 			face.append(separatorChar);
 			face.append("displayName=" + this.makeValueString(this.getDisplayName()));
