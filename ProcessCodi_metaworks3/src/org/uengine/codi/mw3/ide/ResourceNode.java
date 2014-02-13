@@ -384,19 +384,13 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		this.setId(null);
 	}
 	
-	public static String makeResourceName(String resourceName){
+	public static String makeResourcePath(String resourceName){
 		if(resourceName != null){
-			if(resourceName.endsWith(".java")){
-				resourceName = resourceName.substring(0, resourceName.length()-5);
-			}
 			if(resourceName.indexOf(File.separatorChar) > -1)
 				resourceName = resourceName.substring(resourceName.indexOf(File.separatorChar)+1);
 			else
 				resourceName = null;
 		}
-		
-		if(resourceName != null)
-			resourceName = resourceName.replace(File.separatorChar, '.');
 		
 		return resourceName;
 	}
@@ -426,15 +420,21 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return packageName;
 	}
 	
+	public static String makeResourceName(String resourceName){
+		if(resourceName != null){
+			if(resourceName.lastIndexOf('.') > -1)
+				resourceName = resourceName.substring(0, resourceName.lastIndexOf('.'));
+			
+			if(resourceName.indexOf(File.separatorChar) > -1)
+				resourceName = resourceName.substring(resourceName.lastIndexOf(File.separatorChar)+1);
+		}
+		
+		return resourceName;
+	}
+	
 	public static String makeClassName(String className){
+		className = ResourceNode.makeResourceName(className);
 		if(className != null){
-			if(className.endsWith(".java"))
-				className = className.substring(0, className.length()-5);
-			
-			if(className.indexOf(File.separatorChar) > -1)
-				className = className.substring(className.lastIndexOf(File.separatorChar)+1);
-
-			
 			className = className.replace(File.separatorChar, '.');
 		}
 		
