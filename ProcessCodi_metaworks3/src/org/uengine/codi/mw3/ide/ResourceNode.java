@@ -360,7 +360,7 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 			
 			if(clipboard instanceof ResourceNode){
 				ResourceNode resourceNode = (ResourceNode)clipboard;
-				if( !this.getId().equals(resourceNode.getParentId()) ){
+				if( !this.getId().equals(resourceNode.getParentId()) && !this.getId().equals(resourceNode.getId())){
 					File file = new File(resourceNode.getPath());
 					
 					File dstFile = new File(this.getPath() + File.separatorChar + resourceNode.getName());
