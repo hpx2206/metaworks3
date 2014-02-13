@@ -10,11 +10,14 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
+import org.uengine.codi.util.CodiFileUtil;
+import org.uengine.codi.util.CodiStringUtil;
 
 @Face(displayName="$templete.form", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
 public class NewForm extends Templete {
@@ -44,8 +47,8 @@ public class NewForm extends Templete {
 		
 		this.setPackageName(packageName);
 	}
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, keyBinding="enter")
+
+	@Override
 	public Object[] finish() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -59,6 +62,9 @@ public class NewForm extends Templete {
 			node.setParentId(targetNode.getParentId());
 			node.setType(targetNode.getType());
 			node.getMetaworksContext().setWhen("UI");
+			
+			if(CodiFileUtil.exists(node.getPath()))
+				throw new Exception("$file.already.exists");
 			
 			Editor editor = null;
 			try {

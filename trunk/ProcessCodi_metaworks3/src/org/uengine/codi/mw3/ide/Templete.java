@@ -43,4 +43,9 @@ public class Templete implements ContextAware {
 	public Remover cancel(){
 		return new Remover(new ModalWindow());		
 	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, keyBinding="enter")
+	public Object[] finish() throws Exception {
+		return null;
+	}
 }

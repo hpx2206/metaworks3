@@ -11,5 +11,9 @@ public class CodiFileUtil {
 		
 		return true;
 	}
+	
+	public static boolean exists(String path){
+		return new File(path).exists();
+	}
 	 
 }

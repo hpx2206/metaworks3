@@ -24,6 +24,7 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
+import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(displayName="templete.process", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
@@ -44,7 +45,7 @@ public class NewProcess extends Templete {
 			this.name = name;
 		}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Override
 	public Object[] finish() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -58,6 +59,9 @@ public class NewProcess extends Templete {
 			node.setParentId(targetNode.getId());
 			node.setProjectId(targetNode.getParentId());
 			
+			if(CodiFileUtil.exists(node.getPath()))
+				throw new Exception("$file.already.exists");
+
 			WorkItem workitem = new WorkItem();
 			workitem.session = session;
 			workitem.processManager = processManager;

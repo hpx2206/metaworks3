@@ -16,6 +16,7 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.rule.RuleEditor;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiFileUtil;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
 public class NewRule extends Templete {
@@ -32,7 +33,7 @@ public class NewRule extends Templete {
 			this.name = name;
 		}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Override
 	public Object[] finish() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -40,9 +41,13 @@ public class NewRule extends Templete {
 			
 			ResourceNode node = new ResourceNode();
 			node.setName(this.getName() + ".role");
-			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
+			node.setId(targetNode.getId() + File.separatorChar + node.getName());
+			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			node.setType(TreeNode.TYPE_FILE_RULE);
 			
+			if(CodiFileUtil.exists(node.getPath()))
+				throw new Exception("$file.already.exists");
+
 			RuleEditor editor = new RuleEditor(node.getId());
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};
