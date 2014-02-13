@@ -227,10 +227,10 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 			this.setType(type);
 
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-				if("UI".equals(this.getMetaworksContext().getWhen())){
-					editor = new FormEditor(this);
-				}else{
+				if("code".equals(this.getMetaworksContext().getWhen())){
 					editor = new JavaCodeEditor(this);
+				}else{
+					editor = new FormEditor(this);
 				}
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 				editor = new ProcessEditor(this);

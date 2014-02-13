@@ -1,20 +1,12 @@
 package org.uengine.codi.mw3.ide.menu;
 
-import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
-import org.metaworks.component.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
-import org.uengine.codi.mw3.ide.editor.metadata.MetadataXmlEditor;
-import org.uengine.codi.mw3.ide.editor.metadata.ProcessXmlEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.ProcessDesignerContentPanel;
 
@@ -51,9 +43,8 @@ public class OpenMenu extends CloudMenu{
 
 
 	public OpenMenu(){
-		this(null);
+		
 	}
-	
 	
 	public OpenMenu(ResourceNode resourceNode){
 		this.setResourceNode(resourceNode);
@@ -61,21 +52,24 @@ public class OpenMenu extends CloudMenu{
 		this.setId("new");
 		this.setName("$resource.menu.open");
 		
-		this.add(new MenuItem("openWithUI","UI"));
-//		this.add(new MenuItem("openWithJava","OpenWithJava"));
-//		this.add(new MenuItem("openWithXML","OpenWithXML"));
-		this.add(new MenuItem("code","$resource.menu.code"));
-		this.add(new MenuItem("openWithJnlp","javaProcessDesigner"));
-		
+		if(ResourceNode.TYPE_FILE_JAVA.equals(this.getResourceNode().getType())){		
+			this.add(new MenuItem("openDesigner","폼 디자이너"));
+			this.add(new MenuItem("openCode","자바 편집기"));
+		}else if(ResourceNode.TYPE_FILE_PROCESS.equals(this.getResourceNode().getType())){	
+			this.add(new MenuItem("openDesigner","프로세스 디자이너"));
+			this.add(new MenuItem("openCode","XML 편집기"));
+		}else{
+			this.add(new MenuItem("openCode","편집기"));
+		}
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object openWithUI() throws Exception{
+	public Object openDesigner() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
 			node.session = session;
-			node.getMetaworksContext().setWhen("UI");
+			node.getMetaworksContext().setWhen("designer");
 			
 			return node.action();			
 		}else{
@@ -83,36 +77,18 @@ public class OpenMenu extends CloudMenu{
 		}
 	}
 	
-	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object openWithJnlp() throws Exception{
-		String type = this.getResourceNode().findNodeType(this.getResourceNode().getName());
-		
-		if( this.getProcessNode() != null && type.equals(TreeNode.TYPE_FILE_PROCESS)){
-			String projectId = this.getProcessNode().getProjectId();
-			String nadePath =  this.getProcessNode().getId();
-			String defId =  nadePath.substring(projectId.length(), nadePath.length());
-			processDesignerContentPanel.load(defId);
-			return processDesignerContentPanel;
+	public Object openCode() throws Exception{
+
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceNode){
+			ResourceNode node = (ResourceNode)clipboard;
+			node.session = session;
+			node.getMetaworksContext().setWhen("code");
+			
+			return node.action();			
 		}else{
-			throw new MetaworksException("열수 없는 형식입니다.");
-		}
-	}
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object code() throws Exception{
-		
-		String type = this.getResourceNode().findNodeType(this.getResourceNode().getName());
-		
-		if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-			return new ToAppend(new CloudWindow("java"), new JavaCodeEditor(this.getResourceNode()));
-		}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
-			return new ToAppend(new CloudWindow("process"), new ProcessXmlEditor(this.getProcessNode()));
-		}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
-			return new ToAppend(new CloudWindow("xml"), new MetadataXmlEditor(this.getResourceNode()));
-		}else if(type.equals(TreeNode.TYPE_FILE_VALUECHAIN)){
-			return new ToAppend(new CloudWindow("valuechain"), new MetadataXmlEditor(this.getResourceNode()));
-		}else{
-			throw new MetaworksException("열수 없는 형식입니다.");
+			return null;
 		}
 	}
 	
