@@ -230,7 +230,7 @@ public interface IWorkItem extends IDAO{
 			databaseFields = { 	"content" }, 
 			objectFields = { 	"contents" },
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen= "type=='memo'"
+			availableWhen= {"type=='memo'", "type=='email'"}
 		)
 		@ServiceMethod(callByContent=true)		
 		public WebEditor getMemo();
