@@ -288,7 +288,7 @@ public class Login implements ContextAware {
 		String tenantId = Employee.extractTenantName(this.getEmail());
 		String baseUrl = TenantContext.getURL(tenantId);
 		
-		url += baseUrl + "/" + signUpURL;
+		url += baseUrl + signUpURL;
 		
 	
 
@@ -363,7 +363,7 @@ public class Login implements ContextAware {
 		String tenantId = Employee.extractTenantName(this.getEmail());
 		String baseUrl = TenantContext.getURL(tenantId);
 		
-		url += baseUrl + "/" + forgotPasswordURL;
+		url += baseUrl + forgotPasswordURL;
 		
 	
 		
