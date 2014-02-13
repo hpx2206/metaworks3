@@ -25,6 +25,7 @@ import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiStringUtil;
 
 @Face(
 		ejsPath = "dwr/metaworks/org/metaworks/component/TreeNode.ejs",
@@ -32,7 +33,7 @@ import org.uengine.codi.mw3.model.Session;
 				"{how:	'tree', face: 'dwr/metaworks/org/metaworks/component/TreeNode.ejs'}",
 				"{how:	'resourcePicker', face: 'dwr/metaworks/org/metaworks/metadata/ResourceNodePicker.ejs'}"
 		})
-public class ResourceNode extends TreeNode implements ContextAware {
+public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 
 	public final static String TYPE_ACTIVITY 	= "activity";
 	public final static String TYPE_ROLE 		= "role";
@@ -354,23 +355,28 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			if(clipboard instanceof ResourceNode){
 				ResourceNode resourceNode = (ResourceNode)clipboard;
 				if( !this.getId().equals(resourceNode.getParentId()) ){
-					if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){
-						File file = new File(resourceNode.getPath());
+					File file = new File(resourceNode.getPath());
+					
+					File dstFile = new File(this.getPath() + File.separatorChar + resourceNode.getName());
+
+					if(dstFile.exists())
+						return null;
+
+					if(file.exists()){
+						file.renameTo(dstFile);
+					}
+					
+					try {
+						ResourceNode appendResourceNode = (ResourceNode)resourceNode.clone();
 						
-						if(file.exists()){
-							File dstFile = new File(this.getPath() + File.separatorChar + resourceNode.getName());
-							
-							file.renameTo(dstFile);
-						}
+						appendResourceNode.setId(CodiStringUtil.lastLastFileSeparatorChar(this.getId()) + resourceNode.getName());
+						appendResourceNode.setPath(CodiStringUtil.lastLastFileSeparatorChar(this.getPath()) + resourceNode.getName());
+						appendResourceNode.setParentId(this.getId());
 						
-						try {
-							this.setExpanded(true);
-							
-							return new Object[]{new Refresh(this.expand()), new Remover(resourceNode)};
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						return new Object[]{new Remover(resourceNode), new ToAppend(this, appendResourceNode)};
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
 			}
@@ -439,5 +445,12 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		}
 		
 		return className;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		ResourceNode cloneObject = (ResourceNode)super.clone();
+		
+		return cloneObject;
 	}
 }
