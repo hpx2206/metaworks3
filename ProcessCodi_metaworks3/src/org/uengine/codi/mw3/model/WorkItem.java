@@ -1134,6 +1134,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				instance.setTopicName(topic.getName());
 				String topicSecuopt = topic.getSecuopt();
+				
 				if( "1".equals( topicSecuopt )){
 					securityPush = true;
 					Notification notification = new Notification();
@@ -1237,8 +1238,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
 		 */
 		if( !securityPush ){
-			pushUserMap = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
-			pushUserMap.putAll(notiUsers);	// 다른 테넌트의 follower 가 있을수도 있으니 추가를 해줌
+			HashMap<String, String> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+			pushUserMap.putAll(companyUsers);	// 다른 테넌트의 follower 가 있을수도 있으니 추가를 해줌
 		}
 		
 		if(prevInstId == null){
