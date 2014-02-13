@@ -6189,6 +6189,11 @@ OG.common.Constants = {
 	 * Rectangle 모양의 마우스 드래그 선택 박스 영역
 	 */
 	RUBBER_BAND_ID: "OG_R_BAND",
+	
+	/**
+	 * Rubber Band 허용 오차
+	 */
+	RUBBER_BAND_TOLERANCE: 3,
 
 	/**
 	 * Move & Resize 용 가이드 ID 의 suffix 정의
@@ -10703,7 +10708,15 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 				var eventOffset = handler._getOffset(event), shape, newElement, boundary,
 				bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray");
 				boundary = element.shape.geom.getBoundary();
-				shape = new OG.shape.bpmn.A_Task();
+				
+				//FIXME : element _shape_id로 부터 객체를 얻어오도록 하는데 이것을 
+				// 완벽한 객체 교환을 하도록 해야함... 보류 중..
+				var shape_id = $(element).attr("_shape_id");
+				var evalObject = eval(shape_id);
+				shape = new evalObject();
+				
+				//shape = new OG.shape.bpmn.A_Task();
+				
 				$(shape).attr('auto_draw', 'yes');
 				newElement = handler._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [boundary.getWidth(), boundary.getHeight()]);
 				handler._RENDERER._CANVAS.connect(element, newElement);
@@ -10716,9 +10729,14 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 		});
 		$(task.node).bind({
 			click : function (event) {
-				var newElement,
-				shape = new OG.shape.bpmn.A_Task(),
+				var newElement, shape
+				//shape = new OG.shape.bpmn.A_Task(),
 				envelope = element.shape.geom.getBoundary();
+				
+				var shape_id = $(element).attr("_shape_id");
+				var evalObject = eval(shape_id);
+				shape = new evalObject();
+				
 				$(shape).attr('auto_draw', 'yes');
 				newElement = handler._RENDERER._CANVAS.drawShape([envelope.getCentroid().x + 100, envelope.getCentroid().y], shape, [70, 50]);
 				handler._RENDERER._CANVAS.connect(element, newElement);
@@ -17659,9 +17677,8 @@ OG.renderer.RaphaelRenderer.prototype.removeTerminal = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function (element) {
-	//console.log("remove terminal all!!");
-	var elementId = $(element).attr("id")
-		,me = this;	
+		var elementId = $(element).attr("id")
+			,me = this;	
 	$.each(this._ELE_MAP.keys(), function (idx, item) {
 		if(element){
 			if(item.indexOf(elementId) > -1){
@@ -19186,7 +19203,6 @@ OG.handler.EventHandler.prototype = {
 										});
 									},
 									drag : function (event) {
-										//console.log(" draging from terminal ");
 										var eventOffset = me._getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
@@ -19233,7 +19249,6 @@ OG.handler.EventHandler.prototype = {
 										}
 									},
 									stop : function (event) {
-										//console.log(" stop drag!! ");
 										$(element).data("status", "connect_end");
 										
 										var to = me._getOffset(event),
@@ -19444,16 +19459,13 @@ OG.handler.EventHandler.prototype = {
 			bBox = bBoxArray[0].box;
 			targetElement = $(event.srcElement).parent("g")[0];
 			
-			//console.log([targetElement]);
 			if(targetElement && (targetElement.shape instanceof OG.shape.bpmn.ScopeActivity)){
-				//console.log("attatch?!");
 
 				bBox = $(bBox);
 				bBoxX = parseInt(bBox.attr("x")) + dx;
 				bBoxY = parseInt(bBox.attr("y")) + dy;
 				bBoxW = parseInt(bBox.attr("width"));
 				bBoxH = parseInt(bBox.attr("height"));
-				//console.log({"bBoxX":bBoxX, "bBoxY":bBoxY, "bBoxW":bBoxW, "bBoxH":bBoxH});
 				
 				bBoxPoints = [
 								 {"x":bBoxX,"y":bBoxY}				/*top left*/
@@ -19469,7 +19481,6 @@ OG.handler.EventHandler.prototype = {
 				gEleH = groupBoundary.getHeight();
 				gEleXW = gEleX + gEleW;
 				gEleYH = gEleY + gEleH;
-				//console.log({"gEleX":gEleX, "gEleY":gEleY, "gEleW":gEleW, "gEleH":gEleH , "gEleXW":gEleXW, "gEleYH":gEleYH});
 				
 				for(i=0,n=bBoxPoints.length; i<n; i++){
 					if( ((gEleX < bBoxPoints[i]["x"]) && (gEleXW > bBoxPoints[i]["x"]))
@@ -19479,7 +19490,6 @@ OG.handler.EventHandler.prototype = {
 				}
 				
 				if(filteredIndex.length > 0){
-					//console.log(filteredIndex);
 					
 					if(filteredIndex.length > 1){
 						//tow points
@@ -19504,8 +19514,7 @@ OG.handler.EventHandler.prototype = {
 					
 					// move x, y
 				}
-				
-				//console.log({"dx":dx, "dy":dy});
+
 			}
 		} // end if
 		
@@ -19547,7 +19556,13 @@ OG.handler.EventHandler.prototype = {
 					if(element.shape.geom.custom_control){
 						$(element.shape.geom.custom_control).trigger("remove");
 					}
-					me.selectShape(element,event);
+					
+					if(me._getSelectedElement().length > 1){
+						//FIXME : 강제로 컨트롤이 눌린상태를 연출한다.
+						me.selectShape(element,event,{"shiftKey":true, "ctrlKey":true});
+					}else{
+						me.selectShape(element,event);
+					}
 					
 					// redraw guide
 					me._RENDERER.removeGuide(element);
@@ -19686,7 +19701,12 @@ OG.handler.EventHandler.prototype = {
                         });
 					}
 					
-					me.selectShape(element,event);
+					
+					if(me._getSelectedElement().length > 1){
+						me.selectShapes(me._getSelectedElement());
+					}else{
+						me.selectShape(element,event);
+					}
 
                     //me._RENDERER.removeGuide(element);
 					$(root).removeData("bBoxArray");
@@ -19714,7 +19734,7 @@ OG.handler.EventHandler.prototype = {
 		if (!element || !guide) {
 			return;
 		}
-
+		
 		if (isResizable === true) {		
 			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
 				// resize handle
@@ -20471,41 +20491,32 @@ OG.handler.EventHandler.prototype = {
 		var me = this;
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
-			$(element).bind("click", function (event, param) {
-				//event.stopPropagation();
-				var guide;
-				$(me._RENDERER.getContainer()).focus();
-
-				if (element.shape) {
-					if ($(element).attr("_selected") === "true") {
-						me.deselectShape(element);
-						if ( (!event.shiftKey && !event.ctrlKey)
-							|| (!param.shiftKey && !param.ctrlKey) ) {
-							me.selectShape(element);
-						}
-					}else{
-						me.selectShape(element, event, param);
-					}
-
-					/*
-					if ($(element).attr("_selected") === "true") {
-						if (event.shiftKey || event.ctrlKey) {
-							me._RENDERER.removeGuide(element);
-						}
-					} else {
-						me._deselectChildren(element);
-						if (!me._isParentSelected(element)) {
-							guide = me._RENDERER.drawGuide(element);
-							if (guide) {
-								// enable event
-								me.setResizable(element, guide, me._isResizable(element.shape));
-								me._RENDERER.removeAllTerminal();
-								me._RENDERER.toFront(guide.group);
+			$(element).bind({
+				click: function (event, param) {
+					var guide;
+					$(me._RENDERER.getContainer()).focus();
+					
+					if (element.shape) {
+						if ($(element).attr("_selected") === "true") {
+							me.deselectShape(element);
+							if(param){
+								if(!param.shiftKey && !param.ctrlKey){
+									me.selectShape(element, event, param);
+								}
+							}else{
+								if (!event.shiftKey && !event.ctrlKey){
+									me.selectShape(element);
+								}
 							}
+						}else{
+							me.selectShape(element, event, param);
 						}
+
+						return false;
 					}
-					*/
-					return false;
+				},
+				mousedown: function(event, param) {
+					event.stopPropagation();
 				}
 			});
 
@@ -20564,6 +20575,7 @@ OG.handler.EventHandler.prototype = {
 		// 배경클릭한 경우 deselect 하도록
 		$(rootEle).bind("click", function (event) {
 			me.deselectAll();
+			me._RENDERER.removeRubberBand(rootEle);
 		});
 
 		if (isSelectable === true) {
@@ -20571,50 +20583,51 @@ OG.handler.EventHandler.prototype = {
 			$(rootEle).bind("mousedown", function (event) {
 				var eventOffset = me._getOffset(event);
 				$(this).data("dragBox_first", { x: eventOffset.x, y: eventOffset.y});
-				me._RENDERER.drawRubberBand([eventOffset.x, eventOffset.y]);
+				//me._RENDERER.drawRubberBand([eventOffset.x, eventOffset.y]);
 			});
 			$(rootEle).bind("mousemove", function (event) {
 				var first = $(this).data("dragBox_first"),
 					eventOffset, width, height, x, y;
+					
 				if (first) {
 					eventOffset = me._getOffset(event);
 					width = eventOffset.x - first.x;
 					height = eventOffset.y - first.y;
-					x = width <= 0 ? first.x + width : first.x;
-					y = height <= 0 ? first.y + height : first.y;
-					me._RENDERER.drawRubberBand([x-1, y-1], [Math.abs(width), Math.abs(height)]);
+					
+					if(Math.abs(width) > OG.Constants.RUBBER_BAND_TOLERANCE 
+						&& Math.abs(height) > OG.Constants.RUBBER_BAND_TOLERANCE){
+						$(this).data("rubber_band_status","start");
+						
+						x = width <= 0 ? first.x + width : first.x;
+						y = height <= 0 ? first.y + height : first.y;
+						me._RENDERER.drawRubberBand([x-1, y-1], [Math.abs(width), Math.abs(height)]);						
+					}
 				}
 			});
-			$(rootEle).bind("mouseup", function (event) {			
-				var first = $(this).data("dragBox_first"),
-					eventOffset, width, height, x, y, envelope, guide, elements = [];
-				me._RENDERER.removeRubberBand(rootEle);
-				if (first) {
-					eventOffset = me._getOffset(event);
-					width = eventOffset.x - first.x;
-					height = eventOffset.y - first.y;
-					x = width <= 0 ? first.x + width : first.x;
-					y = height <= 0 ? first.y + height : first.y;
-					envelope = new OG.Envelope([x, y], Math.abs(width), Math.abs(height));
-					
-					$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
-						if (element.shape.geom && envelope.isContainsAll(element.shape.geom.getVertices())) {
-							elements.push(element);
-//							if (!me._isParentSelected(element)) {
-//								guide = me._RENDERER.drawGuide(element);
-//								if (guide) {
-//									// enable event
-//									me.setResizable(element, guide, me._isResizable(element.shape));
-//								}
-//							}
-						}
-					});
-					me.selectShapes(elements);
-					
-					/*
-					*/
-					me._RENDERER.removeAllTerminal();
-					$(this).data("dragBox", {"width": width, "height": height, "x": x, "y": y});
+			$(rootEle).bind("mouseup", function (event) {
+				if("start" == $(this).data("rubber_band_status")){
+					var first = $(this).data("dragBox_first"),
+						eventOffset, width, height, x, y, envelope, guide, elements = [];
+					me._RENDERER.removeRubberBand(rootEle);
+					if (first) {
+						eventOffset = me._getOffset(event);
+						width = eventOffset.x - first.x;
+						height = eventOffset.y - first.y;
+						x = width <= 0 ? first.x + width : first.x;
+						y = height <= 0 ? first.y + height : first.y;
+						envelope = new OG.Envelope([x, y], Math.abs(width), Math.abs(height));
+						
+						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "]").each(function (index, element) {
+							if (element.shape.geom && envelope.isContainsAll(element.shape.geom.getVertices())) {
+								elements.push(element);
+							}
+						});
+						me.selectShapes(elements);
+
+						me._RENDERER.removeAllTerminal();
+						$(this).data("dragBox", {"width": width, "height": height, "x": x, "y": y});
+					}
+					$(this).data("rubber_band_status","none");
 				}
 			});
 
@@ -21887,28 +21900,36 @@ OG.handler.EventHandler.prototype = {
 		
 		//단일 선택 다중 선택 여부 판단
 		if(event){
-			console.log("single select");
 			_event = event;
-			if ( (!event.shiftKey && !event.ctrlKey) 
-				&& (param && (!param.shiftKey && !param.ctrlKey)) ) {
-				me.deselectAll();
-				me._RENDERER.removeAllGuide();
+			if(param){
+				if(!param.shiftKey && !param.ctrlKey){
+					me.deselectAll();
+					me._RENDERER.removeAllGuide();
+				}else{
+					//no operation
+				}
 			}else{
+				if(!event.shiftKey && !event.ctrlKey){
+					me.deselectAll();
+					me._RENDERER.removeAllGuide();
+				}else{
+					//no operation
+				}
 			}
 		}else{
-			console.log("multiple select");
 			//기본 단일 선택
 			me.deselectAll();
 			me._RENDERER.removeAllGuide();
 		}
 
-		if (/*$(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && */me._isSelectable(element.shape)) {
+		//if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
+		if (me._isSelectable(element.shape)) {
+			//BUG : remove guide를 반드시 해주어야만 새로운 가이드가 null로 나오지 않는다.
+			me._RENDERER.removeGuide(element);
 			guide = me._RENDERER.drawGuide(element);
-			if (guide) {
-				// enable event
-				me.setResizable(element, guide, me._isResizable(element.shape));
-				me._RENDERER.removeTerminal(element);
-			}
+			// enable event
+			me.setResizable(element, guide, me._isResizable(element.shape));
+			me._RENDERER.removeTerminal(element);
 			
 			//선택상태 설정
 			$(element).attr("_selected", "true");
@@ -21942,7 +21963,12 @@ OG.handler.EventHandler.prototype = {
 		var me = this, guide, _element;
 		
 		if(!elementArray) return;
-				
+		me.deselectAll();
+		
+		//BugFix : 기존의 가이드를 그대로 유지하면 새로운 가이드를 만들어내지 못한다.
+		me._RENDERER.removeAllGuide();		
+		
+		
 		while(elementArray.length > 0){
 			_element = elementArray.pop();
 			me._deselectChildren(_element);
@@ -22988,26 +23014,32 @@ OG.handler.EventHandler.prototype = {
 	//TODO : 선택된 요소를 선택요소배열에 추가
 	_addSelectedElement: function (element) {
 		if(undefined == this.selectedElements){
-			this.selectedElements = [];
+			this.selectedElements = {};
 		}
-		this.selectedElements.push(element);
+		this.selectedElements[element.attributes["id"].value] = element;
 	},
 	
 	//TODO : 선택된 요소를 선택요소배열에 추가
 	_delSelectedElement: function (element) {
-		var removeIndex = this.selectedElements.indexOf(element);
-		this.selectedElements.splice(removeIndex, 1);
+		delete this.selectedElements[element.attributes["id"].value];
 	},
 	
 	//TODO : 선택요소배열 반환
 	_getSelectedElement: function (){
-		return this.selectedElements;
+		var key, returnArray = [];
+		for(key in this.selectedElements){
+			returnArray.push(this.selectedElements[key]);
+		}
+		return returnArray;
 	},
 	
 	//TODO : 선택된 요소를 모두 제거
 	_removeAllSelectedElement: function(){
 		//init
-		this.selectedElements = [];
+		var key;
+		for(key in this.selectedElements){
+			delete this.selectedElements[key];
+		}
 	}
 };
 OG.handler.EventHandler.prototype.constructor = OG.handler.EventHandler;
@@ -23263,7 +23295,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		 * 캔버스 배경색
 		 */
 		CANVAS_BACKGROUND: "#f9f9f9",
-
+		
 		/**
 		 * 디폴트 스타일 정의
 		 */
@@ -23273,12 +23305,12 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			TEXT          : { stroke: "none", "text-anchor": "middle" },
 			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1.5, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center", "stroke-linejoin" : "round" ,cursor: "pointer"},
+			EDGE          : { stroke: "black", fill: "white", "fill-opacity": 0, "stroke-width": 1.5, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center", "stroke-linejoin" : "round" ,cursor: "pointer"},
 			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- ", "edge-type": "plain" ,cursor: "pointer"},
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0, cursor: "pointer"},
 			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 , cursor: "move" },
-			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
+			GUIDE_BBOX    : { stroke: "#00FF00", fill: "white", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
 			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
 			GUIDE_LL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
