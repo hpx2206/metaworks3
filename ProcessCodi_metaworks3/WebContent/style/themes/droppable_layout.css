@@ -2827,7 +2827,7 @@ select.select[class] {
 	margin-left:-45px;
 }
 #signup_popup .popup_step .circle span.ing {
-	top:34px !important;
+	top:31px !important;
 	left:6px;
 	width:15px;
 	height:12px;
@@ -2835,6 +2835,7 @@ select.select[class] {
 	background:url(../../images/signIn/step_ing.png) !important
 }
 #signup_popup .popup_step .completed { background:url(../../images/signIn/step_circle_com.png) !important }
+#signup_popup .popup_step .running { background:url(../../images/signIn/step_circle_run.png) !important }
 #signup_popup .popup_content {
 	padding:20px 40px;
 	background:#FFF
