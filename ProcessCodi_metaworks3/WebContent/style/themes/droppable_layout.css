@@ -2844,7 +2844,7 @@ select.select[class] {
 	margin-bottom:15px;
 	border:1px solid #CCC;
 	font-weight:bold;
-	width:435px;
+	width:453px;
 	padding-left:15px;
 	background:#EDF7FA;
 	font-size:13px;
@@ -2882,7 +2882,7 @@ select.select[class] {
 	color:#a6a3af !important;
 }
 #signup_popup .popup_content .popup_btn_line {
-	width:435px;
+	width:453px;
 	text-align:right;
 	padding-left:17px;
 	padding-top:15px;
@@ -2940,6 +2940,7 @@ select.select[class] {
 	float:left;
 	margin-right:20px;
 	margin-bottom:10px;
+	margin-top:6px;
 }
 #signup_popup .popup_content .singnup_choose_pic {
 	float:left;
