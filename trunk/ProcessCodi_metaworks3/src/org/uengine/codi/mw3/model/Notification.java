@@ -1,24 +1,21 @@
 package org.uengine.codi.mw3.model;
 
-import java.net.URL;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.Role;
-import org.uengine.kernel.UEngineException;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
-
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
 
 public class Notification extends Database<INotification> implements INotification{
 
@@ -126,8 +123,8 @@ public class Notification extends Database<INotification> implements INotificati
 		 * 
 		 */
 		if(userInfo.databaseMe().isMailNoti()){
-			final IEmployee userInfoDB = userInfoTemp;
-			
+			final Employee userInfoDB = new Employee();
+			userInfoDB.copyFrom(userInfoTemp);
 			/*
 			final Employee actorUserInfo = new Employee();
 			actorUserInfo.setEmpCode(getActorId());
@@ -163,11 +160,36 @@ public class Notification extends Database<INotification> implements INotificati
 							}
 						}
 						*/
-						String from = "help@opencloudengine.org";
-						String title = "[ProcessCodi] " + ( (instance != null && instance.getName() != null) ? instance.getName() : GlobalContext.getLocalizedMessage("$AddFo"));
-						String content = getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>;";
+						String content = "";
+						String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
+						String imagePath = GlobalContext.getPropertyString("filesystem.path", "filesystem");
+						String path = resourcePath + "mail"+File.separatorChar+"notiMail.html";
+						FileInputStream is;
+						try {
+							is = new FileInputStream(path);
+							InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+							BufferedReader br = new BufferedReader(isr);
+							
+							int data;
+							while((data = br.read()) != -1){
+								content += (char)data;
+							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
-						(new EMailServerSoapBindingImpl()).sendMail(from, userInfoDB.getEmail(), title, content);
+						content = this.replaceString(content,"user.name", userInfoDB.getEmpName());
+						content = this.replaceString(content, "notimail.date", getInputDate().toString());
+						content = this.replaceString(content, "notimail.image", url + "/portrait/" + userInfoDB.getEmpCode() + ".thumnail");
+						
+						content = this.replaceString(content, "notimail.content", getActAbstract());
+						
+						String from = "help@opencloudengine.org";
+						String title = "프로세스 코디의 알림이 도착했습니다.";
+						
+						// TODO 상대방 이메일을 userInfoDB에서 가져오질 못함
+						(new EMailServerSoapBindingImpl()).sendMail(from, "idtndhksha@uengine.org", title, content);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -177,7 +199,11 @@ public class Notification extends Database<INotification> implements INotificati
 					}
 				}
 				
-				
+				public String replaceString(String lineString, String from, String to){
+					String returnValue = "";
+					returnValue = lineString.replaceAll(from, to);
+					return returnValue;
+				}
 			}.start();
 		}
 	}
