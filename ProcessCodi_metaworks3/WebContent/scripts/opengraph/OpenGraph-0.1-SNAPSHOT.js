@@ -19105,8 +19105,8 @@ OG.handler.EventHandler.prototype = {
 						
 						$(terminalGroup.bBox).bind({
 							mousedown: function(event){
-								$(element).trigger("click");
-								$(element).trigger(event);
+								$(element).trigger("click", [{"shiftKey":event.shiftKey, "ctrlKey":event.ctrlKey}]);
+								$(element).trigger(event, [{"shiftKey":event.shiftKey, "ctrlKey":event.ctrlKey}]);
 							},
 							mouseout: function (event) {
 								if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
@@ -20471,7 +20471,7 @@ OG.handler.EventHandler.prototype = {
 		var me = this;
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
-			$(element).bind("click", function (event) {
+			$(element).bind("click", function (event, param) {
 				//event.stopPropagation();
 				var guide;
 				$(me._RENDERER.getContainer()).focus();
@@ -20479,11 +20479,12 @@ OG.handler.EventHandler.prototype = {
 				if (element.shape) {
 					if ($(element).attr("_selected") === "true") {
 						me.deselectShape(element);
-						if (!event.shiftKey && !event.ctrlKey) {
+						if ( (!event.shiftKey && !event.ctrlKey)
+							|| (!param.shiftKey && !param.ctrlKey) ) {
 							me.selectShape(element);
 						}
 					}else{
-						me.selectShape(element, event);
+						me.selectShape(element, event, param);
 					}
 
 					/*
@@ -21880,18 +21881,22 @@ OG.handler.EventHandler.prototype = {
 	 *
 	 * @param {Element} element Shape 엘리먼트
 	 */
-	selectShape: function (element, event) {
+	selectShape: function (element, event, param) {
 	
 		var me = this, guide, root = me._RENDERER.getRootGroup();
 		
 		//단일 선택 다중 선택 여부 판단
 		if(event){
-			if (!event.shiftKey && !event.ctrlKey) {
+			console.log("single select");
+			_event = event;
+			if ( (!event.shiftKey && !event.ctrlKey) 
+				&& (param && (!param.shiftKey && !param.ctrlKey)) ) {
 				me.deselectAll();
 				me._RENDERER.removeAllGuide();
 			}else{
 			}
 		}else{
+			console.log("multiple select");
 			//기본 단일 선택
 			me.deselectAll();
 			me._RENDERER.removeAllGuide();
