@@ -1801,6 +1801,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objectTypeName = arguments[2];
 				}
 				
+				mw3.removeObject(objectId, true);
 				
 				var divId =  "#objDiv_" + objectId;
 				
@@ -1902,13 +1903,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return this._createObjectRef(this.targetObjectId, getObject());
 			};
 			
-			Metaworks3.prototype.removeObject = function(objectId, self){
+			Metaworks3.prototype.removeObject = function(objectId, keepDiv){
 				if(arguments.length == 0)
 					objectId = this.targetObjectId;				
 				
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
-				
+
 				if(mw3.objects[objectId] && !mw3.objects[objectId]['__cached']){
 					this.newBeanProperty(objectId);
 					
@@ -1934,7 +1935,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 
 				$(divId).triggerHandler('destroy');
-				$(divId).remove();
+				
+				if(!keepDiv)
+					$(divId).remove();
+					
 				$(infoDivId).remove();
 
 				//TODO: the objectId_KeyMapping also need to clear with back mapping or key generation with value;
@@ -1965,6 +1969,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					
 					// 2012-04-16 chlid destroy call
+					this.removeObject(beanPath.valueObjectId, true);
+					
+					/*
 					var faceHelper = this.getFaceHelper(beanPath.valueObjectId);
 					
 					if(faceHelper && faceHelper.destroy)
@@ -1974,6 +1981,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					this.faceHelpers[beanPath.valueObjectId] = null;
 					
 					this.newBeanProperty(beanPath.valueObjectId);
+					*/
 				}
 				
 				this.beanExpressions[parentObjectId]=beanExpression;
