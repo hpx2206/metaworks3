@@ -162,7 +162,6 @@ public class Notification extends Database<INotification> implements INotificati
 						*/
 						String content = "";
 						String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
-						String imagePath = GlobalContext.getPropertyString("filesystem.path", "filesystem");
 						String path = resourcePath + "mail"+File.separatorChar+"notiMail.html";
 						FileInputStream is;
 						try {
