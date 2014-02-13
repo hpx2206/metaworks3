@@ -53,11 +53,11 @@
 	    <div class="popup_title"> <span><%=mw3.localize("$SignUp")%></span> </div>
 	    <div class="popup_step">
 	    	<div class="stepbar">
-	        	<div class="first_circle circle <%=(step > 1)?'completed':''%>">
+	        	<div class="first_circle circle <%=(step > 1)?'completed':''%>"> 
 	        		<span class="steptext"><%=mw3.localize("$SignUp")%></span>
 	        		<%if(step==1){%><span class="ing"></span><%}%>
 	        	</div>
-	            <div class="last_circle circle">
+	            <div class="last_circle circle running">
 	            	<span class="steptext"><%=mw3.localize("$AddYourPhoto")%></span>
 	            	<%if(step==2){%><span class="ing"></span><%}%>
 	            </div>
