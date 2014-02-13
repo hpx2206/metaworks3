@@ -105,6 +105,10 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 	toAppend : function(appendobject){
 		if(!this.object.expanded){
+			this.object.expanded = true;
+			
+			mw3.call(this.objectId, 'expand');
+			
 			return true;
 		}
 		
