@@ -38,7 +38,7 @@ public class MetadataEditor extends MultiPageEditor{
 	
 	@Override
 	@ServiceMethod(callByContent=true)
-	public Object save(){
+	public Object save() throws Exception{
 		MetadataXmlEditor metadataXmlEditor = null;
 		MetadataContentDesigner metadataContentDesigner = null;
 		

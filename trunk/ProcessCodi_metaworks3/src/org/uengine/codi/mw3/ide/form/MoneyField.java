@@ -22,7 +22,7 @@ public class MoneyField extends CommonFormField {
 	}
 	
 	@Override
-	public Object[] apply() {
+	public Object[] apply() throws Exception{
 		this.setValues(this.getFormat());
 		this.setOptions("format");
 				

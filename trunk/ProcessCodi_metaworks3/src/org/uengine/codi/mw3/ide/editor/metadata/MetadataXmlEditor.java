@@ -14,7 +14,7 @@ public class MetadataXmlEditor extends Editor {
 		this.setType(TreeNode.TYPE_FILE_METADATA);
 	}
 	
-	public Object save(){
+	public Object save() throws Exception{
 		return super.save();
 	}
 	

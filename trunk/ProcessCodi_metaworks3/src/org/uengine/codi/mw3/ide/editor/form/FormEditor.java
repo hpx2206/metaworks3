@@ -93,7 +93,9 @@ public class FormEditor extends Editor {
 	
 	@Override
 	@ServiceMethod(callByContent=true)
-	public Object save() {
+	public Object save() throws Exception{
+		form.validate();
+		
 		this.setContent(form.generateJavaCode());
 		
 		try {

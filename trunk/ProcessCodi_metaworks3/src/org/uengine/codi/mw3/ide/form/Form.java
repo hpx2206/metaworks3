@@ -333,4 +333,11 @@ public class Form implements ContextAware {
 		
 		return FORM_FIELD_ID_PREFIX + String.valueOf(id);
 	}
+	
+	public void validate() throws Exception {
+		for(CommonFormField formField : this.getFormFields()){
+			if(!formField.isValidation())
+				formField.validate();
+		}
+	}
 }

@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.ide.form;
 
+import javax.validation.constraints.NotNull;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
@@ -10,6 +12,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.metaworks.annotation.Order;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
@@ -81,7 +84,9 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 
 	String id;
-	@Face(displayName="$form.field.id")
+	@Order(value=1)
+	@NotNull(message="이름을 입력하세요.")
+	@Face(displayName="이름")
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public String getId() {
 		return id;
@@ -91,7 +96,8 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 
 	String displayName;
-	@Face(displayName="$form.field.displayname")
+	@Order(value=2)
+	@Face(displayName="설명")
 	@Available(where={"form", "properties"})
 	public String getDisplayName() {
 		return displayName;
@@ -101,6 +107,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 
 	Boolean hide;
+	@Order(value=3)
 	@Face(displayName="$form.field.hide")
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Boolean getHide() {
@@ -146,6 +153,15 @@ public class CommonFormField implements ContextAware, Cloneable {
 		this.define = define;
 	}
 
+	boolean validation;
+	@Hidden
+	public boolean isValidation() {
+		return validation;
+	}
+	public void setValidation(boolean validation) {
+		this.validation = validation;
+	}
+	
 	public void init(){
 		this.setMetaworksContext(new MetaworksContext());
 		this.setHide(false);
@@ -232,15 +248,21 @@ public class CommonFormField implements ContextAware, Cloneable {
 		return form;
 	}
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, validate=true)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
-	public Object[] apply() {
-
-		FormFieldProperties formFieldProperty = (FormFieldProperties)this.formFieldProperty;
-		formFieldProperty.setFormField(this);
+	public Object[] apply() throws Exception {
 
 		int pos = form.formFields.indexOf(this);
 		if(pos > -1){
+			for(int i=0; i<form.formFields.size(); i++){
+				if(pos == i) continue;
+				
+				CommonFormField formField = form.formFields.get(i);
+				
+				if(this.getId().equals(formField.getId()))
+					throw new Exception("이미 사용 중인 이름입니다.");
+			}
+			
 			CommonFormField applyFormField = (CommonFormField)this.clone();
 			
 			applyFormField.init();
@@ -248,9 +270,13 @@ public class CommonFormField implements ContextAware, Cloneable {
 			applyFormField.setFieldSize(this.getFieldSize());
 			applyFormField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			applyFormField.getMetaworksContext().setWhere("form");
+			applyFormField.setValidation(true);
 
 			form.formFields.set(pos, applyFormField);
 		}
+		
+		FormFieldProperties formFieldProperty = (FormFieldProperties)this.formFieldProperty;
+		formFieldProperty.setFormField(this);
 
 		return new Object[]{form, formFieldProperty};
 	}	
@@ -422,6 +448,11 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 
 		return formField;		
+	}
+	
+	public void validate() throws Exception {
+		if(this.getId() == null)
+			throw new Exception("이름이 입력되지 않았습니다.");
 	}
 	
 	@Override
