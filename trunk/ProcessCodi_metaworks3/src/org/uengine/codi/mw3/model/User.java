@@ -13,6 +13,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
 import org.metaworks.dao.Database;
@@ -111,7 +112,15 @@ public class User extends Database<IUser> implements IUser {
 			this.email = email;
 		}
 		
-		
+	boolean anotherTenant;
+		@Hidden
+		public boolean isAnotherTenant() {
+			return anotherTenant;
+		}
+		public void setAnotherTenant(boolean anotherTenant) {
+			this.anotherTenant = anotherTenant;
+		}
+	
 	@Override
 	public Object[] pickUp() throws Exception {
 		this.getMetaworksContext().setHow(HOW_PICKER);
@@ -145,6 +154,7 @@ public class User extends Database<IUser> implements IUser {
 	public void load() throws Exception {
 		boolean isSelf = this.getUserId().equals(session.getUser().getUserId());
 		boolean isFriend = false;
+		boolean isAnotherTenant = false;
 		
 		Employee emp = new Employee();
 		emp.setEmpCode(this.getUserId());
@@ -162,8 +172,12 @@ public class User extends Database<IUser> implements IUser {
 				isFriend = true;
 		}
 		
+		if(!emp.getGlobalCom().equals(session.getEmployee().getGlobalCom()))
+			isAnotherTenant = true;
+		
 		this.setFriend(isFriend);
 		this.setAdmin(session.getEmployee().getIsAdmin());
+		this.setAnotherTenant(isAnotherTenant);
 	}
 	
 	@Override
