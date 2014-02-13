@@ -119,7 +119,7 @@ public interface IUser extends IDAO{
 	
 	public IUser findByDept(Dept dept) throws Exception;
 	
-	@Available(condition="(typeof self == 'undefined' || !self) && (typeof admin != 'undefined' && admin)")
+	@Available(condition="(typeof self == 'undefined' || !self) && (typeof admin != 'undefined' && admin) && (typeof anotherTenant == 'undefined' || !anotherTenant)")
 	@Group(name="admin")
 	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] delUser() throws Exception;
