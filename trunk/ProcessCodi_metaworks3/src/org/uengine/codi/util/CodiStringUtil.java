@@ -17,7 +17,7 @@ public class CodiStringUtil {
     }
 	
 	public static String lastLastFileSeparatorChar(String value){
-		if(value.charAt(value.length()-1) == File.separatorChar)
+		if(value.charAt(value.length()-1) != File.separatorChar)
 			value += File.separatorChar;
 		
 		return value;
