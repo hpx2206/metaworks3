@@ -153,6 +153,15 @@ public class CommonFormField implements ContextAware, Cloneable {
 		this.define = define;
 	}
 
+	boolean selected;
+	@Hidden
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
 	boolean validation;
 	@Hidden
 	public boolean isValidation() {
@@ -227,10 +236,16 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
 	public Object up() {				
+		
+		for(CommonFormField formField : form.formFields)
+			formField.setSelected(false);
+		
 		int index = form.formFields.indexOf(this);
 		if(index > 0) {
 			form.formFields.remove(this);
 			form.formFields.add(index-1,this);
+			
+			this.setSelected(true);
 		}
 
 		return form;
@@ -239,10 +254,16 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
 	public Object down() {
+		
+		for(CommonFormField formField : form.formFields)
+			formField.setSelected(false);
+
 		int index = form.formFields.indexOf(this);
 		if(index < form.formFields.size()-1) {
 			form.formFields.remove(this);
 			form.formFields.add(index+1,this);
+			
+			this.setSelected(true);
 		}
 
 		return form;
