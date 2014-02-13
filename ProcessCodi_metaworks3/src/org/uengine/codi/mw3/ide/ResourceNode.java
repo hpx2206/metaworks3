@@ -336,8 +336,14 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 //		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
 		if( this.getProjectId() != null ){
 			String id = this.getId();
-//			String alias = id.substring(this.getProjectId().length()+1); 
-			alias = ResourceNode.makeResourceName(id);
+//			String alias = id.substring(this.getProjectId().length()+1);
+			
+			if(ResourceNode.TYPE_FILE_JAVA.equals(this.getType())){
+				alias = ResourceNode.makeFullClassName(id);
+			}else{
+				alias = ResourceNode.makeResourcePath(id);
+			}
+			
 			this.setAlias(alias);
 		}
 		session.setClipboard(this);
@@ -445,6 +451,17 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 		}
 		
 		return className;
+	}
+	
+	public static String makeFullClassName(String id){
+		String packageName = ResourceNode.makePackageName(id);
+		String className = ResourceNode.makeClassName(id);
+		
+		if(packageName == null)
+			return packageName;
+		else
+			return packageName + "." + className;
+
 	}
 	
 	@Override
