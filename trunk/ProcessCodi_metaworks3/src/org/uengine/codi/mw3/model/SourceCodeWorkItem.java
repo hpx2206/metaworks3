@@ -71,8 +71,9 @@ public class SourceCodeWorkItem extends WorkItem{
 
 	@Override
 	public void loadContents() throws Exception {
+		setContentLoaded(true);
+		
 		if(getExtFile()!=null){
-			
 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
 
 			String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + getExtFile();
@@ -80,8 +81,6 @@ public class SourceCodeWorkItem extends WorkItem{
 			UEngineUtil.copyStream(new FileInputStream(absoluteFilePath), bao);
 			
 			getSourceCode().setCode(bao.toString());
-			setContentLoaded(true);
-
 		}
 	}
 

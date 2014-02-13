@@ -340,9 +340,9 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	
 	@Override
 	public void loadContents() throws Exception {
-		this.recodingCheck();
 		this.setContentLoaded(true);
 		
+		this.recodingCheck();
 	}
 	
 	

@@ -65,6 +65,8 @@ public class MemoWorkItem extends WorkItem{
 
 	@Override
 	public void loadContents() throws Exception {
+		setContentLoaded(true);
+		
 		if(getExtFile()!=null){
 			
 			InputStream is = null;

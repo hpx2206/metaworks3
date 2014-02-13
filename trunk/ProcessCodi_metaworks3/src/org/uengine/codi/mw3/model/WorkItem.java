@@ -648,21 +648,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			workItemHandler.load();
 		}
-		this.contentLoaded = true;
-		
-		//setWorkItemHandler(workItemHandler);
-		
-		
-		//return workItemHandler;
 	}
-	
 	
 	public void loadContents() throws Exception {
+		throw new Exception("not defined loadContents method");
+	}
+	/*
+	public void loadContents() throws Exception {
 		//only lazy loading needed workitems will use this method
-		typedDatabaseMe().loadContents();
+		loadContents();
 		setContentLoaded(true);
 	}
-
+	*/
 	
 	
 	public ModalWindow workItemPopup() throws Exception{
