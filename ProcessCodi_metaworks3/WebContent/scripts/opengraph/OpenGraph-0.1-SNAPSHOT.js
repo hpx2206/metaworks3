@@ -19169,7 +19169,6 @@ OG.handler.EventHandler.prototype = {
 								
 								$(item).draggable({
 									start: function (event) {
-										console.error(" start drag from terminal ");
 										$(element).data("status", "connect_start");
 										var x = item.terminal.position.x, y = item.terminal.position.y,
 											edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
@@ -19249,7 +19248,7 @@ OG.handler.EventHandler.prototype = {
 										// 연결대상이 없으면 복사후 연결
 										if (!$(root).data("edge_terminal") && me._isConnectCloneable(element.shape)) {
 											boundary = element.shape.geom.getBoundary();
-											clonedElement = me._RENDERER.drawShape([to.x, to.y], element.shape.clone(),
+											clonedElement = me._RENDERER.drawShape([me._grid(to.x), me._grid(to.y)], element.shape.clone(),
 												[boundary.getWidth(), boundary.getHeight()], element.shapeStyle);
 
 											// enable event
@@ -19306,7 +19305,9 @@ OG.handler.EventHandler.prototype = {
 											var _toElement = me._getShapeFromTerminal(toTerminal)
 											me.selectShape(_toElement);
 										} else {
-											//me.disconnect(edge);
+											if(edge){
+												me._RENDERER.remove(edge);
+											}
 										}
 
 										// clear
