@@ -54,13 +54,17 @@ public class ResourceContextMenu extends CloudMenu {
 		this.setContext(true);
 		
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
-		if( this.getResourceNode() != null  && this.getResourceNode() instanceof ProcessNode){
-			this.add(new SubMenuItem(new OpenMenu((ProcessNode)this.getResourceNode())));
-			
-		}else{
-			this.add(new SubMenuItem(new OpenMenu(this.getResourceNode())));
-			
+		
+		if(ResourceNode.TYPE_FILE_JAVA.equals(this.getResourceNode().getType()) ||
+		   ResourceNode.TYPE_FILE_PROCESS.equals(this.getResourceNode().getType())){
+			if( this.getResourceNode() != null && this.getResourceNode() instanceof ProcessNode){
+				this.add(new SubMenuItem(new OpenMenu((ProcessNode)this.getResourceNode())));
+				
+			}else{
+				this.add(new SubMenuItem(new OpenMenu(this.getResourceNode())));
+			}
 		}
+		
 //		this.add(new MenuItem("open", "$resource.menu.open"));
 		//this.add(new MenuItem("processMerge", "$processMergeCompare"));
 		
