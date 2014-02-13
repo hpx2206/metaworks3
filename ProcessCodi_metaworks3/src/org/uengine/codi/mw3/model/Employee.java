@@ -465,13 +465,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public void saveMe() throws Exception {
-		if("signUp".equals(this.getMetaworksContext().getHow()) && "step2".equals(this.getMetaworksContext().getWhere())){
-			if(this.getIsAdmin()){
-				addBasicTopics();
-				addBasicProcess();
-			}
-			
-		}
 		if(this.getGlobalCom() == null){
 			String comAlias = Employee.extractTenantName(this.getEmail());
 			boolean isAdmin = false;
@@ -493,12 +486,17 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 					e.printStackTrace();
 					throw new MetaworksException(e.getMessage());
 				}
-			}
 
-			String tenantId = findCompany.getComCode();
+				String tenantId = findCompany.getComCode();
+				
+				this.setGlobalCom(tenantId);
+				
+				addBasicTopics();
+				addBasicProcess();
+			}
+			
 			String defaultUX = "wave";
 			String defaultMob = "auto";
-			this.setGlobalCom(tenantId);
 		}
 		
 		/*// 초대 받아 가입 할경우 서로 친구 추가됨.
@@ -559,6 +557,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if( localeManager.getLanguage() != null ){
 			this.setLocale(localeManager.getLanguage());
 		}
+		
+		// 한국어 만 지원하므로 강제 셋팅
+		this.setLocale("ko");
 		
 		// TODO: 부서 딕셔너리 처리 필		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null && !"".equals(getImageFile().getFileTransfer().getFilename())){
@@ -1392,12 +1393,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		this.saveMe();
 		
+		/*
         Company company = new Company();
         company.setComCode(this.getGlobalCom());
         ICompany findCompany = company.findByCode();
         String tenantId = findCompany.getAlias();
+		*/
 		
-		return new Forward(TenantContext.getURL(tenantId));
+		return new Forward(TenantContext.getURL());
 	}
 
 	public int createNewNotiSettingId() throws Exception{
