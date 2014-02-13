@@ -28,6 +28,7 @@ import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
 import org.uengine.codi.platform.Console;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -174,12 +175,7 @@ public class ResourceFile implements ContextAware{
 			return;
 		}	
 		
-		Workspace workspace = new Workspace();
-		workspace.load(session);
-//		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
-		String resourceBase;
-		
-		resourceBase = CodiClassLoader.getMyClassLoader().getCodebase();
+		String resourceBase = CodiStringUtil.lastLastFileSeparatorChar(CodiClassLoader.getMyClassLoader().getCodebase());
 		
 		// TODO workspace.getProjects().get(0) 이 부분을  loop 를 돌려서 프로젝트까지 보이도록 해야함
 		File file = new File(resourceBase + getAlias());
@@ -201,6 +197,7 @@ public class ResourceFile implements ContextAware{
 			ResourceFile rf = new ResourceFile();
 			
 			String childAlias = (getAlias().length() > 0 ? getAlias() + "/" : "") + childFilePaths[i];
+			
 			File f = new File(resourceBase + childAlias);
 			
 			rf.setName(childFilePaths[i]);
