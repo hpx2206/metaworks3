@@ -491,6 +491,7 @@ public class WorkItemHandler implements ContextAware{
 //		if( this.getRootInstId() != null && this.getRootInstId() != new Long(this.getInstanceId())){
 //			// 상위 인스턴스가 있는 경우
 //		}else{
+			inst.getMetaworksContext().setWhere("instancelist");
 			// 본인의 instanceList 에 push
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
 			
