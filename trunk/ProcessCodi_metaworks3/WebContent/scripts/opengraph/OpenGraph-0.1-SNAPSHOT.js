@@ -10705,22 +10705,41 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 			},
 			stop : function (event) {
 				event.stopPropagation();
-				var eventOffset = handler._getOffset(event), shape, newElement, boundary,
-				bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray");
-				boundary = element.shape.geom.getBoundary();
+				var eventOffset = handler._getOffset(event)
+					//, shape, newElement
+					, boundary = element.shape.geom.getBoundary()
+					, bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray")
+					, boundary, clonedElement;
 				
 				//FIXME : element _shape_id로 부터 객체를 얻어오도록 하는데 이것을 
 				// 완벽한 객체 교환을 하도록 해야함... 보류 중..
-				var shape_id = $(element).attr("_shape_id");
-				var evalObject = eval(shape_id);
-				shape = new evalObject();
+				clonedElement = 
+					handler._RENDERER.drawShape(
+						[handler._grid(eventOffset.x), handler._grid(eventOffset.y)]
+						, element.shape.clone()
+						, [boundary.getWidth(), boundary.getHeight()]
+						, element.shapeStyle
+					);
+
+				// enable event
+				handler.setClickSelectable(clonedElement, handler._isSelectable(clonedElement.shape));
+				handler.setMovable(clonedElement, handler._isMovable(clonedElement.shape));
+				if (handler._CONFIG.GROUP_DROPABLE && clonedElement.shape.GROUP_DROPABLE) {
+					handler.enableDragAndDropGroup(clonedElement);
+				}
+				if (handler._CONFIG.GROUP_COLLAPSIBLE && clonedElement.shape.GROUP_COLLAPSIBLE) {
+					handler.enableCollapse(clonedElement);
+				}
+				if (handler._isConnectable(clonedElement.shape)) {
+					handler.enableConnect(clonedElement);
+				}
+				if (handler._isLabelEditable(clonedElement.shape)) {
+					handler.enableEditLabel(clonedElement);
+				}
 				
-				//shape = new OG.shape.bpmn.A_Task();
+				handler._RENDERER._CANVAS.connect(element, clonedElement);
+				handler.selectShape(clonedElement);
 				
-				$(shape).attr('auto_draw', 'yes');
-				newElement = handler._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [boundary.getWidth(), boundary.getHeight()]);
-				handler._RENDERER._CANVAS.connect(element, newElement);
-				handler.selectShape(newElement);
 				$.each(bBoxArray, function (k, item) {
 					handler._RENDERER.remove(item.box);
 				});
@@ -10729,6 +10748,43 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 		});
 		$(task.node).bind({
 			click : function (event) {
+				event.stopPropagation();
+				var eventOffset = handler._getOffset(event)
+					//, shape, newElement
+					, boundary = element.shape.geom.getBoundary()
+					, clonedElement;
+				
+				//FIXME : element _shape_id로 부터 객체를 얻어오도록 하는데 이것을 
+				// 완벽한 객체 교환을 하도록 해야함... 보류 중..
+				
+				clonedElement = 
+					handler._RENDERER.drawShape(
+						[handler._grid(boundary.getCentroid().x + 100), handler._grid(boundary.getCentroid().y)]
+						, element.shape.clone()
+						, [boundary.getWidth(), boundary.getHeight()]
+						, element.shapeStyle
+					);
+
+				// enable event
+				handler.setClickSelectable(clonedElement, handler._isSelectable(clonedElement.shape));
+				handler.setMovable(clonedElement, handler._isMovable(clonedElement.shape));
+				if (handler._CONFIG.GROUP_DROPABLE && clonedElement.shape.GROUP_DROPABLE) {
+					handler.enableDragAndDropGroup(clonedElement);
+				}
+				if (handler._CONFIG.GROUP_COLLAPSIBLE && clonedElement.shape.GROUP_COLLAPSIBLE) {
+					handler.enableCollapse(clonedElement);
+				}
+				if (handler._isConnectable(clonedElement.shape)) {
+					handler.enableConnect(clonedElement);
+				}
+				if (handler._isLabelEditable(clonedElement.shape)) {
+					handler.enableEditLabel(clonedElement);
+				}
+				
+				handler._RENDERER._CANVAS.connect(element, clonedElement);
+				handler.selectShape(clonedElement);
+			
+				/*
 				var newElement, shape
 				//shape = new OG.shape.bpmn.A_Task(),
 				envelope = element.shape.geom.getBoundary();
@@ -10741,6 +10797,10 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 				newElement = handler._RENDERER._CANVAS.drawShape([envelope.getCentroid().x + 100, envelope.getCentroid().y], shape, [70, 50]);
 				handler._RENDERER._CANVAS.connect(element, newElement);
 				handler.selectShape(newElement);
+				*/
+			},
+			mousedown : function (event) {
+				event.stopPropagation();
 			}
 		});
 		$(end.node).draggable({
@@ -16385,7 +16445,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 	group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft()
 		, (boundary.getUpperRight().x - boundary.getUpperLeft().x)
 		, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
-	geom_shadow = this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
+	geom_shadow = this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_SHADOW);
 	geom_shadow.style = new OG.geometry.Style({
 		'cursor': "move"
 	});
@@ -21895,12 +21955,11 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape 엘리먼트
 	 */
 	selectShape: function (element, event, param) {
-	
+
 		var me = this, guide, root = me._RENDERER.getRootGroup();
 		
 		//단일 선택 다중 선택 여부 판단
 		if(event){
-			_event = event;
 			if(param){
 				if(!param.shiftKey && !param.ctrlKey){
 					me.deselectAll();
@@ -21923,6 +21982,7 @@ OG.handler.EventHandler.prototype = {
 		}
 
 		//if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
+		console.log(me._isSelectable(element.shape));
 		if (me._isSelectable(element.shape)) {
 			//BUG : remove guide를 반드시 해주어야만 새로운 가이드가 null로 나오지 않는다.
 			me._RENDERER.removeGuide(element);
@@ -23310,6 +23370,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0, cursor: "pointer"},
 			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 , cursor: "move" },
+			GROUP_SHADOW   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 25, "stroke-opacity": 0, cursor: "pointer"},
 			GUIDE_BBOX    : { stroke: "#00FF00", fill: "white", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
 			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
