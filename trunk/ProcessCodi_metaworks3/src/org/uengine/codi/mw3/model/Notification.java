@@ -8,11 +8,15 @@ import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequestWrapper;
+
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.Role;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
@@ -125,6 +129,10 @@ public class Notification extends Database<INotification> implements INotificati
 		if(userInfo.databaseMe().isMailNoti()){
 			final Employee userInfoDB = new Employee();
 			userInfoDB.copyFrom(userInfoTemp);
+			
+			final String realPath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+			final String url = TenantContext.getURL();
+			
 			/*
 			final Employee actorUserInfo = new Employee();
 			actorUserInfo.setEmpCode(getActorId());
@@ -133,11 +141,12 @@ public class Notification extends Database<INotification> implements INotificati
 			*/
 			
 			try{
-		       	url = TenantContext.getURL();
+		       	
+		       	
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-
+			
 			new Thread(){
 
 				@Override
@@ -160,9 +169,10 @@ public class Notification extends Database<INotification> implements INotificati
 							}
 						}
 						*/
+						
 						String content = "";
-						String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
-						String path = resourcePath + "mail"+File.separatorChar+"notiMail.html";
+						
+						String path = realPath + "/resources/mail/notiMail.html";
 						FileInputStream is;
 						try {
 							is = new FileInputStream(path);
@@ -188,7 +198,7 @@ public class Notification extends Database<INotification> implements INotificati
 						String title = "프로세스 코디의 알림이 도착했습니다.";
 						
 						// TODO 상대방 이메일을 userInfoDB에서 가져오질 못함
-						(new EMailServerSoapBindingImpl()).sendMail(from, "idtndhksha@uengine.org", title, content);
+						(new EMailServerSoapBindingImpl()).sendMail(from, userInfoDB.getEmail(), title, content);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

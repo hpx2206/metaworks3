@@ -1,5 +1,6 @@
 package org.uengine.codi.util;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,4 +15,11 @@ public class CodiStringUtil {
         Matcher m = p.matcher(email);
         return m.matches();
     }
+	
+	public static String lastLastFileSeparatorChar(String value){
+		if(value.charAt(value.length()) == File.separatorChar)
+			value += File.separatorChar;
+		
+		return value;
+	}
 }
