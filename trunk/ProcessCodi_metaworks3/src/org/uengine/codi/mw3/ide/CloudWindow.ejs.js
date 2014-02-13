@@ -83,6 +83,7 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 			
 			this.bind();
 			this.select(id);
+			this.push(tab);
 		}
 	},
 	
@@ -120,5 +121,56 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 			if(nextFocus.length > 0)
 				nextFocus.trigger('selecttab');
 		}
-	}
+	}, 
+	push : function(item){
+		if(this.object == null || typeof this.object == 'undefined')
+			return true;
+		
+		var childObjectId;
+		
+		if(this.object.tabs == null || typeof this.object.tabs == 'undefined' || this.object.tabs.length == 0){
+			childObjectId = ++ mw3.objectId;
+		
+			this.object.tabs = [];
+			mw3.objects[childObjectId] = this.object.tabs;
+			
+			var beanName = 
+			{
+				'.tabs' : 
+				{
+					fieldName : '.tabs' ,
+					valueObjectId : childObjectId
+				
+				}
+			};
+
+			mw3.beanExpressions[this.objectId] = beanName;
+		   
+		}else{
+			childObjectId = mw3.beanExpressions[this.objectId]['.tabs'].valueObjectId;
+		}
+
+		var lastPropName = '0';
+		
+		if(mw3.beanExpressions[childObjectId]){
+			for(var propName in mw3.beanExpressions[childObjectId]){
+				lastPropName = propName.substring(1, propName.length-1);
+				lastPropName = Number(lastPropName)	 + 1;
+			}
+		}else{
+			mw3.beanExpressions[childObjectId] = {};
+		}
+		
+		lastPropName = '[' + lastPropName + ']'; 
+		
+		var beanName = 
+		{
+			fieldName : lastPropName ,
+			valueObjectId : item.__objectId
+		};
+		
+		mw3.beanExpressions[childObjectId][lastPropName] = beanName;
+		
+		this.object.tabs.push(item);
+	},
 };
