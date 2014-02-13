@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -43,8 +44,8 @@ public class EMailReader {
   
     
     public static void dumpPart(Part p, StringBuffer sb, Properties mailInfo) throws Exception {
-        if (p instanceof Message)
-            dumpEnvelope((Message)p, sb, mailInfo);
+        //if (p instanceof Message)
+        //    dumpEnvelope((Message)p, sb, mailInfo);
        
 //        String ct = p.getContentType();
 //        try {
@@ -57,10 +58,12 @@ public class EMailReader {
          * Using isMimeType to determine the content type avoids
          * fetching the actual content data until we need it.
          */
-        if (p.isMimeType("text/plain")) {
+    	if(p.isMimeType("TEXT/HTML")){
+    		sb.append((String)p.getContent()); 
+    	} else if (p.isMimeType("text/plain")) {
 //        	sb.append("This is plain text");
 //        	sb.append("---------------------------");
-        	sb.append((String)p.getContent());        
+//        	sb.append((String)p.getContent());        
         }  else if (p.isMimeType("multipart/*")) {
             Multipart mp = (Multipart)p.getContent();
             for (int i = 0; i < mp.getCount(); i++) {
@@ -166,41 +169,19 @@ public class EMailReader {
 			        Address[] to;// TO
 			        to = message.getRecipients(Message.RecipientType.TO);
 			        
+			        Multipart mp = (Multipart)message.getContent();
+			        BodyPart bp = mp.getBodyPart(0);
+			        
+			        System.out.println("subject : " + message.getSubject());
+			        System.out.println("send date : " + message.getSentDate());
+			        System.out.println("content : " + bp.getContent());
 	
 					
 					dumpPart(message, sb, mailInfo);
 					
 					ArrayList<User> fromUsers = new ArrayList<User>();
 	//	    					ArrayList<User> fromUsers = new ArrayList<User>();
-					for(Address theFrom : from){
-						IEmployee fromUserIsEmployee = new Employee().auto();
-						String theFromString = theFrom.toString();
-						String theFromName = repMailEmp.getEmpName();
-						
-						int whereMailAddress = theFromString.indexOf("<");
-						if(whereMailAddress>-1){
-	    					theFromName = theFromString.substring(0, whereMailAddress);
-	    					theFromString = theFromString.substring(whereMailAddress+1, theFromString.length()-1);
-						}
-						
-						fromUserIsEmployee.setEmail(theFromString);
-						fromUserIsEmployee.select();
-						
-						if(fromUserIsEmployee.next()){
-							User fromUser = new User();
-							fromUser.setName(fromUserIsEmployee.getEmpName());
-							fromUser.setUserId(fromUserIsEmployee.getEmpCode());
-							fromUser.setNetwork("local");
-							fromUsers.add(fromUser);
-						}else{
-							//TODO tries facebook, twitter, google+ by email searching
-							User fromUser = new User();
-							fromUser.setName(theFromName);
-							fromUser.setUserId(theFromString);
-							fromUser.setNetwork("ext");
-							fromUsers.add(fromUser);					
-						}
-					}
+					
 					
 					EmailWorkItem emailWorkItem = new EmailWorkItem();
 					emailWorkItem.processManager = processManager;
@@ -208,17 +189,11 @@ public class EMailReader {
 					emailWorkItem.getMemo().setContents(sb.toString());
 					emailWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
-					User theFirstWriter;
-					if(fromUsers.size() > 0){
-						theFirstWriter = fromUsers.get(0);
-					}else{
-						theFirstWriter = new User();
-						theFirstWriter.setName("unknown");
-						theFirstWriter.setUserId("unknown");
-						theFirstWriter.setNetwork("ext");
-					}
+					User codi = new User();
+					codi.setUserId(repMailEmp.getEmpCode());
+					codi.setName(repMailEmp.getEmpName());
 					
-					emailWorkItem.setWriter(theFirstWriter);
+					emailWorkItem.setWriter(codi);
 					emailWorkItem.setTitle(message.getSubject());
 					emailWorkItem.setStartDate(message.getReceivedDate());
 					
