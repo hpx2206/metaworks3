@@ -566,11 +566,12 @@ body {
 .filemgr-tree .item LABEL {
     display:block;
     position:relative;
-    height:18px;
-	line-height:18px;
     background-position:3px 1px;
     background-repeat:no-repeat;
     padding-left:0px;
+	margin-bottom:0px !important;
+	height:18px;
+	line-height:18px;
 }
 
 .filemgr-tree .item-fix-right .item LABEL {
@@ -627,7 +628,7 @@ body {
 }
 
 .filemgr-tree .loading .item LABEL {
-    background-position : -1000px 0;
+    background-position : -1000px 0 !important;
 }
 
 .filemgr-tree .loading.selected .item {
@@ -1857,4 +1858,4 @@ blockquote {
 	-webkit-margin-end: 40px;
 }
 
-.tab_icon{margin-right:10px;font-size: 12px;position: relative;top: 1px; margin-right:10px;}
+.tab_icon{margin-right:10px;font-size: 12px;position: relative;top: 1px; margin-right:5px;}
