@@ -566,12 +566,11 @@ body {
 .filemgr-tree .item LABEL {
     display:block;
     position:relative;
-    background-position:3px 1px;
+    background-position:3px 0px;
     background-repeat:no-repeat;
     padding-left:0px;
 	margin-bottom:0px !important;
 	height:18px;
-	line-height:18px;
 }
 
 .filemgr-tree .item-fix-right .item LABEL {
