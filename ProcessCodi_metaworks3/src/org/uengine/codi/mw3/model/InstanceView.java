@@ -61,6 +61,7 @@ public class InstanceView {
 		instanceTooltip.setSecuopt(instance.getSecuopt());
 		instanceTooltip.setDueDate(instance.getDueDate());
 		
+		/*
 		if(instance.getDefVerId()!=null){ //process exists!
 //			EventHandler[] eventHandlers = processManager.getEventHandlersInAction(instance.getInstId().toString());
 			ProcessInstance processInstance = processManager.getProcessInstance(instance.getInstId().toString());
@@ -83,6 +84,7 @@ public class InstanceView {
 			
 			instanceTooltip.setEventTriggers(eventTriggers);
 		}
+		*/
 		
 		this.setInstanceAction(instanceTooltip);
 		
