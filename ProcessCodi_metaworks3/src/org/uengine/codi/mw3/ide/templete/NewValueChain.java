@@ -15,6 +15,7 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiFileUtil;
 
 @Face(displayName="$templete.valuechain", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class NewValueChain extends Templete {
@@ -31,7 +32,7 @@ public class NewValueChain extends Templete {
 			this.name = name;
 		}
 		
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Override
 	public Object[] finish() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -43,6 +44,9 @@ public class NewValueChain extends Templete {
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			node.setProjectId(targetNode.getProjectId());
 			
+			if(CodiFileUtil.exists(node.getPath()))
+				throw new Exception("$file.already.exists");
+
 			ValueChainEditor editor = new ValueChainEditor(node);
 			editor.getValueChainDesigner().getProcessNameView().setAlias(this.getName());
 			editor.getValueChainDesigner().getRolePanel().setEditorId(node.getPath());

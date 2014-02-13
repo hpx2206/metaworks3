@@ -15,6 +15,7 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
+import org.uengine.codi.util.CodiFileUtil;
 
 @Face(displayName="$templete.folder", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class NewFolder extends Templete {
@@ -31,7 +32,7 @@ public class NewFolder extends Templete {
 			this.name = name;
 		}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Override
 	public Object[] finish() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -45,6 +46,9 @@ public class NewFolder extends Templete {
 			node.setType(TreeNode.TYPE_FOLDER);
 			node.setFolder(true);
 			
+			if(CodiFileUtil.exists(node.getPath()))
+				throw new Exception("$file.already.exists");
+
 			File file = new File(node.getPath());
 			if(!file.exists())
 				file.mkdirs();

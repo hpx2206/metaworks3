@@ -9,10 +9,13 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.util.CodiFileUtil;
+import org.uengine.codi.util.CodiStringUtil;
 
 @Face(displayName="$templete.file", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class NewFile extends Templete {
@@ -26,7 +29,7 @@ public class NewFile extends Templete {
 			this.name = name;
 		}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, keyBinding="enter")
+	@Override
 	public Object[] finish() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -37,6 +40,9 @@ public class NewFile extends Templete {
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			
+			if(CodiFileUtil.exists(node.getPath()))
+				throw new Exception("$file.already.exists");
+
 			Editor editor = (Editor)node.beforeAction();
 			editor.save();
 			
