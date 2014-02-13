@@ -82,6 +82,8 @@ public class Navigator {
 		projectNode.setChild(projectNode.loadChild());
 		projectNode.setExpanded(true);
 		projectNode.setLoaded(true);
+		projectNode.setRoot(true);
+		projectNode.setFolder(true);
 		
 		ResourceTree resourceTree = new ResourceTree();
 		resourceTree.setId(projectNode.getId());
