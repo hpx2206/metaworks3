@@ -11288,6 +11288,18 @@ OG.shape.bpmn.D_Store.prototype.createShape = function () {
 
 	return this.geom;
 };
+
+OG.shape.bpmn.Event = function (label) {
+	OG.shape.bpmn.Event.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.Event';
+	this.label = label;	
+};
+OG.shape.bpmn.Event.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.Event.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.Event.prototype.constructor = OG.shape.bpmn.Event;
+OG.Event = OG.shape.bpmn.Event;
+
 /**
  * BPMN : End Event Shape
  *
@@ -11304,8 +11316,8 @@ OG.shape.bpmn.E_End = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End';
 	this.label = label;
 };
-OG.shape.bpmn.E_End.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End.prototype.constructor = OG.shape.bpmn.E_End;
 OG.E_End = OG.shape.bpmn.E_End;
 
@@ -11367,8 +11379,8 @@ OG.shape.bpmn.E_End_Cancel = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Cancel';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Cancel.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Cancel.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Cancel.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Cancel.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Cancel.prototype.constructor = OG.shape.bpmn.E_End_Cancel;
 OG.E_End_Cancel = OG.shape.bpmn.E_End_Cancel;
 
@@ -11426,8 +11438,8 @@ OG.shape.bpmn.E_End_Compensation = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Compensation';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Compensation.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Compensation.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Compensation.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Compensation.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Compensation.prototype.constructor = OG.shape.bpmn.E_End_Compensation;
 OG.E_End_Compensation = OG.shape.bpmn.E_End_Compensation;
 
@@ -11495,8 +11507,8 @@ OG.shape.bpmn.E_End_Error = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Error';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Error.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Error.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Error.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Error.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Error.prototype.constructor = OG.shape.bpmn.E_End_Error;
 OG.E_End_Error = OG.shape.bpmn.E_End_Error;
 
@@ -11557,8 +11569,8 @@ OG.shape.bpmn.E_End_Link = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Link';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Link.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Link.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Link.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Link.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Link.prototype.constructor = OG.shape.bpmn.E_End_Link;
 OG.E_End_Link = OG.shape.bpmn.E_End_Link;
 
@@ -11615,8 +11627,8 @@ OG.shape.bpmn.E_End_Message = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Message';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Message.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Message.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Message.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Message.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Message.prototype.constructor = OG.shape.bpmn.E_End_Message;
 OG.E_End_Message = OG.shape.bpmn.E_End_Message;
 
@@ -11673,8 +11685,8 @@ OG.shape.bpmn.E_End_Multiple = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Multiple';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Multiple.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Multiple.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Multiple.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Multiple.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Multiple.prototype.constructor = OG.shape.bpmn.E_End_Multiple;
 OG.E_End_Multiple = OG.shape.bpmn.E_End_Multiple;
 
@@ -11740,8 +11752,8 @@ OG.shape.bpmn.E_Intermediate = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate.prototype.constructor = OG.shape.bpmn.E_Intermediate;
 OG.E_Intermediate = OG.shape.bpmn.E_Intermediate;
 
@@ -11783,8 +11795,8 @@ OG.shape.bpmn.E_Intermediate_Compensation = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Compensation';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Compensation.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Compensation.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Compensation.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Compensation.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Compensation.prototype.constructor = OG.shape.bpmn.E_Intermediate_Compensation;
 OG.E_Intermediate_Compensation = OG.shape.bpmn.E_Intermediate_Compensation;
 
@@ -11844,8 +11856,8 @@ OG.shape.bpmn.E_Intermediate_Error = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Error';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Error.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Error.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Error.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Error.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Error.prototype.constructor = OG.shape.bpmn.E_Intermediate_Error;
 OG.E_Intermediate_Error = OG.shape.bpmn.E_Intermediate_Error;
 
@@ -11899,8 +11911,8 @@ OG.shape.bpmn.E_Intermediate_Link = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Link';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Link.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Link.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Link.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Link.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Link.prototype.constructor = OG.shape.bpmn.E_Intermediate_Link;
 OG.E_Intermediate_Link = OG.shape.bpmn.E_Intermediate_Link;
 
@@ -11999,8 +12011,8 @@ OG.shape.bpmn.E_Start_Connector = function (label) {
 	this.label = label;
 
 };
-OG.shape.bpmn.E_Start_Connector.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Connector.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Connector.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Connector.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start_Connector.prototype.constructor = OG.shape.bpmn.E_Start_Connector;
 OG.E_Start_Connector = OG.shape.bpmn.E_Start_Connector;
 
@@ -12054,8 +12066,8 @@ OG.shape.bpmn.E_End_Connector = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Connector';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Connector.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Connector.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Connector.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_End_Connector.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_End_Connector.prototype.constructor = OG.shape.bpmn.E_End_Connector;
 OG.E_End_Connector = OG.shape.bpmn.E_End_Connector;
 
@@ -12112,8 +12124,8 @@ OG.shape.bpmn.E_Intermediate_Message = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Message';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Message.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Message.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Message.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Message.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Message.prototype.constructor = OG.shape.bpmn.E_Intermediate_Message;
 OG.E_Intermediate_Message = OG.shape.bpmn.E_Intermediate_Message;
 
@@ -12170,8 +12182,8 @@ OG.shape.bpmn.E_Intermediate_Multiple = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Multiple';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Multiple.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Multiple.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Multiple.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Multiple.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Multiple.prototype.constructor = OG.shape.bpmn.E_Intermediate_Multiple;
 OG.E_Intermediate_Multiple = OG.shape.bpmn.E_Intermediate_Multiple;
 
@@ -12218,8 +12230,8 @@ OG.shape.bpmn.E_Intermediate_Escalation = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Escalation';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Escalation.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Escalation.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Escalation.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Escalation.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Escalation.prototype.constructor = OG.shape.bpmn.E_Intermediate_Escalation;
 OG.E_Intermediate_Escalation = OG.shape.bpmn.E_Intermediate_Escalation;
 
@@ -12274,8 +12286,8 @@ OG.shape.bpmn.E_Intermediate_Rule = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Rule';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Rule.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Rule.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Rule.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Rule.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Rule.prototype.constructor = OG.shape.bpmn.E_Intermediate_Rule;
 OG.E_Intermediate_Rule = OG.shape.bpmn.E_Intermediate_Rule;
 
@@ -12328,8 +12340,8 @@ OG.shape.bpmn.E_Intermediate_Timer = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Timer';
 	this.label = label;
 };
-OG.shape.bpmn.E_Intermediate_Timer.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Intermediate_Timer.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Timer.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Intermediate_Timer.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Intermediate_Timer.prototype.constructor = OG.shape.bpmn.E_Intermediate_Timer;
 OG.E_Intermediate_Timer = OG.shape.bpmn.E_Intermediate_Timer;
 
@@ -12389,8 +12401,8 @@ OG.shape.bpmn.E_Start = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start';
 	this.label = label;
 };
-OG.shape.bpmn.E_Start.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start.prototype.constructor = OG.shape.bpmn.E_Start;
 OG.E_Start = OG.shape.bpmn.E_Start;
 
@@ -12451,8 +12463,8 @@ OG.shape.bpmn.E_Start_Link = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Link';
 	this.label = label;
 };
-OG.shape.bpmn.E_Start_Link.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Link.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Link.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Link.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start_Link.prototype.constructor = OG.shape.bpmn.E_Start_Link;
 OG.E_Start_Link = OG.shape.bpmn.E_Start_Link;
 
@@ -12507,8 +12519,8 @@ OG.shape.bpmn.E_Start_Message = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Message';
 	this.label = label;
 };
-OG.shape.bpmn.E_Start_Message.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Message.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Message.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Message.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start_Message.prototype.constructor = OG.shape.bpmn.E_Start_Message;
 OG.E_Start_Message = OG.shape.bpmn.E_Start_Message;
 
@@ -12562,8 +12574,8 @@ OG.shape.bpmn.E_Start_Multiple = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Multiple';
 	this.label = label;
 };
-OG.shape.bpmn.E_Start_Multiple.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Multiple.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Multiple.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Multiple.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start_Multiple.prototype.constructor = OG.shape.bpmn.E_Start_Multiple;
 OG.E_Start_Multiple = OG.shape.bpmn.E_Start_Multiple;
 
@@ -12622,8 +12634,8 @@ OG.shape.bpmn.E_Start_Rule = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Rule';
 	this.label = label;
 };
-OG.shape.bpmn.E_Start_Rule.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Rule.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Rule.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Rule.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start_Rule.prototype.constructor = OG.shape.bpmn.E_Start_Rule;
 OG.E_Start_Rule = OG.shape.bpmn.E_Start_Rule;
 
@@ -12676,8 +12688,8 @@ OG.shape.bpmn.E_Start_Timer = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Timer';
 	this.label = label;
 };
-OG.shape.bpmn.E_Start_Timer.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Timer.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Timer.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Timer.superclass = OG.shape.bpmn.Event;
 OG.shape.bpmn.E_Start_Timer.prototype.constructor = OG.shape.bpmn.E_Start_Timer;
 OG.E_Start_Timer = OG.shape.bpmn.E_Start_Timer;
 
@@ -14006,6 +14018,11 @@ OG.renderer.IRenderer.prototype = {
 						}
 					}else if(element.shape instanceof OG.shape.GroupShape){
 						if(times == 5){
+							elements[element.id] = element;
+						}
+					}else if(element.shape instanceof OG.shape.bpmn.Event){
+						if($(element).attr("_event_target_")
+							|| element.shape.geom.getVertices().length == times){
 							elements[element.id] = element;
 						}
 					}else{
@@ -17642,7 +17659,7 @@ OG.renderer.RaphaelRenderer.prototype.removeTerminal = function (element) {
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function (element) {
-	console.log("remove terminal all!!");
+	//console.log("remove terminal all!!");
 	var elementId = $(element).attr("id")
 		,me = this;	
 	$.each(this._ELE_MAP.keys(), function (idx, item) {
@@ -19170,7 +19187,7 @@ OG.handler.EventHandler.prototype = {
 										});
 									},
 									drag : function (event) {
-										console.log(" draging from terminal ");
+										//console.log(" draging from terminal ");
 										var eventOffset = me._getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
@@ -19217,7 +19234,7 @@ OG.handler.EventHandler.prototype = {
 										}
 									},
 									stop : function (event) {
-										console.log(" stop drag!! ");
+										//console.log(" stop drag!! ");
 										$(element).data("status", "connect_end");
 										
 										var to = me._getOffset(event),
@@ -19412,6 +19429,90 @@ OG.handler.EventHandler.prototype = {
         };
     },
 
+	//FIXME Utilize
+	checkAutoAttach: function(element, bBoxArray, dx, dy, start, offset, event){
+		var me = this
+			,bBox, i, n
+			,bBoxX, bBoxY, bBoxW, bBoxH, bBoxPoints, filteredIndex = []
+			,gEleX, gEleY, gEleW, gEleH, gEleXW, gEleYH
+			,groupBoundary, targetElement;
+		
+		if(bBoxArray.length == 1 
+			&& element.shape instanceof OG.shape.bpmn.Event)
+		{
+			bBox = bBoxArray[0].box;
+			targetElement = $(event.srcElement).parent("g")[0];
+			
+			//console.log([targetElement]);
+			if(targetElement && (targetElement.shape instanceof OG.shape.bpmn.ScopeActivity)){
+				//console.log("attatch?!");
+
+				bBox = $(bBox);
+				bBoxX = parseInt(bBox.attr("x")) + dx;
+				bBoxY = parseInt(bBox.attr("y")) + dy;
+				bBoxW = parseInt(bBox.attr("width"));
+				bBoxH = parseInt(bBox.attr("height"));
+				//console.log({"bBoxX":bBoxX, "bBoxY":bBoxY, "bBoxW":bBoxW, "bBoxH":bBoxH});
+				
+				bBoxPoints = [
+								 {"x":bBoxX,"y":bBoxY}				/*top left*/
+								,{"x":bBoxX,"y":bBoxY+bBoxH} 		/*bottom left*/
+								,{"x":bBoxX+bBoxW,"y":bBoxY+bBoxH}	/*bottom right*/
+								,{"x":bBoxX+bBoxW,"y":bBoxY}		/*top right*/
+							];	
+				
+				groupBoundary = targetElement.shape.geom.getBoundary();
+				gEleX = groupBoundary.getUpperLeft()["x"];
+				gEleY = groupBoundary.getUpperLeft()["y"];
+				gEleW = groupBoundary.getWidth();
+				gEleH = groupBoundary.getHeight();
+				gEleXW = gEleX + gEleW;
+				gEleYH = gEleY + gEleH;
+				//console.log({"gEleX":gEleX, "gEleY":gEleY, "gEleW":gEleW, "gEleH":gEleH , "gEleXW":gEleXW, "gEleYH":gEleYH});
+				
+				for(i=0,n=bBoxPoints.length; i<n; i++){
+					if( ((gEleX < bBoxPoints[i]["x"]) && (gEleXW > bBoxPoints[i]["x"]))
+						&& ((gEleY < bBoxPoints[i]["y"]) && (gEleYH > bBoxPoints[i]["y"])) ){
+						filteredIndex.push((i+1)+"");
+					}
+				}
+				
+				if(filteredIndex.length > 0){
+					//console.log(filteredIndex);
+					
+					if(filteredIndex.length > 1){
+						//tow points
+						
+						// move x
+						if(filteredIndex.indexOf("1") > -1 && filteredIndex.indexOf("2") > -1){
+							dx = me._grid(gEleXW - (bBoxW / 2) - start.x + offset["x"]);
+						}else if(filteredIndex.indexOf("3") > -1 && filteredIndex.indexOf("4") > -1){
+							dx = me._grid(gEleX - (bBoxW / 2) - start.x + offset["x"]);
+						}
+						// move y
+						else if(filteredIndex.indexOf("1") > -1 && filteredIndex.indexOf("4") > -1){
+							dy = me._grid(gEleYH - (bBoxH / 2) - start.y + offset["y"]);
+						}else if(filteredIndex.indexOf("2") > -1 && filteredIndex.indexOf("3") > -1){
+							dy = me._grid(gEleY - (bBoxH / 2) - start.y + offset["y"]);
+						}
+					
+					}else{
+						//single point
+						//모서리 처리가 필요하다면...
+					}
+					
+					// move x, y
+				}
+				
+				//console.log({"dx":dx, "dy":dy});
+			}
+		} // end if
+		
+		return { "dx":dx, "dy":dy
+				,"attatched": (filteredIndex.length > 0)
+				,"targetId": $(targetElement).attr("id") };
+	},
+	
 	/**
 	 * Shape 엘리먼트의 이동 가능여부를 설정한다.
 	 *
@@ -19488,11 +19589,16 @@ OG.handler.EventHandler.prototype = {
 						start = $(this).data("start"),
 						bBoxArray = $(root).data("bBoxArray"),
 						dx = me._grid(eventOffset.x - start.x),
-						dy = me._grid(eventOffset.y - start.y);
+						dy = me._grid(eventOffset.y - start.y),
+						offset = $(this).data("offset");
+						
+					var attatchOffset = me.checkAutoAttach(element, bBoxArray, dx, dy, start, offset, event);
+					dx = attatchOffset["dx"];
+					dy = attatchOffset["dy"];
 
 					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
 					me._autoExtend(eventOffset.x, eventOffset.y);
-
+					
 					$(this).css({"position": "", "left": "", "top": ""});
 					$.each(bBoxArray, function (k, item) {
 						me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
@@ -19506,9 +19612,17 @@ OG.handler.EventHandler.prototype = {
 						dx = me._grid(eventOffset.x - start.x),
 						dy = me._grid(eventOffset.y - start.y),
 						groupTarget = $(root).data("groupTarget"),
-						eleArray,
+						offset = $(this).data("offset"),
+						eleArray, isAttatched, attachTargetId,
 						guide;
-						
+					
+					// 자동 붙기 보정
+					var attatchOffset = me.checkAutoAttach(element, bBoxArray, dx, dy, start, offset, event);
+					dx = attatchOffset["dx"];
+					dy = attatchOffset["dy"];
+					isAttatched = attatchOffset["attatched"];
+					attachTargetId = attatchOffset["targetId"];
+										
 					// 이동 처리
 					$(this).css({"position": "", "left": "", "top": ""});
 					
@@ -19528,6 +19642,13 @@ OG.handler.EventHandler.prototype = {
 					// remove custom control
 					if(me._getSelectedElement().length == 1){
 						element.shape.drawCustomControl(me, element);
+						
+						//자동 붙이기...
+						if(isAttatched){
+							$(element).attr("_event_target_",attachTargetId);
+						}else{
+							$(element).attr("_event_target_","");
+						}
 					}
 					
                     //eleArray.push(element);
