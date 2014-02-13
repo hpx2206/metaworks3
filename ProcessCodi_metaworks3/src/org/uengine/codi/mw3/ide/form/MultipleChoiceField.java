@@ -116,7 +116,7 @@ public class MultipleChoiceField extends CommonFormField {
 		
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
-	public Object[] apply() {
+	public Object[] apply() throws Exception{
 		
 		this.setOptionsAndValues(this, this.getMultipleChoiceOptionPanel().choiceOptions);
 		super.apply();

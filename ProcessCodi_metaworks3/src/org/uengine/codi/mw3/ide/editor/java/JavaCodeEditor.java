@@ -90,7 +90,7 @@ public class JavaCodeEditor extends Editor {
 	}
 
 	@Override
-	public Object save() {
+	public Object save() throws Exception {
 		super.save();
 
 		return complie();

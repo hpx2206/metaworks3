@@ -243,7 +243,7 @@ public class MetadataXML implements ContextAware {
 	
 	@Face(displayName="저장")
 	@ServiceMethod(callByContent=true)
-	public Remover saveMetadata(){
+	public Remover saveMetadata() throws Exception{
 		MetadataEditor metadataEditor = new MetadataEditor(this.getMetadataPropertyInfo().getNewMetadataProperty().getResourceNode());
 		
 		String content = this.toXmlXStream();

@@ -232,7 +232,7 @@ public class Editor {
 	}
 	
 	@ServiceMethod(payload={"resourceNode"})
-	public Object save(){
+	public Object save() throws Exception {
 		FileWriter writer = null;
 
 		try {

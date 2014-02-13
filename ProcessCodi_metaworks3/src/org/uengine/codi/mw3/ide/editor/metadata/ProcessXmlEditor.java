@@ -15,7 +15,7 @@ public class ProcessXmlEditor extends Editor{
 		this.setType(TreeNode.TYPE_FILE_PROCESS);
 	}
 	
-	public Object save(){
+	public Object save() throws Exception{
 		return super.save();
 	}
 	
