@@ -207,7 +207,7 @@ dl dt { margin-left:15px; }
 
 img { border: 0; }
 
-.error_div{position:absolute; z-index:999; top:0px; left:0px; width:100%;}
+.error_div{position:absolute; z-index:9999; top:0px; left:0px; width:100%;}
 .alert{margin-bottom:0px !important}
 /*wf*/
 
@@ -780,11 +780,9 @@ position:absolute;
 	padding-right: 15px;
 }
 .mw3_mainMenu {
-	height: 27px;
-	clear: both;
-	position: absolute;
-	left: 50%;
-	margin-left: -227px;
+	height:27px;
+	margin: 0 auto;
+	width: 455px;
 }
 #gnb_wrap {
 	float: center;
