@@ -29,9 +29,23 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	
 	var workItem = mw3.objects[objectId];
 	this.type = workItem.type;
-	var contentLoad = false;	
-	if(workItem.type == 'memo' && workItem.extFile!=null && !workItem.contentLoaded){
+	var contentLoad = false;
+		
+	if(workItem.type == 'process' && !workItem.contentLoaded){
+		if(workItem.tool != 'formApprovalHandler' && (workItem.status == 'NEW' || workItem.status == 'CONFIRMED' || workItem.status == 'DRAFT')){
+			
+			//console.log(workItem.workItemHandler.parameters);		
+	
+			contentLoad = true;
+		}
+		
+		this.objectDiv.find('.wih_title').css('cursor', 'pointer').bind('click', {objectId: this.objectId}, function(event, ui){
+			mw3.call(event.data.objectId, 'detail');
+		});
+		
+	}else if(workItem.type == 'memo' && workItem.extFile!=null && !workItem.contentLoaded){
 		contentLoad = true;
+		
 	}else if(workItem.type == 'email' && !workItem.contentLoaded){
 		contentLoad = true;
 	}else if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){

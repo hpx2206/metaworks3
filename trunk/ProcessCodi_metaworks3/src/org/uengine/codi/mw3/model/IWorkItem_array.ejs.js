@@ -8,8 +8,10 @@ var org_uengine_codi_mw3_model_IWorkItem_array = function(objectId, className){
 	for(var i=0; i<this.object.length; i++){
 		var workItem = this.object[i];
 		
+		/*
 		if(workItem.type == 'process' && workItem.tool != 'formApprovalHandler' && (workItem.status == 'NEW' || workItem.status == 'CONFIRMED' || workItem.status == 'DRAFT'))
 			workItem.detail();
+		*/
 		
 		if(workItem){
 			if(workItem.type == 'ovryCmnt'){
