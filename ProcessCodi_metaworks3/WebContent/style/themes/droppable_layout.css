@@ -183,6 +183,10 @@ dt {
 	padding: 0px;
 }
 
+nbd{border:none !important}
+npd{padding:0px !important}
+nmg{margin:0px !important}
+
 .editor_div ul, .editor_div ol {
 	margin-left:15px;
 }
@@ -3161,7 +3165,7 @@ legend {display:none;}
 .cb_lstcomment li li .cb_comment_area{margin-top:1px}
 
 .formcontexttitle { position:relative; padding:0px;  font-size:13px;  border-bottom:1px dotted #ccc;margin-top:2px; margin-bottom:5px; font-weight:bold;}
-.formcontexttitle span{float:left; vertical-align: middle; line-height:30px; }
+.formcontexttitle span{float:left; vertical-align: middle; line-height:34px; }
 
 .commentTailRight {position:absolute; top:5px; right:0px;}
 .commentTailLeft {position:absolute; top:5px; left:0px;}
@@ -3173,7 +3177,7 @@ legend {display:none;}
 .writerName { font-size:11px; margin-bottom:3px; }
 .writerName span {color:#3B5998;}
 
-.workItemDate{float:right !important; font-size:11px; color:#969696; margin-top:9px; font-weight:normal; line-height:16px !important;}
+.workItemDate{float:right !important; font-size:11px; color:#969696; margin-top:10px; font-weight:normal; line-height:16px !important;}
 .workItemDate div{display:inline-block}
 
 .replydelete {position:absolute; right:3px; top:3px; width:16px; height:16px;}
