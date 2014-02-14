@@ -1,10 +1,10 @@
 package org.uengine.codi.mw3.model;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -13,9 +13,12 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.TransactionListener;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.Role;
@@ -165,6 +168,9 @@ public class Notification extends Database<INotification> implements INotificati
 						
 						String content = "";
 						
+						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd a h:mm");
+						String date = df.format(getInputDate());
+						
 						String path = realPath + "/resources/mail/notiMail.html";
 						FileInputStream is;
 						try {
@@ -182,7 +188,7 @@ public class Notification extends Database<INotification> implements INotificati
 						}
 						
 						content = this.replaceString(content,"user.name", userInfoDB.getEmpName());
-						content = this.replaceString(content, "notimail.date", getInputDate().toString());
+						content = this.replaceString(content, "notimail.date", date);
 						content = this.replaceString(content, "notimail.image", url + "/portrait/" + userInfoDB.getEmpCode() + ".thumnail");
 						
 						content = this.replaceString(content, "notimail.content", getActAbstract());
@@ -319,6 +325,46 @@ public class Notification extends Database<INotification> implements INotificati
 		return new Object[]{instance.detail(), this};
 		
 	}
+	
+	public static void addPushListener(final HashMap<String, String> notiUsers){
+
+		/*
+		 * event 순서 문제 해결
+		 * 
+		 * desc : flushDatabaseMe() 에서 beforeCommit 이벤트를 발생 시켜 create 및 update 를 실행하는데
+		 * push 가 create 및 update 보다 더 빨리 실행 되여 발생하여 afterCommit 시  push 되도록 수정
+		 */
+		TransactionListener flusher = new TransactionListener(){
+			public void beforeCommit(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+			}
+
+			public void beforeRollback(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+			}
+
+			public void afterCommit(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+				Notification.push(notiUsers);
+			}
+
+			public void afterRollback(TransactionContext tx) throws Exception {
+				// TODO Auto-generated method stub
+			}
+		};
+
+		TransactionContext tx = TransactionContext.getThreadLocalInstance();
+		tx.addTransactionListener(flusher);
+	}
+
+	public static void push(HashMap<String, String> notiUsers) throws Exception {
+
+		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+				new Object[]{});
+
+	}
+	
 	
 	@AutowiredFromClient
 	public Session session;
