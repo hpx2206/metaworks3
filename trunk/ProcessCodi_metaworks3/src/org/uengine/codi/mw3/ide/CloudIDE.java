@@ -353,7 +353,7 @@ public class CloudIDE extends Application {
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		modalWindow.setWidth(0);
+		modalWindow.setWidth(800);
 		modalWindow.setHeight(0);
 						
 		modalWindow.setTitle("실행");
