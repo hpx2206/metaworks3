@@ -56,6 +56,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
 	
+	this.divObj.addClass('mw3_resize');
+	
 	var object = mw3.objects[this.objectId];
 	
 	if(object){
@@ -99,7 +101,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 		this.divObj.css('height','100%');
 		this.divObj.parent().css('height','100%');
 		var canvasDivObj = $('#canvas_' + objectId);
-		
 		
 		OG.common.Constants.CANVAS_BACKGROUND = "#fff";
 	    OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
@@ -274,8 +275,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    canvas.onLabelChanged(function (event, shapeElement, afterText, beforeText) {
 	    	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성
 	    });
-	    var canvasWidth = 1024;		// defualt
-	    var canvasHeight = 768;		// defualt
+	    var canvasWidth = document.getElementById('canvas_' + objectId).getBoundingClientRect().width;		// defualt
+	    var canvasHeight = document.getElementById('canvas_' + objectId).getBoundingClientRect().height;		// defualt
 	    
 	    if( object != null ){
 	    	this.tracingTag = object.processDesignerContainer.lastTracingTag;
@@ -620,4 +621,28 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.st
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.endLoading = function(){
 	this.divObj.trigger('endLoading');
+};
+
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.resize = function(){
+
+	var isChange = false;
+	var tempWidth = mw3.canvas.getRootBBox().width;
+	var tempHeight = mw3.canvas.getRootBBox().height;
+	
+	var canvasWidth = document.getElementById('canvas_' + this.objectId).getBoundingClientRect().width;
+    var canvasHeight = document.getElementById('canvas_' + this.objectId).getBoundingClientRect().height;
+    
+    if(tempWidth < canvasWidth){
+    	isChange = true;
+    	tempWidth = canvasWidth;
+	}
+    if(tempHeight < canvasHeight){
+    	isChange = true;
+    	tempHeight = canvasHeight;
+	}
+    			
+    if(isChange){
+		mw3.canvas.setCanvasSize([tempWidth, tempHeight]);
+	}
+ 
 };
