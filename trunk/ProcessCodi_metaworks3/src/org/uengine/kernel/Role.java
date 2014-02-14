@@ -170,6 +170,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private RoleResolutionContext roleResolutionContext = null;
+	@Hidden
 		public RoleResolutionContext getRoleResolutionContext() {
 			if (roleResolutionContext instanceof DirectRoleResolutionContext) {
 				DirectRoleResolutionContext drrc = (DirectRoleResolutionContext) roleResolutionContext;
@@ -189,6 +190,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 	
 	int dispatchingOption = DISPATCHINGOPTION_ALL;
+	@Hidden
 		public int getDispatchingOption() {
 			return dispatchingOption;
 		}
@@ -197,6 +199,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 			dispatchingOption = i;
 		}
 	private ServiceDefinition serviceType;
+	@Hidden
 		public ServiceDefinition getServiceType() {
 			return serviceType;
 		}
@@ -205,6 +208,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 	
 	private boolean isHumanWorker;
+	@Hidden
 		public boolean isHumanWorker() {
 			return isHumanWorker;
 		}	
@@ -213,6 +217,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 		
 	private boolean askWhenInit = true;
+	@Hidden
 		public boolean isAskWhenInit() {
 			return askWhenInit;
 		}
@@ -230,6 +235,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private String defaultEndpoint;
+	@Hidden
 		public String getDefaultEndpoint() {
 			return defaultEndpoint;
 		}
@@ -257,6 +263,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	boolean dontPersistResolutionResult;
+	@Hidden
 		public boolean isDontPersistResolutionResult() {
 			return dontPersistResolutionResult;
 		}
