@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonSavable;
@@ -42,5 +43,10 @@ public interface IRoleMappingDefinition extends IDAO{
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_SELF)
 	public void drop();
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public void removeUser();
 
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF, eventBinding=EventContext.EVENT_CHANGE)
+	public void refresh();
 }
