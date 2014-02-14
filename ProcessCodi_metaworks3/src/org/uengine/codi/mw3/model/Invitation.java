@@ -98,49 +98,121 @@ public class Invitation implements ContextAware{
 	@Face(displayName="$Invite")
 	public Object[] invite() throws Exception{
 		
-		// 1. The invited person is already one of my friends
+		String authKey = UUID.randomUUID().toString();
+		
 		Employee emp = new Employee();
 		emp.setEmail(this.getEmail());
 		IEmployee findEmp = emp.findByEmail();
 		
-		if(findEmp!=null){
+		// 1. 코디 사용자가 아닐때
+		if(findEmp==null){
+			String empName = this.getEmail().substring(0, this.getEmail().indexOf("@"));
+			Employee newUser = new Employee();
+			newUser.setEmail(getEmail());
+			newUser.setEmpName(empName);
+			newUser.setEmpCode(newUser.createNewId());
+			newUser.setAuthKey(authKey);
+			newUser.setIsDeleted("0");
+			newUser.setApproved(false);
+			newUser.setInviteUser(session.getEmployee().getEmpCode());
+			
+			String comAlias = Employee.extractTenantName(this.getEmail());
+			
+			Company company = new Company();
+			company.setAlias(comAlias);
+			
+			ICompany findCompany = company.findByAlias();
+			if(findCompany == null){
+				
+				// not yet sign up tenant
+				try {
+					company.setComCode(company.createNewId());
+					company.setComName(comAlias);
+
+					findCompany = company.createDatabaseMe();
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new MetaworksException(e.getMessage());
+				}
+			}
+
+			String tenantId = findCompany.getComCode();
+			newUser.setGlobalCom(tenantId);
+			
+			try {
+				newUser.createDatabaseMe();
+				newUser.flushDatabaseMe();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new MetaworksException(e.getMessage());
+			}
+			sendMailToNoUser(authKey);
+			addContactEachother();
+			this.setInvitedMessage("친구초대 메일을 보냈습니다.");
+			this.getMetaworksContext().setHow("afterinvite");
+			
+			return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
+		}
+		
+		
+		Contact contact = new Contact();
+		IContact findContact = contact.findContactsWithFriendId(this.session.getUser(), findEmp.getEmpCode());
+		
+		// 2. 코디 사용자 이고, 이미 친구일 때
+		if(findContact != null){
+			// 3. 초대는 받았지만 아직 가입을 하지 않은 유저이고, 친구 일때
 			if(!findEmp.isApproved()){
-				String authKey = UUID.randomUUID().toString();
 				sendMailToNoUser(authKey);
-				findEmp.setAuthKey(authKey);
-				
-				Employee saveEmp = new Employee();
-				saveEmp.copyFrom(findEmp);
-				saveEmp.syncToDatabaseMe();
-				
-				this.setInvitedMessage("이미 친구에 등록된 이메일 입니다.");
+				this.setInvitedMessage("친구초대 메일을 보냈습니다.");
 				this.getMetaworksContext().setHow("afterinvite");
-				//return new Object[]{new Remover(new Popup(), true)};
+				
 				return new Object[]{new Refresh(this)};
 			}
 			
-			// 2. The invited person is not a member of my company.
-			// different company
-			if(!session.getEmployee().getGlobalCom().equals(findEmp.getGlobalCom())){
-				String authKey = UUID.randomUUID().toString();
-				
-				Employee saveEmp = new Employee();
-				saveEmp.copyFrom(findEmp);
-				saveEmp.setInviteUser(session.getEmployee().getEmpCode());
-				saveEmp.setAuthKey(authKey);
-				saveEmp.syncToDatabaseMe();
-				addContactEachother();
-				
-				sendMailToUser(authKey);
-				
-				this.setInvitedMessage("친구가 등록 되었습니다.");
-				this.getMetaworksContext().setHow("afterinvite");
-				return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
-				//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
-			}
+			this.setInvitedMessage("이미 등록된 친구입니다.");
+			this.getMetaworksContext().setHow("afterinvite");
 			
-			// 3. The invited person is already a member of my company.
-			//	      but, he is not my friend. 
+			return new Object[]{new Refresh(this)};
+		}
+	 
+	// 4. 초대는 받았지만 아직 가입을 하지 않은 유저이고, 친구가 아닐때
+		if(!findEmp.isApproved()){
+			
+			sendMailToNoUser(authKey);
+			findEmp.setAuthKey(authKey);
+			
+			Employee saveEmp = new Employee();
+			saveEmp.copyFrom(findEmp);
+			saveEmp.syncToDatabaseMe();
+			
+			sendMailToUser(authKey);
+			
+			this.setInvitedMessage("친구초대 메일을 보냈습니다.");
+			this.getMetaworksContext().setHow("afterinvite");
+			
+			return new Object[]{new Refresh(this)};
+		}
+		
+		// 5. 코디 사용자이고, 친구가 아니고 다른회사 사람일때
+		if(!session.getEmployee().getGlobalCom().equals(findEmp.getGlobalCom())){
+			
+			Employee saveEmp = new Employee();
+			saveEmp.copyFrom(findEmp);
+			saveEmp.setInviteUser(session.getEmployee().getEmpCode());
+			saveEmp.setAuthKey(authKey);
+			saveEmp.syncToDatabaseMe();
+			addContactEachother();
+			
+			sendMailToUser(authKey);
+			
+			this.setInvitedMessage("친구가 등록 되었습니다.");
+			this.getMetaworksContext().setHow("afterinvite");
+			return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
+			
+		
+		}else{
+		
+			//6. 코디 사용자이고, 친구가 아니고 같은회사 사람일때
 			Contact newContact = new Contact();
 			newContact.setUserId(session.getUser().getUserId());
 			
@@ -156,39 +228,7 @@ public class Invitation implements ContextAware{
 			this.setInvitedMessage("친구가 등록 되었습니다.");
 			this.getMetaworksContext().setHow("afterinvite");
 			return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
-			//return new Object[]{new Refresh(cp), new Remover(new Popup(), true)};
 		}
-		
-		// 4. The invited person is not CODI user.
-		String authKey = UUID.randomUUID().toString();
-		String empName = this.getEmail().substring(0, this.getEmail().indexOf("@"));
-		Employee newUser = new Employee();
-		newUser.setEmail(getEmail());
-		newUser.setEmpName(empName);
-		newUser.setEmpCode(newUser.createNewId());
-		newUser.setAuthKey(authKey);
-		newUser.setIsDeleted("0");
-		newUser.setApproved(false);
-		newUser.setInviteUser(session.getEmployee().getEmpCode());
-		
-
-		try {
-			newUser.createDatabaseMe();
-			newUser.flushDatabaseMe();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			
-			throw new MetaworksException(e.getMessage());
-		}
-		sendMailToNoUser(authKey);
-		
-		addContactEachother();
-		this.setInvitedMessage("친구초대 메일을 보냈습니다.");
-		this.getMetaworksContext().setHow("afterinvite");
-		
-		return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
-        //return new Object[]{new Refresh(cp), new Remover(new Popup(),true)};
 	}
 	
 	public void addContactEachother() throws Exception{
