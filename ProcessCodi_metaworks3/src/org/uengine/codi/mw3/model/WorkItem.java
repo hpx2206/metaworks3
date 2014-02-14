@@ -1206,6 +1206,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 		}
 		
+		pushUserMap.putAll(notiUsers);
+		
 		// noti 저장
 		Iterator<String> iterator = notiUsers.keySet().iterator();
 		while(iterator.hasNext()){
