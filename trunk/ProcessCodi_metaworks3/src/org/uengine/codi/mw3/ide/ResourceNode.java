@@ -458,7 +458,7 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 		String className = ResourceNode.makeClassName(id);
 		
 		if(packageName == null)
-			return packageName;
+			return className;
 		else
 			return packageName + "." + className;
 
