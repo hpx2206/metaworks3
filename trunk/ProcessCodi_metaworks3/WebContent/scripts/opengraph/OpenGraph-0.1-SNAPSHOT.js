@@ -10709,14 +10709,17 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 					//, shape, newElement
 					, boundary = element.shape.geom.getBoundary()
 					, bBoxArray = $(handler._RENDERER.getRootElement()).data("bBoxArray")
-					, boundary, clonedElement;
+					, boundary, clonedElement, clonedShape;
 				
 				//FIXME : element _shape_id로 부터 객체를 얻어오도록 하는데 이것을 
 				// 완벽한 객체 교환을 하도록 해야함... 보류 중..
+				clonedShape = element.shape.clone();
+				$(clonedShape).attr('auto_draw','yes');
+				
 				clonedElement = 
 					handler._RENDERER.drawShape(
 						[handler._grid(eventOffset.x), handler._grid(eventOffset.y)]
-						, element.shape.clone()
+						, clonedShape
 						, [boundary.getWidth(), boundary.getHeight()]
 						, element.shapeStyle
 					);
@@ -10752,15 +10755,17 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 				var eventOffset = handler._getOffset(event)
 					//, shape, newElement
 					, boundary = element.shape.geom.getBoundary()
-					, clonedElement;
+					, clonedElement, clonedShape;
 				
 				//FIXME : element _shape_id로 부터 객체를 얻어오도록 하는데 이것을 
 				// 완벽한 객체 교환을 하도록 해야함... 보류 중..
+				clonedShape = element.shape.clone();
+				$(clonedShape).attr('auto_draw','yes');
 				
 				clonedElement = 
 					handler._RENDERER.drawShape(
 						[boundary.getCentroid().x + boundary.getWidth() + 50, boundary.getCentroid().y]
-						, element.shape.clone()
+						, clonedShape
 						, [boundary.getWidth(), boundary.getHeight()]
 						, element.shapeStyle
 					);
@@ -19163,7 +19168,7 @@ OG.handler.EventHandler.prototype = {
 					return;
 				}
 				
-				if(event.fromElement && $(event.fromElement).parents('svg').length < 1){ 
+				if(event.fromElement && $(event.fromElement).parents('svg') < 1){ 
 					return;
 				}
 				
@@ -23450,7 +23455,7 @@ OG.graph.Canvas.prototype = {
 	    this._RENDERER.setCanvas(canvas);
 	 },
 
-	 initConfig: function (config) {
+	initConfig: function (config) {
 		if (config) {
 			this._CONFIG.SELECTABLE = config.selectable === undefined ? this._CONFIG.SELECTABLE : config.selectable;
 			this._CONFIG.DRAG_SELECTABLE = config.dragSelectable === undefined ? this._CONFIG.DRAG_SELECTABLE : config.dragSelectable;
