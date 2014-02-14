@@ -148,9 +148,14 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         				case 'org.uengine.codi.mw3.ide.ResourceNode':
         					switch (clipboardNode.type) {
         					case 'java':
-        						var dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
-								if( dragObjMetadata == null || dragObjMetadata instanceof undefined){
-									var message = 'java 파일이 온전하지 않습니다. ';
+        						var dragObjMetadata = null;
+								try{
+									dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
+								}catch(e){
+									dragObjMetadata = null;
+								}
+								if( dragObjMetadata == null ){
+									var message = '[' + clipboardNode.alias + '.java] 파일이 온전하지 않습니다. ';
 									mw3.alert(message);
 									break;
 								}
