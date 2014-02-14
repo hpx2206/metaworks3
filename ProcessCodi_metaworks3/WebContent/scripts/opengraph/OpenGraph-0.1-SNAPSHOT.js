@@ -19162,7 +19162,11 @@ OG.handler.EventHandler.prototype = {
 				if("element_selected" == $(element).data("status")){
 					return;
 				}
-								
+				
+				if(event.fromElement && $(event.fromElement).parents('svg').length < 1){ 
+					return;
+				}
+				
 				if (element.shape.isCollapsed === false) {
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
@@ -20671,6 +20675,7 @@ OG.handler.EventHandler.prototype = {
 				}
 			});
 			$(rootEle).bind("mouseup", function (event) {
+			
 				if("start" == $(this).data("rubber_band_status")){
 					var first = $(this).data("dragBox_first"),
 						eventOffset, width, height, x, y, envelope, guide, elements = [];
@@ -22027,7 +22032,15 @@ OG.handler.EventHandler.prototype = {
 	selectShapes: function (elementArray) {
 		var me = this, guide, _element;
 		
-		if(!elementArray) return;
+		if(!elementArray) {
+			return;
+		}else{
+			//route selectShape
+			if(elementArray.length == 1){
+				me.selectShape(elementArray[0]);
+				return;
+			}
+		}
 		me.deselectAll();
 		
 		//BugFix : 기존의 가이드를 그대로 유지하면 새로운 가이드를 만들어내지 못한다.
@@ -23437,7 +23450,7 @@ OG.graph.Canvas.prototype = {
 	    this._RENDERER.setCanvas(canvas);
 	 },
 
-	initConfig: function (config) {
+	 initConfig: function (config) {
 		if (config) {
 			this._CONFIG.SELECTABLE = config.selectable === undefined ? this._CONFIG.SELECTABLE : config.selectable;
 			this._CONFIG.DRAG_SELECTABLE = config.dragSelectable === undefined ? this._CONFIG.DRAG_SELECTABLE : config.dragSelectable;
