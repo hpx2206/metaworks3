@@ -140,13 +140,6 @@ public class Notification extends Database<INotification> implements INotificati
 			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
 			*/
 			
-			try{
-		       	
-		       	
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
 			new Thread(){
 
 				@Override
@@ -193,8 +186,9 @@ public class Notification extends Database<INotification> implements INotificati
 						content = this.replaceString(content, "notimail.image", url + "/portrait/" + userInfoDB.getEmpCode() + ".thumnail");
 						
 						content = this.replaceString(content, "notimail.content", getActAbstract());
+						content = this.replaceString(content, "processcodi.url", url);
 						
-						String from = "help@opencloudengine.org";
+						String from = GlobalContext.getPropertyString("codi.mail.noreply", "noreply@processcodi.com");
 						String title = "프로세스 코디의 알림이 도착했습니다.";
 						
 						// TODO 상대방 이메일을 userInfoDB에서 가져오질 못함

@@ -223,7 +223,7 @@ public class Invitation implements ContextAware{
 	
 	public void sendMailToUser(String authKey) throws Exception {
 		
-		String from = "help@opencloudengine.org";
+		String from = GlobalContext.getPropertyString("codi.mail.support", "support@processcodi.com");
 		String beforeName = "user.name";
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
 		String beforeCompany = "user.company";
@@ -281,7 +281,7 @@ public class Invitation implements ContextAware{
 	
 	public void sendMailToNoUser(String authKey) throws Exception {
 		
-		String from = "help@opencloudengine.org";
+		String from = GlobalContext.getPropertyString("codi.mail.support", "support@processcodi.com");
 		String beforeName = "user.name";
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람 이름
 		String beforeCompany = "user.company";

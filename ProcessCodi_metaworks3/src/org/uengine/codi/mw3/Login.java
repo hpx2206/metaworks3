@@ -278,7 +278,7 @@ public class Login implements ContextAware {
 	}
 	
 	public void sendMailForSignUp(String signUpURL) throws Exception {
-		String from = "help@opencloudengine.org";
+		String from = GlobalContext.getPropertyString("codi.mail.support", "support@processcodi.com");
 		String beforeCompany = "company.name";
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String parameterSignUpURL = "signup.url";
@@ -353,7 +353,7 @@ public class Login implements ContextAware {
 	}
 	
 	public void sendMailForForgotPassword(String forgotPasswordURL) throws Exception {
-		String from = "help@opencloudengine.org";
+		String from = GlobalContext.getPropertyString("codi.mail.support", "support@processcodi.com");
 		String beforeCompany = "company.name";
 		String afterCompany = Employee.extractTenantName(this.getEmail());
 		String passwordURL = "password.url";
