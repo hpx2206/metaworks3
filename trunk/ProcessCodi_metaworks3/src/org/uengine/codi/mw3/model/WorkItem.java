@@ -1226,9 +1226,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 		}
 		
-		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
-				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
-				new Object[]{});
+		Notification.addPushListener(notiUsers);
 		
 		/**
 		 *  === instance push 부분 ===
