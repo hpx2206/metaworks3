@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContext;
@@ -272,7 +273,7 @@ public class Login implements ContextAware {
 		this.getMetaworksContext().setHow("login");
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"email"}, target=ServiceMethodContext.TARGET_SELF)
 	public void goSignUp() throws Exception{
 		this.setStatus("signup");
 		this.getMetaworksContext().setHow("signup");
@@ -312,8 +313,9 @@ public class Login implements ContextAware {
 		String content;
 		String tempContent = "";
 		
-		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
-		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"inviteMail.html";
+		String resourcePath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+		String path = resourcePath + GlobalContext.getPropertyString("email.signup", "resources/mail/signupMail.html");
+
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
@@ -367,8 +369,9 @@ public class Login implements ContextAware {
 		String content;
 		String tempContent = "";
 		
-		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
-		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"passwordChangeMail.html";
+		String resourcePath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+		String path = resourcePath + GlobalContext.getPropertyString("email.forgotpassword", "resources/mail/passwordChangeMail.html");
+		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
@@ -832,7 +835,7 @@ public class Login implements ContextAware {
 		return new Object[]{new Refresh(session), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"email"}, target=ServiceMethodContext.TARGET_SELF)
 	public void goForgotPassword(){
 		this.setStatus("forgotpassword");
 		this.getMetaworksContext().setHow("forgotpassword");
