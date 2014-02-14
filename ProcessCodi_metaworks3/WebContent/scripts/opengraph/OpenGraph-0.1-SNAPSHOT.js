@@ -21982,7 +21982,6 @@ OG.handler.EventHandler.prototype = {
 		}
 
 		//if ($(element.parentNode).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP && me._isSelectable(element.shape)) {
-		console.log(me._isSelectable(element.shape));
 		if (me._isSelectable(element.shape)) {
 			//BUG : remove guide를 반드시 해주어야만 새로운 가이드가 null로 나오지 않는다.
 			me._RENDERER.removeGuide(element);
@@ -23371,7 +23370,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 , cursor: "move" },
 			GROUP_SHADOW   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 25, "stroke-opacity": 0, cursor: "pointer"},
-			GUIDE_BBOX    : { stroke: "#00FF00", fill: "white", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
+			GUIDE_BBOX    : { stroke: "#00FF00", fill: "white", "fill-opacity" :0, "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
 			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
 			GUIDE_LL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
