@@ -210,8 +210,6 @@ public class Invitation implements ContextAware{
 			saveEmp.syncToDatabaseMe();
 			addContactEachother();
 			
-			sendMailToUser(authKey);
-			
 			this.setInvitedMessage("친구가 등록 되었습니다.");
 			this.getMetaworksContext().setHow("afterinvite");
 			return new Object[]{new ToEvent(new ContactPerspective(), EventContext.EVENT_CHANGE), new Refresh(this)};
