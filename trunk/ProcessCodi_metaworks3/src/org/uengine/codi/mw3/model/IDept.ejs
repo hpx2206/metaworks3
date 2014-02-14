@@ -9,8 +9,7 @@
 		   <%  if(mw3.how == 'tree'){    %>
 			     <a style="cursor: pointer" onClick="<%=methods.loadDeptList.caller()%>" ><span class="icon-tree"></span><div style="display:inline-block;"><%=fields.partName.here()%></div></a>					
            <%  }else if(mw3.how == 'addFollower'){  %>
-                <a style="cursor: pointer">
-	                <div class="user">		
+	                <div class="user" style="cursor: Default;">		
 						<div class="user_focus" style="background-size:cover;" title="<%=value.partName%>">	
 							<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic">
 						</div>
@@ -26,7 +25,6 @@
 						<div style="clear:both"></div>				
 						<div style="padding:3px 0px; border-bottom:1px solid #e7e7e7;"></div>
 					</div>
-                </a>
 
            <%  }  %>
 <%   

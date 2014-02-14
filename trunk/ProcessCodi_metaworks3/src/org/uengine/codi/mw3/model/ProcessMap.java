@@ -541,11 +541,23 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			HashMap<String, String> notiUsers = this.processNoti(copyOfInstance);
 			notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
 			
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
+			TodoBadge todoBadge = new TodoBadge();
+			todoBadge.loader = true;
+			// 자기자신의 인스턴스를 변경하고, todo count 를 refresh
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new Refresh(todoBadge, true)});
 			
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(notiUsers , session.getUser().getUserId()),
 					new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});	
+			
+			Notification notification = new Notification();
+			notification.session = session;
+			notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+			
+			// follower 될 사용자의 todo count 를 refresh
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(notiUsers , session.getUser().getUserId()),
+					new Object[]{new Refresh(todoBadge, true)});	
 			
 			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new Refresh(instanceView)};
 		}

@@ -96,7 +96,7 @@ public interface IDept extends IDAO {
 	public IDept findRootDeptByGlobalCom(String globalCom) throws Exception;
 
 	@Available(where=IUser.WHERE_ADDFOLLOWER)
-	@ServiceMethod(callByContent=true, target=TARGET_APPEND, eventBinding=EventContext.EVENT_CLICK)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] addFollower() throws Exception;
 	
 	@Available(where=IUser.WHERE_FOLLOWERS)
