@@ -23521,6 +23521,10 @@ OG.graph.Canvas.prototype = {
 	 * @return {Element} Group DOM Element with geometry
 	 */
 	drawShape: function (position, shape, size, style, id, parentId, gridable) {
+	
+		//강제 그리드 보정
+		gridable = true;
+		
 		// MOVE_SNAP_SIZE 적용
 		if (this._CONFIG.DRAG_GRIDABLE && (!OG.Util.isDefined(gridable) || gridable === true)) {
 			if (position) {
