@@ -2,16 +2,41 @@
 	var type = value.type;
 	var icontype = '';
 			
-	if('process' == type)
-		icontype = "briefcase"
-	if('valuechain' == type)
-		icontype = "link"
-	if('java' == type)
+	if('project' == type){
+		icontype = "folder"
+	}else if('folder' == type){
+		icontype = "folder"
+	}else if('html' == type){
 		icontype = "code"
-	if('navigator' == type)
+	}else if('java' == type){
+		icontype = "code"
+	}else if('ejs' == type){
+		icontype = "code"
+	}else if('js' == type){
+		icontype = "code"
+	}else if('form' == type){
+		icontype = "insert-template"
+	}else if('wpd' == type){
+		icontype = "shuffle"
+	}else if('valuechain' == type){
+		icontype = "link"
+	}else if('rule' == type){
+		icontype = "cog2"
+	}else if('css' == type){
+		icontype = "code"
+	}else if('jpeg' == type ||'jpg' == type ||'png' == type ||'gif' == type){
+		icontype = "image2"
+	}else if('metadata' == type){
+		icontype = "cog2"
+	}else if('process' == type){
+		icontype = "shuffle"
+	}else if('navigator' == type){
 		icontype = "menu2"
-	if('page_white_text' == type)
-		icontype = "file"
+	}else if('page_white_text' == type){
+		icontype = "file4"
+	}else{
+		icontype = "file4"
+	}
 
 %>
 
