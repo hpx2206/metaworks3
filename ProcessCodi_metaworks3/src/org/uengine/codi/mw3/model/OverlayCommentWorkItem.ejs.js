@@ -20,7 +20,7 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 					function(){$(this).parent().find('.overlay_comment').css({'z-index':'100','opacity':'0.5'})}
 			);
 		}else{
-			if(div.length){
+			if(div.length && mw3.MESSAGE_LOADING != div.html()){
 				var faceHelper = this;
 				
 				faceHelper.draw();
@@ -58,8 +58,6 @@ org_uengine_codi_mw3_model_OverlayCommentWorkItem.prototype = {
 		var clone = mw3.clone(this.object);
 		clone.metaworksContext.how = 'comment';
 
-		mw3.removeObject(this.objectId);
-		
 		var ovryCmntTarget = {
 	    	__className : 'org.uengine.codi.mw3.model.IWorkItem',
 	    	taskId : this.object.overlayCommentOption.parentTaskId
