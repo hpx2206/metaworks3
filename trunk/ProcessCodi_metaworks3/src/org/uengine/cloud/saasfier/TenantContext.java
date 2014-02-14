@@ -76,7 +76,7 @@ public class TenantContext{
 		if(port.length() > 0)
 			url.append(":" + port);
 		if(contextRoot.length() > 0)
-			url.append("/" + contextRoot);
+			url.append(contextRoot);
 		
 		return url.toString();
 	}
