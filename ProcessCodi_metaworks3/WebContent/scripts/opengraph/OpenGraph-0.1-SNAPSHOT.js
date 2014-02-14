@@ -23688,6 +23688,84 @@ OG.graph.Canvas.prototype = {
 
 		return edge;
 	},
+	
+	/**
+	 * 두개의 터미널 아이디로 부터 얻어진 Shape를 Edge 로 연결한다.
+	 *
+	 * @param {String} fromTerminal from Terminal Id
+	 * @param {String} toTerminal to Terminal Id
+	 * @param {OG.geometry.Style,Object} style 스타일
+	 * @param {String} label Label
+	 * @return {Element} 연결된 Edge 엘리먼트
+	 */
+	connectWithTerminalId: function (fromTerminal_Id, toTerminal_Id, style, label) {
+		
+		var me = this
+			, fromElement , toElement
+			, fromTerminal, toTerminal
+			, terminalGroup, childTerminals, i, edge, guide, _index
+			, getShapeFromTerminal = function (terminal) {
+				var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
+				if (terminalId) {
+					return me.getRenderer().getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.		TERMINAL_SUFFIX.GROUP)));
+				} else {
+					return null;
+				}
+			};
+	
+		// from Shape 연결 터미널 찾기
+		fromElement = getShapeFromTerminal(fromTerminal_Id);
+		terminalGroup = this._RENDERER.drawTerminal(fromElement, OG.Constants.TERMINAL_TYPE.OUT);
+		childTerminals = terminalGroup.terminal.childNodes;
+		
+		try{
+			_index = parseInt(fromTerminal_Id.substr(fromTerminal_Id.lastIndexOf("_")+1,fromTerminal_Id.length));
+			fromTerminal = childTerminals[_index];
+		}catch(e){
+			_index = 0;
+			fromTerminal = childTerminals[_index];
+		}
+		//console.log({"fromTerminal":fromTerminal, "_index":_index});
+		this._RENDERER.removeTerminal(fromElement);
+
+		// to Shape 연결 터미널 찾기
+		toElement = getShapeFromTerminal(toTerminal_Id);
+		terminalGroup = this._RENDERER.drawTerminal(toElement, OG.Constants.TERMINAL_TYPE.OUT);
+		childTerminals = terminalGroup.terminal.childNodes;
+		
+		try{
+			_index = parseInt(toTerminal_Id.substr(toTerminal_Id.lastIndexOf("_")+1,toTerminal_Id.length));
+			toTerminal = childTerminals[_index];
+		}catch(e){
+			_index = 0;
+			toTerminal = childTerminals[_index];
+		}
+		//console.log({"toTerminal":toTerminal, "_index":_index});
+		this._RENDERER.removeTerminal(toElement);
+		
+		// draw edge
+		edge = this._RENDERER.drawShape(null, new OG.EdgeShape(fromTerminal.terminal.position, toTerminal.terminal.position));
+
+		// connect
+		edge = this._RENDERER.connect(fromTerminal, toTerminal, edge, style, label);
+
+		if (edge) {
+			guide = this._RENDERER.drawGuide(edge);
+			if (edge) {
+				// enable event
+				this._HANDLER.setClickSelectable(edge, this._CONFIG.SELECTABLE);
+				//this._HANDLER.setMovable(edge, this._CONFIG.SELECTABLE && edge.shape.MOVABLE);
+				this._HANDLER.setResizable(edge, guide, this._CONFIG.SELECTABLE && edge.shape.RESIZABLE);
+				if (edge.shape.LABEL_EDITABLE) {
+					this._HANDLER.enableEditLabel(edge);
+				}
+				this._RENDERER.toFront(guide.group);
+			}
+			this._RENDERER.removeGuide(edge);
+		}
+
+		return edge;
+	},
 
 	/**
 	 * 연결속성정보를 삭제한다. Edge 인 경우는 라인만 삭제하고, 일반 Shape 인 경우는 연결된 모든 Edge 를 삭제한다.
