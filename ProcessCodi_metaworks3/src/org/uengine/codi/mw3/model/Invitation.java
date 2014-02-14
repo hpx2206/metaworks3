@@ -25,6 +25,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
@@ -286,9 +287,9 @@ public class Invitation implements ContextAware{
 		String afterName = session.getEmployee().getEmpName(); //초대 하는사람 이름
 		String beforeCompany = "user.company";
 		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail()); //초대 하는사람
-		String baseUrl = TenantContext.getURL(Employee.extractTenantName(this.getEmail()));
+		String baseUrl = CodiStringUtil.lastLastFileSeparatorChar(TenantContext.getURL());
 		String url = "";
-		url += baseUrl + "/activate.html?key=" + authKey;
+		url += baseUrl + "activate.html?key=" + authKey;
 		String beforeFaceIcon = "face.icon";
 		String afterFaceIcon = session.getEmployee().getEmpCode();
 		String baseLinkUrl = "base.url";
