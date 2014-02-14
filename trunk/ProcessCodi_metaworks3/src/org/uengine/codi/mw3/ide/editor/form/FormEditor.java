@@ -1,16 +1,10 @@
 package org.uengine.codi.mw3.ide.editor.form;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.WebObjectType;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
-import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.form.Form;
@@ -118,6 +112,8 @@ public class FormEditor extends Editor {
 		Thread.currentThread().setContextClassLoader(cl);
 		
 		Object o = Thread.currentThread().getContextClassLoader().loadClass(form.getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
+		if(o instanceof ITool)
+			((ITool)o).onLoad();
 		
 		Thread.currentThread().setContextClassLoader(prerCl);
 
