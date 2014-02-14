@@ -1881,7 +1881,7 @@ margin-right:15px;
 }
 .fb_box_desc2 {
 	position:absolute;
-	top:-8px;
+	top:-12px;
 	left:20px;
 	background:#f3f7fb;
 	padding:3px;
@@ -1987,10 +1987,11 @@ select.select[class] {
 
 	background:#069;
 }
-.fb_addForm li span { padding:5px; }
+.fb_addForm li span { padding:5px 5px 5px 10px; }
 .fb_addForm .add_f_text {
 	color:#fff;
-	font-weight:bold
+	font-weight:bold;
+	padding-left:2px;
 }
 .hide_west_btn {
 	position:absolute;
