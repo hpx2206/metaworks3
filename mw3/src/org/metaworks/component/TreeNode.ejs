@@ -50,7 +50,7 @@
 				<div class="tree-checkbox" onClick="if(event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;" style="display:none;position:relative;top:2px;left:3px"><input type="checkbox" nodeId="<%=value.id%>" objectId="<%=objectId%>" style="width:15px"></div>
 				
 				<label style="display:inline-block; <% if(value.align == 'right'){ %>float:right<%}%>">
-					<u class="caption"><b class="icon-<%=icontype%> tab_icon" style="color:#0E51A3"></b> <%=value.name%>,<%=value.type%></u>
+					<u class="caption"><b class="icon-<%=icontype%> tab_icon" style="color:#0E51A3"></b> <%=value.name%></u>
 				</label>
 				<% if(value.align == 'right'){ %><div class="clear"></div><%}%>
 			</div>
