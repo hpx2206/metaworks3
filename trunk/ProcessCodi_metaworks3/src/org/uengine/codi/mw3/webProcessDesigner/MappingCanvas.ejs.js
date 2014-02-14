@@ -189,8 +189,8 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					if( object.type != 'folder' && closedParentObject != null && !isAppend){
 						isView = false;
 					}
-					
 					if( isView ){
+						
 						var shapeElement = canvas.drawShape(
 		                    [(isLeft ? 5 : 275), ( $(this).offset().top - $('#'+canvasId).offset().top ) + item.offsetHeight / 2],
 		                    (isLeft ? new OG.From() : new OG.To()),
@@ -198,7 +198,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 		                    {"r":5},
 		                    shapeId
 						);
-
+						
 						edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
 						if (edgeIds) {
 							$.each(edgeIds.split(","), function (indx, edgeId) {
@@ -244,6 +244,13 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					}
 				}
 			});
+			
+			$('#' + treeDivId+' .item-fix:last').each(function(idx, item) {
+				if( ( $(this).offset().top - $('#'+canvasId).offset().top ) > $('#'+canvasId).height()){
+	                canvas.setCanvasSize([$('#'+canvasId).width(), ( $(this).offset().top - $('#'+canvasId).offset().top ) + 30]);   
+	            }
+			});			
+						
 			this.leftTreeLoaded = leftTreeLoding;
 			this.rightTreeLoaded = rightTreeLoding;
 			if(!this.loadDrawed){
