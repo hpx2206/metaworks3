@@ -218,7 +218,9 @@ public class CommonFormField implements ContextAware, Cloneable {
 	public Object copy() {
 		CommonFormField cloneFormField = (CommonFormField)this.clone();
 		cloneFormField.setFieldId(form.makeFormFieldId());
-
+		cloneFormField.setValidation(false);
+		cloneFormField.setId(null);
+		
 		form.formFields.add(cloneFormField);
 
 		return form;
