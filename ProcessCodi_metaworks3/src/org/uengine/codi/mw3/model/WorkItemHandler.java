@@ -423,19 +423,19 @@ public class WorkItemHandler implements ContextAware{
 		ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
 		
 		for(String taskId : executedTaskIds){
-			WorkItem newlyAppendedWorkItem = new WorkItem();
+			ProcessWorkItem newlyAppendedWorkItem = new ProcessWorkItem();
 			newlyAppendedWorkItem.setTaskId(new Long(taskId));
 			newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
 			
 			newlyAddedWorkItems.add(newlyAppendedWorkItem);
 		}
 		
-		// lastCmn 저장
-		IInstance copyOfInstance = saveLastComent(instance);
-		
 		// TODO pushTargetClientObjects 를 하고 나면 copyOfInstance 가 변경이 되는 상황이 발생하여 새로운 객체를 생성하여줌
 		Instance inst = new Instance();
-		inst.copyFrom(copyOfInstance);
+		inst.setInstId(this.getRootInstId());
+		inst.copyFrom(inst.databaseMe());
+		
+		this.saveLastComent(inst);
 		inst.flushDatabaseMe();
 		
 		WorkItem workItemMe = new WorkItem();
@@ -449,7 +449,7 @@ public class WorkItemHandler implements ContextAware{
 		HashMap<String, String> notiUsers = new HashMap<String, String>();
 		Notification notification = new Notification();
 		notification.session = session;
-		notiUsers = notification.findInstanceNotiUser(copyOfInstance.getInstId().toString());
+		notiUsers = notification.findInstanceNotiUser(inst.getInstId().toString());
 		if(inst.getTopicId() != null){
 			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(inst.getTopicId());
 			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
@@ -474,8 +474,8 @@ public class WorkItemHandler implements ContextAware{
 				noti.setInputDate(Calendar.getInstance().getTime());
 				noti.setTaskId(getTaskId());
 				noti.setInstId(new Long(getInstanceId()));					
-				noti.setActAbstract(session.getUser().getName() + " completed workItem : " + copyOfInstance.getName());
-				noti.add(copyOfInstance);
+				noti.setActAbstract(session.getUser().getName() + " completed workItem : " + inst.getName());
+				noti.add(inst);
 			}
 		}
 		
@@ -499,7 +499,7 @@ public class WorkItemHandler implements ContextAware{
 			// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다
 			if( newlyAddedWorkItems.size() > 0 ){
 				for(int j=0; j < newlyAddedWorkItems.size(); j++){
-					WorkItem wt = newlyAddedWorkItems.get(j);
+					ProcessWorkItem wt = (ProcessWorkItem)newlyAddedWorkItems.get(j);
 					wt.setMetaworksContext(new MetaworksContext());
 					MetaworksRemoteService.pushClientObjectsFiltered(
 							new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
@@ -531,43 +531,50 @@ public class WorkItemHandler implements ContextAware{
 			
 			return new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(workItemMe)};
 
-			
-			/*
-			instanceViewContent.session = session;
-			instanceViewContent.load(copyOfInstance);
-			
-			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
-			*/
 		}
 	}
 	
-	private IInstance saveLastComent(ProcessInstance processInstance) throws Exception{
-		String title = humanActivity.getName().getText();
-		Instance instance = new Instance();
-		instance.setInstId(this.getRootInstId());
-		IInstance instanceRef = instance.databaseMe();
+	private IInstance saveLastComent(Instance instanceRef) throws Exception{
+		String title = humanActivity.getDescription() != null ? humanActivity.getDescription().getText() : null;
 		
 		//마지막 워크아이템의 제목을 인스턴스의 적용
-		if(instanceRef.getLastCmnt() == null){
-			instanceRef.setLastCmnt(title);
-			instanceRef.setLastCmntUser(session.getUser());
-			instanceRef.setLastcmntTaskId(this.getTaskId());
-		}else{
-			if(instanceRef.getLastCmnt2() == null){
-				instanceRef.setLastCmnt2(title);
-				instanceRef.setLastCmnt2User(session.getUser());
-				instanceRef.setLastcmnt2TaskId(this.getTaskId());
-			}else {
-				instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
-				instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
-				instanceRef.setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
-				
-				instanceRef.setLastCmnt2(title);
-				instanceRef.setLastCmnt2User(session.getUser());
-				instanceRef.setLastcmnt2TaskId(this.getTaskId());
+		if( title != null && !"".equals(title)){
+			if(instanceRef.getLastCmnt() == null){
+				instanceRef.setLastCmnt(title);
+				instanceRef.setLastCmntUser(session.getUser());
+				instanceRef.setLastcmntTaskId(this.getTaskId());
+				// database update
+				instanceRef.databaseMe().setLastCmnt(title);
+				instanceRef.databaseMe().setLastCmntUser(session.getUser());
+				instanceRef.databaseMe().setLastcmntTaskId(this.getTaskId());
+			}else{
+				if(instanceRef.getLastCmnt2() == null){
+					instanceRef.setLastCmnt2(title);
+					instanceRef.setLastCmnt2User(session.getUser());
+					instanceRef.setLastcmnt2TaskId(this.getTaskId());
+					// database update
+					instanceRef.databaseMe().setLastCmnt2(title);
+					instanceRef.databaseMe().setLastCmnt2User(session.getUser());
+					instanceRef.databaseMe().setLastcmnt2TaskId(this.getTaskId());
+				}else {
+					instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
+					instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+					instanceRef.setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
+					
+					instanceRef.setLastCmnt2(title);
+					instanceRef.setLastCmnt2User(session.getUser());
+					instanceRef.setLastcmnt2TaskId(this.getTaskId());
+					// database update
+					instanceRef.databaseMe().setLastCmnt(instanceRef.getLastCmnt2());
+					instanceRef.databaseMe().setLastCmntUser(instanceRef.getLastCmnt2User());
+					instanceRef.databaseMe().setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
+					
+					instanceRef.databaseMe().setLastCmnt2(title);
+					instanceRef.databaseMe().setLastCmnt2User(session.getUser());
+					instanceRef.databaseMe().setLastcmnt2TaskId(this.getTaskId());
+				}
 			}
 		}
-
 		return instanceRef;
 	}
 	@Autowired
@@ -621,6 +628,7 @@ public class WorkItemHandler implements ContextAware{
 		//refreshes the instanceview so that the next workitem can be show up
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
+		instance.copyFrom(instance.databaseMe());
 		
 		instanceViewContent.load(instance);
 		

@@ -10,7 +10,7 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
    
             var valObject = object.parameters[i].valueObject;
             var metadata = mw3.getMetadata(valObject.__className);
-            if(metadata.fieldDescriptors){
+            if(metadata && metadata.fieldDescriptors){
                 for (var j=0; j<metadata.fieldDescriptors.length; j++){
                     var fd = metadata.fieldDescriptors[j];
                     var fieldName = fd.name;

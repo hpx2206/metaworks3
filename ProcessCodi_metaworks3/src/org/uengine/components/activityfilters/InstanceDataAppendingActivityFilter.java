@@ -82,9 +82,9 @@ public class InstanceDataAppendingActivityFilter implements ActivityFilter, Seri
 					//for root instance replication: 
 					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("currEp", endpoint.toString());
 					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("currRSNM", resourceName.toString());
-					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("lastCmnt", activity.getDescription().getText());
-					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("lastCmntEp", endpoint.toString());
-					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("lastCmntRsnm", resourceName.toString());
+//					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("lastCmnt", activity.getDescription().getText());
+//					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("lastCmntEp", endpoint.toString());
+//					((EJBProcessInstance)instance.getRootProcessInstance()).getProcessInstanceDAO().set("lastCmntRsnm", resourceName.toString());
 					
 					
 					//((EJBProcessInstance)instance).getProcessInstanceDAO().set("currACT", activity.getName().getText());
