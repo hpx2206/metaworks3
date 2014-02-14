@@ -149,7 +149,11 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         					switch (clipboardNode.type) {
         					case 'java':
         						var dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
-								console.log(dragObjMetadata);
+								if( dragObjMetadata == null || dragObjMetadata instanceof undefined){
+									var message = 'java 파일이 온전하지 않습니다. ';
+									mw3.alert(message);
+									break;
+								}
         						canvas.drawLabel(element, dragObjMetadata.displayName);
     	    		    		
     	    		    		var complexType = {
