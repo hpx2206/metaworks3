@@ -6,7 +6,6 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class FormPreview implements ContextAware {
 
 	Object form;
