@@ -476,8 +476,9 @@ body {
 .filemgr-treeFocus .item-fix.selected .item LABEL .caption,
 .filemgr-treeFocus .item-fix.dragAppend .item LABEL .caption,
 .filemgr-tree.openfile .item-fix.selected .item LABEL .caption,
-.filemgr-treeFocus .item-fix.dragAppend .item LABEL .caption {
-    color:white;
+.filemgr-treeFocus .item-fix.dragAppend .item LABEL .caption,
+.filemgr-treeFocus .item-fix.selected .item LABEL .caption b {
+    color:white !important;
 }
 
 .filemgr-treeFocus > .item-fix.selected:first-child,
@@ -594,7 +595,7 @@ body {
     position:relative;
     overflow:hidden;
     height:16px;
-    padding:1px 0 0 23px;
+    padding:1px 0 0 7px;
     text-decoration:none;
     white-space: nowrap;
 }
