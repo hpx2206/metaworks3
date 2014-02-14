@@ -241,7 +241,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    });
 	    
 	    canvas.onDrawShape(function (event, shapeElement) {
-	    	console.log({"onDrawShape":shapeElement});
 	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
 	    	if($(shapeElement).attr('auto_draw') && $(shapeElement).attr('auto_draw') == 'yes'){
 	    		if( shapeElement.shape instanceof OG.shape.bpmn.A_Task ){

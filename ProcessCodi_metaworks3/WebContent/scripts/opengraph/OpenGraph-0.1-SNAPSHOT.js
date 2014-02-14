@@ -4857,7 +4857,7 @@ window.Raphael.svg && function (R) {
 			res.type = "foreignObject";
 			$(el, res.attrs);
 			if (obj) {
-				var div = document.createElement('span');
+				var div = document.createElement('div');
 				div.innerHTML = obj;
 				res.node.appendChild(div);
 			}
@@ -15102,6 +15102,10 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	text_anchor = _style["text-anchor"] || 'middle';
 	//_style["text-anchor"] = 'middle';
 
+	//Text Filter for foreignObject
+	if(text){
+		text = text.replace(/\n/g, '<br />');
+	}
 	
 	// Draw text
 	// 옆으로 회전했을때 문제
@@ -16573,11 +16577,11 @@ OG.renderer.RaphaelRenderer.prototype.drawLabel = function (shapeElement, text, 
 		element.shape.label = text === undefined ? element.shape.label : text;
 
 		if (element.shape.label !== undefined) {
-			if (element.shape instanceof OG.shape.EdgeShape) {
-				centerOfEdge = getCenterOfEdge(element);
-				position = [centerOfEdge.x, centerOfEdge.y];
-				size = [0, 0];
-			} else {
+			// if (element.shape instanceof OG.shape.EdgeShape) {
+				// centerOfEdge = getCenterOfEdge(element);
+				// position = [centerOfEdge.x, centerOfEdge.y];
+				// size = [0, 0];
+			// } else {(
 				// label-position 에 따라 위치 조정
 				switch (element.shape.geom.style.get("label-position")) {
 				case "left":
@@ -16597,7 +16601,7 @@ OG.renderer.RaphaelRenderer.prototype.drawLabel = function (shapeElement, text, 
 					break;
 				}
 				size = [envelope.getWidth(), envelope.getHeight()];
-			}
+			// }
 
 			labelElement = this._drawLabel(
 				position,
