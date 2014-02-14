@@ -212,7 +212,7 @@ public class Contact extends Database<IContact> implements IContact{
 		countQuery.append("    where topicid=?topicId and t.userid=c.friendId ");
 		countQuery.append("   ) as cnt ");
 		
-		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append("select contact.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		
 		sb.append(Contact.createContactSql(countQuery.toString()));
 		
@@ -221,7 +221,7 @@ public class Contact extends Database<IContact> implements IContact{
 
 		sb.append(" order by friendName desc ");
 		
-		sb.append("  ) d ");
+		sb.append("  ) contact ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
@@ -241,7 +241,7 @@ public class Contact extends Database<IContact> implements IContact{
 		
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append("select contact.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		
 		StringBuffer countQuery = new StringBuffer();
 		countQuery.append(" , (select count('x') from bpm_rolemapping rm   ");
@@ -256,7 +256,7 @@ public class Contact extends Database<IContact> implements IContact{
 
 		sb.append(" order by empname ");
 		
-		sb.append("  ) d ");
+		sb.append("  ) contact ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
@@ -281,7 +281,7 @@ public class Contact extends Database<IContact> implements IContact{
 		countQuery.append("   and empcode = c.friendid");
 		countQuery.append("   ) as cnt ");
 		
-		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append("select contact.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		sb.append(Contact.createContactSql(countQuery.toString()));
 //		sb.append("   and e.partcode != ?partcode");
 		
@@ -289,7 +289,7 @@ public class Contact extends Database<IContact> implements IContact{
 			sb.append("   AND friendname LIKE ?friendname");
 
 		sb.append(" order by empname ");
-		sb.append("  ) d ");
+		sb.append("  ) contact ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
@@ -313,7 +313,7 @@ public class Contact extends Database<IContact> implements IContact{
 		countQuery.append("    where roleCode=?roleCode and rst.empcode=c.friendId ");
 		countQuery.append("   ) as cnt ");
 		
-		sb.append("select d.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
+		sb.append("select contact.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		
 		sb.append(Contact.createContactSql(countQuery.toString()));
 		
@@ -322,7 +322,7 @@ public class Contact extends Database<IContact> implements IContact{
 
 		sb.append(" order by empname ");
 		
-		sb.append("  ) d ");
+		sb.append("  ) contact ");
 		
  		IContact dao = (IContact)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),
  													   			 sb.toString(), 
