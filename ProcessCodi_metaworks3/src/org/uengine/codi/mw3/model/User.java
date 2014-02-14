@@ -172,8 +172,13 @@ public class User extends Database<IUser> implements IUser {
 				isFriend = true;
 		}
 		
-		if(!emp.getGlobalCom().equals(session.getEmployee().getGlobalCom()))
-			isAnotherTenant = true;
+		if(emp.getGlobalCom() == null){
+			if(!Employee.extractTenantName(this.getEmail()).equals(Employee.extractTenantName(session.getEmployee().getEmail())))
+				isAnotherTenant = true;
+		}else{				
+			if(!emp.getGlobalCom().equals(session.getEmployee().getGlobalCom()))
+				isAnotherTenant = true;
+		}
 		
 		this.setFriend(isFriend);
 		this.setAdmin(session.getEmployee().getIsAdmin());
