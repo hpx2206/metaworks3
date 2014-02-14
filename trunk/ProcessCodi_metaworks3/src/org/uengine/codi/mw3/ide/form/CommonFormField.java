@@ -422,13 +422,28 @@ public class CommonFormField implements ContextAware, Cloneable {
 		String type = this.getFieldType().substring(this.getFieldType().lastIndexOf(".")+1);
 
 		propertyBuffer
-		.append("		public ").append(type).append(" get").append(fieldIdFirstCharUpper).append("(){ return ").append(this.getId()).append("; }\n")
-		.append("		public void set").append(fieldIdFirstCharUpper).append("(").append(type).append(" ").append(this.getId()).append("){ this.").append(this.getId()).append(" = ").append(this.getId()).append("; }\n\n")
-		;		
+		.append("		public ").append(type).append(" get").append(fieldIdFirstCharUpper).append("(){\n")
+		.append("			return ").append(this.getId()).append(";\n")
+		.append("		}\n")
+		.append("		public void set").append(fieldIdFirstCharUpper).append("(").append(type).append(" ").append(this.getId()).append("){\n")
+		.append("			this.").append(this.getId()).append(" = ").append(this.getId()).append(";\n")
+		.append("		}\n\n");		
 
 		return propertyBuffer.toString();		
 	}
 
+	public String generateBeforeComplete() {
+		return "";
+	}
+	
+	public String setter(){
+		return "this.set" + UEngineUtil.toOnlyFirstCharacterUpper(this.getId());
+	}
+	
+	public String getter(){
+		return "this.get" + UEngineUtil.toOnlyFirstCharacterUpper(this.getId());
+	}
+	
 	public boolean equalsType(WebFieldDescriptor fd){
 
 		boolean equals = false;
