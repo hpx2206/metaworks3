@@ -133,7 +133,9 @@ public class Notification extends Database<INotification> implements INotificati
 			final Employee userInfoDB = new Employee();
 			userInfoDB.copyFrom(userInfoTemp);
 			
-			final String realPath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+			String realPath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+			final String path = realPath + GlobalContext.getPropertyString("email.noti", "resources/mail/notiMail.html");
+			
 			final String url = TenantContext.getURL();
 			
 			/*
@@ -165,13 +167,11 @@ public class Notification extends Database<INotification> implements INotificati
 							}
 						}
 						*/
-						
 						String content = "";
 						
 						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd a h:mm");
 						String date = df.format(getInputDate());
 						
-						String path = realPath + "/resources/mail/notiMail.html";
 						FileInputStream is;
 						try {
 							is = new FileInputStream(path);

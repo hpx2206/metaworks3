@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.validation.constraints.Pattern;
 
 import org.metaworks.ContextAware;
@@ -22,6 +23,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
@@ -192,7 +194,7 @@ public class Invitation implements ContextAware{
 			saveEmp.copyFrom(findEmp);
 			saveEmp.syncToDatabaseMe();
 			
-			sendMailToUser(authKey);
+			sendMailToNoUser(authKey);
 			
 			this.setInvitedMessage("친구초대 메일을 보냈습니다.");
 			this.getMetaworksContext().setHow("afterinvite");
@@ -267,63 +269,7 @@ public class Invitation implements ContextAware{
 
 	}
 	
-	public void sendMailToUser(String authKey) throws Exception {
-		
-		String from = GlobalContext.getPropertyString("codi.mail.support", "support@processcodi.com");
-		String beforeName = "user.name";
-		String afterName = session.getEmployee().getEmpName(); //초대 하는사람
-		String beforeCompany = "user.company";
-		String baseLinkUrl = "base.url";
-		String afterCompany =  Employee.extractTenantName(session.getEmployee().getEmail());
-		
-		String baseUrl = TenantContext.getURL(Employee.extractTenantName(this.getEmail()));
-		String url = "";
-		url += baseUrl + "/invite.html?key=" + authKey;
-		
-		String signUpURL = "signup.url";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String beforeFaceIcon = "face.icon";
-		String afterFaceIcon = session.getEmployee().getEmpCode();
-		
-		String content;
-		String tempContent = "";
-		
-		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
-		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		FileInputStream is;
-		try {
-			is = new FileInputStream(path);
-			InputStreamReader isr = new InputStreamReader(is,"UTF-8");
-			BufferedReader br = new BufferedReader(isr);
-			
-			int data;
-			while((data = br.read()) != -1){
-				tempContent += (char)data;
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		String title = afterCompany+" 의 "+ afterName + " 님이  당신을  코디에 초대 하였습니다";
-		
-		Login login = new Login();
-		content = login.replaceString(tempContent,beforeName,afterName);
-		content = login.replaceString(content, beforeCompany, afterCompany);
-		content = login.replaceString(content, baseLinkUrl, baseUrl);
-		content = login.replaceString(content, signUpURL, url);
-		content = login.replaceString(content, beforeFaceIcon, afterFaceIcon);
-		System.out.println(content);
-		
-		try{
-			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
-		}catch(Exception e){
-			throw new Exception("$FailedToSendInvitationMail");
-		}
-		
-	}
+
 	
 	public void sendMailToNoUser(String authKey) throws Exception {
 		
@@ -343,8 +289,9 @@ public class Invitation implements ContextAware{
 		String content;
 		String tempContent = "";
 		
-		String resourcePath = GlobalContext.getPropertyString("resource.path", "resource");
-		String path = resourcePath + File.separatorChar+"mail"+File.separatorChar+"invitationMail.html";
+		String resourcePath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+		String path = resourcePath + GlobalContext.getPropertyString("email.invite", "resources/mail/invitationMail.html");
+
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 		try {
