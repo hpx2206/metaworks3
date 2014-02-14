@@ -71,16 +71,16 @@ public class RoleMappingPanel implements ContextAware{
 	
 	public void save() throws Exception{
 		for(IRoleMappingDefinition roleMappingDefinition: roleMappingDefinitions){
+			RoleMappingDefinition saveRoleMappingDef = null;
+			
+			if(roleMappingDefinition instanceof RoleMappingDefinition){
+				saveRoleMappingDef = (RoleMappingDefinition)roleMappingDefinition;
+			}else{
+				saveRoleMappingDef = new RoleMappingDefinition();
+				saveRoleMappingDef.copyFrom(roleMappingDefinition);
+			}
+			
 			if(roleMappingDefinition.getMappedUser()!=null && roleMappingDefinition.getMappedUser().getUserId()!=null){
-				RoleMappingDefinition saveRoleMappingDef = null;
-				
-				if(roleMappingDefinition instanceof RoleMappingDefinition){
-					saveRoleMappingDef = (RoleMappingDefinition)roleMappingDefinition;
-				}else{
-					saveRoleMappingDef = new RoleMappingDefinition();
-					saveRoleMappingDef.copyFrom(roleMappingDefinition);
-				}
-				
 				if(roleMappingDefinition.getRoleDefId() == null){
 					saveRoleMappingDef.setRoleDefId(saveRoleMappingDef.getComCode() + "." + saveRoleMappingDef.getDefId() + "." + saveRoleMappingDef.getRoleName());
 					saveRoleMappingDef.createDatabaseMe();
@@ -103,6 +103,9 @@ public class RoleMappingPanel implements ContextAware{
 				}
 				*/
 				
+			}else{
+				if(roleMappingDefinition.getRoleDefId() != null)
+					saveRoleMappingDef.syncToDatabaseMe();
 			}
 		}
 		
