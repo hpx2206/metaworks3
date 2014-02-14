@@ -91,6 +91,14 @@ public class RoleMappingDefinition extends Database<IRoleMappingDefinition> impl
 	
 	}
 	
+	public void removeUser(){
+		setMappedUser(new User());
+	}
+	
+	public void refresh() {
+		System.out.println("refresh");
+	}
+	
 	public RoleMappingDefinition findRoleMappingDefinition() throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT rd.*, emp.empname mappedUserName");
