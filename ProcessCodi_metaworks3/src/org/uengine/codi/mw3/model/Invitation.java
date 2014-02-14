@@ -162,10 +162,17 @@ public class Invitation implements ContextAware{
 		if(findContact != null){
 			// 3. 초대는 받았지만 아직 가입을 하지 않은 유저이고, 친구 일때
 			if(!findEmp.isApproved()){
+								
+				Employee saveEmp = new Employee();
+				saveEmp.copyFrom(findEmp);
+				saveEmp.setInviteUser(session.getEmployee().getEmpCode());
+				saveEmp.setAuthKey(authKey);
+				saveEmp.syncToDatabaseMe();
+				
 				sendMailToNoUser(authKey);
 				this.setInvitedMessage("친구초대 메일을 보냈습니다.");
 				this.getMetaworksContext().setHow("afterinvite");
-				
+
 				return new Object[]{new Refresh(this)};
 			}
 			
