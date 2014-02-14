@@ -8,4 +8,16 @@ public class UserField extends CommonFormField {
 		this.setDefine(true);
 	}
 
+	@Override
+	public String generateConstructorCode() {
+		StringBuffer beforeCompelete = new StringBuffer();
+	
+		beforeCompelete
+		.append(super.generateConstructorCode())
+		.append("		" + this.getter())
+		.append("().modePicker();\n");
+		
+		return beforeCompelete.toString();
+	}
+	
 }
