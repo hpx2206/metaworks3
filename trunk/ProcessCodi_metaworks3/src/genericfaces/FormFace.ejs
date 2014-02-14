@@ -3,7 +3,8 @@
 		var title = objectMetadata.displayName;
 	
 		var methodVAlign = objectMetadata.getOptionValue('methodVAlign', 'bottom');
-		var showViewBox =  false; 
+		var showTitleBar = (objectMetadata.faceOptions && objectMetadata.faceOptions['showTitleBar']) ? objectMetadata.faceOptions['showTitleBar'] : false;
+		var showViewBox =  ( mw3.when == 'view' ) ? true : false ; 
 
 		var methodOrderValue = objectMetadata.getOptionValue('methodOrder', '');
 		var methodOrder = [];
@@ -107,7 +108,7 @@
 
 	<div <%=showViewBox?'class=\"form_table2\"':'class=\"form_table\"'%>> 
 <%
-		if(title){
+		if(title && showTitleBar){
 %>
 	<div>
 			<%=mw3.localize(title)%>

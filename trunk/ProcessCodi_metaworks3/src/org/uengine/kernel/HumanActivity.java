@@ -672,8 +672,11 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			 * role mapping 이 되어있지 않은 경우에 경합모드로 변경
 			 */
 			//kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+getRole().getDispatchingOption());
-			//roleMapping = new RoleMapping();
-			//roleMapping.setEndpoint(GlobalContext.getPropertyString("codi.user.id"));
+			roleMapping = new RoleMapping();
+			roleMapping.setEndpoint(GlobalContext.getPropertyString("codi.user.id"));
+			roleMapping.setResourceName(GlobalContext.getPropertyString("codi.user.name"));
+			
+			kpv.put("resourceName", roleMapping.getResourceName());
 			kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+Role.DISPATCHINGOPTION_RACING);
 		}
 		
