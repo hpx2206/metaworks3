@@ -320,6 +320,13 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 		return path;
 	}
 	
+	public boolean ableUpload(){
+		if(this.getFileTransfer() != null && this.getFileTransfer().getFilename() != null)
+			return true;
+		
+		return false;
+	}
+	
 	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream) throws Exception{
 		
 		try{
