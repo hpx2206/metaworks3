@@ -617,7 +617,9 @@ public class User extends Database<IUser> implements IUser {
 		return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE), new Refresh(session.logout())};		
 	}
 
-	
+	public void modePicker(){
+		this.getMetaworksContext().setHow(HOW_PICKER);
+	}
 }
 
 
