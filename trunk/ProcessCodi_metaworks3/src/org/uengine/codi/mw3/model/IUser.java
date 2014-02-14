@@ -124,6 +124,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] delUser() throws Exception;
 	
+	@Hidden(when=WHEN_VIEW)
 	@Available(how=HOW_PICKER)
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public Popup popupPicker() throws Exception;
