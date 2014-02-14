@@ -85,5 +85,11 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
         			object.gateCondition();
         		}
         	});
+			
+			// jms 조회 화면
+            if( object != null && object.viewType != null && "definitionView" == object.viewType ){
+                $(element).unbind('dblclick').bind('dblclick' , function(event){
+                });
+            }
 		}
 };
