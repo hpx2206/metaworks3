@@ -9,11 +9,11 @@ public class UserField extends CommonFormField {
 	}
 
 	@Override
-	public String generateConstructorCode() {
+	public String generateOnLoadBuffer() {
 		StringBuffer beforeCompelete = new StringBuffer();
 	
 		beforeCompelete
-		.append(super.generateConstructorCode())
+		.append(super.generateOnLoadBuffer())
 		.append("		" + this.getter())
 		.append("().modePicker();\n");
 		
