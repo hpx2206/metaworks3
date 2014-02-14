@@ -10,6 +10,9 @@
 			if(value.userId)
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}		
+		
+		if(portrait.length == 0)
+			portrait = 'images/portrait/deleted_user.gif';
 %>
 			<div class="user" <%if(mw3.where == 'addfollower'){%>style="float:left; width:auto !important;cursor: Default;"<%}%>>		
 				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
