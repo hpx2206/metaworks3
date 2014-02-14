@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.StartCodi;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 
 
@@ -78,7 +79,7 @@ public class TenantContext{
 		if(contextRoot.length() > 0)
 			url.append(contextRoot);
 		
-		return url.toString();
+		return CodiStringUtil.lastLastFileSeparatorChar(url.toString());
 	}
 	
 	public static TenantContext getThreadLocalInstance(){

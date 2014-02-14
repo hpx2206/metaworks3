@@ -57,6 +57,7 @@ import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
@@ -285,8 +286,7 @@ public class Login implements ContextAware {
 		String signUpBaseUrl = "signup.baseurl";
 		
 		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
+		String baseUrl = CodiStringUtil.lastLastFileSeparatorChar(TenantContext.getURL(null));
 		
 		url += baseUrl + signUpURL;
 		
@@ -360,12 +360,9 @@ public class Login implements ContextAware {
 		String signUpBaseUrl = "signup.baseurl";
 		
 		String url = "";
-		String tenantId = Employee.extractTenantName(this.getEmail());
-		String baseUrl = TenantContext.getURL(tenantId);
+		String baseUrl = CodiStringUtil.lastLastFileSeparatorChar(TenantContext.getURL(null));
 		
 		url += baseUrl + forgotPasswordURL;
-		
-	
 		
 		String content;
 		String tempContent = "";
@@ -394,7 +391,6 @@ public class Login implements ContextAware {
 		content = this.replaceString(tempContent,beforeCompany,afterCompany);
 		content = this.replaceString(content, passwordURL, url);
 		content = this.replaceString(content, signUpBaseUrl, baseUrl);
-		System.out.println(content);
 		
 		try{
 			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
