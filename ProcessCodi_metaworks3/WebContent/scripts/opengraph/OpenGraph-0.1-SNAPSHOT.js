@@ -15099,7 +15099,12 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 
 	
 	// Draw text
-	element = this._PAPER.foreignObject(text, position[0], position[1], size[0], size[1]);
+	// 옆으로 회전했을때 문제
+	if(_style["label-direction"] === 'vertical'){
+		element = this._PAPER.foreignObject(text, position[0], position[1], height, size[1]);
+	}else{
+		element = this._PAPER.foreignObject(text, position[0], position[1], size[0], size[1]);
+	}
 	
 	// real size
 	bBox = element.getBBox();
@@ -15133,7 +15138,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 		// Text Vertical Align
 		switch (_style["vertical-align"]) {
 		case "top":
-			x = OG.Util.round(geom.getBoundary().getLeftCenter().x - bBox.width / 2) + 10;
+			x = OG.Util.round(geom.getBoundary().getLeftCenter().x - bBox.width / 2)+5;
 			break;
 		case "bottom":
 			x = geom.getBoundary().getRightCenter().x - bBox.width;
@@ -15193,6 +15198,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	
 	$(element.node).css({
 		"text-align" : "center"
+		,"cursor"	 : "move"
 	});
 
 	// angle 적용
@@ -15202,6 +15208,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 		}
 		element.rotate(angle);
 	}
+	console.log({"angle":angle});
 
 	// text-anchor 적용
 	element.attr({
