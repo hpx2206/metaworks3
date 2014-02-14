@@ -32,7 +32,10 @@ public class MappingActivityView extends ActivityView {
 			
 		}
 		activity.setActivityView(this);
+		activityWindow.setId(this.getId());	// 꼭 필요함
 		activityWindow.getActivityPanel().setActivity(activity);
+		
+		popup.setId(this.getId());				// 꼭 필요함
 		popup.setTitle(activity.getDescription() != null ? activity.getDescription().getText() : activity.getName().getText() + "[" + activity.getTracingTag() + "]");
 		popup.setPanel(activityWindow);
 		popup.setWidth(1000);

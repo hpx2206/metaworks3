@@ -123,8 +123,6 @@ public class ProcessDesignerContainer {
 		rolePanel.setEditorId(editorId);
 		processVariablePanel.setEditorId(editorId);
 		
-		int maxX = 0;
-		int maxY = 0;
 		int tagCnt = 0;
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
 			Activity activity = (Activity)def.getChildActivities().get(l);
