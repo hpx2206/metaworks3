@@ -1,5 +1,6 @@
 package org.uengine.cloud.saasfier;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -64,8 +65,16 @@ public class TenantContext{
 		
 		String ip = GlobalContext.getPropertyString("web.server.ip", "uenginecloud.com");
 		String port = GlobalContext.getPropertyString("web.server.port", "7070");
-		String contextRoot = GlobalContext.getPropertyString("web.context.root", "");
+		String contextRoot = GlobalContext.getPropertyString("web.context.root", CodiStringUtil.URL_SEPARATOR);
 
+		if(!contextRoot.startsWith(CodiStringUtil.URL_SEPARATOR)){
+			contextRoot = CodiStringUtil.URL_SEPARATOR + contextRoot;
+		}
+		
+		if(contextRoot.charAt(0) == '/'){
+			
+		}
+		
 		StringBuffer url = new StringBuffer();
 		url.append("http://");
 
