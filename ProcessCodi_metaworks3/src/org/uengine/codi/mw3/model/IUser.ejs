@@ -20,7 +20,7 @@
 			if(mw3.where == 'addcontact' || mw3.where == 'addfollower' || mw3.where == 'pickerlist' || mw3.where == 'removefollower')
 				isOverlayName = false;
 			
-			if(isOverlayName && mw3.where != 'self' && mw3.where != 'instancelist' ){
+			if(isOverlayName && mw3.where != 'self' && mw3.where != 'instancelist' && value.name){
 %>
 					<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
 <%
