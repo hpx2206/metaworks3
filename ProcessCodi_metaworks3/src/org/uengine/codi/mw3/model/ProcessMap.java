@@ -401,7 +401,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
 				
 				for(String taskId : executedTaskIds){
-					WorkItem newlyAppendedWorkItem = new WorkItem();
+					ProcessWorkItem newlyAppendedWorkItem = new ProcessWorkItem();
 					newlyAppendedWorkItem.setTaskId(new Long(taskId));
 					newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
 					newlyAppendedWorkItem.setMetaworksContext(new MetaworksContext());
