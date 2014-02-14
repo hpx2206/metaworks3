@@ -271,6 +271,7 @@ public class WorkItemHandler implements ContextAware{
 		cancelledHistory.setTitle(humanActivity.getName().getText() + " task has been cancelled by me.");
 		cancelledHistory.setWriter(session.getUser());
 		cancelledHistory.add();
+		
 		Instance instance = new Instance();
 		instance.setInstId(this.getRootInstId());
 		instance.copyFrom(instance.databaseMe());
@@ -425,7 +426,7 @@ public class WorkItemHandler implements ContextAware{
 		
 		releaseMapForITool();
 		
-		ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
+		ArrayList<ProcessWorkItem> newlyAddedWorkItems = new ArrayList<ProcessWorkItem>();
 		
 		for(String taskId : executedTaskIds){
 			ProcessWorkItem newlyAppendedWorkItem = new ProcessWorkItem();
@@ -443,7 +444,7 @@ public class WorkItemHandler implements ContextAware{
 		this.saveLastComent(inst);
 		inst.flushDatabaseMe();
 		
-		WorkItem workItemMe = new WorkItem();
+		ProcessWorkItem workItemMe = new ProcessWorkItem();
 		workItemMe.setTaskId(this.getTaskId());
 		workItemMe.copyFrom(workItemMe.databaseMe());
 		workItemMe.setMetaworksContext(new MetaworksContext());
@@ -477,7 +478,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 	}
 	
-	public void sendPush(Instance inst, ArrayList<WorkItem> newlyAddedWorkItems, WorkItem workItemMe) throws Exception{
+	public void sendPush(Instance inst, ArrayList<ProcessWorkItem> newlyAddedWorkItems, IWorkItem workItemMe) throws Exception{
 		/**
 		 *  === noti push 부분 ===
 		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
@@ -656,7 +657,7 @@ public class WorkItemHandler implements ContextAware{
 		processManager.applyChanges();
 		
 		// 변경된 액티비티 들만 찾기
-		ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
+		ArrayList<ProcessWorkItem> newlyAddedWorkItems = new ArrayList<ProcessWorkItem>();
 		
 		for(String taskId : executedTaskIds){
 			ProcessWorkItem newlyAppendedWorkItem = new ProcessWorkItem();
@@ -667,7 +668,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		
-		WorkItem workItemMe = new WorkItem();
+		ProcessWorkItem workItemMe = new ProcessWorkItem();
 		workItemMe.setTaskId(this.getTaskId());
 		workItemMe.copyFrom(workItemMe.databaseMe());
 		workItemMe.setMetaworksContext(new MetaworksContext());
