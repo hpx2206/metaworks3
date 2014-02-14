@@ -436,6 +436,10 @@ public class CommonFormField implements ContextAware, Cloneable {
 		return "";
 	}
 	
+	public String generateOnLoadBuffer(){
+		return "";
+	}
+	
 	public String setter(){
 		return "this.set" + UEngineUtil.toOnlyFirstCharacterUpper(this.getId());
 	}

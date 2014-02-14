@@ -236,6 +236,7 @@ public class Form implements ContextAware {
 			methodBuffer.append(field.generateAnnotationCode());
 			methodBuffer.append(field.generatePropertyCode());
 			
+			onLoadBuffer.append(field.generateOnLoadBuffer());
 			beforeCompleteBuffer.append(field.generateBeforeComplete());
 		}
 		
