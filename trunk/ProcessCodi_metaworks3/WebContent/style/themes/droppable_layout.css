@@ -3226,7 +3226,7 @@ legend {display:none;}
 
 
 /* UI Object */
-.form_table2{padding:0;font-size:12px;width:100%;}
+.form_table2{padding:0 0 10px 0;font-size:12px;width:100%;}
 .form_table2 input,
 .form_table2 textarea,
 .form_table2 select,
