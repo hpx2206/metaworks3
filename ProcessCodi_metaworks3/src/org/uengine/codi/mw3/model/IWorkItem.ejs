@@ -26,9 +26,12 @@
 			if('file' == type)
 				desc = value.majorVer + '.' + value.minorVer;
 			else if('process' == type){
-				title = mw3.localize('$MyTask') + ': ' + title;
+				//title = mw3.localize('$MyTask') + ': ' + title;
 				
-				desc = value.status
+				desc = mw3.localize('$workitem.status.' + value.status.toLowerCase());
+				
+				if(!value.workItemHandler || !value.workItemHandler.taskId)
+					collapse = true;
 			}
 											
 			if('file' == type || 'process' == type)
@@ -95,6 +98,14 @@
 %>	
 									
 									<span class="workItemDate" style="margin-right:15px;">
+<%
+			if('process' == type) {
+%>
+											<div><%=mw3.localize(collapse?'$closed':'$opened')%></div>
+											<div> ·</div>																				
+<%
+			}
+%>
 											<div><%=desc%></div>
 											<div><%=desc?' ·':''%></div>
 											<%=fields.startDate.here({when: 'timeago'})%>
