@@ -509,7 +509,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			//FIXME: may occur a decrease of performance 
 			ActivityReference actRef = getProcessDefinition().getInitiatorHumanActivityReference(instance.getProcessTransactionContext());
 			boolean thisIsInitiationActivity = (actRef.getActivity() == this);
-			if( actRef.getActivity() instanceof StartEventActivity ){
+			if( actRef.getActivity() instanceof StartEventActivity || actRef.getActivity() instanceof StartActivity){
 				thisIsInitiationActivity = true;
 			}
 			//if the activity is initiator, put the role mapping with the login user.

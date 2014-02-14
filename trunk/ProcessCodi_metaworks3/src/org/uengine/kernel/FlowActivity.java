@@ -152,7 +152,7 @@ public class FlowActivity extends ComplexActivity {
 		}else if(command.equals(CHILD_STOPPED)){
 			System.out.println(command);
 		}else{
-			onEvent(command, instance, payload);
+//			onEvent(command, instance, payload);
 		}
 	}
 		

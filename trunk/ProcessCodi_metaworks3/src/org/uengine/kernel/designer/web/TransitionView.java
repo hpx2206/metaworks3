@@ -11,7 +11,6 @@ import org.uengine.codi.mw3.webProcessDesigner.ConditionInput;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionNode;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionTreeNode;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
 import org.uengine.codi.mw3.webProcessDesigner.RolePanel;
 import org.uengine.contexts.TextContext;
