@@ -10759,7 +10759,7 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 				
 				clonedElement = 
 					handler._RENDERER.drawShape(
-						[handler._grid(boundary.getCentroid().x + 100), handler._grid(boundary.getCentroid().y)]
+						[boundary.getCentroid().x + boundary.getWidth() + 50, boundary.getCentroid().y]
 						, element.shape.clone()
 						, [boundary.getWidth(), boundary.getHeight()]
 						, element.shapeStyle
@@ -15208,7 +15208,6 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 		}
 		element.rotate(angle);
 	}
-	console.log({"angle":angle});
 
 	// text-anchor 적용
 	element.attr({
