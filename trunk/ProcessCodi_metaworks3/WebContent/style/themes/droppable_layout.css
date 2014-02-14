@@ -3667,6 +3667,7 @@ legend {display:none;}
 
 .moreFollowerBtn{width: 40px;height: 8px;bottom:1px;left:50%; margin-left:-20px;background: #C9E2FC;position: relative;z-index: 9999999; display:none; text-align:center; font-size:6px;  line-height:7px; box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
 .closeFollowerBtn{width: 40px;height: 8px;bottom:-8px;left:50%; margin-left:-20px;background: #C9E2FC;position: absolute;z-index: 9999999;display:none; text-align:center; font-size:6px; line-height:7px; box-shadow:1px 4px 4px rgba(0, 0, 0, 0.1);border: 1px solid #9EBFC4; border-top:none; cursor:pointer;}
+.delete_user{font-size:12px; position:absolute; z-index:9999; right:8px; top:-4px; color:rgb(245, 81, 50); cursor:pointer}
 .view_more_dl{position:absolute; background:#C9E2FC; z-index:999999; box-shadow:0 2px 10px rgba(0, 0, 0, 0.2)}
 .view_more_line{height:auto; overflow:auto}
 .followers_addbtn img {cursor:pointer;}
