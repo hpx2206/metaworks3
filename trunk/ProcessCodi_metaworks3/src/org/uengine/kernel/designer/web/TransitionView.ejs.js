@@ -51,7 +51,8 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 				// 이 부분을 두번 안태우도록 ProcessDesignerContentPanel.ejs.js 에서 해당 attr로 비교를 함
 				$(fromElement).attr('_conneted'+fromElementId , fromElementId +'_'+ toElementId);
 				$(toElement).attr('_conneted'+toElementId , fromElementId +'_'+ toElementId);
-				element = canvas.connect(fromElement, toElement , OG.JSON.decode(unescape(style)) , initText);
+				//element = canvas.connect(fromElement, toElement , OG.JSON.decode(unescape(style)) , initText);
+				element = canvas.connectWithTerminalId(fromTeminal, toTeminal , OG.JSON.decode(unescape(style)) , initText);
 				
 				if( object.transition ){
 					$(element).data('transition', object.transition);
