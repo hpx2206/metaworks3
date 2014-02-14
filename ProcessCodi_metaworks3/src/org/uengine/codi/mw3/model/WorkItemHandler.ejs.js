@@ -24,13 +24,13 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 						valiableObjectDiv.css("position","relative");
 						valiableObjectDiv.find('input').css('float','left');
 						//valiableObjectDiv.find('.form-control').css('width','200px');
-						var buttonHtml = '<button class="btn btn-default btn-xs" type="button" style="position:absolute; right:3px; top:4px; display:none;" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span class="glyphicon glyphicon-comment"></span> ' + mw3.localize('$AddComment') + '</button>';
+						var buttonHtml = '<button class="btn btn-default btn-xs comment-btn" type="button" style="position:absolute; right:3px; top:4px; display:none;" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span class="glyphicon glyphicon-comment"></span> ' + mw3.localize('$AddComment') + '</button>';
 						      
 						valiableObjectDiv.append(buttonHtml);
 						      
 						valiableObjectDiv.hover(
-						function(){$(this).find('.btn').show();},
-						function(){$(this).find('.btn').hide();}
+						function(){$(this).find('.comment-btn').show();},
+						function(){$(this).find('.comment-btn').hide();}
 						);
 	               }
 	           }
