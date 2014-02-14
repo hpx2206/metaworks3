@@ -22,6 +22,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CodeAssist;
 import org.metaworks.widget.Window;
+import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.JavaCodeAssist;
 import org.uengine.codi.mw3.ide.CompilationChecker;
@@ -1167,6 +1168,8 @@ public class JavaCodeEditor extends Editor {
 		Thread.currentThread().setContextClassLoader(cl);
 		
 		Object o = Thread.currentThread().getContextClassLoader().loadClass(fullClassName).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
+		if(o instanceof ITool)
+			((ITool)o).onLoad();
 		
 		Thread.currentThread().setContextClassLoader(prerCl);
 
