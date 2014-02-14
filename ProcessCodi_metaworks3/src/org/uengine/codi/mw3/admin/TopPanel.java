@@ -4,6 +4,7 @@ import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.NotificationBadge;
+import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.SearchBox;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TodoBadge;
@@ -34,8 +35,10 @@ public class TopPanel {
 		setLoginUser(topPanelUser);
 		this.getLoginUser().getMetaworksContext().setHow(IUser.HOW_SELF);
 		
-		TopMenuPanel topMenuPanel = new TopMenuPanel();
-		this.setTopMenuPanel(topMenuPanel);
+		if(!SNS.isPhone()){
+			TopMenuPanel topMenuPanel = new TopMenuPanel();
+			this.setTopMenuPanel(topMenuPanel);
+		}
 
 		setCompany(session.getCompany());
 	}

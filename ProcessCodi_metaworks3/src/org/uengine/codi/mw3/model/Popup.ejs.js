@@ -4,6 +4,8 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	this.divId = "#objDiv_" + this.objectId;
 	this.divObj = $("#objDiv_" + this.objectId).closest('.target_stick,.target_popup');
 	
+	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+
 	var modalWindow = $('.ui-dialog');
 	
 	var zIndex = 100;
@@ -24,14 +26,16 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	var scrollDiv = $('#objDiv_' + this.objectId + " #addcontact-con");
 	var scrollDivChild = $('#objDiv_' + this.objectId + " #addcontact-con > div");
 	
-	scrollDiv.scroll(function(e) {
-		if(scrollDiv.scrollTop() > 1){
-			/*scrollDiv.animate({height:scrollDivChild.height()});*/
-			
-			scrollDiv.animate({height:$('body').height()-50});
-			scrollDiv.closest('.target_stick,.target_popup').animate({top:3});
-		}
-	});
+	if('phone' != session.ux){
+		scrollDiv.scroll(function(e) {
+			if(scrollDiv.scrollTop() > 1){
+				/*scrollDiv.animate({height:scrollDivChild.height()});*/
+				
+				scrollDiv.animate({height:$('body').height()-50});
+				scrollDiv.closest('.target_stick,.target_popup').animate({top:3});
+			}
+		});
+	}
 	
 };
 
@@ -48,6 +52,12 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		var left = x;
 		var top = y;
 
+		
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+
+
+		
+		
 		if(this.divObj.hasClass('target_stick')){
 			var position = 'right';
 			var where = 'up';
@@ -121,9 +131,17 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 			this.divObj.find('.cluetip-arrows').remove();
 		}
 		
-		if(showTitle){
+		if(showTitle || 'phone' == session.ux){
 			this.divObj.find('.cluetip-title').show();
 			this.divObj.find('.cluetip-close2').show();
+		}
+		
+		if('phone' == session.ux){
+			this.divObj.css({'top':'10px','left':'10px','height':bodyHeight -50,'width':bodyWidth-50});
+			
+			this.divObj.find('#cluetip-outer').width('100%');
+			this.divObj.find('#addcontact-con').height(bodyHeight-70);
+			this.divObj.find('.cluetip-arrows').hide();
 		}
 		
 		this.divObj.show();

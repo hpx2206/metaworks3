@@ -2997,7 +2997,7 @@ font-size:20px;
 .index_signup .index_signup_inner input { width:240px; }
 .row .col3 { display:none }
 .row .col7 { width:100%; padding:30px}
-#signup_popup { width:380px; }
+#signup_popup { width:340px; margin-top:10px;}
 #signup_popup .popup_step .stepbar { width:295px; }
 #signup_popup .popup_content .signup_info { width:280px }
 #signup_popup .popup_content .textinput { width:280px; }

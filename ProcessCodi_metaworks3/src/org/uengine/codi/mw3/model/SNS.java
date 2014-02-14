@@ -94,7 +94,6 @@ public class SNS extends Application{
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(topPanel);
 			
 			Window instanceListWindow = createInstanceListWindow(session);
 			
