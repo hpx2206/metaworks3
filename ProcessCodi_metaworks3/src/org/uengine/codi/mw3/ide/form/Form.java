@@ -201,18 +201,17 @@ public class Form implements ContextAware {
 		StringBuffer sb = new StringBuffer();
 		StringBuffer importBuffer = new StringBuffer();
 		StringBuffer methodBuffer = new StringBuffer();
-		StringBuffer constructorBuffer 	= new StringBuffer();
-		StringBuffer initiateVariable = null;
-		StringBuffer userVariable = null;
+		StringBuffer constructorBuffer = new StringBuffer();
+		StringBuffer onLoadBuffer = new StringBuffer();
+		StringBuffer beforeCompleteBuffer = new StringBuffer();
 		
 		ArrayList<String> importList = new ArrayList<String>();
-		ArrayList<String> constructorList = new ArrayList<String>();
+		
+		boolean isHidden = false;
 		
 		importBuffer.append("import org.uengine.codi.ITool; \n");
 		importBuffer.append("import org.metaworks.annotation.Face;\n");
 		importBuffer.append("import org.metaworks.annotation.Order;\n");
-		
-		constructorBuffer.append("	public " + this.getId() + "() { \n");
 		
 		if(formFields != null)
 		for(int i = 0; i < formFields.size(); i++) {
@@ -222,89 +221,56 @@ public class Form implements ContextAware {
 			String importStr = "";
 			String constructortStr = "";
 			
-			//여기 hidden 부분 어떻게 처리 할까? 암튼 이거 아니야 -________________- 어케해방
-			if(field.getHide()) {
-				importStr = "import org.metaworks.annotation.Hidden;\n";
-				if(!importList.contains(importStr)){
-					importList.add(importStr);
-				}
-			}
+			if(field.getHide())
+				isHidden = true;
 			
 			importStr = field.generateImportCode();
 			if(!importList.contains(importStr)){
 				importList.add(importStr);
 			}
 			
-			constructortStr = field.generateConstructorCode();
-			if(!constructorList.contains(constructortStr)){
-				constructorList.add(constructortStr);
-			}
-			if(field.getFieldType().equals("org.metaworks.metadata.MetadataFile")){
-				importBuffer.append("import org.uengine.kernel.GlobalContext;\n");
-				importBuffer.append("import org.uengine.util.UEngineUtil;\n");
-				initiateVariable = new StringBuffer();
-				String fileSystemPath = "\"filesystem.path\"";
-				initiateVariable.append("    if(this." +field.getId()+  " == null){\n");
-				initiateVariable.append("          MetadataFile newFile"+field.getId()+" = new MetadataFile();\n");
-				initiateVariable.append("          String baseDir = GlobalContext.getPropertyString("+fileSystemPath+") + "+"\"/\""+";\n");
-				initiateVariable.append("          newFile"+field.getId()+".setBaseDir(baseDir + UEngineUtil.getCalendarDir());\n");
-				initiateVariable.append("       }\n\n");
-			}
-			
-			if(field.getFieldType().equals("org.uengine.codi.mw3.model.User") || field.getFieldType().equals("org.uengine.codi.mw3.model.IUser")){
-//				userVariable = new StringBuffer();
-//				 IUser user = new User();
-//				 user.setUserId(this.getUser2().getUserId());
-			}
+			constructorBuffer.append(field.generateConstructorCode());
 			
 			methodBuffer.append(field.generateVariableCode());
-			methodBuffer.append(field.generateAnnotationCode());
 			methodBuffer.append("		@Order(value=" + String.valueOf(i+1) + ")\n");
+			methodBuffer.append(field.generateAnnotationCode());
 			methodBuffer.append(field.generatePropertyCode());
+			
+			beforeCompleteBuffer.append(field.generateBeforeComplete());
 		}
 		
-		for(int i =0; i < constructorList.size(); i++){
-			constructorBuffer.append(constructorList.get(i));
-		}
-		constructorBuffer.append("	}\n\n");
-		
-		
-		
-		methodBuffer
-		.append("	@Override\n")
-		.append("	public void onLoad() throws Exception {\n");
+		if(isHidden)
+			importList.add("import org.metaworks.annotation.Hidden;\n");
 
-		if( initiateVariable != null ){
-			methodBuffer.append(initiateVariable);
-		}
-		
-		if( userVariable != null){
-			methodBuffer.append(userVariable);
-		}
-		
-		methodBuffer.append("	}\n\n");
-		
-		methodBuffer
-		.append("	@Override\n")
-		.append("	public void beforeComplete() throws Exception {\n")
-		.append("	}\n\n");
-		
-		methodBuffer
-		.append("	@Override\n")
-		.append("	public void afterComplete() throws Exception {\n")
-		.append("	}\n\n");
-		
 		for(int i =0; i < importList.size(); i++){
 			importBuffer.append(importList.get(i));
 		}
+
+		
+		methodBuffer.append("	@Override\n");
+		methodBuffer.append("	public void onLoad() throws Exception {\n");
+		methodBuffer.append(onLoadBuffer.toString());
+		methodBuffer.append("	}\n\n");
+		
+		methodBuffer.append("	@Override\n");
+		methodBuffer.append("	public void beforeComplete() throws Exception {\n");
+		methodBuffer.append(beforeCompleteBuffer.toString());
+		methodBuffer.append("	}\n\n");
+		
+		methodBuffer.append("	@Override\n");
+		methodBuffer.append("	public void afterComplete() throws Exception {\n");
+		methodBuffer.append("	}\n\n");
+		
 		
 		if(this.getPackageName() != null)
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
 		sb.append(importBuffer.toString() + "\n");
-		sb.append("@Face(displayName=\"" + this.getName() +"\", ejsPath=\"genericfaces/FormFace.ejs\")\n");
-		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
+		sb.append("@Face(displayName=\"" + this.getName() +"\", ejsPath=\"dwr/metaworks/genericfaces/FormFace.ejs\")\n");
+		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{ \n\n");
+		sb.append("	public " + this.getId() + "() {\n");
 		sb.append(constructorBuffer.toString());
+		sb.append("	}\n\n");
 		sb.append(methodBuffer.toString());	
 		sb.append("}");
 		
