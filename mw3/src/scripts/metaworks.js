@@ -1801,8 +1801,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objectTypeName = arguments[2];
 				}
 				
-				mw3.removeObject(objectId, true);
-				
 				var divId =  "#objDiv_" + objectId;
 				
 				/*
@@ -1834,6 +1832,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						mw3.showInfo(objectId, this.recentCallMethodName + " DONE");	
 					}
 				}
+				
+				mw3.removeObject(objectId, true);
 				
 				if(objectTypeName){
 				}else if(value.__className){
