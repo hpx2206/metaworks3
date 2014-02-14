@@ -273,9 +273,12 @@ public class WorkItemHandler implements ContextAware{
 		cancelledHistory.add();
 		Instance instance = new Instance();
 		instance.setInstId(this.getRootInstId());
+		instance.copyFrom(instance.databaseMe());
 		
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
+		
+		this.sendPush(instance,null,cancelledHistory);
 		
 		if("oce".equals(session.getUx())){
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -331,10 +334,12 @@ public class WorkItemHandler implements ContextAware{
 		
 		Instance instance = new Instance();
 		instance.setInstId(this.getRootInstId());
+		instance.copyFrom(instance.databaseMe());
 		
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
-			
+		
+		this.sendPush(instance,null,cancelledHistory);
 			
 		if("oce".equals(session.getUx())){
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -442,6 +447,37 @@ public class WorkItemHandler implements ContextAware{
 		workItemMe.setTaskId(this.getTaskId());
 		workItemMe.copyFrom(workItemMe.databaseMe());
 		workItemMe.setMetaworksContext(new MetaworksContext());
+		
+		this.sendPush(inst,newlyAddedWorkItems,workItemMe);
+		
+		//refreshes the instanceview so that the next workitem can be show up
+		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("instanceList");
+			panel.getMetaworksContext().setWhere("sns");
+			panel.session = session;
+			panel.load(this.getRootInstId().toString());
+			
+			return new Object[]{panel, new Remover(new ModalWindow() , true )};
+		}else{
+			/*
+			 * 2013/12/03 cjw
+			 * 프로세스 완료시에 수정된 워크아이템만 부분 갱신되게 수정
+			 */
+			
+			InstanceTooltip instanceTooltip = new InstanceTooltip();
+			instanceTooltip.getMetaworksContext().setHow("action");		
+			instanceTooltip.load(inst);
+			
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			instanceViewThreadPanel.setInstanceId(this.getInstanceId());
+			
+			return new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(workItemMe), new Refresh(instanceTooltip)};
+
+		}
+	}
+	
+	public void sendPush(Instance inst, ArrayList<WorkItem> newlyAddedWorkItems, WorkItem workItemMe) throws Exception{
 		/**
 		 *  === noti push 부분 ===
 		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
@@ -484,54 +520,48 @@ public class WorkItemHandler implements ContextAware{
 				new Object[]{});
 		
 		/**
+		 *  === todo count push 부분 ===
+		 */
+		TodoBadge todoBadge = new TodoBadge();
+		todoBadge.loader = true;
+		
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge, true)});
+		// follower 될 사용자의 todo count 를 refresh
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new OtherSessionFilter(notiUsers , session.getUser().getUserId()),
+				new Object[]{new Refresh(todoBadge, true)});	
+		
+		/**
 		 *  === instance push 부분 ===
 		 */
 		notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
 		
-//		if( this.getRootInstId() != null && this.getRootInstId() != new Long(this.getInstanceId())){
-//			// 상위 인스턴스가 있는 경우
-//		}else{
-			inst.getMetaworksContext().setWhere("instancelist");
-			// 본인의 instanceList 에 push
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
-			
-			// 본인 이외에 다른 사용자에게 push			
-			// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다
-			if( newlyAddedWorkItems.size() > 0 ){
-				for(int j=0; j < newlyAddedWorkItems.size(); j++){
-					ProcessWorkItem wt = (ProcessWorkItem)newlyAddedWorkItems.get(j);
-					wt.setMetaworksContext(new MetaworksContext());
-					MetaworksRemoteService.pushClientObjectsFiltered(
-							new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
-							new Object[]{new WorkItemListener(WorkItemListener.COMMAND_APPEND , wt)});
-				}
+		inst.getMetaworksContext().setWhere("instancelist");
+		// 본인의 instanceList 에 push
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
+		
+		// 본인 이외에 다른 사용자에게 push			
+		// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다
+		if( newlyAddedWorkItems != null &&newlyAddedWorkItems.size() > 0 ){
+			for(int j=0; j < newlyAddedWorkItems.size(); j++){
+				ProcessWorkItem wt = (ProcessWorkItem)newlyAddedWorkItems.get(j);
+				wt.setMetaworksContext(new MetaworksContext());
+				MetaworksRemoteService.pushClientObjectsFiltered(
+						new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+						new Object[]{new WorkItemListener(WorkItemListener.COMMAND_APPEND , wt)});
 			}
+		}
+		if( workItemMe != null ){
 			// 새로 추가되는 workItem이 없는 경우 1. 완료시킨 워크아이템은 리프레쉬를 시킨다
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(inst) ,  new WorkItemListener(WorkItemListener.COMMAND_REFRESH , workItemMe)});			
-			
-//		}
-		//refreshes the instanceview so that the next workitem can be show up
-		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
-			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-			panel.getMetaworksContext().setHow("instanceList");
-			panel.getMetaworksContext().setWhere("sns");
-			panel.session = session;
-			panel.load(this.getRootInstId().toString());
-			
-			return new Object[]{panel, new Remover(new ModalWindow() , true )};
+					new Object[]{new InstanceListener(inst) ,  new WorkItemListener(WorkItemListener.COMMAND_REFRESH , workItemMe)});
 		}else{
-			/*
-			 * 2013/12/03 cjw
-			 * 프로세스 완료시에 수정된 워크아이템만 부분 갱신되게 수정
-			 */
-			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.setInstanceId(this.getInstanceId());
-			
-			return new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(workItemMe)};
-
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
+					new Object[]{new InstanceListener(inst)});
 		}
+			
 	}
 	
 	private IInstance saveLastComent(Instance instanceRef) throws Exception{
@@ -622,15 +652,35 @@ public class WorkItemHandler implements ContextAware{
 		roleMapping.setName(humanActivity.getRole().getName());
 		roleMapping.setEndpoint(session.getEmployee().getEmpCode());		
 		
-		processManager.delegateWorkitem(this.getInstanceId(), this.getTracingTag(), roleMapping);
+		String[] executedTaskIds = processManager.delegateWorkitem(this.getInstanceId(), this.getTracingTag(), roleMapping);
 		processManager.applyChanges();
 		
-		//refreshes the instanceview so that the next workitem can be show up
-		Instance instance = new Instance();
-		instance.setInstId(new Long(getInstanceId()));
-		instance.copyFrom(instance.databaseMe());
+		// 변경된 액티비티 들만 찾기
+		ArrayList<WorkItem> newlyAddedWorkItems = new ArrayList<WorkItem>();
 		
-		instanceViewContent.load(instance);
+		for(String taskId : executedTaskIds){
+			ProcessWorkItem newlyAppendedWorkItem = new ProcessWorkItem();
+			newlyAppendedWorkItem.setTaskId(new Long(taskId));
+			newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
+			
+			newlyAddedWorkItems.add(newlyAppendedWorkItem);
+		}
+		
+		
+		WorkItem workItemMe = new WorkItem();
+		workItemMe.setTaskId(this.getTaskId());
+		workItemMe.copyFrom(workItemMe.databaseMe());
+		workItemMe.setMetaworksContext(new MetaworksContext());
+		
+
+		//refreshes the instanceview so that the next workitem can be show up
+		Instance inst = new Instance();
+		inst.setInstId(new Long(getInstanceId()));
+		inst.copyFrom(inst.databaseMe());
+		
+		instanceViewContent.load(inst);
+		
+		this.sendPush(inst,newlyAddedWorkItems,workItemMe);
 		
 		if("oce".equals(session.getUx()) || "sns".equals(session.getEmployee().getPreferUX())){
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();

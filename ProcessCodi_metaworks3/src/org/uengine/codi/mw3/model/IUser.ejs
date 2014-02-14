@@ -11,7 +11,7 @@
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}		
 %>
-			<div class="user" <%if(mw3.where == 'addfollower'){%>style="float:left; width:auto !important;"<%}%>>		
+			<div class="user" <%if(mw3.where == 'addfollower'){%>style="float:left; width:auto !important;cursor: Default;"<%}%>>		
 				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 					<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 <%	

@@ -56,35 +56,7 @@ public class InstanceView {
 
 		InstanceTooltip instanceTooltip = new InstanceTooltip();
 		instanceTooltip.getMetaworksContext().setHow("action");		
-		instanceTooltip.setInstanceId(instance.getInstId());
-		instanceTooltip.setStatus(instance.getStatus());
-		instanceTooltip.setSecuopt(instance.getSecuopt());
-		instanceTooltip.setDueDate(instance.getDueDate());
-		
-		/*
-		if(instance.getDefVerId()!=null){ //process exists!
-//			EventHandler[] eventHandlers = processManager.getEventHandlersInAction(instance.getInstId().toString());
-			ProcessInstance processInstance = processManager.getProcessInstance(instance.getInstId().toString());
-			Vector mls = processInstance.getMessageListeners("event");
-
-			ProcessDefinition definition = processInstance.getProcessDefinition();
-			EventTrigger[] eventTriggers = new EventTrigger[mls.size()];
-			if(mls!=null){
-				for(int i=0; i<mls.size(); i++){
-					EventActivity scopeAct = (EventActivity)definition.getActivity((String)mls.get(i));
-					
-					EventTrigger eventTrigger = new EventTrigger();
-					eventTrigger.setInstanceId(instance.getInstId().toString());
-					eventTrigger.setDisplayName(scopeAct.getDescription().getText());
-					eventTrigger.setEventName(scopeAct.getName().getText());
-					eventTriggers[i] = eventTrigger;
-					
-				}
-			}
-			
-			instanceTooltip.setEventTriggers(eventTriggers);
-		}
-		*/
+		instanceTooltip.load(instance);
 		
 		this.setInstanceAction(instanceTooltip);
 		
