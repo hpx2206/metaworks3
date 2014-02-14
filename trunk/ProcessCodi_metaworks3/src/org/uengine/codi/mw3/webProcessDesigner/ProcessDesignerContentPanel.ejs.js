@@ -57,6 +57,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
 	
+	this.divObj.addClass('mw3_resize');
+	
 	var object = mw3.objects[this.objectId];
 	
 	if(object){
@@ -100,7 +102,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 		this.divObj.css('height','100%');
 		this.divObj.parent().css('height','100%');
 		var canvasDivObj = $('#canvas_' + objectId);
-		
 		
 		OG.common.Constants.CANVAS_BACKGROUND = "#fff";
 	    OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
@@ -266,7 +267,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 		    	};
 		    	
 		    	var html = mw3.locateObject(activityView , activityView.__className);
-	        	canvasDivObj.append(html);
+		    	canvasDivObj.append(html);
 	        	
 	        	mw3.onLoadFaceHelperScript();
 	    	}
@@ -276,8 +277,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    canvas.onLabelChanged(function (event, shapeElement, afterText, beforeText) {
 	    	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성
 	    });
-	    var canvasWidth = 1024;		// defualt
-	    var canvasHeight = 768;		// defualt
+	    var canvasWidth = document.getElementById('canvas_' + objectId).getBoundingClientRect().width;		// defualt
+	    var canvasHeight = document.getElementById('canvas_' + objectId).getBoundingClientRect().height;		// defualt
 	    
 	    if( object != null ){
 	    	this.tracingTag = object.processDesignerContainer.lastTracingTag;
@@ -416,7 +417,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.sh
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.clear = function(){
 	this.icanvas.clear();
 };
-//TODO delete test code 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.findSwimlane = function(parentId){
 	var $parentId = $('#'+parentId);
 	if( $parentId ){
@@ -424,7 +424,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.fi
 		if( classType == 'Role'){
 			return parentId;
 		}else{
-			return this.findSwimlane();
+			// parent를 찾아가는 로직이 필요함...
+			//return this.findSwimlane();
 		}
 	}
 	return null;
@@ -496,58 +497,29 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			if(key == '@style'){
 				cellForDwr['style'] = og[key];
 			}
+			if(key == '@swimlane'){
+				cellForDwr['swimlane'] = og[key];
+			}
+			if(key == '@childs'){
+				cellForDwr['childs'] = og[key];
+			}
 		}
-//		cellsForDwr[cellsForDwr.length] = cellForDwr;
 		
 		var $id = $('#'+og['@id']);
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['__className'] = $id.attr('_viewClass');
-			var classname = $id.attr('_classname');
-			var classType = $id.attr('_classType');
-			cellForDwr['activityClass'] = classname;
-			cellForDwr['classType'] = classType;
-			//set Activity, Role
-			var activity = $id.data('activity');
-			if( activity ){
-				activity.activityView = cellForDwr;
-				if(classType == 'Activity'){
-					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
-					if( (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')  && cellForDwr.parent){
-						var parentRoleId = this.findSwimlane(cellForDwr.parent);
-						if( parentRoleId != null ){
-							var role = $('#'+parentRoleId).data('role');
-							activity.role = role;
-						}
-					}
-					activityList[activityIdx++] = activity;
-				}
-			}
-			
-			//set Role
-			var role = $id.data('role');
-			if(role){
-				role.roleView = cellForDwr;
-				if(classType == 'Role'){
-					roleList[roleIdx++] = role;
-				}
-			}
-			
+			cellForDwr['activityClass'] = $id.attr('_classname');
+			cellForDwr['classType'] = $id.attr('_classType');
+			//set Activity
+			activityList = this.activitySetting($id, cellForDwr, activityList);
 			//set ValueChain
-			var valuechain = $id.data('valuechain');
-			if(valuechain){
-				valuechain.valueChainView = cellForDwr;
-				if(classType == 'ValueChain'){
-					valueChainList[valueChainIdx++] = valuechain;
-				}
-			}
+			roleList     = this.roleSetting($id, cellForDwr, roleList);
+			//set ValueChain
+			valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList);
 		}
 		if( og['@shapeType'] == 'EDGE'){
-			var transition = $id.data('transition');
-			if( transition ){
-				transitionList[transitionIdx++] = transition;
-				transition.transitionView = cellForDwr;
-			}
+			transitionList = this.transitionSetting($id, cellForDwr, transitionList);
 		}
 	}
 	var object = mw3.objects[this.objectId];
@@ -568,6 +540,82 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	return object;
 };
 
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.activitySetting = function(idDiv, cellForDwr, list){
+	var activity = idDiv.data('activity');
+    if( activity ){
+		var classname = idDiv.attr('_classname');
+        var classType = idDiv.attr('_classType');
+        activity.activityView = cellForDwr;
+        if(classType == 'Activity' ){
+            // TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
+            if( cellForDwr.swimlane && (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')){
+                var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
+                if( parentRoleId != null ){
+                    var role = $('#'+parentRoleId).data('role');
+                    activity.role = role;
+                }
+            }
+            if(cellForDwr.parent){
+                // 스콥에만 해당시키고 definition 에는 포함안시키기 위하여 
+                // 음.. 이렇게 하면 scope 안쪽의 humanActivity 에 롤이 셋팅 안되는 경우가 발생할수 있을듯한데..
+				return list;
+            }
+            if(cellForDwr.childs){
+                if (classname == 'org.uengine.kernel.ScopeActivity') {
+                    var childLen = 0;
+					var childTransitionIdx = 0;
+                    for(var k = 0; k < cellForDwr.childs.length; k++){
+                        var $childId = $('#'+cellForDwr.childs[k]);
+                        var childClassType = $childId.attr('_classType');
+						var childShapType = $childId.attr('_shape');
+                        if(childShapType != 'EDGE' && childClassType == 'Activity') {
+                            if( activity.childActivities ){
+                                activity.childActivities[childLen++] = $childId.data('activity');
+                            }
+                        }
+						if(childShapType == 'EDGE') {
+							if( activity.transitions ){
+                                activity.transitions[childTransitionIdx++] = $childId.data('transition');
+                            }
+						}
+                    }
+                }
+            }
+            list[list.length] = activity;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.roleSetting = function(idDiv, cellForDwr, list){
+	var role = idDiv.data('role');
+    if(role){
+        role.roleView = cellForDwr;
+		var classType = idDiv.attr('_classType');
+        if(classType == 'Role'){
+            list[list.length] = role;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.valueChainSetting = function(idDiv, cellForDwr, list){
+	var valuechain = idDiv.data('valuechain');
+    if(valuechain){
+        valuechain.valueChainView = cellForDwr;
+		var classType = idDiv.attr('_classType');
+        if(classType == 'ValueChain'){
+            list[list.length] = valuechain;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.transitionSetting = function(idDiv, cellForDwr, list){
+	var transition = idDiv.data('transition');
+    if( transition ){
+        list[list.length] = transition;
+        transition.transitionView = cellForDwr;
+    }
+	return list;
+};
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.startLoading = function(){
 	this.divObj.trigger('startLoading');
@@ -575,4 +623,28 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.st
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.endLoading = function(){
 	this.divObj.trigger('endLoading');
+};
+
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.resize = function(){
+
+	var isChange = false;
+	var tempWidth = mw3.canvas.getRootBBox().width;
+	var tempHeight = mw3.canvas.getRootBBox().height;
+	
+	var canvasWidth = document.getElementById('canvas_' + this.objectId).getBoundingClientRect().width;
+    var canvasHeight = document.getElementById('canvas_' + this.objectId).getBoundingClientRect().height;
+    
+    if(tempWidth < canvasWidth){
+    	isChange = true;
+    	tempWidth = canvasWidth;
+	}
+    if(tempHeight < canvasHeight){
+    	isChange = true;
+    	tempHeight = canvasHeight;
+	}
+    			
+    if(isChange){
+		mw3.canvas.setCanvasSize([tempWidth, tempHeight]);
+	}
+ 
 };
