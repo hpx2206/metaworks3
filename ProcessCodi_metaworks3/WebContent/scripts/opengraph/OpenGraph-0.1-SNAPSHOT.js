@@ -19171,10 +19171,12 @@ OG.handler.EventHandler.prototype = {
 				if("element_selected" == $(element).data("status")){
 					return;
 				}
-				
+				/*
 				if(event.fromElement && $(event.fromElement).parents('svg') < 1){ 
+				
 					return;
 				}
+				*/
 				
 				if (element.shape.isCollapsed === false) {
 					terminalGroup = me._RENDERER.drawTerminal(element,
