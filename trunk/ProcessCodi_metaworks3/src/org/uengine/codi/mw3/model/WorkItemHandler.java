@@ -267,8 +267,9 @@ public class WorkItemHandler implements ContextAware{
 		cancelledHistory.processManager = processManager;
 		cancelledHistory.session = session;
 		cancelledHistory.setInstId(new Long(getInstanceId()));
-		
 		cancelledHistory.setTitle(humanActivity.getName().getText() + " task has been cancelled by me.");
+		
+		
 		cancelledHistory.setWriter(session.getUser());
 		cancelledHistory.add();
 		
@@ -432,7 +433,6 @@ public class WorkItemHandler implements ContextAware{
 			ProcessWorkItem newlyAppendedWorkItem = new ProcessWorkItem();
 			newlyAppendedWorkItem.setTaskId(new Long(taskId));
 			newlyAppendedWorkItem.copyFrom(newlyAppendedWorkItem.databaseMe());
-			
 			newlyAddedWorkItems.add(newlyAppendedWorkItem);
 		}
 		
@@ -537,7 +537,8 @@ public class WorkItemHandler implements ContextAware{
 		 */
 		notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
 		
-		inst.getMetaworksContext().setWhere("instancelist");
+		inst.getMetaworksContext().setWhere(Instance.WHERE_INSTANCELIST);
+		
 		// 본인의 instanceList 에 push
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
 		
@@ -568,15 +569,19 @@ public class WorkItemHandler implements ContextAware{
 	private IInstance saveLastComent(Instance instanceRef) throws Exception{
 		String title = humanActivity.getDescription() != null ? humanActivity.getDescription().getText() : null;
 		
+		IUser writer = new User();
+		writer.setUserId(session.getUser().getUserId());
+		writer.setName(session.getUser().getName());
+
 		//마지막 워크아이템의 제목을 인스턴스의 적용
 		if( title != null && !"".equals(title)){
 			if(instanceRef.getLastCmnt() == null){
 				instanceRef.setLastCmnt(title);
-				instanceRef.setLastCmntUser(session.getUser());
+				instanceRef.setLastCmntUser(writer);
 				instanceRef.setLastcmntTaskId(this.getTaskId());
 				// database update
 				instanceRef.databaseMe().setLastCmnt(title);
-				instanceRef.databaseMe().setLastCmntUser(session.getUser());
+				instanceRef.databaseMe().setLastCmntUser(writer);
 				instanceRef.databaseMe().setLastcmntTaskId(this.getTaskId());
 			}else{
 				if(instanceRef.getLastCmnt2() == null){
@@ -585,7 +590,7 @@ public class WorkItemHandler implements ContextAware{
 					instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					// database update
 					instanceRef.databaseMe().setLastCmnt2(title);
-					instanceRef.databaseMe().setLastCmnt2User(session.getUser());
+					instanceRef.databaseMe().setLastCmnt2User(writer);
 					instanceRef.databaseMe().setLastcmnt2TaskId(this.getTaskId());
 				}else {
 					instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
@@ -593,7 +598,7 @@ public class WorkItemHandler implements ContextAware{
 					instanceRef.setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
 					
 					instanceRef.setLastCmnt2(title);
-					instanceRef.setLastCmnt2User(session.getUser());
+					instanceRef.setLastCmnt2User(writer);
 					instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					// database update
 					instanceRef.databaseMe().setLastCmnt(instanceRef.getLastCmnt2());
@@ -601,7 +606,7 @@ public class WorkItemHandler implements ContextAware{
 					instanceRef.databaseMe().setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
 					
 					instanceRef.databaseMe().setLastCmnt2(title);
-					instanceRef.databaseMe().setLastCmnt2User(session.getUser());
+					instanceRef.databaseMe().setLastCmnt2User(writer);
 					instanceRef.databaseMe().setLastcmnt2TaskId(this.getTaskId());
 				}
 			}

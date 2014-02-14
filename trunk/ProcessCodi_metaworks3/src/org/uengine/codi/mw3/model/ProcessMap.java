@@ -529,6 +529,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			}
 			
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
+			copyOfInstance.getMetaworksContext().setWhere(Instance.WHERE_INSTANCELIST);
 			
 			// 주제 제목 설정
 			if(copyOfInstance.getTopicId() != null){
