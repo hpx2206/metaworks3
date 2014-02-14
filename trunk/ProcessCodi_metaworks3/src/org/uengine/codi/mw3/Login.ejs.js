@@ -23,6 +23,10 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	var lastVisitPage = getCookie("codi.lastVisit");
 	if(lastVisitPage) 
 		this.object.lastVisitPage = lastVisitPage;
+		
+	var lastVisitValue = getCookie("codi.lastVisitValue");
+	if(lastVisitValue)
+		this.object.lastVisitValue = lastVisitValue;
 
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.where == 'index')
 		return true;
@@ -39,7 +43,7 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 
 	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'login'){
 		var id = getCookie("codi.id");
-	
+		
 		var input_email = mw3.getInputElement(objectId, "email");
 		if(input_email)
 			input_email.value = id;			
