@@ -20681,7 +20681,7 @@ OG.handler.EventHandler.prototype = {
 						
 						x = width <= 0 ? first.x + width : first.x;
 						y = height <= 0 ? first.y + height : first.y;
-						me._RENDERER.drawRubberBand([x-1, y-1], [Math.abs(width), Math.abs(height)]);						
+						me._RENDERER.drawRubberBand([x, y], [Math.abs(width), Math.abs(height)]);						
 					}
 				}
 			});
@@ -23701,7 +23701,7 @@ OG.graph.Canvas.prototype = {
 	 * @return {Element} 연결된 Edge 엘리먼트
 	 */
 	connectWithTerminalId: function (fromTerminal_Id, toTerminal_Id, style, label) {
-		
+		console.log("connectWithTerminalId - call");
 		var me = this
 			, fromElement , toElement
 			, fromTerminal, toTerminal
@@ -23732,7 +23732,7 @@ OG.graph.Canvas.prototype = {
 
 		// to Shape 연결 터미널 찾기
 		toElement = getShapeFromTerminal(toTerminal_Id);
-		terminalGroup = this._RENDERER.drawTerminal(toElement, OG.Constants.TERMINAL_TYPE.OUT);
+		terminalGroup = this._RENDERER.drawTerminal(toElement, OG.Constants.TERMINAL_TYPE.IN);
 		childTerminals = terminalGroup.terminal.childNodes;
 		
 		try{
