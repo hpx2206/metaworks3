@@ -52,7 +52,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	private Logger logger = LoggerFactory.getLogger(WorkItem.class);
 	
-	public final static String USE_BBB = GlobalContext.getPropertyString("bbb.use", "1");
+	public final static String USE_BBB = GlobalContext.getPropertyString("bbb.use", "0");
 	
 	public WorkItem(){
 		this.getMetaworksContext().setWhen(WHEN_NEW);
@@ -908,9 +908,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}
 					
 					RoleMapping rm = RoleMapping.create();
-					if(session.getUser() != null){
+					if(this.getWriter() != null){
 						rm.setName("Initiator");
-						rm.setEndpoint(session.getUser().getUserId());
+						rm.setEndpoint(this.getWriter().getUserId());
 						
 						processManager.putRoleMapping(instId, rm);
 					}
@@ -1064,8 +1064,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			initialFollowers = new ArrayList<String>();	
 		}
 		
-		// 게시 사용자도 팔로워에 추가되게
-		initialFollowers.add(this.getWriter().getUserId());
+		// 게시 사용자도 팔로워에 추가, 시스템 사용자는 추가 되지 않게
+		if(!GlobalContext.getPropertyString("codi.user.id", "0").equals(this.getWriter().getUserId()))
+			initialFollowers.add(this.getWriter().getUserId());
 		
 		for(String userId : initialFollowers){
 			follower.beforeFirst();
@@ -1121,60 +1122,29 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		boolean securityPush = false;
 		HashMap<String, String> pushUserMap = new HashMap<String, String>();
 		String currentUserId = session.getUser().getUserId();
-		// 주제 제목 설정
+		
 		if(instance.getTopicId() != null){
 			TopicNode topic = new TopicNode();
 			topic.setId(instance.getTopicId());
 			
 			try{
 				topic.copyFrom(topic.databaseMe());
-				
+		
+				// 주제 제목 설정
 				instance.setTopicName(topic.getName());
-				String topicSecuopt = topic.getSecuopt();
 				
-				if( "1".equals( topicSecuopt )){
+				// 주제 알림 사용자 목록
+				Notification notification = new Notification();
+				notification.session = session;
+				pushUserMap = notification.findTopicNotiUser(topic.getId());
+
+				// 비공개 알림 설정
+				if("1".equals(topic.getSecuopt())){
 					securityPush = true;
-					Notification notification = new Notification();
-					notification.session = session;
-					pushUserMap = notification.findTopicNotiUser(topic.getId());
 				}
 			}catch(Exception e){
 				logger.info("topicId 는 존재하나 해당  Topic 이 존재하지 않음. (" + instance.getTopicId() +")");
 			}
-		}
-		
-		instance.fillFollower();
-		
-		/**
-		 *  ==== returnObjects 생성 ====
-		 *  새로 쓴 글을 제외하고는 workItem 만 컨트롤을 한다.
-		 */
-		// 추가
-		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
-			// 인스턴스 발행
-			if(prevInstId == null){
-				Object detail = instance.detail();
-				
-			     UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
-			     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
-			    		 				      new Refresh(detail),
-			    		 				      new Refresh(upcommingTodoPerspective)};
-			}else{
-				// 댓글
-				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
-				
-				CommentWorkItem commentWorkItem = new CommentWorkItem();
-				commentWorkItem.setInstId(this.getInstId());
-				commentWorkItem.setWriter(session.getUser());
-				commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-				returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
-			}
-			
-		// 수정
-		}else{		
-			// 변경된 WorkItem 을 갱신
-			returnObjects = new Object[]{new Refresh(this, false, true)};
 		}
 		
 		/**
@@ -1302,6 +1272,39 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		this.getMetaworksContext().setWhen(WHEN_VIEW);
 		this.getWriter().setMetaworksContext(this.getMetaworksContext());
 		
+		
+		
+		/**
+		 *  ==== returnObjects 생성 ====
+		 *  새로 쓴 글을 제외하고는 workItem 만 컨트롤을 한다.
+		 */
+		// 추가
+		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
+			// 인스턴스 발행
+			if(prevInstId == null){
+				Object detail = instance.detail();
+				
+			     UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
+			     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
+			    		 				      new Refresh(detail),
+			    		 				      new Refresh(upcommingTodoPerspective)};
+			}else{
+				// 댓글
+				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
+				
+				CommentWorkItem commentWorkItem = new CommentWorkItem();
+				commentWorkItem.setInstId(this.getInstId());
+				commentWorkItem.setWriter(session.getUser());
+				commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+				returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem)};
+			}
+			
+		// 수정
+		}else{		
+			// 변경된 WorkItem 을 갱신
+			returnObjects = new Object[]{new Refresh(this, false, true)};
+		}
 		return returnObjects;
 	}
 	
