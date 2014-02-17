@@ -108,7 +108,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
-		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
+		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?endpoint and item.itemType=?type");
 		sb.append(" where knol.type = ?type");
 		
 		sb.append("   and exists ( ");
