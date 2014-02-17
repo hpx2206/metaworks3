@@ -849,15 +849,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	*/
 	
+	/*
 	@Override
 	public boolean createCodi() throws Exception {
 		
 //		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			
 			Employee emp = new Employee();
-			emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id"));
-			emp.setEmpName(GlobalContext.getPropertyString("codi.user.name"));
-			emp.setGlobalCom(this.globalCom);
+			emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id", "0"));
+			emp.setEmpName(GlobalContext.getPropertyString("codi.user.name", "CODI"));
+			emp.setGlobalCom(this.getGlobalCom());
 			emp.setLocale(this.getLocale());
 			emp.setApproved(true);
 			
@@ -901,6 +902,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 	}
+	*/
+	
 	@ServiceMethod(callByContent=true, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object activate() throws MetaworksException{
 

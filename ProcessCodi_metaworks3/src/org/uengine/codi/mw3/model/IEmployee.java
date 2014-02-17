@@ -216,11 +216,13 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public void saveMe() throws Exception;
 	
+	/*
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	boolean createCodi() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	void createCodiThumNail(String target) throws Exception;
+	*/
 		
 	@ServiceMethod(callByContent=true, target="popup")
 	public void addTopicUser() throws Exception;
