@@ -73,7 +73,7 @@ public class ProcessDefinitionFactory {
 		if (USE_CLASS == null) {
 			try {
 				USE_CLASS = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext
-						.getPropertyString("processdefinitionfactory.class"));
+						.getPropertyString("processdefinitionfactory.class","org.uengine.codi.CodiProcessDefinitionFactory"));
 			} catch (Exception e) {
 				USE_CLASS = ProcessDefinitionFactory.class;
 			}

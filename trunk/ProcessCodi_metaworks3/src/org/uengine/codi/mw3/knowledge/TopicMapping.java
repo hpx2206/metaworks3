@@ -85,9 +85,9 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		node.setId(this.getTopicId());
 		node.copyFrom(node.databaseMe());
 //		if(node.getType().equals("project")){
-//			String host = GlobalContext.getPropertyString("vm.manager.ip");
-//			String userId = GlobalContext.getPropertyString("vm.manager.user");
-//			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+//			String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+//			String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+//			String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 //
 //			JschCommand jschServerBehaviour = new JschCommand();
 //			jschServerBehaviour.sessionLogin(host, userId, passwd);
@@ -97,7 +97,7 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 //			employee.copyFrom(employee.findMe());			
 //			
 //			//SVN 유저 추가
-//			String command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  node.getName() + "\" \"" + employee.getEmpCode() + "\" \"" + employee.getPassword() + "\"";
+//			String command = GlobalContext.getPropertyString("vm.svn.createUser","/home/svn/script/svnUserAdd.sh") + " \"" +  node.getName() + "\" \"" + employee.getEmpCode() + "\" \"" + employee.getPassword() + "\"";
 //			jschServerBehaviour.runCommand(command);
 //		}
 				
@@ -197,8 +197,8 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 	
 	protected void createDatabaseToTadpole(String vmDB, String vmIP) {
 		
-		String ip = GlobalContext.getPropertyString("pole.call.ip");
-		String port = GlobalContext.getPropertyString("pole.call.port");
+		String ip = GlobalContext.getPropertyString("pole.call.ip","localhost");
+		String port = GlobalContext.getPropertyString("pole.call.port","80");
 		String db  = GlobalContext.getPropertyString("pole.call.db");
 		
 		String parameter = "?db=" + vmDB

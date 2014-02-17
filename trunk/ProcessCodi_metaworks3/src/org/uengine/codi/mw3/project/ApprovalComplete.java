@@ -78,15 +78,15 @@ public class ApprovalComplete implements ITool  {
 			wfNode.setId(topicId);
 			String projectName = wfNode.databaseMe().getName();
 			
-			String host = GlobalContext.getPropertyString("vm.manager.ip");
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+			String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+			String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 			
 			String vmName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_name"));
 
 			String paramProjectName = "\"" + projectName + "_" + vmName + "\"";
-			String scriptHudsonCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob");
-			String scriptHudsonSetSvnInfo = GlobalContext.getPropertyString("vm.hudson.setting");*/
+			String scriptHudsonCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh");
+			String scriptHudsonSetSvnInfo = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh");*/
 			
 			// TODO: KIAT 에서 활성화
 			/*
@@ -101,7 +101,7 @@ public class ApprovalComplete implements ITool  {
 			
 			
 			
-//			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
+//			command = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
 //			jschServerBehaviour.runCommand(command);
 			
 			//filecommand롭 보내고
@@ -127,8 +127,8 @@ public class ApprovalComplete implements ITool  {
 	@Override
 	public void afterComplete() throws Exception {
 		
-		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
-		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user","root");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password","root");
 		
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin("192.168.212.77", targetUserId, targetPassword);		
@@ -139,9 +139,9 @@ public class ApprovalComplete implements ITool  {
 
 	protected void createDatabase(String parameter) {
 		
-		String ip = GlobalContext.getPropertyString("pole.call.ip");
-		String port = GlobalContext.getPropertyString("pole.call.port");
-		String db  = GlobalContext.getPropertyString("pole.call.db");
+		String ip = GlobalContext.getPropertyString("pole.call.ip","localhost");
+		String port = GlobalContext.getPropertyString("pole.call.port","80");
+		String db  = GlobalContext.getPropertyString("pole.call.db","/root");
 		
 		String sUrl = "http://" + ip + ":" + port + db + "/createDatabase" + parameter;
 		

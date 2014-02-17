@@ -70,8 +70,8 @@ public class GlobalContext{
 	public final static int DATABASE_MAXSTRLENGTH = 1300;
 	public static String WEB_CONTEXT_ROOT = GlobalContext.getPropertyString("web.context.root", "/uengine-web");
 	
-	public final static boolean useEJB = "true".equals(GlobalContext.getPropertyString("use.ejb", "true"));
-	public final static boolean useManagedTransaction = "true".equals(GlobalContext.getPropertyString("use.managedtransaction", "true"));
+	public final static boolean useEJB = "true".equals(GlobalContext.getPropertyString("use.ejb", "false"));
+	public final static boolean useManagedTransaction = "true".equals(GlobalContext.getPropertyString("use.managedtransaction", "false"));
 	public final static boolean useAutoUserTransactionDemarcation = "true".equals(GlobalContext.getPropertyString("use.auto.usertransaction.demarcation", "false"));
 	public final static boolean captureSystemOut = "true".equals(GlobalContext.getPropertyString("capture.system.out", "false"));
 	public final static boolean logLevelIsDebug = "debug".equals(GlobalContext.getPropertyString("log.level", "debug"));

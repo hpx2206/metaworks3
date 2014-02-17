@@ -312,8 +312,8 @@ public class ProjectServer implements ITool, ContextAware {
 		this.setStatus(SERVER_STATUS_STARTING);
 		this.getMetaworksContext().setWhen(this.getStatus());
 		
-		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
-		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user","root");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password","root");
 
 		String scriptStart = "service jboss -b " + this.getIp() + " > /dev/null 2>&1 &";
 		
@@ -333,8 +333,8 @@ public class ProjectServer implements ITool, ContextAware {
 		this.setStatus(SERVER_STATUS_STOPPED);
 		this.getMetaworksContext().setWhen(this.getStatus());
 		
-		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
-		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user","root");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password","root");
 		
 		String scriptStop = "service jboss-cli --connect command=:shutdown";
 		
@@ -359,22 +359,22 @@ public class ProjectServer implements ITool, ContextAware {
 		this.setStatus(SERVER_STATUS_STOPPED);
 		this.getMetaworksContext().setWhen(this.getStatus());	
 		
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
 		// create Hudson job
-		String scriptCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob"); 
-		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting");
-		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build");
+		String scriptCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh"); 
+		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh");
+		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh");
 		
 		String paramProjectName = "\"" + projectInfo.getProjectName() + "\"";
 		String paramIP = "\"" + this.getIp() + "\"";
 		
-		String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+		String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
 		String nextBuilderNumber = null;
 		String builderResult = null;
 		
@@ -467,8 +467,8 @@ public class ProjectServer implements ITool, ContextAware {
 			this.setStatus(SERVER_STATUS_RUNNING);
 			
 		}else 		if(!"Not Allocated".equals(this.getIp())){
-			String targetUserId = GlobalContext.getPropertyString("vm.target.user");
-			String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+			String targetUserId = GlobalContext.getPropertyString("vm.target.user","root");
+			String targetPassword= GlobalContext.getPropertyString("vm.target.password","root");
 			
 			String scriptStatus = "netstat -an | grep 8080|grep -v grep |grep LISTEN|wc -l";
 			String scriptStarting = "ps -ef|grep service|grep jboss|grep -v grep|wc -l";

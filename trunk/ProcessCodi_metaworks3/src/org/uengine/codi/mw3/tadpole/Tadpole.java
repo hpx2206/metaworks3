@@ -46,9 +46,9 @@ public class Tadpole {
 		
 		
 		//center
-		String ip = GlobalContext.getPropertyString("pole.call.ip");
-		String port = GlobalContext.getPropertyString("pole.call.port");
-		String db  = GlobalContext.getPropertyString("pole.call.db");
+		String ip = GlobalContext.getPropertyString("pole.call.ip","localhost");
+		String port = GlobalContext.getPropertyString("pole.call.port","80");
+		String db  = GlobalContext.getPropertyString("pole.call.db","/tadpole");
 		
 		String url = "http://" + ip + ":" + port + db;
 		
@@ -77,9 +77,9 @@ public class Tadpole {
 	public void createUserAtTadpole(String parameter) throws Exception {
 		
 
-		String ip = GlobalContext.getPropertyString("pole.call.ip");
-		String port = GlobalContext.getPropertyString("pole.call.port");
-		String db  = GlobalContext.getPropertyString("pole.call.db");
+		String ip = GlobalContext.getPropertyString("pole.call.ip","localhost");
+		String port = GlobalContext.getPropertyString("pole.call.port","80");
+		String db  = GlobalContext.getPropertyString("pole.call.db","/tadpole");
 		
 		String sUrl = "http://" + ip + ":" + port + db + "/create" + parameter;
 		

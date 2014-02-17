@@ -179,7 +179,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
     		
 //			ClassPool pool = ClassPool.getDefault();
 //			
-//			String[] securedClassMehtods = GlobalContext.getPropertyStringArray("secured.classmethods");
+//  		String[] securedClassMehtods = GlobalContext.getPropertyStringArray("secured.classmethods","java.io.File.createNewFile,java.io.File.delete,java.io.File.list,java.io.File.listFiles,java.io.File.renameTo,java.io.File.mkdir,java.io.File.mkdirs,java.lang.System.setOut,java.lang.System.load,java.lang.System.loadLibrary,java.lang.System.setOut,java.lang.System.setProperties,java.lang.System.setErr,java.lang.System.setSecurityManager,java.lang.System.getSecurityManager");
 //			
 //			for(String securedClassMethod : securedClassMehtods){
 //				

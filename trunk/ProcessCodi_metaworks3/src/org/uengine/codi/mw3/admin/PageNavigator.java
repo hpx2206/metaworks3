@@ -29,7 +29,7 @@ public class PageNavigator{
 	public final static String USE_SELF_SERVICE_PORTAL = GlobalContext.getPropertyString("selfserviceportal.use", "0");
 	public final static String USE_NKIA = GlobalContext.getPropertyString("nkia.use", "0");
 	public final static String USE_TADPOLE = GlobalContext.getPropertyString("tadpole.use", "0");
-	public final static String USE_KNOWLEDGE = GlobalContext.getPropertyString("knowledge.use", "1");
+	public final static String USE_KNOWLEDGE = GlobalContext.getPropertyString("knowledge.use", "0");
 	public final static String USE_MARKETPLACE = GlobalContext.getPropertyString("marketplace.use", "0");
 	
 

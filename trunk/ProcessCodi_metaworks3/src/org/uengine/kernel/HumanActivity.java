@@ -673,8 +673,8 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			 */
 			//kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+getRole().getDispatchingOption());
 			roleMapping = new RoleMapping();
-			roleMapping.setEndpoint(GlobalContext.getPropertyString("codi.user.id"));
-			roleMapping.setResourceName(GlobalContext.getPropertyString("codi.user.name"));
+			roleMapping.setEndpoint(GlobalContext.getPropertyString("codi.user.id","0"));
+			roleMapping.setResourceName(GlobalContext.getPropertyString("codi.user.name","CODI"));
 			
 			kpv.put("resourceName", roleMapping.getResourceName());
 			kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+Role.DISPATCHINGOPTION_RACING);
@@ -1221,7 +1221,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 	
 	protected void saveSnapshotHTML(ProcessInstance instance) throws Exception {
 		
-		if(!"true".equals(GlobalContext.getPropertyString("humanactivity.save.snapshot.html", "true"))) return;
+		if(!"true".equals(GlobalContext.getPropertyString("humanactivity.save.snapshot.html", "false"))) return;
 
 		
 		if("defaultHandler".equals(getTool()) || "codiReplyHandler".equals(getTool())) {

@@ -116,9 +116,9 @@ public class ReflectPanel {
 		filepathinfo.setProjectId(wfNode.getId());
 		CloudInfo cloudInfo = new CloudInfo();
 		
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 		String command;
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
@@ -211,7 +211,7 @@ public class ReflectPanel {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
 //				this.command(command);
 
 				
@@ -228,7 +228,7 @@ public class ReflectPanel {
 				 */
 				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + this.getSqlFile().getUploadedPath();
 				
-				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
+				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -236,7 +236,7 @@ public class ReflectPanel {
 				 * sell 명령어 = {path}/killDev.sh
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.tomcat.killDevServer");
+				command = GlobalContext.getPropertyString("vm.tomcat.killDevServer","/oce/script/tomcat/killDev.sh");
 				jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -261,7 +261,7 @@ public class ReflectPanel {
 				 * sell 명령어 = {path}/startDev.sh
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer");
+				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer","/oce/script/tomcat/startDev.sh");
 				jschServerBehaviour.runCommand(command);
 				
 			}
@@ -277,7 +277,7 @@ public class ReflectPanel {
 				if(!check){
 					String nextBuilderNumber = null;
 					String builderResult = null;
-					String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+					String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
 					
 					long timeoutTime = 200000;
 					long sleepTime = 5000;
@@ -297,7 +297,7 @@ public class ReflectPanel {
 					
 					jschServerBehaviour.sessionLogin(host, userId, passwd);		
 					
-					command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " + cloudInfo.getRootPwd();
+					command = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " + cloudInfo.getRootPwd();
 					jschServerBehaviour.runCommand(command);
 					
 					HudsonJobApi hudsonJobApi = new HudsonJobApi();
@@ -316,7 +316,7 @@ public class ReflectPanel {
 							break;
 					}
 					
-					command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
+					command = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh") + " " + wfNode.getProjectAlias();
 					jschServerBehaviour.runCommand(command);
 					
 					while(builderResult == null){
@@ -335,7 +335,7 @@ public class ReflectPanel {
 						}
 					}
 					
-					command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " " + wfNode.getProjectAlias();
+					command = GlobalContext.getPropertyString("vm.svn.checkVersion","/home/hudson/script/svnCheck.sh") + " " + wfNode.getProjectAlias();
 					tmp = jschServerBehaviour.runCommand(command);
 					
 					if(jschServerBehaviour.getJschSession() != null)
@@ -400,7 +400,7 @@ public class ReflectPanel {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"";
 //				this.command(command);
 				
 				/*
@@ -415,7 +415,7 @@ public class ReflectPanel {
 				 * 
 				 */
 				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + this.getSqlFile().getUploadedPath();
-				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
+				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -423,7 +423,7 @@ public class ReflectPanel {
 				 * sell 명령어 = {path}/killDev.sh
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.tomcat.killDevServer");
+				command = GlobalContext.getPropertyString("vm.tomcat.killDevServer","/oce/script/tomcat/killDev.sh");
 				jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -433,12 +433,12 @@ public class ReflectPanel {
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + wfNode.getProjectAlias() + "\"" + " \"dev\"";
+				command = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh") + " \"" + wfNode.getProjectAlias() + "\"" + " \"dev\"";
 				jschServerBehaviour.runCommand(command);
 				
 				String nextBuilderNumber = null;
 				String builderResult = null;
-				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
 				HudsonJobApi hudsonJobApi = new HudsonJobApi();
 				
 				long timeoutTime = 200000;
@@ -469,7 +469,7 @@ public class ReflectPanel {
 				 * 
 				 */
 				
-				command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
+				command = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh") + " " + wfNode.getProjectAlias();
 				jschServerBehaviour.runCommand(command);
 				
 				//hudson build monitering popup
@@ -502,7 +502,7 @@ public class ReflectPanel {
 				 * "projectAlias" = 프로젝트 생성 시 입력한 alias 값입니다.
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.svn.checkVersion") + " \"" + wfNode.getProjectAlias() + "\"";
+				command = GlobalContext.getPropertyString("vm.svn.checkVersion","/home/hudson/script/svnCheck.sh") + " \"" + wfNode.getProjectAlias() + "\"";
 				String svnVersion = jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -521,7 +521,7 @@ public class ReflectPanel {
 				 * sell 명령어 = {path}/startDev.sh
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer");
+				command = GlobalContext.getPropertyString("vm.tomcat.startDevServer","/oce/script/tomcat/startDev.sh");
 				jschServerBehaviour.runCommand(command);
 				
 				filepathinfo.setReflectVer(Integer.parseInt(svnVersion));

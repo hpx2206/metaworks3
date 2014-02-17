@@ -19,8 +19,8 @@ public class WorkNotificationMailSendingActivityFilter implements ActivityFilter
 
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	final static String messageBody = GlobalContext.getPropertyString("alarmactivityfilter.message", "You've received a work to do");
-	final static String host = GlobalContext.getPropertyString("alarmactivityfilter.wih.host");
-	final static String port = GlobalContext.getPropertyString("alarmactivityfilter.wih.port");
+	final static String host = GlobalContext.getPropertyString("alarmactivityfilter.wih.host","localhost");
+	final static String port = GlobalContext.getPropertyString("alarmactivityfilter.wih.port","8080");
 	
 	public void afterExecute(Activity activity, final ProcessInstance instance)
 		throws Exception {

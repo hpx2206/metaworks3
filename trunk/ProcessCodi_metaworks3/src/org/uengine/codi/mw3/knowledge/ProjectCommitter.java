@@ -107,15 +107,15 @@ public class ProjectCommitter {
 	
 	public void load() throws Exception{
 		
-		  String host = GlobalContext.getPropertyString("vm.manager.ip");
-		  String userId = GlobalContext.getPropertyString("vm.manager.user");
-		  String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		  String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+		  String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+		  String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 		  String command = null;
 		
 		  JschCommand jschServerBehaviour = new JschCommand();
 		  jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
-		command = GlobalContext.getPropertyString("vm.svn.userInfo") + " " + this.getProjectAlias();
+		command = GlobalContext.getPropertyString("vm.svn.userInfo","/home/svn/script/svnUserInfo.sh") + " " + this.getProjectAlias();
 	
 		String tmp = jschServerBehaviour.runCommand(command);
 		String svnUser = null;
@@ -158,9 +158,9 @@ public class ProjectCommitter {
 	@Face(displayName="▶ add")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
 	public void addCommitter() throws Exception{
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 		String command = null;
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
@@ -174,7 +174,7 @@ public class ProjectCommitter {
 			int size = svnUserList.size();
 			if(size == 0){
 				//관리자 삭제시 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + this.getManagerAccount() + " " + getManagerAccount() + " ";
+				command = GlobalContext.getPropertyString("vm.svn.createUser","/home/svn/script/svnUserAdd.sh") + " " +  this.getProjectAlias() + " " + this.getManagerAccount() + " " + getManagerAccount() + " ";
 			 	jschServerBehaviour.runCommand(command);
 			}
 			
@@ -191,7 +191,7 @@ public class ProjectCommitter {
 						employee.setEmpCode(contact.getFriendId());
 						employee.copyFrom(employee.databaseMe());						
 						
-					 	command = GlobalContext.getPropertyString("vm.svn.createUser") + " " +  this.getProjectAlias() + " " + employee.getEmail() + " " + employee.getPassword() + " ";
+					 	command = GlobalContext.getPropertyString("vm.svn.createUser","/home/svn/script/svnUserAdd.sh") + " " +  this.getProjectAlias() + " " + employee.getEmail() + " " + employee.getPassword() + " ";
 					 	jschServerBehaviour.runCommand(command);
 						
 						SvnUser su = new SvnUser(employee.getEmpCode(), employee.getEmail(), employee.getEmpName());
@@ -229,9 +229,9 @@ public class ProjectCommitter {
 	@Face(displayName="◀ remove")
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_SELF)
 	public void removeCommitter() throws Exception{
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 		String command = null;
 		Employee employee = new Employee();
 
@@ -253,7 +253,7 @@ public class ProjectCommitter {
 
 					JschCommand jschServerBehaviour = new JschCommand();
 					jschServerBehaviour.sessionLogin(host, userId, passwd);
-					command = GlobalContext.getPropertyString("vm.svn.userDelete") + " " + this.getProjectName() + " " + employee.getEmail() + " " + employee.getPassword();
+					command = GlobalContext.getPropertyString("vm.svn.userDelete","/home/svn/script/svnUserDel.sh") + " " + this.getProjectName() + " " + employee.getEmail() + " " + employee.getPassword();
 					jschServerBehaviour.runCommand(command);
 					newUserList.remove(su.getCommittor());
 				}

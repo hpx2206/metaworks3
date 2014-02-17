@@ -285,7 +285,7 @@ public class MetadataBundle {
 	}
 	
 	public static String getProjectId(){
-		String projectKey = GlobalContext.getPropertyString("metadataKey", null );
+		String projectKey = GlobalContext.getPropertyString("metadataKey", "codi" );
 		// TODO projectKey 가 암호화 키로 온다는 가정하에 구하는 로직 필요함
 		String projectId = projectKey;
 		

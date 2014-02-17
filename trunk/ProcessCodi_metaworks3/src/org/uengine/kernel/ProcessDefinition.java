@@ -340,7 +340,7 @@ public class ProcessDefinition extends ScopeActivity implements Serializable{
 		public ActivityFilter[] getActivityFilters() {
 			
 			if(!GlobalContext.isDesignTime() && defaultActivityFilters == null){
-				String defaultActivityFilterClsNames = GlobalContext.getPropertyString("defaultactivityfilters");
+				String defaultActivityFilterClsNames = GlobalContext.getPropertyString("defaultactivityfilters","org.uengine.components.activityfilters.InstanceDataAppendingActivityFilter");
 				
 				if(org.uengine.util.UEngineUtil.isNotEmpty(defaultActivityFilterClsNames)){
 					String [] filterClsNames = defaultActivityFilterClsNames.split(",");
