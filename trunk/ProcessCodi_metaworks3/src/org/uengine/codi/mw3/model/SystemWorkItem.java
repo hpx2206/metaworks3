@@ -22,27 +22,13 @@ public class SystemWorkItem extends CommentWorkItem{
 		Session codiSession = new Session();
 		
 		IEmployee emp = new Employee();
-		emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id"));
-		emp = emp.findMe();
+		emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id", "0"));
+		emp.setEmpName(GlobalContext.getPropertyString("codi.user.name", "CODI"));
 		emp.setGlobalCom(session.getEmployee().getGlobalCom());
-		if( !emp.next() ){
-			emp.createCodi();
-		}
-		emp.beforeFirst();
-		IUser writer = new User();
-		writer.setUserId(emp.getEmpCode());
-		writer.setName(emp.getEmpName());
 		
-		ICompany company = new Company();
-		company.setComCode(emp.getGlobalCom());
-		
-		codiSession.setUser(writer);
-		codiSession.setCompany(company);
+		codiSession.setUser(emp.getUser());
 		codiSession.setEmployee(emp);
 		
-		
-		this.setEndpoint(emp.getEmpCode());
-		this.setWriter(writer);
 		this.setTitle(this.getSystemMessage());
 		this.session = codiSession;
 		
