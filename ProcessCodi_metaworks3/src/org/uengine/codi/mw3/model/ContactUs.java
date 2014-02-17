@@ -58,7 +58,7 @@ public class ContactUs implements ContextAware{
 	@Face(displayName="$sendContactUs")
 	public Object sendFeedback() throws Exception{
 		String contents = this.getContents().getContents();
-		String adminEmail = GlobalContext.getPropertyString("contactUs.feedbackMail");  //help@uengine.org
+		String adminEmail = GlobalContext.getPropertyString("contactUs.feedbackMail","help@uengine.org");  //help@uengine.org
 		
 		EMailServerSoapBindingImpl emailServerSoapBindingImpl = new EMailServerSoapBindingImpl();
 		Company company = new Company();

@@ -177,7 +177,7 @@ public class SNS extends Application{
 				setPageNavigator(new OcePageNavigator());
 			else if("sns".equals(session.getUx()))
 				setPageNavigator(new OcePageNavigator());
-			else if("codi_8080".equals(GlobalContext.getPropertyString("metadataKey", "0")))
+			else if("codi_8080".equals(GlobalContext.getPropertyString("metadataKey", "codi")))
 				setPageNavigator(null);
 			else
 				setPageNavigator(new PageNavigator());

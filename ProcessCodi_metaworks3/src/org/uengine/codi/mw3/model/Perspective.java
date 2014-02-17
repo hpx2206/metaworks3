@@ -35,7 +35,7 @@ public class Perspective {
 	public final static String USE_APP = GlobalContext.getPropertyString("app.use", "0");
 	public final static String USE_CONTACT = GlobalContext.getPropertyString("contact.use", "1");
 	public final static String USE_COMMINGTODO = GlobalContext.getPropertyString("commingTodo.use", "1");
-	public final static String USE_PERSPECTIVE_KNOWLEDGE = GlobalContext.getPropertyString("perspective.knowledge.use", "1");
+	public final static String USE_PERSPECTIVE_KNOWLEDGE = GlobalContext.getPropertyString("perspective.knowledge.use", "0");
 	public final static String USE_DOCUMENT = GlobalContext.getPropertyString("document.use", "0");
 	public final static String USE_GROUP		= GlobalContext.getPropertyString("group.use", "1");
 	
