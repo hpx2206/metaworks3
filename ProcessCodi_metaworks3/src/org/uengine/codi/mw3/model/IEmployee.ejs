@@ -222,6 +222,7 @@ if(value){
 	%>
 	
 	<ul>
+		<li class="user_card_top"></li>
 		<li>
 			<dl class="lst_type2">
 				<dd class="photo2">
@@ -270,7 +271,7 @@ if(value){
 				<li><a id="wBtn" href="#" onClick="<%=methods.closeEmployeeInfo.caller()%>"><span><%=mw3.localize('$Close')%></span></a></li>
 				<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize("$SaveProfile")%></span></a></li>
 				<li style="float:left"><a id="wBtn" href="#" onClick="<%=methods.unsubscribe.caller()%>"><span><%=mw3.localize("$Unsubscribe")%></span></a></li>	
-				<li class="clear"></li>
+				<div class="clear"></div>
 				<%}%>
 		</ul>
 	</div>
