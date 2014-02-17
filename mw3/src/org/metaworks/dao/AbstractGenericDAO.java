@@ -19,6 +19,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.sql.RowSet;
+import javax.sql.rowset.CachedRowSet;
 
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
@@ -30,7 +31,7 @@ import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.dwr.MetaworksRemoteService;
 
-import sun.jdbc.rowset.CachedRowSet;
+import com.sun.rowset.CachedRowSetImpl;
 
 
 /**
@@ -323,7 +324,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			pstmt = con.prepareStatement(getActualSqlStmt(getStatement()));
 		
 			lateBindProperties(getStatement(), pstmt);
-			rowSet = new CachedRowSet();
+			rowSet = new CachedRowSetImpl();
 			
 			System.out.println("=====>");
 			System.out.println(getStatement());
@@ -1765,7 +1766,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	}
 	
 	
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			if(metaworksContext==null)
 				metaworksContext = new MetaworksContext();
