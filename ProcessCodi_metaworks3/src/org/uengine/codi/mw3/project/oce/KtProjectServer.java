@@ -239,8 +239,8 @@ public class KtProjectServer  implements ITool, ContextAware{
 		this.setStatus(ProjectServer.SERVER_STATUS_STARTING);
 		this.getMetaworksContext().setWhen(this.getStatus());
 		
-//		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
-//		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+//		String targetUserId = GlobalContext.getPropertyString("vm.target.user","root");
+//		String targetPassword= GlobalContext.getPropertyString("vm.target.password","root");
 
 //		String targetUserId;
 //		String targetPassword;
@@ -286,8 +286,8 @@ public class KtProjectServer  implements ITool, ContextAware{
 //		this.setStatus(ProjectServer.SERVER_STATUS_STOPPED);
 //		this.getMetaworksContext().setWhen(this.getStatus());
 //		
-////		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
-////		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+////		String targetUserId = GlobalContext.getPropertyString("vm.target.user","root");
+////		String targetPassword= GlobalContext.getPropertyString("vm.target.password","root");
 //		String targetUserId;
 //		String targetPassword;
 //		String scriptStop;

@@ -263,7 +263,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 		this.setProjectAlias(wfNode.getProjectAlias());
 		setType(wfNode.getVisType());
 		if("svn".equals(this.getType())){
-			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + wfNode.getProjectAlias());
+			this.setHudson(GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/") + "/job/" + wfNode.getProjectAlias());
 			this.setSvn(GlobalContext.getPropertyString("vm.svn.url") + "/" + wfNode.getProjectAlias());
 		}
 		this.description = wfNode.getDescription();
@@ -278,10 +278,10 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 			
 			this.ip = (String)(Serializable)processManager.getProcessVariable(linkedId, "", "vm_ip");
 			
-			this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
+			this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip","localhost") + "/" + this.projectName;
 			
 			
-			this.hudson = GlobalContext.getPropertyString("vm.hudson.url");
+			this.hudson = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
 			*/
 		//}
 	}
@@ -314,7 +314,7 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
 	public OpenBrowser downloadVirtualMachine() throws Exception {
 
-		String url = GlobalContext.getPropertyString("vm.download.url");
+		String url = GlobalContext.getPropertyString("vm.download.url","https://www.virtualbox.org/wiki/Downloads");
 
 		return new OpenBrowser(url);
 	}
@@ -428,14 +428,14 @@ public class ProjectInfo extends GroupInfo implements ContextAware {
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
 	public Object hudson() {
 		IFrame iframe = new IFrame();
-		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url") + "job/" + this.getProjectAlias());
+		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/") + "job/" + this.getProjectAlias());
 		return new ModalWindow(iframe, 0, 0, "$hudson");
 	}
 	
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow showHudsonConsole() {
 		IFrame iframe = new IFrame();
-		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url") + "job/" + this.getProjectAlias() + "/lastBuild/console");
+		iframe.setSrc(GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/") + "job/" + this.getProjectAlias() + "/lastBuild/console");
 		return new ModalWindow(iframe, 0, 0, this.getProjectAlias() + " Console");
 	}
 

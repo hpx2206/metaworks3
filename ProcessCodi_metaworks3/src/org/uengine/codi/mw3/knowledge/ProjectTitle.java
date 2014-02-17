@@ -205,9 +205,9 @@ public class ProjectTitle implements ContextAware {
 
 		String command = null;
 //		
-//		String host = GlobalContext.getPropertyString("vm.manager.ip");
-//		String userId = GlobalContext.getPropertyString("vm.manager.user");
-//		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+//		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+//		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+//		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 //		
 //		JschCommand jschServerBehaviour = new JschCommand();
 //		jschServerBehaviour.sessionLogin(host, userId, passwd);
@@ -216,48 +216,48 @@ public class ProjectTitle implements ContextAware {
 //			if("1".equals(StartCodi.USE_IAAS)){
 //				
 //				// create SVN
-//				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.svn.createProject","/home/svn/script/svnMakeProject.sh") + " \"" + projectNode.getProjectAlias() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				// setting SVN
-//				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.svn.setting","/home/svn/script/svnSetting.sh") + " \"" +  projectNode.getProjectAlias() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//SVN 유저 추가
-//				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
+//				command = GlobalContext.getPropertyString("vm.svn.createUser","/home/svn/script/svnUserAdd.sh") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//Create Hudson
-//				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
+//				command = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh") + " " +  projectNode.getProjectAlias();
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//Setting Hudson
-//				command = GlobalContext.getPropertyString("vm.hudson.setting") + " " +  projectNode.getProjectAlias();
+//				command = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh") + " " +  projectNode.getProjectAlias();
 //				jschServerBehaviour.runCommand(command);
 //			}
 //			else{//IaaS 미 연동 시
 //				//SVN 생성
-//				command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.svn.createProject","/home/svn/script/svnMakeProject.sh") + " \"" + projectNode.getProjectAlias() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				// setting SVN
-//				command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.svn.setting","/home/svn/script/svnSetting.sh") + " \"" +  projectNode.getProjectAlias() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//SVN 유저 추가
-//				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
+//				command = GlobalContext.getPropertyString("vm.svn.createUser","/home/svn/script/svnUserAdd.sh") + " \"" +  projectNode.getProjectAlias() + "\" \"" + session.getEmployee().getEmail() + "\" \"" + session.getEmployee().getPassword() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//Create Hudson
-//				command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " +  projectNode.getProjectAlias();
+//				command = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh") + " " +  projectNode.getProjectAlias();
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//Setting Hudson
-//				command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectNode.getProjectAlias() + "\"" + " \"dev\"";
+//				command = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh") + " \"" + projectNode.getProjectAlias() + "\"" + " \"dev\"";
 //				jschServerBehaviour.runCommand(command);
 //				
 //				//Create Database
-//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //			}
 //			
@@ -268,7 +268,7 @@ public class ProjectTitle implements ContextAware {
 //			}else{//IaaS 미 연동 시
 //				
 //				//Create Database
-//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + projectNode.getProjectAlias() + "\"";
 //				jschServerBehaviour.runCommand(command);
 //			}
 //		}

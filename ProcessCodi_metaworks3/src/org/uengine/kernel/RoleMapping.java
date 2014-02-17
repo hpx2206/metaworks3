@@ -361,7 +361,7 @@ public class RoleMapping implements java.io.Serializable, Cloneable, CommandVari
 	public static RoleMapping create(){
 		if(USE_CLASS==null){
 			try{
-				USE_CLASS = GlobalContext.loadClass(GlobalContext.getPropertyString("rolemapping.class"));
+				USE_CLASS = GlobalContext.loadClass(GlobalContext.getPropertyString("rolemapping.class","com.defaultcompany.organization.DefaultCompanyRoleMapping"));
 			}catch(Exception e){
 				throw new RuntimeException("Couldn't find 'rolemapping.class' in uengine.properties has been set or couldn't initializes it.", e);
 				//USE_CLASS = Liferay44RoleMapping.class;

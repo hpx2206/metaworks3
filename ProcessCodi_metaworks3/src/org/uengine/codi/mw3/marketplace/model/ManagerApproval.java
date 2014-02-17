@@ -165,9 +165,9 @@ public class ManagerApproval implements ITool  {
 			
 			
 			if(!("1".equals(StartCodi.USE_IAAS))){
-				String host = GlobalContext.getPropertyString("vm.manager.ip");
-				String userId = GlobalContext.getPropertyString("vm.manager.user");
-				String passwd = GlobalContext.getPropertyString("vm.manager.password");
+				String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+				String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+				String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 				
 				String command ="";
 				String projectAlias = wfNode.getProjectAlias();
@@ -203,7 +203,7 @@ public class ManagerApproval implements ITool  {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"";
+				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				
@@ -234,7 +234,7 @@ public class ManagerApproval implements ITool  {
 				}
 				
 				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + filepathinfo.getSqlPath();
-				command = GlobalContext.getPropertyString("vm.mysql.loadScript") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"" + " \"" + sqlFilePath + "\"";
+				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -242,7 +242,7 @@ public class ManagerApproval implements ITool  {
 				 * sell 명령어 = {path}/killProd.sh
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.tomcat.killProdServer");
+				command = GlobalContext.getPropertyString("vm.tomcat.killProdServer","/oce/script/tomcat/killProd.sh");
 				jschServerBehaviour.runCommand(command);
 				
 				if("war".equals(filepathinfo.getFileType())){
@@ -270,7 +270,7 @@ public class ManagerApproval implements ITool  {
 					 * "subDomain" = 앱 등록 시 입력한 subDomain값 입니다. subDomain은 중복되는 값이 없는 key 값이어야 합니다.
 					 * 
 					 */
-					command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " + app.getSubDomain();
+					command = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh") + " " + app.getSubDomain();
 					jschServerBehaviour.runCommand(command);
 					
 					/*
@@ -285,7 +285,7 @@ public class ManagerApproval implements ITool  {
 					
 					String nextBuilderNumber = null;
 					String builderResult = null;
-					String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+					String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
 					HudsonJobApi hudsonJobApi = new HudsonJobApi();
 					
 					long timeoutTime = 200000;
@@ -321,7 +321,7 @@ public class ManagerApproval implements ITool  {
 					 * "subDomain" = 앱 등록 시 입력한 subDomain값 입니다. subDomain은 중복되는 값이 없는 key 값이어야 합니다.
 					 * 
 					 */
-					command = GlobalContext.getPropertyString("vm.hudson.build") + " " + app.getSubDomain();
+					command = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh") + " " + app.getSubDomain();
 					jschServerBehaviour.runCommand(command);
 					
 					while(builderResult == null){
@@ -358,7 +358,7 @@ public class ManagerApproval implements ITool  {
 				 * sell 명령어 = {path}/startProd.sh
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.tomcat.startProdServer");
+				command = GlobalContext.getPropertyString("vm.tomcat.startProdServer","/oce/script/tomcat/startProd.sh");
 				jschServerBehaviour.runCommand(command);
 				
 				
@@ -432,9 +432,9 @@ public class ManagerApproval implements ITool  {
 				cloudInfo.flushDatabaseMe();
 			}
 			
-			String host = GlobalContext.getPropertyString("vm.manager.ip");
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+			String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+			String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
 			String command;
 			JschCommand jschServerBehaviour = new JschCommand();
 			WfNode wfNode = new WfNode();
@@ -447,7 +447,7 @@ public class ManagerApproval implements ITool  {
 			if("svn".equals(wfNode.getVisType())){
 				String nextBuilderNumber = null;
 				String builderResult = null;
-				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+				String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
 				
 				long timeoutTime = 200000;
 				long sleepTime = 5000;
@@ -456,7 +456,7 @@ public class ManagerApproval implements ITool  {
 
 				jschServerBehaviour.sessionLogin(host, userId, passwd);
 				
-				command = GlobalContext.getPropertyString("vm.svn.svnRevision") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " 
+				command = GlobalContext.getPropertyString("vm.svn.svnRevision","/home/hudson/script/hudsonRevision.sh") + " " + wfNode.getProjectAlias() + " " + cloudInfo.getServerIp() + " " 
 						+ cloudInfo.getRootPwd() + " " + filepathInfo.getReflectVer();
 				
 				
@@ -477,7 +477,7 @@ public class ManagerApproval implements ITool  {
 						break;
 				}
 				
-				command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getProjectAlias();
+				command = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh") + " " + wfNode.getProjectAlias();
 				jschServerBehaviour.runCommand(command);
 				
 				while(builderResult == null){

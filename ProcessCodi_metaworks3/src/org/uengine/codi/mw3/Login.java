@@ -637,7 +637,7 @@ public class Login implements ContextAware {
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.setSession(session);
 		
-		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "0"))){
 			mainPanel = pageNavigator.goKnowledge();
 		}else if("pinterest".equals(lastVisitPage)){
 			mainPanel = pageNavigator.goPinterest();
@@ -661,11 +661,11 @@ public class Login implements ContextAware {
 		String className = null;
 		
 		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
-			pageNavigatorPropertyName = "oce.pagenavigator.class";
+			pageNavigatorPropertyName = GlobalContext.getPropertyStringArray("oce.pagenavigator.class","org.uengine.codi.mw3.admin.OcePageNavigator");
 			session.setUx("oce");
 		}
 		else{
-			pageNavigatorPropertyName = "codi.pagenavigator.class";
+			pageNavigatorPropertyName = GlobalContext.getPropertyStringArray("codi.pagenavigator.class","org.uengine.codi.mw3.admin.PageNavigator");
 		}
 		
 		className = GlobalContext.getPropertyString(pageNavigatorPropertyName);
@@ -685,7 +685,7 @@ public class Login implements ContextAware {
 		if("oce".equals(session.getUx())){
 			mainPanel = pageNavigator.goDashBoard();
 		}else{
-			if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+			if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "0"))){
 				mainPanel = pageNavigator.goKnowledge();
 			}else if("pinterest".equals(lastVisitPage)){
 				mainPanel = pageNavigator.goPinterest();
@@ -1027,9 +1027,9 @@ public class Login implements ContextAware {
 	*/
 	
 	protected void goTadpoleLogin(String email, String pw){
-		String ip = GlobalContext.getPropertyString("pole.call.ip");
-		String port = GlobalContext.getPropertyString("pole.call.port");
-		String db  = GlobalContext.getPropertyString("pole.call.db");
+		String ip = GlobalContext.getPropertyString("pole.call.ip", "localhost");
+		String port = GlobalContext.getPropertyString("pole.call.port","80");
+		String db  = GlobalContext.getPropertyString("pole.call.db","/root");
 		
 		String parameter = "?email=" + email + "&pw=" + pw;
 		
