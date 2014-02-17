@@ -72,10 +72,10 @@ public class ScheduleReader extends QuartzJobBean{
 				while(instRow.next()){
 					
 					IEmployee emp = new Employee();
-					emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id","0")  + "." + instRow.getString("INITCOMCD"));
-					emp.setGlobalCom(GlobalContext.getPropertyString("codi.user.name","CODI"));
-					emp = emp.findMe();
-
+					emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id"));
+					emp.setGlobalCom(GlobalContext.getPropertyString("codi.user.name"));
+					emp.setGlobalCom(instRow.getString("InitComCd"));
+					
 					IUser writer = new User();
 					writer.setUserId(emp.getEmpCode());
 					writer.setName(emp.getEmpName());
