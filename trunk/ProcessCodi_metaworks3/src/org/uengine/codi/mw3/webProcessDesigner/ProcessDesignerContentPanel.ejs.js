@@ -252,7 +252,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    		}else if( shapeElement.shape instanceof OG.shape.bpmn.E_End ){
 	    			$(shapeElement).attr('_width', '30');
 	    			$(shapeElement).attr('_height', '30');
-	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.StartActivity');
+	    			$(shapeElement).attr('_classname', 'org.uengine.kernel.EndActivity');
 	    			$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.ActivityView');
 	    		}
 	    		$(shapeElement).attr('_classType', 'Activity');
@@ -272,7 +272,26 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	        	mw3.onLoadFaceHelperScript();
 	    	}
         });
-	    canvas.onRemoveShape(function (shapeElement) {
+	    canvas.onRemoveShape(function (event, shapeElement) {
+//			console.log($(shapeElement));
+	    });
+	    canvas.onBeforeRemoveShape(function (event, shapeElement) {
+			if( shapeElement.shape &&  shapeElement.shape.TYPE == 'EDGE' ){
+				var getShapeFromTerminal = function (terminal) {
+	                var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
+	                if (terminalId) {
+	                    return canvas.getRenderer().getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
+	                } else {
+	                    return null;
+	                }
+	            };
+				var fromElement = getShapeFromTerminal($(shapeElement).attr("_from"));
+	            var toElement = getShapeFromTerminal($(shapeElement).attr("_to"));
+	            var fromElementId = $(fromElement).attr('id');
+	            var toElementId = $(toElement).attr('id');
+				$(fromElement).attr('_conneted'+fromElementId,'');
+				$(toElement).attr('_conneted'+toElementId,'');
+			}
 	    });
 	    canvas.onLabelChanged(function (event, shapeElement, afterText, beforeText) {
 	    	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성
