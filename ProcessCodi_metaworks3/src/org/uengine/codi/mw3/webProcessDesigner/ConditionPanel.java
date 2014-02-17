@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,6 +13,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.And;
@@ -175,36 +177,36 @@ public class ConditionPanel  implements ContextAware{
 					Condition cd = childCondition[j];
 					if( cd instanceof Evaluate){
 						Evaluate eval = (Evaluate)cd;
-						
+						String type = eval.getType();
 						conditionNode.getValiableChoice().setSelected(eval.getKey());
 						conditionNode.getSignChoice().setSelected(eval.getCondition());
 						ConditionInput conditionInput = conditionNode.getConditionInput();
 						Object value = eval.getValue();
-						if( value instanceof String){
-							String expString = (String)value;
-							if( "yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString) ){
-								conditionNode.getExpressionChoice().setSelected("Yes or No");
-								conditionInput.getMetaworksContext().setHow("Yes or No");
-								conditionInput.setYesNo(expString);
-							}else{
-								if( conditionInput.getValiableChoice().getOptionValues().contains(expString) ){
-									conditionNode.getExpressionChoice().setSelected("variable");
-									conditionInput.getMetaworksContext().setHow("variable");
-									conditionInput.getValiableChoice().setSelected(expString);
-								}else{
-									conditionNode.getExpressionChoice().setSelected("text");
-									conditionInput.getMetaworksContext().setHow("text");
-									conditionInput.setExpressionText(expString);
-								}
-							}
-						}else if( value instanceof Long){
+						if( value != null && value instanceof String && CodiStringUtil.isNumeric((String)value) || "Number".equalsIgnoreCase(type)){
 							conditionNode.getExpressionChoice().setSelected("number");
 							conditionInput.getMetaworksContext().setHow("number");
 							conditionInput.setExpressionText(value.toString());
-						}else if( value instanceof Date){
+						}else if( type != null && "Date".equalsIgnoreCase(type)){
 							conditionNode.getExpressionChoice().setSelected("date");
 							conditionInput.getMetaworksContext().setHow("date");
-							conditionInput.setExpressionDate((Date)value);
+							SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+							Date date = df.parse((String)value);
+							conditionInput.setExpressionDate(date);
+						}else if( value instanceof String){
+							String expString = (String)value;
+							if( ("yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString)) || "Yes or No".equalsIgnoreCase(type) ){
+								conditionNode.getExpressionChoice().setSelected("Yes or No");
+								conditionInput.getMetaworksContext().setHow("Yes or No");
+								conditionInput.setYesNo(expString);
+							}else if( conditionInput.getValiableChoice().getOptionValues().contains(expString) || "variable".equalsIgnoreCase(type) ){
+									conditionNode.getExpressionChoice().setSelected("variable");
+									conditionInput.getMetaworksContext().setHow("variable");
+									conditionInput.getValiableChoice().setSelected(expString);
+							}else{
+								conditionNode.getExpressionChoice().setSelected("text");
+								conditionInput.getMetaworksContext().setHow("text");
+								conditionInput.setExpressionText(expString);
+							}
 						}else{
 							conditionNode.getExpressionChoice().setSelected("null");
 							conditionInput.getMetaworksContext().setHow("null");

@@ -1,12 +1,11 @@
 package org.uengine.kernel;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
 import org.metaworks.FieldDescriptor;
 import org.metaworks.ObjectInstance;
-import org.metaworks.WebFieldDescriptor;
-import org.metaworks.WebObjectType;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.ITool;
 import org.uengine.processmanager.SimulatorTransactionContext;
@@ -23,6 +22,7 @@ public class Evaluate extends Condition{
 	String key;
 	ProcessVariable pv;
 	Object val;
+	String type;
 		
 	String condition;	// default
 	
@@ -69,6 +69,28 @@ public class Evaluate extends Condition{
 		
 		String condition = this.condition.trim();
 		
+		if(compareVal==null){
+			if(condition.equals("!=")){
+				return (returnVal!=null);
+			}else if(condition.equals("contains") || condition.equals("not contains")){
+				return checkupContainsCompareVal(returnVal, compareVal);
+			}else{		
+				return (returnVal==null || "".equals(returnVal));
+			}
+		}
+		
+		if(returnVal==null){
+			if(condition.equals("!=")){
+				return (compareVal!=null);
+			}else{
+				return (compareVal==null);
+			}
+		}
+		
+		if( compareVal instanceof String && "date".equalsIgnoreCase(type)){
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			compareVal = df.parse((String)compareVal);
+		}
 		// compare with ComplexType
 		if(returnVal instanceof ITool){
 			
@@ -153,28 +175,6 @@ public class Evaluate extends Condition{
 			ProcessVariable variable = (ProcessVariable)val;
 			compareVal = instance.getProcessDefinition().getProcessVariable(variable.getName()).get(instance, "");
 		}
-		
-		if(compareVal==null){
-//			System.out.println("Evaluate::isMet : the evaluated value = " + returnVal);
-			
-			if(condition.equals("!=")){
-				return (returnVal!=null);
-			}else if(condition.equals("contains") || condition.equals("not contains")){
-				return checkupContainsCompareVal(returnVal, compareVal);
-			}else{		
-				return (returnVal==null || "".equals(returnVal));
-			}
-		}
-		
-		if(returnVal==null){
-//			System.out.println("Evaluate::isMet : the evaluated value = " + returnVal);
-			
-			if(condition.equals("!=")){
-				return (compareVal!=null);
-			}else{
-				return (compareVal==null);
-			}
-		}
 
 		if ( compareVal instanceof Number &&  returnVal.getClass() == String.class) {
 			String strReturnVal = (String)returnVal;
@@ -189,110 +189,6 @@ public class Evaluate extends Condition{
 			else
 				returnVal = new Double(strReturnVal);
 		}
-
-//		if ( compareVal instanceof Double &&  returnVal.getClass() == Long.class) {
-//			returnVal = ((Long)returnVal).doubleValue();
-//		}else if ( compareVal instanceof Double &&  returnVal.getClass() == Integer.class) {
-//			returnVal = ((Integer)returnVal).doubleValue();
-//		} 
-			
-//		if ( compareVal.getClass() == Long.class &&  returnVal.getClass() == String.class) {
-//			returnVal = new Long((String)returnVal);
-//		}
-
-
-		//review: should support all types comparison		
-/*		if( returnVal instanceof Number 
-					&& compareVal instanceof Number ){
-			
-			
-			
-			
-			
-			if(compareVal.getClass() == Double.class){
-				
-				double returnDouble = ((Number)returnVal).doubleValue();
-				double valDouble = ((Number)compareVal).doubleValue();
-				
-				if( condition.equals( "<")){
-					if( returnDouble < valDouble)
-						return true;
-				}else if( condition.equals( "<=") || condition.equals( "=<")){
-					if( returnDouble <= valDouble)
-						return true;
-				}else if( condition.equals( ">")){
-					if( returnDouble > valDouble)
-						return true;
-				}else if( condition.equals( ">=") || condition.equals( "=>")){
-					if( returnDouble >= valDouble)
-						return true;
-				}else if(condition.equals( "==")){
-					if( returnDouble == valDouble)
-						return true;
-				}else if("!=".equals(condition)){
-					if( returnDouble != valDouble)
-						return true;
-				}
-				
-			}else{
-
-				long returnInt = ((Number)returnVal).longValue();
-				long valInt = ((Number)compareVal).longValue();
-
-				if( condition.equals( "<")){
-					if( returnInt < valInt)
-						return true;
-				}else if( condition.equals( "<=") || condition.equals( "=<")){
-					if( returnInt <= valInt)
-						return true;
-				}else if( condition.equals( ">")){
-					if( returnInt > valInt)
-						return true;
-				}else if( condition.equals( ">=") || condition.equals( "=>")){
-					if( returnInt >= valInt)
-						return true;
-				}else if(condition.equals( "==")){
-					if( returnInt == valInt)
-						return true;
-				}
-			}
-
-			return false;
-		}*/
-		
-//		//review: should support all types comparison		
-//		if( returnVal.getClass() == Long.class 
-//					&& compareVal.getClass() == Long.class){
-//			
-//			long returnInt = ((Long)returnVal).longValue();
-//			long valInt = ((Long)compareVal).longValue();
-//			  
-//			if( condition.equals( "<")){
-//				if( returnInt < valInt)
-//					return true;
-//			}else if( condition.equals( "<=") || condition.equals( "=<")){
-//				if( returnInt <= valInt)
-//					return true;
-//			}else if( condition.equals( ">")){
-//				if( returnInt > valInt)
-//					return true;
-//			}else if( condition.equals( ">=") || condition.equals( "=>")){
-//				if( returnInt >= valInt)
-//					return true;
-//			}else if(condition.equals( "==")){
-//				if( returnInt == valInt)
-//					return true;
-//			}
-//			
-//			return false;
-//		}
-		
-/*		if( returnVal.getClass() == Integer.class || returnVal.getClass() == Long.class){
-			if( condition.equals( "!="))
-				return !(returnVal.toString().equals( compareVal.toString()) );
-			
-			return returnVal.toString().equals( compareVal.toString());
-		}*/
 		
 		if( condition.equals( "!="))
 			return !( instance.get(scope, key).equals(compareVal) );
@@ -389,6 +285,14 @@ public class Evaluate extends Condition{
 
 	public void setCondition(String condition) {
 		this.condition = condition;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public ValidationContext validate(Map options){

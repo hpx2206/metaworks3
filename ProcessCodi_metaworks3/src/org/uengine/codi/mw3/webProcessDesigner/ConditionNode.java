@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
@@ -183,7 +184,8 @@ public class ConditionNode  implements Cloneable, ContextAware{
 			}else if( val3 != null && val3.equalsIgnoreCase("Yes or No") ){
 				val3 = expVal.getYesNo();
 			}else if( val3 != null && val3.equalsIgnoreCase("date") ){
-				val3 = expVal.getExpressionDate().toString();
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				val3 = df.format(expVal.getExpressionDate());
 			}else if( val3 != null && val3.equalsIgnoreCase("File") ){
 				// TODO
 			}else if( val3 != null && val3.equalsIgnoreCase("variable") ){
