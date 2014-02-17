@@ -3228,7 +3228,7 @@ legend {display:none;}
 .form_table2 caption{padding:8px 0;font-weight:bold;text-align:left}
 .form_table2 th{width:120px}
 .form_table2 th,
-.form_table2 td{padding:8px;border:0;vertical-align:top}
+.form_table2 td{height: 30px;line-height: 30px;border:0;vertical-align:top}
 .form_table2 tbody th.vCheck {background:url(../../images/waveStyle/check.png) 0 6px no-repeat;  padding-left:20px;}
 .form_table2 th{color:#333;font-weight:bold;}
 .form_table2 td{color:#666}
