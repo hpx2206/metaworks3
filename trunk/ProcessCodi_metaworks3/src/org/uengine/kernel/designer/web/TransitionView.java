@@ -1,5 +1,6 @@
 package org.uengine.kernel.designer.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
@@ -125,15 +126,18 @@ public class TransitionView extends CanvasDTO{
 						}else if( expressionChoice.equalsIgnoreCase("Yes or No")){
 							exppObject = expressionInput.getYesNo();
 						}else if( expressionChoice.equalsIgnoreCase("Date")){
-							// TODO 컨버팅 에러로 인하여 잠시 보류
-//							exppObject = expressionInput.getExpressionDate();
+							SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+							exppObject = df.format(expressionInput.getExpressionDate());
 						}else if( expressionChoice.equals("variable")){
 							exppObject = expressionInput.getValiableChoice().getSelected();
+						}else{
+							exppObject = "";
 						}
 						
 						if( conditionNode.getConditionType().equals(ConditionTreeNode.CONDITION_OR)){
 							Or orCondition = new Or();
 							Evaluate eval = new Evaluate(valiable, sign, exppObject);
+							eval.setType(expressionChoice);
 							And andCondition = new And(new Condition[]{eval});
 							// 자식이 또 있는 경우 재귀호출
 							if( childNode.getChild() != null &&  childNode.getChild().size() > 0){
@@ -147,6 +151,7 @@ public class TransitionView extends CanvasDTO{
 							((Or)condition).addCondition(orCondition);
 						}else if( conditionNode.getConditionType().equals(ConditionTreeNode.CONDITION_AND)){
 							Evaluate eval = new Evaluate(valiable, sign, exppObject);
+							eval.setType(expressionChoice);
 							And andCondition = new And(new Condition[]{eval});
 							// 자식이 또 있는 경우 재귀호출
 							if( childNode.getChild() != null &&  childNode.getChild().size() > 0){

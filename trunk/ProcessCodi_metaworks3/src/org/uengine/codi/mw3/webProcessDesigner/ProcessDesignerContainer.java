@@ -15,6 +15,7 @@ import org.uengine.kernel.ScopeActivity;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.designer.web.ActivityView;
+import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.kernel.designer.web.ValueChainView;
 import org.uengine.kernel.graph.Transition;
 
@@ -146,9 +147,22 @@ public class ProcessDesignerContainer {
 				}
 				
 				if( role.getRoleView() != null){
-					role.getRoleView().setViewType(viewType);
-					role.getRoleView().setEditorId(getEditorId());
-					role.getRoleView().setRole(role);
+					RoleView view = role.getRoleView();
+					view.setViewType(viewType);
+					view.setEditorId(getEditorId());
+					view.setRole(role);
+					
+					// 엑티비티의 max 좌표 구하기
+					int viewX = view.getX() != null ? Integer.parseInt(view.getX()) : 0 ;
+					int viewY = view.getY() != null ? Integer.parseInt(view.getY()) : 0 ;
+					int viewWidth = view.getWidth() != null ? Integer.parseInt(view.getWidth()) : 0 ;
+					int viewHeight = view.getHeight() != null ? Integer.parseInt(view.getHeight()) : 0 ;
+					if( viewX > maxX ){
+						maxX = viewWidth / 2 + viewX + 10;
+					}
+					if( viewY > maxY ){
+						maxY = viewHeight / 2 + maxY + 10;
+					}
 					
 					roleList.add(role);
 				}
@@ -158,7 +172,6 @@ public class ProcessDesignerContainer {
 				rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 			}
 		}
-		
 		ArrayList<ProcessVariable> pvList = processVariablePanel.getVariableList();
 		ProcessVariable[] processVariables = def.getProcessVariables();
 		for(int i=0; i < processVariables.length; i++){
