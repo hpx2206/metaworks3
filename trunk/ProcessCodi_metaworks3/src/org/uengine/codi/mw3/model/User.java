@@ -607,7 +607,7 @@ public class User extends Database<IUser> implements IUser {
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setPanel(company);
 		modalWindow.setWidth(400);
-		modalWindow.setHeight(220);
+		modalWindow.setHeight(235);
 		modalWindow.setTitle("관리자");
 
 		return new Object[]{modalWindow, new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE)};
