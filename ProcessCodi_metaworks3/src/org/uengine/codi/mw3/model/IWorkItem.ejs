@@ -124,8 +124,14 @@
 									<div class="clear"></div>
 								</div>
 
-								<!-- content -->					
+								<!-- content -->
+<%
+			if(!ejsPath.endsWith('IWorkItem.ejs')){
+%>					
 								<%=include(ejsPath)%>
+<%
+			}
+%>					
 							</div>
 						</div>
 						<div class="clear"></div>
