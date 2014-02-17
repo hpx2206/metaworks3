@@ -83,11 +83,11 @@
 %>
 
 		<tr>
-			<td width="67" height="25" style="color:#8D98AF; padding-left:15px;padding-top:9px"> 
-				<%=mw3.localize("$Title")%> 
+			<td width="67" height="25" style="color:#8D98AF; padding-left:10px;padding-top:10px"> 
+				<div style="text-align:center"><%=mw3.localize('$Title')%></span>
 			</td>
 						
-			<td style=" padding:10px 15px 0px 0px;"> 
+			<td style=" padding:10px 10px 0px 0px;"> 
 				<input id="post_<%=objectId%>" class="wih_comment_input <%=value.type%>" value="<%=value.title ? value.title : ''%>" style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc">
 			</td>			
 			
@@ -119,10 +119,10 @@
 %>
 
 		<tr>
-			<td width="67" height="25" style="color:#8D98AF; padding-left:15px;padding-top:9px"> 
-				Title : 
+			<td width="67" height="25" style="color:#8D98AF; padding-left:10px;padding-top:10px"> 
+				<div style="text-align:center"><%=mw3.localize('$Title')%></span>
 			</td>			
-			<td style=" padding:10px 6px 0px 0px;"> 
+			<td style=" padding:10px 10px 0px 0px;"> 
 				<input id="post_<%=objectId%>" class="wih_comment_input <%=value.type%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc">
 			</td>			
 		</tr>
@@ -149,10 +149,10 @@
 		}else if(value.type == "file" || value.type == 'document'){
 %>
 		<tr>
-			<td width="67" height="25" style="color:#8D98AF; padding-left:15px;padding-top:9px"> 
-				Title : 
-			</td>
-			<td style=" padding:10px 6px 0px 0px;" colspan="2"> 
+			<td width="67" height="25" style="color:#8D98AF; padding-left:10px;padding-top:10px"> 
+				<div style="text-align:center"><%=mw3.localize('$Title')%></span>
+			</td>			
+			<td style=" padding:10px 10px 0px 0px;" colspan="2"> 
 				<input id="post_<%=objectId%>" class=" wih_comment_input <%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
 			</td>			
 			
@@ -189,14 +189,14 @@
 		}else if(value.type == "remoteConf"){
 %>
 		<tr>
-			<td width="67" height="25" style="color:#8D98AF; padding-left:15px;"> 
-				Title : 
-			</td>
-			<td style="padding: 10px 0px;"> 
+			<td width="67"> 
+				<div style="text-align:center"><%=mw3.localize('$Title')%></span>
+			</td>			
+			<td style=" padding:10px 0;"> 
 				<input id="post_<%=objectId%>" class=" wih_comment_input <%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
 			</td>			
-			<td width="50" style="padding-left:15px;">
-				<button type="button" class="btn btn-warning btn-sm "  onClick="<%=methods.add.caller()%>"  style="float:right;margin-right:15px;"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>		
+			<td width=50 align="center" style="padding-right:15px;">
+				<button type="button" class="btn btn-warning btn-sm btn-block" style="width:46px;" onClick="<%=methods.add.caller()%>"  id="method_<%=objectId%>_add" ><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></button>
 			</td>
 		</tr>
 		<tr>
