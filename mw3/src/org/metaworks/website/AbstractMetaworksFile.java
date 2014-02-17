@@ -26,7 +26,6 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 	
 	public AbstractMetaworksFile() {
 		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	}
 	
 
@@ -165,7 +164,9 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 			throw new Exception("No file attached");
 		
 		String prefix = overrideUploadPathPrefix();
-
+		if(!prefix.endsWith("/"))
+			prefix += "/";
+		
 		String uploadFileName = renameUploadFileWithMimeType(fileTransfer.getFilename(), fileTransfer.getMimeType());	
 		//String uploadFileName = renameUploadFile(fileTransfer.getFilename());		
 		String uploadPath = prefix + uploadFileName;
@@ -321,10 +322,10 @@ public abstract class AbstractMetaworksFile implements ContextAware, Serializabl
 	}
 	
 	public boolean ableUpload(){
-		if(this.getFileTransfer() != null && this.getFileTransfer().getFilename() != null)
-			return true;
+		if(this.getFileTransfer() == null || this.getFileTransfer().getFilename() == null || this.getFileTransfer().getFilename().length() == 0)
+			return false;
 		
-		return false;
+		return true;
 	}
 	
 	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream) throws Exception{
