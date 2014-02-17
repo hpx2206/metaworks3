@@ -461,7 +461,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 				/*
 				// user가 매핑이 안되어 있다면 유저를 매핑하라고 메시지를 띄우고 프로세스가 진행이 안됨
-				String systemAdmin = GlobalContext.getPropertyString("codi.user.id");
+				String systemAdmin = GlobalContext.getPropertyString("codi.user.id","0");
 				IEmployee correntUser = session.getEmployee();
 				Employee emp = new Employee();
 				emp.copyFrom(correntUser);

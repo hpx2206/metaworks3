@@ -44,7 +44,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String callURI = "/bigbluebutton/api/create?" + createParam + "&checksum=" + checkSum;
 		
 		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port")), "http");
+		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host", "localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			
 		GetMethod getMethod = new GetMethod(callURI);
@@ -111,7 +111,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String joinURI = "join?" + joinParam + "&checksum=" + joinCheckSum;
 		
 		IFrame iframe = new IFrame();
-		iframe.setSrc("http://"+ GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + joinURI);
+		iframe.setSrc("http://"+ GlobalContext.getPropertyString("bbb.server.host","localhost") + "/bigbluebutton/api/" + joinURI);
 		iframe.setWidth("100%");
 				
 		return new ModalWindow(iframe, 1000, 550, title);
@@ -131,7 +131,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 //		String getRecordURI = getRecordingInfo();
 		
-		URL url = new URL("http://" + GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + endURI);
+		URL url = new URL("http://" + GlobalContext.getPropertyString("bbb.server.host","localhost") + "/bigbluebutton/api/" + endURI);
 		
         URLConnection urlConn = url.openConnection();
         BufferedReader burr = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
@@ -159,7 +159,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String recordID = null;
 		
 		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port")), "http");
+		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host","localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			
 		GetMethod getMethod = new GetMethod(recordURI);
@@ -186,7 +186,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 						recordID = elem.getValue();
 					}
 				}
-				recordUrl = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/presentation/playback.html?meetingId=" + recordID;
+				recordUrl = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/presentation/playback.html?meetingId=" + recordID;
 				IFrame iframe = new IFrame();
 				iframe.setSrc(recordUrl);
 				iframe.setWidth("100%");
@@ -198,11 +198,11 @@ public class RemoteConferenceWorkItem extends WorkItem{
 				
 				IFrame iframe = new IFrame();
 				String loadingUrl = "http://" 
-				        + GlobalContext.getPropertyString("web.server.ip" , "a") 
+				        + GlobalContext.getPropertyString("web.server.ip" , "localhost") 
 				        + ":"
-						+ GlobalContext.getPropertyString("web.server.port", "b") 
+						+ GlobalContext.getPropertyString("web.server.port", "8080") 
 						+ "/"
-						+ GlobalContext.getPropertyString("web.context.root", "c") 
+						+ GlobalContext.getPropertyString("web.context.root", "root") 
 						+ "/dwr/metaworks/images/circleloading.gif";
 				
 				iframe.setSrc(loadingUrl);
@@ -236,7 +236,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 //		String recordURI = "/bigbluebutton/api/getRecordings?" + recordParam + "&checksum=" + checkSum;
 //		
 //		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-//		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port")), "http");
+//		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host","localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
 //		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 //		
 //		GetMethod getMethod = new GetMethod(recordURI);
@@ -270,7 +270,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 //			
 //			is.close();
 //			
-//			url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordID;
+//			url = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/slides/playback.html?meetingId=" + recordID;
 //			
 //		}
 //		
@@ -294,7 +294,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String recordID = null;
 		
 		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port")), "http");
+		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host","localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			
 		GetMethod getMethod = new GetMethod(recordURI);
@@ -326,8 +326,8 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		is.close();
 		
-		//url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordID;
-		url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/presentation/playback.html?meetingId=" + recordID;
+		//url = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/slides/playback.html?meetingId=" + recordID;
+		url = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/presentation/playback.html?meetingId=" + recordID;
 		
 		IFrame iframe = new IFrame();
 		iframe.setSrc(url);
