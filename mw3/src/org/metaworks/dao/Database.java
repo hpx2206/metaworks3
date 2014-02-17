@@ -20,7 +20,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 
 public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			if(metaworksContext==null)
 				metaworksContext = new MetaworksContext();
