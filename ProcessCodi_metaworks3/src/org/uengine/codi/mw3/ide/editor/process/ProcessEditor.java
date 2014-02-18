@@ -74,12 +74,8 @@ public class ProcessEditor extends Editor {
 
 	@Override
 	@ServiceMethod(callByContent=true)
-	public Object save(){
-		try {
-			this.getProcessDesigner().saveMe(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public Object save() throws Exception{
+		this.getProcessDesigner().saveMe(this);
 		return null;
 	}
 }
