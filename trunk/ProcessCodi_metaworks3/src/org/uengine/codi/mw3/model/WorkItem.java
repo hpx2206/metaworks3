@@ -1266,15 +1266,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		/**
-		 *  === MetaworksContext 처리 ===
-		 */
-
-		this.getMetaworksContext().setWhen(WHEN_VIEW);
-		this.getWriter().setMetaworksContext(this.getMetaworksContext());
-		
-		
-		
-		/**
 		 *  ==== returnObjects 생성 ====
 		 *  새로 쓴 글을 제외하고는 workItem 만 컨트롤을 한다.
 		 */
@@ -1305,6 +1296,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			// 변경된 WorkItem 을 갱신
 			returnObjects = new Object[]{new Refresh(this, false, true)};
 		}
+		
+		/**
+		 *  === MetaworksContext 처리 ===
+		 */
+		this.getMetaworksContext().setWhen(WHEN_VIEW);
+		this.getWriter().setMetaworksContext(this.getMetaworksContext());
+
 		return returnObjects;
 	}
 	
