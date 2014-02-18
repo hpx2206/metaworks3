@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.Id;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
@@ -248,6 +249,9 @@ public class ProcessDesignerContainer {
 		}
 		if( roleList != null ){
 			for(Role role : roleList){
+				if( role.getName() == null ){
+					throw new MetaworksException("$roleNameNull");
+				}
 				def.addRole(role);
 			}
 		}
