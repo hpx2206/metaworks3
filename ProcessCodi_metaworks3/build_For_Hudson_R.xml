@@ -11,7 +11,7 @@
     </target>
 	
 	<target name="deploy-war" depends="stop">
-		<scp file="${war.file}" todir="${id}:${pw}@${host}:${dest}" trust="true"/>
+		<scp file="${war.file}" todir="${id}:${pw}@${host}:${dest}" port="${port}" trust="true"/>
 	</target>
 
 	<target name="start" depends="deploy-war">
