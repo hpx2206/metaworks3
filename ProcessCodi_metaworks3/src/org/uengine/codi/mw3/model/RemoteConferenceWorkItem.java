@@ -21,6 +21,7 @@ import org.jdom.input.SAXBuilder;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.kernel.GlobalContext;
 
 public class RemoteConferenceWorkItem extends WorkItem{
@@ -194,16 +195,12 @@ public class RemoteConferenceWorkItem extends WorkItem{
 				this.setContentLoaded(true);
 				returnFalg = true;
 				databaseMe().setStatus("Completed");
+				databaseMe().setExt4(recordUrl);
 			}else{
 				
 				IFrame iframe = new IFrame();
-				String loadingUrl = "http://" 
-				        + GlobalContext.getPropertyString("web.server.ip" , "localhost") 
-				        + ":"
-						+ GlobalContext.getPropertyString("web.server.port", "8080") 
-						+ "/"
-						+ GlobalContext.getPropertyString("web.context.root", "root") 
-						+ "/dwr/metaworks/images/circleloading.gif";
+				String loadingUrl = TenantContext.getURL(null) 
+						+ "dwr/metaworks/images/circleloading.gif";
 				
 				iframe.setSrc(loadingUrl);
 				iframe.setWidth("100%");
