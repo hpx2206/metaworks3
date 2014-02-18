@@ -189,7 +189,7 @@ public class Notification extends Database<INotification> implements INotificati
 						
 						content = this.replaceString(content,"user.name", userInfoDB.getEmpName());
 						content = this.replaceString(content, "notimail.date", date);
-						content = this.replaceString(content, "notimail.image", url + "/portrait/" + userInfoDB.getEmpCode() + ".thumnail");
+						content = this.replaceString(content, "notimail.image", url + "/portrait/" + getActorId() + ".thumnail");
 						
 						content = this.replaceString(content, "notimail.content", getActAbstract());
 						content = this.replaceString(content, "processcodi.url", url);
