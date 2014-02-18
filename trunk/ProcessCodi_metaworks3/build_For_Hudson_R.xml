@@ -7,7 +7,7 @@
                  username="${id}"
                  password="${pw}"
                  trust="true"
-                 command="${bin}/shutdown.sh; rm -rf ${dest}/uengine-web"/>
+                 command="source /etc/profile; ${bin}/shutdown.sh; rm -rf ${dest}/uengine-web"/>
     </target>
 	
 	<target name="deploy-war" depends="stop">
