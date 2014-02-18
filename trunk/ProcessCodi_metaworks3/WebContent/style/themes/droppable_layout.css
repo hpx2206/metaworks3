@@ -3427,10 +3427,14 @@ legend {display:none;}
 
 
 .intaglio {
-    -moz-box-shadow: inset 2px 2px 3px #B1B5BD;
-	-webkit-box-shadow: inset 2px 2px 3px #B1B5BD;
-	box-shadow: inset 2px 2px 3px #B1B5BD;	
-	background-image:none;
+    -moz-box-shadow: inset 2px 2px 3px #B1B5BD !important;
+	-webkit-box-shadow: inset 2px 2px 3px #B1B5BD !important;
+	box-shadow: inset 2px 2px 3px #B1B5BD !important;	
+	background-image:none !important;
+}
+
+.intaglio .tl,.intaglio .tr,.intaglio .lb,.intaglio .rb{
+	background-image:none !important;
 }
 
 
