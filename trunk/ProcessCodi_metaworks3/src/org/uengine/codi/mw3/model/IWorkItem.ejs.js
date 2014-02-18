@@ -51,13 +51,18 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		 
 		 if(!workItem.contentLoaded){
 		 	contentLoad = true;
+	 	} 
+	 	
+	 	if(workItem.status =='FEED'){
+		 	contentLoad = false;
 		}else if(workItem.status =='Waited'){
 			var workItemObjectId = this.objectId;
-			
+	
 			var jobId = setInterval(function(){
 			var workItemsss = mw3.objects[workItemObjectId];
-				if( workItemsss.status !='Completed' ){
+				if( workItemsss.status !='Completed'){
 					mw3.call(workItemObjectId, 'recodingCheck');
+					
 				}else{
 					if(jobId != ''){ 
 						clearInterval(jobId);
@@ -66,15 +71,14 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 				}
 			
 			}, 10000);
+				
 		}
 	}
 	
-	if(contentLoad)
-		mw3.call(this.objectId, 'loadContents');
-	else{
-		if(!this.object.more)
+	if(!contentLoad && !this.object.more) {
 			this.objectDiv.trigger('loaded.workitem_' + workItem.taskId);
 	}
+	
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
