@@ -5,7 +5,8 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 	this.objectDiv = $('#' + this.objectDivId);
 	
 	this.object = mw3.objects[this.objectId];
-
+	this.metadata = mw3.getMetadata(this.className);
+	
 	if(this.object == null)
 		return true;	
 	
@@ -214,6 +215,9 @@ org_metaworks_component_TreeNode.prototype = {
 			this.nodeDiv.addClass('selected');
 
 			this.treeDiv.trigger('change', [this.objectId]);			
+
+			if(mw3.isHiddenMethod(this.metadata.serviceMethodContextMap['select'], mw3.objectContexts[this.objectId].__metaworksContext))
+				mw3.call(this.objectId, 'select');
 		}else{
 			this.treeDiv.find('.item-fix.selected').removeClass('selected');
 			this.nodeDiv.addClass('selected');			

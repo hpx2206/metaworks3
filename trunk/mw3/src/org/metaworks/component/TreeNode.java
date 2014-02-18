@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -161,6 +162,14 @@ public class TreeNode {
 			this.ext4 = ext4;
 		}
 		
+	boolean selected;
+		public boolean isSelected() {
+			return selected;
+		}
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
+		
 	public TreeNode() {
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 		this.setAlign(ALIGN_LEFT);
@@ -192,4 +201,13 @@ public class TreeNode {
 		
 		return null;
 	}	
+	
+	@Hidden
+	@ServiceMethod(payload={"id", "name", "folder"}, target=ServiceMethodContext.TARGET_APPEND)
+	public Object select() throws Exception {
+		// Override method
+		
+		return null;
+	}	
+ 
 }
