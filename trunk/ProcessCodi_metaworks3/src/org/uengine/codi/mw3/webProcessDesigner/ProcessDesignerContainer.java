@@ -157,11 +157,11 @@ public class ProcessDesignerContainer {
 					int viewY = view.getY() != null ? Integer.parseInt(view.getY()) : 0 ;
 					int viewWidth = view.getWidth() != null ? Integer.parseInt(view.getWidth()) : 0 ;
 					int viewHeight = view.getHeight() != null ? Integer.parseInt(view.getHeight()) : 0 ;
-					if( viewX > maxX ){
+					if( (viewWidth / 2 + viewX) > maxX ){
 						maxX = viewWidth / 2 + viewX + 10;
 					}
-					if( viewY > maxY ){
-						maxY = viewHeight / 2 + maxY + 10;
+					if( (viewHeight / 2 + viewY) > maxY ){
+						maxY = viewHeight / 2 + viewY + 10;
 					}
 					
 					roleList.add(role);
