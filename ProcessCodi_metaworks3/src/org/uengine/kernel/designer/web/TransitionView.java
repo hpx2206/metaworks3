@@ -78,9 +78,9 @@ public class TransitionView extends CanvasDTO{
 			ArrayList<ConditionTreeNode> child = rootNode.getChild();
 			Condition condition;
 			if( rootNode.getConditionType() == null || "".equals(rootNode.getConditionType())){	// 최상위 root Node
-				condition = new Or();
+				condition = new And();
 				TextContext condiName = new TextContext();
-				condiName.setText(ConditionTreeNode.CONDITION_OR);
+				condiName.setText(ConditionTreeNode.CONDITION_AND);
 				condition.setDescription(condiName);
 			}else{
 				String rootConditionType = rootNode.getConditionType();
@@ -107,6 +107,11 @@ public class TransitionView extends CanvasDTO{
 				}else{
 					ConditionNode conditionNode = childNode.getConditionNode();
 					if( conditionType != null && conditionType.equals(ConditionTreeNode.CONDITION_OTHERWISE) ){
+						condition = new Or();
+						TextContext aa = new TextContext();
+						condiName.setText(ConditionTreeNode.CONDITION_OR);
+						condition.setDescription(aa);
+						
 						Otherwise otherwise = new Otherwise();
 						otherwise.setDescription(condiName);
 						((Or)condition).addCondition(otherwise);

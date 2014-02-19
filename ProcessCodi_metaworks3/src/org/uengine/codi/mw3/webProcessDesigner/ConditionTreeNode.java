@@ -6,8 +6,10 @@ import java.util.Date;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -90,6 +92,14 @@ public class ConditionTreeNode  implements ContextAware{
 			this.expanded = expanded;
 		}
 
+	boolean selected;
+		public boolean isSelected() {
+			return selected;
+		}
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
+		
 	boolean loaded;
 		public boolean isLoaded() {
 			return loaded;
@@ -162,6 +172,7 @@ public class ConditionTreeNode  implements ContextAware{
 		ArrayList<ConditionTreeNode> child = new ArrayList<ConditionTreeNode>();
 		
 		this.setChild(child);
+		this.setLoaded(true);
 	}
 	public void add(ConditionTreeNode node) {
 		node.setParentId(this.getId());
@@ -185,11 +196,13 @@ public class ConditionTreeNode  implements ContextAware{
 		node.setParentId(this.getId());
 		node.setVariableList(this.getVariableList());
 		node.setRoleList(this.getRoleList());
+		node.setLoaded(true);
 		node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
 		return node;
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Available(how={"folder","root"})
 	public Object newAND() throws Exception{
 		ConditionTreeNode node = this.makeConditionNode();
 		node.setName(CONDITION_AND);
@@ -197,10 +210,12 @@ public class ConditionTreeNode  implements ContextAware{
 		node.setFolder(true);
 		node.setExpanded(true);
 		node.setType(TreeNode.TYPE_FOLDER);
+		node.getMetaworksContext().setHow("folder");
 		return new ToAppend(this , node);
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Available(how={"folder","root"})
 	public Object newOR() throws Exception{
 		ConditionTreeNode node = this.makeConditionNode();
 		node.setName(CONDITION_OR);
@@ -208,10 +223,12 @@ public class ConditionTreeNode  implements ContextAware{
 		node.setFolder(true);
 		node.setExpanded(true);
 		node.setType(TreeNode.TYPE_FOLDER);
+		node.getMetaworksContext().setHow("folder");
 		return new ToAppend(this , node);
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Available(how={"root"})
 	public Object newOtherwise() throws Exception{
 		ConditionTreeNode node = this.makeConditionNode();
 		node.setName(CONDITION_OTHERWISE);
@@ -221,6 +238,7 @@ public class ConditionTreeNode  implements ContextAware{
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@Available(how={"folder","root"})
 	public Object[] newExpression() throws Exception{
 		if( this.getConditionType() == null ){
 			return null;
@@ -231,42 +249,61 @@ public class ConditionTreeNode  implements ContextAware{
 			node.conditionInit();
 			node.getConditionNode().setConditionType(this.getConditionType());
 			node.getConditionNode().setParentTreeNode(node);
-			return new Object[]{new ToAppend(this , node) , new Refresh(node.action())};
+			return new Object[]{new ToAppend(this , node) , new Refresh(node.select())};
 		}
 	}
 	
-	@ServiceMethod(inContextMenu=true, payload={"id","parentNode"})
-	public Object delete() throws Exception{
+	@ServiceMethod(inContextMenu=true, payload={"id","parentNode"}, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] delete() throws Exception{
 		ConditionTreeNode parentNode = this.getParentNode();
-		if( parentNode != null && parentNode.getChild() != null ){
-			for(int i =0; i<parentNode.getChild().size(); i++){
-				if( parentNode.getChild().get(i).getId().equals(this.getId())){
-					parentNode.getChild().remove(i);
-				}
-			}
-			return new Refresh(parentNode);
+		parentNode.setSelected(true);
+		
+		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
+		ConditionTreeNodeView conditionTreeNode = conditionExPressionPanel.getConditionTreeNode();
+		conditionTreeNode.setParentId(parentNode.getId());
+		conditionTreeNode.setParentNode(parentNode);
+		conditionTreeNode.getConditionNode().setParentTreeNode(parentNode);
+		conditionTreeNode.getConditionNode().setRoleList(parentNode.getRoleList());
+		conditionTreeNode.getConditionNode().setVariableList(parentNode.getVariableList());
+		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("folder");
+			
+		return new Object[]{new Remover(this, true), new Refresh(conditionExPressionPanel)};
+	}
+	
+	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_AUTO)
+	public Object select() throws Exception {
+		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
+		ConditionTreeNodeView conditionTreeNode = conditionExPressionPanel.getConditionTreeNode();
+		if( this.folder ){
+			conditionTreeNode.setParentId(this.getId());
+			conditionTreeNode.setParentNode(this);
+			conditionTreeNode.getConditionNode().setParentTreeNode(this);
+			conditionTreeNode.getConditionNode().setRoleList(getRoleList());
+			conditionTreeNode.getConditionNode().setVariableList(getVariableList());
+			conditionTreeNode.getConditionNode().getMetaworksContext().setHow("folder");
+			
+			return conditionExPressionPanel;
+		}else if( CONDITION_OTHERWISE.equals(this.getConditionType())){
+			return conditionExPressionPanel;
 		}else{
-			return null;
+			conditionTreeNode.setId("expression");
+			conditionTreeNode.setRoleList(getRoleList());
+			conditionTreeNode.setVariableList(getVariableList());
+			conditionTreeNode.setConditionNode(getConditionNode());
+			conditionTreeNode.getConditionNode().getMetaworksContext().setHow("expression");
+			conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
+			
+			return conditionExPressionPanel;
 		}
 	}
 	
 	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_AUTO)
-	public Object action() throws Exception {
-		
-		ConditionTreeNodeView conditionTreeNode = new ConditionTreeNodeView();
-		conditionTreeNode.setId("expression");
-		conditionTreeNode.setRoleList(getRoleList());
-		conditionTreeNode.setVariableList(getVariableList());
-		conditionTreeNode.setConditionNode(getConditionNode());
-		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("edit");
-		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-		conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
-		
-		return conditionExPressionPanel;
-	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object expand() throws Exception { 
 		return null;
 	}
+	
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object action() throws Exception {
+		return null;
+	}	
 }

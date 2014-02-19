@@ -102,12 +102,14 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setFolder(true);
 		treeNode.setRoot(true);
 		treeNode.setExpanded(true);
+		treeNode.setSelected(true);
 		treeNode.setId("rootNode");
 		treeNode.setName("Condition");  //TODO: locale
 		treeNode.setRoleList(roleList);
 		treeNode.setVariableList(variableList);
 		treeNode.setType(TreeNode.TYPE_FOLDER);
-		treeNode.setConditionType(ConditionTreeNode.CONDITION_OR);
+		treeNode.setConditionType(ConditionTreeNode.CONDITION_AND);
+		treeNode.getMetaworksContext().setHow("root");
 		
 		if( this.getTransition().getCondition() != null ){
 			makeChildTreeNode(treeNode , this.getTransition().getCondition()); 
@@ -115,54 +117,73 @@ public class ConditionPanel  implements ContextAware{
 		conditionTree.setNode(treeNode);
 			
 		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-		conditionExPressionPanel.getConditionTreeNode().getConditionNode().getMetaworksContext().setWhen("view");
+		// TODO 아이디를 주니... 엉뚱한게 바뀐다
+		ConditionTreeNodeView conditionTreeNode = conditionExPressionPanel.getConditionTreeNode();
+		conditionTreeNode.setParentId(treeNode.getId());
+		conditionTreeNode.setParentNode(treeNode);
+		conditionTreeNode.getConditionNode().setParentTreeNode(treeNode);
+		conditionTreeNode.getConditionNode().setVariableList(getVariableList());
+		conditionTreeNode.getConditionNode().setRoleList(getRoleList());
+		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("folder");
 		setConditionExPressionPanel(conditionExPressionPanel);
 		
 	}
 	
 	public void makeChildTreeNode( ConditionTreeNode rootNode , Condition condition ) throws Exception{
-		// 처음 들어오는 condition 은 무조건 or 가 최상위임
 		Condition[] condis = ((And)condition).getConditions();
 		if( condis != null){
 			for( int i=0; i< condis.length; i++){
 				Condition condi = condis[i];
-				String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
-				ConditionTreeNode treeNode = new ConditionTreeNode();
-				Long idByTime = Math.round(Math.random() * 100000);
-				treeNode.setId(idByTime.toString());
-				treeNode.setParentNode(rootNode);
-				treeNode.setParentId( rootNode.getId() );
-				treeNode.setRoleList(roleList);
-				treeNode.setVariableList(variableList);
-				
-				if( nodeName.equals(ConditionTreeNode.CONDITION_AND) || nodeName.equals(ConditionTreeNode.CONDITION_OR)){
-					treeNode.setName(nodeName);
-					treeNode.setConditionType(nodeName);
-					treeNode.setFolder(true);
-					treeNode.setExpanded(true);
-					treeNode.setType(TreeNode.TYPE_FOLDER);
-					
-					makeChildTreeNode(treeNode, condi);
+				if( condi instanceof Otherwise){
+					ConditionTreeNode otherwiseTreeNode = new ConditionTreeNode();
+					Long otherwiseIdByTime = Math.round(Math.random() * 100000);
+					otherwiseTreeNode.setId(otherwiseIdByTime.toString());
+					otherwiseTreeNode.setParentNode(rootNode);
+					otherwiseTreeNode.setParentId( rootNode.getId() );
+					otherwiseTreeNode.setConditionType(ConditionTreeNode.CONDITION_OTHERWISE);
+					otherwiseTreeNode.setName(ConditionTreeNode.CONDITION_OTHERWISE);
+					otherwiseTreeNode.setType("page_white_text");
+					rootNode.add(otherwiseTreeNode);
+					continue;
 				}else{
-					treeNode.conditionInit();
+					String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
+					ConditionTreeNode treeNode = new ConditionTreeNode();
+					Long idByTime = Math.round(Math.random() * 100000);
+					treeNode.setId(idByTime.toString());
+					treeNode.setParentNode(rootNode);
+					treeNode.setParentId( rootNode.getId() );
+					treeNode.setRoleList(roleList);
+					treeNode.setVariableList(variableList);
 					
-					ConditionNode conditionNode = makeConditionNode(treeNode , condi);
-					
-					String nodeType = "";
-					if( condi instanceof Or ){
-						nodeType = ConditionTreeNode.CONDITION_OR;
-					}else if( condi instanceof And ){
-						nodeType = ConditionTreeNode.CONDITION_AND;
-					}else if( condi instanceof Otherwise ){
-						nodeType = ConditionTreeNode.CONDITION_OTHERWISE;
+					if( nodeName.equals(ConditionTreeNode.CONDITION_AND) || nodeName.equals(ConditionTreeNode.CONDITION_OR)){
+						treeNode.setName(nodeName);
+						treeNode.setConditionType(nodeName);
+						treeNode.setFolder(true);
+						treeNode.setExpanded(true);
+						treeNode.setType(TreeNode.TYPE_FOLDER);
+						treeNode.getMetaworksContext().setHow("folder");
+						makeChildTreeNode(treeNode, condi);
+					}else{
+						treeNode.conditionInit();
+						
+						ConditionNode conditionNode = makeConditionNode(treeNode , condi);
+						
+						String nodeType = "";
+						if( condi instanceof Or ){
+							nodeType = ConditionTreeNode.CONDITION_OR;
+						}else if( condi instanceof And ){
+							nodeType = ConditionTreeNode.CONDITION_AND;
+						}else if( condi instanceof Otherwise ){
+							nodeType = ConditionTreeNode.CONDITION_OTHERWISE;
+						}
+						conditionNode.setConditionType(nodeType);
+						treeNode.setType("page_white_text");
+						treeNode.setName(nodeName);
+						conditionNode.setParentTreeNode(treeNode);
+						treeNode.setConditionNode(conditionNode);
 					}
-					conditionNode.setConditionType(nodeType);
-					treeNode.setType("page_white_text");
-					treeNode.setName(nodeName);
-					conditionNode.setParentTreeNode(treeNode);
-					treeNode.setConditionNode(conditionNode);
+					rootNode.add(treeNode);
 				}
-				rootNode.add(treeNode);
 			}
 		}
 	}
@@ -202,6 +223,9 @@ public class ConditionPanel  implements ContextAware{
 									conditionNode.getExpressionChoice().setSelected("variable");
 									conditionInput.getMetaworksContext().setHow("variable");
 									conditionInput.getValiableChoice().setSelected(expString);
+							}else if( "null".equalsIgnoreCase(type) ){
+								conditionNode.getExpressionChoice().setSelected("null");
+								conditionInput.getMetaworksContext().setHow("null");
 							}else{
 								conditionNode.getExpressionChoice().setSelected("text");
 								conditionInput.getMetaworksContext().setHow("text");
@@ -227,12 +251,30 @@ public class ConditionPanel  implements ContextAware{
 	public Object[] saveCondition() throws Exception{
 		TransitionView transitionView = new TransitionView();
 		ConditionTreeNode rootNode = conditionTree.getNode();
+		// 삭제가 일어났을수도 있으니 arrayList 에 null을 제거하는 로직을 심어준다.
+		this.removeNullChild(rootNode.getChild());
 		Condition condition = transitionView.makeCondition(rootNode);
 		
 		this.getTransition().setCondition(condition);
 		this.getTransition().setTransitionName(this.getConditionLabel());
 		
 		return new Object[]{ new ApplyProperties(this.getConditionId() , transition) , new Remover(new ModalWindow(), true)};
+	}
+	
+	public void removeNullChild(ArrayList<ConditionTreeNode> childNodes){
+		if( childNodes != null ){
+			for(int i=childNodes.size()-1; i >= 0 ;i--){
+				ConditionTreeNode node = childNodes.get(i);
+				if( node == null ){
+					childNodes.remove(i);
+					
+					
+					
+				}else if( node.getChild() != null && node.getChild().size() > 0 ){
+					removeNullChild(node.getChild() );
+				}
+			}
+		}
 	}
 	
 	@AutowiredFromClient
