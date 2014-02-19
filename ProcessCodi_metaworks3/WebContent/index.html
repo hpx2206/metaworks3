@@ -37,6 +37,8 @@
 		
 		<!-- bootstrap -->
 		<link rel="stylesheet" type="text/css" href="style/bootstrap-3.0.2/dist/css/bootstrap.css" media="screen" />
+		<script src="style/bootstrap-3.0.2/dist/js/bootstrap.min.js"></script>
+		
 		<!-- Just for debugging purposes. Don't actually copy this line! -->
 	    <!--[if lt IE 9]><script src="style/bootstrap-3.0.2/docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 	
@@ -103,9 +105,6 @@
 		<!-- for check date -->
 		<script type='text/javascript' src='scripts/datejs/date_kr.js'></script>
 
-		<!-- mw3 component -->
-		<link rel="stylesheet" type="text/css" href="style/uclipse.css" />
-		 
 		<!-- popup -->
  		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
 		
@@ -124,6 +123,9 @@
 		<script type="text/javascript" src="scripts/jquery/fullcalendar/fullcalendar.min.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="scripts/jquery/fullcalendar/fullcalendar.css" />
+
+		<!-- mw3 component -->
+		<link rel="stylesheet" type="text/css" href="style/uclipse.css" />
 		
  		<script type="text/javascript">
  			// no convert for face helper variable and start with '__' char variable
@@ -183,11 +185,6 @@
 			}
 
 			$(document).ready(function() {
-				document.body.addEventListener("DOMNodeInserted", function (ev) {
-					//console.log('DOMNodeInserted');
-					//console.log(ev);
-				});
-			
 				$.fn.cycle.defaults.autoSelector = '.slideshow';
 				
 				var request = new Request();
@@ -222,7 +219,7 @@
 					
 		 		};
 		 		
-		 		Metaworks3.prototype.startLoading = function(objId){
+		 		Metaworks3.prototype.startLoading = function(objId, name){
                     var divId = mw3._getObjectDivId(objId);
                     var offset = $('#' + divId).offset();                    
                     
@@ -237,7 +234,7 @@
                     }
                 };
                 
-                Metaworks3.prototype.endLoading = function(objId){
+                Metaworks3.prototype.endLoading = function(objId, name){
                      $('body>#loading_div_' + objId).remove();
                 };
                 
@@ -249,16 +246,6 @@
                     if(offset){
                     	var offsetRight = offset.left + $('#' + divId).width() - 20;                    
                         var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
-                        /*
-                        var html;
-                        html = "<div id='info_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_done_box'  >"+message+"</div></div>";
-                        
-                        $('body').append(html);
-                        setTimeout(function(){
-                        	$('body>#info_div_' + objId).fadeOut(500);
-                        	setTimeout(function(){$('body>#info_div_' + objId).remove();},500);	
-                        	},2000);
-                        */
                     }
                     
                 };
@@ -275,13 +262,6 @@
                     html = "<div class='alert alert-warning alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
                     
                     $('.error_div').append(html);
-                    
-                    
-					
-					/* $.msg({
-							bgPath : mw3.base + '/images/',
-						    content : "<b>" + mw3.localize(message) + "</b>"
-					}); */
 		 		}
 		 		
 		 		mw3.alert = function(message){
@@ -290,11 +270,6 @@
                     html = "<div class='alert alert-danger alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
                     
                     $('.error_div').append(html);
-                    
-					/* $.msg({
-							bgPath : mw3.base + '/images/',
-						    content : "<b>" + mw3.localize(message) + "</b>"
-					}); */
 		 		}
 		 		
 		 		mw3.showValidation = function(objId, inputObjectId, isValid, message){
@@ -400,12 +375,12 @@
 						key : 'loader'             
             	    }, 'body');
 				}
-				
+
+				mw3.onLoadFaceHelperScript();
+								
        			window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
 				};
-				         
-				mw3.onLoadFaceHelperScript();
 			});
 		</script>
 	</head>

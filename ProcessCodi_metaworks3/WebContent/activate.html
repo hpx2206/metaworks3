@@ -48,6 +48,10 @@
 	  	<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
 	  	<script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
 
+		<!-- user scripts -->
+		<script type='text/javascript' src='scripts/common.js'></script>
+		<script type='text/javascript' src='scripts/jquery/timeago/jquery.timeago.js'></script>
+
 		<!-- user css -->
 		<link rel="stylesheet" type="text/css" href="style/themes/droppable_layout.css" />
 		<link rel="stylesheet" type="text/css" href="style/themes/waveStyle/wave_theme.css" />
@@ -80,6 +84,16 @@
 				if (navigator.appVersion.indexOf("Win")!=-1){
 					$('body').css('font-family', "'맑은 고딕', Malgun gothic, Arial");
 				}
+
+				//mw3.importClasses(["org.uengine.codi.mw3.model.*", "org.metaworks.widget.*"]);
+				
+				mw3.recordingExceptClasses["org.uengine.codi.mw3.model.Session"] = true;
+				
+				mw3.testSet={
+					"testScenario":
+						[{"value":{"__className":"org.uengine.codi.mw3.model.InstanceListPanel","metaworksContext":null},"objectKey":"org.uengine.codi.mw3.model.InstanceListPanel","methodName":"newInstance","scenario":"testScenario"},{"value":{"__className":"org.uengine.codi.mw3.model.CommentWorkItem","activityAppAlias":null,"content":null,"contentLoaded":false,"dueDate":null,"endDate":null,"endpoint":null,"extFile":null,"file":null,"genericWorkItemHandler":null,"implementationObject":null,"instId":null,"instantiation":true,"memo":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"edit","where":null},"parameters":null,"rootInstId":null,"saveDate":null,"sourceCode":null,"startDate":null,"status":null,"taskId":null,"title":"새글쓰기","tool":null,"type":"comment","workItemHandler":null,"writer":{"__className":"org.uengine.codi.mw3.model.User","implementationObject":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"workitem","where":"local"},"mood":null,"name":"Tester","network":null,"userId":"test","__objectId":323,"__faceHelper":{"objectId":"323","className":"org.uengine.codi.mw3.model.User","divId":"objDiv_323","windowObjectId":"54"}},"__objectId":207,"__faceHelper":{"objectId":"207","className":"org.uengine.codi.mw3.model.CommentWorkItem","commandTrigger":null,"commandActivityAppAlias":null,"commandParameters":null,"sending":false}},"objectKey":"org.uengine.codi.mw3.model.CommentWorkItem","methodName":"add","scenario":"testScenario"},{"value":{"__className":"org.uengine.codi.mw3.model.CommentWorkItem","activityAppAlias":null,"content":null,"contentLoaded":false,"dueDate":null,"endDate":null,"endpoint":null,"extFile":null,"file":null,"genericWorkItemHandler":null,"implementationObject":null,"instId":893,"instantiation":false,"memo":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"edit","where":null},"parameters":null,"rootInstId":null,"saveDate":null,"sourceCode":null,"startDate":null,"status":null,"taskId":-1,"title":"답달기","tool":null,"type":"comment","workItemHandler":null,"writer":{"__className":"org.uengine.codi.mw3.model.User","implementationObject":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"workitem","where":"local"},"mood":null,"name":"Tester","network":null,"userId":"test","__objectId":323,"__faceHelper":{"objectId":"323","className":"org.uengine.codi.mw3.model.User","divId":"objDiv_323","windowObjectId":"54"}},"__objectId":227,"__faceHelper":{"objectId":"227","className":"org.uengine.codi.mw3.model.CommentWorkItem","commandTrigger":null,"commandActivityAppAlias":null,"commandParameters":null,"sending":false}},"objectKey":"org.uengine.codi.mw3.model.CommentWorkItem@-1","methodName":"add","scenario":"testScenario"},{"value":{"__className":"org.uengine.codi.mw3.model.CommentWorkItem","activityAppAlias":null,"content":null,"contentLoaded":false,"dueDate":null,"endDate":null,"endpoint":null,"extFile":null,"file":null,"genericWorkItemHandler":null,"implementationObject":null,"instId":893,"instantiation":false,"memo":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"edit","where":null},"parameters":null,"rootInstId":null,"saveDate":null,"sourceCode":null,"startDate":null,"status":null,"taskId":-1,"title":"달달기2","tool":null,"type":"comment","workItemHandler":null,"writer":{"__className":"org.uengine.codi.mw3.model.User","implementationObject":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"workitem","where":"local"},"mood":null,"name":"Tester","network":null,"userId":"test","__objectId":323,"__faceHelper":{"objectId":"323","className":"org.uengine.codi.mw3.model.User","divId":"objDiv_323","windowObjectId":"54"}},"__objectId":227,"__faceHelper":{"objectId":"227","className":"org.uengine.codi.mw3.model.CommentWorkItem","commandTrigger":null,"commandActivityAppAlias":null,"commandParameters":null,"sending":false}},"objectKey":"org.uengine.codi.mw3.model.CommentWorkItem@-1","methodName":"add","scenario":"testScenario"},{"value":{"__className":"org.uengine.codi.mw3.model.CommentWorkItem","activityAppAlias":null,"content":null,"contentLoaded":false,"dueDate":null,"endDate":null,"endpoint":null,"extFile":null,"file":null,"genericWorkItemHandler":null,"implementationObject":null,"instId":893,"instantiation":false,"memo":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"edit","where":null},"parameters":null,"rootInstId":null,"saveDate":null,"sourceCode":null,"startDate":null,"status":null,"taskId":-1,"title":null,"tool":null,"type":"comment","workItemHandler":null,"writer":{"__className":"org.uengine.codi.mw3.model.User","implementationObject":null,"metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"workitem","where":"local"},"mood":null,"name":"Tester","network":null,"userId":"test","__objectId":323,"__faceHelper":{"objectId":"323","className":"org.uengine.codi.mw3.model.User","divId":"objDiv_323","windowObjectId":"54"}},"__objectId":227,"__faceHelper":{"objectId":"227","className":"org.uengine.codi.mw3.model.CommentWorkItem","commandTrigger":null,"commandActivityAppAlias":null,"commandParameters":null,"sending":false}},"objectKey":"org.uengine.codi.mw3.model.CommentWorkItem@-1","methodName":"newActivity","scenario":"testScenario"},{"value":{"__className":"org.uengine.codi.mw3.model.IProcessMap","metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"view","where":null},"defId":"examples/process/IssueManagement.process"},"objectKey":"org.uengine.codi.mw3.model.IProcessMap@examples/process/IssueManagement.process","methodName":"initiate","scenario":"testScenario"},{"value":{"__className":"org.uengine.codi.mw3.model.IProcessMap","metaworksContext":{"__className":"org.metaworks.MetaworksContext","how":null,"when":"view","where":null},"defId":"examples/process/IssueManagement.process"},"objectKey":"org.uengine.codi.mw3.model.IProcessMap@examples/process/IssueManagement.process","methodName":"initiate","scenario":"testScenario"}]
+				}
+				
 		 		mw3.setWhen(mw3.WHEN_VIEW);
 		 		mw3.template_error = function(e, actualFace) {
 					if(e.lineNumber){
@@ -97,7 +111,7 @@
 					
 		 		};
 		 		
-		 		Metaworks3.prototype.startLoading = function(objId){
+		 		Metaworks3.prototype.startLoading = function(objId, name){
                     var divId = mw3._getObjectDivId(objId);
                     var offset = $('#' + divId).offset();                    
                     
@@ -111,26 +125,21 @@
 	                    $('body').append(html);
                     }
                 };
+                
+                Metaworks3.prototype.endLoading = function(objId, name){
+                     $('body>#loading_div_' + objId).remove();
+                };
+                
                         
                 Metaworks3.prototype.showInfo = function(objId, message){
                     var divId = mw3._getObjectDivId(objId);
                     var offset = $('#' + divId).offset();                    
-//                    if(offset){
-//                    	var offsetRight = offset.left + $('#' + divId).width() - 20;                    
-//                        var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
-//                        var html;
-//                        html = "<div id='info_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_done_box'  >"+message+"</div></div>";
-//                        
-//                        $('body').append(html);
-//                        setTimeout(function(){
-//                        	$('body>#info_div_' + objId).fadeOut(500);
-//                        	setTimeout(function(){$('body>#info_div_' + objId).remove();},500);	
-//                        	},2000);
-//                    }
-                };
-                
-                Metaworks3.prototype.endLoading = function(objId){
-                     $('body>#loading_div_' + objId).remove();
+                    
+                    if(offset){
+                    	var offsetRight = offset.left + $('#' + divId).width() - 20;                    
+                        var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
+                    }
+                    
                 };
                 
 		 		mw3.showError = function(objId, message, methodName){
@@ -141,19 +150,29 @@
 					
 					try{mw3.endLoading(objId);}catch(x){}
 					
-					$.msg({
-							bgPath : mw3.base + '/images/',
-						    content : "<b>" + mw3.localize(message) + "</b>"
-					});
+					var html;
+                    html = "<div class='alert alert-warning alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
+                    
+                    $('.error_div').append(html);
 		 		}
 		 		
 		 		mw3.alert = function(message){
-					$.msg({
-							bgPath : mw3.base + '/images/',
-						    content : "<b>" + mw3.localize(message) + "</b>"
-					});
+		 			
+		 			var html;
+                    html = "<div class='alert alert-danger alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+"</div>";
+                    
+                    $('.error_div').append(html);
 		 		}
 		 		
+		 		mw3.showValidation = function(objId, inputObjectId, isValid, message){
+		 		console.log(objId);
+		 		console.log(isValid);
+		 		console.log(message);
+		 		
+		 			if(!isValid)
+		 				mw3.alert(message);
+				};
+				
 		 		mw3.localize = function(){		 		
 		 			var message = arguments[0];
 					
@@ -185,9 +204,24 @@
 						message = message.replace("%s", argument);
 					}
 					
-					//console.log(message);
 					return message;
 		 		}
+		 		
+		 		mw3.getMessage = function(key, defaultValue){
+		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
+		 			
+		 			if(localeHandler!=null && localeHandler.resourceBundle != null){		 				
+		 				var message = localeHandler.resourceBundle[key];		 				
+		 				if(message)
+		 					return message;
+		 			}
+		 			
+		 			if(defaultValue)
+		 				return defaultValue;
+		 			
+		 			return key;		
+		 		}
+		 		
 		 		var locatePage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.model.Locale",
                     language : navigator.language
@@ -217,10 +251,15 @@
 				mw3.onLoadFaceHelperScript();
 				
 				loader.activate();
+				
+				window.onbeforeunload= function(){
+				    return 'You are about to leave this page, OK?';
+				};
 			});
 		</script>
 	</head>
 	
 	<body onload="dwr.engine.setActiveReverseAjax(true);">
+		<div class="error_div"></div>
 	</body>
 </html>
