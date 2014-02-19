@@ -20,6 +20,13 @@
 						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="104" height="104"></div>	
 					</dd>
 					<dd class="tit">
+<%
+		if(value.deleted){
+%>					
+						<div>탈퇴한 사용자 입니다.</div>
+<%
+		}
+%>					
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
 						<div class="invitation_div" style="padding:10px 0"><p class="title"><%=value.email%></p></div>
 						<%
