@@ -26,6 +26,10 @@ import org.uengine.kernel.GlobalContext;
 
 public class RemoteConferenceWorkItem extends WorkItem{
 	
+	final public String BBBSalt = GlobalContext.getPropertyString("bbb.security.salt");
+	final public String BBBHost = GlobalContext.getPropertyString("bbb.server.host","localhost");
+	final public String BBBPort = GlobalContext.getPropertyString("bbb.server.port","80");
+	
 	public RemoteConferenceWorkItem() {
 		setType(WORKITEM_TYPE_REMOTECONF);
 	}
@@ -38,14 +42,12 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		boolean record = true;
 		
-		String salt = GlobalContext.getPropertyString("bbb.security.salt");
-		
 		String createParam = "name=" + URLEncoder.encode(session.getUser().getName(), "UTF-8") + "&record=" + record + "&meetingID=" + getTaskId();// + "&attendeePW=" + password;
-		String checkSum = hex_sha1("create" + createParam + salt);
+		String checkSum = hex_sha1("create" + createParam + BBBSalt);
 		String callURI = "/bigbluebutton/api/create?" + createParam + "&checksum=" + checkSum;
 		
 		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host", "localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
+		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host", "localhost"), Integer.parseInt(BBBPort), "http");
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			
 		GetMethod getMethod = new GetMethod(callURI);
@@ -89,8 +91,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	
 	@ServiceMethod(target="popup")
 	public ModalWindow join() throws Exception{
- 		String salt = GlobalContext.getPropertyString("bbb.security.salt");
-		
+ 		
 		String meetingID = databaseMe().getExt1();
 		String attendeePW = databaseMe().getExt2();
 		String moderatorPW = databaseMe().getExt3();
@@ -108,11 +109,11 @@ public class RemoteConferenceWorkItem extends WorkItem{
 			joinParam += "&password=" + attendeePW;
 		
 		
-		String joinCheckSum = hex_sha1("join" + joinParam + salt);
+		String joinCheckSum = hex_sha1("join" + joinParam + BBBSalt);
 		String joinURI = "join?" + joinParam + "&checksum=" + joinCheckSum;
 		
 		IFrame iframe = new IFrame();
-		iframe.setSrc("http://"+ GlobalContext.getPropertyString("bbb.server.host","localhost") + "/bigbluebutton/api/" + joinURI);
+		iframe.setSrc("http://"+ BBBHost + "/bigbluebutton/api/" + joinURI);
 		iframe.setWidth("100%");
 				
 		return new ModalWindow(iframe, 1000, 550, title);
@@ -120,6 +121,10 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	
 	@ServiceMethod
 	public void end() throws Exception {
+		
+		if(!"0".equals(isMeetingAttendee())){
+			throw new Exception("회의가 진행 중입니다.");
+		}
 		
 		String salt = GlobalContext.getPropertyString("bbb.security.salt");
 		
@@ -132,7 +137,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 //		String getRecordURI = getRecordingInfo();
 		
-		URL url = new URL("http://" + GlobalContext.getPropertyString("bbb.server.host","localhost") + "/bigbluebutton/api/" + endURI);
+		URL url = new URL("http://" + BBBHost + "/bigbluebutton/api/" + endURI);
 		
         URLConnection urlConn = url.openConnection();
         BufferedReader burr = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
@@ -145,7 +150,99 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		recodingCheck();
 		
+//		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+//		Notification notification = new Notification();
+//		notification.session = session;
+//		pushUserMap = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+//		String currentUserId = session.getUser().getUserId();
+//		
+//		MetaworksRemoteService.pushClientObjectsFiltered(
+//				new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+//				new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , this)});
+	
+		
 	}
+
+	public String isMeetingRunning() throws Exception{
+		
+		String meetingID = databaseMe().getExt1();
+		
+		String param = "meetingID=" + meetingID;
+		String checksum = hex_sha1("isMeetingRunning" + param + BBBSalt);
+		String url = "http://" + BBBHost + "/bigbluebutton/api/isMeetingRunning?"+ param + "&checksum=" + checksum;
+		
+		
+		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		httpClient.getHostConfiguration().setHost(BBBHost, Integer.parseInt(BBBPort), "http");
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+			
+		GetMethod getMethod = new GetMethod(url);
+
+		httpClient.executeMethod(getMethod);
+		
+		InputStream is = getMethod.getResponseBodyAsStream();
+		
+		SAXBuilder builder = new SAXBuilder();
+		builder.setValidation(false);
+		builder.setExpandEntities(false);
+		builder.setIgnoringElementContentWhitespace(true);
+
+		Document documentToAttach = builder.build(is);
+		Element rootElement = documentToAttach.getRootElement();
+		List<Element> childs = rootElement.getChildren();
+		
+		String returnValue = "";
+		
+		for(Element elem : childs){
+			if("running".equals(elem.getName())){
+				returnValue = elem.getValue();
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	@ServiceMethod
+	public String isMeetingAttendee() throws Exception{
+		
+		String meetingID = databaseMe().getExt1();
+		String moderatorPW = databaseMe().getExt3();
+		
+		String param = "meetingID=" + meetingID + "&password=" + moderatorPW;
+		String checksum = hex_sha1("getMeetingInfo" + param + BBBSalt);
+		String url = "http://" + BBBHost + "/bigbluebutton/api/getMeetingInfo?"+ param + "&checksum=" + checksum;
+		
+		
+		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		httpClient.getHostConfiguration().setHost(BBBHost, Integer.parseInt(BBBPort), "http");
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+			
+		GetMethod getMethod = new GetMethod(url);
+
+		httpClient.executeMethod(getMethod);
+		
+		InputStream is = getMethod.getResponseBodyAsStream();
+		
+		SAXBuilder builder = new SAXBuilder();
+		builder.setValidation(false);
+		builder.setExpandEntities(false);
+		builder.setIgnoringElementContentWhitespace(true);
+
+		Document documentToAttach = builder.build(is);
+		Element rootElement = documentToAttach.getRootElement();
+		List<Element> childs = rootElement.getChildren();
+		
+		String returnValue = "";
+		
+		for(Element elem : childs){
+			if("participantCount".equals(elem.getName())){
+				returnValue = elem.getValue();
+			}
+		}
+		
+		return returnValue;
+	}
+	
 	
 	@ServiceMethod(callByContent=true)
 	public Object recodingCheck() throws Exception{
@@ -160,7 +257,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String recordID = null;
 		
 		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host","localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
+		httpClient.getHostConfiguration().setHost(BBBHost, Integer.parseInt(BBBPort), "http");
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			
 		GetMethod getMethod = new GetMethod(recordURI);
@@ -187,7 +284,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 						recordID = elem.getValue();
 					}
 				}
-				recordUrl = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/presentation/playback.html?meetingId=" + recordID;
+				recordUrl = "http://" + BBBHost+ "/playback/presentation/playback.html?meetingId=" + recordID;
 				IFrame iframe = new IFrame();
 				iframe.setSrc(recordUrl);
 				iframe.setWidth("100%");
@@ -196,6 +293,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 				returnFalg = true;
 				databaseMe().setStatus("Completed");
 				databaseMe().setExt4(recordUrl);
+
 			}else{
 				
 				IFrame iframe = new IFrame();
@@ -208,6 +306,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 				this.setContentLoaded(false);
 				returnFalg = false;
 
+				
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -233,7 +332,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 //		String recordURI = "/bigbluebutton/api/getRecordings?" + recordParam + "&checksum=" + checkSum;
 //		
 //		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-//		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host","localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
+//		httpClient.getHostConfiguration().setHost(bbbHost, Integer.parseInt(bbbPort), "http");
 //		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 //		
 //		GetMethod getMethod = new GetMethod(recordURI);
@@ -267,7 +366,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 //			
 //			is.close();
 //			
-//			url = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/slides/playback.html?meetingId=" + recordID;
+//			url = "http://" + bbbHost+ "/playback/slides/playback.html?meetingId=" + recordID;
 //			
 //		}
 //		
@@ -291,7 +390,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String recordID = null;
 		
 		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(GlobalContext.getPropertyString("bbb.server.host","localhost"), Integer.parseInt(GlobalContext.getPropertyString("bbb.server.port","80")), "http");
+		httpClient.getHostConfiguration().setHost(BBBHost, Integer.parseInt(BBBPort), "http");
 		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
 			
 		GetMethod getMethod = new GetMethod(recordURI);
@@ -323,8 +422,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		is.close();
 		
-		//url = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/slides/playback.html?meetingId=" + recordID;
-		url = "http://" + GlobalContext.getPropertyString("bbb.server.host","localhost")+ "/playback/presentation/playback.html?meetingId=" + recordID;
+		url = "http://" + BBBHost+ "/playback/presentation/playback.html?meetingId=" + recordID;
 		
 		IFrame iframe = new IFrame();
 		iframe.setSrc(url);
@@ -339,7 +437,6 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	public void loadContents() throws Exception {
 		this.setContentLoaded(true);
 		
-		this.recodingCheck();
 	}
 	
 	
