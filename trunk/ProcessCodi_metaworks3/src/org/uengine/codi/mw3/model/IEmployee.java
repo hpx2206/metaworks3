@@ -61,10 +61,6 @@ public interface IEmployee extends IDAO {
 	@Hidden(when = "view")
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호를 입력하여 주십시오."),
-		@Validator(name=ValidatorContext.VALIDATE_MIN , options={"6"}, message="비밀번호는 6자 이상 입력하셔야 합니다."),
-		@Validator(name=ValidatorContext.VALIDATE_MAX , options={"20"}, message="비밀번호는 20자 이내로 입력하셔야 합니다."),
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/[a-z0-9]*[a-z]+[a-z0-9]*/"}, message="비밀번호는 영문,숫자혼합이어야 합니다."),
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/[a-z0-9]*[0-9]+[a-z0-9]*/"}, message="비밀번호는 영문,숫자혼합이어야 합니다.")
 	})
 	@Face(displayName="$Password", options="type", values="password")
 	public String getPassword();
