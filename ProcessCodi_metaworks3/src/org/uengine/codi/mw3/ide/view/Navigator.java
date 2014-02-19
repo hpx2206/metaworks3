@@ -82,6 +82,7 @@ public class Navigator {
 		projectNode.setChild(projectNode.loadChild());
 		projectNode.setExpanded(true);
 		projectNode.setLoaded(true);
+		projectNode.setSelected(true);
 		projectNode.setRoot(true);
 		projectNode.setFolder(true);
 		
