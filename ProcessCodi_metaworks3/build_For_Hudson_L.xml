@@ -7,7 +7,7 @@
                  username="${id}"
                  password="${pw}"
                  trust="true"
-                 command="source /etc/profile; ${bin}/shutdown.sh; rm -rf ${dest}/ROOT"/>
+                 command="${command}; ${bin}/shutdown.sh; rm -rf ${dest}/ROOT"/>
     </target>
 	
 	<target name="upload-war" depends="stop">
@@ -29,6 +29,6 @@
                  username="${id}"
                  password="${pw}"
                  trust="true"
-                 command="source /etc/profile; sh -x ${bin}/startup.sh"/>
+                 command="${command}; sh -x ${bin}/startup.sh"/>
     </target>
 </project>
