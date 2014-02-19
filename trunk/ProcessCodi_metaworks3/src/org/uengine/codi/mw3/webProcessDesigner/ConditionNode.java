@@ -2,16 +2,19 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
+import org.metaworks.component.TreeNode;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.contexts.ComplexType;
@@ -29,11 +32,11 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		this.metaworksContext = metaworksContext;
 	}
 
-	SelectBox valiableChoice;
-		public SelectBox getValiableChoice() {
+	VariableSelectBox valiableChoice;
+		public VariableSelectBox getValiableChoice() {
 			return valiableChoice;
 		}
-		public void setValiableChoice(SelectBox valiableChoice) {
+		public void setValiableChoice(VariableSelectBox valiableChoice) {
 			this.valiableChoice = valiableChoice;
 		}
 	SelectBox signChoice;
@@ -94,21 +97,24 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		getMetaworksContext().setWhen("edit");
 	}
 	public void makeValiableChoice() throws Exception{
-		SelectBox choice = new SelectBox();
+		VariableSelectBox choice = new VariableSelectBox();
 		choice.setId("makeKey");
-		choice.add("", "null");
+		choice.add("선택해 주세요", "null");
 		if( this.getRoleList() != null){
 			for(int i = 0; i < roleList.size(); i++){
 				Role role = roleList.get(i);
-				choice.add("[ROLE]"+role.getName(), role.getName());
+				String displayName = role.getDisplayName() == null ? role.getName() : role.getDisplayName().getText();
+				choice.add("[ROLE]"+displayName, role.getName());
 			}
 		}
 		if( this.getVariableList() != null){
 			for(int i = 0; i < variableList.size(); i++){
 				ProcessVariable processVariable = variableList.get(i);
 				String nameAttr = processVariable.getName();
-				choice.add(nameAttr, nameAttr);
-//				String typeAttr = processVariable.getDefaultValue();
+				String displayName = processVariable.getDisplayName() == null ? nameAttr : processVariable.getDisplayName().getText();
+				
+				choice.add("[VARIABLE]"+displayName, nameAttr);
+				/*
 				Object typeAttr = processVariable.getDefaultValue();
 				if( typeAttr instanceof ComplexType){
 //					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
@@ -135,10 +141,50 @@ public class ConditionNode  implements Cloneable, ContextAware{
 						}
 					}
 				}
+				*/
 			}
 		}
-//		choice.setSelectStyle("font-size:10px;");
 		setValiableChoice(choice);
+	}
+	
+	@ServiceMethod( callByContent=true, eventBinding = "change", bindingFor = "valiableChoice")
+	public void makeValiableChoiceChild() throws Exception{
+		VariableSelectBox parentSelectBox = this.getValiableChoice();
+		
+		VariableSelectBox childSelectBox = null;
+		
+		if( variableList != null){
+			for(int i = 0; i < variableList.size(); i++){
+				ProcessVariable processVariable = variableList.get(i);
+				String nameAttr = processVariable.getName();
+				if( nameAttr.equals(parentSelectBox.getSelected()) ){
+					Object typeAttr = processVariable.getDefaultValue();
+					if( typeAttr instanceof ComplexType){
+						ComplexType complexType = (ComplexType)typeAttr;
+						String typeIdAttr = complexType.getTypeId();
+						childSelectBox = new VariableSelectBox();
+						childSelectBox.setId(parentSelectBox.getSelected());
+						childSelectBox.setMetaworksContext(this.getMetaworksContext());
+						
+						if( typeIdAttr != null && !"".equals(typeIdAttr) ){
+							String formName = typeIdAttr.substring(1, typeIdAttr.length() -1); 
+							WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( formName ); 
+							WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
+							FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
+							for(int j=0; j<fields.length; j++){
+								WebFieldDescriptor wfd = wfields[j];
+								String classType = wfd.getClassName().substring(wfd.getClassName().lastIndexOf(".")+1);
+								String displayName = "".equals(wfd.getDisplayName()) ? wfd.getName() : wfd.getDisplayName();
+								childSelectBox.add("["+classType+"]"+displayName, "["+wfd.getClassName()+"]"+wfd.getName());
+							}
+						}
+					}
+					break;
+				}
+			}
+		}
+		parentSelectBox.setMetaworksContext(this.getMetaworksContext());
+		parentSelectBox.setChildSelectBox(childSelectBox);
 	}
 	public void makeSignChoice() throws Exception{
 		SelectBox choice = new SelectBox();
@@ -161,15 +207,11 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");
-//		choice.add("File", "File");
-//		choice.add("Activity Selection", "Activity Selection");
-//		choice.add("Knowledge Type" ,"knowledgelType");
 		choice.add("Process Variable" ,"variable");
-//		choice.add("Html Form" ,"htmlType" );
 		setExpressionChoice(choice);
 	}
 	
-	@ServiceMethod( callByContent=true ,target=ServiceMethodContext.TARGET_AUTO)
+	@ServiceMethod( callByContent=true ,target=ServiceMethodContext.TARGET_AUTO, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object[] saveCondition() throws Exception{
 //		this.getMetaworksContext().setHow("tree");
 		String nodeName = "";
@@ -184,8 +226,10 @@ public class ConditionNode  implements Cloneable, ContextAware{
 			}else if( val3 != null && val3.equalsIgnoreCase("Yes or No") ){
 				val3 = expVal.getYesNo();
 			}else if( val3 != null && val3.equalsIgnoreCase("date") ){
-				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				val3 = df.format(expVal.getExpressionDate());
+				if( expVal.getExpressionDate() != null ){
+					SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					val3 = df.format(expVal.getExpressionDate());
+				}
 			}else if( val3 != null && val3.equalsIgnoreCase("File") ){
 				// TODO
 			}else if( val3 != null && val3.equalsIgnoreCase("variable") ){
@@ -201,12 +245,9 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		ConditionTreeNode node = getParentTreeNode();
 		node.setName(nodeName);
 		node.setConditionNode(this);
+		node.setSelected(true);
 		
-		// 오른쪽 패널 화면 아무것도 안나오도록 설정
-		ConditionNode conditionNode = new ConditionNode();
-		conditionNode.getMetaworksContext().setWhen("view");
-		
-		return new Object[]{node , conditionNode};
+		return new Object[]{node};
 	}
 
 	public void init() throws Exception{
@@ -221,6 +262,82 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		selectBox.setOptionNames(valiableChoice.getOptionNames());
 		selectBox.setOptionValues(valiableChoice.getOptionValues());
 		conditionInput.setValiableChoice(selectBox);
+	}
+	
+	public ConditionTreeNode makeConditionTreeNode() throws Exception{
+		ConditionTreeNode parentNode = this.getParentTreeNode();
+		if( parentNode == null ){
+			parentNode = new ConditionTreeNode();
+			parentNode.setId("rootNode");
+			parentNode.setName("Condition");  
+			parentNode.setRoleList(roleList);
+			parentNode.setVariableList(variableList);
+			parentNode.setType(TreeNode.TYPE_FOLDER);
+			parentNode.setConditionType(ConditionTreeNode.CONDITION_OR);
+			this.setParentTreeNode(parentNode);
+		}
+		
+		ConditionTreeNode node = new ConditionTreeNode();
+		Long idByTime = new Date().getTime();
+		node.setId(idByTime.toString());
+		node.setParentNode(this.getParentTreeNode());
+		node.setParentId(this.getParentTreeNode().getId());
+		node.setVariableList(this.getVariableList());
+		node.setRoleList(this.getRoleList());
+		node.setLoaded(true);
+		return node;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object newAND() throws Exception{
+		ConditionTreeNode node = this.makeConditionTreeNode();
+		node.setName(ConditionTreeNode.CONDITION_AND);
+		node.setConditionType(ConditionTreeNode.CONDITION_AND);
+		node.setFolder(true);
+		node.setExpanded(true);
+		node.setType(TreeNode.TYPE_FOLDER);
+		node.getMetaworksContext().setHow("folder");
+		return new ToAppend(this.getParentTreeNode() , node);
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object newOR() throws Exception{
+		
+		ConditionTreeNode node = this.makeConditionTreeNode();
+		node.setName(ConditionTreeNode.CONDITION_OR);
+		node.setConditionType(ConditionTreeNode.CONDITION_OR);
+		node.setFolder(true);
+		node.setExpanded(true);
+		node.setType(TreeNode.TYPE_FOLDER);
+		node.getMetaworksContext().setHow("folder");
+		return new ToAppend(this.getParentTreeNode() , node);
+		
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object newOtherwise() throws Exception{
+		
+		ConditionTreeNode node = this.makeConditionTreeNode();
+		node.setName(ConditionTreeNode.CONDITION_OTHERWISE);
+		node.setConditionType(ConditionTreeNode.CONDITION_OTHERWISE);
+		node.setType("page_white_text");
+		return new ToAppend(this.getParentTreeNode() , node);
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object newExpression() throws Exception{
+		
+		if( this.getConditionType() == null ){
+			this.setConditionType(ConditionTreeNode.CONDITION_AND);
+		}
+		
+		ConditionTreeNode node = this.makeConditionTreeNode();
+		node.setName(ConditionTreeNode.CONDITION_DEFAULT_EXPRESSION);
+		node.setConditionType(ConditionTreeNode.CONDITION_EXPRESSION);
+		node.conditionInit();
+		node.getConditionNode().setConditionType(this.getConditionType());
+		node.getConditionNode().setParentTreeNode(node);
+		return new ToAppend(this.getParentTreeNode() , node);
 	}
 	
 	@AutowiredFromClient
