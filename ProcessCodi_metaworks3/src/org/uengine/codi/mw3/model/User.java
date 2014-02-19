@@ -121,6 +121,14 @@ public class User extends Database<IUser> implements IUser {
 			this.anotherTenant = anotherTenant;
 		}
 	
+	boolean deleted;
+		public boolean isDeleted() {
+			return deleted;
+		}
+		public void setDeleted(boolean deleted) {
+			this.deleted = deleted;
+		}
+	
 	@Override
 	public Object[] pickUp() throws Exception {
 		this.getMetaworksContext().setHow(HOW_PICKER);
@@ -164,7 +172,9 @@ public class User extends Database<IUser> implements IUser {
 		// reload data
 		this.setName(this.getName());
 		this.setMood(emp.getMood());
-		this.setEmail(emp.getEmail());		  
+		this.setEmail(emp.getEmail());
+		this.setDeleted("1".equals(emp.getIsDeleted()));
+		
 		this.setSelf(isSelf);
 		
 		if(!isSelf){

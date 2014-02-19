@@ -64,11 +64,11 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] showSchedule() throws Exception;
 	
-	@Available(condition="(typeof self == 'undefined' || !self)")
+	@Available(condition="(typeof deleted == 'undefined' || !deleted) && (typeof self == 'undefined' || !self)")
 	@ServiceMethod(callByContent=true, target=TARGET_SELF)
 	public UnstructuredProcessInstanceStarter chat() throws Exception;
 	
-	@Available(condition="(typeof self == 'undefined' || !self) && (typeof friend == 'undefined' || !friend)")
+	@Available(condition="(typeof deleted == 'undefined' || !deleted) && (typeof self == 'undefined' || !self) && (typeof friend == 'undefined' || !friend)")
 	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] addContactForInfo() throws Exception;
 	
@@ -119,7 +119,7 @@ public interface IUser extends IDAO{
 	
 	public IUser findByDept(Dept dept) throws Exception;
 	
-	@Available(condition="(typeof self == 'undefined' || !self) && (typeof admin != 'undefined' && admin) && (typeof anotherTenant == 'undefined' || !anotherTenant)")
+	@Available(condition="(typeof deleted == 'undefined' || !deleted) && (typeof self == 'undefined' || !self) && (typeof admin != 'undefined' && admin) && (typeof anotherTenant == 'undefined' || !anotherTenant)")
 	@Group(name="admin")
 	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] delUser() throws Exception;
