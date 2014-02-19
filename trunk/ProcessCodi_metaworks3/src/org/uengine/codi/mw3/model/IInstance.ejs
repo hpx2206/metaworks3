@@ -62,7 +62,7 @@ if(value){
 							<tr>
 								<td  style="border:none;"><a href="#"><b><font color=204070><%=value.initiator.name%></font>&nbsp;&nbsp;
 								
-									<font color=#5C5C5C style="line-height:19px;">
+									<font color=#5C5C5C style="line-height:19px; word-break: break-word;">
 									<%if(value.dueDate){
 							            var format = 'y.mm.dd';
                                         var convertValue = $.datepicker.formatDate( format, value.dueDate );
@@ -160,14 +160,14 @@ if(value){
 			   		<% if(!isDashboard){%>
 					    <li>
 					   		<table><td style="border:none;vertical-align:top"><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
-					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
+					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply" style="word-break: break-word;"><%=lastCmnt%></font></td></table>
 					 	</li>
 			   		<%}%>
 
 			   		<%if(value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
 					   		<table><td  style="border:none;vertical-align:top"><%value.lastCmnt2User['size']='small';%><%=fields.lastCmnt2User.here()%></td>
-					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt2%></font></td></table>
+					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply" style="word-break: break-word;"><%=lastCmnt2%></font></td></table>
 					 	</li>
 			   		<%}%>
 			    <%}%>
