@@ -154,6 +154,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 								}catch(e){
 									dragObjMetadata = null;
 								}
+								
 								if( dragObjMetadata == null ){
 									var message = '[' + clipboardNode.alias + '.java] 파일이 온전하지 않습니다. ';
 									mw3.alert(message);
@@ -166,9 +167,15 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    				designerMode : true,
     	    		    				typeId : '[' + clipboardNode.alias + ']'
     	    		    		};
+								var variableName = clipboardNode.name.substring(0, clipboardNode.name.length-5);
+								var variableDisplayName = {
+                                        __className : 'org.uengine.contexts.TextContext',
+                                        text : dragObjMetadata.displayName
+                                    };
     	    		    		var variable = {
     									__className : 'org.uengine.kernel.ProcessVariable',
-    									name : dragObjMetadata.displayName ,
+    									name :  variableName,
+										displayName : variableDisplayName ,
     									typeInputter : complexType.__className,
     									defaultValue : complexType
     							};
@@ -184,11 +191,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    		// 엑티비티에 파라미터 추가
     	    		    		if( object.activity ){
     	    		    			object.activity.parameters = parameterContexts;
-    	    		    			var text = {
-	    		    					__className : 'org.uengine.contexts.TextContext',
-	    		    					text : dragObjMetadata.displayName
-    	    		    			};
-    	    		    			object.activity.description = text;
+    	    		    			object.activity.description = variableDisplayName;
     	    		    		}
     	    		    		
     	    		    		// 전체 변수 리스트에 추가
