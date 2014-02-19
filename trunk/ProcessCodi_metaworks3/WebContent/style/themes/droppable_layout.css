@@ -3651,7 +3651,7 @@ legend {display:none;}
 .morePointL{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointL.png") no-repeat;}
 .morePointR{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointR.png") no-repeat;}
 
-.topic_span{ padding:0 6px 1px 6px;-webkit-border-radius: 9px;     -moz-border-radius: 9px;  border-radius: 9px; background: #00BA9C; white-space:nowrap; color:#fff;}
+.topic_span{ padding:0 6px 1px 6px;-webkit-border-radius: 9px;     -moz-border-radius: 9px;  border-radius: 9px; background: #00BA9C; white-space:nowrap; color:#fff; line-height:19px;}
 .workdueDate{ float:left; margin-left:67px; margin-top:4px;}
 
 .security_hidden_radio_box{height:60px; width:60px; position:relative; margin:0 auto;cursor:pointer;}      
@@ -3664,3 +3664,6 @@ legend {display:none;}
 .view_more_dl{position:absolute; background:#C9E2FC; z-index:999999; box-shadow:0 2px 10px rgba(0, 0, 0, 0.2)}
 .view_more_line{height:auto; overflow:auto}
 .followers_addbtn img {cursor:pointer;}
+
+.feedback_btn{position:absolute;z-index:9999; top:50%; right:0px; width:15px; height:125px; margin-top:-62px;  cursor:pointer; background:#2B3D51; font-size:11px; line-height: 12px; color: #fff;text-align: center; padding-top:4px; -webkit-border-top-left-radius: 3px;-moz-border-top-left-radius: 3px;border-top-left-radius: 3px;  webkit-border-bottom-left-radius: 3px;-moz-border-bottom-left-radius: 3px;border-bottom-left-radius: 3px}
+.feedback_btn span{line-height:20px;}
