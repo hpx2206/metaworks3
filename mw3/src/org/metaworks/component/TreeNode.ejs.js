@@ -50,6 +50,10 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		mw3.getFaceHelper(event.data.objectId).action(event);
 	});
 	
+	if( this.object.selected){
+		faceHelper.select();
+	}
+	
 };
 
 org_metaworks_component_TreeNode.prototype = {
@@ -204,10 +208,12 @@ org_metaworks_component_TreeNode.prototype = {
 		});
 	},
 	select : function(event){
-		if(event.stopPropagation){
-			event.stopPropagation();
-		}else if(window.event){
-			window.event.cancelBubble = true;
+		if( event ){
+			if(event.stopPropagation){
+				event.stopPropagation();
+			}else if(window.event){
+				window.event.cancelBubble = true;
+			}
 		}
 		
 		if(!this.nodeDiv.hasClass('selected')){
@@ -216,8 +222,9 @@ org_metaworks_component_TreeNode.prototype = {
 
 			this.treeDiv.trigger('change', [this.objectId]);			
 
-			if(mw3.isHiddenMethod(this.metadata.serviceMethodContextMap['select'], mw3.objectContexts[this.objectId].__metaworksContext))
-				mw3.call(this.objectId, 'select');
+			if(!mw3.isHiddenMethodContext(this.metadata.serviceMethodContextMap['select'], this.object)){
+				 mw3.call(this.objectId, 'select');
+			}
 		}else{
 			this.treeDiv.find('.item-fix.selected').removeClass('selected');
 			this.nodeDiv.addClass('selected');			
