@@ -2,11 +2,12 @@
 	if(value){
 		if( mw3.how == "folder" ){
 %>
-            <div>
-                <div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.newAND.caller()%>"><span>and</span></a></div>
-                <div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.newOR.caller()%>"><span>or</span></a></div>
-                <div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.newOtherwise.caller()%>"><span>otherwise</span></a></div>
-                <div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.newExpression.caller()%>"><span>expression</span></a></div>
+            <div class="ide_edit_option">
+                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon">&</span> and </button>
+                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon ">||</span> or </button>
+                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon ">...</span> otherwise </button>
+                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon ">$</span> expression </button>
+                
             </div>
 <%  
         }else	if( mw3.how == "expression" ){
