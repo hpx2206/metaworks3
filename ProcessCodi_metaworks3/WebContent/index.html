@@ -272,7 +272,7 @@
 					try{mw3.endLoading(objId);}catch(x){}
 					
 					var html;
-                    html = "<div class='alert alert-warning alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+" <button type='button' class='btn btn-warning btn-sm ' data-dismiss='alert' aria-hidden='true' onclick='mw3.getObject('" + objId + "')."+ methodName + "()'>retry</button></div>";
+                    html = "<div class='alert alert-warning alert-dismissable'style='width: 100%; text-align: center;'><button type='button' class='close' data-dismiss='alert' aria-hidden='true' onclick='$(this).parent().remove()'>&times;</button><span class='icon-spam'></span> "+ mw3.localize(message)+" <button type='button' class='btn btn-default btn-sm ' data-dismiss='alert' aria-hidden='true' onclick='mw3.getObject('" + objId + "')."+ methodName + "()'><span class='glyphicon glyphicon-repeat'></span> retry</button></div>";
                     
                     $('.error_div').append(html);
                     
