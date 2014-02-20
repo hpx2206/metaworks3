@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -31,7 +32,7 @@ public class TodoBadge{
 		this.setLoader(true);
 	}
 	
-	@ServiceMethod
+	@ServiceMethod(eventBinding=EventContext.EVENT_CHANGE)
 	public void refresh() throws Exception{
 		
 		

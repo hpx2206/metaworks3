@@ -4,7 +4,6 @@ import org.metaworks.EventContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
@@ -66,6 +65,9 @@ public class Follower extends Database<IFollower> implements IFollower {
 		}
 		public void setUser(IUser user) {
 			this.user = user;
+			
+			if(this.getUser() != null)
+				this.setEndpoint(user.getUserId());
 		}
 	
 	IDept dept;
@@ -228,10 +230,19 @@ public class Follower extends Database<IFollower> implements IFollower {
 	public void push() throws Exception {
 		
 		if(this.isEnablePush()){
+			
+			// TODO 타 회사의 사용자도 리프레쉬가 되어야 한다.
 			// 본인 이외에 다른 사용자에게 push
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
 					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE , true)});
+
+			final Object[] returnObject = new Object[]{new ToEvent(new TodoBadge(), EventContext.EVENT_CHANGE)};
+			
+ 			if(this.getAssigntype() == Role.ASSIGNTYPE_USER)
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(this.getEndpoint()), returnObject);
+			else
+				MetaworksRemoteService.pushClientObjectsFiltered(new AllSessionFilter(Login.getSessionIdWithDept(this.getEndpoint())), returnObject);
 			
 			// TODO 다른 테넌트일 경우는?? 체크하는 로직이 필요할듯
 			// user 에 회사정보가 없어서 체크를 할 수가 없음
@@ -242,7 +253,7 @@ public class Follower extends Database<IFollower> implements IFollower {
 //						new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE)});
 //			}
 		}
-		
+
 	}
 
 }
