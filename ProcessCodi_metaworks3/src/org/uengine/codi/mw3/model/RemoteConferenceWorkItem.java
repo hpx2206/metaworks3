@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -18,10 +19,14 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.kernel.GlobalContext;
 
 public class RemoteConferenceWorkItem extends WorkItem{
@@ -29,12 +34,30 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	final public String BBBSalt = GlobalContext.getPropertyString("bbb.security.salt");
 	final public String BBBHost = GlobalContext.getPropertyString("bbb.server.host","localhost");
 	final public String BBBPort = GlobalContext.getPropertyString("bbb.server.port","80");
+
+	final public String RETURNCODE 			= "returncode";
+	final public String CONFERENCE_STARTED	= "startTime";
+	final public String METTING_RUNNING 	= "running";
+	final public String PARTICIPANTCOUNT 	= "participantCount";
 	
-	public RemoteConferenceWorkItem() {
+	final public String TRUE			 	= "true";
+	final public String FALSE 				= "false";
+	final public String FAILED				= "FAILED";
+	/**
+	 * ext1 = meetingID;
+	   ext2 = attendeePW;
+	   ext3 = moderatorPW;
+	   ext4 = URL;
+	   ext5 = confereceStarted;
+	   ext6 = MeetingRunning;
+	   ext7 = participantCount;
+	 * 
+	 */
+	public RemoteConferenceWorkItem() throws Exception {
 		setType(WORKITEM_TYPE_REMOTECONF);
 	}
-
-
+	
+		
 	@Override
 	public Object[] add() throws Exception {
 	
@@ -89,8 +112,8 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	}
 
 	
-	@ServiceMethod(target="popup")
-	public ModalWindow join() throws Exception{
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND, callByContent=true)
+	public Object[] join() throws Exception{
  		
 		String meetingID = databaseMe().getExt1();
 		String attendeePW = databaseMe().getExt2();
@@ -98,8 +121,6 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String title = databaseMe().getTitle();
 		String endPoint = databaseMe().getEndpoint();
 		String joinParam=null;
-		
-		System.out.println(session.getEmployee().getEmail());
 		
 		joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8");
 				
@@ -115,14 +136,34 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		IFrame iframe = new IFrame();
 		iframe.setSrc("http://"+ BBBHost + "/bigbluebutton/api/" + joinURI);
 		iframe.setWidth("100%");
+		
+		this.databaseMe().setExt5(TRUE);
+		this.databaseMe().setExt6(TRUE);
 				
-		return new ModalWindow(iframe, 1000, 550, title);
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		Notification notification = new Notification();
+		notification.session = session;
+		pushUserMap = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+		String currentUserId = session.getUser().getUserId();
+	
+		final IWorkItem copyOfThis = this;
+		
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
+		
+		// 본인 이외에 다른 사용자에게 push
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+				new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
+				
+		return new Object[]{new ModalWindow(iframe, 1000, 550, title)};
 	}
 	
 	@ServiceMethod
 	public void end() throws Exception {
+		this.MeetingInfo();
+		String participantCount = this.databaseMe().getExt7();
 		
-		if(!"0".equals(isMeetingAttendee())){
+		if(!"0".equals(participantCount)){
 			throw new Exception("회의가 진행 중입니다.");
 		}
 		
@@ -134,8 +175,6 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String endParam = "meetingID=" + meetingID + "&password=" + moderatorPW ;
 		String checkSum = hex_sha1("end" + endParam + salt);
 		String endURI = "end?" + endParam + "&checksum=" + checkSum;
-		
-//		String getRecordURI = getRecordingInfo();
 		
 		URL url = new URL("http://" + BBBHost + "/bigbluebutton/api/" + endURI);
 		
@@ -150,60 +189,10 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		recodingCheck();
 		
-//		HashMap<String, String> pushUserMap = new HashMap<String, String>();
-//		Notification notification = new Notification();
-//		notification.session = session;
-//		pushUserMap = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
-//		String currentUserId = session.getUser().getUserId();
-//		
-//		MetaworksRemoteService.pushClientObjectsFiltered(
-//				new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
-//				new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , this)});
-	
-		
 	}
 
-	public String isMeetingRunning() throws Exception{
-		
-		String meetingID = databaseMe().getExt1();
-		
-		String param = "meetingID=" + meetingID;
-		String checksum = hex_sha1("isMeetingRunning" + param + BBBSalt);
-		String url = "http://" + BBBHost + "/bigbluebutton/api/isMeetingRunning?"+ param + "&checksum=" + checksum;
-		
-		
-		HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-		httpClient.getHostConfiguration().setHost(BBBHost, Integer.parseInt(BBBPort), "http");
-		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-			
-		GetMethod getMethod = new GetMethod(url);
-
-		httpClient.executeMethod(getMethod);
-		
-		InputStream is = getMethod.getResponseBodyAsStream();
-		
-		SAXBuilder builder = new SAXBuilder();
-		builder.setValidation(false);
-		builder.setExpandEntities(false);
-		builder.setIgnoringElementContentWhitespace(true);
-
-		Document documentToAttach = builder.build(is);
-		Element rootElement = documentToAttach.getRootElement();
-		List<Element> childs = rootElement.getChildren();
-		
-		String returnValue = "";
-		
-		for(Element elem : childs){
-			if("running".equals(elem.getName())){
-				returnValue = elem.getValue();
-			}
-		}
-		
-		return returnValue;
-	}
-	
 	@ServiceMethod
-	public String isMeetingAttendee() throws Exception{
+	public void MeetingInfo() throws Exception{
 		
 		String meetingID = databaseMe().getExt1();
 		String moderatorPW = databaseMe().getExt3();
@@ -232,15 +221,37 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		Element rootElement = documentToAttach.getRootElement();
 		List<Element> childs = rootElement.getChildren();
 		
-		String returnValue = "";
 		
 		for(Element elem : childs){
-			if("participantCount".equals(elem.getName())){
-				returnValue = elem.getValue();
+			if(RETURNCODE.equals(elem.getName())){
+				if(FAILED.equals(elem.getValue())){
+					this.databaseMe().setExt5(FAILED);
+					this.databaseMe().setExt6(FAILED);
+					break;
+				}
 			}
+			
+			if(CONFERENCE_STARTED.equals(elem.getName())){
+				if("0".equals(elem.getValue()))
+					this.databaseMe().setExt5(FALSE);
+				else
+					this.databaseMe().setExt5(TRUE);
+			
+			}else if(METTING_RUNNING.equals(elem.getName())){
+				
+				if(Boolean.parseBoolean(elem.getValue()))
+					this.databaseMe().setExt6(TRUE);
+				else
+					this.databaseMe().setExt6(FALSE);
+			
+			}else if(PARTICIPANTCOUNT.equals(elem.getName())){
+				
+				this.databaseMe().setExt7(elem.getValue());
+				
+			}
+			
 		}
 		
-		return returnValue;
 	}
 	
 	
@@ -436,6 +447,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	@Override
 	public void loadContents() throws Exception {
 		this.setContentLoaded(true);
+		MeetingInfo();
 		
 	}
 	
@@ -449,6 +461,11 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	        }
 	         
 	        return sb.toString();
+	}
+	
+	@ServiceMethod(callByContent=true, eventBinding="change")
+	public void refresh() throws Exception{
+		//this.loadContents();
 	}
 	
 	ArrayList<String> initialFollowers;
