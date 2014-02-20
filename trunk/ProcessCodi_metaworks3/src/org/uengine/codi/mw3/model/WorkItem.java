@@ -52,7 +52,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	private Logger logger = LoggerFactory.getLogger(WorkItem.class);
 	
-	public final static String USE_BBB = GlobalContext.getPropertyString("bbb.use", "0");
+	public final static String USE_BBB = GlobalContext.getPropertyString("bbb.use", "1");
 	
 	public WorkItem(){
 		this.getMetaworksContext().setWhen(WHEN_NEW);
