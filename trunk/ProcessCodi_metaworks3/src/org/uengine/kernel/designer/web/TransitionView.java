@@ -70,7 +70,7 @@ public class TransitionView extends CanvasDTO{
 		conditionPanel.setRoleList(roleList);
 		conditionPanel.setVariableList(variableList);
 		conditionPanel.load();
-		return new ModalWindow(conditionPanel , 800, 550,  "조건편집" );
+		return new ModalWindow(conditionPanel , 800, 600,  "조건편집" );
 	}
 	
 	public Condition makeCondition(ConditionTreeNode rootNode){
