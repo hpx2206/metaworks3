@@ -820,6 +820,9 @@ body {
 	left: 0px;
 	right: 0px;
 }
+.ide_edit_option {padding:15px;}
+.ide_edit_option button{width:100%;margin-bottom:15px;}
+.ide_edit_option button span{ font-weight:bolder;}
 .pane { display: none; /* will appear when layout inits */ }
 /*	layout	*/
 .sub_topheight { height: 7px; }
