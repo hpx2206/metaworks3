@@ -4720,6 +4720,20 @@ window.Raphael.svg && function (R) {
 		return this;
 	};
 
+	elproto.prependChild = function (element) {
+		if (this.removed) {
+			return this;
+		}
+		if (this.type !== 'group') {
+			throw new TypeError('appendChild function supports only the group type!');
+		}
+		
+		var node = element.node || element[element.length - 1].node;
+		this.node.insertBefore(node, this.node.firstChild);
+	
+		return this;
+	};
+
     elproto.insertAfter = function (element) {
         if (this.removed) {
             return this;
@@ -6233,6 +6247,12 @@ OG.common.Constants = {
      */
     TASKTYPE_SUFFIX : "_TASKTYPE",
     TASKTYPE_BBOX_SUFFIX : "_TASKTYPE_BBOX",
+    
+    /**
+     * STATUS 용 가이드 ID의 suffix 정의
+     */
+    STATUS_SUFFIX : "_STATUS",
+    STATUS_BBOX_SUFFIX : "_STATUS_BBOX",
 
 	/**
 	 * Shape Move & Resize 시 이동 간격
@@ -10557,6 +10577,7 @@ OG.shape.bpmn.A_Task = function (label) {
 	//this.HaveButton = true;
 	this.LoopType = "None";
 	this.TaskType = "None";
+	this.status = "None";
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
@@ -10890,6 +10911,32 @@ OG.shape.bpmn.A_Task.prototype.drawCustomControl = function(handler, element){
 };
 
 /**
+ * BPMN : Mapper Task Shape
+ *
+ * @class
+ * @extends OG.shape.bpmn.A_Task
+ * @requires OG.common.*, OG.geometry.*, OG.shape.bpmn.A_Task
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.A_MapperTask = function (label) {
+    OG.shape.bpmn.A_MapperTask.superclass.call(this);
+    
+    this.SHAPE_ID = 'OG.shape.bpmn.A_MapperTask';
+    this.label = label;
+    this.CONNECTABLE = true;
+    this.GROUP_COLLAPSIBLE = false;
+    this.LoopType = "None";
+    this.TaskType = "Mapper";
+    this.status = "None";
+}
+OG.shape.bpmn.A_MapperTask.prototype = new OG.shape.bpmn.A_Task();
+OG.shape.bpmn.A_MapperTask.superclass = OG.shape.bpmn.A_Task;
+OG.shape.bpmn.A_MapperTask.prototype.constructor = OG.shape.bpmn.A_MapperTask;
+OG.A_MapperTask = OG.shape.bpmn.A_MapperTask;
+
+/**
  * BPMN : Human Task Shape
  *
  * @class
@@ -10908,6 +10955,7 @@ OG.shape.bpmn.A_HumanTask = function (label) {
     this.GROUP_COLLAPSIBLE = false;
     this.LoopType = "None";
     this.TaskType = "User";
+    this.status = "None";
 }
 OG.shape.bpmn.A_HumanTask.prototype = new OG.shape.bpmn.A_Task();
 OG.shape.bpmn.A_HumanTask.superclass = OG.shape.bpmn.A_Task;
@@ -10975,9 +11023,9 @@ OG.shape.bpmn.Signal.prototype.createShape = function () {
     	geom1 = new OG.geometry.Circle([50, 50], 50);
     	geom2 = new OG.geometry.Circle([50, 50], 40);
         geom3 = new OG.Polygon([
-    		[15, 75],
+    		[20, 75],
     		[50, 10],
-    		[85, 75]
+    		[80, 75]
     	]);
 
     	geomCollection.push(geom1);
@@ -15317,8 +15365,12 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
     
     // Draw for Task
     if(shape instanceof OG.shape.bpmn.A_Task){
-		this.drawLoopType(groupNode);
-		this.drawTaskType(groupNode);
+    	if(groupNode.shape.LoopType != 'None')
+			this.drawLoopType(groupNode);
+		if(groupNode.shape.TaskType != 'None')
+			this.drawTaskType(groupNode);
+		if(groupNode.shape.status != 'None')
+			this.drawStatus(groupNode);
     }
 	
 	if(shape instanceof OG.shape.HorizontalLaneShape
@@ -16799,8 +16851,12 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 		}
 
         if(element.shape instanceof OG.shape.bpmn.A_Task){ // LoopType 에 따라서 도형을 그리기 위해서
-            this.drawLoopType(element);
-            this.drawTaskType(element);
+			if(element.shape.LoopType != 'None')
+				this.drawLoopType(element);
+			if(element.shape.TaskType != 'None')
+				this.drawTaskType(element);
+			if(element.shape.status != 'None')
+				this.drawStatus(element);
         }
 
 		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
@@ -17901,45 +17957,44 @@ OG.renderer.RaphaelRenderer.prototype.drawLoopType = function (element) {
 		_size = me._CONFIG.COLLAPSE_SIZE,
 		_hSize = _size / 2;
 
-		_rect1 = this._getREleById(rElement.id + OG.Constants.LOOPTYPE_SUFFIX);
-		if (_rect1) {
-			this._remove(_rect1);
-		}
+	_rect1 = this._getREleById(rElement.id + OG.Constants.LOOPTYPE_SUFFIX);
+	if (_rect1) {
+		this._remove(_rect1);
+	}
 
-		envelope = geometry.getBoundary();
-		_lowerCenter = envelope.getLowerCenter();
+	envelope = geometry.getBoundary();
+	_lowerCenter = envelope.getLowerCenter();
 
-        switch(element.shape.LoopType){
-        case "Standard":
-            _rect1 = this._PAPER.path(
-                "M" + (_lowerCenter.x - 15) + " " + (_lowerCenter.y - 15) +
-                "v" + 15 +  "M" + (_lowerCenter.x - 10) + " " + (_lowerCenter.y - 15) +
-                "v" + 15 +  "M" + (_lowerCenter.x - 5) + " " + (_lowerCenter.y - 15) + "v" + 15
-            );
-            break;
+    switch(element.shape.LoopType){
+    case "Standard":
+        _rect1 = this._PAPER.path(
+            "M" + (_lowerCenter.x - 15) + " " + (_lowerCenter.y - 15) +
+            "v" + 15 +  "M" + (_lowerCenter.x - 10) + " " + (_lowerCenter.y - 15) +
+            "v" + 15 +  "M" + (_lowerCenter.x - 5) + " " + (_lowerCenter.y - 15) + "v" + 15
+        );
+        break;
 
-        case "MIParallel":
-            _rect1 = this._PAPER.path(
-                "M" + (_lowerCenter.x - 15) + " " + (_lowerCenter.y - 15) +
-                "v" + 15 +  "M" + (_lowerCenter.x - 10) + " " + (_lowerCenter.y - 15) +
-                "v" + 15 +  "M" + (_lowerCenter.x - 5) + " " + (_lowerCenter.y - 15) + "v" + 15
-            );
-            break;
+    case "MIParallel":
+        _rect1 = this._PAPER.path(
+            "M" + (_lowerCenter.x - 15) + " " + (_lowerCenter.y - 15) +
+            "v" + 15 +  "M" + (_lowerCenter.x - 10) + " " + (_lowerCenter.y - 15) +
+            "v" + 15 +  "M" + (_lowerCenter.x - 5) + " " + (_lowerCenter.y - 15) + "v" + 15
+        );
+        break;
 
-        case "MISequential":
-            _rect1 = this._PAPER.path(
-                "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 15) +
-                "h" + 15 +  "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 10) +
-                "h" + 15 +  "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 5) + "h" + 15
-            );
-            break;
+    case "MISequential":
+        _rect1 = this._PAPER.path(
+            "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 15) +
+            "h" + 15 +  "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 10) +
+            "h" + 15 +  "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 5) + "h" + 15
+        );
+        break;
 
-        }
-        if(element.shape.LoopType != "None"){
-            this._add(_rect1, rElement.id + OG.Constants.LOOPTYPE_SUFFIX);
-            _rect1.insertAfter(rElement);
-            rElement.appendChild(_rect1);
-        }
+    }
+    this._add(_rect1, rElement.id + OG.Constants.LOOPTYPE_SUFFIX);
+    _rect1.insertAfter(rElement);
+    rElement.appendChild(_rect1);
+        
 	return null;
 };
 
@@ -17952,54 +18007,104 @@ OG.renderer.RaphaelRenderer.prototype.drawAttatchEvent = function (element) {
 //TaskType 드로우
 
 OG.renderer.RaphaelRenderer.prototype.drawTaskType = function (element) {
+	console.log(element);
+	
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
 		_size = me._CONFIG.COLLAPSE_SIZE,
 		_hSize = _size / 2;
 
-		_rect1 = this._getREleById(rElement.id + OG.Constants.TASKTYPE_SUFFIX);
-		if (_rect1) {
-			this._remove(_rect1);
-		}
+	_rect1 = this._getREleById(rElement.id + OG.Constants.TASKTYPE_SUFFIX);
+	if (_rect1) {
+		this._remove(_rect1);
+	}
 
-		envelope = geometry.getBoundary();
-		_upperLeft = envelope.getUpperLeft();
+	envelope = geometry.getBoundary();
+	_upperLeft = envelope.getUpperLeft();
 
-        switch(element.shape.TaskType){
-        case "User":
-            _rect1 = this._PAPER.image("images/opengraph/User.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
+    switch(element.shape.TaskType){
+    case "User":
+        _rect1 = this._PAPER.image("images/opengraph/User.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "Send":
+        _rect1 = this._PAPER.image("images/opengraph/Send.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "Receive":
+        _rect1 = this._PAPER.image("images/opengraph/Receive.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "Manual":
+        _rect1 = this._PAPER.image("images/opengraph/Manual.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "Service":
+        _rect1 = this._PAPER.image("images/opengraph/Service.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "BusinessRule":
+        _rect1 = this._PAPER.image("images/opengraph/BusinessRule.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "Script":
+        _rect1 = this._PAPER.image("images/opengraph/Script.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+	case "Mapper":
+        _rect1 = this._PAPER.image("images/opengraph/mapper.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+        
+    }
 
-        case "Send":
-            _rect1 = this._PAPER.image("images/opengraph/Send.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
+    this._add(_rect1, rElement.id + OG.Constants.TASKTYPE_SUFFIX);
+    _rect1.insertAfter(rElement);
+    rElement.appendChild(_rect1);
+    
+	return null;
+};
 
-        case "Receive":
-            _rect1 = this._PAPER.image("images/opengraph/Receive.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
-        case "Manual":
-            _rect1 = this._PAPER.image("images/opengraph/Manual.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
+//Status 드로우
 
-        case "Service":
-            _rect1 = this._PAPER.image("images/opengraph/Service.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
-        case "BusinessRule":
-            _rect1 = this._PAPER.image("images/opengraph/BusinessRule.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
+OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+		geometry = rElement ? rElement.node.shape.geom : null,
+		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
+		_size = me._CONFIG.COLLAPSE_SIZE,
+		_hSize = _size / 2;
 
-        case "Script":
-            _rect1 = this._PAPER.image("images/opengraph/Script.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
-            break;
+	_rect1 = this._getREleById(rElement.id + OG.Constants.STATUS_SUFFIX);
+	if (_rect1) {
+		this._remove(_rect1);
+	}
+	
+	_rect = this._getREleById(rElement.id + OG.Constants.STATUS_SUFFIX + '_IMG');
+	if (_rect) {
+		this._remove(_rect);
+	}
 
-        }
+	envelope = geometry.getBoundary();
+	_upperRight = envelope.getUpperRight();
 
-        if(element.shape.TaskType != "None"){
-            this._add(_rect1, rElement.id + OG.Constants.TASKTYPE_SUFFIX);
-            _rect1.insertAfter(rElement);
-            rElement.appendChild(_rect1);
-        }
+    switch(element.shape.status){
+    case "Completed":
+        _rect1 = this._PAPER.image("images/opengraph/complete.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
+        break;
+    case "Running":
+        _rect = this._PAPER.rect(envelope.getUpperLeft().x - 20, envelope.getUpperLeft().y - 20, envelope.getWidth() + 40, envelope.getHeight() + 40);
+        _rect.attr("fill", "red");
+        _rect.attr("stroke-width", "1.2");
+        _rect.attr("r", "10");
+        _rect.attr("fill-opacity", "0.5");
+	
+        _rect1 = this._PAPER.image("images/opengraph/running.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
+        break;
+    }
+
+    this._add(_rect1, rElement.id + OG.Constants.STATUS_SUFFIX);
+    _rect1.insertAfter(rElement);
+    rElement.appendChild(_rect1);
+    
+    if(_rect){
+    	this._add(_rect, rElement.id + OG.Constants.STATUS_SUFFIX + '_IMG');
+    	_rect.insertAfter(rElement);
+    	rElement.prependChild(_rect);
+    }
+    
 	return null;
 };
 
@@ -22458,6 +22563,9 @@ OG.handler.EventHandler.prototype = {
 				}else if(taskType === "Service"){
 					$(item).attr("_shape_id", "OG.shape.bpmn.A_ServiceTask");
 					item.shape.SHAPE_ID = "OG.shape.bpmn.A_ServiceTask";
+				}else if(taskType === "Mapper"){
+					$(item).attr("_shape_id", "OG.shape.bpmn.A_MapperTask");
+					item.shape.SHAPE_ID = "OG.shape.bpmn.A_MapperTask";
 				}else{
 					$(item).attr("_shape_id", "OG.shape.bpmn.A_Task");
 					item.shape.SHAPE_ID = "OG.shape.bpmn.A_Task";
