@@ -792,7 +792,9 @@ public class Login implements ContextAware {
 			app = new SNS(session);
 
 		TopPanel topPanel = new TopPanel(session);
-		topPanel.setTopCenterPanel(app.loadTopCenterPanel(session));
+		
+		if(!SNS.isPhone())
+			topPanel.setTopCenterPanel(app.loadTopCenterPanel(session));
 		
 		mainPanel = new MainPanel(topPanel, app);
 		
