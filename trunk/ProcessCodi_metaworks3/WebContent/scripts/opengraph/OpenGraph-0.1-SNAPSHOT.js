@@ -18085,12 +18085,13 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
         _rect1 = this._PAPER.image("images/opengraph/complete.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
         break;
     case "Running":
-        _rect = this._PAPER.rect(envelope.getUpperLeft().x - 20, envelope.getUpperLeft().y - 20, envelope.getWidth() + 40, envelope.getHeight() + 40);
+        _rect = this._PAPER.rect(envelope.getUpperLeft().x - 10, envelope.getUpperLeft().y - 10, envelope.getWidth() + 20, envelope.getHeight() + 20);
         _rect.attr("fill", "#C9E2FC");
-        _rect.attr("stroke-width", "1.2");
+        _rect.attr("stroke-width", "0.2");
         _rect.attr("r", "10");
         _rect.attr("fill-opacity", "0.5");
-	
+        _rect.attr("stroke-dasharray", "--");
+        
         _rect1 = this._PAPER.image("images/opengraph/running.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
         break;
     }
