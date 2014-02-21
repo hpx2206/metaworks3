@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javassist.expr.Instanceof;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
@@ -1530,6 +1532,20 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			activities.add(otherwiseActivity);
 		}
 		return activities;
+	}
+	
+	public boolean checkStartsWithEventActivity() throws Exception {
+		boolean check = false;
+		for (Iterator<Transition> it = getIncomingTransitions().iterator(); it.hasNext(); ) {
+			Transition ts = (Transition)it.next();
+			Activity beforeActivity = ts.getSourceActivity();
+			if(beforeActivity instanceof EventActivity && beforeActivity instanceof MessageListener ){
+				return true;
+			}else{
+				check = beforeActivity.checkStartsWithEventActivity();
+			}
+		}
+		return check;
 	}
 	
 	public void setTokenCount(ProcessInstance instance, int tokenCount) throws Exception {

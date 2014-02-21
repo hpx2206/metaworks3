@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.Date;
+import java.util.Vector;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -12,6 +13,8 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.kernel.EventActivity;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class InstanceTooltip implements ContextAware {
@@ -66,12 +69,28 @@ public class InstanceTooltip implements ContextAware {
 			this.dueDate = dueDate;
 		}
 		
+	String instanceDefId;
+		public String getInstanceDefId() {
+			return instanceDefId;
+		}
+		public void setInstanceDefId(String instanceDefId) {
+			this.instanceDefId = instanceDefId;
+		}
+
 	EventTrigger[] eventTriggers;
 		public EventTrigger[] getEventTriggers() {
 			return eventTriggers;
 		}
 		public void setEventTriggers(EventTrigger[] eventTriggers) {
 			this.eventTriggers = eventTriggers;
+		}
+		
+	boolean loaded;
+		public boolean isLoaded() {
+			return loaded;
+		}
+		public void setLoaded(boolean loaded) {
+			this.loaded = loaded;
 		}
 		
 	public InstanceTooltip() throws Exception{
@@ -83,33 +102,36 @@ public class InstanceTooltip implements ContextAware {
 		this.setStatus(instance.getStatus());
 		this.setSecuopt(instance.getSecuopt());
 		this.setDueDate(instance.getDueDate());
-		
-		/*
-		if(instance.getDefVerId()!=null){ //process exists!
-//			EventHandler[] eventHandlers = processManager.getEventHandlersInAction(instance.getInstId().toString());
-			ProcessInstance processInstance = processManager.getProcessInstance(instance.getInstId().toString());
+		this.setInstanceDefId(instance.getDefVerId());
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void eventTriggerCheck() throws Exception{
+		if( Instance.INSTNACE_STATUS_RUNNING.equals(this.getStatus()) ){
+			ProcessInstance processInstance = processManager.getProcessInstance(this.getInstanceId().toString());
 			Vector mls = processInstance.getMessageListeners("event");
-
-			ProcessDefinition definition = processInstance.getProcessDefinition();
+	
+			org.uengine.kernel.ProcessDefinition definition = processInstance.getProcessDefinition();
 			EventTrigger[] eventTriggers = new EventTrigger[mls.size()];
 			if(mls!=null){
 				for(int i=0; i<mls.size(); i++){
 					EventActivity scopeAct = (EventActivity)definition.getActivity((String)mls.get(i));
-					
-					EventTrigger eventTrigger = new EventTrigger();
-					eventTrigger.setInstanceId(instance.getInstId().toString());
-					eventTrigger.setDisplayName(scopeAct.getDescription().getText());
-					eventTrigger.setEventName(scopeAct.getName().getText());
-					eventTriggers[i] = eventTrigger;
-					
+					if( scopeAct.getName() != null){
+						EventTrigger eventTrigger = new EventTrigger();
+						eventTrigger.setInstanceId(this.getInstanceId().toString());
+						eventTrigger.setDisplayName(scopeAct.getDescription() == null ? scopeAct.getName().getText() : scopeAct.getDescription().getText());
+						eventTrigger.setEventName(scopeAct.getName().getText());
+						eventTriggers[i] = eventTrigger;
+					}else{
+						continue;
+					}
 				}
 			}
 			
-			instanceTooltip.setEventTriggers(eventTriggers);
+			this.setEventTriggers(eventTriggers);
 		}
-		*/
+		this.setLoaded(true);
 	}
-	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow monitor() throws Exception{
 		Instance instance = new Instance();

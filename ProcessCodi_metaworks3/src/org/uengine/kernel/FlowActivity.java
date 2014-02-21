@@ -117,14 +117,15 @@ public class FlowActivity extends ComplexActivity {
 			
 			if (possibleNextActivities.size() == 0) {
 				// fireComplete(instance);
-				 setStatus(instance, STATUS_COMPLETED);
+				 if( !currentActivity.checkStartsWithEventActivity() ){
+					 setStatus(instance, STATUS_COMPLETED);
+					 fireComplete(instance);
+				 }
 				 // change the status to be completed 
 				 //after the completion of all the activities
 				 if (instance != null && instance.isSubProcess()) {
 					instance.getProcessDefinition().returnToMainProcess(instance);
 				 }
-				 
-				 fireComplete(instance);
 			}
 
 			// register token before queueActivity()
