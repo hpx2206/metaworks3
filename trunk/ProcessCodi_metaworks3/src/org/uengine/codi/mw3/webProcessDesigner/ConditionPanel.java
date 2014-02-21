@@ -165,7 +165,6 @@ public class ConditionPanel  implements ContextAware{
 						makeChildTreeNode(treeNode, condi);
 					}else{
 						treeNode.conditionInit();
-						
 						ConditionNode conditionNode = makeConditionNode(treeNode , condi);
 						
 						String nodeType = "";
@@ -199,7 +198,23 @@ public class ConditionPanel  implements ContextAware{
 					if( cd instanceof Evaluate){
 						Evaluate eval = (Evaluate)cd;
 						String type = eval.getType();
-						conditionNode.getValiableChoice().setSelected(eval.getKey());
+						
+						if( eval.getKey() != null ){
+							String valKey = eval.getKey();
+							String[] valKeys = valKey.replaceAll("[.]", "@").split("@");
+							if( valKeys.length > 0){
+								for(int k=0; k < valKeys.length; k++){
+									if( k == 0 ){
+										conditionNode.getValiableChoice().setSelected(valKeys[k]);
+										conditionNode.getValiableChoice().loadRoot();
+									}else{
+										conditionNode.getValiableChoice().loadChild(k, valKeys[k]);
+									}
+								}
+							}
+						}
+						
+						
 						conditionNode.getSignChoice().setSelected(eval.getCondition());
 						ConditionInput conditionInput = conditionNode.getConditionInput();
 						Object value = eval.getValue();
@@ -222,7 +237,17 @@ public class ConditionPanel  implements ContextAware{
 							}else if( conditionInput.getValiableChoice().getOptionValues().contains(expString) || "variable".equalsIgnoreCase(type) ){
 									conditionNode.getExpressionChoice().setSelected("variable");
 									conditionInput.getMetaworksContext().setHow("variable");
-									conditionInput.getValiableChoice().setSelected(expString);
+									String[] valKeys = expString.replaceAll("[.]", "@").split("@");
+									if( valKeys.length > 0){
+										for(int k=0; k < valKeys.length; k++){
+											if( k == 0 ){
+												conditionInput.getValiableChoice().setSelected(valKeys[k]);
+												conditionInput.getValiableChoice().loadRoot();
+											}else{
+												conditionInput.getValiableChoice().loadChild(k, valKeys[k]);
+											}
+										}
+									}
 							}else if( "null".equalsIgnoreCase(type) ){
 								conditionNode.getExpressionChoice().setSelected("null");
 								conditionInput.getMetaworksContext().setHow("null");
