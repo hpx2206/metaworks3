@@ -60,7 +60,7 @@ public interface IEmployee extends IDAO {
 	
 	@Hidden(when = "view")
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호를 입력하여 주십시오."),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호를 입력해 주세요."),
 	})
 	@Face(displayName="$Password", options="type", values="password")
 	public String getPassword();
