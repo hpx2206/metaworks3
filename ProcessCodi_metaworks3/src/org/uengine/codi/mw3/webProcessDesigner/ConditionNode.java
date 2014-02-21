@@ -113,6 +113,11 @@ public class ConditionNode  implements Cloneable, ContextAware{
 				choice.add("[VARIABLE]"+displayName, nameAttr);
 			}
 		}
+		
+		choice.add("[INSTANCE].InstanceId", "[instance].InstanceId");
+		choice.add("[INSTANCE].Name", "[instance].Name");
+		choice.add("[INSTANCE].DueDate", "[instance].DueDate");
+		
 		setValiableChoice(choice);
 	}
 	

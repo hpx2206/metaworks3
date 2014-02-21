@@ -104,7 +104,7 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setExpanded(true);
 		treeNode.setSelected(true);
 		treeNode.setId("rootNode");
-		treeNode.setName("Condition");  //TODO: locale
+		treeNode.setName("조건선택");  //TODO: locale
 		treeNode.setRoleList(roleList);
 		treeNode.setVariableList(variableList);
 		treeNode.setType(TreeNode.TYPE_FOLDER);
@@ -201,14 +201,18 @@ public class ConditionPanel  implements ContextAware{
 						
 						if( eval.getKey() != null ){
 							String valKey = eval.getKey();
-							String[] valKeys = valKey.replaceAll("[.]", "@").split("@");
-							if( valKeys.length > 0){
-								for(int k=0; k < valKeys.length; k++){
-									if( k == 0 ){
-										conditionNode.getValiableChoice().setSelected(valKeys[k]);
-										conditionNode.getValiableChoice().loadRoot();
-									}else{
-										conditionNode.getValiableChoice().loadChild(k, valKeys[k]);
+							if( valKey.startsWith("[instance]")  ){
+								conditionNode.getValiableChoice().setSelected(valKey);
+							}else{
+								String[] valKeys = valKey.replaceAll("[.]", "@").split("@");
+								if( valKeys.length > 0){
+									for(int k=0; k < valKeys.length; k++){
+										if( k == 0 ){
+											conditionNode.getValiableChoice().setSelected(valKeys[k]);
+											conditionNode.getValiableChoice().loadRoot();
+										}else{
+											conditionNode.getValiableChoice().loadChild(k, valKeys[k]);
+										}
 									}
 								}
 							}
@@ -235,8 +239,11 @@ public class ConditionPanel  implements ContextAware{
 								conditionInput.getMetaworksContext().setHow("Yes or No");
 								conditionInput.setYesNo(expString);
 							}else if( conditionInput.getValiableChoice().getOptionValues().contains(expString) || "variable".equalsIgnoreCase(type) ){
-									conditionNode.getExpressionChoice().setSelected("variable");
-									conditionInput.getMetaworksContext().setHow("variable");
+								conditionNode.getExpressionChoice().setSelected("variable");
+								conditionInput.getMetaworksContext().setHow("variable");
+								if( expString.startsWith("[instance]")  ){
+									conditionInput.getValiableChoice().setSelected(expString);
+								}else{
 									String[] valKeys = expString.replaceAll("[.]", "@").split("@");
 									if( valKeys.length > 0){
 										for(int k=0; k < valKeys.length; k++){
@@ -248,6 +255,7 @@ public class ConditionPanel  implements ContextAware{
 											}
 										}
 									}
+								}
 							}else if( "null".equalsIgnoreCase(type) ){
 								conditionNode.getExpressionChoice().setSelected("null");
 								conditionInput.getMetaworksContext().setHow("null");
