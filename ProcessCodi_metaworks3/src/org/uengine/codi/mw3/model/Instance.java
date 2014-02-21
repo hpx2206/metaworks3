@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,10 +11,13 @@ import javax.sql.RowSet;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
@@ -35,8 +37,6 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.Role;
 import org.uengine.processmanager.ProcessManagerRemote;
-
-import com.efsol.util.StringUtils;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
@@ -445,10 +445,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public Object[] view() throws Exception{
 		session.setLastInstanceId(this.getInstId().toString());
 		
-		return new Object[]{ this.detail(), session};
+		InstanceViewContent instanceViewContent = this.detail();
+		
+		if(SNS.isPhone()){
+			Popup popup = new Popup(instanceViewContent.instanceView);
+			popup.setName(instanceViewContent.getTitle());
+			
+			return new Object[]{ popup };
+		}else{
+			return new Object[]{ new Refresh(instanceViewContent, true), new Refresh(session, true)};
+		}
 	}
 	
-	public Object detail() throws Exception{
+	public InstanceViewContent detail() throws Exception{
 		
 		IInstance instanceRef = this.databaseMe();
 		
@@ -484,53 +493,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setMetaworksContext(new MetaworksContext());
 		}
 		
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			getMetaworksContext().setHow("sns");
-			
-			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-			panel.getMetaworksContext().setHow("sns");
-			
-			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
-				panel.session = session;
-				panel.load(this.getInstId().toString());
-				
-//				followers = new InstanceFollowers();
-//				followers.setInstanceId(this.getInstId().toString());
-//				followers.load();
-				this.fillFollower();
-					
-//				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-//				processInstanceMonitorPanel.processManager = processManager;
-//				processInstanceMonitorPanel.session = session;
-//				processInstanceMonitorPanel.load(this.getInstId().toString());
-//				FollowerPanel followerPanel = new FollowerPanel("instance", this.getFollowers());			
-//				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};				
-//				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
-			}
-			
-			setInstanceViewThreadPanel(panel);
-			
-			return this;
-		}else if("oce".equals(session.getUx()) && (session.getLastPerspecteType() != "inbox" || session.getLastPerspecteType() != "dashboard")){
-			
-			return this;
-		}
-		else{
-			getMetaworksContext().setHow("");
-			getMetaworksContext().setWhere("");
-			TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
-			
-			if(instanceViewContent == null)
-				instanceViewContent = new InstanceViewContent();
-			
-			instanceViewContent.setTitle(instanceRef.getName());
-			instanceViewContent.session = session;
-			instanceViewContent.setMetaworksContext(getMetaworksContext());
-			instanceViewContent.load(instanceRef);
-			
-			return instanceViewContent;
-		}
+		getMetaworksContext().setHow("");
+		getMetaworksContext().setWhere("");
+		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
 		
+		if(instanceViewContent == null)
+			instanceViewContent = new InstanceViewContent();
+		
+		instanceViewContent.setTitle(instanceRef.getName());
+		instanceViewContent.session = session;
+		instanceViewContent.setMetaworksContext(getMetaworksContext());
+		instanceViewContent.load(instanceRef);
+		
+		return instanceViewContent;
 	}
 	
 	public ModalWindow popupDetail() throws Exception{
@@ -1253,12 +1228,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 				new Object[]{scEvent});
 		
 		/* return 부분 */
-		if(!"sns".equals(session.getEmployee().getPreferUX())){
-			NewInstancePanel instancePanel = new NewInstancePanel();
-			instancePanel.load(session);
-			return new Object[]{new Remover(this), new Refresh(new ContentWindow(instancePanel))};
+		if(SNS.isPhone()){
+			return new Object[]{new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 		}else{
-			return new Object[]{new Remover(this)};
+			if(!"sns".equals(session.getEmployee().getPreferUX())){
+				NewInstancePanel instancePanel = new NewInstancePanel();
+				instancePanel.load(session);
+				return new Object[]{new Remover(this), new Refresh(new ContentWindow(instancePanel))};
+			}else{
+				return new Object[]{new Remover(this)};
+			}
 		}
 	}
 	

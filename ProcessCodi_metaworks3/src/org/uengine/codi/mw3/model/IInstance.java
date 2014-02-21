@@ -33,10 +33,10 @@ public interface IInstance extends IDAO{
 	
 	public final static String WHERE_INSTANCELIST = "instancelist";
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object view() throws Exception;
 	
-	public Object detail() throws Exception;
+	public InstanceViewContent detail() throws Exception;
 
 	@ServiceMethod(target="popup")
 	public ModalWindow popupDetail() throws Exception;
