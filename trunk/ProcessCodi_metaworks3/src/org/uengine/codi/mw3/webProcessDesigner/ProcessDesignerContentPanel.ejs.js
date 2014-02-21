@@ -227,11 +227,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 			if( fromFlag == connectedText && toflag == connectedText ){
 				connected = true;
 			}
-			
 	    	if( $(edgeElement).data('transition') == undefined && !connected ){
 	    		var transitionView = {
 						__className : 'org.uengine.kernel.designer.web.TransitionView',
 						drawByCanvas : true,
+						editorId : object.alias,
 						element : edgeElement
 	    		};
 	    		var html = mw3.locateObject(transitionView , transitionView.____className);
