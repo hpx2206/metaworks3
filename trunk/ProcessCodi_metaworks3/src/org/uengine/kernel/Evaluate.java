@@ -63,8 +63,12 @@ public class Evaluate extends Condition{
 	}
 
 	public boolean isMet(ProcessInstance instance, String scope) throws Exception{
-		
-		Object returnVal = instance.getProcessDefinition().getProcessVariable(key).get(instance, "");
+		Object returnVal = null;
+		if( key.startsWith("[instance]")  ){
+			returnVal = instance.getBeanProperty(key); 
+		}else{
+			returnVal = instance.getProcessDefinition().getProcessVariable(key).get(instance, "");
+		}
 		Object compareVal = val;
 		
 		String condition = this.condition.trim();
@@ -90,6 +94,40 @@ public class Evaluate extends Condition{
 		if( compareVal instanceof String && "date".equalsIgnoreCase(type)){
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 			compareVal = df.parse((String)compareVal);
+		}else if( compareVal instanceof String && "variable".equalsIgnoreCase(type)){
+			// TODO
+			if( ((String)compareVal).startsWith("[instance]")  ){
+				compareVal = instance.getBeanProperty(((String)compareVal)); 
+			}else{
+				String compareString = (String)val;
+				compareVal = instance.getProcessDefinition().getProcessVariable(compareString).get(instance, "");
+				if(compareVal instanceof ITool){
+					ObjectInstance returnValObjInst = (ObjectInstance) MetaworksRemoteService.getInstance().getMetaworksType(compareVal.getClass().getName() ).metaworks2Type().createInstance();
+					returnValObjInst.setObject(compareVal);
+					FieldDescriptor fields[] = returnValObjInst.getFieldDescriptors();
+					Object keyVal = null;
+					String [] wholePartPath = compareString.replace('.','@').split("@");
+					if( wholePartPath.length >= 2 ){
+						Object rootObject = instance.getBeanProperty(wholePartPath[0]);
+						String rootObjectName = wholePartPath[1] ;
+						if( wholePartPath.length > 2 ){
+							for(int j = 2 ; j < wholePartPath.length; j++){
+								rootObjectName += "."+ wholePartPath[j];
+							}
+						}
+						if( rootObject != null ){
+							compareVal = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
+						}
+					}else{
+						for(int j=0; j<fields.length; j++){
+							FieldDescriptor fd = fields[j];
+							if( key.equalsIgnoreCase( compareVal.getClass().getSimpleName() + "." + fd.getName() ) ){
+								compareVal = returnValObjInst.getFieldValue(fd.getName());
+							}
+						}
+					}
+				}
+			}
 		}
 		// compare with ComplexType
 		if(returnVal instanceof ITool){

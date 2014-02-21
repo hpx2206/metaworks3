@@ -160,7 +160,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 									mw3.alert(message);
 									break;
 								}
-        						canvas.drawLabel(element, dragObjMetadata.displayName);
+								// 이미 label 이 그려진 경우라면 새롭게 label을 그리지 않는다.
+								if( !($(this).find('#'+this.id+'_LABEL') && $(this).find('#'+this.id+'_LABEL').length > 0 && $(this).find('#'+this.id+'_LABEL').text() != "" )){
+	        						canvas.drawLabel(element, dragObjMetadata.displayName);
+								}
     	    		    		
     	    		    		var complexType = {
     	    		    				__className : 'org.uengine.contexts.ComplexType',
