@@ -1,11 +1,7 @@
 package org.metaworks.dao;
 
 
-import java.lang.reflect.*;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import sun.jdbc.rowset.CachedRowSet;
+import java.lang.reflect.Proxy;
 
 
 /**
