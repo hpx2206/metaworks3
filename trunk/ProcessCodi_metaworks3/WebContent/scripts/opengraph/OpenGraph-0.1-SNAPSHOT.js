@@ -18086,7 +18086,7 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
         break;
     case "Running":
         _rect = this._PAPER.rect(envelope.getUpperLeft().x - 20, envelope.getUpperLeft().y - 20, envelope.getWidth() + 40, envelope.getHeight() + 40);
-        _rect.attr("fill", "red");
+        _rect.attr("fill", "#C9E2FC");
         _rect.attr("stroke-width", "1.2");
         _rect.attr("r", "10");
         _rect.attr("fill-opacity", "0.5");
