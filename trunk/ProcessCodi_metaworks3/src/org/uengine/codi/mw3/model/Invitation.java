@@ -118,29 +118,6 @@ public class Invitation implements ContextAware{
 			newUser.setApproved(false);
 			newUser.setInviteUser(session.getEmployee().getEmpCode());
 			
-			String comAlias = Employee.extractTenantName(this.getEmail());
-			
-			Company company = new Company();
-			company.setAlias(comAlias);
-			
-			ICompany findCompany = company.findByAlias();
-			if(findCompany == null){
-				
-				// not yet sign up tenant
-				try {
-					company.setComCode(company.createNewId());
-					company.setComName(comAlias);
-
-					findCompany = company.createDatabaseMe();
-				} catch (Exception e) {
-					e.printStackTrace();
-					throw new MetaworksException(e.getMessage());
-				}
-			}
-
-			String tenantId = findCompany.getComCode();
-			newUser.setGlobalCom(tenantId);
-			
 			try {
 				newUser.createDatabaseMe();
 				newUser.flushDatabaseMe();

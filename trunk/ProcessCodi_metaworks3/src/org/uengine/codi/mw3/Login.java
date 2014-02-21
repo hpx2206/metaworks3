@@ -435,43 +435,11 @@ public class Login implements ContextAware {
 		
 		employee.setAuthKey(authKey);
 		
-		String comAlias = Employee.extractTenantName(this.getEmail());
-		boolean isAdmin = false;
-		
-		Company company = new Company();
-		company.setAlias(comAlias);
-		
-		ICompany findCompany = company.findByAlias();
-		if(findCompany == null){
-			isAdmin = true;
-			
-			// not yet sign up tenant
-			try {
-				company.setComCode(company.createNewId());
-				company.setComName(comAlias);
-
-				findCompany = company.createDatabaseMe();
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new MetaworksException(e.getMessage());
-			}
-		}
-
-		String tenantId = findCompany.getComCode();
-		String defaultUX = "wave";
-		String defaultMob = "auto";
-		
-		//tenantName.substring(0, tenantName.lastIndexOf("@"))
-		
 		String empName = employee.getEmail().substring(0, employee.getEmail().indexOf("@"));
 		
 		employee.setEmpName(empName);	
-		employee.setGlobalCom(tenantId);
 		employee.setAuthKey(authKey);
-		employee.setIsAdmin(isAdmin);
 		employee.setIsDeleted("0");
-		employee.setPreferUX(defaultUX);
-		employee.setPreferMob(defaultMob);
 		employee.setEmpCode(employee.createNewId());
 		employee.setLocale(localeManager.getLanguage());
 		
