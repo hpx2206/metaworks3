@@ -13,7 +13,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.dwr.MetaworksRemoteService;

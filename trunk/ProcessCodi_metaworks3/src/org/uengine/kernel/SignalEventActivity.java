@@ -10,11 +10,11 @@ public class SignalEventActivity  extends EventActivity implements MessageListen
 	}
 	@Override
 	public boolean onMessage(ProcessInstance instance, Object payload)	throws Exception {
-		Vector activityInstances =  instance.getCurrentRunningActivities();
-		for(int i=0; i<activityInstances.size(); i++){
-			Activity nextAct = (Activity) activityInstances.get(i);
-			nextAct.stop(instance);
-		}
+//		Vector activityInstances =  instance.getCurrentRunningActivities();
+//		for(int i=0; i<activityInstances.size(); i++){
+//			Activity nextAct = (Activity) activityInstances.get(i);
+//			nextAct.stop(instance);
+//		}
 		
 		fireComplete(instance);
 		

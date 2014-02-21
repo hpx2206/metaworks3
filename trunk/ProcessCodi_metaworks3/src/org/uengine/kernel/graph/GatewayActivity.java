@@ -97,7 +97,7 @@ public class GatewayActivity extends DefaultActivity {
 			//since executeActivity in graph model would be called every time the incoming activities are done.
 			fireComplete(instance);
 		}else{
-			fireComplete(instance);
+//			fireComplete(instance);
 		}
 //		else {
 //			//ignore token

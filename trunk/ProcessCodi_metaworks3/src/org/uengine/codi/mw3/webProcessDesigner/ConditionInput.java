@@ -35,7 +35,7 @@ public class ConditionInput implements ContextAware {
 		}	
 		
 	String yesNo;
-	    @Range(options={"yes","no"},values={"yes","no"})
+	    @Range(options={"Yes","No"},values={"Yes","No"})
 		public String getYesNo() {
 			return yesNo;
 		}
