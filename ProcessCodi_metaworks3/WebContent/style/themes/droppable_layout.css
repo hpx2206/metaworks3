@@ -2693,21 +2693,18 @@ select.select[class] {
 	background:#fff;
 	border-bottom:1px solid #d9d9d9
 }
+.row{margin:0px !important}
 .row .col3 {
 	float:left;
 	width:40%;
 	text-align:center
 }
-.row .col7 {
-	float:left;
-	width:60%;
+.row .col-md-7 {
 	line-height:25px;
-	padding-top:60px;
-	padding-bottom:30px;
-	padding-left:30px;
-	font-size:14px;
+	padding:60px 70px;
+	font-size:15px;
 }
-.row .col7 h1 {
+.row .col-md-7 h1 {
 	background:none;
 	font-size:24px;
 	padding-left:0px;
@@ -2972,7 +2969,7 @@ font-size:20px;
 .banner_img_div_disc_box { height:110px }
 .banner_img_div_disc span.bf { display:none }
 .row .col3 { display:none }
-.row .col7 { width:100%; padding:30px}
+.row .col-md-7 { width:100%; padding:30px}
 #signup_popup { width:340px; margin-top:10px;}
 #signup_popup .popup_step .stepbar { width:295px; }
 #signup_popup .popup_content .signup_info { width:280px }
