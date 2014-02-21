@@ -48,10 +48,10 @@ public class TransitionView extends CanvasDTO{
 			this.element = element;
 		}
 	
-	@AutowiredFromClient
+		@AutowiredFromClient(select="typeof editorId!='undefined' && editorId==autowiredObject.editorId")
 	transient public RolePanel rolePanel;
 	
-	@AutowiredFromClient
+	@AutowiredFromClient(select="typeof editorId!='undefined' && editorId==autowiredObject.editorId")
 	transient public ProcessVariablePanel processVariablePanel;
 	
 	@ServiceMethod(callByContent=true, target="popup")
@@ -73,7 +73,7 @@ public class TransitionView extends CanvasDTO{
 		return new ModalWindow(conditionPanel , 800, 600,  "조건편집" );
 	}
 	
-	public Condition makeCondition(ConditionTreeNode rootNode){
+	public Condition makeCondition(ConditionTreeNode rootNode) throws Exception{
 		if( rootNode != null){
 			ArrayList<ConditionTreeNode> child = rootNode.getChild();
 			Condition condition;
@@ -119,8 +119,7 @@ public class TransitionView extends CanvasDTO{
 					
 						String expressionChoice 	= conditionNode.getExpressionChoice().getSelected();	// Text, Number
 						String sign = conditionNode.getSignChoice().getSelected();								// == , =>
-						String valiable = conditionNode.getValiableChoice().getSelected();					// processValiable
-						
+						String valiable = conditionNode.getValiableChoice().findChildDepthString(conditionNode.getValiableChoice());					// processValiable
 						ConditionInput expressionInput 	= conditionNode.getConditionInput();			// Text , Number , Date ..
 						
 						Object exppObject = new Object();
@@ -134,7 +133,7 @@ public class TransitionView extends CanvasDTO{
 							SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 							exppObject = df.format(expressionInput.getExpressionDate());
 						}else if( expressionChoice.equals("variable")){
-							exppObject = expressionInput.getValiableChoice().getSelected();
+							exppObject = expressionInput.getValiableChoice().findChildDepthString(expressionInput.getValiableChoice());
 						}else{
 							exppObject = "";
 						}

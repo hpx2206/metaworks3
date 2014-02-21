@@ -3,10 +3,10 @@
 		if( mw3.how == "folder" ){
 %>
             <div class="ide_edit_option">
-                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon">&</span> and </button>
-                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon ">||</span> or </button>
-                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon ">...</span> otherwise </button>
-                <button type="button" class="btn btn-default btn-lg" >  <span class="glyphicon ">$</span> expression </button>
+                <button type="button" class="btn btn-default btn-lg" onClick="<%=methods.newAND.caller()%>">  <span class="glyphicon">&</span> and </button>
+                <button type="button" class="btn btn-default btn-lg" onClick="<%=methods.newOR.caller()%>">  <span class="glyphicon ">||</span> or </button>
+                <button type="button" class="btn btn-default btn-lg" onClick="<%=methods.newOtherwise.caller()%>">  <span class="glyphicon ">...</span> otherwise </button>
+                <button type="button" class="btn btn-default btn-lg" onClick="<%=methods.newExpression.caller()%>">  <span class="glyphicon ">$</span> expression </button>
                 
             </div>
 <%  

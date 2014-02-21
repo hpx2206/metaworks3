@@ -1,7 +1,17 @@
 var org_uengine_codi_mw3_webProcessDesigner_VariableSelectBox = function(objectId, className){
     this.objectId = objectId;
     this.className = className;
-    
+	
+	$('#select_'+this.objectId).bind('change', {objectId : this.objectId},function(event){
+		var object = mw3.objects[objectId];
+		if( object.id == 'makeKey' || object.id == 'makeSecondKey' ){
+            mw3.call(objectId, 'makeValiableChoice');
+		}else{
+			if( object.childSelectBox != null ){
+				mw3.call(objectId, 'makeValiableChoiceChild');
+			}
+		}
+	});
 };
 
 org_uengine_codi_mw3_webProcessDesigner_VariableSelectBox.prototype = {
@@ -16,7 +26,6 @@ org_uengine_codi_mw3_webProcessDesigner_VariableSelectBox.prototype = {
             object.selected = change.val();
             object.selectedText = change.text();                
         }
-        
         return object;
     }
 };

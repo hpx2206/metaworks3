@@ -4,10 +4,9 @@ import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Face;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.SelectBox;
 
 public class ConditionInput implements ContextAware {
 	
@@ -52,11 +51,11 @@ public class ConditionInput implements ContextAware {
 			this.changeType = changeType;
 		}
 		
-	SelectBox valiableChoice;
-		public SelectBox getValiableChoice() {
+	VariableSelectBox valiableChoice;
+		public VariableSelectBox getValiableChoice() {
 			return valiableChoice;
 		}
-		public void setValiableChoice(SelectBox valiableChoice) {
+		public void setValiableChoice(VariableSelectBox valiableChoice) {
 			this.valiableChoice = valiableChoice;
 		}	
 		
@@ -66,14 +65,26 @@ public class ConditionInput implements ContextAware {
 	}
 	public void init(){
 		expressionDate = new Date();
-		valiableChoice = new SelectBox();
+		valiableChoice = new VariableSelectBox();
 	}
 	public void load() throws Exception{
 		
 	}
 		
-	@ServiceMethod( payload={"changeType" , "valiableChoice"} )
+	@ServiceMethod( payload={"changeType" , "valiableChoice"},eventBinding="change", bindingFor={"changeType"} )
 	public void changeInput() throws Exception{
 		this.getMetaworksContext().setHow(changeType);
 	}
+	
+	@ServiceMethod( callByContent=true ,eventBinding="change", bindingFor={"yesNo","expressionDate","expressionText"})
+	public Object[] changeValue() throws Exception{
+		conditionNode.getConditionInput().setChangeType(this.getChangeType());
+		conditionNode.getConditionInput().setExpressionDate(getExpressionDate());
+		conditionNode.getConditionInput().setExpressionText(getExpressionText());
+		conditionNode.getConditionInput().setYesNo(getYesNo());
+		return new Object[]{ conditionNode.saveCondition(), conditionNode };
+	}
+	
+	@AutowiredFromClient
+	public ConditionNode conditionNode;
 }
