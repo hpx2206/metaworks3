@@ -1395,14 +1395,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session = new Session();
 		
 		this.saveMe();
-		
-		/*
-        Company company = new Company();
-        company.setComCode(this.getGlobalCom());
-        ICompany findCompany = company.findByCode();
-        String tenantId = findCompany.getAlias();
-		*/
-		
+				
 		return new Forward(TenantContext.getURL());
 	}
 
