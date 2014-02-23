@@ -1084,8 +1084,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 							return mw3._template(url, contextValues);
 				   		};
-				   		
-				   		
+				   						   		
 						var html = mw3._template(url, contextValues);
 						
 						if(targetDiv == null)							
@@ -2180,7 +2179,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 				}
 				
-				
 				var autowiredObjectId = this.objectId_ClassNameMapping[className];
 				if(autowiredObjectId){
 					if(autowiredObjectId.__isAutowiredDirectValue){ //means direct value not id pointer
@@ -2423,6 +2421,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							var autowiredClassName = autowiredField.field;
 							var autowiredSelect = autowiredField.select;
 							
+							// Condition object to be autowired 
 							if(autowiredSelect != null && autowiredSelect.length > 0){
 							     for(var i in this.objects){
 							    	 
@@ -2454,7 +2453,38 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							    	 }
 							     }
 							}else{
-								autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);	
+								// Nearest object to be autowired
+								try{
+									var srcObjectDiv = $('#' + mw3._getObjectDivId(objId));
+									if(srcObjectDiv.length > 0){
+										var srcObjects = [];
+							
+										for(var targetClassName in this.objectId_KeyMapping){
+											if(targetClassName == autowiredClassName || targetClassName.indexOf(autowiredClassName + '@') == 0){
+												var targetObjectDiv = $('#' + mw3._getObjectDivId(this.objectId_KeyMapping[targetClassName]));
+												if(targetObjectDiv.length > 0){
+													srcObjects.push({
+														objectId: this.objectId_KeyMapping[targetClassName],
+														distance: srcObjectDiv.distanceTo(targetObjectDiv)
+													});
+												}
+											}
+										}
+									
+										if(srcObjects.length > 2){
+											srcObjects.sort(function(a, b) {return a.distance - b.distance});
+										
+											autowiredObjects[fieldName] = this.getObject(srcObjects[0].objectId);
+										}									
+									}
+								}catch(e){
+									if(console)
+										console.log(e);
+								}
+								
+								// Default autowired
+								if(!autowiredObjects[fieldName])
+									autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);	
 								
 								if(autowiredObjects[fieldName] && autowiredObjects[fieldName].__objectId)
 									autowiredObjects[fieldName] = this.getObject(autowiredObjects[fieldName].__objectId);
@@ -4568,3 +4598,18 @@ var MetaworksListener = {
 		});		
 	}	
 }
+
+$.fn.extend({ 
+	distanceTo : function(elem2) {
+		var o1 = this.offset();
+		var o2 = elem2.offset();
+		
+		var dx = o1.left - o2.left;
+		var dy = o1.top - o2.top;
+		var distance = Math.sqrt(dx * dx + dy * dy);
+	
+		return distance;
+	}
+});
+
+
