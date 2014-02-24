@@ -493,10 +493,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				
 				addBasicTopics();
 				addBasicProcess();
+			}else{
+				this.setGlobalCom(findCompany.getComCode());
 			}
 			
-			String defaultUX = "wave";
-			String defaultMob = "auto";
 		}
 		
 		/*// 초대 받아 가입 할경우 서로 친구 추가됨.
