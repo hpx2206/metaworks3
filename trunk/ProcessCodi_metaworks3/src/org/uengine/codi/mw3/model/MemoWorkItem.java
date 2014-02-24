@@ -76,8 +76,6 @@ public class MemoWorkItem extends WorkItem{
 				bao = new ByteArrayOutputStream();
 				String absoluteFilePath = CodiStringUtil.lastLastFileSeparatorChar(FormActivity.FILE_SYSTEM_DIR) + getExtFile();
 				
-				System.out.println("absoluteFilePath : " + absoluteFilePath);
-				
 				is = new FileInputStream(absoluteFilePath);
 	
 				UEngineUtil.copyStream(is, bao);
