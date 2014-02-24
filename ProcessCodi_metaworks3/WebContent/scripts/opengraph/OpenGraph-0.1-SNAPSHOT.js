@@ -8455,6 +8455,8 @@ OG.geometry.Geometry.prototype = {
 				return new OG.geometry.Coordinate(coordinate);
 			} else if (coordinate instanceof OG.geometry.Coordinate) {
 				return new OG.geometry.Coordinate(coordinate.x, coordinate.y);
+			} else if (typeof coordinate.x != 'undefined' && typeof coordinate.y != 'undefined') {
+                return new OG.geometry.Coordinate(coordinate.x, coordinate.y);  
 			} else {
 				throw new OG.ParamError();
 			}
