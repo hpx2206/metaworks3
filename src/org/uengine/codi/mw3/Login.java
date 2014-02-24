@@ -35,6 +35,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.model.Enterprise;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
@@ -294,6 +295,8 @@ public class Login implements ContextAware {
 	
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_SELF)
 	public Object subscribe() throws Exception{
+		// 임시 작성
+		
 		Employee emp = new Employee();
 		emp.getMetaworksContext().setHow("detail");
 		emp.getMetaworksContext().setWhen("new");				
@@ -326,6 +329,8 @@ public class Login implements ContextAware {
 		emp.setPreferUX(defaultUX);
 		emp.setPreferMob(defaultMob);
 		return emp;
+		
+		//return null;
 	}
 		
 	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)

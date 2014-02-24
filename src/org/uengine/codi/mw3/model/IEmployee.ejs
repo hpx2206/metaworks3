@@ -39,8 +39,11 @@ if(value){
 			} else if(mw3.when == 'new') {
 			%>	
 				<ul id="green_and_orange_step_menu">
-					<li class="frist inprogress">STEP1<em>Choose language</em></li>
+				    <!-- first inprogress -> lastinprogress 로 수정 나중에 다시 first로 변경-->
+					<li class="lastinprogress">STEP1<em>Choose language</em></li>
+					<!-- 임시 주석 
 					<li class="last">STEP2<em>Basic Informationy</em><span></span></li>
+				    -->
 				    
 				    <!--
 				    <li>STEP2<em>Basic Informationy</em><span></span></li>
@@ -65,8 +68,12 @@ if(value){
 			} else if(mw3.when == 'new2') {
 			%>
 				<ul id="green_and_orange_step_menu">
-					<li class="frist fdone">STEP1<em>Choose language</em></li>
+				    <!-- 여기 STEP1을 STEP2로 바꿈 나중에 수정. 그리고 li class 이름 frist fdone -> lastinprogress 로 수정-->
+					<li class="lastinprogress">STEP2<em>Choose language</em></li>
+					
+					<!-- 임시 주석
 					<li  class="lastinprogress last">STEP2<em>Basic Informationy</em><span></span></li>
+					-->
 				    
 				    <!--
 				    <li class="inprogress">STEP2<em>Basic Informationy</em><span></span></li>
@@ -110,6 +117,63 @@ if(value){
 								</div>
 							</td>
 						</tr>
+						
+						<!-- 가짜 가짜 지워 지워!!!! -->
+						<tr>
+                            <th scope="row">대표자</th>
+                            <td>
+                                <div class="item">
+                                    <%=fields.ceoName.here({when:'new'}) %>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">사업분야</th>
+                            <td>
+                                <div class="item">
+                                    <%=fields.bPart.here({when:'new'}) %>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">주소</th>
+                            <td>
+                                <div class="item">
+                                    <%=fields.address.here({when:'new'}) %>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">전화번호</th>
+                            <td>
+                                <div class="item">
+                                    <%=fields.mobileNo.here({when:'new'}) %>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">회사 설립 년도</th>
+                            <td>
+                                <div class="item">
+                                    <%=fields.foundation.here({when:'new'}) %>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">해당부문 종사기간</th>
+                            <td>
+                                <div class="item">
+                                    <%=fields.jongsa.here({when:'new'}) %>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- 여기까지 --> 
 						<tr>
 							<th scope="row"><%=mw3.localize("$Password")%></th>
 							<td>
@@ -135,8 +199,215 @@ if(value){
 					<ul>	
 						<li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep2.caller()%>"><span>Next</span></a></li>
 					</ul>
-				</div>				
-		 	
+				</div>		
+				
+			<!-- 여기도 야메임!! 제발 알아서 지워!! -->		
+		 	<%
+            } else if(mw3.when == 'yame1') { %>
+            
+                <ul id="green_and_orange_step_menu">
+                    <li  class="lastinprogress last">STEP3<em>Service</em><span></span></li>
+                    
+                </ul>
+                <div> <B>서비스</B> </div>
+                <%for(var i = 0; i < 2; i++) {%>
+                <div class="form_table">
+                    <table border="1" cellspacing="0" summary="">
+                        <tbody>
+                    <tr>
+                        <th scope="row">서비스 형태</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.serviceHyungtae.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">제품명</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.productName.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">프로젝트실적</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.projectSiljeok.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <p>
+                    <p>
+                    <p>
+                    
+                <% } %>
+                </tbody>
+                </table>
+                <div id="btnline">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.yame1.caller()%>"><span>Next</span></a></li>
+                    </ul>
+                </div>   
+                
+            <%
+            } else if(mw3.when == 'yame2') { %>
+            
+                <ul id="green_and_orange_step_menu">
+                    <li  class="lastinprogress last">STEP4<em>Service</em><span></span></li>
+                    
+                </ul>
+                <div> <B>특허/프로그램 출원 및 등록실적</B> </div>
+                <%for(var i = 0; i < 2; i++) {%>
+                <div class="form_table">
+                    <table border="1" cellspacing="0" summary="">
+                        <tbody>
+                    <tr>
+                        <th scope="row">특허 형태</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.tukher.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">특허/프로그램명</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.tukherAndProgram.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">출원/등록일</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.chulwonAndStartDate.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">출원/등록순번</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.chulwonAndStartSunbun.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">출원등록자수</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.chulwonSu.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">비고</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.etc.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <p>
+                    <p>
+                    <p>
+                    
+                <% } %>
+                </tbody>
+                </table>
+                <div id="btnline">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.yame2.caller()%>"><span>Next</span></a></li>
+                    </ul>
+                </div>   
+            <%            
+            } else if(mw3.when == 'yame3') { %>
+            
+                <ul id="green_and_orange_step_menu">
+                    <li  class="lastinprogress last">STEP5<em>Service</em><span></span></li>
+                    
+                </ul>
+                <div> <B>자가 진단</B> </div>
+                <div class="form_table">
+                    <table border="1" cellspacing="0" summary="">
+                    <tr>
+                        <th scope="row">동종업계 해외 선도기업에 비해 품질경쟁력을 가지고 있습니까?</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.product.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">해외 정보 수집에 적극적 의지를 가지고 있습니까?</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.info.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">적정 수준의 해외 마케팅 전문 인력을 보유하고 있습니까?</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.markecting.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">해외바이어와 온라인 화상상담을 활용해 본 적이 있거나 계획중입니까?</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.it.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">제품의 혁신성을 향상하기 위해 지속적인 노력을 하고 있습니까?</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.rnd.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">해외 거래처 에이전트는 확보하고 있습니까?</th>
+                        <td>
+                            <div class="item">
+                                <%=fields.global.here({when:'new'}) %>
+                            </div>
+                        </td>
+                    </tr>
+                    <p>
+                    <p>
+                    <p>
+                </table>
+                <div id="btnline">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.yame3.caller()%>"><span>Next</span></a></li>
+                    </ul>
+                </div>  
+                 <%
+                 } else if(mw3.when == 'yame4') { %>
+            
+                 <ul id="green_and_orange_step_menu">
+                    <li  class="lastinprogress last">STEP6<em>Service</em><span></span></li>
+                    
+                </ul>
+                <div> <B>자가 진단 결과</B> </div>
+                <div style="float:left;padding-top:10px; margin-right:5px;">
+                    <img src="images/waveStyle/imsi2.png"/>
+                </div>
+                    
+                <div id="btnline">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.yame4.caller()%>"><span>Next</span></a></li>
+                    </ul>
+                </div>                        
+            <!-- 여기까지 -->
 			<%
 			} else if(mw3.when == 'new3') {
 				
@@ -147,9 +418,11 @@ if(value){
 					<li class="last lastinprogress">STEP2<em>Basic Informationy</em><span></span></li>
 			    -->				    
 				    
+				    <!-- 임시 주석 처리 
 				    <li class="done">STEP2<em>Basic Informationy</em><span></span></li>
 				    <li class="last lastinprogress">STEP3<em>Preferences</em><span></span></li>
-				    
+				    -->
+				    <li class="last lastinprogress">STEP7<em>Complete</em><span></span></li>
 				</ul>		
 			 	
 				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">

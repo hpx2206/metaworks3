@@ -15,6 +15,7 @@ import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceList;
+import org.uengine.codi.mw3.model.KnowledgeMarketTitle;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;

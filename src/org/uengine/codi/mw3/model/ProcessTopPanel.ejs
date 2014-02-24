@@ -5,8 +5,8 @@
 
 			<% if(value.session.ux == 'oce'){ %>
 			
-				<div style="float:left;padding-top:10px; margin-right:5px;">
-			 		<img src="images/waveStyle/garuda_logo.png"/>
+				<div style="background:transparent; float:left;padding-top:10px; margin-right:5px;">
+			 		<img src="images/waveStyle/login_logo.png"/>
 			 	</div>
 		 	
 		 	<% } %>
@@ -33,13 +33,13 @@
 <%
 			}else{
 %>
-		 	<div style="float:left;padding-top:10px; margin-right:5px;">
-		 		<img src="images/waveStyle/garuda_logo.png"/>
+		 	<div style="background:transparent; float:left;padding-top:10px; margin-right:5px;">
+		 		<img src="images/waveStyle/login_logo.png"/>
 		 	</div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.notificationBadge.here()%></div>
 		 	<div style="float:left;padding-top:17px;margin-left:15px;"><%=fields.todoBadge.here()%></div>
 		 	<div style="float:right;padding-top:17px;margin-right:200px;">
-             <a id="wBtn" href="#" onClick="<%=methods.serviceChoice.caller()%>"><span><%=mw3.localize("$ServiceChoice")%></span></a>
+             <a id="wBtn" href="#" onClick="<%=methods.exportConsulting.caller()%>"><span><%=mw3.localize("$exportConsulting")%></span></a>
             </div>
 		 	<div style="float:left;"><%=fields.windowPanel.here()%></div>
 		 	

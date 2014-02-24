@@ -29,10 +29,10 @@ public class CustomsEnterprisePoolPerspective {
 		customsEnterprisePoolPanel.load();
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setWidth(1050);
-		modalWindow.setHeight(650);
-		modalWindow.setTitle("국내외 수출입 Pool ");
-		modalWindow.setPanel(customsEnterprisePoolPanel);
+		modalWindow.setWidth(250);
+		modalWindow.setHeight(50);
+		modalWindow.setTitle("서비스 준비중입니다.");
+		//modalWindow.setPanel(customsEnterprisePoolPanel);
 		
 		return new Object[]{modalWindow};
 	}

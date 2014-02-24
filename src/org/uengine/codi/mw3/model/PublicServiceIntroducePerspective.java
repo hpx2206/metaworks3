@@ -10,28 +10,16 @@ public class PublicServiceIntroducePerspective {
 	@AutowiredFromClient
 	public static Session session;
 	
-	PublicServiceIntroducePanel publicServiceIntroducePanel;
-		public PublicServiceIntroducePanel getPublicServiceIntroducePanel() {
-			return publicServiceIntroducePanel;
-		}
-	
-		public void setPublicServiceIntroducePanel(
-				PublicServiceIntroducePanel publicServiceIntroducePanel) {
-			this.publicServiceIntroducePanel = publicServiceIntroducePanel;
-		}
-
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] select() throws Exception {
-		if(publicServiceIntroducePanel == null) {
-			publicServiceIntroducePanel = new PublicServiceIntroducePanel();
-		}
+		PublicServiceIntroducePanel publicServiceIntroducePanel = new PublicServiceIntroducePanel();
+		publicServiceIntroducePanel.load();
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setWidth(1100);
-		modalWindow.setHeight(725);
+		modalWindow.setWidth(1000);
+		modalWindow.setHeight(600);
 		modalWindow.setTitle("$publicServiceIntroduce");
 		modalWindow.setPanel(publicServiceIntroducePanel);
-		
 		return new Object[]{modalWindow};
 	}
 }

@@ -120,19 +120,14 @@ public class ProcessTopPanel {
 			this.mode = mode;
 		}	
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, callByContent=true)
-	public ModalWindow serviceChoice() {
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow exportConsulting() {
 		ServiceChoicePanel serviceChoicePanel = new ServiceChoicePanel();
 		serviceChoicePanel.session = session;
-		serviceChoicePanel.setOrderInfo("발주 정보");
-		serviceChoicePanel.setKoreaPublicService("한국형 공공서비스");
-		serviceChoicePanel.setExportConsulting("수출 컨설팅 지원");
-		serviceChoicePanel.setUserFunctionImprovement("사용자 기능개선");
-		serviceChoicePanel.setExportEnterprisePool("국내외 수출 기업 pool");
-		serviceChoicePanel.setSocialNetworking("소셜 네트워킹");
-		serviceChoicePanel.setKnolMarket("지식마켓");
+		serviceChoicePanel.setSelfTest("셀프 테스트 서비스");
+		serviceChoicePanel.setRegionMatching("국가 매칭 서비스");
 
-		ModalWindow modalWindow = new ModalWindow(serviceChoicePanel, 700, 400, "서비스 선택");
+		ModalWindow modalWindow = new ModalWindow(serviceChoicePanel, 250, 200, "서비스 선택");
 		
 		return modalWindow;
 	}		
