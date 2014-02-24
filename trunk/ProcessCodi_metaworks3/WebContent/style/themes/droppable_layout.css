@@ -3256,7 +3256,7 @@ legend {display:none;}
 #adminiconline{ height:32px; width:100%;}
 #adminicon{  float:right;height:32px; width:32px; background:url(../../images/processMap/advanced.png) no-repeat right; cursor:pointer;}
 .process_open_btn{line-height:19px;background: floralwhite;border: 1px solid #ccc;padding: 0 10px;border-radius: 10px;-webkit-box-shadow: inset 2px 2px 3px #B1B5BD !important;box-shadow: inset 2px 2px 3px #B1B5BD !important;}
-.process_btn_icon{font-size:10px; margin-right:5px; line-height:19px !important;}
+.process_btn_icon{font-size:10px; margin-right:5px; line-height:20px !important;}
 .process_map{overflow:hidden;padding:0 0 40px 20px; float:left;}
 .process_map .fdiv{display:inline;float:left;width:66px; height:90px; margin:10px 10px 0 0;padding:0px;font-size:12px;text-align:center;list-style:none; background:url(../../images/processMap/newPrcessBgDefault.png) no-repeat; position:relative;}
 .process_map .fdiv .editicon{position:absolute; right:2px; top:2px; width:16px; height:16px; cursor:pointer; background:url(../../images/processMap/wheel.png) no-repeat; display:none;}
