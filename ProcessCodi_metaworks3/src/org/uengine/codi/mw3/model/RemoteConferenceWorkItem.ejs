@@ -3,7 +3,7 @@
 	if(value){
 		if(value.status == 'FEED'){
 %>
-			<button type="button" class="btn btn-default" onClick="<%=methods.join.caller()%>"><span class="glyphicon glyphicon-log-in"></span> <%=mw3.localize('$GoJoin')%></button> 
+			<button type="button" class="btn btn-default" onClick="mw3.getFaceHelper('<%=objectId%>').conferenceWorkItemJoin();"><span class="glyphicon glyphicon-log-in"></span> <%=mw3.localize('$GoJoin')%></button> 
 			
 <%
 			if(value.ext5 == 'true'){
