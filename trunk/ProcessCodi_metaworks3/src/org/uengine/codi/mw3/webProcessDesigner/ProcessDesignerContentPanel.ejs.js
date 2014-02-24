@@ -523,7 +523,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 				cellForDwr['childs'] = og[key];
 			}
 		}
-		
+		console.log(cellForDwr);
 		var $id = $('#'+og['@id']);
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
@@ -588,14 +588,18 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
                         var childClassType = $childId.attr('_classType');
 						var childShapType = $childId.attr('_shape');
                         if(childShapType != 'EDGE' && childClassType == 'Activity') {
-                            if( activity.childActivities ){
-                                activity.childActivities[childLen++] = $childId.data('activity');
+                            if( !activity.childActivities ){
+								var actList = [];
+								activity.childActivities = actList;
                             }
+                            activity.childActivities[childLen++] = $childId.data('activity');
                         }
 						if(childShapType == 'EDGE') {
-							if( activity.transitions ){
-                                activity.transitions[childTransitionIdx++] = $childId.data('transition');
+							if( !activity.transitions ){
+								var trsList = [];
+								activity.transitions = trsList;
                             }
+                            activity.transitions[childTransitionIdx++] = $childId.data('transition');
 						}
                     }
                 }

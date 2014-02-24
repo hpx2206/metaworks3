@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.metaworks.annotation.Hidden;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessTransactionContext;
 
@@ -13,6 +14,7 @@ public class FlowActivity extends ComplexActivity {
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 
 	public ArrayList<Transition> transitions;
+	@Hidden
 		public ArrayList<Transition> getTransitions() {
 			if (this.transitions == null) {
 				this.setTransitions(new ArrayList<Transition>());
