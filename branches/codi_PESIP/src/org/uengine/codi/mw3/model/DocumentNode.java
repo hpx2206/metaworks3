@@ -242,25 +242,25 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			setFirst(false);
 	}
 	
-	public Object[] loadDocument() throws Exception {
-		String title = "문서명: " + this.getName();
-		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
-		
-		return returnObject;
-
-	}
+	//PSEIP에서 미사용
+//	public Object[] loadDocument() throws Exception {
+//		String title = "문서명: " + this.getName();
+//		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
+//		
+//		return returnObject;
+//
+//	}
 	
-	@Override
-	public Object[] loadExplorerDocument() throws Exception{
-		
-		String title = "문서명: " + this.getName();
-		Object[] returnObject = Perspective.loadDocumentListPanel(session, "explorer", getId(), title);
-		
-		return returnObject;
-		
-		
-		
-	}
+	//PSEIP에서 미사용
+//	@Override
+//	public Object[] loadExplorerDocument() throws Exception{
+//		
+//		String title = "문서명: " + this.getName();
+//		Object[] returnObject = Perspective.loadDocumentListPanel(session, "explorer", getId(), title);
+//		
+//		return returnObject;
+//		
+//	}
 	
 	
 	

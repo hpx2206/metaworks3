@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.knowledge;
+package org.uengine.codi.mw3.model;
 
 import java.net.URL;
 
@@ -17,7 +17,10 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.knowledge.IKnowledgeMarketNode;
+import org.uengine.codi.mw3.knowledge.KnowledgeMarketNode;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.codi.mw3.knowledge.WfNode;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
 	  ejsPathMappingByContext=	{

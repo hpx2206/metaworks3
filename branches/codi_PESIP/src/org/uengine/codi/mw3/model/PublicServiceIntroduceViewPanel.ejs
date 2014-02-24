@@ -1,0 +1,129 @@
+<% if(value) { %>
+
+    <div class="form_table">
+    
+        <table id="detail_<%=objectId%>" border="1" cellspacing="0" summary="">
+        
+            <tbody>
+            
+                <tr>
+                    <td>
+                        <B><%=mw3.localize("$businessName")%></B>
+                        <%=fields.itemName.here()%>              
+                        
+                    </td>
+                    
+                    <td width="10%">
+                        <B><%=mw3.localize("$profileNo")%></B>
+                        <%=fields.itemProfileNo.here()%>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <B><%=mw3.localize("$businessDescription")%></B>
+                        <% if(value.itemDescription == null) { %>
+                            
+                            &nbsp;
+                            
+                        <% } else { %>
+                       
+                            <%=fields.itemDescription.here()%>
+                        
+                        <% } %>
+                    </td>
+                    
+                    <td>
+                        <B><%=mw3.localize("$businessMotivation")%></B>
+                        <% if(value.itemBusinessMotivation == null) { %>
+                            
+                            &nbsp;
+                            
+                        <% } else { %>
+                       
+                            <%=fields.itemBusinessMotivation.here()%>
+                        
+                        <% } %>
+                    </td>
+                        
+                </tr>
+                
+                <tr>
+                    <td colspan="2">
+                        <B><%=mw3.localize("$expectedEffect")%></B></p>
+                        
+                        <tr>
+                            <td>
+                                <% if(value.itemGovExpectedEffect == null) { %>
+                                    
+                                    <B> - 정 부</B>&nbsp;
+                                    
+                                <% } else { %>
+                                    <B> - 정 부</B> <%=fields.itemGovExpectedEffect.here()%>
+                                    
+                                <% } %>
+                            </td>
+                            
+                            <td>
+                                <% if(value.itemPriExpectedEffect == null) { %>
+                                    
+                                    <B> - 민 간</B> &nbsp;
+                                    
+                                <% } else { %>
+                                    <B> - 민 간</B> <%=fields.itemPriExpectedEffect.here()%>
+                                    
+                                <% } %>
+                            </td>
+                        </tr>
+                        
+                    </td>                
+                </tr>
+                
+                <tr>
+                    <td colspan="2">
+                        <B> CSF </B></p>
+                        <% if(value.itemCSF == null) { %>
+                            
+                            &nbsp;
+                            
+                        <% } else { %>
+                       
+                            <%=fields.itemCSF.here()%>
+                        
+                        <% } %>
+                        
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2">
+                        <B><%=mw3.localize("$modelConcept")%></B></p>
+                        <%=fields.webEditor.here({htmlAttr:{style:'width: 1000px'}})%>
+                    </td>
+                    
+                </tr>
+                
+            </tbody>
+            
+        </table>
+        
+    </div>
+    
+    <div id="btnline">
+    
+        <ul>
+            <% if(mw3.when == 'view') { %>  
+              
+                <li><a id="wBtn" href="#" onClick="<%=methods.modify.caller()%>"><span><B><%=mw3.localize("$Modify")%></B></span></a></li>
+                <li><a id="wBtn" href="#" onClick="<%=methods.apply.caller()%>"><span><B><%=mw3.localize("$Apply")%></B></span></a></li>
+                
+            <% } else { %>
+            
+                <li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><B><%=mw3.localize("$Save")%></B></span></a></li>
+                
+            <% } %>
+        </ul>
+        
+    </div>  
+
+<% } %>

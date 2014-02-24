@@ -234,4 +234,17 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
 	
+	
+	// 나중에 제발좀 지우자 로그인관련
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object yame1() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object yame2() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object yame3() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object yame4() throws Exception;
 }

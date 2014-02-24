@@ -4,13 +4,12 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.Login;
-
 
 @Face(
 		ejsPathMappingByContext=
@@ -23,7 +22,6 @@ public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 15;
 	final static int PAGE_CNT_MOBILE = 5;
-	final static int PAGE_CNT_DASHBOARD = 3;
 	
 	public InstanceList(){
 		this(null);
@@ -80,33 +78,10 @@ public class InstanceList implements ContextAware{
 			this.navigation = navigation;
 		}
 
-	@AutowiredToClient
+	@AutowiredFromClient
 	public Session session;
 	
 
-	String folderId;
-		public String getFolderId() {
-			return folderId;
-		}
-		public void setFolderId(String folderId) {
-			this.folderId = folderId;
-		}
-	String folderName;
-		public String getFolderName() {
-			return folderName;
-		}
-	
-		public void setFolderName(String folderName) {
-			this.folderName = folderName;
-		}
-
-	IWorkItem workItem;
-		public IWorkItem getWorkItem() {
-			return workItem;
-		}
-		public void setWorkItem(IWorkItem workItem) {
-			this.workItem = workItem;
-		}
 //	@ServiceMethod(callByContent = true, except = { "instances",
 //			"moreInstanceList" })
 //	public void search() throws Exception {
@@ -118,12 +93,7 @@ public class InstanceList implements ContextAware{
 	public void more() throws Exception {
 		load(this.getNavigation());
 	}
-	
-	@ServiceMethod(callByContent = true, except = { "workitem" })
-	public void moreDocument() throws Exception{
-		loadDocument(this.getNavigation());
-	}
-	
+
 	public InstanceList load() throws Exception {
 		return load(this.getNavigation());
 	}
@@ -139,40 +109,20 @@ public class InstanceList implements ContextAware{
 				
 			});
 		}
-		int count;
-		Instance tempInstanceContent = new Instance();
-		tempInstanceContent.setMetaworksContext(new MetaworksContext());
-		if(getMetaworksContext()!=null && getMetaworksContext().getHow()!=null && "dashboard".equals(getMetaworksContext().getHow())){
-			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT_DASHBOARD);
-			tempInstanceContent.getMetaworksContext().setHow("dashboard");
-			
-		}else{
-			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
-		}
-		IInstance instanceContents = tempInstanceContent.loadOnDashboard(navigation,	getPage()-1, count);
 		
-
+		int count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
+		
+		IInstance instanceContents = Instance.load(navigation,	getPage()-1, count);
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}
-		
 		String preferUX = session.getEmployee().getPreferUX();
 		
-		if("oce".equals(session.getUx()) ){
-			if("dashboard".equals(session.getLastPerspecteType())){
-				instanceContents.getMetaworksContext().setWhere("dashboard");
-			}
+		if("sns".equals(preferUX)){
+			instanceContents.setMetaworksContext(new MetaworksContext());
+			instanceContents.getMetaworksContext().setHow("sns");			
+			instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}
-		
-//		if("sns".equals(preferUX)){
-//			if("oce".equals(session.getUx())){
-//				instanceContents.setMetaworksContext(new MetaworksContext());
-//				if("dashboard".equals(this.getMetaworksContext().getHow()))
-//					instanceContents.getMetaworksContext().setWhere("dashboard");
-//				instanceContents.getMetaworksContext().setHow("sns");			
-//				instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//			}
-//		}
 		setInstances(instanceContents);
 
 		// setting moreInstanceList
@@ -183,20 +133,6 @@ public class InstanceList implements ContextAware{
 		return this;
 	}
 
-	public InstanceList loadDocument() throws Exception{
-		return loadDocument(this.getNavigation());
-	}
-	public InstanceList loadDocument(Navigation navigation) throws Exception{
-		IInstance instance = Instance.loadDocument(getFolderId());
-		
-
-		setInstances(instance);
-//		setWorkItem(workitem);
-		setMoreInstanceList(new InstanceList());
-		getMoreInstanceList().setNavigation(navigation);
-		getMoreInstanceList().setPage(getPage()+1);
-		return this;
-	}
 
 //	private int findPerspectiveTypeCode(String typeString) {
 //		if(typeString == null) {
@@ -224,11 +160,4 @@ public class InstanceList implements ContextAware{
 //		}
 //		return -1;
 //	}
-	
-	@ServiceMethod(target="instances")
-	public void drillDown() throws Exception{
-		
-		System.out.println("SDfsdkf sldkfjs ldkfj sdlkfj seldkfj sdlkfj sldkjfsldkfj sdkl");
-		
-	}
 }

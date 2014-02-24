@@ -43,15 +43,6 @@ public class WorldMap {
 			this.distinctOrderInformation = distinctOrderInformation;
 		}
 		
-	OrderInformationViewPanel orderInformationViewPanel;
-		public OrderInformationViewPanel getOrderInformationViewPanel() {
-			return orderInformationViewPanel;
-		}
-	
-		public void setOrderInformationViewPanel(
-				OrderInformationViewPanel orderInformationViewPanel) {
-			this.orderInformationViewPanel = orderInformationViewPanel;
-		}
 
 	public void loadMapInfo() throws Exception {
 //		if(orderInformation == null) {
@@ -68,12 +59,10 @@ public class WorldMap {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] loadViewPanel() throws Exception {
-		
-		if(orderInformationViewPanel == null) {
-			orderInformationViewPanel = new OrderInformationViewPanel();
-		}
+
 		
 		// 패널이 가지고 있는 IOrderInformation에 set.
+		OrderInformationViewPanel orderInformationViewPanel = new OrderInformationViewPanel();
 		orderInformationViewPanel.load(this.getCountrycode());
 		
 		Popup popup = new Popup();

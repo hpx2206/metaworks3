@@ -4,9 +4,6 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.knowledge.KnowledgeMarketPanel;
-import org.uengine.codi.mw3.knowledge.KnowledgeMarketTitle;
-import org.uengine.codi.mw3.knowledge.RegionTitle;
 
 
 public class KnowledgeMarketPerspective extends Perspective{

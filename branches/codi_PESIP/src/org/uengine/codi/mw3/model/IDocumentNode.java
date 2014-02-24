@@ -103,14 +103,16 @@ public interface IDocumentNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public IDocumentNode loadDocumentList() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public Object[] loadExplorerDocument() throws Exception;
+	//PSEIP에서 미사용
+//	@ServiceMethod(callByContent=true)
+//	public Object[] loadExplorerDocument() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public ArrayList<DocumentNode> loadChildren() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public Object[] loadDocument() throws Exception;
+	//PSEIP에서 미사용
+//	@ServiceMethod(callByContent=true)
+//	public Object[] loadDocument() throws Exception;
 	
 	
 	public void saveMe() throws Exception;

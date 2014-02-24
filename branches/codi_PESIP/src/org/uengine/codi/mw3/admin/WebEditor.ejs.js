@@ -13,11 +13,19 @@ var org_uengine_codi_mw3_admin_WebEditor = function(objectId, className) {
 			fullPage : true,
 			extraPlugins : 'docprops',
 			htmlEncodeOutput : false,
-			entities : false		
+			entities : false,
+
+			filebrowserUploadUrl : './upload',
+            filebrowserImageUploadUrl : './upload?command=QuickUpload&type=Images',
+            filebrowserFlashUploadUrl : './upload?command=QuickUpload&type=Flash',
+            filebrowserWindowWidth  : 800,
+            filebrowserWindowHeight : 500
+            
 		});
 		
-		this.editor.setData(this.object.contents);		
 	}
+	
+	
 };
 
 org_uengine_codi_mw3_admin_WebEditor.prototype.getValue = function() {
@@ -32,3 +40,4 @@ org_uengine_codi_mw3_admin_WebEditor.prototype.getValue = function() {
 	}
 	
 };
+

@@ -1,8 +1,9 @@
-package org.uengine.codi.mw3.knowledge;
+package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.knowledge.IKnowledgeMarketNode;
+import org.uengine.codi.mw3.knowledge.KnowledgeMarketNode;
 
 
 public class KnowledgeMarketPanel {
