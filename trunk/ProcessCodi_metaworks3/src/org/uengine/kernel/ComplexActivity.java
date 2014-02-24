@@ -1001,15 +1001,9 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 				if(activity instanceof HumanActivity){
 					stop(activity);
 				}else if(activity instanceof SubProcessActivity){
-					
-//					if(ptc==null){
-//						stop(null);
-//						return;
-//					}
-					
-						stop(null);
-						if(GlobalContext.isDesignTime()){
-						return;
+					stop(null);
+					if(GlobalContext.isDesignTime()){
+					return;
 					}
 					
 					SubProcessActivity spAct = (SubProcessActivity)activity;
