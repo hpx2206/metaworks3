@@ -10,6 +10,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.CodiClassLoader;
@@ -41,6 +42,7 @@ public class Form implements ContextAware {
 		}
 
 	String id;
+		@Id
 		@Face(displayName="$form.id")
 		public String getId() {
 			return id;
