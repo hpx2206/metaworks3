@@ -235,8 +235,14 @@ public class ProcessDesignerContainer {
 		def.setRoles(roles);
 		if( activityList != null ){
 			for(Activity act : activityList){
-				def.addChildActivity(this.fillVariableType(act));
 				if( act instanceof ScopeActivity){
+					if( ((ScopeActivity) act).getChildActivities() != null ){
+						ArrayList<Activity> childs = new ArrayList<Activity>(); 
+						for(Activity sact : ((ScopeActivity) act).getChildActivities()){
+							childs.add(this.fillVariableType(sact));
+						}
+						((ScopeActivity) act).setChildActivities(childs);
+					}
 					if( ((ScopeActivity) act).getTransitions() != null ){
 						for(Transition ts : ((ScopeActivity) act).getTransitions()){
 							if(transitionList.contains(ts)){
@@ -245,6 +251,7 @@ public class ProcessDesignerContainer {
 						}
 					}
 				}
+				def.addChildActivity(this.fillVariableType(act));
 			}
 		}
 		if( roleList != null ){
