@@ -272,7 +272,7 @@ public class Contact extends Database<IContact> implements IContact{
 		return dao;
 	}
 
-	public static IContact findContactsForDept(String partCode, IUser user, String keyword) throws Exception {
+	public static IContact findContactsForDept(String comCode, String partCode, IUser user, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
 		StringBuffer countQuery = new StringBuffer();
@@ -284,6 +284,7 @@ public class Contact extends Database<IContact> implements IContact{
 		sb.append("select contact.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		sb.append(Contact.createContactSql(countQuery.toString()));
 //		sb.append("   and e.partcode != ?partcode");
+		sb.append("   and e.globalcom = ?globalcom");
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
@@ -300,12 +301,13 @@ public class Contact extends Database<IContact> implements IContact{
 		dao.set("friendname", "%" + keyword + "%");
  		dao.set("itemType", RecentItem.TYPE_FRIEND);
  		dao.set("isDeleted", "0");
+ 		dao.set("globalcom", comCode);
  		dao.select();
  		
 		return dao;
 	}
 	
-	public static IContact findContactsForRole(String roleCode, IUser user, String keyword) throws Exception {
+	public static IContact findContactsForRole(String comCode, String roleCode, IUser user, String keyword) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
 		StringBuffer countQuery = new StringBuffer();
@@ -316,6 +318,7 @@ public class Contact extends Database<IContact> implements IContact{
 		sb.append("select contact.* , if(cnt > 0 , 1, 0 ) as followed from ( ");
 		
 		sb.append(Contact.createContactSql(countQuery.toString()));
+		sb.append("   and e.globalcom = ?globalcom");
 		
 		if(keyword != null && keyword.trim().length() > 0)
 			sb.append("   AND friendname LIKE ?friendname");
@@ -333,6 +336,7 @@ public class Contact extends Database<IContact> implements IContact{
 		dao.set("friendname", "%" + keyword + "%");
  		dao.set("itemType", RecentItem.TYPE_FRIEND);
  		dao.set("isDeleted", "0");
+ 		dao.set("globalcom", comCode);
  		dao.select();
  		
 		return dao;
