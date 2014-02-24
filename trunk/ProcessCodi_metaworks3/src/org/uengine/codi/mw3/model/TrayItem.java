@@ -57,10 +57,16 @@ public class TrayItem implements ContextAware {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
+		instance.session = session;
+		instance.copyFrom(instance.databaseMe());
 		
-		if(instance.databaseMe().getIsDeleted()){
-			throw new MetaworksException("$alreadyDeletedPost");
+		if(!instance.checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
 		}
+		if( instance.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}	
+		
 		
 		instanceView.session = session;
 		instanceView.load(instance);
@@ -91,8 +97,13 @@ public class TrayItem implements ContextAware {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
+		instance.session = session;
+		instance.copyFrom(instance.databaseMe());
 		
-		if(instance.databaseMe().getIsDeleted()){
+		if(!instance.checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		if( instance.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
 		instanceViewContent.session = session;

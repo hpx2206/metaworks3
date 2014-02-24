@@ -459,34 +459,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public InstanceViewContent detail() throws Exception{
 		
-		IInstance instanceRef = this.databaseMe();
+		IInstance instanceRef = databaseMe();
 		
-		// 이미 삭제되어 있는 리스트를 클릭한 경우
+		if(!checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
-		// 팔로워가 아닌사람의 작업을 막음
-		if( "1".equals(instanceRef.getSecuopt())){
-			this.fillFollower();
-			IFollower follower = this.getFollowers().getFollowers();
-			boolean isExist = false;
-			while(follower.next()){
-				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						isExist = true;
-						break;
-					}
-				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
-						isExist = true;
-						break;
-					}
-				}
-			}
-			if( !isExist ){
-				throw new MetaworksException("$NotPermittedToWork");
-			}
-		}
+		
 		
 		
 		if(getMetaworksContext()==null){
@@ -1110,6 +1091,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public ModalWindow monitor() throws Exception{
 
+		IInstance instanceRef = databaseMe();
+		
+		if(!checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		
 		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
 		boolean flag = processInstanceMonitorPanel.load(this.getInstId().toString(), session, processManager);
 		if( flag ){
@@ -1130,35 +1120,44 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return new ModalWindow(iframe, 1024, 768, "Process Gantt Chart");
 	}
 	
-	public Popup schedule() throws Exception{
+	public boolean checkRelatedUser() throws Exception{
 		
+		boolean isRelated = false;
 		IInstance instanceRef = databaseMe();
-		
-		// 이미 삭제되어 있는 리스트를 클릭한 경우
-		if( instanceRef.getIsDeleted() ){
-			throw new MetaworksException("$alreadyDeletedPost");
-		}
 		// 비공개 글일 경우 본건의 관련자가 아니면 글쓰기를 막음.
 		if( "1".equals(instanceRef.getSecuopt())){
 			InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
 			IFollower follower = findFollower.findFollowers();
-			boolean isExist = false;
 			while(follower.next()){
 				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
 					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						isExist = true;
+						isRelated = true;
 						break;
 					}
 				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
 					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
-						isExist = true;
+						isRelated = true;
 						break;
 					}
 				}
 			}
-			if( !isExist ){
-				throw new MetaworksException("$NotPermittedToWork");
-			}
+			
+		}else{
+			isRelated = true;
+		}
+		return isRelated;
+		
+	}
+	
+	public Popup schedule() throws Exception{
+		
+		IInstance instanceRef = databaseMe();
+				
+		if(!checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
 		}
 		
 		InstanceDueSetter ids = new InstanceDueSetter();
@@ -1195,7 +1194,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instanceRef = databaseMe();
 		
-		// 이미 삭제되어 있는 리스트를 클릭한 경우
+		if(!checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
@@ -1242,6 +1243,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 	}
 	
 	public void toggleSecurityConversation() throws Exception{
+	
+		IInstance instanceRef = databaseMe();
+		
+		if(!checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		if( instanceRef.getIsDeleted() ){
+			throw new MetaworksException("$alreadyDeletedPost");
+		}
+		
 		String secuopt = this.getSecuopt();
 		
 		if (secuopt.charAt(0) != '0') {
@@ -1250,38 +1261,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			databaseMe().setSecuopt("1");
 		}
 		
-		IInstance instanceRef = databaseMe();
 		Instance instance = new Instance();
 		instance.copyFrom(instanceRef);
 		instance.fillFollower();
-		
-		// 이미 삭제되어 있는 리스트를 클릭한 경우
-		if( instanceRef.getIsDeleted() ){
-			throw new MetaworksException("$alreadyDeletedPost");
-		}
-		
-		// 공개 상태에서 비공개로는 아무나 할수 있지만 비공개에서 공개는 팔로워만 되도록 수정
-		if("0".equals(this.getSecuopt())){
-			// 팔로워가 아닌사람의 작업을 막음
-			IFollower follower = instance.getFollowers().getFollowers();
-			boolean isExist = false;
-			while(follower.next()){
-				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						isExist = true;
-						break;
-					}
-				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
-						isExist = true;
-						break;
-					}
-				}
-			}
-			if( !isExist ){
-				throw new MetaworksException("$NotPermittedToWork");
-			}
-		}
 				
 		// 주제 제목 설정
 		if(instance.getTopicId() != null){
@@ -1305,6 +1287,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public void complete() throws Exception{
 
 		IInstance instanceRef = databaseMe();
+		
+		if(!checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}		

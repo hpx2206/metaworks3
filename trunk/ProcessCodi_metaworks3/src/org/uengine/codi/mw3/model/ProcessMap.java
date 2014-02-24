@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -362,6 +363,18 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			
 			
 		}else if(processMapList!=null && processMapList.getParentInstanceId() != null){ //need to attach new instance to the parent instance
+			Instance instance = new Instance();
+			instance.setInstId(Long.valueOf(this.instanceView.getInstanceView().getInstanceId()));
+			instance.session = session;
+			instance.copyFrom(instance.databaseMe());
+			
+			if(!instance.checkRelatedUser()){
+				throw new MetaworksException("$NotPermittedToWork");
+			}
+			if( instance.getIsDeleted() ){
+				throw new MetaworksException("$alreadyDeletedPost");
+			}
+			
 			ProcessInstance instanceObject = processManager.getProcessInstance(instId);
 			
 			//IInstance instance = instanceRef.databaseMe();

@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.EventContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -144,6 +145,20 @@ public class Follower extends Database<IFollower> implements IFollower {
 	@Override
 	public Object[] detail() throws Exception {
 		session.setClipboard(this);
+		
+		if("instance".equals(this.getParentType())){
+			Instance instance = new Instance();
+			instance.setInstId(Long.valueOf(this.getParentId()));
+			instance.session = session;
+			instance.copyFrom(instance.databaseMe());
+			
+			if( instance.getIsDeleted() ){
+				throw new MetaworksException("$alreadyDeletedPost");
+			}
+			if(!instance.checkRelatedUser()){
+				throw new MetaworksException("$NotPermittedToWork");
+			}
+		}
 		
 		if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
 			User convertUser = new User();
