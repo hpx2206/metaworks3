@@ -167,8 +167,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
    			 			(mw3.dragStartY != 0 && (mouseY > mw3.dragStartY + 30 || mouseY < mw3.dragStartY - 30) )){
  						
  						if(!mw3.dragging){
- 	 						if(console)
- 	 							console.log('drag  start');
+ 	 						if(console) console.log('drag  start');
  							 	 				
  	 						$(mw3.dragObject).trigger('dragstart');
  	 						
@@ -4014,8 +4013,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				for(var i=0; i<serviceMethods.length; i++){
 					var serviceMethod = serviceMethods[i];
 					var command = serviceMethod.caller();
-					
-					console.log(command);
 					
 					var menuItem = { 
 			   			text: mw3.localize(serviceMethod.methodContext.displayName) + (serviceMethod.methodContext.keyBinding ? '(' + serviceMethod.methodContext.keyBinding[0] + ')' : ''),
