@@ -33,6 +33,8 @@ public class OverlayCommentWorkItem extends WorkItem{
 		instance.setInstId(parentWorkItem.databaseMe().getRootInstId());
 		
 		this.setRootInstId(instance.databaseMe().getRootInstId());
+		
+		this.setPrtTskId(getOverlayCommentOption().getParentTaskId());
 		this.setExt1(getOverlayCommentOption().getX());
 		this.setExt2(getOverlayCommentOption().getY());
 		
