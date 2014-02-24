@@ -10987,62 +10987,6 @@ OG.shape.bpmn.A_ServiceTask.superclass = OG.shape.bpmn.A_Task;
 OG.shape.bpmn.A_ServiceTask.prototype.constructor = OG.shape.bpmn.A_ServiceTask;
 OG.A_ServiceTask = OG.shape.bpmn.A_ServiceTask;
 
-/**
- * BPMN : Signal Activity Shape
- *
- * @class
- * @extends OG.shape.GeomShape
- * @requires OG.common.*, OG.geometry.*
- *
- * @param {String} label 라벨 [Optional]
- * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
- */
-OG.shape.bpmn.Signal = function (label) {
-	OG.shape.bpmn.Signal.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.Signal';
-	this.label = label;
-};
-OG.shape.bpmn.Signal.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.Signal.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.Signal.prototype.constructor = OG.shape.bpmn.Signal;
-OG.Signal = OG.shape.bpmn.Signal;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.Signal.prototype.createShape = function () {
-    var geom1, geom2, geom3, geomCollection = [];
-    	if (this.geom) {
-    		return this.geom;
-    	}
-
-    	geom1 = new OG.geometry.Circle([50, 50], 50);
-    	geom2 = new OG.geometry.Circle([50, 50], 40);
-        geom3 = new OG.Polygon([
-    		[20, 75],
-    		[50, 10],
-    		[80, 75]
-    	]);
-
-    	geomCollection.push(geom1);
-    	geomCollection.push(geom2);
-    	geomCollection.push(geom3);
-
-    	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-    	this.geom.style = new OG.geometry.Style({
-    		'label-position': 'bottom',
-    		"stroke-width": 1.5,
-     		"stroke" : "#969149",
-     		fill: "white",
-     		"fill-opacity": 1
-    	});
-
-    	return this.geom;
-};
 
 OG.shape.bpmn.ParallelMultiple = function (label) {
 	OG.shape.bpmn.ParallelMultiple.superclass.call(this);
@@ -11430,6 +11374,66 @@ OG.shape.bpmn.Event.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.Event.superclass = OG.shape.GeomShape;
 OG.shape.bpmn.Event.prototype.constructor = OG.shape.bpmn.Event;
 OG.Event = OG.shape.bpmn.Event;
+
+
+/**
+ * BPMN : Signal Activity Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.Signal = function (label) {
+	OG.shape.bpmn.Signal.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.Signal';
+	this.label = label;
+};
+OG.shape.bpmn.Signal.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.Signal.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.Signal.prototype.constructor = OG.shape.bpmn.Signal;
+OG.Signal = OG.shape.bpmn.Signal;
+
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.Signal.prototype.createShape = function () {
+    var geom1, geom2, geom3, geomCollection = [];
+    	if (this.geom) {
+    		return this.geom;
+    	}
+
+    	geom1 = new OG.geometry.Circle([50, 50], 50);
+    	geom2 = new OG.geometry.Circle([50, 50], 40);
+        geom3 = new OG.Polygon([
+    		[20, 75],
+    		[50, 10],
+    		[80, 75]
+    	]);
+
+    	geomCollection.push(geom1);
+    	geomCollection.push(geom2);
+    	geomCollection.push(geom3);
+
+    	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+    	this.geom.style = new OG.geometry.Style({
+    		'label-position': 'bottom',
+    		"stroke-width": 1.5,
+     		"stroke" : "#969149",
+     		fill: "white",
+     		"fill-opacity": 1
+    	});
+
+    	return this.geom;
+};
+
 
 /**
  * BPMN : End Event Shape
@@ -18007,7 +18011,6 @@ OG.renderer.RaphaelRenderer.prototype.drawAttatchEvent = function (element) {
 //TaskType 드로우
 
 OG.renderer.RaphaelRenderer.prototype.drawTaskType = function (element) {
-	console.log(element);
 	
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
@@ -23810,7 +23813,6 @@ OG.graph.Canvas.prototype = {
 	 * @return {Element} 연결된 Edge 엘리먼트
 	 */
 	connectWithTerminalId: function (fromTerminal_Id, toTerminal_Id, style, label) {
-		console.log("connectWithTerminalId - call");
 		var me = this
 			, fromElement , toElement
 			, fromTerminal, toTerminal
@@ -23836,7 +23838,6 @@ OG.graph.Canvas.prototype = {
 			_index = 0;
 			fromTerminal = childTerminals[_index];
 		}
-		//console.log({"fromTerminal":fromTerminal, "_index":_index});
 		this._RENDERER.removeTerminal(fromElement);
 
 		// to Shape 연결 터미널 찾기
@@ -23851,7 +23852,6 @@ OG.graph.Canvas.prototype = {
 			_index = 0;
 			toTerminal = childTerminals[_index];
 		}
-		//console.log({"toTerminal":toTerminal, "_index":_index});
 		this._RENDERER.removeTerminal(toElement);
 		
 		// draw edge
@@ -24437,10 +24437,6 @@ OG.graph.Canvas.prototype = {
 				}
 			}
 			
-			if(shape instanceof OG.shape.bpmn.A_Task){
-				cell['@swimlaneId'] = "";
-			}
-
 			if ($(item).attr('_fromedge')) {
 				cell['@fromEdge'] = $(item).attr('_fromedge');
 			}
