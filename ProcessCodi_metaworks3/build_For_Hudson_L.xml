@@ -7,7 +7,7 @@
                  username="${id}"
                  password="${pw}"
                  trust="true"
-                 command="${command}; ${bin}/shutdown.sh; rm -rf ${dest}/ROOT"/>
+                 command="${command}; ${bin}/shutdown.sh; rm -rf ${dest}/ROOT; sleep 5"/>
     </target>
 	
 	<target name="upload-war" depends="stop">
