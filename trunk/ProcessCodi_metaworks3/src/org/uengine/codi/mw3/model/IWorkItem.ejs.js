@@ -90,6 +90,36 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		var url = location.origin.replace('8080','7080') + '/uengine-web/processparticipant/worklist/workitemHandler.jsp?taskId='+object.taskId+'&instanceId='+object.instId+'&tracingTag='+object.trcTag;
 		
 		window.open(url);
+	},
+	
+	
+	conferenceWorkItemJoin : function(){
+		
+		var workItemObjectId = this.objectId;
+	 	var workItem = mw3.objects[workItemObjectId];		
+		
+		mw3.call(workItemObjectId, 'join');
+		
+		if(workItem.ext5 == null){	
+		 	var job = setInterval(function(){
+		 	var workItemsss = mw3.objects[workItemObjectId];
+				console.log("시작"+job);
+				if(workItemsss.ext7 == null || workItemsss.ext7 =='0'){
+					
+					mw3.call(workItemObjectId, 'checkJoined');
+					console.log("sss"+job);
+				}else{
+					console.log("111"+job);
+					if(job != ''){ 
+						clearInterval(job);
+						return;
+					}
+				}
+			
+			}, 10000);
+		}
+			
 	}
 };
+	
 
