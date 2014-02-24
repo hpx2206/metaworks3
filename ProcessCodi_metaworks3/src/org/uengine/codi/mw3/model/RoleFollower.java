@@ -70,7 +70,7 @@ public class RoleFollower extends Follower {
 	
 	@Override
 	public IContact findContacts(String keyword) throws Exception {
-		return Contact.findContactsForRole(this.getParentId(), session.getUser(), keyword);
+		return Contact.findContactsForRole(session.getEmployee().getGlobalCom(), this.getParentId(), session.getUser(), keyword);
 	}
 
 }

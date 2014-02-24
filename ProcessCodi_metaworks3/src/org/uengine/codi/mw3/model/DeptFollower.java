@@ -51,7 +51,7 @@ public class DeptFollower extends Follower {
 	
 	@Override
 	public IContact findContacts(String keyword) throws Exception {
-		return Contact.findContactsForDept(this.getParentId(), session.getUser(), keyword);
+		return Contact.findContactsForDept(session.getEmployee().getGlobalCom(), this.getParentId(), session.getUser(), keyword);
 	}
 
 }
