@@ -26,7 +26,7 @@
 	border-top:1px solid #eee;
 }
 #loginContainer h1, #loginContainer h2 {
-	background: url('../../images/waveStyle/doore.png') no-repeat 140px;
+	background: url('../../images/waveStyle/login_logo.png') no-repeat 140px;
 	line-height:58px;
 	font-style: "Calibri", Arial;
 	text-align: center;
@@ -283,7 +283,7 @@ input.submitFacebook {
     display:none;
 }
 #loginContainer h1, #loginContainer h2{
-    background:url('../../images/waveStyle/doore.png') no-repeat 50%;
+    background:url('../../images/waveStyle/login_logo.png') no-repeat 50%;
 }
 #loginContainer .options{
     margin:30px 0 0 65px;
