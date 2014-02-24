@@ -41,8 +41,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		});
 		
 	}else if(workItem.type == 'memo' && workItem.extFile!=null && !workItem.contentLoaded){
-		contentLoad = true;
-		
+		contentLoad = true;		
 	}else if(workItem.type == 'email' && !workItem.contentLoaded){
 		contentLoad = true;
 	}else if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
@@ -75,10 +74,12 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		}
 	}
 	
-	if(!contentLoad && !this.object.more) {
+	if(contentLoad)
+		mw3.call(this.objectId, 'loadContents');
+	else{
+		if(!this.object.more)
 			this.objectDiv.trigger('loaded.workitem_' + workItem.taskId);
-	}
-	
+	}	
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
