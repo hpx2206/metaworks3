@@ -11434,6 +11434,285 @@ OG.shape.bpmn.Signal.prototype.createShape = function () {
     	return this.geom;
 };
 
+/**
+ * BPMN : Complex Gateway Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.G_Complex = function (label) {
+	OG.shape.bpmn.G_Complex.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.G_Complex';
+	this.label = label;
+};
+OG.shape.bpmn.G_Complex.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.G_Complex.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.G_Complex.prototype.constructor = OG.shape.bpmn.G_Complex;
+OG.G_Complex = OG.shape.bpmn.G_Complex;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Complex.prototype.createShape = function () {
+	var geom1, geom2, geom3, geom4, geom5, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Line([30, 30], [70, 70]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom3 = new OG.geometry.Line([30, 70], [70, 30]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom4 = new OG.geometry.Line([20, 50], [80, 50]);
+	geom4.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geom5 = new OG.geometry.Line([50, 20], [50, 80]);
+	geom5.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+	geomCollection.push(geom4);
+	geomCollection.push(geom5);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
+/**
+ * BPMN : Exclusive Gateway Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.G_Exclusive = function (label) {
+	OG.shape.bpmn.G_Exclusive.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.G_Exclusive';
+	this.label = label;
+};
+OG.shape.bpmn.G_Exclusive.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.G_Exclusive.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.G_Exclusive.prototype.constructor = OG.shape.bpmn.G_Exclusive;
+OG.G_Exclusive = OG.shape.bpmn.G_Exclusive;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Exclusive.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Line([30, 30], [70, 70]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geom3 = new OG.geometry.Line([30, 70], [70, 30]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
+/**
+ * BPMN : Gateway Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.G_Gateway = function (label) {
+	OG.shape.bpmn.G_Gateway.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.G_Gateway';
+	this.label = label;
+};
+OG.shape.bpmn.G_Gateway.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.G_Gateway.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.G_Gateway.prototype.constructor = OG.shape.bpmn.G_Gateway;
+OG.G_Gateway = OG.shape.bpmn.G_Gateway;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Gateway.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	return this.geom;
+};
+/**
+ * BPMN : Inclusive Gateway Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.G_Inclusive = function (label) {
+	OG.shape.bpmn.G_Inclusive.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.G_Inclusive';
+	this.label = label;
+};
+OG.shape.bpmn.G_Inclusive.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.G_Inclusive.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.G_Inclusive.prototype.constructor = OG.shape.bpmn.G_Inclusive;
+OG.G_Inclusive = OG.shape.bpmn.G_Inclusive;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Inclusive.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Circle([50, 50], 25);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 3
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
+/**
+ * BPMN : Parallel Gateway Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.G_Parallel = function (label) {
+	OG.shape.bpmn.G_Parallel.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.G_Parallel';
+	this.label = label;
+};
+OG.shape.bpmn.G_Parallel.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.G_Parallel.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.G_Parallel.prototype.constructor = OG.shape.bpmn.G_Parallel;
+OG.G_Parallel = OG.shape.bpmn.G_Parallel;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.G_Parallel.prototype.createShape = function () {
+	var geom1, geom2, geom3, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[0, 50],
+		[50, 100],
+		[100, 50],
+		[50, 0]
+	]);
+
+	geom2 = new OG.geometry.Line([20, 50], [80, 50]);
+	geom2.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geom3 = new OG.geometry.Line([50, 20], [50, 80]);
+	geom3.style = new OG.geometry.Style({
+		"stroke-width": 5
+	});
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+	geomCollection.push(geom3);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+
+	return this.geom;
+};
 
 /**
  * BPMN : End Event Shape
@@ -12921,285 +13200,7 @@ OG.shape.bpmn.E_Terminate.prototype.createShape = function () {
 
 	return this.geom;
 };
-/**
- * BPMN : Complex Gateway Shape
- *
- * @class
- * @extends OG.shape.GeomShape
- * @requires OG.common.*, OG.geometry.*
- *
- * @param {String} label 라벨 [Optional]
- * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
- */
-OG.shape.bpmn.G_Complex = function (label) {
-	OG.shape.bpmn.G_Complex.superclass.call(this);
 
-	this.SHAPE_ID = 'OG.shape.bpmn.G_Complex';
-	this.label = label;
-};
-OG.shape.bpmn.G_Complex.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.G_Complex.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.G_Complex.prototype.constructor = OG.shape.bpmn.G_Complex;
-OG.G_Complex = OG.shape.bpmn.G_Complex;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.G_Complex.prototype.createShape = function () {
-	var geom1, geom2, geom3, geom4, geom5, geomCollection = [];
-	if (this.geom) {
-		return this.geom;
-	}
-
-	geom1 = new OG.geometry.Polygon([
-		[0, 50],
-		[50, 100],
-		[100, 50],
-		[50, 0]
-	]);
-
-	geom2 = new OG.geometry.Line([30, 30], [70, 70]);
-	geom2.style = new OG.geometry.Style({
-		"stroke-width": 3
-	});
-
-	geom3 = new OG.geometry.Line([30, 70], [70, 30]);
-	geom3.style = new OG.geometry.Style({
-		"stroke-width": 3
-	});
-
-	geom4 = new OG.geometry.Line([20, 50], [80, 50]);
-	geom4.style = new OG.geometry.Style({
-		"stroke-width": 3
-	});
-
-	geom5 = new OG.geometry.Line([50, 20], [50, 80]);
-	geom5.style = new OG.geometry.Style({
-		"stroke-width": 3
-	});
-
-	geomCollection.push(geom1);
-	geomCollection.push(geom2);
-	geomCollection.push(geom3);
-	geomCollection.push(geom4);
-	geomCollection.push(geom5);
-
-	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-	return this.geom;
-};
-/**
- * BPMN : Exclusive Gateway Shape
- *
- * @class
- * @extends OG.shape.GeomShape
- * @requires OG.common.*, OG.geometry.*
- *
- * @param {String} label 라벨 [Optional]
- * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
- */
-OG.shape.bpmn.G_Exclusive = function (label) {
-	OG.shape.bpmn.G_Exclusive.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.G_Exclusive';
-	this.label = label;
-};
-OG.shape.bpmn.G_Exclusive.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.G_Exclusive.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.G_Exclusive.prototype.constructor = OG.shape.bpmn.G_Exclusive;
-OG.G_Exclusive = OG.shape.bpmn.G_Exclusive;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.G_Exclusive.prototype.createShape = function () {
-	var geom1, geom2, geom3, geomCollection = [];
-	if (this.geom) {
-		return this.geom;
-	}
-
-	geom1 = new OG.geometry.Polygon([
-		[0, 50],
-		[50, 100],
-		[100, 50],
-		[50, 0]
-	]);
-
-	geom2 = new OG.geometry.Line([30, 30], [70, 70]);
-	geom2.style = new OG.geometry.Style({
-		"stroke-width": 5
-	});
-
-	geom3 = new OG.geometry.Line([30, 70], [70, 30]);
-	geom3.style = new OG.geometry.Style({
-		"stroke-width": 5
-	});
-
-	geomCollection.push(geom1);
-	geomCollection.push(geom2);
-	geomCollection.push(geom3);
-
-	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-	return this.geom;
-};
-/**
- * BPMN : Gateway Shape
- *
- * @class
- * @extends OG.shape.GeomShape
- * @requires OG.common.*, OG.geometry.*
- *
- * @param {String} label 라벨 [Optional]
- * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
- */
-OG.shape.bpmn.G_Gateway = function (label) {
-	OG.shape.bpmn.G_Gateway.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.G_Gateway';
-	this.label = label;
-};
-OG.shape.bpmn.G_Gateway.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.G_Gateway.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.G_Gateway.prototype.constructor = OG.shape.bpmn.G_Gateway;
-OG.G_Gateway = OG.shape.bpmn.G_Gateway;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.G_Gateway.prototype.createShape = function () {
-	if (this.geom) {
-		return this.geom;
-	}
-
-	this.geom = new OG.geometry.Polygon([
-		[0, 50],
-		[50, 100],
-		[100, 50],
-		[50, 0]
-	]);
-
-	return this.geom;
-};
-/**
- * BPMN : Inclusive Gateway Shape
- *
- * @class
- * @extends OG.shape.GeomShape
- * @requires OG.common.*, OG.geometry.*
- *
- * @param {String} label 라벨 [Optional]
- * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
- */
-OG.shape.bpmn.G_Inclusive = function (label) {
-	OG.shape.bpmn.G_Inclusive.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.G_Inclusive';
-	this.label = label;
-};
-OG.shape.bpmn.G_Inclusive.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.G_Inclusive.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.G_Inclusive.prototype.constructor = OG.shape.bpmn.G_Inclusive;
-OG.G_Inclusive = OG.shape.bpmn.G_Inclusive;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.G_Inclusive.prototype.createShape = function () {
-	var geom1, geom2, geomCollection = [];
-	if (this.geom) {
-		return this.geom;
-	}
-
-	geom1 = new OG.geometry.Polygon([
-		[0, 50],
-		[50, 100],
-		[100, 50],
-		[50, 0]
-	]);
-
-	geom2 = new OG.geometry.Circle([50, 50], 25);
-	geom2.style = new OG.geometry.Style({
-		"stroke-width": 3
-	});
-
-	geomCollection.push(geom1);
-	geomCollection.push(geom2);
-
-	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-	return this.geom;
-};
-/**
- * BPMN : Parallel Gateway Shape
- *
- * @class
- * @extends OG.shape.GeomShape
- * @requires OG.common.*, OG.geometry.*
- *
- * @param {String} label 라벨 [Optional]
- * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
- */
-OG.shape.bpmn.G_Parallel = function (label) {
-	OG.shape.bpmn.G_Parallel.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.G_Parallel';
-	this.label = label;
-};
-OG.shape.bpmn.G_Parallel.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.G_Parallel.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.G_Parallel.prototype.constructor = OG.shape.bpmn.G_Parallel;
-OG.G_Parallel = OG.shape.bpmn.G_Parallel;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.G_Parallel.prototype.createShape = function () {
-	var geom1, geom2, geom3, geomCollection = [];
-	if (this.geom) {
-		return this.geom;
-	}
-
-	geom1 = new OG.geometry.Polygon([
-		[0, 50],
-		[50, 100],
-		[100, 50],
-		[50, 0]
-	]);
-
-	geom2 = new OG.geometry.Line([20, 50], [80, 50]);
-	geom2.style = new OG.geometry.Style({
-		"stroke-width": 5
-	});
-
-	geom3 = new OG.geometry.Line([50, 20], [50, 80]);
-	geom3.style = new OG.geometry.Style({
-		"stroke-width": 5
-	});
-
-	geomCollection.push(geom1);
-	geomCollection.push(geom2);
-	geomCollection.push(geom3);
-
-	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-
-	return this.geom;
-};
 /**
  * BPMN : Annotation Shape
  *
