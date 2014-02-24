@@ -101,7 +101,13 @@
 <%
 			if('process' == type) {
 %>
-											<div class="process_open_btn"><%=mw3.localize(collapse?'$closed':'$opened')%></div>
+											<div class="process_open_btn">
+												<%if(collapse){%>
+													<span class="icon-contract2 process_btn_icon"></span>
+												<%}else{%>
+													<span class="icon-expand2 process_btn_icon"></span>
+												<%}%>
+												<%=mw3.localize(collapse?'$closed':'$opened')%></div>
 											<div> ·</div>																				
 <%
 			}
