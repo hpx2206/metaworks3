@@ -19,9 +19,16 @@ public class InstanceDrag {
 	public Session cut() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(this.instanceId);
-		if(instance.databaseMe().getIsDeleted()){
+		instance.session = session;
+		instance.copyFrom(instance.databaseMe());
+		
+		if(!instance.checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		if( instance.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
+		
 		session.setClipboard(this);
 		return session;
 	}

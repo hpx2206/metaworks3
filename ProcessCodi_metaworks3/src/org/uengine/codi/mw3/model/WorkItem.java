@@ -1335,6 +1335,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		theInstance.setInstId(getInstId());
 		theInstance.copyFrom(theInstance.databaseMe());
 		
+		permittedCheck(theInstance);
+		
 		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin()) || theInstance.getInitiator().getUserId().equals(session.getUser().getUserId())){
 			if( this.getTaskId().equals(theInstance.getLastcmntTaskId()) ){
 				if( theInstance.getLastcmnt2TaskId() != null ){
@@ -1379,6 +1381,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 
 	public void edit() throws Exception{
+		
+		Instance theInstance = new Instance();
+		theInstance.setInstId(getInstId());
+		theInstance.copyFrom(theInstance.databaseMe());
+		
+		permittedCheck(theInstance);
 		
 		if(!"file".equals(this.getType())) {
 			if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
@@ -1503,6 +1511,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	
 	public OverlayCommentWorkItem comment() throws Exception {
+		Instance theInstance = new Instance();
+		theInstance.setInstId(getInstId());
+		theInstance.copyFrom(theInstance.databaseMe());
+		
+		permittedCheck(theInstance);
 		
 		OverlayCommentOption overlayCommentOption = new OverlayCommentOption();
 		

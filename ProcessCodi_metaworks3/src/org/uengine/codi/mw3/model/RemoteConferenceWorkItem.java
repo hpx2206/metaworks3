@@ -137,7 +137,8 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		iframe.setSrc("http://"+ BBBHost + "/bigbluebutton/api/" + joinURI);
 		iframe.setWidth("100%");
 		
-		this.databaseMe().setExt5(TRUE);
+		this.databaseMe().setExt7("0");
+		/*
 		this.databaseMe().setExt6(TRUE);
 				
 		HashMap<String, String> pushUserMap = new HashMap<String, String>();
@@ -154,13 +155,35 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
 				new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
-				
+		*/		
 		return new Object[]{new ModalWindow(iframe, 1000, 550, title)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF, callByContent=true)
+	public void checkJoined() throws Exception{
+ 		
+		this.meetingInfo();
+		
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		Notification notification = new Notification();
+		notification.session = session;
+		pushUserMap = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+		String currentUserId = session.getUser().getUserId();
+	
+		final IWorkItem copyOfThis = this;
+		
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
+		
+		// 본인 이외에 다른 사용자에게 push
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+				new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
+		
 	}
 	
 	@ServiceMethod
 	public void end() throws Exception {
-		this.MeetingInfo();
+		this.meetingInfo();
 		String participantCount = this.databaseMe().getExt7();
 		
 		if(!"0".equals(participantCount)){
@@ -192,7 +215,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	}
 
 	@ServiceMethod
-	public void MeetingInfo() throws Exception{
+	public void meetingInfo() throws Exception{
 		
 		String meetingID = databaseMe().getExt1();
 		String moderatorPW = databaseMe().getExt3();
@@ -447,7 +470,6 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	@Override
 	public void loadContents() throws Exception {
 		this.setContentLoaded(true);
-		MeetingInfo();
 		
 	}
 	

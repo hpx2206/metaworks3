@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -128,6 +129,19 @@ public class Followers implements ContextAware {
 	@ServiceMethod(callByContent=true, except="followers", target=ServiceMethodContext.TARGET_APPEND, mouseBinding=EventContext.EVENT_DROP)
 	public Object drop() throws Exception{
 		
+		if("instance".equals(this.getFollower().getParentType())){
+			Instance instance = new Instance();
+			instance.setInstId(Long.valueOf(this.getFollower().getParentId()));
+			instance.session = session;
+			instance.copyFrom(instance.databaseMe());
+			
+			if(!instance.checkRelatedUser()){
+				throw new MetaworksException("$NotPermittedToWork");
+			}
+			if( instance.getIsDeleted() ){
+				throw new MetaworksException("$alreadyDeletedPost");
+			}
+		}
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IUser){
 			User newFollowUser = (User)clipboard;

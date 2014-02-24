@@ -92,33 +92,16 @@ public class InstanceFollower extends Follower {
 
 		Instance instance = new Instance();
 		instance.setInstId(new Long(this.getParentId()));
+		instance.session = this.session;
+		instance.copyFrom(instance.databaseMe());
 		
-		IInstance instanceRef = instance.databaseMe();
-		
-		if( instanceRef.getIsDeleted() ){
+		if(!instance.checkRelatedUser()){
+			throw new MetaworksException("$NotPermittedToWork");
+		}
+		if( instance.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
 		
-		if( "1".equals(instanceRef.getSecuopt()) ){
-			IFollower follower = this.findFollowers();
-			boolean isExist = false;
-			while(follower.next()){
-				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						isExist = true;
-						break;
-					}
-				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
-						isExist = true;
-						break;
-					}
-				}
-			}
-			if( !isExist ){
-				throw new MetaworksException("$NotPermittedToWork");
-			}
-		}
 		
 		return super.popupAddFollower();
 	}
