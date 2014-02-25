@@ -10580,6 +10580,7 @@ OG.shape.bpmn.A_Task = function (label) {
 	this.LoopType = "None";
 	this.TaskType = "None";
 	this.status = "None";
+	this.errorType = "None";
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
@@ -15378,6 +15379,8 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 			this.drawTaskType(groupNode);
 		if(groupNode.shape.status != 'None')
 			this.drawStatus(groupNode);
+		if(groupNode.shape.errorType != 'None')
+			this.drawErrorType(groupNode);
     }
 	
 	if(shape instanceof OG.shape.HorizontalLaneShape
@@ -16797,7 +16800,6 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 			}
 		}
 	};
-
 	if (element && element.shape.geom) {
 		switch ($(element).attr("_shape")) {
 		case OG.Constants.SHAPE_TYPE.GEOM:
@@ -16864,6 +16866,8 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 				this.drawTaskType(element);
 			if(element.shape.status != 'None')
 				this.drawStatus(element);
+			if(element.shape.errorType != 'None')
+				this.drawErrorType(element);
         }
 
 		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
@@ -16872,7 +16876,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
             collapseObj = this.drawButton(element);
         }
 	}
-
+	
 	// redrawShape event fire
 	$(this._PAPER.canvas).trigger('redrawShape', [element]);
 
@@ -18112,6 +18116,34 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
     	rElement.prependChild(_rect);
     }
     
+	return null;
+};
+
+OG.renderer.RaphaelRenderer.prototype.drawErrorType = function (element) {
+	
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+		geometry = rElement ? rElement.node.shape.geom : null,
+		envelope, _upperLeft, _bBoxRect, _rect,
+		_size = me._CONFIG.COLLAPSE_SIZE,
+		_hSize = _size / 2;
+
+	_rect = this._getREleById(rElement.id + OG.Constants.STATUS_SUFFIX);
+	if (_rect) {
+		this._remove(_rect);
+	}
+
+	envelope = geometry.getBoundary();
+	_upperRight = envelope.getUpperRight();
+
+    switch(element.shape.errorType){
+    case "error":
+        _rect = this._PAPER.image("images/activity_status/i_status_CANCELLED.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
+        break;
+    }
+
+	this._add(_rect, rElement.id + OG.Constants.STATUS_SUFFIX);
+	_rect.insertAfter(rElement);
+	rElement.appendChild(_rect);
 	return null;
 };
 
@@ -22584,10 +22616,16 @@ OG.handler.EventHandler.prototype = {
             }
 		});
 	},
+	
+	setErrorType: function (element, errorType) {
+		var me = this;
+		element.shape.errorType = errorType;
+		me._RENDERER.redrawShape(element);
+	},
 
     /*
     setCollapseSelectedShape: function (collapse) {
-		var me = this;
+		
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
             if(item.shape.SHAPE_ID == "OG.shape.bpmn.A_Task" || item.shape.SHAPE_ID == "OG.shape.bpmn.Value_Chain"){
                 item.shape.HaveButton = collapse;
@@ -23715,7 +23753,11 @@ OG.graph.Canvas.prototype = {
 
 		return element;
 	},
-
+	
+	setErrorType: function (element, errorType) {
+		this._HANDLER.setErrorType(element, errorType);
+	},
+	
 	/**
 	 * Shape 의 스타일을 변경한다.
 	 *
