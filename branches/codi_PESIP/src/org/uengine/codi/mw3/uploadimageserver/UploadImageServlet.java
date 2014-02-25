@@ -49,11 +49,11 @@ public class UploadImageServlet extends HttpServlet {
 	    	out.print("File Upload Fail");
 	    
 	    } else {  // 파일이 업로드 되었을때
-	    	
 	    	fileName = new String(fileName.getBytes());
 	    	
 	    	// 파일명 변경 (현재 시간)
 	    	File originalFile = new File(uploadPath + "/" + fileName);
+	    	
 	    	// request 파일의 확장자를 기억하고 있어야 한다. (확장자로 이미지 파일 판단.)
 	    	int extPosition = fileName.lastIndexOf(".");
 	    	String fileExt = fileName.substring(extPosition + 1); 
@@ -68,7 +68,9 @@ public class UploadImageServlet extends HttpServlet {
 	        String responseURL = request.getRequestURL().toString().replaceAll(REQUEST_URL, "") + UPLOAD_FOLDER_NAME + "/" + changedFile.getName();
 	        
 	        // 파일 확장자가 jpeg, jpg, png, gif가 아니면 그냥 엑박을 띄워도 되니 업로드만 하고 미리보기 지원하지 않아도 된다. 파일만 업로드.
-	        if(fileExt.equals("png") || fileExt.equals("jpeg") || fileExt.equals("jpg") || fileExt.equals("gif")) {
+	        if(fileExt.equals("png") || fileExt.equals("jpeg") || fileExt.equals("jpg") || fileExt.equals("gif") ||
+	        	fileExt.equals("PNG") || fileExt.equals("JPEG") || fileExt.equals("JPG") || fileExt.equals("GIF")) {
+	        	
 	        	out.println("<script type=\"text/javascript\">");  
 	        	out.println("	window.parent.CKEDITOR.tools.callFunction('"+callBackId+"', '"+responseURL+"', 'Image Upload complete'); "); //CKEDITOR API  
 	        	out.println("</script>");
