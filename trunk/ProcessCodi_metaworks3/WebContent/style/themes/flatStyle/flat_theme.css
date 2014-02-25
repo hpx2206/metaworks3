@@ -649,7 +649,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 .instance_select{margin:0 0 0 0 !important;border-left:0px;border-bottom:0px;background:#FFDD56 !important}
 
 
-.InstanceViewPanel{background:#eaeced}
+.InstanceViewPanel{background:#fff}
 .instanceName{background:#eaeced}
 /* table */
 .tbl_type_out,.tbl_type_out th,.tbl_type_out td{border:0}
