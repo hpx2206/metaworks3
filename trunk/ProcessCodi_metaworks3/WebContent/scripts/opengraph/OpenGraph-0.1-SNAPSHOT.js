@@ -20765,11 +20765,16 @@ OG.handler.EventHandler.prototype = {
 	setDragSelectable: function (isSelectable) {
 		var me = this, rootEle = me._RENDERER.getRootElement();
 
+		// 배경클릭한 경우 deselect 하도록
+		$(rootEle).bind("click", function (event) {
+			me.deselectAll();
+			me._RENDERER.removeRubberBand(rootEle);
+		});
+
 		if (isSelectable === true) {
 			// 마우스 영역 드래그하여 선택 처리
 			$(rootEle).bind("mousedown", function (event) {
 				var eventOffset = me._getOffset(event);
-				me.deselectAll();
 				$(this).data("dragBox_first", { x: eventOffset.x, y: eventOffset.y});
 				//me._RENDERER.drawRubberBand([eventOffset.x, eventOffset.y]);
 			});
@@ -20817,9 +20822,6 @@ OG.handler.EventHandler.prototype = {
 						$(this).data("dragBox", {"width": width, "height": height, "x": x, "y": y});
 					}
 					$(this).data("rubber_band_status","none");
-				}
-				else{
-					$(this).removeData("dragBox_first");
 				}
 			});
 
