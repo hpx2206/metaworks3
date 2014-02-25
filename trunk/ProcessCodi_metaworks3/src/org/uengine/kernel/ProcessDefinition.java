@@ -1129,5 +1129,12 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
 			this.processDesignerInstanceId = processDesignerInstanceId;
 		}
+	Object GraphicInfo;
+		public Object getGraphicInfo() {
+			return GraphicInfo;
+		}
+		public void setGraphicInfo(Object graphicInfo) {
+			GraphicInfo = graphicInfo;
+		}
 }
 

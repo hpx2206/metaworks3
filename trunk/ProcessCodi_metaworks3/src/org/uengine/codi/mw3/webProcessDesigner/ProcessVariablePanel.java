@@ -123,7 +123,9 @@ public class ProcessVariablePanel implements ContextAware{
 	public Object editVariable(){
 		int selectedIdx = variableList.indexOf(editedProcessVariable);
 		ProcessVariable processVariable = variableList.get(selectedIdx);
-		
+		processVariable.setCurrentEditorId(this.getParentEditorId());
+		processVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		processVariable.getMetaworksContext().setHow("setting");
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setWidth(400);
 		modalWindow.setHeight(400);

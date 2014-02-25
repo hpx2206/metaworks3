@@ -16,6 +16,7 @@ import org.uengine.kernel.ScopeActivity;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.designer.web.ActivityView;
+import org.uengine.kernel.designer.web.GraphicView;
 import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.kernel.designer.web.ValueChainView;
 import org.uengine.kernel.graph.Transition;
@@ -57,6 +58,21 @@ public class ProcessDesignerContainer {
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
+	ArrayList<GraphicView> graphicList;
+		public ArrayList<GraphicView> getGraphicList() {
+			return graphicList;
+		}
+		public void setGraphicList(ArrayList<GraphicView> graphicList) {
+			this.graphicList = graphicList;
+		}
+	ArrayList<GraphicView> graphicLineList;
+		public ArrayList<GraphicView> getGraphicLineList() {
+			return graphicLineList;
+		}
+		public void setGraphicLineList(ArrayList<GraphicView> graphicLineList) {
+			this.graphicLineList = graphicLineList;
+		}
+		
 	RolePanel	rolePanel;
 		public RolePanel getRolePanel() {
 			return rolePanel;
@@ -109,6 +125,8 @@ public class ProcessDesignerContainer {
 		transitionList = new ArrayList<Transition>();
 		valueChainList = new ArrayList<ValueChain>();
 		roleList = new ArrayList<Role>();
+		graphicList = new ArrayList<GraphicView>();
+		graphicLineList = new ArrayList<GraphicView>();
 		
 		rolePanel = new RolePanel();
 		rolePanel.getMetaworksContext().setHow("menu");
@@ -173,6 +191,19 @@ public class ProcessDesignerContainer {
 				rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 			}
 		}
+		if( def.getGraphicInfo() != null ){
+			ArrayList<GraphicView> list = (ArrayList<GraphicView>)def.getGraphicInfo();
+			// load 하는 시점에 도형은 선보다 먼저 그려져야 한다. 그리하여 객체를 나눔
+			for(int p=0; p < list.size(); p++){
+				list.get(p).setEditorId(getEditorId());
+				if( "EDGE".equalsIgnoreCase(list.get(p).getShapeType())){
+					graphicLineList.add(list.get(p));
+				}else{
+					graphicList.add(list.get(p));
+				}
+			}
+		}
+		
 		ArrayList<ProcessVariable> pvList = processVariablePanel.getVariableList();
 		ProcessVariable[] processVariables = def.getProcessVariables();
 		for(int i=0; i < processVariables.length; i++){
@@ -235,22 +266,6 @@ public class ProcessDesignerContainer {
 		def.setRoles(roles);
 		if( activityList != null ){
 			for(Activity act : activityList){
-				if( act instanceof ScopeActivity){
-					if( ((ScopeActivity) act).getChildActivities() != null ){
-						ArrayList<Activity> childs = new ArrayList<Activity>(); 
-						for(Activity sact : ((ScopeActivity) act).getChildActivities()){
-							childs.add(this.fillVariableType(sact));
-						}
-						((ScopeActivity) act).setChildActivities(childs);
-					}
-					if( ((ScopeActivity) act).getTransitions() != null ){
-						for(Transition ts : ((ScopeActivity) act).getTransitions()){
-							if(transitionList.contains(ts)){
-								transitionList.remove(ts);
-							}
-						}
-					}
-				}
 				def.addChildActivity(this.fillVariableType(act));
 			}
 		}
@@ -266,6 +281,9 @@ public class ProcessDesignerContainer {
 			for(Transition ts : transitionList){
 				def.addTransition(ts);
 			}
+		}
+		if( graphicList != null && graphicList.size()>0){
+			def.setGraphicInfo(graphicList);
 		}
 		
 		if( processVariablePanel.getVariableList() != null ){
@@ -380,6 +398,28 @@ public class ProcessDesignerContainer {
 				}
 			}
 			((ReceiveActivity)activity).setParameters(contexts);
+		}
+		if( activity instanceof ScopeActivity){
+			/*
+			 * 스콥엑티비티안쪽에 재귀 호출을 하면서 childactivity의 변수를 정리한다.
+			 */
+			if( ((ScopeActivity) activity).getChildActivities() != null ){
+				ArrayList<Activity> childs = new ArrayList<Activity>(); 
+				for(Activity sact : ((ScopeActivity) activity).getChildActivities()){
+					childs.add(this.fillVariableType(sact));
+				}
+				((ScopeActivity) activity).setChildActivities(childs);
+			}
+			/*
+			 * definition 에 있는 transition에 있으면 제거를 하고 스콥엑티비티 안쪽에서 선정보를 들고있는다.
+			 */
+			if( ((ScopeActivity) activity).getTransitions() != null ){
+				for(Transition ts : ((ScopeActivity) activity).getTransitions()){
+					if(transitionList.contains(ts)){
+						transitionList.remove(ts);
+					}
+				}
+			}
 		}
 		return activity;
 	}

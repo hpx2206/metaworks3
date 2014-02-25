@@ -460,6 +460,9 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] apply(){
 		if( rolePanel != null ){
+			if ( this.getDisplayName() == null || "".equals(this.getDisplayName().getText())){
+				this.setDisplayName(this.getName());
+			}
 			ArrayList<Role> roles = rolePanel.getRoleList();
 			for(int i=0; i < roles.size() ; i++){ 
 				if( roles.get(i).equals(this) ){

@@ -24,7 +24,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 	this.canvasObjectId = canvasObject.__objectId;
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	this.canvas = canvasObjectFaceHelper.icanvas;
-	
+	this.element;
 };
 
 org_uengine_kernel_designer_web_ActivityView.prototype = {
@@ -80,7 +80,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				
 				object.element = null;
 			}
-			
+			this.element = element;
         	if( typeof object.activityClass != 'undefined'){
 	        	$(element).unbind('dblclick');
 	        	$(element).on({
@@ -214,6 +214,15 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         					} 
         					
         					break;
+						case 'org.uengine.codi.mw3.ide.libraries.ProcessNode':
+							switch (clipboardNode.type) {
+								case 'process':
+								    console.log('1');
+									break;
+								default:
+									break;
+							}
+        					break;
         				default:
         					break;
         				
@@ -253,5 +262,11 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 					}
 			    });
 			}
+		},
+		validation : function(errorType){
+			var EMPTY_ROLE = 'emptyRole';
+			var EMPTY_TRACINGTAG = 'emptyTracingTag';
+			console.log(this.element);
+			mw3.alert(errorType);
 		}
 };

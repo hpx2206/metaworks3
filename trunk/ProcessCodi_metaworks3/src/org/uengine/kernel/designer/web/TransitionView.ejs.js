@@ -22,7 +22,7 @@ var org_uengine_kernel_designer_web_TransitionView = function(objectId, classNam
 	}
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	this.canvas = canvasObjectFaceHelper.icanvas;
-	
+	this.element;
 };
 
 org_uengine_kernel_designer_web_TransitionView.prototype = {
@@ -65,13 +65,15 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 //				
 				var fromTracingTag = $(fromElement).attr('_tracingTag');
 				var toTracingTag = $(toElement).attr('_tracingTag');
-				var transitionData = {
-						__className : 'org.uengine.kernel.graph.Transition', 
-						source : fromTracingTag,
-						target : toTracingTag
-				};
-				$(element).data('transition', transitionData);
-				object.transition = transitionData;
+				if( fromTracingTag && toTracingTag){
+					var transitionData = {
+							__className : 'org.uengine.kernel.graph.Transition', 
+							source : fromTracingTag,
+							target : toTracingTag
+					};
+					$(element).data('transition', transitionData);
+					object.transition = transitionData;
+				}
 				object.element = null;
 			}
 			object.id = $(element).attr('id');
@@ -92,5 +94,11 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
                 $(element).unbind('dblclick').bind('dblclick' , function(event){
                 });
             }
-		}
+		},
+        validation : function(errorType){
+            var EMPTY_CONNECTION = 'cantFindActivity';
+			if( errorType == EMPTY_CONNECTION){
+	            mw3.alert('선의 연결정보가 없습니다.');
+			}
+        }
 };

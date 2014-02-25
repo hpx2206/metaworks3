@@ -8,7 +8,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessViewer = function(objectId, c
 	var object = mw3.objects[this.objectId];
 	
 	if(object){
-		mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js');
 		mw3.importScript('scripts/jquery/jquery.contextMenu.js');
 		mw3.importStyle('style/jquery/jquery.contextMenu.css');
 		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');

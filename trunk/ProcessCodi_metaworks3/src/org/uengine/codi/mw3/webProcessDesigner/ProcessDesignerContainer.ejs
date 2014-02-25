@@ -33,4 +33,18 @@
            <%
         }
     }
+    if( value && value.graphicList ){
+        for(var i in value.graphicList){
+           %>
+           <%=mw3.locateObject(value.graphicList[i] , value.graphicList[i].__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
+           <%
+        }
+    }
+    if( value && value.graphicLineList ){
+        for(var i in value.graphicLineList){
+           %>
+           <%=mw3.locateObject(value.graphicLineList[i] , value.graphicLineList[i].__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
+           <%
+        }
+    }
 %>
