@@ -109,6 +109,9 @@
 		<!-- popup -->
  		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
 		
+		<!-- for open graph -->
+		<script type="text/javascript" src="scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js"></script>
+		
 	    <!-- for open presentation -->
 	    <link rel="stylesheet" type="text/css" href="scripts/presentation/jmpressStyle.css" />
 		<script type="text/javascript" src="scripts/presentation/jmpress.all.js"></script>
@@ -373,8 +376,8 @@
                 
 				dwr.engine.setErrorHandler(function(errorString, exception){
 					if(console){
-						console.log(errorString);
-						console.log(exception);
+						//console.log(errorString);
+						//console.log(exception);
 					}
 					
 					if(errorString && errorString.length > 0)
