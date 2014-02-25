@@ -7,6 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.contexts.SubProcessContext;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ParameterContextPanel;
@@ -40,6 +41,11 @@ public class ActivityWindow  {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] apply(){
 		Activity activity = activityPanel.getActivity();
+		if ( activity.getDescription() == null || "".equals(activity.getDescription().getText())){
+			TextContext desc = new TextContext();
+			desc.setText(activity.getName().getText());
+			activity.setDescription(desc);
+		}
 		Documentation document = activityPanel.getDocument();
 		if( document != null ){
 			MetaworksFile file1 = document.getAttachfile1();

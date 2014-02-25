@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -18,8 +19,12 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Order;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
 import org.uengine.contexts.ComplexType;
@@ -42,7 +47,10 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 	String name;
 	@Id
-	@Face(displayName="변수 이름")
+	@Order(1)
+	@ValidatorSet({
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="변수이름을 입력하세요."),
+	})
 		public String getName() {
 			return name;
 		}
@@ -51,7 +59,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	TextContext displayName = TextContext.createInstance();
-	@Face(displayName="변수 설명")
+	@Order(2)
 		public TextContext getDisplayName(){
 			if(displayName.getText()==null){
 				TextContext result = TextContext.createInstance();
@@ -95,6 +103,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 		
 	transient String typeInputter;
+		@Order(3)
 		@Range(options={"Text", "Complex"}, values={"java.lang.String", "org.uengine.contexts.ComplexType"})
 		public String getTypeInputter() {
 			return typeInputter;
@@ -183,6 +192,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	Object defaultValue = null;
+	@Order(4)
 		public Object getDefaultValue() {
 			return defaultValue;
 		}
@@ -213,6 +223,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 	public ProcessVariable(){
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		this.setDefaultValue(new String());
 	}
 
 	//review: The return object of this method is only for scripting users to indicate certain process variable
@@ -408,9 +419,13 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.editorId")
 	transient public ProcessVariablePanel wholeProcessVariablePanel;
 	
-	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND, validate=true)
 	@Face(displayName="$Save")
 	public Object[] saveVariable() throws Exception{
+		if ( this.getDisplayName() == null || "".equals(this.getDisplayName().getText())){
+			this.setDisplayName(this.getName());
+		}
+		
 		ArrayList<Object> returnList = new ArrayList<Object>();
 		returnList.add(new Remover(new ModalWindow() , true));
 		

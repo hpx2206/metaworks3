@@ -4,15 +4,17 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessVariablePanel = function(obje
 	this.className = className;
 	
 	this.clickedVariable = '';
-	
-	$('.variableTr').dblclick(function() {
-		var dblclickedVarable = {
-				__className : 'org.uengine.kernel.ProcessVariable',
-				name : this.clickedVariable
-		};
-		var object = mw3.objects[this.objectId];
-		object.editedProcessVariable = dblclickedVarable;
-		object.editVariable();
+	$('.variableTr').dblclick(function(event) {
+		var faceHelper = mw3.faceHelpers[objectId];
+		if( faceHelper.clickedVariable != '' && faceHelper.clickedVariable != null && faceHelper.clickedVariable != 'undefined'){
+			var dblclickedVarable = {
+					__className : 'org.uengine.kernel.ProcessVariable',
+					name : faceHelper.clickedVariable
+			};
+			var object = mw3.objects[objectId];
+			object.editedProcessVariable = dblclickedVarable;
+			object.editVariable();
+		}
 	});
 	
 };

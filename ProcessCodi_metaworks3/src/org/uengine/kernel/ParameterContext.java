@@ -123,6 +123,11 @@ public class ParameterContext implements Serializable , ContextAware{
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="$Save")
 	public Object[] saveVariable() throws Exception{
+		if ( this.getArgument() == null || "".equals(this.getArgument().getText())){
+			TextContext desc = new TextContext();
+			desc.setText(((SelectBox)this.getType()).getSelected());
+			this.setArgument(desc);
+		}
 		ArrayList<Object> returnList = new ArrayList<Object>();
 		returnList.add(new Remover(new ModalWindow() , true));
 		

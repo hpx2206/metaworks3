@@ -62,7 +62,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 	var object = mw3.objects[this.objectId];
 	
 	if(object){
-		mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js');
 		mw3.importScript('scripts/jquery/jquery.contextMenu.js');
 		mw3.importStyle('style/jquery/jquery.contextMenu.css');
 //		mw3.importScript('scripts/jquery/jquery-tooltip.js');
@@ -151,7 +150,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	            	var viewclass = shapeInfo._viewclass;
 	            	var activityclass = shapeInfo._classname;
 	            	if( typeof viewclass == 'undefined' ){
-	            		viewclass = "org.uengine.kernel.designer.web.ActivityView";
+	            		viewclass = "org.uengine.kernel.designer.web.GraphicView";
 	            	}
 	            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
 	            	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
@@ -228,12 +227,26 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 				connected = true;
 			}
 	    	if( $(edgeElement).data('transition') == undefined && !connected ){
-	    		var transitionView = {
-						__className : 'org.uengine.kernel.designer.web.TransitionView',
-						drawByCanvas : true,
-						editorId : object.alias,
-						element : edgeElement
-	    		};
+				var fromTrcingTag = $(fromElement).attr('_tracingTag');
+				var toTrcingTag = $(toElement).attr('_tracingTag');
+				var transitionView;
+				if( fromTrcingTag && toTrcingTag ){
+					// from과 to 가 모두 엑티비티인 경우만 transition 으로 데이터를 넣는다.
+		    		transitionView = {
+							__className : 'org.uengine.kernel.designer.web.TransitionView',
+							drawByCanvas : true,
+							editorId : object.alias,
+							element : edgeElement
+		    		};
+				}else{
+					transitionView = {
+                            __className : 'org.uengine.kernel.designer.web.GraphicView',
+                            editorId : object.alias,
+							drawByCanvas : true,
+							shapeType : 'EDGE',
+							element : edgeElement
+                    };
+				}
 	    		var html = mw3.locateObject(transitionView , transitionView.____className);
             	canvasDivObj.append(html);
             	
@@ -457,11 +470,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	var roleList = [];
 	var transitionList = [];
 	var valueChainList = [];
-	
-	var activityIdx = 0;
-	var roleIdx = 0;
-	var transitionIdx = 0;
-	var valueChainIdx = 0;
+	var graphicList = [];
+	var graphicIdx = 0;
 	
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
@@ -523,24 +533,34 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 				cellForDwr['childs'] = og[key];
 			}
 		}
-		console.log(cellForDwr);
 		var $id = $('#'+og['@id']);
-		if( og['@shapeType'] != 'EDGE'){
-			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
-			cellForDwr['__className'] = $id.attr('_viewClass');
-			cellForDwr['activityClass'] = $id.attr('_classname');
-			cellForDwr['classType'] = $id.attr('_classType');
-			//set Activity
-			activityList = this.activitySetting($id, cellForDwr, activityList);
-			//set ValueChain
-			roleList     = this.roleSetting($id, cellForDwr, roleList);
-			//set ValueChain
-			valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList);
-		}
-		if( og['@shapeType'] == 'EDGE'){
-			transitionList = this.transitionSetting($id, cellForDwr, transitionList);
+		var viewClass = $id.attr('_viewClass');
+		// 그래픽 정보만 저장을 할 경우
+		if( viewClass == 'org.uengine.kernel.designer.web.GraphicView' ){
+			graphicList[graphicIdx++] = cellForDwr;
+        }else{
+			if( og['@shapeType'] != 'EDGE'){
+				var tracingTag = $id.attr('_tracingTag');
+				cellForDwr['tracingTag'] = tracingTag;
+				cellForDwr['__className'] = viewClass;
+				cellForDwr['activityClass'] = $id.attr('_classname');
+				cellForDwr['classType'] = $id.attr('_classType');
+				// set Activity
+				activityList = this.activitySetting($id, cellForDwr, activityList);
+				// set ValueChain
+				valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList);
+				// set Role
+				roleList     = this.roleSetting($id, cellForDwr, roleList);
+			}
+			if( og['@shapeType'] == 'EDGE'){
+				transitionList = this.transitionSetting($id, cellForDwr, transitionList);
+			}
 		}
 	}
+	
+	// validation
+	this.tracingTagValidate(activityList, transitionList);
+	
 	var object = mw3.objects[this.objectId];
 	var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel@'+object.alias);
 	
@@ -550,6 +570,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			transitionList : transitionList,
 			valueChainList : valueChainList,
 			roleList : roleList,
+			graphicList : graphicList,
 			processVariablePanel : processVariablePanel
 	};
 	object.processDesignerContainer = container;
@@ -566,13 +587,17 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
         var classType = idDiv.attr('_classType');
         activity.activityView = cellForDwr;
         if(classType == 'Activity' ){
-            // TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
-            if( cellForDwr.swimlane && (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity')){
-                var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
-                if( parentRoleId != null ){
-                    var role = $('#'+parentRoleId).data('role');
-                    activity.role = role;
-                }
+            if( classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity'){
+				if( cellForDwr.swimlane ){
+	                var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
+	                if( parentRoleId != null ){
+	                    var role = $('#'+parentRoleId).data('role');
+	                    activity.role = role;
+					}
+				}else{
+					var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
+					actViewObj.__faceHelper.validation('emptyRole');
+				}
             }
             if(cellForDwr.parent){
                 // 스콥에만 해당시키고 definition 에는 포함안시키기 위하여 
@@ -638,6 +663,33 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.tr
         transition.transitionView = cellForDwr;
     }
 	return list;
+};
+/**
+ * 엑티비티와 트렌지션정보를 받아서 트레이싱태그가 누락이 된건 없는지 체크를 하여준다.
+ * @param {Object} activityList
+ * @param {Object} transitionList
+ */
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.tracingTagValidate = function(activityList, transitionList){
+	var tracingMap = new HashMap();
+	for(var i=0; i < activityList.length; i++){
+		try{
+			tracingMap.put(activityList[i].tracingTag , activityList[i]);
+		}catch(e){
+			var actViewObj = mw3.getAutowiredObject(activityList[i].activityView.__className +'@'+activityList[i].activityView.id);
+            actViewObj.__faceHelper.validation('emptyTracingTag');
+		}
+	}
+	for(var j=0; j < transitionList.length; j++){
+		// TODO 일부러 분리함... source와 target별로 엑티비티도 변경해야 할듯
+		if( !tracingMap.containsKey(transitionList[j].source) ){
+			var actViewObj = mw3.getAutowiredObject(transitionList[j].transitionView.__className +'@'+transitionList[j].transitionView.id);
+            actViewObj.__faceHelper.validation('cantFindActivity');
+		}
+		if( !tracingMap.containsKey(transitionList[j].target) ){
+			var actViewObj = mw3.getAutowiredObject(transitionList[j].transitionView.__className +'@'+transitionList[j].transitionView.id);
+            actViewObj.__faceHelper.validation('cantFindActivity');
+		}
+	}
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.startLoading = function(){

@@ -11,7 +11,7 @@
                 <table style="width: 100%;" border="1" cellspacing="0" > 
                     <tbody>
                     <tr>
-                        <th>name</th>
+                        <th style="padding-left:5px;">name</th>
                         <th width="100">데이타형식</th>
                         <th>프로세스 변수 이름</th>
                     </tr>
@@ -21,7 +21,7 @@
                                 var variableName = value.variableList[i].name;
                     %>
                                 <tr class="variableTr <%= variableName %>_<%= objectId %>" onclick="mw3.getFaceHelper(<%=objectId%>).clickedItem('<%= variableName %>');">
-                                    <td class="variablePanel_td"><%= variableName %></td>
+                                    <td class="variablePanel_td"  style="padding-left:5px;"><%= variableName %></td>
                                     <td class="variablePanel_td"><%= value.variableList[i].typeInputter %></td>
                                     <td class="variablePanel_td"><%= value.variableList[i].displayName != null ?  value.variableList[i].displayName.text : '' %></td>
                                 </tr>
