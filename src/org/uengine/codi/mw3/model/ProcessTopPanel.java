@@ -1,10 +1,7 @@
 package org.uengine.codi.mw3.model;
 
-import javax.xml.ws.ServiceMode;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -122,10 +119,9 @@ public class ProcessTopPanel {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow exportConsulting() {
-		ServiceChoicePanel serviceChoicePanel = new ServiceChoicePanel();
+		ConsultingServiceChoicePanel serviceChoicePanel = new ConsultingServiceChoicePanel();
 		serviceChoicePanel.session = session;
-		serviceChoicePanel.setSelfTest("셀프 테스트 서비스");
-		serviceChoicePanel.setRegionMatching("국가 매칭 서비스");
+		serviceChoicePanel.load();
 
 		ModalWindow modalWindow = new ModalWindow(serviceChoicePanel, 250, 200, "서비스 선택");
 		
