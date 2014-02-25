@@ -275,6 +275,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 		    	var activityView = {
 						__className : $(shapeElement).attr('_viewclass'),
 						element : shapeElement,
+						editorId : object.alias,
 						activityClass : $(shapeElement).attr('_classname'),
 						drawByCanvas : true
 		    	};
@@ -463,6 +464,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.fi
 	return null;
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.getValue = function(){
+	console.log('getValue call');
 	var graphJson = this.icanvas.toJSON();
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;

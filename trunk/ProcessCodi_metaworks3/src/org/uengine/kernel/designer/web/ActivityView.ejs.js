@@ -266,7 +266,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 		validation : function(errorType){
 			var EMPTY_ROLE = 'emptyRole';
 			var EMPTY_TRACINGTAG = 'emptyTracingTag';
-			console.log(this.element);
+//			console.log(this.element);
 			mw3.alert(errorType);
 		}
 };
