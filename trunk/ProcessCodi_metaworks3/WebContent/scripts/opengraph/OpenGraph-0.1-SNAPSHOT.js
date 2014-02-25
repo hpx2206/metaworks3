@@ -20767,8 +20767,10 @@ OG.handler.EventHandler.prototype = {
 
 		// 배경클릭한 경우 deselect 하도록
 		$(rootEle).bind("click", function (event) {
-			me.deselectAll();
-			me._RENDERER.removeRubberBand(rootEle);
+			if(!$(this).data("dragBox")){
+				me.deselectAll();
+				me._RENDERER.removeRubberBand(rootEle);
+			}
 		});
 
 		if (isSelectable === true) {
@@ -20776,6 +20778,7 @@ OG.handler.EventHandler.prototype = {
 			$(rootEle).bind("mousedown", function (event) {
 				var eventOffset = me._getOffset(event);
 				$(this).data("dragBox_first", { x: eventOffset.x, y: eventOffset.y});
+				$(this).removeData("dragBox");
 				//me._RENDERER.drawRubberBand([eventOffset.x, eventOffset.y]);
 			});
 			$(rootEle).bind("mousemove", function (event) {
@@ -20793,7 +20796,7 @@ OG.handler.EventHandler.prototype = {
 						
 						x = width <= 0 ? first.x + width : first.x;
 						y = height <= 0 ? first.y + height : first.y;
-						me._RENDERER.drawRubberBand([x, y], [Math.abs(width + 10), Math.abs(height + 10)]);						
+						me._RENDERER.drawRubberBand([x, y], [Math.abs(width), Math.abs(height)]);						
 					}
 				}
 			});
