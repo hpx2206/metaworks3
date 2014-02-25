@@ -3138,7 +3138,7 @@ legend {display:none;}
 
 .formcontexttitle { position:relative; padding:0px;  font-size:13px;  border-bottom:1px dotted #ccc;margin-top:2px; margin-bottom:5px; font-weight:bold;}
 .formcontexttitle span{float:left; vertical-align: middle; line-height:34px; }
-
+.formcontexttitle .wih_title{word-break: break-word}
 .commentTailRight {position:absolute; top:5px; right:0px;}
 .commentTailLeft {position:absolute; top:5px; left:0px;}
 
@@ -3626,6 +3626,7 @@ legend {display:none;}
 
       .workItem_tabs .current a {
               background-position:0% -42px;
+			  font-weight:bolder;
       }
       .workItem_tabs .current a span {
               background-position:100% -42px;
