@@ -10,6 +10,7 @@ public class CodiStatusUtil {
 	public final static String STATUS_READY 	= "ready";
 	public final static String STATUS_QUEUE 	= "queue";
 	public final static String STATUS_COMPLETE 	= "complete";
+	public final static String STATUS_ERROR 	= "error";
 
 	String statusFolderPath;
 		public String getStatusFolderPath() {
@@ -87,4 +88,12 @@ public class CodiStatusUtil {
 		
 		srcFile.renameTo(dstFile);		
 	}
+	
+	public void error(){
+		File srcFile = new File(this.makeFilePath(STATUS_QUEUE));
+		File dstFile = new File(this.makeFilePath(STATUS_ERROR));
+		
+		srcFile.renameTo(dstFile);		
+	}
+	
 }
