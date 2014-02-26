@@ -386,7 +386,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			rootInstanceRef.setInstId(processMapList.getParentInstanceId());
 			
 			roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
-			roleMappingPanel.putRoleMappings(processManager, instId);
+			roleMappingPanel.putRoleMappings(processManager, processMapList.getParentInstanceId().toString());
 			processManager.executeProcess(instId);
 			
 			String[] executedTaskIds = WorkItemHandler.executedActivityTaskIds(instanceObject);
@@ -450,7 +450,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 						new OtherSessionFilter(notiUsers , session.getUser().getUserId().toUpperCase()),
 						new Object[]{new InstanceListener(parentInstance)});	
 				
-				return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems)};
+				Followers followers = instanceView.getInstanceView().getFollowers();
+				followers.load();
+				
+				return new Object[]{new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CLOSE), new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(followers)};
 			}
 		}
 		
