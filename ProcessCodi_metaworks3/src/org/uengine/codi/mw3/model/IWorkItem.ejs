@@ -22,7 +22,9 @@
 
 			var title = value.title.replace('\n','<br>');
 			var desc = '';
-			
+			var fileMimeType = value.file.mimeType; 
+        	var isPreview = false;
+        
 			if('file' == type)
 				desc = value.majorVer + '.' + value.minorVer;
 			else if('process' == type){
@@ -33,11 +35,17 @@
 				if(!value.workItemHandler || !value.workItemHandler.taskId)
 					collapse = true;
 			}
-											
-			if('file' == type || 'process' == type)
+						
+			if(fileMimeType.indexOf("msdownload") == -1 && ( fileMimeType.indexOf("ms")>=1   || fileMimeType.indexOf("officedocument")>=1 || fileMimeType.indexOf("pdf")>=1) )
+				isPreview = true;
+									
+			if('file' == type){
+				if(isPreview)
+					maximize = true;	
+			}else if('process' == type){
 				maximize = true;
-								
-			maximize = false;
+			}
+			
 			
 			if(session && session.user && session.user.userId == value.writer.userId)
 				isMine = true;
