@@ -410,16 +410,6 @@ public class ProcessDesignerContainer {
 				}
 				((ScopeActivity) activity).setChildActivities(childs);
 			}
-			/*
-			 * definition 에 있는 transition에 있으면 제거를 하고 스콥엑티비티 안쪽에서 선정보를 들고있는다.
-			 */
-			if( ((ScopeActivity) activity).getTransitions() != null ){
-				for(Transition ts : ((ScopeActivity) activity).getTransitions()){
-					if(transitionList.contains(ts)){
-						transitionList.remove(ts);
-					}
-				}
-			}
 		}
 		return activity;
 	}

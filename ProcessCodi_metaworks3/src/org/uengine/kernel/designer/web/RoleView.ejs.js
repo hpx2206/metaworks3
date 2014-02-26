@@ -31,12 +31,12 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
 			var objectId = this.objectId;
 			var canvas = this.canvas;
 			var element = null;
-			var initText;
-			if( object.role ){
-				initText = ( object.role.displayName != null && object.role.displayName.text != null ) ? object.role.displayName.text :  "";
-			}else{
-				initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
-			}
+			var initText = "";
+            if( !(object.label == null || object.label == 'undefined') ){
+                initText = unescape(object.label);
+            }else if( object.role && object.role.description != null && object.role.description.text != null ){
+                initText = object.role.description.text;
+            }
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
 			var style = object.style;
