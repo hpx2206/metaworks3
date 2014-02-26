@@ -77,6 +77,7 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 				object.element = null;
 			}
 			object.id = $(element).attr('id');
+			$(element).attr("_viewClass", object.__className);
 			
 			$(element).unbind('dblclick');
         	$(element).on({

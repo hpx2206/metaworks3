@@ -33,12 +33,13 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			var element = null;
 			var canvas = this.canvas;
 			if( object && !object.drawByCanvas){
-				var initText;
-				if( object.activity ){
-					initText = ( object.activity.description != null && object.activity.description.text != null ) ? object.activity.description.text :  "";
-				}else{
-					initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
+				var initText = "";
+				if( !(object.label == null || object.label == 'undefined') ){
+					initText = unescape(object.label);
+				}else if( object.activity && object.activity.description != null && object.activity.description.text != null ){
+					initText = object.activity.description.text;
 				}
+				
 				var shape = null;
 				if( initText && initText != "" && initText != null){
 					shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
@@ -60,7 +61,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 	        	// object.activityClass : Activity , object.__className : ActivityView
 				
 	        	$(element).attr("_classname", object.activityClass);
-	        	$(element).attr("_viewClass", object.__className);
 	        	$(element).attr("_classType", object.classType);
 	        	$(element).attr("_tracingTag",object.tracingTag);
 	        	if( object.activity ){
@@ -80,6 +80,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				
 				object.element = null;
 			}
+			$(element).attr("_viewClass", object.__className);
 			this.element = element;
         	if( typeof object.activityClass != 'undefined'){
 	        	$(element).unbind('dblclick');
@@ -263,10 +264,8 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			    });
 			}
 		},
-		validation : function(errorType){
-			var EMPTY_ROLE = 'emptyRole';
-			var EMPTY_TRACINGTAG = 'emptyTracingTag';
+		validation : function(message){
 			this.canvas.setErrorType(this.element, 'error');
-			
+			//mw3.alert(message);
 		}
 };

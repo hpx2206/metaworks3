@@ -150,6 +150,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	            	var viewclass = shapeInfo._viewclass;
 	            	var activityclass = shapeInfo._classname;
 	            	if( typeof viewclass == 'undefined' ){
+	            		viewclass = "org.uengine.kernel.designer.web.ActivityView";
+	            	}
+	            	if( typeof activityclass == 'undefined' ){
 	            		viewclass = "org.uengine.kernel.designer.web.GraphicView";
 	            	}
 	            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
@@ -464,7 +467,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.fi
 	return null;
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.getValue = function(){
-	console.log('getValue call');
 	var graphJson = this.icanvas.toJSON();
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
@@ -541,10 +543,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		if( viewClass == 'org.uengine.kernel.designer.web.GraphicView' ){
 			graphicList[graphicIdx++] = cellForDwr;
         }else{
+			cellForDwr['__className'] = viewClass;
 			if( og['@shapeType'] != 'EDGE'){
 				var tracingTag = $id.attr('_tracingTag');
 				cellForDwr['tracingTag'] = tracingTag;
-				cellForDwr['__className'] = viewClass;
 				cellForDwr['activityClass'] = $id.attr('_classname');
 				cellForDwr['classType'] = $id.attr('_classType');
 				// set Activity
@@ -560,8 +562,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		}
 	}
 	
-	// validation
-	this.tracingTagValidate(activityList, transitionList);
+	this.activityValidate(activityList, transitionList);
 	
 	var object = mw3.objects[this.objectId];
 	var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel@'+object.alias);
@@ -575,6 +576,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			graphicList : graphicList,
 			processVariablePanel : processVariablePanel
 	};
+	
 	object.processDesignerContainer = container;
 	if( object.processNameView ){
 		object.processName = $('#processName_' + object.processNameView.__objectId).val();
@@ -589,18 +591,19 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
         var classType = idDiv.attr('_classType');
         activity.activityView = cellForDwr;
         if(classType == 'Activity' ){
-            if( classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity'){
-				if( cellForDwr.swimlane ){
-	                var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
-	                if( parentRoleId != null ){
-	                    var role = $('#'+parentRoleId).data('role');
-	                    activity.role = role;
+            if (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity') {
+				activity.role = null;       // role 정보를 초기화
+				if (cellForDwr.swimlane) {
+					var parentRoleId = this.findSwimlane(cellForDwr.swimlane);
+					if (parentRoleId != null) {
+						var role = $('#' + parentRoleId).data('role');
+						activity.role = role;
 					}
-				}else{
-					var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
-					actViewObj.__faceHelper.validation('emptyRole');
 				}
-            }
+			}else if (classname == 'org.uengine.kernel.ScopeActivity') {
+				activity.childActivities = [];     // child를 초기화
+                activity.transitions = [];         // transition 을 초기화
+			}
             if(cellForDwr.parent){
                 // 스콥에만 해당시키고 definition 에는 포함안시키기 위하여 
                 // 음.. 이렇게 하면 scope 안쪽의 humanActivity 에 롤이 셋팅 안되는 경우가 발생할수 있을듯한데..
@@ -615,18 +618,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
                         var childClassType = $childId.attr('_classType');
 						var childShapType = $childId.attr('_shape');
                         if(childShapType != 'EDGE' && childClassType == 'Activity') {
-                            if( !activity.childActivities ){
-								var actList = [];
-								activity.childActivities = actList;
-                            }
                             activity.childActivities[childLen++] = $childId.data('activity');
                         }
 						if(childShapType == 'EDGE') {
-							if( !activity.transitions ){
-								var trsList = [];
-								activity.transitions = trsList;
-                            }
-                            activity.transitions[childTransitionIdx++] = $childId.data('transition');
+							if( $childId.data('transition') ){
+	                            activity.transitions[childTransitionIdx++] = $childId.data('transition');
+							}
 						}
                     }
                 }
@@ -661,37 +658,66 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.va
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.transitionSetting = function(idDiv, cellForDwr, list){
 	var transition = idDiv.data('transition');
     if( transition ){
-        list[list.length] = transition;
         transition.transitionView = cellForDwr;
+		if (!cellForDwr.parent) {
+			// parent가 있는 경우는 parent 에서 transition을 넣어준다.
+            list[list.length] = transition;		
+		}
     }
 	return list;
 };
 /**
- * 엑티비티와 트렌지션정보를 받아서 트레이싱태그가 누락이 된건 없는지 체크를 하여준다.
+ * 1. 휴먼엑티비티에는 무조건 롤이 포함되어야 한다.
+ * 2. 스콥엑티비티에는 inCommingTransition 이 무조건 있어야 한다.
+ * 3. 서브프로세스는 서브프로세스가 들어있어야한다.
+ * 4. invocationActivity에는 resourceClass가 있어야 한다.
  * @param {Object} activityList
  * @param {Object} transitionList
  */
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.tracingTagValidate = function(activityList, transitionList){
-	var tracingMap = new HashMap();
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.activityValidate = function(activityList, transitionList){
+	var scopeActivity = null;
+	var subprocessActivity = null;
+	var invocationActivity = null;
+	
+	var transitionSource = new HashMap();
+	var transitionTarget = new HashMap();
+	for (var o = 0; o < transitionList.length; o++) {
+	   transitionSource.put(transitionList[o].source , transitionList[o]);
+	   transitionTarget.put(transitionList[o].target , transitionList[o]);
+	}
+	
 	for(var i=0; i < activityList.length; i++){
-		try{
-			tracingMap.put(activityList[i].tracingTag , activityList[i]);
-		}catch(e){
-			var actViewObj = mw3.getAutowiredObject(activityList[i].activityView.__className +'@'+activityList[i].activityView.id);
-            actViewObj.__faceHelper.validation('emptyTracingTag');
+		var activity = activityList[i];
+//		console.log(activity);
+		var classname = activity.__className;
+		if (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity') {
+			if( activity.role == null ){
+				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
+				 actViewObj.__faceHelper.validation('emptyRole');
+			}
+		}
+		if( classname == 'org.uengine.kernel.ScopeActivity'){
+			if( !transitionTarget.containsKey(activity.tracingTag) ){
+				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
+                actViewObj.__faceHelper.validation(' scopeActivity can not execute! ');
+			}
+			// 스콥안쪽에 차일드가 있는지 재귀호출로 체크를 하여준다.
+			this.activityValidate(activity.childActivities, activity.transitions);
+		}
+		if (classname == 'org.uengine.kernel.SubProcessActivity') {
+		    if( !activity.definitionId || activity.definitionId == "" || activity.definitionId == null ){
+				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
+                actViewObj.__faceHelper.validation(' SubProcess definitionId is null ');
+			}
+		}
+		if (classname == 'org.uengine.kernel.InvocationActivity') {
+		    if( !activity.resourceClass || activity.resourceClass == "" || activity.resourceClass == null ){
+                var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
+                actViewObj.__faceHelper.validation(' InvocationActivity resourceClass is null ');
+            }
 		}
 	}
-	for(var j=0; j < transitionList.length; j++){
-		// TODO 일부러 분리함... source와 target별로 엑티비티도 변경해야 할듯
-		if( !tracingMap.containsKey(transitionList[j].source) ){
-			var actViewObj = mw3.getAutowiredObject(transitionList[j].transitionView.__className +'@'+transitionList[j].transitionView.id);
-            actViewObj.__faceHelper.validation('cantFindActivity');
-		}
-		if( !tracingMap.containsKey(transitionList[j].target) ){
-			var actViewObj = mw3.getAutowiredObject(transitionList[j].transitionView.__className +'@'+transitionList[j].transitionView.id);
-            actViewObj.__faceHelper.validation('cantFindActivity');
-		}
-	}
+	
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.startLoading = function(){

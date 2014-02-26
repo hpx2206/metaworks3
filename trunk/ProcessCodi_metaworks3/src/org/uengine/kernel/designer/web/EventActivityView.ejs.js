@@ -30,11 +30,12 @@ org_uengine_kernel_designer_web_EventActivityView.prototype = {
 			var object = mw3.objects[this.objectId];
 			var canvas = this.canvas;
 			var element = null;
-			if( object.activity ){
-				initText = ( object.activity.description != null && object.activity.description.text != null ) ? object.activity.description.text :  "";
-			}else{
-				initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
-			}
+			var initText = "";
+            if( !(object.label == null || object.label == 'undefined') ){
+                initText = unescape(object.label);
+            }else if( object.activity && object.activity.description != null && object.activity.description.text != null ){
+                initText = object.activity.description.text;
+            }
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
 			var style = object.style;
