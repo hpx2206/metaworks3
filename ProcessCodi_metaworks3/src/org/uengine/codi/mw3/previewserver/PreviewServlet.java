@@ -11,12 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.metaworks.Refresh;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.spring.SpringConnectionFactory;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.uengine.codi.mw3.model.FileWorkItem;
+import org.uengine.codi.mw3.model.Preview;
 import org.uengine.codi.util.CodiStatusUtil;
 import org.uengine.kernel.GlobalContext;
 
@@ -85,8 +88,8 @@ public class PreviewServlet extends HttpServlet {
 		FileWorkItem workItem = new FileWorkItem();
 		workItem.setTaskId(taskId);
 
-		if("image".equals(previewType)){	// 처음에 이미지가 호출이 되고 이미지가 호출되는 순간 PDF 가 변환이 되기때문에 pdf 는 isProcessing 체크를 하지 않는다.
-//		if("image".equals(previewType) || "pdf".equals(previewType)){
+//		if("image".equals(previewType)){	// 처음에 이미지가 호출이 되고 이미지가 호출되는 순간 PDF 가 변환이 되기때문에 pdf 는 isProcessing 체크를 하지 않는다.
+		if("image".equals(previewType) || "pdf".equals(previewType)){
 			// 변환진행 여부
 			if(statusUtil.isProcessing()){		// 변환중
 				// 변환완료
@@ -116,6 +119,15 @@ public class PreviewServlet extends HttpServlet {
 						e1.printStackTrace();
 					}
 				}finally{
+					if( !converted ){
+						// 변환 실패시...
+						Preview preview = new Preview();
+						preview.setTaskId(workItem.getTaskId());
+						preview.setGrpTaskId(workItem.getGrpTaskId());
+						preview.setErrorStatus(true);
+						
+						MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
+					}
 					try {
 						tx.releaseResources();
 					} catch (Exception e) {

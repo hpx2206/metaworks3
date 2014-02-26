@@ -266,24 +266,24 @@ public class FileWorkItem extends WorkItem{
 		if(!srcFile.isFile())
 			return false;
 
-//		boolean convert = true;
+		boolean convert = true;
 		String convertedFilePath = targetPath + File.separatorChar + this.makeConvertedFilename();
 
 
-//		if("image".equals(convertType)){
-//			if(this.getExt1() == null){
-//				convert = false;
-//			}
-//		}
+		if("image".equals(convertType)){
+			if(this.getExt1() == null){
+				convert = false;
+			}
+		}
 
-//		if(convert){
+		if(convert){
 			CodiStatusUtil statusUtil = new CodiStatusUtil(targetPath, this.getTaskId() + "_" +  convertType);
 			if(!statusUtil.ready())
 				return false;
 
 			statusUtil.queue();
 
-//			if("pdf".equals(convertType)){
+			if("pdf".equals(convertType)){
 				boolean converted = false;
 
 				if(this.getTool().indexOf("ms") > 0 || this.getTool().indexOf("officedocument") > 0 ||
@@ -329,48 +329,47 @@ public class FileWorkItem extends WorkItem{
 							}
 					}
 				}
-//				if("pdf".equals(convertType)){
-//					if(converted){
-//						Preview preview = new Preview();
-//						preview.setGrpTaskId(this.getGrpTaskId());
-//						preview.setTaskId(this.getTaskId());
-//						preview.setMimeType(convertType);
-//						preview.setConvertStatus("1");
-//	
-//						try {
-//							databaseMe().setExt1(preview.getConvertStatus());
-//						} catch (Exception e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//							return false;
-//						}
-//						MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
-//	//					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
-//					}
-//				}else if("image".equals(convertType)){
-				
+				if(converted){
+					Preview preview = new Preview();
+					preview.setGrpTaskId(this.getGrpTaskId());
+					preview.setTaskId(this.getTaskId());
+					preview.setMimeType(convertType);
+					preview.setConvertStatus("1");
+
 					try {
-						int pageCount = getImageForPdf(convertedFilePath, convertedFilePath);
-	
-						Preview preview = new Preview();
-						preview.setTaskId(this.getTaskId());
-						preview.setGrpTaskId(this.getGrpTaskId());
-						preview.setMimeType("image");
-						preview.setPageCount(String.valueOf(pageCount));
-						preview.setConvertStatus("2");
-	
 						databaseMe().setExt1(preview.getConvertStatus());
-						databaseMe().setExt2(preview.getPageCount());
-	
-						MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
-	//					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
 					} catch (Exception e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 						return false;
 					}
-				
-//				}
-//		}
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
+//					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
+				}
+			}else if("image".equals(convertType)){
+			
+				try {
+					int pageCount = getImageForPdf(convertedFilePath, convertedFilePath);
+
+					Preview preview = new Preview();
+					preview.setTaskId(this.getTaskId());
+					preview.setGrpTaskId(this.getGrpTaskId());
+					preview.setMimeType("image");
+					preview.setPageCount(String.valueOf(pageCount));
+					preview.setConvertStatus("2");
+
+					databaseMe().setExt1(preview.getConvertStatus());
+					databaseMe().setExt2(preview.getPageCount());
+
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
+//					MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(targetUserId), new Object[]{new Refresh(preview)});
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			
+			}
+		}
 
 
 		return true;

@@ -44,6 +44,13 @@ public class Preview {
 		public void setConvertStatus(String convertStatus) {
 			this.convertStatus = convertStatus;
 		}
+	boolean errorStatus;
+		public boolean isErrorStatus() {
+			return errorStatus;
+		}
+		public void setErrorStatus(boolean errorStatus) {
+			this.errorStatus = errorStatus;
+		}
 		
 	public void setPageCountInt(int pageCount) {
 		this.pageCount = Integer.toString(pageCount);
