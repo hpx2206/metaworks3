@@ -14,13 +14,18 @@
 		</div>
 <%		
         var convertMimeType = value.mimeType;
-		if(convertMimeType != null && convertMimeType == 'image'){
-			if(value.convertStatus != null && value.convertStatus == '2')
-				preview = true
-		}else{			
-			if(value.convertStatus != null && (value.convertStatus =='1' || value.convertStatus =='2'))
-				preview = true
-		}
+        if(convertMimeType != null && convertMimeType == 'image'){
+            if(value.convertStatus != null && value.convertStatus == '2')
+                preview = true
+        }else{          
+            if(value.convertStatus != null && (value.convertStatus =='1' || value.convertStatus =='2'))
+                preview = true
+        }
+        var errorFlag = value.errorStatus;
+        if( convertMimeType == 'pdf' && value.convertStatus =='1' && errorFlag ){
+            errorFlag = false;
+        }
+        
 		
 		if(!preview){
 %>
@@ -30,13 +35,13 @@
 			<br />
 			<li></li>
 			<%
-			if(value.errorStatus){
+			if(errorFlag){
 			%>
-			<li><br /><br /> <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> 변환중에 오류가 발생하였습니다. 관리자에게 문의해주세요.</div> </li>
+			     <li><br /><br /> <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> 변환중에 오류가 발생하였습니다. 관리자에게 문의해주세요.</div> </li>
 			<%
 			}else{
 			%>
-			<li><br /><br /><b><%=mw3.localize('$PreviewLoading')%> </b><br /><br /> <img src="dwr/metaworks/images/circleloading.gif" /></li>
+			     <li><br /><br /><b><%=mw3.localize('$PreviewLoading')%> </b><br /><br /> <img src="dwr/metaworks/images/circleloading.gif" /></li>
 			<%
 			}
 			%>
@@ -44,10 +49,11 @@
 		</div>
 <%
 		}
-		if(convertMimeType != null && convertMimeType == 'image'){
+		if(!errorFlag){
+		  if(convertMimeType != null && convertMimeType == 'image'){
 			if(!preview){
 %>
-		<img style="display:none" src="preview/<%=value.taskId%>.image" />
+		      <img style="display:none" src="preview/<%=value.taskId%>.image" />
 <%
 			}else{
 				if(value.pageCount != null){
@@ -69,10 +75,11 @@
 <%
 				}		
 			}
-		}else{
+		  }else{
 %>
-		 <iframe id="converted_pdf_<%=objectId%>" style="display:none" onload="mw3.getFaceHelper(<%=objectId%>).onloadPdf();" src="preview/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width="100%" height="300px" />
+		      <iframe id="converted_pdf_<%=objectId%>" style="display:none" onload="mw3.getFaceHelper(<%=objectId%>).onloadPdf();" src="preview/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width="100%" height="300px" />
 <%				
+		  }
 		}
 %>
 		<br />

@@ -53,6 +53,10 @@ public class CodiStatusUtil {
 		return this.exists(makeFilePath(STATUS_COMPLETE));
 	}
 	
+	public boolean isError(){
+		return this.exists(makeFilePath(STATUS_ERROR));
+	}
+	
 	public boolean exists(String path){
 		File file = new File(path);
 		
@@ -63,15 +67,18 @@ public class CodiStatusUtil {
 	}
 	
 	public boolean ready(){
+		File srcFile = new File(this.makeFilePath(STATUS_ERROR));
 		File file = new File(makeFilePath(STATUS_READY));
-		
-		try {
-			FileUtils.touch(file);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+		if( srcFile.exists() ){
+			srcFile.renameTo(file);
+		}else{
+			try {
+				FileUtils.touch(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
-		
 		return true;
 	}
 	

@@ -282,10 +282,9 @@ public class FileWorkItem extends WorkItem{
 				return false;
 
 			statusUtil.queue();
-
+			
 			if("pdf".equals(convertType)){
 				boolean converted = false;
-
 				if(this.getTool().indexOf("ms") > 0 || this.getTool().indexOf("officedocument") > 0 ||
 						this.getTool().indexOf("haansoft") > 0 ||		
 						this.getTool().indexOf("plain") > 0 || this.getTool().indexOf("rtf") > 0){
@@ -297,6 +296,7 @@ public class FileWorkItem extends WorkItem{
 						converted = true;
 					} catch (Exception e) {
 						e.printStackTrace();
+						statusUtil.error();
 						return false;
 					}
 				}else if(this.getTool().equals("application/pdf")){
@@ -313,6 +313,7 @@ public class FileWorkItem extends WorkItem{
 						converted = true;
 					} catch (Exception e) {
 						e.printStackTrace();
+						statusUtil.error();
 						return false;
 					} finally {
 						if(os != null)
