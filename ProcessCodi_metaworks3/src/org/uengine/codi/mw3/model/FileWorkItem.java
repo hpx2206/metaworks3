@@ -231,7 +231,7 @@ public class FileWorkItem extends WorkItem{
 		// connect to an OpenOffice.org instance running on port 8100
 		OpenOfficeConnection connection;
 		
-		if("0".equals(GlobalContext.getPropertyString("ooo.remote", "0")))
+		if("false".equals(GlobalContext.getPropertyString("ooo.remote", "false")))
 			connection = new SocketOpenOfficeConnection(port);
 		else
 			connection = new SocketOpenOfficeConnection(GlobalContext.getPropertyString("ooo.host", "127.0.0.1"), port);
