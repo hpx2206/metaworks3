@@ -4,21 +4,16 @@
 	<span id="preview_<%=objectId%>">
 		<div class="workItem_tabs">
 			 <ul>
-			 	<li id="imagePreview_<%=objectId%>">
-			 		<a href="#" onClick="mw3.getFaceHelper(<%=objectId%>).viewAsImages();"><span><%=mw3.localize('$ViewAsImage')%></span></a>
-			 	</li>
 				<li id="pdfPreview_<%=objectId%>">
 					<a href="#" onClick="mw3.getFaceHelper(<%=objectId%>).viewAsPDF();"><span><%=mw3.localize('$ViewAsPdf')%></span></a>
 				</li>	
+			 	<li id="imagePreview_<%=objectId%>">
+			 		<a href="#" onClick="mw3.getFaceHelper(<%=objectId%>).viewAsImages();"><span><%=mw3.localize('$ViewAsImage')%></span></a>
+			 	</li>
 			 </ul>
 		</div>
 <%		
-        var convertMimeType = 'image';
-        if(value.convertStatus == null && value.mimeType != null && (value.mimeType.indexOf("ms")>=1 || value.mimeType.indexOf("officedocument")>=1 || value.mimeType.indexOf("pdf")>=1) ){
-            convertMimeType = 'image';
-        }else{
-            convertMimeType = value.mimeType;
-        }
+        var convertMimeType = value.mimeType;
 		if(convertMimeType != null && convertMimeType == 'image'){
 			if(value.convertStatus != null && value.convertStatus == '2')
 				preview = true
@@ -34,12 +29,22 @@
 			<br />
 			<br />
 			<li></li>
+			<%
+			if(value.errorStatus){
+			%>
+			<li><b><i><%=mw3.localize('$PreviewLoading')%> </i></b> 에러 화면~~~</li>
+			<%
+			}else{
+			%>
 			<li><b><i><%=mw3.localize('$PreviewLoading')%> </i></b> <img src="dwr/metaworks/images/circleloading.gif" /></li>
+			<%
+			}
+			%>
 			<li></li>
 		</div>
 <%
 		}
-		if(convertMimeType == null || (convertMimeType != null && convertMimeType == 'image')){
+		if(convertMimeType != null && convertMimeType == 'image'){
 			if(!preview){
 %>
 		<img style="display:none" src="preview/<%=value.taskId%>.image" />
