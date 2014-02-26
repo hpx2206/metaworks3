@@ -124,6 +124,8 @@ public class PreviewServlet extends HttpServlet {
 						Preview preview = new Preview();
 						preview.setTaskId(workItem.getTaskId());
 						preview.setGrpTaskId(workItem.getGrpTaskId());
+						preview.setMimeType(previewType);
+						preview.setConvertStatus(workItem.getExt1());
 						preview.setErrorStatus(true);
 						
 						MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview,true)});
