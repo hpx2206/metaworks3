@@ -32,11 +32,11 @@
 			<%
 			if(value.errorStatus){
 			%>
-			<li><b><i><%=mw3.localize('$PreviewLoading')%> </i></b> 에러 화면~~~</li>
+			<li><br /><br /> <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> 변환중에 오류가 발생하였습니다. 관리자에게 문의해주세요.</div> </li>
 			<%
 			}else{
 			%>
-			<li><b><i><%=mw3.localize('$PreviewLoading')%> </i></b> <img src="dwr/metaworks/images/circleloading.gif" /></li>
+			<li><br /><br /><b><%=mw3.localize('$PreviewLoading')%> </b><br /><br /> <img src="dwr/metaworks/images/circleloading.gif" /></li>
 			<%
 			}
 			%>
