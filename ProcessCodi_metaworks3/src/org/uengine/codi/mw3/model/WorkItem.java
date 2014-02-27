@@ -683,8 +683,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		modalWindow.setPanel(result);
-		modalWindow.setWidth(1000);
-		modalWindow.setHeight(800);
+		modalWindow.setWidth(0);
+		modalWindow.setHeight(0);
 		modalWindow.setTitle(title);
 		
 		return modalWindow;//(result, 0, 0, getTitle());
