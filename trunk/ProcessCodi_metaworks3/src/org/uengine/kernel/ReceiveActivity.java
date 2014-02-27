@@ -199,8 +199,8 @@ System.out.println("ReceiveActivity::payload is " + payload);
 	public ValidationContext validate(Map options){
 		ValidationContext validationContext  = super.validate(options);
 		
-		if(getMessage()== null)
-			validationContext.addWarning(getActivityLabel()+" Message must be specified.");
+//		if(getMessage()== null)
+//			validationContext.addWarning(getActivityLabel()+" Message must be specified.");
 			
 		if(getParameters()!=null){
 			ParameterContext[] parameters = getParameters();

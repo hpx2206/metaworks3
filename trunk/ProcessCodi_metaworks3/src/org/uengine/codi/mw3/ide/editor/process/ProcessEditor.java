@@ -75,6 +75,7 @@ public class ProcessEditor extends Editor {
 	@Override
 	@ServiceMethod(callByContent=true)
 	public Object save() throws Exception{
+		this.getProcessDesigner().session = this.session;
 		this.getProcessDesigner().saveMe(this);
 		return null;
 	}

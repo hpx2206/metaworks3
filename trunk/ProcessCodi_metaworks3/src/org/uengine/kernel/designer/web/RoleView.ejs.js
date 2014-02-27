@@ -53,12 +53,23 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
         	
         	if( object.role ){
         		$(element).data('role', object.role);
-        		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
         		object.role.roleView = null;
         	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("role") == 'undefined' ){
         		var activityData = {__className : $(element).attr("_classname")};
         		$(element).data('role', activityData);
         	}
+			
+			if( !object.id ){
+                // 새롭게 그려진 경우 ID를 부여하여 keymapping 시켜줌
+                object.id = $(element).attr('id');
+                var objKeys = mw3._createObjectKey(object, true);
+                if(objKeys && objKeys.length){
+                    for(var i=0; i<objKeys.length; i++){
+                        mw3.objectId_KeyMapping[objKeys[i]] = Number(this.objectId);
+                    }
+                }
+            }
+			
         	$(element).unbind('dblclick');
         	$(element).on({
         		dblclick: function (event) {

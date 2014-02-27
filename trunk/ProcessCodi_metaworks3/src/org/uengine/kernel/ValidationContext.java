@@ -8,9 +8,20 @@ import java.util.*;
 
 public class ValidationContext extends java.util.Vector{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
-	
 	public static String OPTIONKEY_DISABLE_REPLICATION = "disable replication";
-	HashMap codedMap = new HashMap();
+	HashMap<String,Object> codedMap = new HashMap<String,Object>();
+	
+	ArrayList<String> errorMessage;
+		public ArrayList<String> getErrorMessage() {
+			return errorMessage;
+		}
+		public void setErrorMessage(ArrayList<String> errorMessage) {
+			this.errorMessage = errorMessage;
+		}
+	
+	public ValidationContext(){
+		errorMessage = new ArrayList<String>();
+	}
 	
 	public void add(String cause, String resolution, int errorLevel, String code){
 		UEngineException e = new UEngineException(cause, resolution);
@@ -74,5 +85,12 @@ public class ValidationContext extends java.util.Vector{
 		Object errorOrWarning = codedMap.get(code);
 		remove(errorOrWarning);
 		codedMap.remove(code);
+	}
+	
+	public void setMessageToArray(){
+		for(Enumeration enumeration = this.elements(); enumeration.hasMoreElements();){
+			UEngineException item = (UEngineException)enumeration.nextElement();
+			errorMessage.add(item.toString());
+		}
 	}
 }

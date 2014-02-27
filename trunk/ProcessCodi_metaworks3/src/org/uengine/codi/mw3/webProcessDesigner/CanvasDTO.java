@@ -178,4 +178,11 @@ public class CanvasDTO implements Serializable{
 			public void setActivityClass(String activityClass) {
 				this.activityClass = activityClass;
 			}
+		String exceptionType;
+			public String getExceptionType() {
+				return exceptionType;
+			}
+			public void setExceptionType(String exceptionType) {
+				this.exceptionType = exceptionType;
+			}
 }

@@ -806,7 +806,9 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	
 	public ValidationContext validate(Map options){
 		ValidationContext vc = new ValidationContext();
-	
+		
+		/* 
+		 * 일단 필요가 없어 보이는 로직이라서 주석 처리함 14.2.27 김형국
 		try{					
 			ComplexActivity.USE_JMS = false;
 			ComplexActivity.USE_THREAD = false;
@@ -859,7 +861,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}catch(Exception e){
 			//e.printStackTrace();
 		}
-		
+		*/
 		return vc;
 	}
 	

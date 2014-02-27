@@ -336,39 +336,39 @@ public class Evaluate extends Condition{
 	public ValidationContext validate(Map options){
 		ValidationContext validationContext = super.validate(options);
 		
-		Activity activity = (Activity)options.get("activity");
-		
-		Evaluate evaluate = this;
-		ProcessVariable pv = activity.getProcessDefinition().getProcessVariable(evaluate.getKey()); 
-		if(pv==null)
-			validationContext.addWarning(activity.getActivityLabel()+" unrecognized process variable '" + evaluate.key + "' used in a condition expression" );
-		else{
-			try{
-				Class valueType;
-				
-				if(evaluate.getValue() instanceof ProcessVariable){
-					valueType = activity.getProcessDefinition().getProcessVariable(((ProcessVariable)evaluate.getValue()).getName()).getType();
-				}else
-					valueType = evaluate.getValue().getClass();
-									
-				if(!valueType.isAssignableFrom(pv.getType())){
-					if(evaluate.getValue() instanceof java.lang.Number){
-						try{
-							pv.getType().asSubclass(Number.class);
-						}catch (Exception e) {
-							validationContext.addWarning(activity.getActivityLabel()+" value '" + evaluate.getValue() + "' is not comparable to process variable '" + evaluate.key + "'" );
-						}
-					}else{
-						validationContext.addWarning(activity.getActivityLabel()+" value '" + evaluate.getValue() + "' is not comparable to process variable '" + evaluate.key + "'" );
-					}
-					
-					
-					
-					
-				}
-			}catch(Exception e){
-			}
-		}
+//		Activity activity = (Activity)options.get("activity");
+//		
+//		Evaluate evaluate = this;
+//		ProcessVariable pv = activity.getProcessDefinition().getProcessVariable(evaluate.getKey()); 
+//		if(pv==null)
+//			validationContext.addWarning(activity.getActivityLabel()+" unrecognized process variable '" + evaluate.key + "' used in a condition expression" );
+//		else{
+//			try{
+//				Class valueType;
+//				
+//				if(evaluate.getValue() instanceof ProcessVariable){
+//					valueType = activity.getProcessDefinition().getProcessVariable(((ProcessVariable)evaluate.getValue()).getName()).getType();
+//				}else
+//					valueType = evaluate.getValue().getClass();
+//									
+//				if(!valueType.isAssignableFrom(pv.getType())){
+//					if(evaluate.getValue() instanceof java.lang.Number){
+//						try{
+//							pv.getType().asSubclass(Number.class);
+//						}catch (Exception e) {
+//							validationContext.addWarning(activity.getActivityLabel()+" value '" + evaluate.getValue() + "' is not comparable to process variable '" + evaluate.key + "'" );
+//						}
+//					}else{
+//						validationContext.addWarning(activity.getActivityLabel()+" value '" + evaluate.getValue() + "' is not comparable to process variable '" + evaluate.key + "'" );
+//					}
+//					
+//					
+//					
+//					
+//				}
+//			}catch(Exception e){
+//			}
+//		}
 		return validationContext;		
 	}
 	

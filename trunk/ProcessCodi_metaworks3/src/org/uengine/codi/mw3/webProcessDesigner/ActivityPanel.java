@@ -8,6 +8,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Order;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
+import org.uengine.kernel.ValidationContext;
 
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
@@ -55,6 +56,16 @@ public class ActivityPanel  implements ContextAware{
 			this.parameterContextPanel = parameterContextPanel;
 		}
 
+	ValidationContext validationContext; 
+	@Order(4)
+	@Available(condition="validationContext")
+		public ValidationContext getValidationContext() {
+			return validationContext;
+		}
+		public void setValidationContext(ValidationContext validationContext) {
+			this.validationContext = validationContext;
+		}
+	
 	public ActivityPanel(){
 		this.setMetaworksContext(new MetaworksContext());
 	}

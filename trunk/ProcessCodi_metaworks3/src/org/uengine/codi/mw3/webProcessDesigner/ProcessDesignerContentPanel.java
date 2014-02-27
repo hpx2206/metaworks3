@@ -113,6 +113,7 @@ public class ProcessDesignerContentPanel implements ContextAware {
 		}	
 	
 	public void saveMe(ProcessEditor processEditor) throws Exception{
+		processDesignerContainer.session = session;
 		ProcessDefinition def = processDesignerContainer.containerToDefinition(processDesignerContainer);
 		TextContext text = new TextContext();
 		text.setText(this.getProcessName());
