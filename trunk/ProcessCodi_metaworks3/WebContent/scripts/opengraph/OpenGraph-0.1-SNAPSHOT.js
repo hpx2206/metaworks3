@@ -6253,6 +6253,12 @@ OG.common.Constants = {
      */
     STATUS_SUFFIX : "_STATUS",
     STATUS_BBOX_SUFFIX : "_STATUS_BBOX",
+    
+    /**
+     * EXCEPTIONTYPE 용 가이드 ID의 suffix 정의
+     */
+    EXCEPTIONTYPE_SUFFIX : "_EXCEPTIONTYPE",
+    EXCEPTIONTYPE_BBOX_SUFFIX : "_EXCEPTIONTYPE_BBOX",
 
 	/**
 	 * Shape Move & Resize 시 이동 간격
@@ -9861,7 +9867,7 @@ OG.shape.IShape = function () {
 	this.LABEL_EDITABLE = true;
 	
 	
-	this.errorType = "None";
+	this.exceptionType = '';
 };
 
 OG.shape.IShape.prototype = {
@@ -15385,8 +15391,8 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
     }
 	
 	// Draw Error
-	if(groupNode.shape.errorType != 'None')
-			this.drawErrorType(groupNode);
+	if(groupNode.shape.exceptionType != '')
+			this.drawExceptionType(groupNode);
 			
 			
 	if(shape instanceof OG.shape.HorizontalLaneShape
@@ -16874,8 +16880,8 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 				this.drawStatus(element);
         }
 
-		if(element.shape.errorType != 'None')
-				this.drawErrorType(element);
+		if(element.shape.exceptionType != '')
+				this.drawExceptionType(element);
 				
 		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
         if(element.shape.HaveButton){
@@ -18126,7 +18132,7 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
 	return null;
 };
 
-OG.renderer.RaphaelRenderer.prototype.drawErrorType = function (element) {
+OG.renderer.RaphaelRenderer.prototype.drawExceptionType = function (element) {
 	
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
@@ -18134,7 +18140,7 @@ OG.renderer.RaphaelRenderer.prototype.drawErrorType = function (element) {
 		_size = me._CONFIG.COLLAPSE_SIZE,
 		_hSize = _size / 2;
 
-	_rect = this._getREleById(rElement.id + OG.Constants.STATUS_SUFFIX);
+	_rect = this._getREleById(rElement.id + OG.Constants.EXCEPTIONTYPE_SUFFIX);
 	if (_rect) {
 		this._remove(_rect);
 	}
@@ -18142,13 +18148,13 @@ OG.renderer.RaphaelRenderer.prototype.drawErrorType = function (element) {
 	envelope = geometry.getBoundary();
 	_upperRight = envelope.getUpperRight();
 
-    switch(element.shape.errorType){
+    switch(element.shape.exceptionType){
     case "error":
         _rect = this._PAPER.image("images/activity_status/i_status_CANCELLED.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
         break;
     }
 
-	this._add(_rect, rElement.id + OG.Constants.STATUS_SUFFIX);
+	this._add(_rect, rElement.id + OG.Constants.EXCEPTIONTYPE_SUFFIX);
 	_rect.insertAfter(rElement);
 	rElement.appendChild(_rect);
 	return null;
@@ -22624,9 +22630,9 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 	
-	setErrorType: function (element, errorType) {
+	setExceptionType: function (element, exceptionType) {
 		var me = this;
-		element.shape.errorType = errorType;
+		element.shape.exceptionType = exceptionType;
 		me._RENDERER.redrawShape(element);
 	},
 
@@ -23761,8 +23767,8 @@ OG.graph.Canvas.prototype = {
 		return element;
 	},
 	
-	setErrorType: function (element, errorType) {
-		this._HANDLER.setErrorType(element, errorType);
+	setExceptionType: function (element, exceptionType) {
+		this._HANDLER.setExceptionType(element, exceptionType);
 	},
 	
 	/**
@@ -24534,8 +24540,8 @@ OG.graph.Canvas.prototype = {
 			if (shape.TaskType) {
 				cell['@taskType'] = shape.TaskType;
 			}
-			if (shape.errorType) {
-				cell['@errorType'] = shape.errorType;
+			if (shape.exceptionType) {
+				cell['@exceptionType'] = shape.exceptionType;
 			}
 			
 			cell['@childs'] = [];
