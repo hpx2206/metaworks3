@@ -229,7 +229,7 @@ public class User extends Database<IUser> implements IUser {
 		setBusinessValue(myBV);
 		
 		//선택된 유저가 해야 할 일의 개수를 보인다.
-		int todoCount = Instance.countTodo(getUserId(), employee.databaseMe().getGlobalCom());
+		int todoCount = Instance.countTodo(getUserId(), employee.databaseMe().getPartCode());
 		setTodoCount(todoCount);
 
 		Popup popup = new Popup(with, height);
