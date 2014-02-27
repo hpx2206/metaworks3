@@ -22,8 +22,7 @@
 
 			var title = value.title.replace('\n','<br>');
 			var desc = '';
-			var fileMimeType = value.file.mimeType; 
-        	var isPreview = false;
+        	
         
 			if('file' == type)
 				desc = value.majorVer + '.' + value.minorVer;
@@ -37,10 +36,14 @@
 			}
 						
 			
-			console.log(type);						
 			if('file' == type){
+				var fileMimeType = value.file.mimeType;
+				var isPreview = false;
+				
 				if(fileMimeType.indexOf("msdownload") == -1 && ( fileMimeType.indexOf("ms")>=1   || fileMimeType.indexOf("officedocument")>=1 || fileMimeType.indexOf("pdf")>=1) )
 					maximize = true;
+			}else if('process' == type){
+				maximize = true;
 			}			
 			
 			if(session && session.user && session.user.userId == value.writer.userId)
@@ -94,7 +97,7 @@
 			// icon - maximize
 			if(maximize){
 %>	
-									<span>
+									<span style="position:absolute;">
 										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"> <img src="images/waveStyle/newWindow.png" style="position:relative; top:5px; left:5px;" title="Open new window"></a>
 									</span>	
 <%
