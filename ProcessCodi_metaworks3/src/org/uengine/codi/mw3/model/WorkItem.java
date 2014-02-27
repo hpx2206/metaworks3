@@ -674,7 +674,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			iframe.setHeight("98%");
 			
 			result = iframe;
-		}else if(this.getType() == null){
+		}else if("process".equals(this.getType())){
 			this.workItemHandler = null;
 			detail();			
 			result = workItemHandler; 
