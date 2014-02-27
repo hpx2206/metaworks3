@@ -9859,6 +9859,9 @@ OG.shape.IShape = function () {
 	 * @type Boolean
 	 */
 	this.LABEL_EDITABLE = true;
+	
+	
+	this.errorType = "None";
 };
 
 OG.shape.IShape.prototype = {
@@ -10580,7 +10583,7 @@ OG.shape.bpmn.A_Task = function (label) {
 	this.LoopType = "None";
 	this.TaskType = "None";
 	this.status = "None";
-	this.errorType = "None";
+	
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
@@ -15379,10 +15382,13 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 			this.drawTaskType(groupNode);
 		if(groupNode.shape.status != 'None')
 			this.drawStatus(groupNode);
-		if(groupNode.shape.errorType != 'None')
-			this.drawErrorType(groupNode);
     }
 	
+	// Draw Error
+	if(groupNode.shape.errorType != 'None')
+			this.drawErrorType(groupNode);
+			
+			
 	if(shape instanceof OG.shape.HorizontalLaneShape
 		|| shape instanceof OG.shape.VerticalLaneShape){	
 		groupNode.parentNode.insertBefore(groupNode, groupNode.parentNode.firstChild);
@@ -16866,10 +16872,11 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 				this.drawTaskType(element);
 			if(element.shape.status != 'None')
 				this.drawStatus(element);
-			if(element.shape.errorType != 'None')
-				this.drawErrorType(element);
         }
 
+		if(element.shape.errorType != 'None')
+				this.drawErrorType(element);
+				
 		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
         if(element.shape.HaveButton){
             var me = this, collapseObj, clickHandle;
@@ -24526,6 +24533,9 @@ OG.graph.Canvas.prototype = {
 			}
 			if (shape.TaskType) {
 				cell['@taskType'] = shape.TaskType;
+			}
+			if (shape.errorType) {
+				cell['@errorType'] = shape.errorType;
 			}
 			
 			cell['@childs'] = [];
