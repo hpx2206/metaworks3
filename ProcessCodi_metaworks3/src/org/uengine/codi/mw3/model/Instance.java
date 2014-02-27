@@ -987,27 +987,29 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		StringBuffer sb = new StringBuffer();		
 		sb
-		.append("select count(*) cnt from (")
-		.append("SELECT distinct inst.instid")
-		.append("  FROM bpm_procinst inst,")
-		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping rm ON wl.instid=rm.instid AND rm.endpoint=?endpoint")
-		.append(" WHERE wl.instid=inst.instid")
-		.append("   AND inst.isdeleted = 0")
-		.append("   AND initcomcd = ?initcomcd")
-		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_STOPPED + "'")
-		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_FAILED + "'")
-		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
-				
-
-		.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-		.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
-		.append(") a");
-
+		.append("SELECT count(*) cnt")
+		.append(" FROM bpm_procinst inst")
+		.append(" WHERE inst.isdeleted = 0")
+		.append("  AND inst.isDocument = 0")
+		.append("  AND inst.status <> 'Stopped'")
+		.append("  AND inst.status <> 'Failed'")
+		.append("  AND inst.status <> 'Completed'")
+		.append("  AND ((inst.defVerId != 'Unstructured.process')")
+		.append("   OR (inst.defVerId = 'Unstructured.process'")
+		.append("    AND inst.DUEDATE is not null))")
+		.append("  AND exists(")
+		.append("   SELECT 1")
+		.append("   FROM bpm_rolemapping rm")
+		.append("   WHERE inst.instid = rm.rootinstid")
+		.append("    AND ((assigntype = 0")
+		.append("     AND rm.endpoint =?endpoint)")
+		.append("      OR (assigntype = 2")
+		.append("       AND rm.endpoint =?partcode)))");
 		
 		try{
 			IInstance instance = (IInstance) sql(Instance.class, sb.toString());
 			instance.set("endpoint", session.getEmployee().getEmpCode());
-			instance.setInitComCd(session.getEmployee().getGlobalCom());
+			instance.set("partcode", session.getEmployee().getPartCode());
 			instance.select();
 			
 			if(instance.next())
