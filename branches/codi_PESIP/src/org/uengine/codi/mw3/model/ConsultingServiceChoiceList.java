@@ -1,8 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
+
 public class ConsultingServiceChoiceList {
 	
 	String selfTest;
@@ -20,4 +23,34 @@ public class ConsultingServiceChoiceList {
 		public void setRegionMatching(String regionMatching) {
 			this.regionMatching = regionMatching;
 		}
+		
+	RegionMatchingChart regionMatchingChart;
+		public RegionMatchingChart getRegionMatchingChart() {
+			return regionMatchingChart;
+		}
+		public void setRegionMatchingChart(RegionMatchingChart regionMatchingChart) {
+			this.regionMatchingChart = regionMatchingChart;
+		}
+
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object loadSelfTest() {
+			return regionMatching;
+			
+	}
+		
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow loadRegionMatching() {
+		ModalWindow modalWindow = new ModalWindow();
+		if(regionMatchingChart == null){
+			regionMatchingChart = new RegionMatchingChart();
+		}
+		
+//		ModalWindow modalWindow = new ModalWindow(regionMatchingChart, 700, 400, "RegionMatching");
+		
+		modalWindow.setWidth(900);
+		modalWindow.setHeight(600);
+		modalWindow.setPanel(regionMatchingChart);
+		return modalWindow;
+			
+	}		
 }
