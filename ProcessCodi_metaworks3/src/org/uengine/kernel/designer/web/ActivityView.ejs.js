@@ -53,6 +53,10 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 						shape.status = object.instStatus;
 					}
 				}
+				console.log(object.exceptionType);
+				if (object.exceptionType && object.exceptionType != 'None') {
+					shape.exceptionType = object.exceptionType;
+				}
 	
 				element = canvas.drawShape([
 	        	                                 object.x, object.y 
@@ -80,6 +84,18 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				
 				object.element = null;
 			}
+			
+			if( !object.id ){
+				// 새롭게 그려진 경우 ID를 부여하여 keymapping 시켜줌
+				object.id = $(element).attr('id');
+				var objKeys = mw3._createObjectKey(object, true);
+	            if(objKeys && objKeys.length){
+	                for(var i=0; i<objKeys.length; i++){
+	                    mw3.objectId_KeyMapping[objKeys[i]] = Number(this.objectId);
+	                }
+	            }
+			}
+			
 			$(element).attr("_viewClass", object.__className);
 			this.element = element;
         	if( typeof object.activityClass != 'undefined'){
@@ -265,7 +281,11 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			}
 		},
 		validation : function(message){
-			this.canvas.setErrorType(this.element, 'error');
-			//mw3.alert(message);
+			if('release' == message){
+				this.canvas.setExceptionType(this.element, '');
+			}else{
+				this.canvas.setExceptionType(this.element, 'error');
+			}
+//			mw3.alert(message);
 		}
 };

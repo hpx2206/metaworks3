@@ -668,7 +668,6 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 	
 	public ValidationContext validate(Map options){
 		ValidationContext valCtx = super.validate(options);
-//System.out.println("valCtx:"+valCtx);
 		if(getChildActivities()!= null && getChildActivities().size() > 0){
 			if(getChildActivities().size()==1){
 				if(!(this instanceof ProcessDefinition || this instanceof LoopActivity)){
@@ -683,7 +682,6 @@ public class ComplexActivity extends DefaultActivity implements NeedArrangementT
 				}
 			}
 		}else{
-//System.out.println("valCtx:"+valCtx);
 			valCtx.addWarning(getActivityLabel() + " child activity is empty.");
 		}
 		

@@ -1,10 +1,15 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.annotation.Id;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContext;
@@ -13,6 +18,8 @@ import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.ScopeActivity;
+import org.uengine.kernel.UEngineException;
+import org.uengine.kernel.ValidationContext;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.designer.web.ActivityView;
@@ -116,6 +123,9 @@ public class ProcessDesignerContainer {
 		public void setMaxY(int maxY) {
 			this.maxY = maxY;
 		}
+		
+	public Session session;
+		
 	public ProcessDesignerContainer(){
 		this.init();
 	}
@@ -266,6 +276,7 @@ public class ProcessDesignerContainer {
 		def.setRoles(roles);
 		if( activityList != null ){
 			for(Activity act : activityList){
+				this.validate(act);
 				def.addChildActivity(this.fillVariableType(act));
 			}
 		}
@@ -421,5 +432,39 @@ public class ProcessDesignerContainer {
 			processVariable.setType( Class.forName(processVariable.getTypeInputter()) );
 		}
 		return processVariable;
+	}
+	
+	public void validate(Object obj) throws Exception{
+		ValidationContext valCtx = null;
+		String viewId = null;
+		String viewClass = null;
+		if( obj instanceof Activity ){
+			Activity act = (Activity)obj;
+			valCtx = act.validate(null);
+			if(valCtx!=null && valCtx.size()>0){
+				viewId = act.getActivityView().getId();
+				viewClass = act.getActivityView().getClass().getName();
+			}
+			
+			if( act instanceof ScopeActivity){
+				if( ((ScopeActivity) act).getChildActivities() != null ){
+					ArrayList<Activity> childs = new ArrayList<Activity>(); 
+					for(Activity sact : ((ScopeActivity) act).getChildActivities()){
+						this.validate(null);
+					}
+				}
+			}
+		}
+		if(valCtx!=null && valCtx.size()>0){
+			
+//			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+//					"if(mw3.getAutowiredObject('"+viewClass +"@" + viewId +"')!=null) mw3.getAutowiredObject('"+viewClass +"@" + viewId +"').__getFaceHelper().validation",
+//					new Object[]{new String()});
+			
+			for(Enumeration enumeration = valCtx.elements(); enumeration.hasMoreElements();){
+				Object item = (Object)enumeration.nextElement();
+				System.out.println(item);
+			}
+		}
 	}
 }

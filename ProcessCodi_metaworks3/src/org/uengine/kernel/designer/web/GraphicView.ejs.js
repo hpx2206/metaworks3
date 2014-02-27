@@ -80,6 +80,16 @@ org_uengine_kernel_designer_web_GraphicView.prototype = {
 				}
 			}
 			$(element).attr("_viewClass", object.__className);
+			if( !object.id ){
+                // 새롭게 그려진 경우 ID를 부여하여 keymapping 시켜줌
+                object.id = $(element).attr('id');
+                var objKeys = mw3._createObjectKey(object, true);
+                if(objKeys && objKeys.length){
+                    for(var i=0; i<objKeys.length; i++){
+                        mw3.objectId_KeyMapping[objKeys[i]] = Number(this.objectId);
+                    }
+                }
+            }
             this.element = element;
         }
 };

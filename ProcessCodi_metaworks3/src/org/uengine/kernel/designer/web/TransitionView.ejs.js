@@ -76,7 +76,16 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 				}
 				object.element = null;
 			}
-			object.id = $(element).attr('id');
+			if( !object.id ){
+                // 새롭게 그려진 경우 ID를 부여하여 keymapping 시켜줌
+                object.id = $(element).attr('id');
+                var objKeys = mw3._createObjectKey(object, true);
+                if(objKeys && objKeys.length){
+                    for(var i=0; i<objKeys.length; i++){
+                        mw3.objectId_KeyMapping[objKeys[i]] = Number(this.objectId);
+                    }
+                }
+            }
 			$(element).attr("_viewClass", object.__className);
 			
 			$(element).unbind('dblclick');
@@ -96,10 +105,8 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
                 });
             }
 		},
-        validation : function(errorType){
-            var EMPTY_CONNECTION = 'cantFindActivity';
-			if( errorType == EMPTY_CONNECTION){
-	            mw3.alert('선의 연결정보가 없습니다.');
-			}
+		validation : function(message){
+//          this.canvas.setErrorType(this.element, 'error');
+//          mw3.alert(message);
         }
 };

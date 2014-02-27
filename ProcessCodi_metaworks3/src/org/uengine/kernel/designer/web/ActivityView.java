@@ -19,6 +19,7 @@ import org.uengine.kernel.IDrawDesigner;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ParameterContextPanel;
 import org.uengine.kernel.ReceiveActivity;
+import org.uengine.kernel.ValidationContext;
 
 public class ActivityView extends CanvasDTO  implements ContextAware{
 	transient MetaworksContext metaworksContext;
@@ -129,6 +130,12 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			}
 		}
 		activity.setActivityView(this);
+		
+		ValidationContext valCtx = activity.validate(null);
+		if(valCtx!=null && valCtx.size()>0){
+			valCtx.setMessageToArray();
+			activityWindow.getActivityPanel().setValidationContext(valCtx);
+		}
 		
 		if( "definitionDiffView".equals(this.getViewType()) ){
 			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
