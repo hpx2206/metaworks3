@@ -24,7 +24,7 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 						valiableObjectDiv.css("position","relative");
 						valiableObjectDiv.find('input').css('float','left');
 						//valiableObjectDiv.find('.form-control').css('width','200px');
-						var buttonHtml = '<button class="btn btn-default btn-xs comment-btn" type="button" style="position:absolute; right:3px; top:4px; display:none;" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span class="glyphicon glyphicon-comment"></span> ' + mw3.localize('$AddComment') + '</button>';
+						var buttonHtml = '<button class="btn btn-default btn-xs comment-btn" type="button" style="position:absolute; right:3px; top:6px; display:none; border:none;font-size:14px;" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')" title="' + mw3.localize('$AddComment') + '"><span class="icon-bubble"></span></button>';
 						      
 						valiableObjectDiv.append(buttonHtml);
 						      
