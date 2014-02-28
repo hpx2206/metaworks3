@@ -41,28 +41,21 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				options['modal'] = true;
 				options['close'] = function(event, ui) {
 					mw3.getFaceHelper(objectId).close();
-				}
+				};
 		
 				var width = this.object.width;
-				var body_width = $('body').width();
-				if(width > body_width)
-					width = body_width;
+				var height = this.object.height;
+				var body_width = $(window).width();
+				var body_height = $(window).height();
 				
-				if (this.object.width)
-					options['width'] = width;
-				else
-					options['width'] = body_width - 100;
-				
-				if (this.object.height)
-					options['height'] = this.object.height;
-				else
-					options['height'] = $(window).height() - 100;
-			
-				
-				if(options['width'] == body_width){
-					options['width'] = body_width -30;
-					options['height'] = $(window).height() - 30;
-				}
+				if(!width || width > body_width - 20)
+					width = body_width - 20;
+
+				if(!height || height > body_height - 20)
+					height = body_height - 20;
+
+				options['width'] = width;
+				options['height'] = height;
 				
 				options['resizable'] = this.object.resizable;	
 				
@@ -72,8 +65,8 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				for(var button in this.object.buttons){
 					var action = this.object.buttons[button];
 					buttons.push({text: mw3.localize(button), 'data.action':action, 'data.button':button, click: function(event){						
-						var action = $(event.currentTarget).attr('data.action')
-						var button = $(event.currentTarget).attr('data.button')
+						var action = $(event.currentTarget).attr('data.action');
+						var button = $(event.currentTarget).attr('data.button');
 						
 						if(action){					
 							if(mw3.objects[objectId].panel && mw3.objects[objectId].panel.__objectId)
