@@ -389,7 +389,7 @@ public class Login implements ContextAware {
 		}
 		
 		
-		String title = "비밀번호 변경을 요청하셨습니다";
+		String title = "비밀번호 변경을 요청하셨습니다.";
 		
 		content = this.replaceString(tempContent,beforeCompany,afterCompany);
 		content = this.replaceString(content, passwordURL, url);
