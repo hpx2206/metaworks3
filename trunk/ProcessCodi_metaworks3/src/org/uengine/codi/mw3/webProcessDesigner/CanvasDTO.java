@@ -178,7 +178,8 @@ public class CanvasDTO implements Serializable{
 			public void setActivityClass(String activityClass) {
 				this.activityClass = activityClass;
 			}
-		String exceptionType;
+		transient String exceptionType;
+			// 에러정보는 저장을 하지 않는다.
 			public String getExceptionType() {
 				return exceptionType;
 			}
