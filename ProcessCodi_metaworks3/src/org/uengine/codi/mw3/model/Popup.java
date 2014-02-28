@@ -7,6 +7,7 @@ import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
 public class Popup implements ContextAware {
@@ -47,6 +48,7 @@ public class Popup implements ContextAware {
 		}		
 
 	String name;		
+		@Id
 		public String getName() {
 			return name;
 		}
