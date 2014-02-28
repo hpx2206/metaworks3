@@ -66,7 +66,7 @@ public interface IProcessMap extends IDAO {
 	
 	@Available(when={WHEN_NEW})
 	@ServiceMethod
-	public ToEvent close() throws Exception;
+	public Remover close() throws Exception;
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP) 
 	@Test(scenario="first", starter=true, instruction="$first.ProcessStart", next="autowiredObject.org.uengine.codi.mw3.model.CommentWorkItem@-1.add()")

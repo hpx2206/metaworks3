@@ -214,8 +214,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return popup;		
 	}
 
-	public ToEvent close() throws Exception {		
-		return new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE);
+	public Remover close() throws Exception {
+		Popup popup = new Popup();
+		popup.setName("프로세스 정보");
+		return new Remover(popup);
 	}
 		
 	public boolean confirmExist() {
