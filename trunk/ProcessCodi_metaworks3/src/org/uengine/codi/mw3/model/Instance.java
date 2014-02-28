@@ -44,6 +44,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public final static String INSTNACE_STATUS_FAILED		= "Failed";
 	public final static String INSTNACE_STATUS_COMPLETED	= "Completed";
 	public final static String INSTNACE_STATUS_RUNNING 		= "Running";
+	public final static String INSTNACE_STATUS_CANCELED		= "Canceled";
 	
 	public static final String TASK_DIRECT_APPEND_SQL_KEY = "task.";
 	public static final String INSTANCE_DIRECT_APPEND_SQL_KEY = "inst.";
@@ -328,11 +329,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			StringBuffer instanceSql) throws Exception {
 
 		instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
-		instanceSql.append(" and inst.status!=?instStatus ");
 		instanceSql.append(" and inst.isDocument =?isDocument ");
 		
 		criteria.put("instIsdelete", "1");
-		criteria.put("instStatus", "Stopped");
 		criteria.put("isDocument", "0");
 
 		if(Perspective.TYPE_NEWSFEED.equals(navigation.getPerspectiveType())
@@ -391,7 +390,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 					.append("   AND wl.instid=inst.instid")			
 					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
 					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
-					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
+					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")
+					.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_CANCELED + "'")
 					.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
 					.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))");
 					
@@ -994,6 +994,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("  AND inst.status <> 'Stopped'")
 		.append("  AND inst.status <> 'Failed'")
 		.append("  AND inst.status <> 'Completed'")
+		.append("  AND inst.status <> 'Canceled'")
 		.append("  AND ((inst.defVerId != 'Unstructured.process')")
 		.append("   OR (inst.defVerId = 'Unstructured.process'")
 		.append("    AND inst.DUEDATE is not null))")
@@ -1035,6 +1036,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("  AND inst.status <> 'Stopped'")
 		.append("  AND inst.status <> 'Failed'")
 		.append("  AND inst.status <> 'Completed'")
+		.append("  AND inst.status <> 'Canceled'")
 		.append("  AND ((inst.defVerId != 'Unstructured.process')")
 		.append("   OR (inst.defVerId = 'Unstructured.process'")
 		.append("    AND inst.DUEDATE is not null))")
