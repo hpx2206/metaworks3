@@ -595,7 +595,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
         activity.activityView = cellForDwr;
         if(classType == 'Activity' ){
 			if( cellForDwr.exceptionType != '' ){
-				activity.activityView.exceptionType = '';
+				// 기존에 에러라고 표시가 되어있으면 해제
 				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
 	            actViewObj.__faceHelper.validation('release');
 			}
@@ -697,18 +697,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
 	
 	for(var i=0; i < activityList.length; i++){
 		var activity = activityList[i];
-		console.log(activity);
 		var classname = activity.__className;
 		if (classname == 'org.uengine.kernel.HumanActivity' || classname == 'org.uengine.codi.activitytypes.KnowledgeActivity') {
 			if( activity.role == null ){
-				activity.activityView.exceptionType = 'error';
 				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
 				 actViewObj.__faceHelper.validation('emptyRole');
 			}
 		}
 		if( classname == 'org.uengine.kernel.ScopeActivity'){
 			if( !transitionTarget.containsKey(activity.tracingTag) ){
-				activity.activityView.exceptionType = 'error';
 				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
                 actViewObj.__faceHelper.validation(' scopeActivity can not execute! ');
 			}
@@ -717,14 +714,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ac
 		}
 		if (classname == 'org.uengine.kernel.SubProcessActivity') {
 		    if( !activity.definitionId || activity.definitionId == "" || activity.definitionId == null ){
-				activity.activityView.exceptionType = 'error';
 				var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
                 actViewObj.__faceHelper.validation(' SubProcess definitionId is null ');
 			}
 		}
 		if (classname == 'org.uengine.kernel.InvocationActivity') {
 		    if( !activity.resourceClass || activity.resourceClass == "" || activity.resourceClass == null ){
-				activity.activityView.exceptionType = 'error';
                 var actViewObj = mw3.getAutowiredObject(activity.activityView.__className +'@'+activity.activityView.id);
                 actViewObj.__faceHelper.validation(' InvocationActivity resourceClass is null ');
             }

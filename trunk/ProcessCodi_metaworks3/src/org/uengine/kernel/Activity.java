@@ -22,20 +22,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import javassist.expr.Instanceof;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
-import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
+import org.metaworks.annotation.Order;
 import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.ActivityView;
@@ -127,6 +118,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 
 	TextContext name;
 	@Face(displayName="$activityName")
+	@Order(1)
 		public TextContext getName() {
 			return name;
 		}
@@ -148,6 +140,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		
 	TextContext description = TextContext.createInstance();
 	@Face(displayName="$activityDisplayName")
+	@Order(2)
 		public TextContext getDescription() {
 			return description;
 		}
@@ -862,6 +855,33 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			//e.printStackTrace();
 		}
 		*/
+		
+		// 1. Transition 에 condition이 있으면 otherwise 가 1개는 있어야함
+		// 2. condition이 1개라도 있으면 나머지 transition에도 condition이 있어야함.
+		boolean otherwiseCondition = false;
+		boolean isCondition = false;
+		boolean emptyCondition = false;	// 컨디션이 전혀 없는 경우는 true
+		for (Iterator<Transition> it = getOutgoingTransitions().iterator(); it.hasNext(); ) {
+			Transition ts = (Transition)it.next();
+			if( ts.getCondition() != null){
+				isCondition = true;	
+				Condition condition = ts.getCondition();
+				if( condition instanceof Or){
+					Condition[] condis =  ((Or) condition).getConditions();
+					if( condis[0] instanceof Otherwise){
+						otherwiseCondition = true;
+					}
+				}
+			}else{
+				emptyCondition = true;
+			}
+		}
+		if( isCondition && !otherwiseCondition){	// 컨디션이 존재하는데 otherwise가 없을때
+			vc.add(getActivityLabel() + " : no otherwise condition. ");
+		}
+		if( isCondition && emptyCondition ){		// 컨디션이 존재하는데 어떤 선은 컨디션이 없을때
+			vc.add(getActivityLabel() + " : all line have to include condition ");
+		}
 		return vc;
 	}
 	
