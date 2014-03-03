@@ -2,6 +2,8 @@ package org.uengine.kernel;
 
 import java.io.Serializable;
 
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.contexts.MappingContext;
@@ -17,6 +19,7 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigner {
 	}
 	
 	transient String parentEditorId;
+	@Hidden
 		public String getParentEditorId() {
 			return parentEditorId;
 		}
@@ -25,6 +28,7 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigner {
 		}
 	
 	MappingContext mappingContext;
+	@Face(displayName="$dataMapping")
 		public MappingContext getMappingContext() {
 			return mappingContext;
 		}

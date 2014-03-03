@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +24,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
+import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
+import org.uengine.contexts.MappingContext;
 import org.uengine.contexts.TextContext;
 import org.uengine.persistence.dao.DAOFactory;
 import org.uengine.persistence.worklist.WorklistDAOType;
@@ -40,7 +44,7 @@ import org.uengine.webservices.worklist.WorkListServiceLocator;
  * @author Jinyoung Jang
  */
 
-public class HumanActivity extends ReceiveActivity{
+public class HumanActivity extends ReceiveActivity implements IDrawDesigner{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	public static final String GENERICCONTEXT_CURR_LOGGED_ROLEMAPPING = "currentLoggedRoleMapping";
 
@@ -889,6 +893,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 		
 		//UserManagerBean.addWorkload(getRole().getMapping(instance).getEndpoint(), (-1)*getWorkload());
 		super.afterComplete(instance);
+		dataMapping(instance);
 		fireEventToActivityFilters(instance, "saveAnyway", null);		
 	}
 
@@ -1290,6 +1295,95 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 					sw.close();
 				}
 			}
+		}
+	}
+	
+	transient String parentEditorId;
+	@Hidden
+		public String getParentEditorId() {
+			return parentEditorId;
+		}
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}
+	
+	MappingContext mappingContext;
+	@Face(displayName="$dataMapping")
+		public MappingContext getMappingContext() {
+			return mappingContext;
+		}
+		public void setMappingContext(MappingContext mappingContext) {
+			this.mappingContext = mappingContext;
+		}
+	@Override
+	public void drawInit() throws Exception {
+		MappingTree leftTree = new MappingTree();
+		leftTree.setId("left");
+		leftTree.setAlign("left");
+		leftTree.setParentEditorId(this.getParentEditorId());
+		MappingTree rightTree = new MappingTree();
+		rightTree.setId("right");
+		rightTree.setAlign("right");
+		rightTree.setParentEditorId(this.getParentEditorId());
+		
+		
+		if( mappingContext == null ){
+			mappingContext = new MappingContext();
+			MappingCanvas canvas = new MappingCanvas();
+			canvas.setCanvasId("mappingCanvas");
+			canvas.setLeftTreeId(leftTree.getId());
+			canvas.setRightTreeId(rightTree.getId());
+			mappingContext.setMappingCanvas(canvas);
+		}
+		mappingContext.setMappingTreeLeft(leftTree);
+		mappingContext.setMappingTreeRight(rightTree);
+		
+	}
+	
+	protected void dataMapping(ProcessInstance instance) throws Exception {
+		MappingContext mc= getMappingContext();
+		if(mc !=null){
+			ParameterContext[] params = mc.getMappingElements();
+			if( params == null && mc.getMappingCanvas() != null){
+				params = mc.getMappingCanvas().getMappingElements();
+			}
+			for (int i = 0; i < params.length; i++) {
+				ParameterContext param = params[i];
+				
+				String srcVariableName = null;
+				String targetFieldName = param.getArgument().getText();
+				Object value = null;
+				
+				if(param.getVariable() == null && param.getTransformerMapping() != null){
+					value = param.getTransformerMapping().getTransformer().letTransform(instance, param.getTransformerMapping().getLinkedArgumentName());
+				}else{
+					srcVariableName = param.getVariable().getName();		
+					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]")  || srcVariableName.startsWith("[roles]") ){
+						value = instance.getBeanProperty(srcVariableName); // varA
+					}else{
+						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
+						// wholePartPath.length >= 1 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+						if( wholePartPath.length >= 2 ){
+							String rootObjectName = wholePartPath[1] ;
+							if( wholePartPath.length > 2 ){
+								for(int j = 2 ; j < wholePartPath.length; j++){
+									rootObjectName += "."+ wholePartPath[j];
+								}
+							}
+							// 이걸 바로 호출
+							Object rootObject = instance.getBeanProperty(wholePartPath[0]);
+							if( rootObject != null ){
+								value = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
+							}
+						}else{
+							value = instance.getBeanProperty(srcVariableName); // varA
+						}
+					}
+				}			
+				
+				instance.setBeanProperty(targetFieldName, (Serializable)value); //[instance].instanceId
+	
+			}	
 		}
 	}
 	
