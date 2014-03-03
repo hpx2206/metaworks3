@@ -94,6 +94,7 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
         			if(event.stopPropagation){
         				event.stopPropagation();
         			}
+					object.id = $(this).attr('id');
         			object.transition = $(this).data('transition');
         			object.gateCondition();
         		}

@@ -53,7 +53,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 						shape.status = object.instStatus;
 					}
 				}
-				console.log(object.exceptionType);
 				if (object.exceptionType && object.exceptionType != 'None') {
 					shape.exceptionType = object.exceptionType;
 				}

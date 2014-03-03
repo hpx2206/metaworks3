@@ -76,6 +76,9 @@ public class TransitionView extends CanvasDTO{
 	public Condition makeCondition(ConditionTreeNode rootNode) throws Exception{
 		if( rootNode != null){
 			ArrayList<ConditionTreeNode> child = rootNode.getChild();
+			if( "rootNode".equals(rootNode.getId()) && child.size() == 0 ){
+				return null;
+			}
 			Condition condition;
 			if( rootNode.getConditionType() == null || "".equals(rootNode.getConditionType())){	// 최상위 root Node
 				condition = new And();

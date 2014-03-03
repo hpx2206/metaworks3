@@ -369,6 +369,9 @@ public class ScopeActivity extends FlowActivity implements MessageListener{
 				eventNames.put(eventHandler.getName(),"");
 			}
 		}
+		if( this.getIncomingTransitions() == null || (this.getIncomingTransitions() != null && this.getIncomingTransitions().size() < 1) ){
+			vc.add(getActivityLabel() + " is not execute. no incomming transition. ");
+		}
 		
 		return vc;
 	}
