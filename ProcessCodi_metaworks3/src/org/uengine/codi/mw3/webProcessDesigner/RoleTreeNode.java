@@ -22,7 +22,7 @@ public class RoleTreeNode extends TreeNode {
 			RoleTreeNode node = new RoleTreeNode();			
 			// 주의 : id에 "." 이 들어간다면 Tree 에서 Id검색을 할수가 없다. 그리하여 "-" 으로 데이터 셋팅함
 			node.setId("[roles]-" + role.getName());
-			node.setName(role.getName());
+			node.setName(role.getDisplayName() == null ? role.getName() : role.getDisplayName().getText());
 			node.setParentId(this.getId());
 			node.setAlign(this.getAlign());
 			node.setType(TreeNode.TYPE_FILE_HTML);
