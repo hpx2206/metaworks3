@@ -4,6 +4,7 @@ import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.ide.DefaultProject;
 
@@ -41,4 +42,10 @@ public class TopMenuPanel {
 		
 		return new Object[]{new Refresh(cloudIDE), new Refresh(cloudIDE.loadTopCenterPanel(session))};
 	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow popupFeedback(){
+		return new ModalWindow(new ContactUs(),800,570,"피드백");
+	}
+
 }
