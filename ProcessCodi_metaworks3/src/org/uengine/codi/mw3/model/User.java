@@ -234,6 +234,7 @@ public class User extends Database<IUser> implements IUser {
 
 		Popup popup = new Popup(with, height);
 		popup.setPanel(this);
+		popup.setAnimate(false);
 
 		return popup;
 	}
