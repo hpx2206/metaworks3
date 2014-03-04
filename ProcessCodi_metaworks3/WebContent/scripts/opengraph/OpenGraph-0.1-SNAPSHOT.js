@@ -10539,6 +10539,7 @@ OG.shape.bpmn.A_Subprocess = function (label) {
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Subprocess';
 	this.GROUP_COLLAPSIBLE = false;
 	this.HaveButton = true;
+	this.status = "None";
 };
 OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GeomShape;
@@ -15389,6 +15390,11 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 		if(groupNode.shape.status != 'None')
 			this.drawStatus(groupNode);
     }
+    
+    if(shape instanceof OG.shape.bpmn.A_Subprocess){
+    	if(groupNode.shape.status != 'None')
+			this.drawStatus(groupNode);
+    }
 	
 	// Draw Error
 	if(groupNode.shape.exceptionType != '')
@@ -16877,6 +16883,11 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 			if(element.shape.TaskType != 'None')
 				this.drawTaskType(element);
 			if(element.shape.status != 'None')
+				this.drawStatus(element);
+        }
+        
+        if(element.shape instanceof OG.shape.bpmn.A_Subprocess){
+        	if(element.shape.status != 'None')
 				this.drawStatus(element);
         }
 
