@@ -26,8 +26,8 @@ public class ConsultingServiceChoicePanel {
 			serviceChoicePanelList = new ConsultingServiceChoiceList();
 		}
 	
-		serviceChoicePanelList.setSelfTest("aa");
-		serviceChoicePanelList.setRegionMatching("bb");
+		serviceChoicePanelList.setSelfTest("셀프 테스트 서비스");
+		serviceChoicePanelList.setRegionMatching("국가 매칭 서비스");
 	
 	}
 }

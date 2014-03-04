@@ -16,7 +16,7 @@
                     <% } else { %>
                     
                         <td width="10%">
-                        
+                            
                             <%=mw3.locateObject(value.services[i])%>
                             <% mw3.addBeanProperty(value.__objectId, '.services[' + i + ']'); %>
                             
@@ -47,7 +47,7 @@
                                                value.sectors[j].id == value.item[k].sectorId) { 
                                                
                                                 var options = {};
-                                                options['htmlAttr'] =  {'style': 'width:30%;' }; %>
+                                                options['htmlAttr'] =  {'style': 'width: 50%;' }; %>
                                                 
                                                 <%=mw3.locateObject(value.item[k], value.item[k].__className, null, options)%>
                                                 <% mw3.addBeanProperty(value.__objectId, '.item[' + k + ']'); %>
