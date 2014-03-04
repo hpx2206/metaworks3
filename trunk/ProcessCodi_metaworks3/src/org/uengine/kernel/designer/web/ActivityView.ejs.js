@@ -148,6 +148,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         		drop: function(event, ui){
         			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
         	 		var clipboardNode = session.clipboard;
+					var eleClassName = $(this).attr("_classname");
 					//console.log(clipboardNode);
         			if(clipboardNode){
         				switch (clipboardNode.__className){
@@ -207,7 +208,9 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    		// 엑티비티에 파라미터 추가
     	    		    		if( object.activity ){
     	    		    			object.activity.parameters = parameterContexts;
-    	    		    			object.activity.description = variableDisplayName;
+									if( !(object.activity.description && object.activity.description.text != null && object.activity.description.text != '') ){
+	    	    		    			object.activity.description = variableDisplayName;
+									}
     	    		    		}
     	    		    		
     	    		    		// 전체 변수 리스트에 추가
@@ -217,7 +220,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    			processVariablePanel.addWholeVariable();
     	            			}
     	    		    		
-    	    		    		var eleClassName = $(this).attr("_classname");
     	    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
     	    		    			var activityData = $(this).data('activity');
     	    		    			activityData.resourceClass = clipboardNode.alias;
@@ -233,7 +235,32 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 						case 'org.uengine.codi.mw3.ide.libraries.ProcessNode':
 							switch (clipboardNode.type) {
 								case 'process':
-								    console.log('1');
+									if( eleClassName == 'org.uengine.kernel.SubProcessActivity' ){  // 서브프로세스 에서만 프로세스를 받을수 있음
+									    console.log(clipboardNode);
+										
+										var descName = clipboardNode.name.substring(0, clipboardNode.name.length - 8);
+		                                // 이미 label 이 그려진 경우라면 새롭게 label을 그리지 않는다.
+		                                if( !($(this).find('#'+this.id+'_LABEL') && $(this).find('#'+this.id+'_LABEL').length > 0 && $(this).find('#'+this.id+'_LABEL').text() != "" )){
+		                                    canvas.drawLabel(element, descName);
+		                                }
+										
+										object.id = $(this).attr('id');
+		                                object.activity = $(this).data('activity');
+										
+										var subprocessDisplayName = {
+	                                        __className : 'org.uengine.contexts.TextContext',
+	                                        text : descName
+	                                    };
+									
+		                                // 엑티비티에 파라미터 추가
+	                                    if (object.activity) {
+											  if( !(object.activity.description && object.activity.description.text != null && object.activity.description.text != '') ){
+		                                          object.activity.description = subprocessDisplayName;
+		                                      }
+										      object.activity.alias = clipboardNode.alias;
+											  object.activity.definitionId = clipboardNode.alias;
+										}
+									}
 									break;
 								default:
 									break;

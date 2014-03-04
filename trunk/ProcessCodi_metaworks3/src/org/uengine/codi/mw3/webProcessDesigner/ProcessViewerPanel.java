@@ -3,12 +3,14 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.io.File;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -116,6 +118,7 @@ public class ProcessViewerPanel implements ContextAware {
 		metaworksContext = new MetaworksContext();
 	}
 	
+	@ServiceMethod(callByContent=true)
 	public void findDefinitionView(){
 		this.getMetaworksContext().setHow("find");
 		processViewNavigator = new ProcessViewNavigator();
@@ -139,7 +142,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.setUseClassLoader(useClassLoader);
 		processViewPanel.load();
 	}
-	
+	@ServiceMethod(callByContent=true)
 	public void loadDefinitionView(){
 		this.getMetaworksContext().setHow("load");
 		processViewPanel = new ProcessViewPanel();
@@ -163,37 +166,24 @@ public class ProcessViewerPanel implements ContextAware {
 	}
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] removeLink(){
-			Activity activity = this.getOpenerActivity();
-			if( activity instanceof SubProcessActivity){
-				((SubProcessActivity) activity).setDefinitionId(null);
-				((SubProcessActivity) activity).setAlias(null);			
-
-			}else if(activity instanceof EventActivity){
-				((EventActivity) activity).setDefinitionId(null);
-				((EventActivity) activity).setAlias(null);
-			}
-			ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
-			applyProperties.setViewType(this.getViewType());
-			return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
-		}
-	
-	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] saveLink(){
+	public Object[] saveLink() throws Exception{
 		String defId = processViewPanel.getDefId();
 		String alias = processViewPanel.getAlias();
 		Activity activity = this.getOpenerActivity();
 		if( activity instanceof SubProcessActivity){
 			((SubProcessActivity) activity).setDefinitionId(defId);
-			((SubProcessActivity) activity).setAlias(alias);
+			((SubProcessActivity) activity).setAlias(defId);
+			
+			((SubProcessActivity) activity).setSubProcessContext(null);
+			((SubProcessActivity) activity).drawInit();
+			((SubProcessActivity) activity).getProcessSelectPanel().setDefinitionId(defId);
+			
 		}else if(activity instanceof EventActivity){
 			((EventActivity) activity).setDefinitionId(defId);
 			((EventActivity) activity).setAlias(alias);
 		}
 		
-		ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
-		applyProperties.setViewType(this.getViewType());
-		return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
+		return new Object[]{ new Refresh(activity), new Remover(new ModalWindow() , true)};
 	}
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)

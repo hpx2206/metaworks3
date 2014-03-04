@@ -13,9 +13,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.metaworks.EventContext;
 import org.metaworks.FieldDescriptor;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
@@ -23,6 +24,7 @@ import org.metaworks.component.TreeNode;
 import org.metaworks.inputter.ArrayObjectInput;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessSelectPanel;
 import org.uengine.codi.mw3.webProcessDesigner.SubProcessResourceTree;
 import org.uengine.contexts.SubProcessContext;
 import org.uengine.contexts.TextContext;
@@ -57,6 +59,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigner
   }
   
   	String instanceId;
+  	@Hidden
 	    public String getInstanceId() {
 	      return instanceId;
 	    }
@@ -81,8 +84,15 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigner
 	    public void setDefinitionId(String l) {
 	      definitionId = l;
 	    }
-    
-    //add ryu start
+    transient ProcessSelectPanel processSelectPanel;
+		public ProcessSelectPanel getProcessSelectPanel() {
+			return processSelectPanel;
+		}
+		public void setProcessSelectPanel(ProcessSelectPanel processSelectPanel) {
+			this.processSelectPanel = processSelectPanel;
+		}
+
+	//add ryu start
     ProcessDefinition definitionObject;
     @Hidden
    	public ProcessDefinition getDefinitionObject() {
@@ -163,6 +173,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigner
     }
 
   boolean createAsRootProcess;
+  @Hidden
     public boolean isCreateAsRootProcess() {
       return createAsRootProcess;
     }
@@ -171,6 +182,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigner
     }
 
   TextContext multipleInstanceLabel = TextContext.createInstance();
+  @Hidden
     public TextContext getMultipleInstanceLabel() {
       return multipleInstanceLabel;
     }
@@ -1219,6 +1231,7 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
   }
   
     SubProcessContext subProcessContext;
+    @Face(displayName="$dataMapping")
 		public SubProcessContext getSubProcessContext() {
 			return subProcessContext;
 		}
@@ -1226,6 +1239,7 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
 			this.subProcessContext = subProcessContext;
 		}
 	transient String parentEditorId;
+		@Hidden
 		public String getParentEditorId() {
 			return parentEditorId;
 		}
@@ -1259,7 +1273,6 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
 		subProcessContext.getMappingCanvas().setLeftTreeId(leftTree.getId());
 		subProcessContext.getMappingCanvas().setRightTreeId(rightTree.getId());
 	}
-
 }
 
 

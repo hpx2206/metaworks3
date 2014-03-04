@@ -97,7 +97,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				if(childFile.isDirectory()){
 					ProcessDefinitionNode node = new ProcessDefinitionNode();
 					node.setProjectId(this.getProjectId());
-					node.setId(this.getId() + childFile.getName());				
+					node.setId(this.getId() + File.separatorChar + childFile.getName());				
 					node.setName(childFile.getName());
 					node.setDefId(childFile.getName());
 					node.setPath(this.getPath() + childFile.getName() + File.separatorChar);
@@ -125,9 +125,9 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 					}
 					ProcessDefinitionNode node = new ProcessDefinitionNode();
 					node.setProjectId(this.getProjectId());
-					node.setId(this.getId() + childFile.getName());
+					node.setId(this.getId() + File.separatorChar +childFile.getName());
 					node.setName(childFile.getName());
-					node.setDefId(childFile.getName());
+					node.setDefId(ResourceNode.makeResourcePath(node.getId()));
 					node.setPath(this.getPath() + childFile.getName());
 					node.setAlias(childFile.getName());
 					node.setParentId(this.getId());
