@@ -35,8 +35,10 @@ public class OverlayCommentWorkItem extends WorkItem{
 		this.setRootInstId(instance.databaseMe().getRootInstId());
 		
 		this.setPrtTskId(getOverlayCommentOption().getParentTaskId());
-		this.setExt1(getOverlayCommentOption().getX());
-		this.setExt2(getOverlayCommentOption().getY());
+		if( !"replyCmnt".equals(this.getType()) ){
+			this.setExt1(getOverlayCommentOption().getX());
+			this.setExt2(getOverlayCommentOption().getY());
+		}
 		
 		/*
 		 * fileWorkItem 은 GenericWorkItem 이 한번 감싸고, 다른 instId 를 가지고 따로 그려진다.
