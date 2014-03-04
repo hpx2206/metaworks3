@@ -71,6 +71,14 @@ public class SubProcessResourceTree extends Tree {
 			variableTreeNode.setFolder(true);
 			variableTreeNode.setAlign(this.getAlign());
 			variableTreeNode.load(variableList);
+			
+			InstanceTreeNode InstanceTreeNode = new InstanceTreeNode();
+			InstanceTreeNode.setId(treeId + "Instance");
+			InstanceTreeNode.setTreeId(treeId);
+			InstanceTreeNode.setType(TreeNode.TYPE_FOLDER);
+			InstanceTreeNode.setFolder(true);
+			InstanceTreeNode.setAlign(this.getAlign());
+			InstanceTreeNode.load();
 
 			String processName = "";
 			if( subDesignerContentPanel.getProcessNameView().getAlias() != null ){
@@ -81,6 +89,7 @@ public class SubProcessResourceTree extends Tree {
 			rootnode.setName(processName);	// 최상위 폴더 이름은 서브프로세스 이름
 			rootnode.add(roleNode);
 			rootnode.add(variableTreeNode);
+			rootnode.add(InstanceTreeNode);
 			
 		}else{
 			rootnode.setName("서브 프로세스를 등록해주세요.");

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.validation.Valid;
 
@@ -39,6 +40,7 @@ import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.kernel.RoleMapping;
+import org.uengine.kernel.SubProcessActivity;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 //@Face(ejsPath="faces/org/metaworks/widget/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
@@ -471,7 +473,7 @@ public class WorkItemHandler implements ContextAware{
 			instanceTooltip.load(inst);
 			
 			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.setInstanceId(this.getInstanceId());
+			instanceViewThreadPanel.setInstanceId(this.getRootInstId().toString());
 			
 			return new Object[]{new ToAppend(instanceViewThreadPanel, newlyAddedWorkItems), new Refresh(workItemMe), new Refresh(instanceTooltip)};
 
@@ -601,13 +603,13 @@ public class WorkItemHandler implements ContextAware{
 					instanceRef.setLastCmnt2User(writer);
 					instanceRef.setLastcmnt2TaskId(this.getTaskId());
 					// database update
-					instanceRef.databaseMe().setLastCmnt(instanceRef.getLastCmnt2());
-					instanceRef.databaseMe().setLastCmntUser(instanceRef.getLastCmnt2User());
-					instanceRef.databaseMe().setLastcmntTaskId(instanceRef.getLastcmnt2TaskId());
+					instanceRef.databaseMe().setLastCmnt(instanceRef.getLastCmnt());
+					instanceRef.databaseMe().setLastCmntUser(instanceRef.getLastCmntUser());
+					instanceRef.databaseMe().setLastcmntTaskId(instanceRef.getLastcmntTaskId());
 					
-					instanceRef.databaseMe().setLastCmnt2(title);
-					instanceRef.databaseMe().setLastCmnt2User(writer);
-					instanceRef.databaseMe().setLastcmnt2TaskId(this.getTaskId());
+					instanceRef.databaseMe().setLastCmnt2(instanceRef.getLastCmnt2());
+					instanceRef.databaseMe().setLastCmnt2User(instanceRef.getLastCmnt2User());
+					instanceRef.databaseMe().setLastcmnt2TaskId(instanceRef.getLastcmnt2TaskId());
 				}
 			}
 		}
@@ -681,7 +683,7 @@ public class WorkItemHandler implements ContextAware{
 
 		//refreshes the instanceview so that the next workitem can be show up
 		Instance inst = new Instance();
-		inst.setInstId(new Long(getInstanceId()));
+		inst.setInstId(new Long(getRootInstId()));
 		inst.copyFrom(inst.databaseMe());
 		
 		instanceViewContent.load(inst);
@@ -791,13 +793,36 @@ public class WorkItemHandler implements ContextAware{
                     if(lastAct instanceof HumanActivity && lastActCtx.getInstance().isRunning(lastAct.getTracingTag())){
                         HumanActivity newlyStartedAct = (HumanActivity)lastAct;
 						String[] taskIds = newlyStartedAct.getTaskIds(instance);
-                        
-						for(String taskId : taskIds){
-                            newlyAddedWorkItems.add(taskId);
-						}							
+                        if( taskIds != null ){
+							for(String taskId : taskIds){
+	                            newlyAddedWorkItems.add(taskId);
+							}						
+                        }
+                    }
+                    
+                    if(lastAct instanceof SubProcessActivity && lastActCtx.getInstance().isRunning(lastAct.getTracingTag())){
+                    	Vector subProcess = ((SubProcessActivity)lastAct).getSubProcesses(instance);
+                    	for(int indexOfSP=0; indexOfSP<subProcess.size(); indexOfSP++){
+                    		ProcessInstance sp = (ProcessInstance) subProcess.elementAt(indexOfSP);
+                    		String[] subprocessTaskIds = executedActivityTaskIds(sp);
+                    		if( subprocessTaskIds != null ){
+	                    		for(int j=0; j < subprocessTaskIds.length; j++){
+	                    			newlyAddedWorkItems.add(subprocessTaskIds[j]);
+	                    		}
+                    		}
+                	    }
                     }
             }
-        }		
+        }
+        if( instance.isSubProcess() && (Activity.STATUS_STOPPED.equals(instance.getStatus()) || Activity.STATUS_COMPLETED.equals(instance.getStatus()))){
+        	ProcessInstance mainp = instance.getMainProcessInstance();
+        	String[] mainProcessTaskIds = executedActivityTaskIds(mainp);
+    		if( mainProcessTaskIds != null ){
+        		for(int j=0; j < mainProcessTaskIds.length; j++){
+        			newlyAddedWorkItems.add(mainProcessTaskIds[j]);
+        		}
+    		}
+        }
         
         return newlyAddedWorkItems.toArray(new String[newlyAddedWorkItems.size()]);
 	}

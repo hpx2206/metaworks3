@@ -39,16 +39,9 @@
                             <a id="wBtn" href="#" onClick="<%=methods.closeModalPopup.caller()%>"><span><%=mw3.localize("$Close")%></span></a>
                     <%
                         }else{
-                            if( value.viewType == 'definitionView' ){
                     %>
-                                <a id="wBtn" href="#" onClick="<%=methods.openLink.caller()%>"><span><%=mw3.localize("$Open")%></span></a>
+                            <a id="wBtn" href="#" onClick="<%=methods.findDefinitionView.caller()%>"><span><%=mw3.localize("$ProcessReselect")%></span></a>
                     <%
-                            }else{
-                    %>
-                                <a id="wBtn" href="#" onClick="<%=methods.openLink.caller()%>"><span><%=mw3.localize("$Open")%></span></a>
-                                <a id="wBtn" href="#" onClick="<%=methods.removeLink.caller()%>"><span><%=mw3.localize("$ProcessReselect")%></span></a>
-                    <%
-                            }
                         }
                     %>
                 </div>
