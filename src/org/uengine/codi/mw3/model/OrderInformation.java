@@ -150,4 +150,18 @@ public class OrderInformation extends Database<IOrderInformation> implements IOr
 		return orderInformation;
 	}
 	
+	// 발주정보의 모든 리스트를 가져와야 한다. 가져오는 쿼리문
+	public IOrderInformation loadPastOrderInfo() throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select distinct name_ko as countryname, count(a.country_code) as count, a.project_name as projectname, a.reg_date as regdate");
+		sb.append(" from pseip_bidding as a, pseip_country as b");
+		sb.append(" where a.country_code = b.country_code");
+		sb.append(" group by a.country_code, b.country_code");
+		
+		IOrderInformation pastOrderInformation = (IOrderInformation) sql(IOrderInformation.class, sb.toString());
+		pastOrderInformation.select();
+		
+		return pastOrderInformation;
+	}
+	
 }

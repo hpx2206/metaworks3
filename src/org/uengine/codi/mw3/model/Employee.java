@@ -244,7 +244,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		public void setInviteUser(String inviteUser) {
 			this.inviteUser = inviteUser;
 		}
-	
+		
+	EnterpriseInformation enterpriseInformation;
+		public EnterpriseInformation getEnterpriseInformation() {
+			return enterpriseInformation;
+		}
+		public void setEnterpriseInformation(EnterpriseInformation enterpriseInformation) {
+			this.enterpriseInformation = enterpriseInformation;
+		}
+		
 	@Override
 	public IEmployee load() throws Exception {
 		String errorMessage;
@@ -562,18 +570,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		//임시
-		modalWindow.setWidth(1000);
-		modalWindow.setHeight(800);
-//		modalWindow.setWidth(300);
-//		modalWindow.setHeight(150);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(150);
 		
 		modalWindow.setTitle("$JoinCompleteTitle");
-		// 임시
-		ImageAndText imageAndText = new ImageAndText();
-		imageAndText.setImageAndText();
-		modalWindow.setPanel(imageAndText);
-		//modalWindow.setPanel(localeManager.getString("$JoinCompleteMessage"));
+		modalWindow.setPanel(localeManager.getString("$JoinCompleteMessage"));
 		modalWindow.getButtons().put("$Confirm", null);
 		modalWindow.getCallback().put("$Confirm", "forward");
 		
@@ -697,7 +698,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 
 		return new Object[]{locale, this};
 	}
-	@Override
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object subscribeStep2() throws Exception {
 		if(!this.checkValidEmail()){
 			throw new Exception("Is that email is already subscribed");
@@ -707,11 +709,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(!getPassword().equals(getConfirmPassword())){
 			throw new Exception("Re-entered password doesn't match");
 		}
-
+		
+		if(enterpriseInformation == null) {
+			enterpriseInformation = new EnterpriseInformation();
+		}
+		getMetaworksContext().setWhen(EnterpriseInformation.ENTERPRISE);
+		enterpriseInformation.getMetaworksContext().setWhen(EnterpriseInformation.ENTERPRISE);
 		//getMetaworksContext().setWhen("new3");
-		getMetaworksContext().setWhen("yame1");
 
-		return this;
+		return enterpriseInformation;
 	}
 	@Override
 	public Object subscribeStep3() throws Exception {
@@ -764,196 +770,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		removeWindow.setId("subscribe");
 		
 		return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
-	}
-	
-	
-	/// 가짜 객체 나중에 지울것. (로그인 대용)
-	String ceoName;
-		public String getCeoName() {
-			return ceoName;
-		}
-		public void setCeoName(String ceoName) {
-			this.ceoName = ceoName;
-		}
-	
-	String bPart;
-		public String getbPart() {
-			return bPart;
-		}
-		public void setbPart(String bPart) {
-			this.bPart = bPart;
-		}
-
-	String address;
-		public String getAddress() {
-			return address;
-		}
-		public void setAddress(String address) {
-			this.address = address;
-		}
-	
-	String foundation;
-		public String getFoundation() {
-			return foundation;
-		}
-		public void setFoundation(String foundation) {
-			this.foundation = foundation;
-		}
-	
-	String jongsa;
-		public String getJongsa() {
-			return jongsa;
-		}
-		public void setJongsa(String jongsa) {
-			this.jongsa = jongsa;
-		}
-		
-	String serviceHyungtae;
-		public String getServiceHyungtae() {
-			return serviceHyungtae;
-		}
-		public void setServiceHyungtae(String serviceHyungtae) {
-			this.serviceHyungtae = serviceHyungtae;
-		}
-	
-	String productName;
-		public String getProductName() {
-			return productName;
-		}
-		public void setProductName(String productName) {
-			this.productName = productName;
-		}
-	
-	String projectSiljeok;
-		public String getProjectSiljeok() {
-			return projectSiljeok;
-		}
-		public void setProjectSiljeok(String projectSiljeok) {
-			this.projectSiljeok = projectSiljeok;
-		}
-	
-	String tukher;
-		public String getTukher() {
-			return tukher;
-		}
-		public void setTukher(String tukher) {
-			this.tukher = tukher;
-		}
-
-	String tukherAndProgram;
-		public String getTukherAndProgram() {
-			return tukherAndProgram;
-		}
-		public void setTukherAndProgram(String tukherAndProgram) {
-			this.tukherAndProgram = tukherAndProgram;
-		}
-
-	String chulwonAndStartDate;
-		public String getChulwonAndStartDate() {
-			return chulwonAndStartDate;
-		}
-		public void setChulwonAndStartDate(String chulwonAndStartDate) {
-			this.chulwonAndStartDate = chulwonAndStartDate;
-		}
-		
-	String chulwonAndStartSunbun;
-		public String getChulwonAndStartSunbun() {
-			return chulwonAndStartSunbun;
-		}
-		public void setChulwonAndStartSunbun(String chulwonAndStartSunbun) {
-			this.chulwonAndStartSunbun = chulwonAndStartSunbun;
-		}
-		
-	String chulwonSu;
-		public String getChulwonSu() {
-			return chulwonSu;
-		}
-		public void setChulwonSu(String chulwonSu) {
-			this.chulwonSu = chulwonSu;
-		}
-		
-	String etc;
-		public String getEtc() {
-			return etc;
-		}
-		public void setEtc(String etc) {
-			this.etc = etc;
-		}
-		
-	String product;
-		public String getProduct() {
-			return product;
-		}
-		public void setProduct(String product) {
-			this.product = product;
-		}
-		
-	String info;
-		public String getInfo() {
-			return info;
-		}
-		public void setInfo(String info) {
-			this.info = info;
-		}
-		
-	String markecting;
-		public String getMarkecting() {
-			return markecting;
-		}
-		public void setMarkecting(String markecting) {
-			this.markecting = markecting;
-		}
-	
-	String it;
-		public String getIt() {
-			return it;
-		}
-		public void setIt(String it) {
-			this.it = it;
-		}
-		
-	String rnd;
-		public String getRnd() {
-			return rnd;
-		}
-		public void setRnd(String rnd) {
-			this.rnd = rnd;
-		}
-		
-	String global;
-		public String getGlobal() {
-			return global;
-		}
-		public void setGlobal(String global) {
-			this.global = global;
-		}
-		
-	@Override
-	public Object yame1() throws Exception {
-		getMetaworksContext().setWhen("yame2");
-
-		return this;
-	}
-	
-	@Override
-	public Object yame2() throws Exception {
-		getMetaworksContext().setWhen("yame3");
-
-		return this;
-	}
-	
-	@Override
-	public Object yame3() throws Exception {
-		getMetaworksContext().setWhen("yame4");
-
-		return this;
-	}
-	
-	@Override
-	public Object yame4() throws Exception {
-		getMetaworksContext().setWhen("new3");
-
-		return this;
 	}
 	
 }

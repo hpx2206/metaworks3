@@ -1,0 +1,71 @@
+<% if(value) { %>
+    
+    <ul id="green_and_orange_step_menu">
+        <li class="frist fdone">STEP3<em>Service</em></li>
+        <li class="lastinprogress last">STEP4<em>Patent</em><span></span></li>
+    </ul>
+    
+    <div class="form_table">
+        <table border="1" cellspacing="0" summary="">
+            <tbody>
+            <tr>
+                <th scope="row">특허 형태</th>
+                <td>
+                    <div class="item">
+                        <%=fields.patentForm.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">특허/프로그램 명</th>
+                <td>
+                    <div class="item">
+                        <%=fields.patentName.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">출원/등록일</th>
+                <td>
+                    <div class="item">
+                        <%=fields.registrationNumber.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">출원/등록순번</th>
+                <td>
+                    <div class="item">
+                        <%=fields.registrationNumber.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">출원등록자수</th>
+                <td>
+                    <div class="item">
+                        <%=fields.registrationMembers.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">비고</th>
+                <td>
+                    <div class="item">
+                        <%=fields.etc.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            
+            </tbody>
+        </table>
+    </div>
+        
+        
+<% } %>

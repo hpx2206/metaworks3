@@ -44,14 +44,6 @@ public class WorldMap {
 			this.distinctOrderInformation = distinctOrderInformation;
 		}
 
-		WorldMapChart	worldMapChart;
-		public WorldMapChart getWorldMapChart() {
-			return worldMapChart;
-		}
-	
-		public void setWorldMapChart(WorldMapChart worldMapChart) {
-			this.worldMapChart = worldMapChart;
-		}
 
 	public void loadMapInfo() throws Exception {
 //		if(orderInformation == null) {
@@ -83,17 +75,21 @@ public class WorldMap {
 		return new Object[] {popup};
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow loadRegionMatching() {
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow loadPastOrderInformation() throws Exception{
+		// db 에서 과거의 발주정보를 전부 찾아온다.
+		OrderInformation orderInformation = new OrderInformation();
+		IOrderInformation iOrderInformation = orderInformation.loadPastOrderInfo();
+		
+		// 그리고 worldChart에 set
+		WorldMapChart worldMapChart = new WorldMapChart();
+		worldMapChart.load(iOrderInformation);
+		
 		ModalWindow modalWindow = new ModalWindow();
-		if(worldMapChart == null){
-			worldMapChart = new WorldMapChart();
-		}
-		
-		
 		modalWindow.setWidth(900);
 		modalWindow.setHeight(600);
 		modalWindow.setPanel(worldMapChart);
+		
 		return modalWindow;
 			
 	}		

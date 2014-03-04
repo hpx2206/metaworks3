@@ -20,6 +20,7 @@ public class PublicServiceIntroducePerspective {
 		modalWindow.setHeight(600);
 		modalWindow.setTitle("$publicServiceIntroduce");
 		modalWindow.setPanel(publicServiceIntroducePanel);
+		
 		return new Object[]{modalWindow};
 	}
 }

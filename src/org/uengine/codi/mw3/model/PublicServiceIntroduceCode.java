@@ -1,6 +1,13 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.knowledge.CategoryTitle;
 
 public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduceCode> implements IPublicServiceIntroduceCode {
 
@@ -14,11 +21,14 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 	
 	final static long FRIST_SEQUENCE = 1;
 	
+	public final static String CODE_MODIFY = "code_modify";
+	
+	
 	String id;
+		@Id
 		public String getId() {
 			return id;
 		}
-	
 		public void setId(String id) {
 			this.id = id;
 		}
@@ -203,6 +213,32 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		return tabs;
 	} 
 	
+	public IPublicServiceIntroduceCode findSector() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select *");
+		sb.append(" from public_introduce_code");
+		sb.append("	where id = ?id");
+		
+		IPublicServiceIntroduceCode sector = (IPublicServiceIntroduceCode) sql(IPublicServiceIntroduceCode.class, sb.toString());
+		sector.setId(this.getId());
+		sector.select();
+		
+		return sector;
+	}
+	
+	public IPublicServiceIntroduceCode findService() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select *");
+		sb.append(" from public_introduce_code");
+		sb.append("	where id = ?id");
+		
+		IPublicServiceIntroduceCode service = (IPublicServiceIntroduceCode) sql(IPublicServiceIntroduceCode.class, sb.toString());
+		service.setId(this.getId());
+		service.select();
+		
+		return service;
+	}
+	
 	public IPublicServiceIntroduceCode findCurrentLastTab() throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select id");
@@ -216,6 +252,19 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 		return tabs;
 		
+	}
+	
+	public IPublicServiceIntroduceCode findTabInfo() throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select *");
+		sb.append(" from public_introduce_code");
+		sb.append("	where id = ?id");
+		
+		IPublicServiceIntroduceCode tab = (IPublicServiceIntroduceCode) sql(IPublicServiceIntroduceCode.class, sb.toString());
+		tab.setId(this.getId());
+		tab.select();
+		
+		return tab;
 	}
 	
 	public void addSector(String name, String codeId) throws Exception {
@@ -262,5 +311,90 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 	}
 	
+	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_POPUP)
+	@Face(displayName="$Delete")
+	public Object[] delete() throws Exception {
+		// sector와 service를 구분하며 지워야 한다.
+		String[] parseId = this.getId().split("_");
+		
+		// sector인 경우
+		if("SEC".equals(parseId[0])) {
+			// item 삭제 후 div 까지 지워야 한다.
+			PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
+			publicServiceIntroduceItem.deleteBySector(this.getId());
+			
+			// item 삭제 후 code 삭제
+			PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
+			publicServiceIntroduceCode.setId(this.getId());
+			publicServiceIntroduceCode.deleteDatabaseMe();
+			
+			// 화면 refresh
+			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+			publicServiceIntroduce.loadChart(this.getTab());
+			
+			return new Object[] { new Refresh(publicServiceIntroduce) };
+					
+		// service 인 경우	
+		} else {
+			// item 삭제 후 div 까지 지워야 한다.
+			PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
+			publicServiceIntroduceItem.deleteByService(this.getId());
+			
+			// item 삭제 후 code 삭제
+			PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
+			publicServiceIntroduceCode.setId(this.getId());
+			publicServiceIntroduceCode.deleteDatabaseMe();
+			
+			// 화면 refresh
+			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+			publicServiceIntroduce.loadChart(this.getTab());
+			
+			return new Object[] { new Refresh(publicServiceIntroduce) };
+		}
+	}
+	
+	public void deleteTab() throws Exception {
+		this.deleteDatabaseMe();
+	}
+	
+	public void deleteByTab(String tabId) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("delete");
+		sb.append(" from public_introduce_code");
+		sb.append("	where tab = ?tab");
+		
+		IPublicServiceIntroduceCode tabs = (IPublicServiceIntroduceCode) sql(IPublicServiceIntroduceCode.class, sb.toString());
+		tabs.setTab(tabId);
+		tabs.update();
+	}
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_POPUP)
+	@Face(displayName="$Modify")
+	public ModalWindow modify() throws Exception {
+		CategoryTitle categoryTitle = new CategoryTitle();
+		categoryTitle.setMetaworksContext(new MetaworksContext());
+		categoryTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		categoryTitle.getMetaworksContext().setHow(CODE_MODIFY);
+		categoryTitle.setTab(this.getTab());
+		
+		String[] temp = this.getId().split("_");
+		// sector면
+		if("SEC".equals(temp[0])) { 
+			categoryTitle.setSectorId(this.getId());
+			
+		}
+		// service면
+		else {
+			categoryTitle.setServiceId(this.getId());
+			
+		}
+		categoryTitle.setContentName(this.getName());
+		
+		return new ModalWindow(categoryTitle , 500, 200,  "$Modify");
+	}
+	
+	public void modifyTab() throws Exception {
+		this.syncToDatabaseMe();
+	}
 	
 }

@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -72,5 +73,9 @@ public interface IPublicServiceIntroduceItem extends IDAO{
 	public Object[] showDetail() throws Exception;
 	
 	public void save() throws Exception;
+	public void delete() throws Exception;
+	public void deleteByTab(String tabId) throws Exception;
+	public void deleteBySector(String sectorId) throws Exception;
+	public void deleteByService(String serviceId) throws Exception;
 	
 }

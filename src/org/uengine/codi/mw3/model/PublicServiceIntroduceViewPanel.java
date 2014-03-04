@@ -1,9 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -11,9 +13,6 @@ import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.kernel.UEngineException;
 
 public class PublicServiceIntroduceViewPanel {
-	
-	// return 할 오브젝트가 두개이다. ViewPanel은 Remover, Panel은 Refresh
-	final static int OBJECT_SIZE = 2;
 	
 	public PublicServiceIntroduceViewPanel() {
 		metaworksContext = new MetaworksContext();
@@ -185,15 +184,35 @@ public class PublicServiceIntroduceViewPanel {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND) 
 	public Object[] apply() throws Exception{
 		// 표의 전체 아이템을 다시 가져와서 뿌려주고 닫는다.
-		PublicServiceIntroducePanel publicServiceIntroducePanel = new PublicServiceIntroducePanel();
-		publicServiceIntroducePanel.refreshPanel();
+		PublicServiceIntroduceTabInfo publicServiceIntroduceTabInfo = new PublicServiceIntroduceTabInfo();
+		publicServiceIntroduceTabInfo.load();
 		
-		// 로직상 리턴할 오브젝트가 2개다. 지금은 하드코딩인데..이것을 어떻게 해야할지 모르겠다.
-		Object returnObject[] = new Object[OBJECT_SIZE];
-		returnObject[0] = new Remover(new ModalWindow());
-		returnObject[1] = new Refresh(publicServiceIntroducePanel, true);
+		String thisTabId = this.getItemTabId();
+		String tempArray[]  = thisTabId.split("_");
+		// tab의 id는 2인데 어레이는 0부터 들어가니 - 1
+		int parseTabId = Integer.parseInt(tempArray[1]) - 1;
 		
-		return returnObject;
+		return new Object[] {new Remover(new ModalWindow()), new Refresh(publicServiceIntroduceTabInfo.getIntroList().get(parseTabId)) };
+		
+	}
+	
+	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND) 
+	public Object[] delete() throws Exception{
+		PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
+		publicServiceIntroduceItem.setItemId(this.getItemId());
+		publicServiceIntroduceItem.delete();
+		
+		// 삭제하고 바로 적용 해야한다.
+		PublicServiceIntroduceTabInfo publicServiceIntroduceTabInfo = new PublicServiceIntroduceTabInfo();
+		publicServiceIntroduceTabInfo.load();
+		
+		String thisTabId = this.getItemTabId();
+		String tempArray[]  = thisTabId.split("_");
+		// tab의 id는 2인데 어레이는 0부터 들어가니 - 1
+		int parseTabId = Integer.parseInt(tempArray[1]) - 1;
+		
+		
+		return new Object[] {new Remover(new ModalWindow()), new Refresh(publicServiceIntroduceTabInfo.getIntroList().get(parseTabId)) };
 		
 	}
 }

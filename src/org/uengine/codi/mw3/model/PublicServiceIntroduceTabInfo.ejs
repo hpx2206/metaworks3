@@ -4,18 +4,19 @@
 %>
 
     <div id="tabs_<%=objectId%>" class="ui-layout-center tabs-min">
-
+        
         <ul>
-
-        <% for (var i = 0; i < value.introList.length; i++) {
             
-            var intro = value.introList[i]; %>
+            <% for(var i = 0; i < value.publicServiceIntroduceTab.length; i++) {
+                
+                var tab = value.publicServiceIntroduceTab; %>
+                
+                
+                <li>
+                    <a<%if(tab[i].name != 'null'){%> id="tabIcon_<%=tab[i].name%>" <%}%>  href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"> <%=mw3.locateObject(tab[i], tab[i].__className)%> </a>
+                </li>
             
-            <li>
-                <a<%if(intro.tabName != 'null'){%> id="tabIcon_<%=intro.tabName%>" <%}%>  href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=mw3.localize(intro.tabName)%></a>
-            </li>
-            
-        <% } %>
+            <% } %>
         
         <li>
             <button id="plus" id="title_<%=objectId%>_<%=i+2%>" onClick="<%=methods.addTab.caller()%>"><B> + </B></button>
@@ -39,3 +40,6 @@
             <% } %>
             
         </div>
+        
+    </div>
+        

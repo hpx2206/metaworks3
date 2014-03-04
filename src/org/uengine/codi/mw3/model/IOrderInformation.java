@@ -44,5 +44,6 @@ public interface IOrderInformation extends IDAO{
 //	public IOrderInformation findOrderInfo() throws Exception;
 	public IOrderInformation findDistinctOrderInfo() throws Exception;
 	public IOrderInformation loadDetailOrderInfo() throws Exception;
+	public IOrderInformation loadPastOrderInfo() throws Exception;
 	
 }

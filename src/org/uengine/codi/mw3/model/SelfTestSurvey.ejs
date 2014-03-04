@@ -1,0 +1,43 @@
+<% if(value) { %>
+    
+    <ul id="green_and_orange_step_menu">
+        <li class="frist fdone">STEP3<em>Patent</em></li>
+        <li class="lastinprogress last">STEP4<em>Self-Test Survey</em><span></span></li>
+    </ul>
+    
+    <div class="form_table">
+        <table border="1" cellspacing="0" summary="">
+            <tbody>
+            <tr>
+                <th scope="row">첫번째 서베이</th>
+                <td>
+                    <div class="item">
+                        <%=fields.firstSurvey.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">두번째 서베이</th>
+                <td>
+                    <div class="item">
+                        <%=fields.secondSurvey.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">세번째 서베이</th>
+                <td>
+                    <div class="item">
+                        <%=fields.thirdSurvey.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            </tbody>
+        </table>
+    </div>
+        
+        
+<% } %>

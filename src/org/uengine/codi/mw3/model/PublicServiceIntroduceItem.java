@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
@@ -21,7 +24,9 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 	
 	final static String CONTENT = "content";
 	
+	
 	Long itemId;
+		@Id
 		public Long getItemId() {
 			return itemId;
 		}
@@ -223,8 +228,8 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		}	
 		
 		modalWindow.setTitle(this.getContentName());
-		modalWindow.setWidth(1200);
-		modalWindow.setHeight(600);
+		modalWindow.setWidth(1500);
+		modalWindow.setHeight(700);
 		modalWindow.setPanel(publicServiceIntroduceViewPanel);
 		
 		return new Object[] { modalWindow };
@@ -287,4 +292,42 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		
 		return contentNameList;
 	}
+	
+	public void delete() throws Exception {
+		this.deleteDatabaseMe();
+	}
+	
+	public void deleteByTab(String tabId) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("delete");
+		sb.append(" from public_introduce_item");
+		sb.append("	where tab = ?tab");
+		
+		IPublicServiceIntroduceItem items = (IPublicServiceIntroduceItem) sql(IPublicServiceIntroduceItem.class, sb.toString());
+		items.setTab(tabId);
+		items.update();
+	}
+	
+	public void deleteBySector(String sectorId) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("delete");
+		sb.append(" from public_introduce_item");
+		sb.append("	where sectorId = ?sectorId");
+		
+		IPublicServiceIntroduceItem items = (IPublicServiceIntroduceItem) sql(IPublicServiceIntroduceItem.class, sb.toString());
+		items.setSectorId(sectorId);
+		items.update();
+	}
+	
+	public void deleteByService(String serviceId) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("delete");
+		sb.append(" from public_introduce_item");
+		sb.append("	where serviceId = ?serviceId");
+		
+		IPublicServiceIntroduceItem items = (IPublicServiceIntroduceItem) sql(IPublicServiceIntroduceItem.class, sb.toString());
+		items.setSectorId(serviceId);
+		items.update();
+	}
+	
 }

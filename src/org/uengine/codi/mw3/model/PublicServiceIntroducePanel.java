@@ -1,27 +1,22 @@
 package org.uengine.codi.mw3.model;
 
-
 public class PublicServiceIntroducePanel {
 	
-	PublicServiceIntroduceTabPanel publicServiceIntroduceTabPanel;
-		public PublicServiceIntroduceTabPanel getPublicServiceIntroduceTabPanel() {
-			return publicServiceIntroduceTabPanel;
+	PublicServiceIntroduceTabInfo publicServiceIntroduceTabInfo;
+		public PublicServiceIntroduceTabInfo getPublicServiceIntroduceTabInfo() {
+			return publicServiceIntroduceTabInfo;
 		}
-		public void setPublicServiceIntroduceTabPanel(
-				PublicServiceIntroduceTabPanel publicServiceIntroduceTabPanel) {
-			this.publicServiceIntroduceTabPanel = publicServiceIntroduceTabPanel;
+		public void setPublicServiceIntroduceTabInfo(
+				PublicServiceIntroduceTabInfo publicServiceIntroduceTabInfo) {
+			this.publicServiceIntroduceTabInfo = publicServiceIntroduceTabInfo;
 		}
 
 	public void load() throws Exception {
-		PublicServiceIntroduceTabPanel publicServiceIntroduceTabPanel = new PublicServiceIntroduceTabPanel();
-		publicServiceIntroduceTabPanel.load();
+		if(publicServiceIntroduceTabInfo == null)
+			publicServiceIntroduceTabInfo = new PublicServiceIntroduceTabInfo();
 		
-		this.setPublicServiceIntroduceTabPanel(publicServiceIntroduceTabPanel);
-	}
-	
-	public void refreshPanel() throws Exception {
-		this.load();
-		
+		publicServiceIntroduceTabInfo.load();
+		this.setPublicServiceIntroduceTabInfo(publicServiceIntroduceTabInfo);
 	}
 	
 }

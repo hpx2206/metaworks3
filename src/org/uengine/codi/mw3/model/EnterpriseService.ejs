@@ -1,0 +1,43 @@
+<% if(value) { %>
+    
+    <ul id="green_and_orange_step_menu">
+        <li class="frist fdone">STEP3<em>Enterprise Information</em></li>
+        <li class="lastinprogress last">STEP4<em>Service</em><span></span></li>
+    </ul>
+    
+    <div class="form_table">
+        <table border="1" cellspacing="0" summary="">
+            <tbody>
+            <tr>
+                <th scope="row">서비스 형태</th>
+                <td>
+                    <div class="item">
+                        <%=fields.serviceForm.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">서비스 이름</th>
+                <td>
+                    <div class="item">
+                        <%=fields.serviceName.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row">프로젝트 실적</th>
+                <td>
+                    <div class="item">
+                        <%=fields.projectResult.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            </tbody>
+        </table>
+    </div>
+        
+        
+<% } %>
