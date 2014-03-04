@@ -28,6 +28,7 @@ public class Popup implements ContextAware {
 		setWidth(width);
 		setHeight(height);
 		setPanel(panel);
+		setAnimate(true);
 	}	
 
 	Object panel;
@@ -71,7 +72,15 @@ public class Popup implements ContextAware {
 		public void setHeight(int height) {
 			this.height = height;
 		}
-		
+	
+	boolean animate;
+		public boolean isAnimate() {
+			return animate;
+		}
+		public void setAnimate(boolean animate) {
+			this.animate = animate;
+		}
+
 	@ServiceMethod(eventBinding=EventContext.EVENT_CLOSE)
 	public Object close() {
 		return new Remover(ServiceMethodContext.TARGET_SELF);

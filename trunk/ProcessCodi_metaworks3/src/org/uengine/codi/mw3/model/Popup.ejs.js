@@ -30,9 +30,11 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 		scrollDiv.scroll(function(e) {
 			if(scrollDiv.scrollTop() > 1){
 				/*scrollDiv.animate({height:scrollDivChild.height()});*/
+				if( object.animate ){
+					scrollDiv.animate({height:$('body').height()-50});
+					scrollDiv.closest('.target_stick,.target_popup').animate({top:3});
+				}
 				
-				scrollDiv.animate({height:$('body').height()-50});
-				scrollDiv.closest('.target_stick,.target_popup').animate({top:3});
 			}
 		});
 	}
