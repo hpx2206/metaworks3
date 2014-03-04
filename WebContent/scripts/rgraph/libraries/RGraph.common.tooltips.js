@@ -90,16 +90,16 @@
         tooltipObj.style.paddingRight    = RGraph.tooltips.padding;
         tooltipObj.style.fontFamily      = RGraph.tooltips.font_face;
         tooltipObj.style.fontSize        = RGraph.tooltips.font_size;
-        tooltipObj.style.zIndex          = 3;
+        tooltipObj.style.zIndex          = 99993;
 
         // Only apply a border if there's content
         if (RGraph.trim(text).length > 0) {
-            tooltipObj.style.border             = '1px #bbb solid';
+            tooltipObj.style.border             = '2px #bbb solid';
         }
 
-        tooltipObj.style.borderRadius       = '5px';
-        tooltipObj.style.MozBorderRadius    = '5px';
-        tooltipObj.style.WebkitBorderRadius = '5px';
+        tooltipObj.style.borderRadius       = '10px';
+        tooltipObj.style.MozBorderRadius    = '10px';
+        tooltipObj.style.WebkitBorderRadius = '10px';
         tooltipObj.style.WebkitBoxShadow    = 'rgba(96,96,96,0.5) 0 0 15px';
         tooltipObj.style.MozBoxShadow       = 'rgba(96,96,96,0.5) 0 0 15px';
         tooltipObj.style.boxShadow          = 'rgba(96,96,96,0.5) 0 0 15px';
