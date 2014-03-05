@@ -47,7 +47,7 @@ public interface ICompany extends IDAO {
 	public void setIsDeleted(String deleted);
 
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, condition="repMail", options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
+		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, condition="repMail", options={"/^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$/"}, message="이메일 형식이 잘못되었습니다")
 	})
 	
 	@Face(options={"width"}, values={"300"})
