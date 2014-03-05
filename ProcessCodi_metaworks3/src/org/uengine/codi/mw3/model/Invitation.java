@@ -72,7 +72,7 @@ public class Invitation implements ContextAware{
 
 	String email;
 	//@Face(options={"placeholder"}, values={"Enter your work email address"})
-	@Pattern(regexp = "/^[a-z A-Z 0-9\\-_]+@[a-z A-Z 0-9\\-]+(\\.[a-z A-Z 0-9 \\-]+)+$/", message = "이메일 형식이 잘못되었습니다.")
+	@Pattern(regexp = "/^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$/", message = "이메일 형식이 잘못되었습니다.")
 	@Face(options={"hideLabel","placeholder"}, values={"true", "$InputEmail"})
 		public String getEmail() {
 			return email;
