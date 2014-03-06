@@ -156,7 +156,7 @@ public class WorkItemHandler implements ContextAware{
 		if( taskId != -1 && taskId != 0){
 			WorkItem item = new WorkItem();
 			
-			workItem = item.findParentWorkItemByType(taskId+"" , "replyCmnt");
+			workItem = item.findParentWorkItem(taskId.toString());
 		}
 	}
 	

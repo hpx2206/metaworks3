@@ -135,7 +135,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 	}
 	
-	protected static IWorkItem findParentWorkItemByType(String taskId , String type) throws Exception{
+	protected static IWorkItem findParentWorkItem(String taskId) throws Exception{
 		
 		StringBuffer sql = new StringBuffer();
 				
@@ -143,18 +143,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where prtTskId = ?prtTskId");
 		sql.append("   and isdeleted != ?isDeleted");
-		sql.append("   and type = ?type ");
+		sql.append("   and type in ('ovryCmnt' , 'replyCmnt') ");
 		sql.append(" order by taskId");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
-		workitem.set("type", type);
 		workitem.set("prtTskId", taskId);
 		workitem.set("isDeleted", 1);
 		workitem.select();
 		
 		return workitem;
 	}
+	
+	
 	
 	protected static IWorkItem find(String instanceId, int count) throws Exception{
 		
