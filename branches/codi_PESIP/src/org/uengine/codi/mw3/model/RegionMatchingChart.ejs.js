@@ -16,8 +16,6 @@ var org_uengine_codi_mw3_model_RegionMatchingChart = function(objectId, classNam
     }
     
     
-	var objectId = this.objectId;
-	$(document).ready(function() {
       var scatter2 = new RGraph.Scatter('scatter2',  [[50,31, 'red', '<b>Fred</b><br />Fred is at the start'], 
                                                       [80,49, 'blue', '<b>Juan</b><br />Juan is in the middle'], 
                                                       [180,45, 'red', '<b>Hoolio</b><br />Hoolio is at the end']]);
@@ -40,7 +38,6 @@ var org_uengine_codi_mw3_model_RegionMatchingChart = function(objectId, classNam
 		.Set('xaxispos','center')
 		.Draw();
 
-  });
   
 };
   
