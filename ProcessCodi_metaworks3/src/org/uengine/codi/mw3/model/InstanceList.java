@@ -148,7 +148,7 @@ public class InstanceList implements ContextAware{
 //		}
 		
 			// setting moreInstanceList
-		if( instanceContents.size() >= PAGE_CNT){
+		if( instanceContents.size() >= count){
 			setMoreInstanceList(new InstanceList());
 			getMoreInstanceList().setNavigation(navigation);
 			getMoreInstanceList().setPage(getPage()+1);
