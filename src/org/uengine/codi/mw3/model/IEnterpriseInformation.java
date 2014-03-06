@@ -31,13 +31,4 @@ public interface IEnterpriseInformation extends IDAO{
 	public String getCarryon();
 	public void setCarryon(String carryon);
 	
-	@ServiceMethod(callByContent=true)
-	public Object inputNextService();
-	
-	@ServiceMethod(callByContent=true)
-	public Object inputNextPatent();
-	
-	@ServiceMethod(callByContent=true)
-	public Object inputNextSurvey();
-	
 }

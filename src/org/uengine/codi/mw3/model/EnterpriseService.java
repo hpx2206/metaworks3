@@ -3,6 +3,8 @@ package org.uengine.codi.mw3.model;
 
 public class EnterpriseService {
 	
+	public static final String SERVICE = "service";
+	
 	String serviceForm;
 		public String getServiceForm() {
 			return serviceForm;

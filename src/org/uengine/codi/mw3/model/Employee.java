@@ -253,6 +253,22 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.enterpriseInformation = enterpriseInformation;
 		}
 		
+	EnterpriseService enterpriseService;
+		public EnterpriseService getEnterpriseService() {
+			return enterpriseService;
+		}
+		public void setEnterpriseService(EnterpriseService enterpriseService) {
+			this.enterpriseService = enterpriseService;
+		}
+		
+	EnterprisePatent enterprisePatent;
+		public EnterprisePatent getEnterprisePatent() {
+			return enterprisePatent;
+		}
+		public void setEnterprisePatent(EnterprisePatent enterprisePatent) {
+			this.enterprisePatent = enterprisePatent;
+		}
+		
 	@Override
 	public IEmployee load() throws Exception {
 		String errorMessage;
@@ -426,7 +442,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public boolean saveMe() throws Exception {
-		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
+		//if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
+		if(EnterprisePatent.PATENT.equals(getMetaworksContext().getWhen())) {
 			checkRegistered();
 
 			this.setIsDeleted("0");
@@ -673,7 +690,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public Object[] subscribeStep1() throws Exception {
 		
-		
 		Locale locale = new Locale();
 		locale.setLanguage(this.getLocale());
 		locale.load();
@@ -699,7 +715,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return new Object[]{locale, this};
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	
+	@ServiceMethod(callByContent=true, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object subscribeStep2() throws Exception {
 		if(!this.checkValidEmail()){
 			throw new Exception("Is that email is already subscribed");
@@ -714,15 +731,28 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			enterpriseInformation = new EnterpriseInformation();
 		}
 		getMetaworksContext().setWhen(EnterpriseInformation.ENTERPRISE);
-		enterpriseInformation.getMetaworksContext().setWhen(EnterpriseInformation.ENTERPRISE);
 		//getMetaworksContext().setWhen("new3");
 
-		return enterpriseInformation;
+		return this;
 	}
 	@Override
 	public Object subscribeStep3() throws Exception {
-		getMetaworksContext().setWhen("new4");
-
+		
+		if(enterpriseService == null) {
+			enterpriseService = new EnterpriseService();
+		}
+		getMetaworksContext().setWhen(EnterpriseService.SERVICE);
+		
+		return this;
+	}
+	
+	@Override
+	public Object subscribeStep4() throws Exception {
+		if(enterprisePatent == null) {
+			enterprisePatent = new EnterprisePatent();
+		}
+		getMetaworksContext().setWhen(EnterprisePatent.PATENT);
+		
 		return this;
 	}
 	

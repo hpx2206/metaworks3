@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 public class EnterprisePatent {
 
+	public final static String PATENT = "patent";
+	
 	String patentForm;
 		public String getPatentForm() {
 			return patentForm;

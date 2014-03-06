@@ -1,11 +1,9 @@
-<% if(value) { 
+<% if(value) { %>
     
-    if(mw3.when == 'enterprise') { %>
-    
-        <ul id="green_and_orange_step_menu">
-            <li class="first inprogress">STEP3<em>Enterprise Information</em></li>
-            <li class="last">STEP4<em>Service</em><span></span></li>
-        </ul>
+    <ul id="green_and_orange_step_menu">
+        <li class="first inprogress">STEP3<em>Enterprise Information</em></li>
+        <li class="last">STEP4<em>Service</em><span></span></li>
+    </ul>
     
         <div class="form_table">
             <table border="1" cellspacing="0" summary="">
@@ -77,36 +75,4 @@
             </table>
         </div>
         
-        <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
-            <ul>    
-                <li><a id="wBtn" href="#" onClick="<%=methods.inputNextService.caller()%>"><span><%=mw3.localize('$Next')%></span></a></li>
-            </ul>
-        </div>
-        
-    <% } else if(mw3.when == 'service') { %>
-        <%=fields.enterpriseService.here()%>
-        <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
-            <ul>    
-                <li><a id="wBtn" href="#" onClick="<%=methods.inputNextPatent.caller()%>"><span><%=mw3.localize('$Next')%></span></a></li>
-            </ul>
-        </div>
-            
-    <% } else if(mw3.when == 'patent') { %>
-        <%=fields.enterprisePatent.here()%>
-        <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
-            <ul>    
-                <li><a id="wBtn" href="#" onClick="<%=methods.inputNextSurvey.caller()%>"><span><%=mw3.localize('$Next')%></span></a></li>
-            </ul>
-        </div>
-        
-        
-    <% } else { %>
-        <%=fields.selfTestSurvey.here()%>
-        <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
-            <ul>    
-                <li><a id="wBtn" href="#" onClick=""><span><%=mw3.localize('$Next')%></span></a></li>
-            </ul>
-        </div>
-        
-    <% } %>
 <% } %>
