@@ -18,7 +18,6 @@ public class ConsultingServiceChoicePanel {
 	@AutowiredFromClient
 	public Session session;
 	
-	// 나중에 로드할 것이 잇다면 여기서 로드해야함
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public void load() {
 	
@@ -26,6 +25,7 @@ public class ConsultingServiceChoicePanel {
 			serviceChoicePanelList = new ConsultingServiceChoiceList();
 		}
 	
+		serviceChoicePanelList.session = session;
 		serviceChoicePanelList.setSelfTest("셀프 테스트 서비스");
 		serviceChoicePanelList.setRegionMatching("국가 매칭 서비스");
 	

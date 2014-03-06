@@ -1,0 +1,68 @@
+<% if(value) { %>
+
+    <!-- 처음 시작이냐 이미 설문을 한 적이 있는가 -->
+
+    <% if(mw3.when == 'init' && mw3.how == 'however') { %>
+       
+        <ul>
+            <li><em><H>셀프테스트를 진행한 적이 없습니다. 다음을 누르면 셀프테스트가 진행됩니다.</H></em></li>
+        </ul>
+        
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.progressfirstSurvey.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+            </ul>
+        </div>
+    
+    <% } 
+    
+    <% if(mw3.when == 'progressive' && mw3.how == 'however') { %>
+    
+        <div class="item">
+            <B>셀프테스트를 진행하신 적이 있습니다. 다음을 누르면 계속 진행됩니다.<B>
+            <!-- 추후에 작업합시다. 이부분 보다는 새시작에 초점을 맞추겟음 -->
+        </div>
+    
+    <% } %>
+    
+    <!-- 설문 1 ~ 9까지 mw3.how -->
+    
+    <% if(mw3.how == 'first') { %>
+    
+        <div>
+            <B> 제품 관련 셀프 테스트 </B>
+        </div>
+        
+        <br>
+     
+        <% for(var i = 0; i < value.surveyContent.length; i++) {
+            var firstContent = value.surveyContent[i]; %>
+            
+            <br>
+            
+            <%=firstContent.itemContent%>
+            
+            <div>
+            
+                <input type="radio" name="preferred_color" value=5 /> 5
+                <input type="radio" name="preferred_color" value=4 /> 4 
+                <input type="radio" name="preferred_color" value=3 /> 3 
+                <input type="radio" name="preferred_color" value=2 /> 2 
+                <input type="radio" name="preferred_color" value=2 /> 1 
+                
+            </div>
+            
+        <% } %>
+            
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.showResult.caller()%>"><span><%=mw3.localize("$Finish")%></span></a></li>
+            </ul>
+        </div>
+            
+    <% } if(mw3.how == 'complete') { %>
+        <%console.log(mw3.how);%>
+        아야어여우유우이 여기다 방사형 그래프 그리세욘
+    <% } %>
+    
+<% } %>

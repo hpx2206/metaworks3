@@ -1,20 +1,12 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 
 public class EnterpriseInformation extends Database<IEnterpriseInformation> implements IEnterpriseInformation {
 
 	public final static String ENTERPRISE = "enterprise";
-	public final static String SERVICE = "service";
-	public final static String PATENT = "patent";
-	public final static String SURVEY = "survey";
-	
-	public EnterpriseInformation() {
-		metaworksContext = new MetaworksContext();
-	}
 	
 	String enterpriseName;
 		public String getEnterpriseName() {
@@ -72,14 +64,6 @@ public class EnterpriseInformation extends Database<IEnterpriseInformation> impl
 			this.carryon = carryon;
 		}
 	
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
-		
 	EnterpriseService enterpriseService;
 		public EnterpriseService getEnterpriseService() {
 			return enterpriseService;
@@ -95,43 +79,5 @@ public class EnterpriseInformation extends Database<IEnterpriseInformation> impl
 		public void setEnterprisePatent(EnterprisePatent enterprisePatent) {
 			this.enterprisePatent = enterprisePatent;
 		}
-		
-	SelfTestSurvey selfTestSurvey;
-		public SelfTestSurvey getSelfTestSurvey() {
-			return selfTestSurvey;
-		}
-		public void setSelfTestSurvey(SelfTestSurvey selfTestSurvey) {
-			this.selfTestSurvey = selfTestSurvey;
-		}
-		
-	@ServiceMethod(callByContent=true)
-	public Object inputNextService() {
-		this.getMetaworksContext().setWhen(SERVICE);
-		
-		if(enterpriseService == null) {
-			enterpriseService = new EnterpriseService();
-		}
-		return this;
-	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object inputNextPatent() {
-		this.getMetaworksContext().setWhen(PATENT);
-		
-		if(enterprisePatent == null) {
-			enterprisePatent = new EnterprisePatent();
-		}
-		return this;
-	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object inputNextSurvey() {
-		this.getMetaworksContext().setWhen(SURVEY);
-		
-		if(selfTestSurvey == null) {
-			selfTestSurvey = new SelfTestSurvey();
-		}
-		return this;
-	}
 	
 }

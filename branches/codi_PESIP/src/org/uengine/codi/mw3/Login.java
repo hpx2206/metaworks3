@@ -35,7 +35,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Employee;
-import org.uengine.codi.mw3.model.Enterprise;
+import org.uengine.codi.mw3.model.EnterpriseInformation;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;

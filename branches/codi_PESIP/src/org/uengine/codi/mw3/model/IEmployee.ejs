@@ -60,7 +60,8 @@ if(value){
 					<ul>	
 						<li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep1.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
 					</ul>
-				</div>				 	
+				</div>
+				
 			<%
 			} else if(mw3.when == 'new2') {
 			%>
@@ -142,7 +143,9 @@ if(value){
 			} else if(mw3.when == 'enterprise') {
 				
 			%>	
+			    <!--
 				<ul id="green_and_orange_step_menu">
+				-->
 				<!--
 					<li class="first inprogress">STEP1<em>Choose language</em></li>
 					<li class="last lastinprogress">STEP2<em>Basic Informationy</em><span></span></li>
@@ -151,9 +154,38 @@ if(value){
 				    <li class="first inprogress">STEP3<em>Basic Informationy</em><span></span></li>
 				    <li class="last">STEP4<em>Enterprise Information</em><span></span></li>
 			    -->
-				</ul>	
-					
-                <%=fields.enterpriseInformation.here()%>
+			    <!--
+				</ul>
+				-->
+			    <%=mw3.locateObject(value.enterpriseInformation, value.enterpriseInformation.__className)%>
+				<div id="btnline">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep3.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+                    </ul>
+                </div>      
+                
+            <%
+            } else if(mw3.when == 'service') {
+            %>
+            
+                <%=mw3.locateObject(value.enterpriseService, value.enterpriseService.__className)%>
+                <div id="btnline">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep4.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+                    </ul>
+                
+                </div>  
+                
+            <%
+            } else if(mw3.when == 'patent') {
+            %>
+            
+                <%=mw3.locateObject(value.enterprisePatent, value.enterprisePatent.__className)%>
+                <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+                    <ul>    
+                        <li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
+                    </ul>
+                </div>              
                             
 			<%
 			} else if(mw3.when == 'edit') {
