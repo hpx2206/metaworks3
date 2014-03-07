@@ -30,7 +30,7 @@ public class SelfTestSurveyContent extends Database<ISelfTestSurveyContent> impl
 			this.itemContent = itemContent;
 		}
 
-	public ISelfTestSurveyContent findFirstSurvey(Long itemType) throws Exception {
+	public ISelfTestSurveyContent findSurvey(Long itemType) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select item_content as itemContent");
