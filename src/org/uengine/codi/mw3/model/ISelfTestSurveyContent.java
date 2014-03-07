@@ -17,6 +17,6 @@ public interface ISelfTestSurveyContent extends IDAO {
 	public String getItemContent();
 	public void setItemContent(String itemContent);
 	
-	// 첫 번째 설문 찾기
-	public ISelfTestSurveyContent findFirstSurvey(Long itemType) throws Exception;
+	// 설문조사를 찾아온다. itemType으로
+	public ISelfTestSurveyContent findSurvey(Long itemType) throws Exception;
 }
