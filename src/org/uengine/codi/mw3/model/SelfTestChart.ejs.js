@@ -14,7 +14,9 @@ var org_uengine_codi_mw3_model_SelfTestChart = function(objectId, className){
     	mw3.importScript('scripts/rgraph/libraries/RGraph.radar.js');
     }
     
-    var radar2 = new RGraph.Radar('selfTest', [[9,7,5,6,10,8,7,5,8,6],[5,9,6,9,7,5,4,6,7,10],[6,10,8,7,5,9,7,5,4,6]])
+    var radarData1 = object.sumScore;
+    
+    var radar2 = new RGraph.Radar('selfTest', [radarData1,7,5,6,10,8,7,5,8,6])
 	    .Set('labels', ['제품', '해외정보', '해외마케팅 인력','해외마케팅 활동','IT 역량','브랜드마케팅','R&D','글로벌 전략','글로벌 네트워크','시장규모'])
 	    .Draw();
 	    

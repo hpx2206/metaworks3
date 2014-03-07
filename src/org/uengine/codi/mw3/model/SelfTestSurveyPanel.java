@@ -1,8 +1,12 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 
 public class SelfTestSurveyPanel {
 	
@@ -22,13 +26,17 @@ public class SelfTestSurveyPanel {
 	
 	public static final Long SURVEY_INIT_INDEX = new Long(1);
 	
-	Long sumScore;
-		public Long getSumScore() {
-			return sumScore;
-		}
-		public void setSumScore(Long sumScore) {
-			this.sumScore = sumScore;
-		}
+	int sumScore;
+
+	
+	public int getSumScore() {
+		return sumScore;
+	}
+
+
+	public void setSumScore(int sumScore) {
+		this.sumScore = sumScore;
+	}
 		
 	Long surveyIndex;
 		public Long getSurveyIndex() {
@@ -54,6 +62,14 @@ public class SelfTestSurveyPanel {
 			this.metaworksContext = metaworksContext;
 		}
 		
+	SelfTestChart selfTestChart;
+		public SelfTestChart getSelfTestChart() {
+				return selfTestChart;
+		}
+		public void setSelfTestChart(SelfTestChart selfTestChart) {
+			this.selfTestChart = selfTestChart;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 		
@@ -101,9 +117,23 @@ public class SelfTestSurveyPanel {
 	
 	@ServiceMethod(callByContent=true)
 	public Object showResult() throws Exception {
-		
+		if(metaworksContext == null)
+			metaworksContext = new MetaworksContext();
 		this.getMetaworksContext().setHow(COMPLETE);
-		return this;
+		
+		if(selfTestChart == null){
+			selfTestChart = new SelfTestChart();
+			selfTestChart.setSumScore(this.getSumScore());
+		}
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setWidth(900);
+		modalWindow.setTitle("셀프 테스트 설문조사");
+		modalWindow.setHeight(600);
+		modalWindow.setPanel(selfTestChart);
+		
+		//selfTestChart의 오버라이드된 ToAppeend메소드로 
+		return modalWindow;
 		
 	}
 }
