@@ -25,82 +25,82 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		}
 		
 	// 설문조사 점수
-	Long productScore;
-		public Long getProductScore() {
-			return productScore;
+	Long first;
+		public Long getFirst() {
+			return first;
 		}
-		public void setProductScore(Long productScore) {
-			this.productScore = productScore;
-		}
-	
-	Long globalInfoScore;
-		public Long getGlobalInfoScore() {
-			return globalInfoScore;
-		}
-		public void setGlobalInfoScore(Long globalInfoScore) {
-			this.globalInfoScore = globalInfoScore;
+		public void setFirst(Long first) {
+			this.first = first;
 		}
 		
-	Long globalManpowerScore;
-		public Long getGlobalManpowerScore() {
-			return globalManpowerScore;
+	Long second;
+		public Long getSecond() {
+			return second;
 		}
-		public void setGlobalManpowerScore(Long globalManpowerScore) {
-			this.globalManpowerScore = globalManpowerScore;
+		public void setSecond(Long second) {
+			this.second = second;
 		}
-
-	Long globalActivityScore;
-		public Long getGlobalActivityScore() {
-			return globalActivityScore;
+		
+	Long third;
+		public Long getThird() {
+			return third;
 		}
-		public void setGlobalActivityScore(Long globalActivityScore) {
-			this.globalActivityScore = globalActivityScore;
+		public void setThird(Long third) {
+			this.third = third;
 		}
-
-	Long itCapabilityScore;
-		public Long getItCapabilityScore() {
-			return itCapabilityScore;
+		
+	Long fourth;
+		public Long getFourth() {
+			return fourth;
 		}
-		public void setItCapabilityScore(Long itCapabilityScore) {
-			this.itCapabilityScore = itCapabilityScore;
+		public void setFourth(Long fourth) {
+			this.fourth = fourth;
 		}
-
-	Long brandMarketingScore;
-		public Long getBrandMarketingScore() {
-			return brandMarketingScore;
+		
+	Long fifth;
+		public Long getFifth() {
+			return fifth;
 		}
-		public void setBrandMarketingScore(Long brandMarketingScore) {
-			this.brandMarketingScore = brandMarketingScore;
+		public void setFifth(Long fifth) {
+			this.fifth = fifth;
 		}
-
-	Long rndScore;
-		public Long getRndScore() {
-			return rndScore;
+		
+	Long sixth;
+		public Long getSixth() {
+			return sixth;
 		}
-		public void setRndScore(Long rndScore) {
-			this.rndScore = rndScore;
+		public void setSixth(Long sixth) {
+			this.sixth = sixth;
 		}
-
-	Long globalStrategyScore;
-		public Long getGlobalStrategyScore() {
-			return globalStrategyScore;
+		
+	Long seventh;
+		public Long getSeventh() {
+			return seventh;
 		}
-		public void setGlobalStrategyScore(Long globalStrategyScore) {
-			this.globalStrategyScore = globalStrategyScore;
+		public void setSeventh(Long seventh) {
+			this.seventh = seventh;
 		}
-
-	Long globalNetworkScore;
-		public Long getGlobalNetworkScore() {
-			return globalNetworkScore;
+		
+	Long eighth;
+		public Long getEighth() {
+			return eighth;
 		}
-		public void setGlobalNetworkScore(Long globalNetworkScore) {
-			this.globalNetworkScore = globalNetworkScore;
+		public void setEighth(Long eighth) {
+			this.eighth = eighth;
+		}
+		
+	Long ninth;
+		public Long getNinth() {
+			return ninth;
+		}
+		public void setNinth(Long ninth) {
+			this.ninth = ninth;
 		}
 		
 	public ISelfTestSurvey checkProgress(String empCode) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select survey_index");
-		sb.append(" from pseip_survey_evaluate");
+		sb.append(" from pseip_survey_score");
 		sb.append(" where empcode = ?empcode");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
@@ -110,7 +110,17 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		return survey;
 	}
 	
-	public void saveProduct(int sumScore) throws Exception {
+	public void saveProduct(int sumScore, String surveyForm) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("update pseip_survey_score");
+		sb.append(" set "+surveyForm+" = ?first");
+		sb.append(" where empcode = ?empcode");
+		
+		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
+		survey.setFirst(new Long(2));
+		survey.setEmpCode("test@uengine.org");
+		survey.update();
+		
 	}
 	
 }
