@@ -90,9 +90,15 @@ var org_uengine_codi_mw3_model_WorldMap = function(objectId, className){
     }
     
     
+    // 마커 범위 안내
+    $('.jvectormap-container').prepend('<div id="markerInformation"> <B> 마커 정보<B> </div>');
+    $('.jvectormap-container').find('div').eq(0).addClass("markerInfo");
     
-    
-    
+    // div 3개 추가
+    $('.markerInfo').append('<div id="markerBlue"> ▷ 파랑 : 0 ~ 3 (건) </div>');
+    $('#markerBlue').attr("style", "padding-top: 15px");
+    $('.markerInfo').append('<div id="markerYellow"> ▷ 노랑 : 3 ~ 10 (건) </div>');
+    $('.markerInfo').append('<div id="markerRed"> ▷ 빨강 : 10 ~ (건)</div>');
     
     
     //////////////// 이 아래로 주석 //////////////////////
