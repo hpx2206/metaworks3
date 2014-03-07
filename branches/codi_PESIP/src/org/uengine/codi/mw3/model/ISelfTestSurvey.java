@@ -4,7 +4,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
-@Table(name="pseip_survey_evaluate")
+@Table(name="pseip_survey_score")
 public interface ISelfTestSurvey extends IDAO{
 	
 	@Id
@@ -16,32 +16,32 @@ public interface ISelfTestSurvey extends IDAO{
 	public void setSurveyIndex(Long surveyIndex);
 	
 	// 설문조사 점수 부분
-	public Long getProductScore();
-	public void setProductScore(Long productScore);
+	public Long getFirst();
+	public void setFirst(Long first);
 	
-	public Long getGlobalInfoScore();
-	public void setGlobalInfoScore(Long globalInfoScore);
+	public Long getSecond();
+	public void setSecond(Long second);
 	
-	public Long getGlobalManpowerScore();
-	public void setGlobalManpowerScore(Long globalManpowerScore);
+	public Long getThird();
+	public void setThird(Long third);
 	
-	public Long getGlobalActivityScore();
-	public void setGlobalActivityScore(Long globalActivityScore);
+	public Long getFourth();
+	public void setFourth(Long fourth);
 	
-	public Long getItCapabilityScore();
-	public void setItCapabilityScore(Long itCapabilityScore);
+	public Long getFifth();
+	public void setFifth(Long fifth);
 	
-	public Long getBrandMarketingScore();
-	public void setBrandMarketingScore(Long brandMarketingScore);
+	public Long getSixth();
+	public void setSixth(Long sixth);
 	
-	public Long getRndScore();
-	public void setRndScore(Long rndScore);
+	public Long getSeventh();
+	public void setSeventh(Long seventh);
 	
-	public Long getGlobalStrategyScore();
-	public void setGlobalStrategyScore(Long globalStrategyScore);
+	public Long getEighth();
+	public void setEighth(Long eighth);
 	
-	public Long getGlobalNetworkScore();
-	public void setGlobalNetworkScore(Long globalNetworkScore);
+	public Long getNinth();
+	public void setNinth(Long ninth);
 	
 	// 진행된 테스트가 있는지 검사
 	public ISelfTestSurvey checkProgress(String empCode) throws Exception;
