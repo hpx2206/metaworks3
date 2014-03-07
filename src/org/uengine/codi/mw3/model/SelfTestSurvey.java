@@ -99,7 +99,7 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		
 	public ISelfTestSurvey checkProgress(String empCode) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select survey_index");
+		sb.append("select surveyIndex");
 		sb.append(" from pseip_survey_score");
 		sb.append(" where empcode = ?empcode");
 		
@@ -110,17 +110,35 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		return survey;
 	}
 	
-	public void saveProduct(int sumScore, String surveyForm) throws Exception {
+	public void save(Long sumScore, String surveyForm, String empCode) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("update pseip_survey_score");
-		sb.append(" set "+surveyForm+" = ?first");
+		sb.append(" set "+surveyForm+" = "+sumScore.toString()+", surveyIndex = ?surveyIndex");
 		sb.append(" where empcode = ?empcode");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
-		survey.setFirst(new Long(2));
-		survey.setEmpCode("test@uengine.org");
+		survey.setSurveyIndex(this.getSurveyIndex());
+		survey.setEmpCode(empCode);
 		survey.update();
 		
 	}
 	
+	public void createEmpScore(String empCode) throws Exception {
+		SelfTestSurvey survey = new SelfTestSurvey();
+		survey.setEmpCode(empCode);
+		survey.createDatabaseMe();
+	}
+	
+	public ISelfTestSurvey checkEmpCode(String empCode) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select empcode");
+		sb.append(" from pseip_survey_score");
+		sb.append(" where empcode = ?empcode");
+		
+		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
+		survey.setEmpCode(empCode);
+		survey.select();
+		
+		return survey;
+	}
 }

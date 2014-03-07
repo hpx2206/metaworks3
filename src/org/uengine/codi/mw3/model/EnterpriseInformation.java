@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 
 public class EnterpriseInformation extends Database<IEnterpriseInformation> implements IEnterpriseInformation {
