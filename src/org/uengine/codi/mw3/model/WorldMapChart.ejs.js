@@ -3,33 +3,50 @@ var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
     this.className = className;
     this.divId = mw3._getObjectDivId(this.objectId);
     this.divObj = $('#' + this.divId);
-    this.object = mw3.objects[this.objectId];
     
     var object = mw3.objects[this.objectId];
-    if(object){
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.core.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.key.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.bar.js');
+    
+    var item = object.pastOrderInformationList;
+    console.log(item.length);
+    console.log(item);
+    
+    var regionName = new Array();
+    for(var i = 0; i < item.length; i++){
+    	regionName[i] = item[i].regionName;
     }
     
+    console.log(regionName[0]);
+    console.log(regionName[1]);
+    if(object){
+    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.core.js');
+    	mw3.importScript('scripts/rgraph/libraries/RGraph.bar.js');
+    	mw3.importScript('scripts/rgraph/libraries/RGraph.line.js');
+    }
     
-    var regionList = this.object.pastOrderInformationList;
-    
-    for(var i = 0; i < regionList.length; i++) {
-    
-    
-    
-       var bar = new RGraph.Bar('cvs', barData)            
-                .Set('hmargin', 1)
-                .Set('colors', colors)
-                .Set('colors.sequential', true)
-                .Set('xaxispos', 'center')
-                .Set('background.grid.autofit.numhlines', 10)
-                .Set('ymax', 100)
-                .Set('gutter.bottom', 50)
-                .Set('labels', ['1997', '1998','1999','2000','2001','2002','2003','2004','2005','2006','2007','2008','2009','2010','2011'])
-       
-    } 
+    var bar = new RGraph.Bar('scatter3', [[item[0].number],[item[1].number]]);
+    				bar.Set('labels', regionName);
+    				bar.Set('colors', ['Gradient(#99f:#27afe9:#058DC7:#058DC7)', 'Gradient(#94f776:#50B332:#B1E59F)', 'Gradient(#fe783e:#EC561B:#F59F7D)'])
+				    bar.Set('strokestyle', 'white')
+				    bar.Set('linewidth', 2)
+				    bar.Set('shadow', true)
+				    bar.Set('shadow.offsetx', 1)
+				    bar.Set('shadow.offsety', 0)
+				    bar.Set('shadow.blur', 1)
+
+    var line = new RGraph.Line('scatter3', [item[0].number,item[1].number])
+					    .Set('spline', true)
+					    .Set('tickmarks', 'filledcircle')
+					    .Set('colors', ['blue'])
+					    .Set('ymax', 10);
+	
+	var combo = new RGraph.CombinedChart(bar, line);
+	combo.Draw();
+      
+//	 var item = {
+//             __className : 'org.uengine.codi.mw3.model.PublicServiceIntroduceItem',
+//             
+//         };
+
   
 };
   
