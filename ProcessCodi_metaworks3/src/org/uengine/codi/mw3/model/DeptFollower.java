@@ -4,7 +4,7 @@ package org.uengine.codi.mw3.model;
 public class DeptFollower extends Follower {
 
 	public DeptFollower(){
-		this.setParentType(TYPE_TOPIC);
+		this.setParentType(TYPE_DEPT);
 	}
 
 	@Override

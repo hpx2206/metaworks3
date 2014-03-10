@@ -11,7 +11,7 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 public class RoleFollower extends Follower {
 
 	public RoleFollower(){
-		this.setParentType(TYPE_TOPIC);
+		this.setParentType(TYPE_ROLE);
 	}
 
 	public RoleUser makeRoleUser(){
