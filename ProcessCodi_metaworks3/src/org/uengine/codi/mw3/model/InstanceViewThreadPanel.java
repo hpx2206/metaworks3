@@ -118,6 +118,17 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		result = WorkItem.findComment(instanceId);
 		while(result.next()){
+			boolean isProcessComment = false;
+			thread.beforeFirst();
+			while(thread.next()){
+				if(thread.getTaskId().equals(result.getPrtTskId()) && "process".equals(thread.getType())){
+					isProcessComment = true;
+					break;
+				}
+			}
+			if( isProcessComment ){
+				continue;
+			}
 			thread.moveToInsertRow();
 			thread.getImplementationObject().copyFrom(result);
 		}
