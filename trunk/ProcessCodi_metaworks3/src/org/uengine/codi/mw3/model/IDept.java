@@ -1,9 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import javax.persistence.GeneratedValue;
-import javax.validation.constraints.NotNull;
 
-import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -145,8 +143,8 @@ public interface IDept extends IDAO {
 	@ServiceMethod(target="popup")
 	public Popup openPicker() throws Exception;
 	
-	@Available(condition="(typeof self == 'undefined' || !self)")
-	@ServiceMethod(target="append", where="picker")
+	@Available(where=IUser.WHERE_PICKERLIST)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
 	public Object pickup() throws Exception;
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)

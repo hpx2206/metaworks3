@@ -153,6 +153,19 @@
                 </div>
             </span>
             <%=methods.pickup.here()%>
+<%			
+            } else if(mw3.where == 'pickerlist'){
+        %>
+             <div class="user" style="cursor: Default;">        
+                <div class="user_focus" style="background-size:cover;" title="<%=value.partName%>"> 
+                    <img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic">
+                </div>
+                <div class="user_detail">
+                    <span class="fontbold"><%=fields.partName.here()%></span>
+                </div>
+                <div style="clear:both"></div>              
+                <div style="padding:3px 0px; border-bottom:1px solid #e7e7e7;"></div>
+            </div>
         <%
 			}
 		}

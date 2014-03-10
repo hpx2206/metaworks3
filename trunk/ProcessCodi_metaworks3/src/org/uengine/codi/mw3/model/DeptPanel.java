@@ -38,7 +38,13 @@ public class DeptPanel implements ContextAware {
 		public void setFollower(Follower follower) {
 			this.follower = follower;
 		}
-		
+	boolean picker;
+		public boolean isPicker() {
+			return picker;
+		}
+		public void setPicker(boolean picker) {
+			this.picker = picker;
+		}	
 	SearchBox searchBox;
 		@Face(options={"keyupSearch"}, values={"true"})
 		@Available(condition="searchBox")
@@ -67,10 +73,17 @@ public class DeptPanel implements ContextAware {
 		if( this.getFollower() != null ){
 			this.getFollower().session = session;
 			dept = this.getFollower().findDepts(this.getKeyword());
+		}else{
+			Dept deptRef = new Dept(); 
+			dept = deptRef.findTreeByGlobalCom(session.getCompany().getComCode(), this.getKeyword());
 		}
 		
-		dept.getMetaworksContext().setHow("addFollower");
-		dept.getMetaworksContext().setWhere(User.WHERE_ADDFOLLOWER);
+		if(this.isPicker()){
+			dept.getMetaworksContext().setWhere(IUser.WHERE_PICKERLIST);
+		}else{
+			dept.getMetaworksContext().setHow("addFollower");
+			dept.getMetaworksContext().setWhere(User.WHERE_ADDFOLLOWER);
+		}
 		
 		setDept(dept);
 		
