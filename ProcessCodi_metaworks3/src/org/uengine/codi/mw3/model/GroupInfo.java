@@ -59,7 +59,7 @@ public class GroupInfo extends FollowerPerspectiveInfo{
 		return new Popup(MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, topicTitle);
 	}
 	
-	@ServiceMethod(callByContent=true, except="followers", target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, except="followers", target=ServiceMethodContext.TARGET_APPEND, needToConfirm=true)
 	public Object[] remove() throws Exception {
 		TopicNode deletedNode = new TopicNode();
 		deletedNode.setId(this.getId());

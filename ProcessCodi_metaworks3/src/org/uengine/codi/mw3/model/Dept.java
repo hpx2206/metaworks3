@@ -227,9 +227,17 @@ public class Dept extends Database<IDept> implements IDept {
 
 	@Override
 	public IDept findTreeByGlobalCom(String globalCom) throws Exception {
+		return findTreeByGlobalCom(globalCom, null);
+	}
+	public IDept findTreeByGlobalCom(String globalCom,String keyword) throws Exception {
 		String sql = "select * from parttable where globalcom=?globalCom and isDeleted='0' ";
+		
+		if(keyword != null && keyword.trim().length() > 0)
+			sql += "   AND partName LIKE ?partName";
+		
 		IDept deptList = sql(sql);
 		deptList.setGlobalCom(globalCom);
+		deptList.setPartName("%" + keyword + "%");
 		deptList.select();
 		deptList.setMetaworksContext(new MetaworksContext());
 		deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -797,7 +805,7 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.getMetaworksContext().setHow("picker");
 		dept.getMetaworksContext().setWhen("edit");
 		
-		return new Object[] {new ToOpener(dept), new Remover(new Popup())};
+		return new Object[] {new ToOpener(dept), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@Override

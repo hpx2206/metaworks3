@@ -162,6 +162,10 @@ public class Contact extends Database<IContact> implements IContact{
 	}
 	
 	public static IContact findContacts(IUser user, boolean isMore) throws Exception {
+		
+		return Contact.findContacts(user, true, null);
+	}
+	public static IContact findContacts(IUser user, boolean isMore, String keyword) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, item.updatedate")
 		  .append("  from contact c ")
@@ -170,8 +174,12 @@ public class Contact extends Database<IContact> implements IContact{
 		  .append("  	left join recentItem item ")
 		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
 		  .append(" where c.userId=?userId")
-		  .append("   and e.isDeleted=?isDeleted")
-          .append(" order by updatedate desc ");
+		  .append("   and e.isDeleted=?isDeleted");
+		
+		if(keyword != null && keyword.trim().length() > 0)
+			sb.append("   AND friendname LIKE ?friendname");
+		
+		sb.append(" order by updatedate desc ");
 		
 		if(!isMore) {
 			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
@@ -183,6 +191,7 @@ public class Contact extends Database<IContact> implements IContact{
  		
  		dao.setUserId(user.getUserId());		
  		dao.set("itemType", RecentItem.TYPE_FRIEND);
+ 		dao.set("friendName", "%" + keyword + "%");
  		dao.set("isDeleted", "0");
  		dao.select();
  		
