@@ -45,11 +45,11 @@
             
             <div>
             
-                <input type="radio" id="radio_1" name="preferred_color" value=5 /> 5
-                <input type="radio" id="radio_2" name="preferred_color" value=4 /> 4 
-                <input type="radio" id="radio_3" name="preferred_color" value=3 /> 3 
-                <input type="radio" id="radio_4" name="preferred_color" value=2 /> 2 
-                <input type="radio" id="radio_5" name="preferred_color" value=1 /> 1 
+                <input type="radio" id="radio_1" name=preferred_color<%=i%> value=5 /> 5
+                <input type="radio" id="radio_2" name=preferred_color<%=i%> value=4 /> 4 
+                <input type="radio" id="radio_3" name=preferred_color<%=i%> value=3 /> 3 
+                <input type="radio" id="radio_4" name=preferred_color<%=i%> value=2 /> 2 
+                <input type="radio" id="radio_5" name=preferred_color<%=i%> value=1 /> 1 
                 
             </div>
             
@@ -65,15 +65,16 @@
         <% } else { %>
             <div id="btnline">
                 <ul>    
+               <!-- finish 스크립트타게해서 선택된값 골라내어 saveSurvey를 타고한뒤에 SaveSurvery메소드에서 ShowResult를 호출-->
                     <li><a id="wBtn" href="#" onClick="<%=methods.initProgressSurvey.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+                    <li><a id="wBtn" href="#" ><span  id="radio_save"><%=mw3.localize("$Save")%></span></a></li>
                 </ul>
             </div>
             
         <% } %>
             
     <% } if(mw3.how == 'complete') { %>
-        <%console.log(mw3.how);%>
-        아야어여우유우이 여기다 방사형 그래프 그리세욘
+        	<%=fields.selfTestChart.here()%>
     <% } %>
     
 <% } %>
