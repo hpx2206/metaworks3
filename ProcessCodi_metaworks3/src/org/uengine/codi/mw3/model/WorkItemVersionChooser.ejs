@@ -1,7 +1,14 @@
 <div>
-<div style="float:left">
-	<%=fields.versionSelector.here({when:'edit'})%>
-</div>
+
+<%
+if(value.versionSelector.size > 1){
+%>
+	<div style="float:left">
+		<%=fields.versionSelector.here({when:'edit'})%>
+	</div>
+<%
+}
+%>
 
 <div style="clear:both" />
-<div>
+</div>
