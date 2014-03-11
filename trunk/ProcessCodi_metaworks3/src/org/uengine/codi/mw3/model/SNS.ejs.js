@@ -12,4 +12,10 @@ var org_uengine_codi_mw3_model_SNS = function(objectId, className){
 	
 	setCookie("codi.lastVisit", "process", 10, "/", "", "");
 	setCookie("codi.lastVisitValue", "", 10, "/", "", "");
+	
+	var sns = mw3.getAutowiredObject('org.uengine.codi.mw3.model.SNS');
+	var layoutFaceHelper = mw3.getFaceHelper(sns.layout.__objectId);
+	if(sessionObj.ux == "phone"){
+		$(layoutFaceHelper.divId + ' .hide_west_btn').trigger('click');
+	}
 };
