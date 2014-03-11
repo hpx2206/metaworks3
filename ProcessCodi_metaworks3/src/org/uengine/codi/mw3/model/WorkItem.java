@@ -13,6 +13,7 @@ import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
+import org.metaworks.ToNext;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
@@ -1274,12 +1275,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			// 인스턴스 발행
 			if(prevInstId == null){
-				Object detail = instance.detail();
+				UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 				
-			     UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
-			     returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
+				if(SNS.isPhone()){
+					InstanceViewContent detail = instance.detail();
+				    returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), 
+							new ToNext(new NewInstancePanel(), detail.getInstanceView()),
+				    		 new Remover(new NewInstancePanel()),
+		 				      new Refresh(upcommingTodoPerspective)};
+				}else{
+					Object detail = instance.detail();
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
 			    		 				      new Refresh(detail),
 			    		 				      new Refresh(upcommingTodoPerspective)};
+				}
 			}else{
 				// 댓글
 				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
