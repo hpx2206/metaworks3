@@ -93,14 +93,30 @@ public class SNS extends Application{
 			session.setUx("phone");
 			
 			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
+			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, west__size:150, north__size:52");
 			
 			Window instanceListWindow = createInstanceListWindow(session);
 			
-			outerLayout.setCenter(instanceListWindow);	
-			outerLayout.setName("center");
+			Layout eastLayout = new Layout();
+			eastLayout.setCenter(instanceListWindow);	
+			eastLayout.setName("east");
+			eastLayout.setUseHideBar(false);
+//			outerLayout.setCenter(instanceListWindow);	
+//			outerLayout.setName("center");
 			
+			Layout westLayout = new Layout();
+			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
+			westLayout.setCenter(perspectiveWindow);
+			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+			westLayout.setUseHideBar(true);
+			westLayout.setName("west");
+			
+			
+			outerLayout.setWest(westLayout);
+			outerLayout.setCenter(eastLayout);
 			setLayout(outerLayout);
+			
+			
 			
 		}else if("pad".equals(preferMob) || "fb".equals(preferUX)  || "asana".equals(preferUX)){
 			session.setUx("pad");
