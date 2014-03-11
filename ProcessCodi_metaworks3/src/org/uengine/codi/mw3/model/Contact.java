@@ -162,8 +162,7 @@ public class Contact extends Database<IContact> implements IContact{
 	}
 	
 	public static IContact findContacts(IUser user, boolean isMore) throws Exception {
-		
-		return Contact.findContacts(user, true, null);
+		return Contact.findContacts(user, isMore, null);
 	}
 	public static IContact findContacts(IUser user, boolean isMore, String keyword) throws Exception {
 		StringBuffer sb = new StringBuffer();
