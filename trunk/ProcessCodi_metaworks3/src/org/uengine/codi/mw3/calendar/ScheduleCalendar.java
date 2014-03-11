@@ -33,6 +33,7 @@ import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.webservices.worklist.DefaultWorkList;
@@ -452,7 +453,7 @@ public class ScheduleCalendar implements ContextAware {
 	@AutowiredFromClient
 	public NewInstancePanel newInstancePanel;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] linkScheduleDay() throws Exception{
 		
 		// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
@@ -493,7 +494,16 @@ public class ScheduleCalendar implements ContextAware {
 		
 		newInstancePanel.setNewInstantiator(newInstantiator);
 	
-		return new Object[]{new NewInstanceWindow(newInstancePanel)};
+		NewInstanceWindow window = new NewInstanceWindow(newInstancePanel);
+		
+		if(SNS.isPhone()){
+			Popup popup = new Popup(window.getPanel());
+			popup.setName(window.getTitle());
+			
+			return new Object[]{popup};
+		}else{
+			return new Object[]{new Refresh(window, true)};
+		}
 	}
 	
 }
