@@ -1907,7 +1907,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
-
+                  
+				if(objectId == mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1])
+				    mw3.recentOpenerObjectId.pop();
+				
 				if(mw3.objects[objectId] && !mw3.objects[objectId]['__cached']){
 					this.newBeanProperty(objectId);
 					
@@ -1931,7 +1934,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					*/
 				}
 				
-
 				$(divId).triggerHandler('destroy');
 				
 				if(!keepDiv)
@@ -4302,16 +4304,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 			
 			function closeOutsideContainer(divId){
-				$('#' + divId).one('destroy', {divId: divId}, function(event){
-					$(this).remove();
-					
+				$('#' + divId).one('destroy', {divId: divId}, function(event){					
 					$('body').unbind('mousedown.cos_' + event.data.divId);
+					var objectId = $(this).attr('objectId');
+					mw3.removeObject(objectId);
 				});
 				
 				$('body').bind('mousedown.cos_' + divId, {divId: divId}, function(event){
 					var container = $('#' + event.data.divId);
 					
-					var result = isMouseInContanier(container, event);				
+					var result = isMouseInContanier(container, event);
 					if(!result)
 						$(container).trigger('destroy');
 				});
@@ -4421,11 +4423,7 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 					mw3.showOverPopop(objId, serviceMethodContext, result);
 				}else{
 					mw3.showStick(objId, serviceMethodContext, result);
-				}
-								
-				$('#' + mw3._getObjectDivId(result.__objectId)).one('destroy', function(){
-					mw3.recentOpenerObjectId.pop();
-				});
+				}								
 			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
 				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
 
