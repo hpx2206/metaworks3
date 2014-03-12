@@ -56,6 +56,7 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.PerspectivePanel;
 import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.util.CodiStringUtil;
@@ -100,7 +101,7 @@ public class Login implements ContextAware {
 		@Face(displayName="$Email")
 		@ValidatorSet({
 			@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이메일을 입력하세요."),
-			@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
+			@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$/"}, message="이메일 형식이 잘못되었습니다")
 		})
 		public String getEmail() {
 			return email;
@@ -797,6 +798,10 @@ public class Login implements ContextAware {
 			topPanel.setTopCenterPanel(app.loadTopCenterPanel(session));
 		
 		mainPanel = new MainPanel(topPanel, app);
+		
+		if(SNS.isPhone()){
+			mainPanel.setPerspectivePanel(new PerspectivePanel(session));
+		}
 		
 		Locale locale = new Locale();
 		locale.setLanguage(session.getEmployee().getLocale());
