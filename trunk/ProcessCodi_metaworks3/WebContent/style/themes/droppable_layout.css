@@ -187,6 +187,11 @@ nbd{border:none !important}
 npd{padding:0px !important}
 nmg{margin:0px !important}
 
+#mobile_left_container{display:none; background:#2c3e50; height:100%; position:absolute;}
+#main_container{}
+#main_container .top_panel_mobile_menu{float:left;}
+#mobile_right_container{display:none;}
+
 .editor_div ul, .editor_div ol {
 	margin-left:15px;
 }
