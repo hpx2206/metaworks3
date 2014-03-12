@@ -5,32 +5,19 @@
 	if(mw3.how == 'selector'){
 		var displayName = '';
 		
-		if(typeof value.value != 'undefined' || value.value != null)
+		if(typeof value.name != 'undefined' || value.name != null)
 			displayName = value.name;
 %>
-	<input type="text" readonly value="<%=displayName%>" /><input type="button" value="..." onClick="javascript:<%=methods.openSelector.caller()%>" />
+	<input id="text_<%=objectId%>" type="text" readonly value="<%=displayName%>" /><input id="button_<%=objectId%>" type="button" value="..." onClick="javascript:<%=methods.openSelector.caller()%>" />
 <%	
 	}else{
 %>
 
-<div style="position:relative; overflow:auto; height: 200px;">
+<div style="position:relative; overflow:auto; height: 300px;">
 	<%=fields.target.here()%>	
 </div>
 
-<%
-		if(objectMetadata.serviceMethodContexts){
-			var first = true;
-			
-			for(var i=0; i<objectMetadata.serviceMethodContexts.length; i++){
-   	   			var serviceMethod = objectMetadata.serviceMethodContexts[i];
-   	   			
-   	   			if(mw3.isHiddenMethodContext(serviceMethod))
-   	   				continue;
-%>		
-	<input type="button" value="<%=serviceMethod.displayName%>" onClick="<%=methods[serviceMethod.methodName].caller()%>" />
 <%   	   			
-			}
-		}
 	}			
 %>		
 

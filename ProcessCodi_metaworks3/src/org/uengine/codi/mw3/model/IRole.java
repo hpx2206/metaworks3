@@ -4,6 +4,7 @@ import javax.persistence.GeneratedValue;
 import javax.validation.constraints.NotNull;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -91,6 +92,10 @@ public interface IRole extends IDAO {
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] loadRole() throws Exception;
+	
+	@Available(where=IUser.WHERE_PICKERLIST)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
+	public Object pickup() throws Exception;
 	
 	// function
 	public IRole findByGlobalCom() throws Exception;
