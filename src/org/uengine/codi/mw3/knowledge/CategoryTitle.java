@@ -254,6 +254,7 @@ public class CategoryTitle  implements ContextAware{
 				publicServiceIntroduceCode.flushDatabaseMe();
 				
 				PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+				publicServiceIntroduce.setId(this.getTab());
 				publicServiceIntroduce.loadChart(this.getTab());
 				
 				return new Object[] { new Remover(new ModalWindow()), new Refresh(publicServiceIntroduce)};
