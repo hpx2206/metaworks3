@@ -104,15 +104,15 @@ public class SNS extends Application{
 //			outerLayout.setCenter(instanceListWindow);	
 //			outerLayout.setName("center");
 			
-			Layout westLayout = new Layout();
-			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
-			westLayout.setCenter(perspectiveWindow);
-			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
-			westLayout.setUseHideBar(true);
-			westLayout.setName("west");
+//			Layout westLayout = new Layout();
+//			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
+//			westLayout.setCenter(perspectiveWindow);
+//			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+//			westLayout.setUseHideBar(true);
+//			westLayout.setName("west");
 			
 			
-			outerLayout.setWest(westLayout);
+//			outerLayout.setWest(westLayout);
 			outerLayout.setCenter(eastLayout);
 			setLayout(outerLayout);
 			
