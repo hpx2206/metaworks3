@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.common;
 
 import org.uengine.codi.mw3.admin.TopPanel;
+import org.uengine.codi.mw3.model.PersonalPerspective;
 
 public class MainPanel {
 
@@ -10,6 +11,15 @@ public class MainPanel {
 	}
 	public void setTopPanel(TopPanel topPanel) {
 		this.topPanel = topPanel;
+	}
+	
+	PersonalPerspective personalPerspective;
+	public PersonalPerspective getPersonalPerspective() {
+		return personalPerspective;
+	}
+
+	public void setPersonalPerspective(PersonalPerspective personalPerspective) {
+		this.personalPerspective = personalPerspective;
 	}
 
 	Object appPanel;
