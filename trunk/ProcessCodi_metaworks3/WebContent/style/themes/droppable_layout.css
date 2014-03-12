@@ -187,10 +187,20 @@ nbd{border:none !important}
 npd{padding:0px !important}
 nmg{margin:0px !important}
 
-#mobile_left_container{display:none; background:#2c3e50; height:100%; position:absolute;}
+#mobile_left_container{display:none; background:#2c3e50 !important; height:100%; position:absolute;width:0px;}
+#mobile_left_container #navigator{padding:0px !important; font-weight:bolder;}
+#mobile_left_container .navigator_top_margin{height:0px !important}
+#mobile_left_container .fist_menu{margin:0px !important;}
+#mobile_left_container .depth1{color:#4C6379; border-bottom:2px solid #4C6379;border-top:none !important; padding-bottom:10px; padding-left:15px;}
+#mobile_left_container .depth1 .west_more_btn{display:initial !important; top:7px !important;}
+#mobile_left_container .depth2 li{line-height:42px; font-size:18px;  border-bottom:1px solid #4C6379; padding:0 0 0 10px !important;-webkit-border-radius: 0px !important;;border-radius: 0px !important;;}
+#mobile_left_container .depth2 li a{color:#fff !important;}
+#mobile_left_container .depth2 .fist_menu li span{top:0px !important}
 #main_container{}
-#main_container .top_panel_mobile_menu{float:left;}
+#main_container .top_panel_mobile_menu{float:left; font-size:24px; margin:14px 10px 10px 15px;color:#7f8c8d}
+#main_container .top_panel_mobile_friend{float:right; font-size:24px; margin:14px 15px 10px 10px;color:#7f8c8d}
 #mobile_right_container{display:none;}
+#mobile_right_container{display:none; background:#2c3e50 !important; height:100%; position:absolute;width:0px;right: 0px;top: 0px}
 
 .editor_div ul, .editor_div ol {
 	margin-left:15px;
