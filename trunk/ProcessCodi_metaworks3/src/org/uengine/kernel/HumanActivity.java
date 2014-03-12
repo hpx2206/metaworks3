@@ -539,11 +539,6 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 					
 				}else{
 					try{
-						/*
-						 * SubProcess�� �ƴѰ�쿡�� �ش�.
-						 * ���� SubProcess�� ������ User�� Role�� �ش���� �ʴ�� �7�߻� ����...
-						 * Date:2008-06-12, Hwajin.Lee
-						 */
 						if(!instance.isSubProcess() && getRole().getRoleResolutionContext()!=null && !getRole().containsMapping(instance, currentLogin)){
 							UEngineException ue = new UEngineException("You ("+currentLogin+") are not permitted to initiate this process. The initiator group is '"+getRole().getRoleResolutionContext()+"'.");
 							ue.setErrorLevel(UEngineException.MESSAGE_TO_USER);

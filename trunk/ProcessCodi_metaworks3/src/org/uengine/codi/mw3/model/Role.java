@@ -11,6 +11,7 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
@@ -313,6 +314,19 @@ public class Role extends Database<IRole> implements IRole {
 		return popup;		
 	}
 	
+	@Override
+	public Object[] pickup() throws Exception {
+		
+		Role role = new Role();
+		role.setRoleCode(this.getRoleCode());
+		role.copyFrom(role.databaseMe());
+		
+		role.getMetaworksContext().setHow("picker");
+		role.getMetaworksContext().setWhen("edit");
+		
+		return new Object[] {new ToOpener(role), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
 	public IRole findByEmployee(IEmployee employee) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT a.*");
@@ -417,19 +431,21 @@ public class Role extends Database<IRole> implements IRole {
 		return dao;
 	}
 	
-	public IRole findByCode() throws Exception{
+	public IRole findRoles(String keyword) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from roleTable ");
-		sb.append("where rolecode=?rolecode ");
-		sb.append("and comCode=?comCode ");
+		sb.append("where comCode=?comCode ");
 		sb.append("and isDeleted='0'");
+		
+		if(keyword != null && keyword.trim().length() > 0)
+			sb.append("   AND roleName LIKE ?roleName");
 		
 		IRole dao = null;
 		
 		try {
 			dao = sql(sb.toString());
-			dao.setRoleCode(this.getRoleCode());
 			dao.setComCode(session.getEmployee().getGlobalCom());
+			dao.setRoleName("%" + keyword + "%");
 			dao.select();
 			
 			if(!dao.next())

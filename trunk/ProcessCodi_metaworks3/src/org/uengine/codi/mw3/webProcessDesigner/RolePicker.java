@@ -1,13 +1,16 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.kernel.RoleResolutionContext;
 
 import com.defaultcompany.organization.DefaultCompanyRoleResolutionContext;
 
@@ -37,32 +40,9 @@ public class RolePicker implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-		/*
-	ArrayList<RoleResolutionContext> roleResolutionContext;
-		public ArrayList<RoleResolutionContext> getRoleResolutionContext() {
-			return roleResolutionContext;
-		}
-		public void setRoleResolutionContext(
-				ArrayList<RoleResolutionContext> roleResolutionContext) {
-			this.roleResolutionContext = roleResolutionContext;
-		}
-		*/
-		
-
-	/*	RoleResolutionContext[] roleResolutionContext;
-		public RoleResolutionContext[] getRoleResolutionContext() {
-			return roleResolutionContext;
-		}
-		public void setRoleResolutionContext(
-				RoleResolutionContext[] roleResolutionContext) {
-			this.roleResolutionContext = roleResolutionContext;
-		}
-	}*/
-	
-
 
 	@Hidden
-	@ServiceMethod
+	@ServiceMethod(callByContent=true)
 	public void load() {
 		MetaworksContext metaworksContext = new MetaworksContext();
 		metaworksContext.setHow("pick");
@@ -70,16 +50,13 @@ public class RolePicker implements ContextAware {
 		this.setMetaworksContext(metaworksContext);
 		this.setLoaded(true);
 		
-		this.setRoleResolutionContext(new DefaultCompanyRoleResolutionContext());
-		//this.setRoleResolutionContext(new ArrayList<RoleResolutionContext>());
-		//this.getRoleResolutionContext().add(new DefaultCompanyRoleResolutionContext());
-/*		roleResolutionContext = new RoleResolutionContext[]{
-			new DefaultCompanyRoleResolutionContext()
-		};
-*/	}
+		if( roleResolutionContext == null ){
+			roleResolutionContext = new DefaultCompanyRoleResolutionContext();
+		}
+	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] select(){
-		return new Object[]{new Remover(new ModalWindow()), new ToOpener(this.getRoleResolutionContext())};
+		return new Object[]{new Remover(new ModalWindow()),new ToOpener(this.getRoleResolutionContext()), new ToEvent(this.getRoleResolutionContext(), EventContext.EVENT_CHANGE)};
 	}
 }

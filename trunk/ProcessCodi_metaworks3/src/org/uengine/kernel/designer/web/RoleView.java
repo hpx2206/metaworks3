@@ -6,8 +6,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.ide.libraries.OrganizationRole;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Role;
@@ -44,6 +42,7 @@ public class RoleView extends CanvasDTO implements ContextAware {
 		role.setMetaworksContext(propertiesWindow.getMetaworksContext());
 		role.setRoleView(this);
 		
+		popup.setId(this.getId());				// 꼭 필요함
 		popup.setTitle(role.getDisplayName() != null ? role.getDisplayName().getText() : "role setting..");
 		popup.setPanel(role);
 		popup.setWidth(700);

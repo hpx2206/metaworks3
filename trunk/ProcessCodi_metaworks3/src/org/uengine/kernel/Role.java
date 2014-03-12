@@ -16,18 +16,20 @@ import org.metaworks.Type;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Order;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
 import org.metaworks.validator.Validator;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.codi.mw3.webProcessDesigner.RolePanel;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.processdesigner.inputters.RoleResolutionContextSelectorInput;
 import org.uengine.util.UEngineUtil;
+
+import com.defaultcompany.organization.DefaultCompanyRoleResolutionContext;
 
 /**
  * @author Jinyoung Jang
@@ -48,9 +50,9 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 	public static final int DISPATCHINGOPTION_RECEIVE 			= 6; //����ڿ� ���� ��d
 	public static final int DISPATCHINGOPTION_ANNOUNCEMENT 		= 7; //Notice Option
 	
-	public static final int ASSIGNTYPE_USER		 	= 0;	//����� ��b��d
-	public static final int ASSIGNTYPE_DEPT 		= 2;	//�μ�
-	public static final int ASSIGNTYPE_GROUP 		= 3;	//�׷�
+	public static final int ASSIGNTYPE_USER		 	= 0;	
+	public static final int ASSIGNTYPE_DEPT 		= 2;	
+	public static final int ASSIGNTYPE_GROUP 		= 3;	
 	public static final int ASSIGNTYPE_ROLE 		= 4;	
 
 	
@@ -162,6 +164,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 
 	private java.lang.String name;
 	@Face(displayName="역할 이름")
+	@Order(1)
 		public String getName() {
 			return name;
 		}
@@ -170,12 +173,26 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private RoleResolutionContext roleResolutionContext = null;
-	@Hidden
+	@Face(displayName="역할 선택")
+	@Order(3)
 		public RoleResolutionContext getRoleResolutionContext() {
 			if (roleResolutionContext instanceof DirectRoleResolutionContext) {
 				DirectRoleResolutionContext drrc = (DirectRoleResolutionContext) roleResolutionContext;
 				if(!UEngineUtil.isNotEmpty(drrc.getEndpoint())) {
 					roleResolutionContext = null;
+				}
+			}
+			if( roleResolutionContext == null ){
+				String roleresolutioncontexts = GlobalContext.getPropertyString("roleresolutioncontexts", null);
+				if( roleresolutioncontexts != null ){
+					try{
+						Class<?> clazz = Class.forName(roleresolutioncontexts);
+						if( clazz.equals(DefaultCompanyRoleResolutionContext.class)){
+							roleResolutionContext = (DefaultCompanyRoleResolutionContext)clazz.newInstance();
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 			}
 			
@@ -245,6 +262,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		
 	private TextContext displayName = TextContext.createInstance();
 	@Face(displayName="역할 설명")
+	@Order(2)
 		public TextContext getDisplayName() {
 			if(displayName==null){
 				displayName = TextContext.createInstance();
@@ -473,13 +491,18 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 			rolePanel.setRoleList(roles);
 		}
 		
-		return new Object[]{new ApplyProperties(this.getRoleView().getId() , this), new Remover(new ModalWindow() , true) , new Refresh(rolePanel) };
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setId(this.getRoleView().getId());
+		
+		return new Object[]{new ApplyProperties(this.getRoleView().getId() , this), new Remover(modalWindow, true) , new Refresh(rolePanel) };
 	}
 
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] cancel(){
-		return new Object[]{new Remover(new ModalWindow() , true)};
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setId(this.getRoleView().getId());
+		return new Object[]{new Remover(modalWindow , true)};
 		
 	}
 }
