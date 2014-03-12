@@ -15,45 +15,72 @@ var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
     for(var i = 0; i < item.length; i++){
     	regionName[i] = item[i].regionName;
     	regionNumber[i] = item[i].number;
-    }
-    console.log(regionNumber);
-    console.log(regionName[0]);
-    console.log(regionName[1]);
+    };
+    
+    
     if(object){
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.core.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.bar.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.line.js');
+    	mw3.importScript('scripts/highchart/highcharts.js');
+    	mw3.importScript('scripts/highchart/modules/exporting.js');
     }
     
-    var bar = new RGraph.Bar('scatter3', regionNumber);
-    				bar.Set('labels', regionName);
-    				bar.Set('colors', ['Gradient(#99f:#27afe9:#058DC7:#058DC7)', 'Gradient(#94f776:#50B332:#B1E59F)', 'Gradient(#fe783e:#EC561B:#F59F7D)']);
-//				    bar.Set('colors', ['#494949'],['#35A0DA'])
-    				bar.Set('strokestyle', 'white');
-				    bar.Set('linewidth', 2);
-				    bar.Set('shadow', true);
-				    bar.Set('shadow.offsetx', 1);
-				    bar.Set('shadow.offsety', 0);
-				    bar.Set('shadow.blur', 1);
-    var line = new RGraph.Line('scatter3',regionNumber)
-					    .Set('spline', true)
-					    .Set('tickmarks', 'circle')
-					    .Set('colors', ['#CDE217'])
-					    .Set('ymax', 10)
-		                .Set('linewidth', 3)
-					    .Set('shadow', true)
-					    .Set('shadow.color', 'rgba(20,20,20,0.3)')
-					    .Set('shadow.blur', 15)
-					    .Set('shadow.offsetx', 0)
-					    .Set('shadow.offsety', 0);
-	var combo = new RGraph.CombinedChart(bar, line);
-	combo.Draw();
-      
-//	 var item = {
-//             __className : 'org.uengine.codi.mw3.model.PublicServiceIntroduceItem',
-//             
-//         };
-
-  
+    $(function () {
+        $('#scatter3').highcharts({
+            chart: {
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {
+                categories:regionName
+            },
+            tooltip: {
+                formatter: function() {
+                    var s;
+                    if (this.point.name) { // the pie chart
+                        s = ''+
+                            this.point.name +': '+ this.y +' 건수';
+                    } else {
+                        s = ''+
+                            this.x  +': '+ this.y;
+                    }
+                    return s;
+                }
+            },
+            labels: {
+                items: [{
+                    html: '전체 건수',
+                    style: {
+                        left: '600px',
+                        top: '8px',
+                        color: 'black'
+                    }
+                }]
+            },
+            series: [{
+    			type: 'column',
+    			name : regionName,
+    			data : regionNumber
+            }, {
+                type: 'spline',
+                name: 'Average',
+                data:regionNumber,
+                marker: {
+                	lineWidth: 2,
+                	lineColor: Highcharts.getOptions().colors[3],
+                	fillColor: 'white'
+                }
+            }, {
+                type: 'pie',
+                name: '전체건수 ',
+                data: regionNumber,
+                center: [650, 80],
+                size: 100,
+                showInLegend: false,
+                dataLabels: {
+                    enabled: false
+                }
+            }]
+        });
+    });
 };
   
