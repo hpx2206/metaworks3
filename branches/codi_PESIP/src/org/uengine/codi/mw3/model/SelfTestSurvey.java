@@ -25,81 +25,81 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		}
 		
 	// 설문조사 점수
-	Long first;
-		public Long getFirst() {
-			return first;
+	Long survey1;
+		public Long getSurvey1() {
+			return survey1;
 		}
-		public void setFirst(Long first) {
-			this.first = first;
-		}
-		
-	Long second;
-		public Long getSecond() {
-			return second;
-		}
-		public void setSecond(Long second) {
-			this.second = second;
+		public void setSurvey1(Long survey1) {
+			this.survey1 = survey1;
 		}
 		
-	Long third;
-		public Long getThird() {
-			return third;
+	Long survey2;
+		public Long getSurvey2() {
+			return survey2;
 		}
-		public void setThird(Long third) {
-			this.third = third;
-		}
-		
-	Long fourth;
-		public Long getFourth() {
-			return fourth;
-		}
-		public void setFourth(Long fourth) {
-			this.fourth = fourth;
+		public void setSurvey2(Long survey2) {
+			this.survey2 = survey2;
 		}
 		
-	Long fifth;
-		public Long getFifth() {
-			return fifth;
+	Long survey3;
+		public Long getSurvey3() {
+			return survey3;
 		}
-		public void setFifth(Long fifth) {
-			this.fifth = fifth;
-		}
-		
-	Long sixth;
-		public Long getSixth() {
-			return sixth;
-		}
-		public void setSixth(Long sixth) {
-			this.sixth = sixth;
+		public void setSurvey3(Long survey3) {
+			this.survey3 = survey3;
 		}
 		
-	Long seventh;
-		public Long getSeventh() {
-			return seventh;
+	Long survey4;
+		public Long getSurvey4() {
+			return survey4;
 		}
-		public void setSeventh(Long seventh) {
-			this.seventh = seventh;
-		}
-		
-	Long eighth;
-		public Long getEighth() {
-			return eighth;
-		}
-		public void setEighth(Long eighth) {
-			this.eighth = eighth;
+		public void setSurvey4(Long survey4) {
+			this.survey4 = survey4;
 		}
 		
-	Long ninth;
-		public Long getNinth() {
-			return ninth;
+	Long survey5;
+		public Long getSurvey5() {
+			return survey5;
 		}
-		public void setNinth(Long ninth) {
-			this.ninth = ninth;
+		public void setSurvey5(Long survey5) {
+			this.survey5 = survey5;
 		}
 		
-	public ISelfTestSurvey checkProgress(String empCode) throws Exception {
+	Long survey6;
+		public Long getSurvey6() {
+			return survey6;
+		}
+		public void setSurvey6(Long survey6) {
+			this.survey6 = survey6;
+		}
+		
+	Long survey7;
+		public Long getSurvey7() {
+			return survey7;
+		}
+		public void setSurvey7(Long survey7) {
+			this.survey7 = survey7;
+		}
+		
+	Long survey8;
+		public Long getSurvey8() {
+			return survey8;
+		}
+		public void setSurvey8(Long survey8) {
+			this.survey8 = survey8;
+		}
+		
+	Long survey9;
+		public Long getSurvey9() {
+			return survey9;
+		}
+		public void setSurvey9(Long survey9) {
+			this.survey9 = survey9;
+		}
+		
+	public int checkProgress(String empCode) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select surveyIndex");
+		sb.append("select empcode as empCode, surveyIndex");
 		sb.append(" from pseip_survey_score");
 		sb.append(" where empcode = ?empcode");
 		
@@ -107,17 +107,17 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		survey.setEmpCode(empCode);
 		survey.select();
 		
-		return survey;
+		return survey.size();
 	}
 	
-	public void save(Long sumScore, String surveyForm, String empCode) throws Exception {
+	public void save(Long sumScore, String surveyForm, String empCode, Long surveyIndex) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("update pseip_survey_score");
-		sb.append(" set "+surveyForm+" = "+sumScore.toString()+", surveyIndex = ?surveyIndex");
+		sb.append(" set survey"+surveyForm+" = "+sumScore.toString()+", surveyIndex = ?surveyIndex");
 		sb.append(" where empcode = ?empcode");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
-		survey.setSurveyIndex(this.getSurveyIndex());
+		survey.setSurveyIndex(surveyIndex);
 		survey.setEmpCode(empCode);
 		survey.update();
 		
@@ -141,4 +141,46 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		
 		return survey;
 	}
+	
+	public Long findSurveyIndex(String empCode) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select surveyIndex");
+		sb.append(" from pseip_survey_score");
+		sb.append(" where empcode = ?empcode");
+		
+		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
+		survey.setEmpCode(empCode);
+		survey.select();
+		
+		Long index = null;
+		while(survey.next()) {
+			if(survey.getSurveyIndex() == null || survey.getSurveyIndex() == 0) {
+				// 0으로 리턴해준다.
+				index = new Long(0);
+				
+			} else {
+				index = survey.getSurveyIndex();
+			}
+		}
+		
+		return index;
+	}
+	
+	public ISelfTestSurvey findAllSelfTestScore(String empCode) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select *");
+		sb.append(" from pseip_survey_score");
+		sb.append(" where empcode = ?empcode");
+		
+		ISelfTestSurvey scores = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
+		scores.setEmpCode(empCode);
+		scores.select();
+		
+		return scores;
+	}
+	
+	public void resetScore() throws Exception {
+		this.deleteDatabaseMe();
+	}
+	
 }

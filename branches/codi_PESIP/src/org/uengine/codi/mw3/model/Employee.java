@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -253,19 +254,19 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.enterpriseInformation = enterpriseInformation;
 		}
 		
-	EnterpriseService enterpriseService;
-		public EnterpriseService getEnterpriseService() {
+	ArrayList<EnterpriseService> enterpriseService;
+		public ArrayList<EnterpriseService> getEnterpriseService() {
 			return enterpriseService;
 		}
-		public void setEnterpriseService(EnterpriseService enterpriseService) {
+		public void setEnterpriseService(ArrayList<EnterpriseService> enterpriseService) {
 			this.enterpriseService = enterpriseService;
 		}
-		
-	EnterprisePatent enterprisePatent;
-		public EnterprisePatent getEnterprisePatent() {
+
+	ArrayList<EnterprisePatent> enterprisePatent;
+		public ArrayList<EnterprisePatent> getEnterprisePatent() {
 			return enterprisePatent;
 		}
-		public void setEnterprisePatent(EnterprisePatent enterprisePatent) {
+		public void setEnterprisePatent(ArrayList<EnterprisePatent> enterprisePatent) {
 			this.enterprisePatent = enterprisePatent;
 		}
 		
@@ -739,8 +740,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public Object subscribeStep3() throws Exception {
 		
 		if(enterpriseService == null) {
-			enterpriseService = new EnterpriseService();
+			enterpriseService = new ArrayList<EnterpriseService>();
 		}
+		// 초기에 1개만 add
+		this.getEnterpriseService().add(new EnterpriseService());
 		getMetaworksContext().setWhen(EnterpriseService.SERVICE);
 		
 		return this;
@@ -749,8 +752,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public Object subscribeStep4() throws Exception {
 		if(enterprisePatent == null) {
-			enterprisePatent = new EnterprisePatent();
+			enterprisePatent = new ArrayList<EnterprisePatent>();
 		}
+		// 초기에 1개만 add
+		this.getEnterprisePatent().add(new EnterprisePatent());
 		getMetaworksContext().setWhen(EnterprisePatent.PATENT);
 		
 		return this;
@@ -802,4 +807,17 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
 	}
 	
+	@ServiceMethod(callByContent=true)
+	public Object addService() throws Exception {
+		this.getEnterpriseService().add(new EnterpriseService());
+		
+		return this;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object addPatent() throws Exception {
+		this.getEnterprisePatent().add(new EnterprisePatent());
+		
+		return this;
+	}
 }

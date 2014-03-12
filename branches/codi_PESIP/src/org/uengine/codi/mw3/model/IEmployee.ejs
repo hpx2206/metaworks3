@@ -168,25 +168,42 @@ if(value){
             } else if(mw3.when == 'service') {
             %>
             
-                <%=mw3.locateObject(value.enterpriseService, value.enterpriseService.__className)%>
+                <ul id="green_and_orange_step_menu">
+                    <li class="frist fdone">STEP3<em>Enterprise Information</em></li>
+                    <li class="lastinprogress last">STEP4<em>Service</em><span></span></li>
+                </ul>
+                
+                <% for(var i = 0; i < value.enterpriseService.length; i++) { %>
+                    <%=mw3.locateObject(value.enterpriseService[i], value.enterpriseService[i].__className)%>
+                <% } %>
+                
                 <div id="btnline">
                     <ul>    
                         <li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep4.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+                        <li><a id="wBtn" href="#" onClick="<%=methods.addService.caller()%>"><span><%=mw3.localize('$addService')%></span></a></li>
                     </ul>
                 
-                </div>  
+                </div>
                 
             <%
             } else if(mw3.when == 'patent') {
             %>
+                <ul id="green_and_orange_step_menu">
+                    <li class="first inprogress">STEP5<em>Patent</em></li>
+                    <li class="last">STEP6<em>Complete</em><span></span></li>
+                </ul>
             
-                <%=mw3.locateObject(value.enterprisePatent, value.enterprisePatent.__className)%>
+                <% for(var i = 0; i < value.enterprisePatent.length; i++) { %>
+                    <%=mw3.locateObject(value.enterprisePatent[i], value.enterprisePatent[i].__className)%>
+                <% } %>
+                
                 <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
                     <ul>    
                         <li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
+                        <li><a id="wBtn" href="#" onClick="<%=methods.addPatent.caller()%>"><span><%=mw3.localize('$addPatent')%></span></a></li>
                     </ul>
-                </div>              
-                            
+                </div>
+                
 			<%
 			} else if(mw3.when == 'edit') {
 			%>

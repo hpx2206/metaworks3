@@ -98,7 +98,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     // 어쩔 수가 없다. + 1 을 해줘야 한다.
                     if(appendobject.serviceId == service.id) {
                         var options = {};
-                        options['htmlAttr'] =  {'style': 'width:1%;' };
+                        options['htmlAttr'] =  {'style': 'width:50%;' };
                     
                         $('#introTable_'+this.objectId+' tr:eq('+(j+1)+') td:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
                         

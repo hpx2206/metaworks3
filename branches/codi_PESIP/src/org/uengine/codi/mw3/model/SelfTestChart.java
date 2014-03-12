@@ -1,19 +1,17 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+
 public class SelfTestChart {
-	int sumScore;
-
 	
-	public int getSumScore() {
-		return sumScore;
-	}
+	public final static int SELF_TEST_LENGTH = 9; 
+	
+	ArrayList<Long> sumScore;
+		public ArrayList<Long> getSumScore() {
+			return sumScore;
+		}
+		public void setSumScore(ArrayList<Long> sumScore) {
+			this.sumScore = sumScore;
+		}
 
-
-	public void setSumScore(int sumScore) {
-		this.sumScore = sumScore;
-	}
-
-
-	public void load(){
-	}
 }

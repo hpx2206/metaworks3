@@ -13,8 +13,6 @@ public class WorldMapChart {
 			this.pastOrderInformationList = pastOrderInformationList;
 		}
 
-
-
 	public void load(IOrderInformation iOrderInformation) throws Exception {
 		if(pastOrderInformationList == null) {
 			pastOrderInformationList = new ArrayList<PastOrderInformation>();

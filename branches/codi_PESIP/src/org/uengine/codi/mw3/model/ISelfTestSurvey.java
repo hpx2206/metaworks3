@@ -16,34 +16,38 @@ public interface ISelfTestSurvey extends IDAO{
 	public void setSurveyIndex(Long surveyIndex);
 	
 	// 설문조사 점수 부분
-	public Long getFirst();
-	public void setFirst(Long first);
+	public Long getSurvey1();
+	public void setSurvey1(Long survey1);
 	
-	public Long getSecond();
-	public void setSecond(Long second);
+	public Long getSurvey2();
+	public void setSurvey2(Long survey2);
 	
-	public Long getThird();
-	public void setThird(Long third);
+	public Long getSurvey3();
+	public void setSurvey3(Long survey3);
 	
-	public Long getFourth();
-	public void setFourth(Long fourth);
+	public Long getSurvey4();
+	public void setSurvey4(Long survey4);
 	
-	public Long getFifth();
-	public void setFifth(Long fifth);
+	public Long getSurvey5();
+	public void setSurvey5(Long survey5);
 	
-	public Long getSixth();
-	public void setSixth(Long sixth);
+	public Long getSurvey6();
+	public void setSurvey6(Long survey6);
 	
-	public Long getSeventh();
-	public void setSeventh(Long seventh);
+	public Long getSurvey7();
+	public void setSurvey7(Long survey7);
 	
-	public Long getEighth();
-	public void setEighth(Long eighth);
+	public Long getSurvey8();
+	public void setSurvey8(Long survey8);
 	
-	public Long getNinth();
-	public void setNinth(Long ninth);
+	public Long getSurvey9();
+	public void setSurvey9(Long survey9);
 	
-	// 진행된 테스트가 있는지 검사
-	public ISelfTestSurvey checkProgress(String empCode) throws Exception;
+	public int checkProgress(String empCode) throws Exception;
+	public ISelfTestSurvey checkEmpCode(String empCode) throws Exception;
+	public Long findSurveyIndex(String empCode) throws Exception;
+	public ISelfTestSurvey findAllSelfTestScore(String empCode) throws Exception;
+	public void createEmpScore(String empCode) throws Exception;
+	public void resetScore() throws Exception;
 	
 }

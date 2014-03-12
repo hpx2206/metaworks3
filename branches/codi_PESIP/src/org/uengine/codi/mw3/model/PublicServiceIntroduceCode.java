@@ -162,29 +162,42 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 	}
 	
-	public int findSectors() throws Exception {
+	public Long findSectorSeqeunce() throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select *");
+		sb.append("select MAX(sequence) as sequence");
 		sb.append(" from public_introduce_code");
 		sb.append("	where parentId = 'SECTOR'");
 		
 		IPublicServiceIntroduceCode sectors = (IPublicServiceIntroduceCode) sql(IPublicServiceIntroduceCode.class, sb.toString());
 		sectors.select();
 		
-		return sectors.size();
+		Long sequence = null;
+		
+		while(sectors.next()) {
+			sequence = sectors.getSequence();
+		}
+		
+		return sequence;
 		
 	}
 	
-	public int findServices() throws Exception {
+	public Long findServiceSeqeunce() throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select *");
+		sb.append("select MAX(sequence) as sequence");
 		sb.append(" from public_introduce_code");
 		sb.append("	where parentId = 'SERVICE'");
 		
 		IPublicServiceIntroduceCode services = (IPublicServiceIntroduceCode) sql(IPublicServiceIntroduceCode.class, sb.toString());
 		services.select();
 		
-		return services.size();
+		Long sequence = null;
+		
+		while(services.next()) {
+			sequence = services.getSequence();
+		}
+		
+		return sequence;
+		
 	}
 	
 	public int findTabs() throws Exception {
@@ -269,8 +282,19 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 	
 	public void addSector(String name, String codeId) throws Exception {
 		// count 보다 1개가 커야한다. 현재 sector가 1개면 그 다음엔 2개니까..
-		int count = this.findSectors() + 1;
-		String sectorId = SEC_ + count;
+		// 그런데 섹터가 아예없을 때는 초기값으로 1을 준다.
+		String sectorId = null;
+		int count = 0;
+		
+		if(this.findSectorSeqeunce() == null) {
+			++count;
+			sectorId = SEC_ + count;
+			
+		} else {
+			count = (int) (this.findSectorSeqeunce() + 1);
+			sectorId = SEC_ + count;
+			
+		}
 		
 		this.setId(sectorId);
 		this.setName(name);
@@ -283,9 +307,20 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 	}
 	
 	public void addService(String name, String codeId) throws Exception {
-		// count 보다 1개가 커야한다. 현재 service 1개면 그 다음엔 2개니까..
-		int count = this.findServices() + 1;
-		String serviceId = SER_ + count;
+		// count 보다 1개가 커야한다. 현재 sector가 1개면 그 다음엔 2개니까..
+		// 그런데 서비스가 아예없을 때는 초기값으로 1을 준다.
+		String serviceId = null;
+		int count = 0;
+		
+		if(this.findServiceSeqeunce() == null) {
+			++count;
+			serviceId = SER_ + count;
+			
+		} else {
+			count = (int) (this.findServiceSeqeunce() + 1);
+			serviceId = SER_ + count;
+			
+		}
 		
 		this.setId(serviceId);
 		this.setName(name);
@@ -311,7 +346,7 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 	}
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_POPUP)
+	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true, target=TARGET_POPUP)
 	@Face(displayName="$Delete")
 	public Object[] delete() throws Exception {
 		// sector와 service를 구분하며 지워야 한다.
@@ -330,6 +365,7 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 			
 			// 화면 refresh
 			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+			publicServiceIntroduce.setId(this.getTab());
 			publicServiceIntroduce.loadChart(this.getTab());
 			
 			return new Object[] { new Refresh(publicServiceIntroduce) };
@@ -347,6 +383,7 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 			
 			// 화면 refresh
 			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+			publicServiceIntroduce.setId(this.getTab());
 			publicServiceIntroduce.loadChart(this.getTab());
 			
 			return new Object[] { new Refresh(publicServiceIntroduce) };
