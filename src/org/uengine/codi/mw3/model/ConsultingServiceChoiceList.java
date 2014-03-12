@@ -36,8 +36,8 @@ public class ConsultingServiceChoiceList {
 		selfTestSurveyPanel.load();
 		
 		modalWindow.setTitle("셀프 테스트 설문조사");
-		modalWindow.setWidth(900);
-		modalWindow.setHeight(600);
+		modalWindow.setWidth(1000);
+		modalWindow.setHeight(650);
 		modalWindow.setPanel(selfTestSurveyPanel);
 		
 		return modalWindow;

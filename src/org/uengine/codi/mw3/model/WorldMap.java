@@ -86,6 +86,7 @@ public class WorldMap {
 		worldMapChart.load(iOrderInformation);
 		
 		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setTitle("발주정보 리스트");
 		modalWindow.setWidth(900);
 		modalWindow.setHeight(600);
 		modalWindow.setPanel(worldMapChart);
