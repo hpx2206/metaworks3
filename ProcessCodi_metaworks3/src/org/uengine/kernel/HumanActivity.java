@@ -664,11 +664,13 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 					}
 				}
 			}
-
-		} else {
+		}
+		if( roleMapping==null || (roleMapping!=null && roleMapping.size() > 1)){
 			/*
 			 * 2013/06/10
 			 * role mapping 이 되어있지 않은 경우에 경합모드로 변경
+			 * 2014/03/12
+			 * role mapping 이 여러사람에게 떨어질때 경합모드로 변경
 			 */
 			//kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+getRole().getDispatchingOption());
 			roleMapping = new RoleMapping();
