@@ -1,26 +1,29 @@
 package org.uengine.codi.mw3.common;
 
+import org.metaworks.annotation.Available;
 import org.uengine.codi.mw3.admin.TopPanel;
-import org.uengine.codi.mw3.model.PersonalPerspective;
+import org.uengine.codi.mw3.model.PerspectivePanel;
 
 public class MainPanel {
+	 
+	PerspectivePanel perspectivePanel;
+	@Available(condition="perspectivePanel")
+		public PerspectivePanel getPerspectivePanel() {
+			return perspectivePanel;
+		}
+		public void setPerspectivePanel(PerspectivePanel perspectivePanel) {
+			this.perspectivePanel = perspectivePanel;
+		}
+
 
 	TopPanel topPanel;
-	public TopPanel getTopPanel() {
-		return topPanel;
-	}
-	public void setTopPanel(TopPanel topPanel) {
-		this.topPanel = topPanel;
-	}
+		public TopPanel getTopPanel() {
+			return topPanel;
+		}
+		public void setTopPanel(TopPanel topPanel) {
+			this.topPanel = topPanel;
+		}
 	
-	PersonalPerspective personalPerspective;
-	public PersonalPerspective getPersonalPerspective() {
-		return personalPerspective;
-	}
-
-	public void setPersonalPerspective(PersonalPerspective personalPerspective) {
-		this.personalPerspective = personalPerspective;
-	}
 
 	Object appPanel;
 		public Object getAppPanel() {
