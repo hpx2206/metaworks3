@@ -10390,6 +10390,48 @@ OG.shape.HorizontalLaneShape.prototype.createShape = function () {
     return this.geom;
 };
 /**
+ * Horizontal Pool Shape
+ *
+ * @class
+ * @extends OG.shape.GroupShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.HorizontalPoolShape = function (label) {
+	OG.shape.HorizontalPoolShape.superclass.call(this, label);
+
+	this.SHAPE_ID = 'OG.shape.HorizontalPoolShape';
+	this.CONNECTABLE = true;
+	this.LoopType = 'None';
+};
+OG.shape.HorizontalPoolShape.prototype = new OG.shape.GroupShape();
+OG.shape.HorizontalPoolShape.superclass = OG.shape.GroupShape;
+OG.shape.HorizontalPoolShape.prototype.constructor = OG.shape.HorizontalPoolShape;
+OG.HorizontalPoolShape = OG.shape.HorizontalPoolShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.HorizontalPoolShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'label-direction': 'vertical',
+		'vertical-align' : 'top',
+		'fill' : 'none'
+	});
+
+    return this.geom;
+};
+/**
  * ForeignObject HTML Shape
  *
  * @class
@@ -10514,6 +10556,46 @@ OG.shape.VerticalLaneShape.prototype.createShape = function () {
 		return this.geom;
 	}
 
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'label-direction': 'horizontal',
+		'vertical-align' : 'top',
+		fill: 'none'
+	});
+
+	return this.geom;
+};
+/**
+ * Vertical Pool Shape
+ *
+ * @class
+ * @extends OG.shape.GroupShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨
+ */
+OG.shape.VerticalPoolShape = function (label) {
+	OG.shape.VerticalPoolShape.superclass.call(this, label);
+
+	this.SHAPE_ID = 'OG.shape.VerticalPoolShape';
+	this.CONNECTABLE = true;
+};
+OG.shape.VerticalPoolShape.prototype = new OG.shape.GroupShape();
+OG.shape.VerticalPoolShape.superclass = OG.shape.GroupShape;
+OG.shape.VerticalPoolShape.prototype.constructor = OG.shape.VerticalPoolShape;
+OG.VerticalPoolShape = OG.shape.VerticalPoolShape;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.VerticalPoolShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+	
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'horizontal',
@@ -15444,21 +15526,27 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 		}
 	}
     
-	/*
-    $(me.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, element) {
-        var elements, i;
-        elements = me.getElementsByBBox(element.shape.geom.getBoundary());
-        for(i=0; i<elements.length; i++){
-            if(element.id != elements[i].id){
-                if(!$(elements[i]).parent().get(0).shape){
-					//FIXME : remove this
-                    //element.appendChild(elements[i]);
-                }
-            }
+	
+	$(me.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
+    	if(element.shape instanceof OG.shape.HorizontalPoolShape){
+	        var elements, i, checkPool = false;
+	        elements = me.getElementsByBBox(element.shape.geom.getBoundary());
+	        for(i=0; i<elements.length; i++){
+	            if(element.id != elements[i].id){
+	                /*
+	                if(!$(elements[i]).parent().get(0).shape){
+						//FIXME : remove this
+	                    //element.appendChild(elements[i]);
+	                }
+	                */
+	                if(($(elements[i]).parent().get(0) == $(element).parent().get(0))){
+	                	element.appendChild(elements[i]);
+	                }
+	            }
+	        }
         }
     });
-	*/
-	
+    	
     if($(shape).attr('auto_draw') == 'yes'){
         $(groupNode).attr('auto_draw', 'yes');
     }
@@ -16769,10 +16857,28 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 
     root = me.getRootGroup();
     eleArray.push(element);
-//    me.addToGroup(root, eleArray);
-
+    me.addToGroup(root, eleArray);
+	$(me.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
+    	if(element.shape instanceof OG.shape.HorizontalPoolShape){
+	        var elements, i, checkPool = false;
+	        elements = me.getElementsByBBox(element.shape.geom.getBoundary());
+	        for(i=0; i<elements.length; i++){
+	            if(element.id != elements[i].id){
+	                /*
+	                if(!$(elements[i]).parent().get(0).shape){
+						//FIXME : remove this
+	                    //element.appendChild(elements[i]);
+	                }
+	                */
+	                if(($(elements[i]).parent().get(0) == $(element).parent().get(0))){
+	                	element.appendChild(elements[i]);
+	                }
+	            }
+	        }
+        }
+    });
+    
 	redrawChildConnectedEdge = function (_collapseRootElement, _element) {
-
 		var edgeIdArray, fromEdge, toEdge, _childNodes = _element.childNodes, otherShape, i, j, isNeedToRedraw;
 		for (i = _childNodes.length - 1; i >= 0; i--) {
 			if ($(_childNodes[i]).attr("_type") === OG.Constants.NODE_TYPE.SHAPE) {
@@ -16874,16 +16980,22 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 				this.redrawConnectedEdge(element, excludeEdgeId);
 				this.drawLabel(element);
 			}
+			
 			break;
 		}
-
-        if(element.shape instanceof OG.shape.bpmn.A_Task){ // LoopType 에 따라서 도형을 그리기 위해서
+	
+        if(element.shape instanceof OG.shape.bpmn.A_Task){ 
 			if(element.shape.LoopType != 'None')
 				this.drawLoopType(element);
 			if(element.shape.TaskType != 'None')
 				this.drawTaskType(element);
 			if(element.shape.status != 'None')
 				this.drawStatus(element);
+        }
+        
+        if(element.shape instanceof OG.shape.HorizontalPoolShape){
+			if(element.shape.LoopType != 'None')
+				this.drawLoopType(element);
         }
         
         if(element.shape instanceof OG.shape.bpmn.A_Subprocess){
@@ -16915,7 +17027,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
-	var me = this, edge, fromTerminalId, toTerminalId, fromShape, toShape, fromTerminalNum, toTerminalNum,
+	var me = this, edge, fromTerminalId, toTerminalId, fromShape, toShape, fromElement, toElement, fromTerminalNum, toTerminalNum,
 		fromTerminal, toTerminal, vertices, fromDrct, toDrct, fromXY, toXY,
 		orgFromXY, orgToXY, orgFromDrct, orgToDrct, intersectionInfo, isSelf,
 		collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
@@ -16928,6 +17040,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 
 	if (fromTerminalId) {
 		fromShape = this._getShapeFromTerminal(fromTerminalId);
+		fromElement = me.getElementById(fromShape.id);
 		fromTerminalNum = parseInt(fromTerminalId.substring(fromTerminalId.lastIndexOf("_") + 1), 10);
 		fromTerminal = fromShape.shape.createTerminal()[fromTerminalNum];
 		fromDrct = fromTerminal.direction.toLowerCase();
@@ -16940,6 +17053,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 
 	if (toTerminalId) {
 		toShape = this._getShapeFromTerminal(toTerminalId);
+		toElement = me.getElementById(toShape.id);
 		toTerminalNum = parseInt(toTerminalId.substring(toTerminalId.lastIndexOf("_") + 1), 10);
 		toTerminal = toShape.shape.createTerminal()[toTerminalNum];
 		toDrct = toTerminal.direction.toLowerCase();
@@ -17053,9 +17167,26 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
     }
 
 	// redraw edge
-	edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-		OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf, pointOfInflection);
-
+	if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
+		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
+	}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
+			|| toShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data"  ){
+		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": ". "}), edge.id, isSelf, pointOfInflection);
+	}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation" 
+				|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"){
+		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": ". ", "arrow-end": "none"}), edge.id, isSelf, pointOfInflection);		
+	}else if(fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
+				|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"){
+		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
+	}else{
+		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "", "arrow-end": "classic-wide-long"}), edge.id, isSelf, pointOfInflection);
+	}
+	
 	// Draw Label
 	this.drawLabel(edge);
 	this.drawEdgeLabel(edge, null, 'FROM');
@@ -17108,8 +17239,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawConnectedEdge = function (element, e
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style, label) {
-	
-	var me = this, _style = {}, fromShape, toShape, intersectionInfo, fromXY, toXY,
+	var me = this, _style = {}, fromShape, toShape, fromElement, toElement, intersectionInfo, fromXY, toXY,
 		orgFromXY, orgToXY, fromDrct, toDrct, orgFromDrct, orgToDrct, isSelf, beforeEvent,
 		addAttrValues = function (element, name, value) {
 			var attrValue = $(element).attr(name),
@@ -17154,8 +17284,19 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 				|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"  ){
 			_style["arrow-end"] = "none";
 			_style["stroke-dasharray"] = ". ";
+		}else if( fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
+				|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"  ){
+			_style["arrow-end"] = "open_block-wide-long";
+			_style["stroke-dasharray"] = "--";		
 		}
 
+		fromElement = me.getElementById(fromShape.id);
+		toElement = me.getElementById(toShape.id);
+		
+		if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
+			_style["arrow-end"] = "open_block-wide-long";
+			_style["stroke-dasharray"] = "--";
+		}		
 	
 		beforeEvent = jQuery.Event("beforeConnectShape", {edge: edge, fromShape: fromShape, toShape: toShape});
 		$(this._PAPER.canvas).trigger(beforeEvent);
@@ -17766,7 +17907,7 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 
 		// group
 		group = this._PAPER.group();
-
+		
 		// hidden box
 		/*
 		rect = this._PAPER.rect(envelope.getUpperLeft().x - rect_gap, envelope.getUpperLeft().y - rect_gap,
@@ -17798,12 +17939,18 @@ OG.renderer.RaphaelRenderer.prototype.drawTerminal = function (element, terminal
 
 		this._add(group, rElement.id + OG.Constants.TERMINAL_SUFFIX.GROUP);
 
+
+
 		// layer 위치 조정
 		//rect.insertBefore(rElement);
 		group.insertAfter(rElement);
 		rect.insertAfter(rElement);
 		//rElement.appendChild(group);
 
+		$(rect.node).bind('mouseover', function(event, ui){
+			event.stopPropagation();
+		});
+		
 		return {
 			bBox    : rect.node,
 			terminal: group.node
@@ -18123,17 +18270,31 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
         _rect.attr("fill", "#C9E2FC");
         _rect.attr("stroke-width", "0.2");
         _rect.attr("r", "10");
-        _rect.attr("fill-opacity", "0.5");
+        _rect.attr("fill-opacity", "1");
         _rect.attr("stroke-dasharray", "--");
         
         _rect1 = this._PAPER.image("images/opengraph/running.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
         break;
     }
 
+	var ani1 = Raphael.animation({
+        fill:'#C9E2FC'
+    },1000);
+    
+    var ani2 = Raphael.animation({
+        fill:'white'
+    },1000, startAni);
+	
+	function startAni(){
+		_rect.attr({fill: 'white'}).animate(ani1);
+		_rect.attr({fill: '#C9E2FC'}).animate(ani2.delay(1000));
+	}
+	startAni();
+	
     this._add(_rect1, rElement.id + OG.Constants.STATUS_SUFFIX);
     _rect1.insertAfter(rElement);
     rElement.appendChild(_rect1);
-    
+
     if(_rect){
     	this._add(_rect, rElement.id + OG.Constants.STATUS_SUFFIX + '_IMG');
     	_rect.insertAfter(rElement);
@@ -18797,7 +18958,7 @@ OG.renderer.RaphaelRenderer.prototype.move = function (element, offset, excludeE
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		type = rElement ? rElement.node.getAttribute("_type") : null,
 		geometry;
-
+	
 	this.removeCollapseGuide(element);
 	if (rElement && type) {
 		$(rElement.node).children("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=EDGE]").each(function (idx, item) {
@@ -19336,6 +19497,10 @@ OG.handler.EventHandler.prototype = {
 	
 		$(element).bind({
 			mouseover: function (event) {
+				console.log(this);
+				
+				event.stopPropagation();
+				
 				if("element_selected" == $(element).data("status")){
 					return;
 				}
@@ -19347,6 +19512,8 @@ OG.handler.EventHandler.prototype = {
 				*/
 				
 				if (element.shape.isCollapsed === false) {
+					console.log('false');
+					
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
 
@@ -19410,11 +19577,12 @@ OG.handler.EventHandler.prototype = {
 								}
 							}
 						});
-
+							
 						$.each(terminalGroup.terminal.childNodes, function (idx, item) {
 							if (item.terminal) {
 								$(item).bind({
 									mouseover: function (event) {
+										event.stopPropagation();
 										var fromTerminal = $(root).data("from_terminal"),
 											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
 											isSelf = element && fromShape && element.id === fromShape.id;
@@ -19780,7 +19948,7 @@ OG.handler.EventHandler.prototype = {
 	 */
 	setMovable: function (element, isMovable) {
 		var me = this, eleArray = [], root = me._RENDERER.getRootGroup();
-
+		
 		if (!element) {
 			return;
 		}
@@ -19829,8 +19997,11 @@ OG.handler.EventHandler.prototype = {
 						delete childElementMap[elementId];
 										
 						for(var key_childElementMap in childElementMap){
+							
 							childElement = childElementMap[key_childElementMap];
 							if(childElement instanceof OG.shape.EdgeShape){
+								//no operation
+							}else if($(childElement).parent().get(0)){
 								//no operation
 							}else{
 								me._RENDERER.removeGuide(childElement);
@@ -19923,7 +20094,7 @@ OG.handler.EventHandler.prototype = {
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
 						// grouping
 						//me._RENDERER.addToGroup(groupTarget, eleArray);
-
+						console.log(element);
 						// guide
 						$.each(eleArray, function (k, item) {
 							me._RENDERER.removeGuide(item);
@@ -22553,6 +22724,10 @@ OG.handler.EventHandler.prototype = {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
             if(item.shape instanceof OG.shape.bpmn.A_Task){
+                item.shape.LoopType = loopType;
+                me._RENDERER.redrawShape(item);
+            }
+            if(item.shape instanceof OG.shapeHorizontalPoolShape){
                 item.shape.LoopType = loopType;
                 me._RENDERER.redrawShape(item);
             }
