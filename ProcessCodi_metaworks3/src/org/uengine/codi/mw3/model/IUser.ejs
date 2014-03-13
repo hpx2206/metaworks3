@@ -1,7 +1,25 @@
 <!--<%=mw3.when%>,<%=mw3.how%>,<%=mw3.where%>-->
 
 <%
-	if(value){	
+	if(value){
+		var contacts = [];
+		var friendAlias = value.name;
+		var contactPespective = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactPerspective');
+		
+		if( contactPespective ){
+			if(contactPespective.more){
+				contacts = contactPespective.child;
+			}else{
+				contacts = contactPespective.loadAllContact();
+			}
+		}
+		for(var i=0; i<contacts.length; i++){
+			var contact = contacts[i];
+			if(contact.friend && contact.friend.userId && contact.friend.userId == value.userId ){
+				friendAlias = contact.friend.name;
+			}
+				
+		}
 		var portrait = '';		
 		if(value.network == 'local' || value.network == null){
 			if(value.userId)
@@ -15,7 +33,7 @@
 			portrait = 'images/portrait/deleted_user.gif';
 %>
 			<div class="user" <%if(mw3.where == 'addfollower'){%>style="float:left; width:auto !important;cursor: Default;"<%}%>>		
-				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
+				<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=friendAlias%>">	
 					<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 <%	
 			var isOverlayName = true;
@@ -23,9 +41,9 @@
 			if(mw3.where == 'addcontact' || mw3.where == 'addfollower' || mw3.where == 'pickerlist' || mw3.where == 'removefollower')
 				isOverlayName = false;
 			
-			if(isOverlayName && mw3.where != 'self' && mw3.where != 'instancelist' && value.name){
+			if(isOverlayName && mw3.where != 'self' && mw3.where != 'instancelist' && friendAlias){
 %>
-					<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
+					<div class="followers_name" title="<%=friendAlias%>"><%=friendAlias%></div>
 <%
 			}
 %>
@@ -35,7 +53,7 @@
 			if(!isOverlayName){
 %>			
 				<div class="user_detail">
-					<span class="fontbold"><%=value.name%></span>
+					<span class="fontbold"><%=friendAlias%></span>
 					<span class="fontgray"><%=value.mood ? value.mood : ''%></span>
 				</div>
 <%
