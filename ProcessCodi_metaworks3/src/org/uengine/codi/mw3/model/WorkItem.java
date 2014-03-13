@@ -32,7 +32,6 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
-import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.TopicNode;
@@ -107,6 +106,29 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		System.out.println("comment size : " + workitem.size());
 		
 		return workitem;
+	}
+	
+	protected static IWorkItem findByTaskId(String taskId) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where taskId=?taskId");
+		sql.append("   and isdeleted!=?isDeleted");
+		sql.append(" order by taskId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("taskId", taskId);
+		workitem.set("isDeleted",1);
+		
+		workitem.select();
+		
+		if(workitem.next()){
+			return workitem;
+		}
+		
+		return null;
 	}
 	
 	protected static IWorkItem findComment(String instanceId) throws Exception{
@@ -1051,6 +1073,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			this.syncToDatabaseMe();
+			
+			//워크아이템 수정시 알림 워크아이템 발행
+			String type=null;
+			WorkItem workItem = new WorkItem();
+			workItem.setTaskId(this.getTaskId());
+			workItem.copyFrom(workItem.findByTaskId(this.getTaskId().toString()));
+			
+			generateNotiWorkItem(workItem.getTitle(), "modify");
 		}		
 		
 		// 팔로워 추가(추천 및 게시)
@@ -1109,6 +1139,46 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		SolrData.insertWorkItem(this , inst);
 		
 		return instanceRef;
+	}
+	
+	
+	
+	public WorkItem generateNotiWorkItem(String title) throws Exception{
+		return generateNotiWorkItem(title, null);
+	}
+	
+	public WorkItem generateNotiWorkItem(String title, String act) throws Exception{
+		CommentWorkItem workItem = new CommentWorkItem();
+		
+		String codiId = GlobalContext.getPropertyString("codi.user.id", "0");
+		String codiName = GlobalContext.getPropertyString("codi.user.name", "CODI");
+		
+		IUser writer = new User();
+		writer.setUserId(codiId);
+		writer.setName(codiName);
+		workItem.session = session;
+		workItem.processManager = processManager;
+		workItem.session.setUser(writer);
+		
+		String totalTitle = "\'" + session.getEmployee().getEmpName() + "\' "
+		+ localeManager.getString("$notiWorkItem.subjectParticle");
+		
+		
+		if(act != null){
+			String type = " "+localeManager.getString("$notiWorkItem.type."+ this.getType());
+			String attachTitle = localeManager.getString("$notiWorkItem.act." + act);
+			
+			title = type + " [ " + title + " ] " + attachTitle;
+		}
+		
+		totalTitle += title;
+		
+		workItem.setInstId(this.getInstId());
+		workItem.setTitle(totalTitle);
+		workItem.add();
+		workItem.flushDatabaseMe();
+		
+		return workItem;
 	}
 	
 	public Object[] makeReturn(Long prevInstId, IInstance instanceRef) throws Exception {
@@ -1347,6 +1417,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		permittedCheck(theInstance);
 		
+		if(!this.getWriter().getUserId().equals(session.getEmployee().getEmpCode())){
+			throw new Exception("$CanNotDelete");
+		}
+			
+		
 		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin()) || theInstance.getInitiator().getUserId().equals(session.getUser().getUserId())){
 			if( this.getTaskId().equals(theInstance.getLastcmntTaskId()) ){
 				if( theInstance.getLastcmnt2TaskId() != null ){
@@ -1372,6 +1447,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			deleteDatabaseMe();
+			
+			//워크아이템 삭제시 노티워크아이템 발행
+			String removedTitle = this.getTitle();
+			
+			generateNotiWorkItem(removedTitle, "remove");
 			
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = theInstance;
@@ -1402,11 +1482,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
 				throw new Exception("$CanNotEdit");
 			}
-			if(!session.getUser().getUserId().equals(getWriter().getUserId())){
-				throw new Exception("$OnlyTheWriterCanEdit");
-			}
 		}
-		
+	
 		/*
 		setDueDate(null);
 		setStartDate(null);
@@ -1663,6 +1740,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 
+	@AutowiredFromClient
+	public Locale localeManager;
+	
 //	@AutowiredFromClient
 //	public TopicFollowers topicFollowers;
 //	
