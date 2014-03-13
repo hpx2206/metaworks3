@@ -1251,8 +1251,25 @@ public class Instance extends Database<IInstance> implements IInstance{
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
-		
+
+		String title=null;
 		String secuopt = this.getSecuopt();
+
+		if(secuopt.charAt(0) != '0'){
+			title = localeManager.getString("$InstanceSecuopt");
+		}else{
+			title = localeManager.getString("$InstanceNoSecuopt");
+		}
+		
+		// add comment schedule changed
+		WorkItem workItem = new WorkItem();
+		workItem.getMetaworksContext().setHow("changeSchedule");
+		workItem.session = session;
+		workItem.processManager = processManager;
+		workItem.setInstId(this.getInstId());
+		
+		workItem.generateNotiWorkItem(title);
+		
 		
 		if (secuopt.charAt(0) != '0') {
 			databaseMe().setSecuopt("0");
@@ -1277,10 +1294,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		// 자기자신의 인스턴스 상태를 변경함
 //		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		
-		InstanceFollower findFollower = new InstanceFollower(instance.getInstId().toString());
-		findFollower.session = session;
-		findFollower.setUser(session.getUser());
-		findFollower.put();
+		//비공개&공개 이벤트 발생자 팔로우 추가
+		addFollowActUser();
 	}
 	
 	public void complete() throws Exception{
@@ -1306,24 +1321,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 			tobe = "Completed";
 			title = localeManager.getString("$CompletedDate");
 		}
-			
 		
-		/*
-		 * 워크아이템 발행 부분 주석 처리
-		 * 2014.02.05
-		 * 민수환
-		 * 
 		// add comment schedule changed
-		CommentWorkItem workItem = new CommentWorkItem();
+		WorkItem workItem = new WorkItem();
 		workItem.getMetaworksContext().setHow("changeSchedule");
 		workItem.session = session;
 		workItem.processManager = processManager;
-		
 		workItem.setInstId(this.getInstId());
-		workItem.setTitle(title);
-		workItem.add();
-		workItem.flushDatabaseMe();
-		*/
+		
+		workItem.copyFrom(workItem.generateNotiWorkItem(title));
 		
 		// instance update flush
 		instanceRef.setStatus(tobe);
@@ -1366,14 +1372,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 
-		/*
-		 * 워크아이템 발행 부분 변경 처리
-		 * 2014.02.10
-		 * 민수환
-		 * 
+		//본인에게 알림 워크아이템 발행
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(upcommingTodoPerspective)});			
-		*/
 		
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});	
 		
@@ -1386,9 +1387,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 			insertBV(businessValue);
 		}
 		
-		InstanceFollower findFollower = new InstanceFollower(instance.getInstId().toString());
+		//완료 이벤트 발생자 팔로우 추가
+		addFollowActUser();
+	}
+	public void addFollowActUser() throws Exception{
+		InstanceFollower findFollower = new InstanceFollower(getInstId().toString());
 		findFollower.session = session;
-		findFollower.setUser(session.getUser());
+		IUser actUser = new User();
+		actUser.setUserId(session.getEmployee().getEmpCode());
+		actUser.setName(session.getEmployee().getEmpName());
+		findFollower.setUser(actUser);
 		findFollower.put();
 		
 	}

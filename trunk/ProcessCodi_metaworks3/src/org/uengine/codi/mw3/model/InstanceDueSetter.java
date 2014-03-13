@@ -126,7 +126,7 @@ public class InstanceDueSetter implements ContextAware{
 
 		IInstance instanceRef = instance.databaseMe();
 		
-		if(instanceRef.isInitCmpl() != isOnlyInitiatorCanComplete()){
+	/*	if(instanceRef.isInitCmpl() != isOnlyInitiatorCanComplete()){
 			instanceRef.setInitCmpl(isOnlyInitiatorCanComplete());		// 시작자만 완료 가능
 			checkChanged = true;
 		}
@@ -142,7 +142,7 @@ public class InstanceDueSetter implements ContextAware{
 			instanceRef.setEffort(getEffort());				// effort
 			checkChanged = true;
 		}
-		
+		*/
 		instanceRef.getMetaworksContext().setWhen("blinking");
 		
 		long databaseDueTime = 0;
@@ -189,16 +189,6 @@ public class InstanceDueSetter implements ContextAware{
 		*/
 		
 		if(databaseDueTime != dueTime){
-			/*
-			 * 워크아이템 발행 부분 주석 처리
-			 * 2014.02.05
-			 * 민수환
-			 * 
-			//if schedule changed
-			CommentWorkItem workItem = new CommentWorkItem();
-			workItem.getMetaworksContext().setHow("changeSchedule");
-			workItem.session = session;
-			workItem.processManager = processManager;
 			
 			String title = null;
 			
@@ -207,18 +197,23 @@ public class InstanceDueSetter implements ContextAware{
 				title = localeManager.getString("$CancelDate");
 			}else{				
 				instanceRef.setDueDate(new Date(dueTime));
-				title = localeManager.getString("$ChangedDate");			
-				title += ": " + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate());
+				title = " [ " + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate()) + " ] ";			
+				title += localeManager.getString("$ChangedDate");
 			}
 			
-			workItem.setInstId(getInstId());
-			workItem.setTitle(title);
-			workItem.add();
+			//if schedule changed
+			WorkItem workItem = new WorkItem();
+			workItem.getMetaworksContext().setHow("changeSchedule");
+			workItem.session = session;
+			workItem.processManager = processManager;
+			workItem.setInstId(this.getInstId());
+			
+			//납기일이 변한 경우 워크아이템 발행
+			workItem.copyFrom(workItem.generateNotiWorkItem(title));
 
 			MetaworksRemoteService.pushTargetClientObjects(
 					Login.getSessionIdWithUserId(session.getUser().getUserId()),
 					new Object[]{new ToAppend(new InstanceViewThreadPanel(), workItem)});
-			*/
 			
 			
 			checkChanged = true;
@@ -275,11 +270,14 @@ public class InstanceDueSetter implements ContextAware{
 		
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 		
-		
+		//업무정보를 변경한 사람 팔로우 추가
 		if(checkChanged == true){
 			InstanceFollower findFollower = new InstanceFollower(instance.getInstId().toString());
 			findFollower.session = session;
-			findFollower.setUser(session.getUser());
+			IUser activeUser = new User();
+			activeUser.setUserId(session.getEmployee().getEmpCode());
+			activeUser.setName(session.getEmployee().getEmpName());
+			findFollower.setUser(activeUser);
 			findFollower.put();
 		}
 		
