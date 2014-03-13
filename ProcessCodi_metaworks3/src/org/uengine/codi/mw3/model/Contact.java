@@ -82,7 +82,13 @@ public class Contact extends Database<IContact> implements IContact{
 		contact.setUserId(getUserId());
 		contact.update();
 	}
-	
+	public void editFriendName() throws Exception{
+		IContact contact = sql("update contact set friendName=?friendName where userid = ?userId and friendId = ?friendId");
+		contact.set("friendId", getFriend().getUserId());
+		contact.set("friendName", getFriend().getName());
+		contact.setUserId(getUserId());
+		contact.update();
+	}
 	@Override
 	public Object[] addFollower() throws Exception {
 		User user = new User();
