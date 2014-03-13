@@ -128,7 +128,15 @@ public class User extends Database<IUser> implements IUser {
 		public void setDeleted(boolean deleted) {
 			this.deleted = deleted;
 		}
-	
+		
+	UserNicknameChanger userNicknameChanger;
+		public UserNicknameChanger getUserNicknameChanger() {
+			return userNicknameChanger;
+		}
+		public void setUserNicknameChanger(UserNicknameChanger userNicknameChanger) {
+			this.userNicknameChanger = userNicknameChanger;
+		}
+		
 	@Override
 	public Object[] pickUp() throws Exception {
 		this.getMetaworksContext().setHow(HOW_PICKER);
@@ -202,7 +210,17 @@ public class User extends Database<IUser> implements IUser {
 		int height = 279;
 		
 		this.load();
-		
+		if(!this.getUserId().equals(session.getUser().getUserId())){
+			Contact contact = new Contact();
+			IContact findContact = contact.findContactsWithFriendId(session.getUser(), this.getUserId());
+			if(findContact != null){
+				userNicknameChanger = new UserNicknameChanger();
+				userNicknameChanger.setUserId(this.getUserId());
+				userNicknameChanger.setUserNickname(findContact.getFriend().getName());
+				userNicknameChanger.session = session;
+				userNicknameChanger.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			}
+		}
 		//this.getMetaworksContext().setWhen(this.getMetaworksContext().getWhere());
 		this.getMetaworksContext().setHow(HOW_INFO);
 		
