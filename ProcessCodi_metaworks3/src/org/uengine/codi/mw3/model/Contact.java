@@ -166,7 +166,7 @@ public class Contact extends Database<IContact> implements IContact{
 	}
 	public static IContact findContacts(IUser user, boolean isMore, String keyword) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, item.updatedate")
+		sb.append("select distinct c.userId, c.friendId, c.friendName, item.updatedate")
 		  .append("  from contact c ")
 		  .append("  	left join emptable e")
 		  .append("    		on c.friendid = e.empcode")
