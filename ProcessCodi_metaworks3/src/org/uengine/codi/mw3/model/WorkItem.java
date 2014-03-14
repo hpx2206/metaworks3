@@ -1160,8 +1160,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		workItem.processManager = processManager;
 		workItem.session.setUser(writer);
 		
-		String totalTitle = "\'" + session.getEmployee().getEmpName() + "\' "
-		+ localeManager.getString("$notiWorkItem.subjectParticle");
+		String totalTitle = "\'" + session.getEmployee().getEmpName() + "\' 님이 ";
 		
 		
 		if(act != null){
