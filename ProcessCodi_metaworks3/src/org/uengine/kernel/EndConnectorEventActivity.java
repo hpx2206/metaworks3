@@ -1,5 +1,5 @@
 package org.uengine.kernel;
 
-public class EndConnectorEventActivity extends EventActivity {
+public class EndConnectorEventActivity extends StartConnectorEventActivity {
 
 }
