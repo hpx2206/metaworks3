@@ -98,7 +98,7 @@ public class Form implements ContextAware {
 		try {
 			this.formLoad();
 		}catch(Exception ex) {
-			ex.printStackTrace();
+			throw new RuntimeException("$UIEditorFailedToLoadJavaClass", ex);
 		}		
 	}
 	
