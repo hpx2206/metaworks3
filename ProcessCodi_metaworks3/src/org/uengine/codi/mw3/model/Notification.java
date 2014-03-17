@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
@@ -322,7 +323,16 @@ public class Notification extends Database<INotification> implements INotificati
 		instance.setInstId(getInstId());
 		instance.session = session;
 
-		return new Object[]{instance.detail(), this};
+		InstanceViewContent instanceViewContent = instance.detail();
+		
+		if(SNS.isPhone()){
+			Popup popup = new Popup(instanceViewContent.instanceView);
+			popup.setName(instanceViewContent.getTitle());
+			
+			return new Object[]{ popup };
+		}else{
+			return new Object[]{new Refresh(instanceViewContent), new Refresh(this)};
+		}
 		
 	}
 	

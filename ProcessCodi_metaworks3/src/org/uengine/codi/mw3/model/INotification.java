@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
@@ -48,7 +49,7 @@ public interface INotification extends IDAO{
 	public boolean isConfirm();
 	public void setConfirm(boolean confirm);
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] see() throws Exception;
 
 
