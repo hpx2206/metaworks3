@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 
 public class PerspectivePanel implements ContextAware {
@@ -15,6 +16,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 
 	PersonalPerspective personalPerspective;
+	@Available(condition="personalPerspective")
 		public PersonalPerspective getPersonalPerspective() {
 			return personalPerspective;
 		}
@@ -24,6 +26,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 	
 	DeptPerspective deptPerspective;
+	@Available(condition="deptPerspective")
 		public DeptPerspective getDeptPerspective() {
 			return deptPerspective;
 		}
@@ -32,6 +35,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 
 	RolePerspective rolePerspective;
+	@Available(condition="rolePerspective")
 		public RolePerspective getRolePerspective() {
 			return rolePerspective;
 		}
@@ -40,6 +44,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 
 	ProcessPerspective processPerspective;
+	@Available(condition="processPerspective")
 		public ProcessPerspective getProcessPerspective() {
 			return processPerspective;
 		}
@@ -49,6 +54,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 	
 	OrganizationPerspectiveApp appPerspective;
+	@Available(condition="appPerspective")
 		public OrganizationPerspectiveApp getAppPerspective() {
 			return appPerspective;
 		}
@@ -58,6 +64,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 		
 	ProjectPerspective projectPerspective;
+	@Available(condition="projectPerspective")
 		public ProjectPerspective getProjectPerspective() {
 			return projectPerspective;
 		}	
@@ -75,6 +82,7 @@ public class PerspectivePanel implements ContextAware {
 //		}
 		
 	StrategicPerspective strategicPerspective;
+	@Available(condition="strategicPerspective")
 		public StrategicPerspective getStrategicPerspective() {
 			return strategicPerspective;
 		}
@@ -83,6 +91,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 		
 	DocumentPerspective documentPerspective;
+	@Available(condition="documentPerspective")
 		public DocumentPerspective getDocumentPerspective() {
 			return documentPerspective;
 		}
@@ -91,6 +100,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 
 	TopicPerspective topicPerspective;
+	@Available(condition="topicPerspective")
 		public TopicPerspective getTopicPerspective() {
 			return topicPerspective;
 		}
@@ -100,6 +110,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 		
 	ContactPerspective contactPerspective;
+	@Available(condition="contactPerspective")
 		public ContactPerspective getContactPerspective() {
 			return contactPerspective;
 		}
@@ -108,6 +119,7 @@ public class PerspectivePanel implements ContextAware {
 		}
 
 	UpcommingTodoPerspective upcommingTodoPerspective;
+	@Available(condition="upcommingTodoPerspective")
 		public UpcommingTodoPerspective getUpcommingTodoPerspective() {
 			return upcommingTodoPerspective;
 		}
