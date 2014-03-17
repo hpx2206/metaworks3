@@ -40,7 +40,8 @@
 				var fileMimeType = value.file.mimeType;
 				var isPreview = false;
 				
-				if(fileMimeType.indexOf("msdownload") == -1 && ( fileMimeType.indexOf("ms")>=1   || fileMimeType.indexOf("officedocument")>=1 || fileMimeType.indexOf("pdf")>=1 || fileMimeType.indexOf("image/jpeg")==0) )
+				
+				if(fileMimeType.indexOf("msdownload") == -1 && ( fileMimeType.indexOf("ms")>=1   || fileMimeType.indexOf("officedocument")>=1 || fileMimeType.indexOf("pdf")>=1 || fileMimeType.indexOf("image")>-1) )
 					maximize = true;
 			}else if('process' == type){
 				maximize = true;
