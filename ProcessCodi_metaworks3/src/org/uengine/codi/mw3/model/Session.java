@@ -256,23 +256,7 @@ public class Session implements ContextAware{
 		
 		messages.add(message);
 	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object[] returnToList() throws Exception{
-		Object[] instanceListObj = PersonalPerspective.loadInstanceListPanel(this, this.getLastPerspecteMode(), this.getLastPerspecteType(), this.getLastSelectedItem());
-		InstanceListWindow instanceListWindow = null;
-				
-		for(int i=0; i<instanceListObj.length; i++){
-			if(instanceListObj[i] instanceof InstanceListPanel){
-				instanceListWindow = new InstanceListWindow((InstanceListPanel)instanceListObj[i]);
-			}
-				
-		}
 		
-		return new Object[]{instanceListWindow};
-	}
-	
-	
 	// when need HttpSession
 	public void fillUserInfoToHttpSession(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
