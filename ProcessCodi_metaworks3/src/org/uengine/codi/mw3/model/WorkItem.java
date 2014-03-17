@@ -1359,8 +1359,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					InstanceViewContent detail = instance.detail();
 				    returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), 
 							new ToNext(new NewInstancePanel(), detail.getInstanceView()),
-				    		 new Remover(new NewInstancePanel()),
-		 				      new Refresh(upcommingTodoPerspective)};
+				    		 new Remover(new NewInstancePanel())};
 				}else{
 					Object detail = instance.detail();
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
