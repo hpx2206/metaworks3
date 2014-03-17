@@ -72,7 +72,7 @@ if(value){
 									   <%=instanceTitle%> 
 									</font></b></a>
 									<a href="#">
-									<% if(topicName != null){ %> <span class="topic_span" onclick="<%=methods.loadTopic.caller()%>"><%=topicName%></span><% }%>
+									<span width=10px>&nbsp;</span><% if(topicName != null){ %> <span class="topic_span" onclick="<%=methods.loadTopic.caller()%>"><%=topicName%></span><% }%>
 									</a>
 									<div>
 										<div  class="instanceType">
@@ -178,7 +178,7 @@ if(value){
 
 
 		
-		<td width="20"  class="instanceMove">
+		<td width="30"  class="instanceMove">
 			<% if(mw3.how != 'sns'){ %>
 				<%if(mw3.how != 'document'){%>
 				<div class="instanceBtn" style="width: 15px;margin: 0 auto;"><%=fields.instanceDrag.here()%></div>
