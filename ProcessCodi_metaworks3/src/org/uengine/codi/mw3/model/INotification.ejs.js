@@ -10,19 +10,8 @@ var org_uengine_codi_mw3_model_INotification = function(objectId, className){
 		return true;
 	
 	$('#see_' + this.objectId).bind('click', {objectId : this.objectId}, function(event){
-		var object = mw3.getObject(event.data.objectId);
-		
-		object.see(true, function(){
-		 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-		 	
-		 	if(session && session.ux == 'phone'){
- 				$('.mw3_popup').each(function(){
-					var objectId = $(this).attr('objectId');
-					
-					mw3.getFaceHelper(objectId).destoryPopup();
-				});
-		 	}			
-		});
+		var objectId = event.data.objectId;
+		mw3.call(objectId, 'see');
 	});
 };
 	
