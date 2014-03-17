@@ -693,7 +693,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		if("file".equals(this.getType())){
 			String path = null;
-			if( "image/jpeg".equals(this.getFile().getMimeType()) ){
+			if(this.getFile().getMimeType().indexOf("image") > -1 ){
 				this.getFile().getMetaworksContext().setWhen("image");
 				result = this.getFile();
 				
