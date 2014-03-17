@@ -2,23 +2,27 @@
 
 <%
 	if(value){
-		var contacts = [];
+		var contacts = mw3.contacts;
 		var friendAlias = value.name;
 		var contactPespective = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactPerspective');
-		
-		if( contactPespective ){
-			if(contactPespective.more){
-				contacts = contactPespective.child;
-			}else{
-				contacts = contactPespective.loadAllContact();
+		if( !contacts ){
+			if( contactPespective ){
+				if(contactPespective.more){
+					contacts = contactPespective.child;
+				}else{
+					contacts = contactPespective.loadAllContact();
+				}
 			}
+			mw3.contacts = contacts;
 		}
-		for(var i=0; i<contacts.length; i++){
-			var contact = contacts[i];
-			if(contact.friend && contact.friend.userId && contact.friend.userId == value.userId ){
-				friendAlias = contact.friend.name;
+		if( contacts ){
+			for(var i=0; i<contacts.length; i++){
+				var contact = contacts[i];
+				if(contact.friend && contact.friend.userId && contact.friend.userId == value.userId ){
+					friendAlias = contact.friend.name;
+				}
+					
 			}
-				
 		}
 		var portrait = '';		
 		if(value.network == 'local' || value.network == null){
