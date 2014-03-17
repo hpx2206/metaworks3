@@ -1,6 +1,5 @@
 package org.uengine.kernel;
 
-import java.util.Vector;
 
 public class SignalEventActivity  extends EventActivity implements MessageListener{
 

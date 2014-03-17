@@ -18,6 +18,7 @@ import org.uengine.codi.MetaworksUEngineSpringConnectionAdapter;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ProcessInstance;
+import org.uengine.kernel.TimerEventActivity;
 import org.uengine.kernel.WaitActivity;
 import org.uengine.scheduler.SchedulerItem;
 
@@ -48,6 +49,9 @@ public class WaitJob implements StatefulJob {
 			pm.setConnectionFactory(connectionAdapter);
 			pm.setAutoCloseConnection(false);
 			pm.setManagedTransaction(true);
+			
+			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(null, null, false);
+			Thread.currentThread().setContextClassLoader(clForSession);
 			
 			Calendar now = Calendar.getInstance();
 			
@@ -107,6 +111,40 @@ public class WaitJob implements StatefulJob {
 							
 							continue;
 							
+						}
+					}else if( act != null && act instanceof TimerEventActivity ){
+						TimerEventActivity wa = (TimerEventActivity)act;
+						
+						String status = wa.getStatus(instance);
+						if (Activity.STATUS_RUNNING.equals(status) || Activity.STATUS_TIMEOUT.equals(status)) {
+							tx.addTransactionListener(new TransactionListener() {
+
+								public void beforeRollback(TransactionContext tx) throws Exception {
+								}
+
+								public void beforeCommit(TransactionContext tx) throws Exception {
+									deleteSchedule(item.getIdx());
+								}
+
+								public void afterRollback(TransactionContext tx) throws Exception {
+								}
+
+								public void afterCommit(TransactionContext tx) throws Exception {
+								}
+							});
+							
+							isError = false;
+							
+							if(wa.getInstanceStop() != null && wa.getInstanceStop().equals("STOP_INSTANCE")){
+								WaitActivity waitActivity = new WaitActivity();
+								waitActivity.stopInstance(instance);
+							}
+							
+							wa.fireComplete(instance);
+						}else if (Activity.STATUS_FAULT.equals(status)
+								|| Activity.STATUS_READY.equals(status) 
+								|| Activity.STATUS_STOPPED.equals(status) || Activity.STATUS_CANCELLED.equals(status) ) {
+							continue;
 						}
 					}
 				}
@@ -221,7 +259,7 @@ public class WaitJob implements StatefulJob {
             
             stmt.executeUpdate(sql.toString());
             
-            conn.commit();
+//            conn.commit();
         } catch (Exception e) {
 			if (conn != null) try { conn.rollback(); } catch (Exception e1) { }
 			throw e;
