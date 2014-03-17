@@ -140,51 +140,53 @@ public class PerspectivePanel implements ContextAware {
 			}
 				
 			if(!SNS.isPhone()){
-				//조직도
-				if("1".equals(Perspective.USE_GROUP)){
-					deptPerspective = new DeptPerspective();
-//					organizationPerspectiveDept.session = session;
-//					organizationPerspectiveDept.select();
-				}
-				
-				//역할
-				if("1".equals(Perspective.USE_ROLE)){
-					rolePerspective = new RolePerspective();
-					
-//					organizationPerspectiveRole.session = session;
-//					organizationPerspectiveRole.select();
-				}
-				
-				//프로세스별
-				if("1".equals(Perspective.USE_PROCESS)){
-					processPerspective = new ProcessPerspective();
-//					processPerspective.select();
-				}
-				
-				//친구
-				if("1".equals(Perspective.USE_CONTACT)){
-					contactPerspective = new ContactPerspective();
-				}
-				if("1".equals(Perspective.USE_COMMINGTODO)){
-					upcommingTodoPerspective = new UpcommingTodoPerspective();
-				}
-				
-				//앱
-				if("1".equals(Perspective.USE_APP)){
-					appPerspective = new OrganizationPerspectiveApp();
-					appPerspective.session = session;
-					if(!("goSns".equals(session.getLastSelectedItem()))){
-						appPerspective.getMetaworksContext().setHow("dashboard");
-						appPerspective.getMetaworksContext().setWhere("oce_perspective");
-						appPerspective.select();
+				if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
+					//조직도
+					if("1".equals(Perspective.USE_GROUP)){
+						deptPerspective = new DeptPerspective();
+	//					organizationPerspectiveDept.session = session;
+	//					organizationPerspectiveDept.select();
 					}
-				}
-				//프로젝트	
-				if("1".equals(Perspective.USE_PROJECT)){
-					projectPerspective = new ProjectPerspective();
-					projectPerspective.session = session;
-					projectPerspective.select();
-				}
+					
+					//역할
+					if("1".equals(Perspective.USE_ROLE)){
+						rolePerspective = new RolePerspective();
+						
+	//					organizationPerspectiveRole.session = session;
+	//					organizationPerspectiveRole.select();
+					}
+					
+					//프로세스별
+					if("1".equals(Perspective.USE_PROCESS)){
+						processPerspective = new ProcessPerspective();
+	//					processPerspective.select();
+					}
+					
+					//친구
+					if("1".equals(Perspective.USE_CONTACT)){
+						contactPerspective = new ContactPerspective();
+					}
+					if("1".equals(Perspective.USE_COMMINGTODO)){
+						upcommingTodoPerspective = new UpcommingTodoPerspective();
+					}
+					
+					//앱
+					if("1".equals(Perspective.USE_APP)){
+						appPerspective = new OrganizationPerspectiveApp();
+						appPerspective.session = session;
+						if(!("goSns".equals(session.getLastSelectedItem()))){
+							appPerspective.getMetaworksContext().setHow("dashboard");
+							appPerspective.getMetaworksContext().setWhere("oce_perspective");
+							appPerspective.select();
+						}
+					}
+					//프로젝트	
+					if("1".equals(Perspective.USE_PROJECT)){
+						projectPerspective = new ProjectPerspective();
+						projectPerspective.session = session;
+						projectPerspective.select();
+					}
+				}//.isApproved() && .isGuest()
 			
 				//processStatusPerspective = new ProcessStatusPerspective();
 				//지식맵
