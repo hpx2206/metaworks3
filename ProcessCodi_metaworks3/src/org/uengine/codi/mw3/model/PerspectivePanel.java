@@ -134,12 +134,12 @@ public class PerspectivePanel implements ContextAware {
 				personalPerspective.session = session;
 			}
 			
-			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-				//주제별
-				if("1".equals(Perspective.USE_TOPIC)){
-					topicPerspective = new TopicPerspective();
-				}
+			//주제별
+			if("1".equals(Perspective.USE_TOPIC)){
+				topicPerspective = new TopicPerspective();
+			}
 				
+			if(!SNS.isPhone()){
 				//조직도
 				if("1".equals(Perspective.USE_GROUP)){
 					deptPerspective = new DeptPerspective();
@@ -185,22 +185,22 @@ public class PerspectivePanel implements ContextAware {
 					projectPerspective.session = session;
 					projectPerspective.select();
 				}
-			}
 			
-			//processStatusPerspective = new ProcessStatusPerspective();
-			//지식맵
-			if("1".equals(Perspective.USE_PERSPECTIVE_KNOWLEDGE)){
-				strategicPerspective = new StrategicPerspective();
-			}
-			if("1".equals(Perspective.USE_DOCUMENT)){
-			     documentPerspective = new DocumentPerspective();
-			     MetaworksContext metaworksContext = new MetaworksContext();
-			     metaworksContext.setHow("perspectivePanel");
-			     
-			     documentPerspective.setMetaworksContext(metaworksContext);
-			     String tenentId = Employee.extractTenantName(session.getEmployee().getEmail());
-			     documentPerspective.setTenentId(tenentId);
-			}
+				//processStatusPerspective = new ProcessStatusPerspective();
+				//지식맵
+				if("1".equals(Perspective.USE_PERSPECTIVE_KNOWLEDGE)){
+					strategicPerspective = new StrategicPerspective();
+				}
+				if("1".equals(Perspective.USE_DOCUMENT)){
+				     documentPerspective = new DocumentPerspective();
+				     MetaworksContext metaworksContext = new MetaworksContext();
+				     metaworksContext.setHow("perspectivePanel");
+				     
+				     documentPerspective.setMetaworksContext(metaworksContext);
+				     String tenentId = Employee.extractTenantName(session.getEmployee().getEmail());
+				     documentPerspective.setTenentId(tenentId);
+				}
+			}//SNS.isPhone
 		}//session
 	}
 	
