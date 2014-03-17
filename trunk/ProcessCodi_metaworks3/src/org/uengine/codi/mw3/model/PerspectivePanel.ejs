@@ -2,10 +2,6 @@
 <div class="navigator_top_margin"></div>
 	<%=fields.personalPerspective.here() %>
 	<%=fields.topicPerspective.here() %>
-<%
-		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
-		if(session && session.ux != 'phone'){
-%>
 	
 	<%=fields.upcommingTodoPerspective.here() %>
 	<%=fields.contactPerspective.here() %>
@@ -15,7 +11,4 @@
 	<%=fields.processPerspective.here() %>
 	<%=fields.projectPerspective.here() %>
 	<%=fields.appPerspective.here() %>
-<%
-	}
-%>
 </div>
