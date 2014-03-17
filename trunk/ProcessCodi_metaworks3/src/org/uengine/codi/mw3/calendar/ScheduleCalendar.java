@@ -429,7 +429,14 @@ public class ScheduleCalendar implements ContextAware {
 				instanceViewContent.session = session;
 				instanceViewContent.load(instance.databaseMe());
 				
-				return new Object[]{new Refresh(instanceViewContent)};
+				if(SNS.isPhone()){
+					Popup popup = new Popup(instanceViewContent.getInstanceView());
+					popup.setName(instanceViewContent.getInstanceView().getInstanceName());
+					
+					return new Object[]{popup};
+				}else{
+					return new Object[]{new Refresh(instanceViewContent)};
+				}
 				
 			}
 		}
