@@ -692,12 +692,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		ModalWindow modalWindow = new ModalWindow();
 		
 		if("file".equals(this.getType())){
-			String path = "preview/" +this.getTaskId() + ".pdf";
-			IFrame iframe = new IFrame(path);
-			iframe.setWidth("100%");
-			iframe.setHeight("98%");
+			String path = null;
+			if( "image/jpeg".equals(this.getFile().getMimeType()) ){
+				this.getFile().getMetaworksContext().setWhen("image");
+				result = this.getFile();
+				
+			}else{
+				path = "preview/" +this.getTaskId() + ".pdf";
+				IFrame iframe = new IFrame(path);
+				iframe.setWidth("100%");
+				iframe.setHeight("98%");
+				result = iframe;
+				
+			}
 			
-			result = iframe;
+			
 		}else if("process".equals(this.getType())){
 			this.workItemHandler = null;
 			detail();			
@@ -705,7 +714,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}else{
 			throw new Exception("$CannotOpen");
 		}
-		
+		MetaworksFile file = this.getFile();
 		modalWindow.setPanel(result);
 		modalWindow.setWidth(0);
 		modalWindow.setHeight(0);
