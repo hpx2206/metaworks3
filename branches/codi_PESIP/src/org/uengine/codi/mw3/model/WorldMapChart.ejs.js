@@ -12,12 +12,32 @@ var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
     
     var regionName = new Array();
     var regionNumber = new Array();
+    var piedata = new Array();
+    var columnData = new Array();
+    var colors = new Array();
+    for(var i=0; i<item.length*2; i+=2){
+    	colors[i] = '#'+i+'23456';
+    }
+
     for(var i = 0; i < item.length; i++){
     	regionName[i] = item[i].regionName;
     	regionNumber[i] = item[i].number;
+    	piedata[i] = {
+    			name : regionName[i],
+        		y: regionNumber[i],
+        		color : colors[i]
+    	}
+    	columnData[i] = {
+                type: 'column',
+                name: regionName[i],
+                data: regionNumber[i]
+    	}
     };
     
     
+    console.log("칼러"+colors);
+    console.log("파이데이타"+regionNumber[0]);
+    console.log("파이데이타"+regionNumber[1]);
     if(object){
     	mw3.importScript('scripts/highchart/highcharts.js');
     	mw3.importScript('scripts/highchart/modules/exporting.js');
@@ -25,6 +45,7 @@ var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
     
     $(function () {
         $('#scatter3').highcharts({
+        	
             chart: {
             },
             title: {
@@ -57,27 +78,27 @@ var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
                 }]
             },
             series: [{
-    			type: 'column',
-    			name : regionName,
-    			data : regionNumber
-            }, {
+                type: 'column',
+                name:regionName[0],
+                data: regionNumber
+            },{
                 type: 'spline',
                 name: 'Average',
                 data:regionNumber,
                 marker: {
-                	lineWidth: 2,
-                	lineColor: Highcharts.getOptions().colors[3],
+                	lineWidth:3,
+                	lineColor: 'black',
                 	fillColor: 'white'
                 }
-            }, {
+            },{
                 type: 'pie',
                 name: '전체건수 ',
-                data: regionNumber,
+                data: piedata,
                 center: [650, 80],
                 size: 100,
-                showInLegend: false,
+                showInLegend: true,
                 dataLabels: {
-                    enabled: false
+                    enabled: true
                 }
             }]
         });

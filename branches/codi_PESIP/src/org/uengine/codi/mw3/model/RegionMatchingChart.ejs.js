@@ -6,37 +6,80 @@ var org_uengine_codi_mw3_model_RegionMatchingChart = function(objectId, classNam
     
     var object = mw3.objects[this.objectId];
     if(object){
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.core.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.context.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.annotate.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.tooltips.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.common.dynamic.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.drawing.xaxis.js');
-    	mw3.importScript('scripts/rgraph/libraries/RGraph.scatter.js');
+    	mw3.importScript('scripts/highchart/highcharts.js');
+    	mw3.importScript('scripts/highchart/modules/exporting.js');
     }
     
+    $(function () {
+        $('#regionMatching').highcharts({
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: ''
+            },
+            xAxis: {          
+                gridLineWidth : 1,
+                title: {
+                    enabled: true,
+                    text: '세로'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: '가로'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 100,
+                y: 70,
+                floating: true,
+                backgroundColor: '#FFFFFF',
+                borderWidth: 1
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        symbol : 'diamond',
+                        radius: 12,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.x} x, {point.y} y'
+                    }
+                }
+            },
+            series: [{
+                name: '단위',
+                color: 'rgba(223, 83, 83, .5)',
+                data: [[161.2, 51.6], [167.5, 59.0], [159.5, 49.2], [157.0, 63.0], [155.8, 53.6],
+                    [170.0, 59.0], [159.1, 47.6], [166.0, 69.8], [176.2, 66.8], [160.2, 75.2],
+                    [176.5, 71.8], [164.4, 55.5], [160.7, 48.6], [174.0, 66.4], [163.8, 67.3]]
     
-      var scatter2 = new RGraph.Scatter('scatter2',  [[50,31, 'red', '<b>Fred</b><br />Fred is at the start'], 
-                                                      [80,49, 'blue', '<b>Juan</b><br />Juan is in the middle'], 
-                                                      [180,45, 'red', '<b>Hoolio</b><br />Hoolio is at the end']]);
-//      scatter2.Set('chart.title', 'Sample Chart');
-   //   scatter2.Set('chart.labels', ['1', '2', '3', '4']);
-      scatter2.Set('chart.defaultcolor', 'black'); // Optional
-      scatter2.Set('chart.gutter', 40); //margins
-      scatter2.Set('chart.tickmarks', 'circle');
-      scatter2.Set('chart.ticksize', 12);
-      scatter2.Set('chart.xmax', 200);
-      scatter2.Set('chart.ymax', 200);
-      scatter2.Set('tooltips.event','mousemove');
-      scatter2.Set('tooltips',['AAA','BBB','CCC']);
-//      scatter2.Set('chart.units.pre', '$');
-//    scatter2.Set('chart.contextmenu', [['Clear', function () {RGraph.Clear(scatter2.canvas);
-      scatter2.Draw();
-     
-      var xaxis = new RGraph.Drawing.XAxis('scatter2', scatter2.canvas.height - 25)
-		.Set('max',200)
-		.Set('xaxispos','center')
-		.Draw();
+            }]
+        });
+    });
+    
 
   
 };
