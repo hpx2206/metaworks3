@@ -16,9 +16,11 @@
 				}
 			}
 	%>
+	<label for="checkbox">
 		<input type="checkbox" name="checkBox_<%=objectId%>"
 			 				value="<%=mw3.localize(descriptor.values[i])%>"
-			 				<%=inputOption%> > <%=mw3.localize(descriptor.options[i])%> </input>
+			 				<%=inputOption%> ></input> <%=mw3.localize(descriptor.options[i])%>
+    </label>
 		<div style="clear:both"></div>
 <% 
 		}
@@ -34,9 +36,11 @@
     				}
     			}
 	%>
+	       <label for="checkbox">
     			<input type="checkbox" name="checkBox_<%=objectId%>"
                             value="<%=mw3.localize(descriptor.values[i])%>"
-                            <%=inputOption%> disabled="disabled" > <%=mw3.localize(descriptor.options[i])%> </input>
+                            <%=inputOption%> disabled="disabled" ></input> <%=mw3.localize(descriptor.options[i])%> 
+            </label>
                 <div style="clear:both"></div>
 	<%
     		}

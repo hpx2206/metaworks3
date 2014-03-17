@@ -3,14 +3,12 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.io.File;
 
 import org.metaworks.ContextAware;
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
-import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -23,7 +21,7 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.EventActivity;
+import org.uengine.kernel.StartConnectorEventActivity;
 import org.uengine.kernel.SubProcessActivity;
 
 public class ProcessViewerPanel implements ContextAware {
@@ -178,9 +176,9 @@ public class ProcessViewerPanel implements ContextAware {
 			((SubProcessActivity) activity).drawInit();
 			((SubProcessActivity) activity).getProcessSelectPanel().setDefinitionId(defId);
 			
-		}else if(activity instanceof EventActivity){
-			((EventActivity) activity).setDefinitionId(defId);
-			((EventActivity) activity).setAlias(alias);
+		}else if(activity instanceof StartConnectorEventActivity){
+			((StartConnectorEventActivity) activity).setDefinitionId(defId);
+			((StartConnectorEventActivity) activity).setAlias(alias);
 		}
 		
 		return new Object[]{ new Refresh(activity), new Remover(new ModalWindow() , true)};
