@@ -14,7 +14,7 @@ public class EventActivityView extends ActivityView{
 		@Override
 		@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
 		public ModalWindow showDefinitionMonitor() throws Exception{
-			EventActivity activity = (EventActivity)this.getActivity();
+			StartConnectorEventActivity activity = (StartConnectorEventActivity)this.getActivity();
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 			
 			if( "definitionView".equals(this.getViewType() )){
