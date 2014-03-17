@@ -16,5 +16,6 @@ org_uengine_codi_mw3_knowledge_TopicPanel.prototype.loaded = function(){
 	$('#navigator .depth2 a').click(function(){
 		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
 		$(this).parent().addClass('selected_navi');
+		$(".overlay_right").trigger('click');
 	});
 };
