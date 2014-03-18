@@ -1,8 +1,10 @@
-package org.uengine.codi.scheduler;
+package org.uengine.scheduler;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,7 +22,7 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.TimerEventActivity;
 import org.uengine.kernel.WaitActivity;
-import org.uengine.scheduler.SchedulerItem;
+import org.uengine.scheduler.SchedulerUtil;
 
 
 public class WaitJob implements StatefulJob {
@@ -123,7 +125,21 @@ public class WaitJob implements StatefulJob {
 								}
 
 								public void beforeCommit(TransactionContext tx) throws Exception {
-									deleteSchedule(item.getIdx());
+									boolean isUpdate = false;
+									Calendar modifyCal = null;
+									if( item.getExpression() != null ){
+										Calendar now = Calendar.getInstance();
+										modifyCal = SchedulerUtil.getCalendarByCronExpression(item.getExpression());
+										if (modifyCal.getTimeInMillis() >= now.getTimeInMillis()) {
+											// 다음 스케쥴이 존재한다면 지우지 않고, update를 해준다.
+											isUpdate = true;
+										}
+									}
+									if( isUpdate ){
+										updateSchedule(item.getIdx(), modifyCal);
+									}else{
+										deleteSchedule(item.getIdx());
+									}
 								}
 
 								public void afterRollback(TransactionContext tx) throws Exception {
@@ -195,6 +211,7 @@ public class WaitJob implements StatefulJob {
             sql.append("	schedule_table.INSTID, "); 
             sql.append("	schedule_table.TRCTAG, "); 
             sql.append("	schedule_table.STARTDATE, "); 
+            sql.append("	schedule_table.expression, "); 
             sql.append("	bpm_procinst.STATUS, "); 
             sql.append("	bpm_procinst.ISDELETED "); 
             sql.append("FROM schedule_table JOIN bpm_procinst ON schedule_table.INSTID = bpm_procinst.INSTID "); 
@@ -211,12 +228,12 @@ public class WaitJob implements StatefulJob {
             	item.setInstanceId(rs.getString("INSTID"));
             	item.setTracingTag(rs.getString("TRCTAG"));
             	item.setStartDate(rs.getTimestamp("STARTDATE"));
-            	
+            	item.setExpression(rs.getString("expression"));
             	schedulerItems.add(item);
             }
 
         } catch (Exception e){
-        	e.printStackTrace();
+//        	e.printStackTrace();
         } finally {
         	if (rs != null) {
                 try {
@@ -238,6 +255,43 @@ public class WaitJob implements StatefulJob {
         return schedulerItems;
 	}
 	
+	/**
+	 * Delete schedule in DB.
+	 * 
+	 * @param instance the instance
+	 * @param tracintTag the tracing tag
+	 */
+	public void updateSchedule(int idx, Calendar modifyCal) throws Exception {
+		// delete schedule information from DB. 
+		Connection conn = null;
+		PreparedStatement  pstmt = null;
+		
+		try {
+			conn = connectionFactory.getConnection();
+			StringBuilder sql = new StringBuilder();
+			sql.append(" UPDATE schedule_table SET STARTDATE=?  WHERE SCHE_IDX=").append(idx);
+			
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setTimestamp(1, new Timestamp(modifyCal.getTimeInMillis()));
+			pstmt.executeUpdate();
+			
+//            conn.commit();
+		} catch (Exception e) {
+			if (conn != null) try { conn.rollback(); } catch (Exception e1) { }
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) { }
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception e) { }
+			}
+		}
+	}
 	/**
 	 * Delete schedule in DB.
 	 * 
