@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,7 +37,6 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Employee;
-import org.uengine.codi.mw3.model.EnterpriseInformation;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
@@ -207,6 +208,15 @@ public class Login implements ContextAware {
 	public static String getSessionIdWithUserId(String userId){
 		return SessionIdForEmployeeMapping.get(userId.toUpperCase());
 	}
+	
+	// 2014.03.17 모든 employee session 상태 가져오기 HWS
+	public static void getSessionIdWithAllUser() {
+		ArrayList<String> arr = new ArrayList<String>(SessionIdForEmployeeMapping.keySet());
+		for(int i = 0; i < arr.size(); i++) {
+			System.out.println(arr.get(i));
+		}
+	}
+	
 
 	public static HashMap<String, String> getSessionIdWithDept(String deptId){
 		deptId = deptId.toUpperCase();
