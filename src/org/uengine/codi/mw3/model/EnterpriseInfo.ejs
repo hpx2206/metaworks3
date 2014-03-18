@@ -1,0 +1,67 @@
+<% if(value) { %>
+    
+    <% if(mw3.when == 'modify') { %>
+    
+        <%console.log(value);%>
+                
+        <%=fields.enterprise.here()%>
+        <%=fields.enterpriseServiceList.here()%>
+        <%=fields.enterprisePatentList.here()%>
+        
+         <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize('$Modify')%></span></a></li>
+            </ul>
+        </div>
+        
+        
+    <% } else { %>
+        
+        <div>
+            <em><H>입력된 기업정보가 없기 때문에 아래의 화면에 정보를 입력해 주세요</H></em>
+        </div>
+        
+        <br><br>
+        
+        <div>
+            <em>Enterprise Information</em>
+            <%=fields.enterprise.here()%>
+        </div>
+            
+        <div>
+            <em>Service</em>
+            <%=fields.enterpriseServiceList.here()%>
+        </div>
+            
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.addService.caller()%>"><span><%=mw3.localize('$addService')%></span></a></li>
+            </ul>
+        </div>
+            
+        <br><br>
+        
+        <div>
+            <em>Patent</em>
+            <%=fields.enterprisePatentList.here()%>
+        </div>
+            
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.addPatent.caller()%>"><span><%=mw3.localize('$addPatent')%></span></a></li>
+            </ul>
+        </div>
+            
+        <br><br>
+        
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize('$Save')%></span></a></li>
+            </ul>
+        </div>
+    
+    <% } %>
+   
+
+
+<% } %>

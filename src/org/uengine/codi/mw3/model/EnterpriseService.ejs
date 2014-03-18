@@ -4,7 +4,7 @@
         <table border="1" cellspacing="0" summary="">
             <tbody>
             <tr>
-                <th scope="row">서비스 형태</th>
+                <th scope="row"><%=mw3.localize("$serviceForm")%></th>
                 <td>
                     <div class="item">
                         <%=fields.serviceForm.here({when:'new'}) %>
@@ -13,16 +13,16 @@
             </tr>
             
             <tr>
-                <th scope="row">서비스 이름</th>
+                <th scope="row"><%=mw3.localize("$productName")%></th>
                 <td>
                     <div class="item">
-                        <%=fields.serviceName.here({when:'new'}) %>
+                        <%=fields.productName.here({when:'new'}) %>
                     </div>
                 </td>
             </tr>
             
             <tr>
-                <th scope="row">프로젝트 실적</th>
+                <th scope="row"><%=mw3.localize("$projectResult")%></th>
                 <td>
                     <div class="item">
                         <%=fields.projectResult.here({when:'new'}) %>

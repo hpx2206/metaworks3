@@ -15,8 +15,8 @@ import org.metaworks.dao.IDAO;
 @Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public interface IPublicServiceIntroduceItem extends IDAO{
 	
-	@Id
 	@Hidden
+	@Id
 	public Long getItemId();
 	public void setItemId(Long itemId);
 	

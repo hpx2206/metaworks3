@@ -16,26 +16,16 @@ var org_uengine_codi_mw3_model_WorldMap = function(objectId, className){
     
     // db를 통해 최소한의 국가와 좌표값만 가져온다.
     var distinctOrderInformationList = object.distinctOrderInformation;
-    
-    var countryData = []; 
-    //for each country, set the code and value
-    $.each(data.countries, function() {
-        countryData[this.code] = this.pGdp;
-    });
-     
+   
     // 지도 담을 객체 및 마커 스타일 셋팅
     var map;
     // 지도 뿌리기.
     $(document).ready(function(){
         map = $('#jvm_worldMap').vectorMap({
-            map : 'world_mill_en',
-            series : {
-                regions : [ {
-                    values : countryData,
-                    scale : [ '#C8EEFF', '#0071A4' ],   // two colors: for minimum and maximum values 
-                    normalizeFunction : 'polynomial'
-                } ]
-            },
+        
+            map: 'world_mill_en',
+            normalizeFunction: 'polynomial',
+            backgroundColor: '#FFFFFF',
             
             onRegionLabelShow: function(e, el, code) {
                 var country = $.grep(data.countries, function(obj, index) {
@@ -90,7 +80,10 @@ var org_uengine_codi_mw3_model_WorldMap = function(objectId, className){
     }
     
     
+    
+    
     // 마커 범위 안내
+    /*
     $('.jvectormap-container').prepend('<div id="markerInformation"> <B> 마커 정보<B> </div>');
     $('.jvectormap-container').find('div').eq(0).addClass("markerInfo");
     
@@ -99,7 +92,7 @@ var org_uengine_codi_mw3_model_WorldMap = function(objectId, className){
     $('#markerBlue').attr("style", "padding-top: 15px");
     $('.markerInfo').append('<div id="markerYellow"> ▷ 노랑 : 3 ~ 10 (건) </div>');
     $('.markerInfo').append('<div id="markerRed"> ▷ 빨강 : 10 ~ (건)</div>');
-    
+    */
     
     //////////////// 이 아래로 주석 //////////////////////
     

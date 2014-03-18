@@ -64,6 +64,7 @@ if(value){
 				
 			<%
 			} else if(mw3.when == 'new2') {
+			 
 			%>
 				<ul id="green_and_orange_step_menu">
 					<li class="frist fdone">STEP1<em>Choose language</em></li>
@@ -132,32 +133,36 @@ if(value){
 					</table>
 				</div>
 
-			 	
-				<div id="btnline">
-					<ul>	
-						<li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep2.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
-					</ul>
-				</div>		
+			    <% if(value.checkSigned == true) { %>
+			     
+			        <div id="btnline">
+                        <ul>    
+                            <li>기존에 가입된 회사명이 존재합니다. 회사정보 확인 및 변경하려면 로그인 한 후 프로필 설정에서 해주시기 바랍니다. </li>
+                            <li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize("$Finish")%></span></a></li>
+                        </ul>
+                    </div>
+    				
+    						
+				<% } else { %>
+				    <div id="btnline">
+                        <ul>    
+                            <li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep2.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+                        </ul>
+                    </div>
+				    
+                <% } %>
 				
 			<%
 			} else if(mw3.when == 'enterprise') {
 				
 			%>	
-			    <!--
-				<ul id="green_and_orange_step_menu">
-				-->
-				<!--
-					<li class="first inprogress">STEP1<em>Choose language</em></li>
-					<li class="last lastinprogress">STEP2<em>Basic Informationy</em><span></span></li>
-			    -->
-			    <!--				    
-				    <li class="first inprogress">STEP3<em>Basic Informationy</em><span></span></li>
-				    <li class="last">STEP4<em>Enterprise Information</em><span></span></li>
-			    -->
-			    <!--
-				</ul>
-				-->
-			    <%=mw3.locateObject(value.enterpriseInformation, value.enterpriseInformation.__className)%>
+			
+			    <ul id="green_and_orange_step_menu">
+                    <li class="first inprogress">STEP3<em>Enterprise Information</em></li>
+                    <li class="last">STEP4<em>Service</em><span></span></li>
+                </ul>
+			
+				<%=fields.enterprise.here()%>
 				<div id="btnline">
                     <ul>    
                         <li><a id="wBtn" href="#" onClick="<%=methods.subscribeStep3.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
@@ -173,9 +178,7 @@ if(value){
                     <li class="lastinprogress last">STEP4<em>Service</em><span></span></li>
                 </ul>
                 
-                <% for(var i = 0; i < value.enterpriseService.length; i++) { %>
-                    <%=mw3.locateObject(value.enterpriseService[i], value.enterpriseService[i].__className)%>
-                <% } %>
+                <%=fields.enterpriseService.here()%>
                 
                 <div id="btnline">
                     <ul>    
@@ -193,9 +196,7 @@ if(value){
                     <li class="last">STEP6<em>Complete</em><span></span></li>
                 </ul>
             
-                <% for(var i = 0; i < value.enterprisePatent.length; i++) { %>
-                    <%=mw3.locateObject(value.enterprisePatent[i], value.enterprisePatent[i].__className)%>
-                <% } %>
+                <%=fields.enterprisePatent.here()%>
                 
                 <div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
                     <ul>    
@@ -334,6 +335,7 @@ if(value){
 	
 	%>
 		<div class="info_top_show_detail" onClick="<%=methods.showDetail.caller() %>" style="cursor:pointer;"><img src="images/waveStyle/i_memo.png"><%=mw3.localize('$Profile')%></div>
+		<div class="info_top_show_detail" onClick="<%=methods.showEnterpriseDetail.caller() %>" style="cursor:pointer;"><img src="images/waveStyle/i_memo.png"><%=mw3.localize('$enterpriseProfile')%></div>
 		<div class="info_top_show_detail" onClick="<%=methods.logout.caller() %>" style="border:none; cursor:pointer;"><img src="images/waveStyle/i_logout.png"><%=mw3.localize('$Logout')%></div>
 	<%
 	} else {

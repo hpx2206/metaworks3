@@ -1,10 +1,5 @@
 <% if(value) { %>
     
-    <ul id="green_and_orange_step_menu">
-        <li class="first inprogress">STEP3<em>Enterprise Information</em></li>
-        <li class="last">STEP4<em>Service</em><span></span></li>
-    </ul>
-    
         <div class="form_table">
             <table border="1" cellspacing="0" summary="">
                 <tbody>
@@ -26,6 +21,7 @@
                     </td>
                 </tr>
                 
+                
                 <tr>
                     <th scope="row">사업분야</th>
                     <td>
@@ -45,15 +41,6 @@
                 </tr>
                 
                 <tr>
-                    <th scope="row">전화번호</th>
-                    <td>
-                        <div class="item">
-                            <%=fields.number.here({when:'new'}) %>
-                        </div>
-                    </td>
-                </tr>
-                
-                <tr>
                     <th scope="row">회사설립년도</th>
                     <td>
                         <div class="item">
@@ -63,10 +50,29 @@
                 </tr>
                 
                 <tr>
+                    <th scope="row">전화번호</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.number.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                
+                <tr>
                     <th scope="row">해당부문 종사기간</th>
                     <td>
                         <div class="item">
-                            <%=fields.carryon.here({when:'new'}) %>
+                            <%=fields.carryOn.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">FAX</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.fax.here({when:'new'}) %>
                         </div>
                     </td>
                 </tr>

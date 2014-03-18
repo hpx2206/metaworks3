@@ -4,7 +4,7 @@
         <table border="1" cellspacing="0" summary="">
             <tbody>
             <tr>
-                <th scope="row">특허 형태</th>
+                <th scope="row"><%=mw3.localize("$patentForm")%></th>
                 <td>
                     <div class="item">
                         <%=fields.patentForm.here({when:'new'}) %>
@@ -13,7 +13,7 @@
             </tr>
             
             <tr>
-                <th scope="row">특허/프로그램 명</th>
+                <th scope="row"><%=mw3.localize("$patentName")%></th>
                 <td>
                     <div class="item">
                         <%=fields.patentName.here({when:'new'}) %>
@@ -22,7 +22,16 @@
             </tr>
             
             <tr>
-                <th scope="row">출원/등록일</th>
+                <th scope="row"><%=mw3.localize("$registrationDate")%></th>
+                <td>
+                    <div class="item">
+                        <%=fields.registrationDate.here({when:'new'}) %>
+                    </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th scope="row"><%=mw3.localize("$registrationNumber")%></th>
                 <td>
                     <div class="item">
                         <%=fields.registrationNumber.here({when:'new'}) %>
@@ -31,16 +40,7 @@
             </tr>
             
             <tr>
-                <th scope="row">출원/등록순번</th>
-                <td>
-                    <div class="item">
-                        <%=fields.registrationNumber.here({when:'new'}) %>
-                    </div>
-                </td>
-            </tr>
-            
-            <tr>
-                <th scope="row">출원등록자수</th>
+                <th scope="row"><%=mw3.localize("$registrationMembers")%></th>
                 <td>
                     <div class="item">
                         <%=fields.registrationMembers.here({when:'new'}) %>
@@ -49,7 +49,7 @@
             </tr>
             
             <tr>
-                <th scope="row">비고</th>
+                <th scope="row"><%=mw3.localize("$etc")%></th>
                 <td>
                     <div class="item">
                         <%=fields.etc.here({when:'new'}) %>
