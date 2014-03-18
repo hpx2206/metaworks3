@@ -83,7 +83,6 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 	}
 	
 	@ServiceMethod( callByContent=true ,target=ServiceMethodContext.TARGET_APPEND, eventBinding="change", bindingFor={"duration"})
-	@Hidden
 	public Object[] changeDuration() throws Exception{
 		expression.load(duration);
 		return new Object[]{new Refresh(expression)};
@@ -94,7 +93,8 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 		//start listens...
 		String resultExpression = expression.getResultExpression();
 		if( WAITING_TYPE_PERIOD.equals(duration)){
-			
+			Calendar modifyCal = SchedulerUtil.getCalendarByCronExpression(resultExpression);
+			this.addSchedule(instance, this.getTracingTag(), modifyCal, resultExpression);
 		}else if( WAITING_TYPE_UNTIL.equals(duration)){
 			Calendar modifyCal = Calendar.getInstance();
 			
@@ -123,20 +123,20 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 				modifyCal.add(Calendar.MONTH, months-1);
 			}
 			
-			this.addSchedule(instance, this.getTracingTag(), modifyCal);
+			this.addSchedule(instance, this.getTracingTag(), modifyCal, null);
 		}else{
 			fireComplete(instance);
 		}
 		
 	}
 	
-	protected void addSchedule(ProcessInstance instance, String tracingTag, Calendar modifyCal) throws Exception { 		
+	protected void addSchedule(ProcessInstance instance, String tracingTag, Calendar modifyCal, String expression) throws Exception { 		
 		Connection conn = null;
 		PreparedStatement  pstmt = null;
 		ResultSet rs = null;
 		String sqlOldSchDelete =  "DELETE FROM SCHEDULE_TABLE WHERE INSTID = ? AND TRCTAG = ? ";
 		String sqlSEQ = "SELECT MAX(SCHE_IDX) FROM SCHEDULE_TABLE";
-		String sql = " INSERT INTO SCHEDULE_TABLE(SCHE_IDX, INSTID, TRCTAG, STARTDATE) VALUES(?, ?, ?, ?) "; 
+		String sql = " INSERT INTO SCHEDULE_TABLE(SCHE_IDX, INSTID, TRCTAG, STARTDATE, expression) VALUES(?, ?, ?, ?, ?, ?) "; 
         
 		try {
 			conn = instance.getProcessTransactionContext().getConnection();
@@ -155,12 +155,19 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 			pstmt.setString(2, tracingTag);
 			pstmt.executeUpdate();
 			pstmt.close();
+			
+			String newInstance = "0";
+			if( this.getIncomingTransitions().size() == 0 ){
+				// TODO intermidediate 일 경우에는 incomming이 없고, 엑티비티안쪽에서 작용하는 것이라 새로운 인스턴스를 발행하는게 아니라 다른 방식이 필요함 
+				newInstance = "1";
+			}
 						
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, max == 0 ? 1 : max + 1);
 			pstmt.setString(2, instance.getInstanceId());
 			pstmt.setString(3, tracingTag);
 			pstmt.setTimestamp(4, new Timestamp(modifyCal.getTimeInMillis()));
+			pstmt.setString(5, expression);
 			pstmt.executeUpdate();
 			
 		} catch (Exception e) {

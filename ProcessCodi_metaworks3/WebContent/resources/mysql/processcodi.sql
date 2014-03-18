@@ -1098,3 +1098,6 @@ BEGIN
  
  RETURN rv;
 END $$
+
+alter table schedule_table add column expression varchar(100);
+alter table processmap add column isScheduled int(1) DEFAULT '0';
