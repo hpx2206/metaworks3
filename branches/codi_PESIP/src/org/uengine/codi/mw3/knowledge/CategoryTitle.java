@@ -20,7 +20,6 @@ import org.uengine.codi.mw3.model.PublicServiceIntroduceCode;
 import org.uengine.codi.mw3.model.PublicServiceIntroduceItem;
 import org.uengine.codi.mw3.model.PublicServiceIntroduceTab;
 import org.uengine.codi.mw3.model.PublicServiceIntroduceTabInfo;
-import org.uengine.codi.mw3.model.PublicServiceIntroduceViewPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.UEngineException;
 
