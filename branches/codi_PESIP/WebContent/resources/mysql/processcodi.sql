@@ -1037,3 +1037,70 @@ CREATE TABLE `pseip_bidding` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
   
+-- 2013_12_26 한국형 공공서비스 소개 db
+
+delimiter $$
+
+CREATE TABLE `public_introduce_code` (
+  `id` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `parentId` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `sequence` int(10) NOT NULL,
+  `tab` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+
+
+
+delimiter $$
+
+CREATE TABLE `public_introduce_item` (
+  `itemId` int(100) NOT NULL AUTO_INCREMENT,
+  `tab` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `serviceId` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `sectorId` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `profileNo` int(100) NOT NULL,
+  `contentName` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `contentDescription` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `govExpectedEffect` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `priExpectedEffect` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `modelConcept` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `businessMotivation` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `CSF` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`itemId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+=InnoDB AUTO_INCREMENT=216 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+
+--- 공공서비스 Survey
+
+delimiter $$
+
+CREATE TABLE `pseip_survey_content` (
+  `item_id` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `item_type` int(11) NOT NULL DEFAULT '0',
+  `item_content` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+
+delimiter $$
+
+CREATE TABLE `pseip_survey_score` (
+  `empcode` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `surveyIndex` int(11) DEFAULT '0',
+  `survey1` int(11) DEFAULT '0',
+  `survey2` int(11) DEFAULT '0',
+  `survey3` int(11) DEFAULT '0',
+  `survey4` int(11) DEFAULT '0',
+  `survey5` int(11) DEFAULT '0',
+  `survey6` int(11) DEFAULT '0',
+  `survey7` int(11) DEFAULT '0',
+  `survey8` int(11) DEFAULT '0',
+  `survey9` int(11) DEFAULT '0',
+  PRIMARY KEY (`empcode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci$$
+
+
