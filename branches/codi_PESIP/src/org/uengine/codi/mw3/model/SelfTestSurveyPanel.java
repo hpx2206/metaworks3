@@ -118,7 +118,7 @@ public class SelfTestSurveyPanel {
 			metaworksContext = new MetaworksContext();
 		
 		SelfTestSurvey selfTestSurvey = new SelfTestSurvey();
-		int checkSurvey = selfTestSurvey.checkProgress(session.getEmployee().getEmpCode());
+		int checkSurvey = selfTestSurvey.checkProgress(session.getEmployee().getGlobalCom());
 		
 		if(checkSurvey == 0) {
 			this.getMetaworksContext().setWhen(INIT);
@@ -146,7 +146,7 @@ public class SelfTestSurveyPanel {
 		if(INIT.equals(this.getMetaworksContext().getWhen())) {
 			
 			SelfTestSurvey selfTestSurvey = new SelfTestSurvey();
-			selfTestSurvey.createEmpScore(session.getEmployee().getEmpCode());
+			selfTestSurvey.createEmpScore(session.getEmployee().getGlobalCom());
 			
 			this.getMetaworksContext().setHow(SURVEY_FIRST);
 			this.setSurveyIndex(SURVEY_ORDER_FIRST);
@@ -157,7 +157,7 @@ public class SelfTestSurveyPanel {
 		} else {
 			
 			SelfTestSurvey selfTestSurvey = new SelfTestSurvey();
-			Long surveyIndex = selfTestSurvey.findSurveyIndex(session.getEmployee().getEmpCode());
+			Long surveyIndex = selfTestSurvey.findSurveyIndex(session.getEmployee().getGlobalCom());
 			
 			if(surveyIndex == 0) {
 				this.getMetaworksContext().setHow(SURVEY_FIRST);
@@ -288,14 +288,14 @@ public class SelfTestSurveyPanel {
 		// 마지막 단계일 때.
 		if(COMPLETE.equals(this.getMetaworksContext().getHow())) {
 			int parseIndex = Integer.parseInt(this.getSurveyIndex().toString());
-			selfTestSurvey.save(this.getSumScore(), SURVEY_LIST[parseIndex - 1], session.getEmployee().getEmpCode(), this.getSurveyIndex());
+			selfTestSurvey.save(this.getSumScore(), SURVEY_LIST[parseIndex - 1], session.getEmployee().getGlobalCom(), this.getSurveyIndex());
 			
 		// 그렇지 않을 때.
 		} else {
 			// 한단계 앞의 걸 저장해야하므로 -1
 			int parseIndex = (int) (this.getSurveyIndex() - 1);
 			// 그런데 배열은 0번째가 처음이다 그러므로 -1을 한번더
-			selfTestSurvey.save(this.getSumScore(), SURVEY_LIST[parseIndex - 1], session.getEmployee().getEmpCode(), this.getSurveyIndex());
+			selfTestSurvey.save(this.getSumScore(), SURVEY_LIST[parseIndex - 1], session.getEmployee().getGlobalCom(), this.getSurveyIndex());
 		}
 	}
 	
@@ -304,7 +304,7 @@ public class SelfTestSurveyPanel {
 		this.progressSurvey();
 		
 		SelfTestSurvey selfTestSurvey = new SelfTestSurvey();
-		ISelfTestSurvey iSelfTestSurvey = selfTestSurvey.findAllSelfTestScore(session.getEmployee().getEmpCode());
+		ISelfTestSurvey iSelfTestSurvey = selfTestSurvey.findAllSelfTestScore(session.getEmployee().getGlobalCom());
 		
 		ArrayList<Long> sumScoreList = new ArrayList<Long>();
 		
@@ -333,7 +333,7 @@ public class SelfTestSurveyPanel {
 	@ServiceMethod(callByContent=true)
 	public Object restartSurvey() throws Exception {
 		SelfTestSurvey selfTestSurvey = new SelfTestSurvey();
-		selfTestSurvey.setEmpCode(session.getEmployee().getEmpCode());
+		selfTestSurvey.setGlobalCom(session.getEmployee().getGlobalCom());
 		selfTestSurvey.resetScore();
 		
 		this.getMetaworksContext().setWhen(INIT);

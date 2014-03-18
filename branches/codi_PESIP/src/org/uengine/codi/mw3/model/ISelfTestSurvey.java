@@ -8,8 +8,8 @@ import org.metaworks.dao.IDAO;
 public interface ISelfTestSurvey extends IDAO{
 	
 	@Id
-	public String getEmpCode();
-	public void setEmpCode(String empCode);
+	public String getGlobalCom();
+	public void setGlobalCom(String globalCom);
 	
 	// 설문조사 진행 확인
 	public Long getSurveyIndex();

@@ -17,7 +17,10 @@
                     
                         <td width="10%">
                             
-                            <%=mw3.locateObject(value.services[i])%>
+                            <% var options = {};
+                               options['htmlAttr'] =  {'style': 'cursor: default;' }; %>
+                            
+                            <%=mw3.locateObject(value.services[i], value.services[i].__className, null, options)%>
                             <% mw3.addBeanProperty(value.__objectId, '.services[' + i + ']'); %>
                             
                         </td>
@@ -30,7 +33,10 @@
                             
                                 <td width="10%">
                                 
-                                    <%=mw3.locateObject(value.sectors[j])%>
+                                <% var options = {};
+                                   options['htmlAttr'] =  {'style': 'cursor: default;' }; %>
+                                
+                                    <%=mw3.locateObject(value.sectors[j], value.sectors[j].__className, null, options)%>
                                     <% mw3.addBeanProperty(value.__objectId, '.sectors[' + j + ']'); %>
                                     
                                 </td>
@@ -47,7 +53,7 @@
                                                value.sectors[j].id == value.item[k].sectorId) {
                                                 
                                                 var options = {};
-                                                options['htmlAttr'] =  {'style': 'width: 50%;' }; %>
+                                                options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer;' }; %>
                                                 
                                                 <%=mw3.locateObject(value.item[k], value.item[k].__className, null, options)%>
                                                 <% mw3.addBeanProperty(value.__objectId, '.item[' + k + ']'); %>

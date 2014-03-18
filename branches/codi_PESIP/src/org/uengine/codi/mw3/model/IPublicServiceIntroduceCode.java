@@ -11,8 +11,8 @@ import org.metaworks.widget.ModalWindow;
 @Table(name="public_introduce_code")
 public interface IPublicServiceIntroduceCode extends IDAO{
 	
-	@Id
 	@Hidden
+	@Id
 	public String getId();
 	public void setId(String id);
 	

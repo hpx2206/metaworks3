@@ -186,6 +186,9 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
 	public Object editEmployeeInfo() throws Exception;
 	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
+	public Object editEnterpriseInfo() throws Exception;
+	
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW)
 	public Object[] subscribeStep1() throws Exception;
 	
@@ -212,6 +215,9 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object showDetail() throws Exception;
+	
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object[] showEnterpriseDetail() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public Refresh addContact() throws Exception;

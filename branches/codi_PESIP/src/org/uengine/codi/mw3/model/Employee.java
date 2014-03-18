@@ -12,8 +12,6 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.NonLoadable;
-import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.widget.ModalWindow;
@@ -23,8 +21,6 @@ import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
-
-import examples.ImageAndText;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 
@@ -45,12 +41,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	*/
 	
 	String publicName;
-	public String getPublicName() {
-		return publicName;
-	}
-	public void setPublicName(String publicName) {
-		this.publicName = publicName;
-	}
+		public String getPublicName() {
+			return publicName;
+		}
+		public void setPublicName(String publicName) {
+			this.publicName = publicName;
+		}
 
 	boolean validEmail;
 		public boolean isValidEmail() {
@@ -246,14 +242,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.inviteUser = inviteUser;
 		}
 		
-	EnterpriseInformation enterpriseInformation;
-		public EnterpriseInformation getEnterpriseInformation() {
-			return enterpriseInformation;
+	Enterprise enterprise;
+		public Enterprise getEnterprise() {
+			return enterprise;
 		}
-		public void setEnterpriseInformation(EnterpriseInformation enterpriseInformation) {
-			this.enterpriseInformation = enterpriseInformation;
+		public void setEnterprise(Enterprise enterprise) {
+			this.enterprise = enterprise;
 		}
-		
+
 	ArrayList<EnterpriseService> enterpriseService;
 		public ArrayList<EnterpriseService> getEnterpriseService() {
 			return enterpriseService;
@@ -268,6 +264,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		public void setEnterprisePatent(ArrayList<EnterprisePatent> enterprisePatent) {
 			this.enterprisePatent = enterprisePatent;
+		}
+		
+	boolean checkSigned;
+		public boolean isCheckSigned() {
+			return checkSigned;
+		}
+		public void setCheckSigned(boolean checkSigned) {
+			this.checkSigned = checkSigned;
 		}
 		
 	@Override
@@ -442,6 +446,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	@Override
+	public Object editEnterpriseInfo() throws Exception {
+		EnterpriseInfo enterpriseInfo = new EnterpriseInfo();
+		enterpriseInfo.load(session.getEmployee().getGlobalCom());
+		
+		return enterpriseInfo;
+	}
+	
+	
+	
+	@Override
 	public boolean saveMe() throws Exception {
 		//if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 		if(EnterprisePatent.PATENT.equals(getMetaworksContext().getWhen())) {
@@ -452,6 +466,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			
 			if(this.getGlobalCom()==null){
 				this.setGlobalCom("uEngine");
+				
 			}else{
 				
 				Company company = new Company();
@@ -477,6 +492,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			syncToDatabaseMe();
 		}
 		flushDatabaseMe();
+		
+		//this.saveEnterpriseInfomation();
+		
 		
 		//codi user 추가 시 이행하도록 이동
 		//getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -622,6 +640,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
+	public Object[] showEnterpriseDetail() throws Exception {
+		return new Object[]{new Remover(new Popup()), new ModalWindow(this.editEnterpriseInfo(), 700, 560, "$editEnterpriseProfile")}; 
+	}
+	
+	@Override
 	public Refresh addContact() throws Exception {
 		Contact contact = new Contact();
 		IUser friendUser = new User();
@@ -712,6 +735,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		getMetaworksContext().setWhen("new2");
+		
+		// 이미 회원가입을 한 회사면 그냥 아이디만 만들어서 가입.
+		// 아니면 enterprise 정보 입력. how로 컨트롤
+		// size가 0보다 크면 이미 가입한 것
+		if(this.checkSignedGlobalCom() != 0 )
+			this.setCheckSigned(true);
+		else 
+			this.setCheckSigned(false);
 
 		return new Object[]{locale, this};
 	}
@@ -728,14 +759,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			throw new Exception("Re-entered password doesn't match");
 		}
 		
-		if(enterpriseInformation == null) {
-			enterpriseInformation = new EnterpriseInformation();
+		if(enterprise == null) {
+			enterprise = new Enterprise();
 		}
-		getMetaworksContext().setWhen(EnterpriseInformation.ENTERPRISE);
+		
+		getMetaworksContext().setWhen(Enterprise.ENTERPRISE);
 		//getMetaworksContext().setWhen("new3");
 
 		return this;
 	}
+	
 	@Override
 	public Object subscribeStep3() throws Exception {
 		
@@ -749,6 +782,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return this;
 	}
 	
+	// 여기 꼭 보기 내일!!
 	@Override
 	public Object subscribeStep4() throws Exception {
 		if(enterprisePatent == null) {
@@ -797,6 +831,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session.setEmployee(this);
 		session.fillSession();
 		session.setGuidedTour(true);
+		
+		//session을 다 만들고 디비에 접근해야한다. 왜인지 session이 널이다 compnay 즉 comcode랑 관련있는 듯 한데 잘 모르겠으므로. 일단 여기에 처리
+		this.saveEnterpriseInfomation();
 
 		Login login = new Login();
 		login.storeIntoServerSession(session);
@@ -820,4 +857,63 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return this;
 	}
+	
+	public int checkSignedGlobalCom() throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("select globalcom");
+		sb.append(" from emptable");
+		sb.append(" where globalcom = ?globalcom");
+		
+		IEmployee employee = (IEmployee) sql(IEmployee.class, sb.toString());
+		employee.setGlobalCom(this.getGlobalCom());
+		employee.select();
+		
+		return employee.size();
+	}
+	
+	public void saveEnterpriseInfomation() throws Exception {
+		
+		// enterprise 정보 save 추가 2014_03_12
+		Enterprise enterprise = new Enterprise();
+		enterprise.setGlobalCom(this.getGlobalCom());
+		enterprise.setEnterpriseName(this.getEnterprise().getEnterpriseName());
+		enterprise.setRepresentative(this.getEnterprise().getRepresentative());
+		enterprise.setBusinessPart(this.getEnterprise().getBusinessPart());
+		enterprise.setAddress(this.getEnterprise().getAddress());
+		enterprise.setFoundation(this.getEnterprise().getFoundation());
+		enterprise.setNumber(this.getEnterprise().getNumber());
+		enterprise.setCarryOn(this.getEnterprise().getCarryOn());
+		enterprise.setFax(this.getEnterprise().getFax());
+		
+		enterprise.saveEnterprise();
+		
+		// service 저장
+		for(int i = 0; i < this.getEnterpriseService().size(); i++) {
+			EnterpriseService enterpriseService = new EnterpriseService();
+			enterpriseService.setId(new Long(enterpriseService.createNewNotiSettingId()));
+			enterpriseService.setGlobalCom(this.getGlobalCom());
+			enterpriseService.setServiceForm(this.getEnterpriseService().get(i).getServiceForm());
+			enterpriseService.setProductName(this.getEnterpriseService().get(i).getProductName());
+			enterpriseService.setProjectResult(this.getEnterpriseService().get(i).getProjectResult());
+			
+			enterpriseService.saveService();
+		}
+		
+		// patent 저장
+		for(int i = 0; i < this.getEnterprisePatent().size(); i++) {
+			EnterprisePatent enterprisePatent = new EnterprisePatent();
+			enterprisePatent.setId(new Long(enterprisePatent.createNewNotiSettingId()));
+			enterprisePatent.setGlobalCom(this.getGlobalCom());
+			enterprisePatent.setPatentForm(this.getEnterprisePatent().get(i).getPatentForm());
+			enterprisePatent.setPatentName(this.getEnterprisePatent().get(i).getPatentName());
+			enterprisePatent.setRegistrationDate(this.getEnterprisePatent().get(i).getRegistrationDate());
+			enterprisePatent.setRegistrationNumber(this.getEnterprisePatent().get(i).getRegistrationNumber());
+			enterprisePatent.setRegistrationMembers(this.getEnterprisePatent().get(i).getRegistrationMembers());
+			enterprisePatent.setEtc(this.getEnterprisePatent().get(i).getEtc());
+			
+			enterprisePatent.savePatent();
+			
+		}
+	}
+	
 }

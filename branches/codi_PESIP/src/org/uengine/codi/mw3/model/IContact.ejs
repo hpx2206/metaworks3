@@ -12,10 +12,9 @@
 			<%=fields.checked.here({when: 'edit'})%>
 			<img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="35" height="35" style="margin-right:5px;">
 			<%=value.friendId%>
-			<div class="clear"></div>
 		</div>
 		
-	<% } else {%>
+	<% } else { %>
 		<%=fields.friend.here()%>
 		<% if(value.metaworksContext.how == 'follower'){ %>
 		<div style="clear:left;"></div>

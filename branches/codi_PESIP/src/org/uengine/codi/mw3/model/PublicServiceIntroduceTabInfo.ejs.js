@@ -96,7 +96,9 @@ org_uengine_codi_mw3_model_PublicServiceIntroduceTabInfo.prototype = {
             
             // 그 후 li 의 a 링크를 찾는다. 그리고 a의 html에 locateObject
             target = $('.ui-tabs-nav').find('li').eq(tabSize-1).find('a');
-            target.html(mw3.locateObject(appendobject, appendobject.__className));
+            var options = {};
+            options['htmlAttr'] =  {'style': 'cursor: pointer;' };
+            target.html(mw3.locateObject(appendobject, appendobject.__className, null, options));
             
         // div 붙이기    
         } else {

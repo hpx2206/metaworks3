@@ -7,14 +7,15 @@ import org.metaworks.dao.Database;
 @Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTestSurvey{
 	
-	String empCode;
+	String globalCom;
 		@Id
-		public String getEmpCode() {
-			return empCode;
+		public String getGlobalCom() {
+			return globalCom;
 		}
-		public void setEmpCode(String empCode) {
-			this.empCode = empCode;
+		public void setGlobalCom(String globalCom) {
+			this.globalCom = globalCom;
 		}
+		
 	// 설문조사 진행 확인
 	Long surveyIndex;
 		public Long getSurveyIndex() {
@@ -97,59 +98,59 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 			this.survey9 = survey9;
 		}
 		
-	public int checkProgress(String empCode) throws Exception {
+	public int checkProgress(String globalCom) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select empcode as empCode, surveyIndex");
+		sb.append("select globalcom as globalCom, surveyIndex");
 		sb.append(" from pseip_survey_score");
-		sb.append(" where empcode = ?empcode");
+		sb.append(" where globalcom = ?globalcom");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
-		survey.setEmpCode(empCode);
+		survey.setGlobalCom(globalCom);
 		survey.select();
 		
 		return survey.size();
 	}
 	
-	public void save(Long sumScore, String surveyForm, String empCode, Long surveyIndex) throws Exception {
+	public void save(Long sumScore, String surveyForm, String globalCom, Long surveyIndex) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("update pseip_survey_score");
 		sb.append(" set survey"+surveyForm+" = "+sumScore.toString()+", surveyIndex = ?surveyIndex");
-		sb.append(" where empcode = ?empcode");
+		sb.append(" where globalcom = ?globalcom");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
 		survey.setSurveyIndex(surveyIndex);
-		survey.setEmpCode(empCode);
+		survey.setGlobalCom(globalCom);
 		survey.update();
 		
 	}
 	
-	public void createEmpScore(String empCode) throws Exception {
+	public void createEmpScore(String globalCom) throws Exception {
 		SelfTestSurvey survey = new SelfTestSurvey();
-		survey.setEmpCode(empCode);
+		survey.setGlobalCom(globalCom);
 		survey.createDatabaseMe();
 	}
 	
-	public ISelfTestSurvey checkEmpCode(String empCode) throws Exception {
+	public ISelfTestSurvey checkEmpCode(String globalCome) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select empcode");
+		sb.append("select globalcom as globalCom");
 		sb.append(" from pseip_survey_score");
-		sb.append(" where empcode = ?empcode");
+		sb.append(" where globalcom = ?globalcom");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
-		survey.setEmpCode(empCode);
+		survey.setGlobalCom(globalCome);
 		survey.select();
 		
 		return survey;
 	}
 	
-	public Long findSurveyIndex(String empCode) throws Exception {
+	public Long findSurveyIndex(String globalCom) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select surveyIndex");
 		sb.append(" from pseip_survey_score");
-		sb.append(" where empcode = ?empcode");
+		sb.append(" where globalcom = ?globalcom");
 		
 		ISelfTestSurvey survey = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
-		survey.setEmpCode(empCode);
+		survey.setGlobalCom(globalCom);
 		survey.select();
 		
 		Long index = null;
@@ -170,10 +171,10 @@ public class SelfTestSurvey extends Database<ISelfTestSurvey> implements ISelfTe
 		StringBuffer sb = new StringBuffer();
 		sb.append("select *");
 		sb.append(" from pseip_survey_score");
-		sb.append(" where empcode = ?empcode");
+		sb.append(" where globalcom = ?globalcom");
 		
 		ISelfTestSurvey scores = (ISelfTestSurvey) sql(ISelfTestSurvey.class, sb.toString());
-		scores.setEmpCode(empCode);
+		scores.setGlobalCom(empCode);
 		scores.select();
 		
 		return scores;

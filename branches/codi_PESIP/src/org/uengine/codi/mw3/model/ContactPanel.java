@@ -7,6 +7,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.Login;
 
 public class ContactPanel {
 	
@@ -30,6 +31,8 @@ public class ContactPanel {
 		searchBox.setKeyEntetSearch(true);
 		
 		setSearchBox(searchBox);
+		
+		Login.getSessionIdWithAllUser();
 	}
 	
 	public ContactPanel(Session session, String type) throws Exception {

@@ -13,13 +13,13 @@
                 
                 
                 <li>
-                    <a<%if(tab[i].name != 'null'){%> id="tabIcon_<%=tab[i].name%>" <%}%>  href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"> <%=mw3.locateObject(tab[i], tab[i].__className)%> </a>
+                    <a<%if(tab[i].name != 'null'){%> id="tabIcon_<%=tab[i].name%>" <%}%>  style="cursor: pointer" href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"> <%=mw3.locateObject(tab[i], tab[i].__className)%> </a>
                 </li>
             
             <% } %>
         
         <li>
-            <button id="plus" id="title_<%=objectId%>_<%=i+2%>" onClick="<%=methods.addTab.caller()%>"><B> + </B></button>
+            <button id="title_<%=objectId%>_<%=i+2%>" style="cursor: pointer" onClick="<%=methods.addTab.caller()%>"><B> + </B></button>
         </li>
         
         </ul>

@@ -13,16 +13,19 @@ var org_uengine_codi_mw3_model_PublicServiceIntroduce = function(objectId, class
 
 org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
     addService : function(appendobject){
+    
+        var options = {};
+        options['htmlAttr'] =  {'style': 'cursor: default;' };
         
         if(this.object.sectors.length == 0) 
-            $('#introTable_'+this.objectId+' tr:last').after('<tr><td width="10%">'+mw3.locateObject(appendobject)+'</td></tr>');
+            $('#introTable_'+this.objectId+' tr:last').after('<tr><td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td></tr>');
         
         else {
         
             for(var i = 0; i <= this.object.sectors.length; i++) {
                 
                 if(i == 0) {
-                    $('#introTable_'+this.objectId+' tr:last').after('<tr><td width="10%">'+mw3.locateObject(appendobject)+'</td></tr>');
+                    $('#introTable_'+this.objectId+' tr:last').after('<tr><td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td></tr>');
                     
                 } else {
                 
@@ -47,9 +50,12 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
     },
     
     addSector : function(appendobject){
+    
+        var options = {};
+        options['htmlAttr'] =  {'style': 'cursor: default;' };
         
         if(this.object.services.length == 0) {
-            $('#introTable_'+this.objectId+' tr:first td:last').after('<td width="10%">'+mw3.locateObject(appendobject)+'</td>');
+            $('#introTable_'+this.objectId+' tr:first td:last').after('<td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td>');
         }
         
         else {
@@ -57,7 +63,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
             for(var i = 0; i <= this.object.services.length; i++) {
                 
                 if(i == 0) { 
-                    $('#introTable_'+this.objectId+' tr:first td:last').after('<td width="10%">'+mw3.locateObject(appendobject)+'</td>');
+                    $('#introTable_'+this.objectId+' tr:first td:last').after('<td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td>');
                
                 } else {
                     
@@ -97,8 +103,9 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     // 그런데 빈 tr, td 와 row, column 들 때문에 i 와 j 값은 항상 1이 작다. 설계를 잘못해서
                     // 어쩔 수가 없다. + 1 을 해줘야 한다.
                     if(appendobject.serviceId == service.id) {
+                       
                         var options = {};
-                        options['htmlAttr'] =  {'style': 'width:50%;' };
+                        options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer;' };
                     
                         $('#introTable_'+this.objectId+' tr:eq('+(j+1)+') td:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
                         

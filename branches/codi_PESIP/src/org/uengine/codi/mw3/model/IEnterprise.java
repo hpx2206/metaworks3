@@ -1,15 +1,14 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
-
-@Table(name="enterprise")
-public interface IEnterpriseInformation extends IDAO{
+public interface IEnterprise extends IDAO{
 	
 	@Id
+	public String getGlobalCom();
+	public void setGlobalCom(String globalCom);
+	
 	public String getEnterpriseName();
 	public void setEnterpriseName(String enterpriseName);
 	
@@ -28,7 +27,13 @@ public interface IEnterpriseInformation extends IDAO{
 	public String getNumber();
 	public void setNumber(String number);
 	
-	public String getCarryon();
-	public void setCarryon(String carryon);
+	public String getCarryOn();
+	public void setCarryOn(String carryOn);
 	
+	public String getFax();
+	public void setFax(String fax);
+	
+	public void saveEnterprise() throws Exception;
+	public void modifyEnterprise() throws Exception;
+	public IEnterprise findEnterprise(String globalCom) throws Exception;
 }
