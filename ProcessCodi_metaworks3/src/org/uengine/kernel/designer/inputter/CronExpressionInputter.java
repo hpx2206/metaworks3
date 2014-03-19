@@ -5,9 +5,13 @@ import java.util.Calendar;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.TimerEventActivity;
 import org.uengine.scheduler.SchedulerUtil;
 
@@ -25,7 +29,8 @@ public class CronExpressionInputter implements Serializable, ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 	
-	public void load(String duration){
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_SELF)
+	public void load() throws Exception{
 		metaworksContext = new MetaworksContext();
 		metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
 		
@@ -33,7 +38,6 @@ public class CronExpressionInputter implements Serializable, ContextAware {
 		hour = new SelectBox();
 		dayOfMonth = new SelectBox();
 		month = new SelectBox();
-		this.setDuration(duration);
 		
 		this.loadMinute();
 		this.loadHour();
@@ -77,7 +81,41 @@ public class CronExpressionInputter implements Serializable, ContextAware {
 				dayOfMonth.setSelected("-");
 				month.setSelected("-");
 			}
+		}else if( TimerEventActivity.WAITING_TYPE_UNTIL_WITH_DATE.equals(duration)){
+			variableDate = new SelectBox();
+			if( processVariablePanel != null && processVariablePanel.getVariableList().size() > 0 ){
+				for(int i=0; i < processVariablePanel.getVariableList().size(); i++){
+					ProcessVariable processVariable = processVariablePanel.getVariableList().get(i);
+					if( "java.util.Date".equals(processVariable.getTypeInputter())){
+						String nameAttr = processVariable.getName();
+						String displayName = processVariable.getDisplayName() == null ? nameAttr : processVariable.getDisplayName().getText();
+						variableDate.add(displayName, nameAttr);
+					}
+				}
+			}
+			
+			if( resultExpression != null && resultExpression.length() > 0){
+				String[] exp = resultExpression.split(" ");
+				if( exp.length >= 5 ){
+					minute.setSelected(exp[0]);
+					hour.setSelected(exp[1]);
+					dayOfMonth.setSelected(exp[2]);
+					month.setSelected(exp[3]);
+					variableDate.setSelected(exp[4]);
+				}
+			}else{
+				// default
+				minute.setSelected("0");
+				hour.setSelected("0");
+				dayOfMonth.setSelected("-");
+				month.setSelected("-");
+			}
+			if( variableDate.getSize() == 0){
+				throw new Exception("no available processVariable. ");
+			}
 		}
+		
+		setPreLoaded(true);
 	}
 	
 	public void loadMinute(){
@@ -161,11 +199,27 @@ public class CronExpressionInputter implements Serializable, ContextAware {
 		sb.append(this.getMinute()).append(" ");
 		sb.append(this.getHour()).append(" ");
 		sb.append(this.getDayOfMonth()).append(" ");		
-		sb.append(this.getMonth()).append(" ");
+		sb.append(this.getMonth());
 
 		return sb.toString();
 	}
-	
+	transient boolean preLoaded;
+	@Hidden
+	public boolean isPreLoaded() {
+		return preLoaded;
+	}
+	public void setPreLoaded(boolean preLoaded) {
+		this.preLoaded = preLoaded;
+	}
+	transient String parentEditorId;
+		@Hidden
+		public String getParentEditorId() {
+			return parentEditorId;
+		}
+		public void setParentEditorId(String parentEditorId) {
+			this.parentEditorId = parentEditorId;
+		}
+		
 	transient String duration;
 		public String getDuration() {
 			return duration;
@@ -222,6 +276,14 @@ public class CronExpressionInputter implements Serializable, ContextAware {
 			this.year = year;
 		}
 		
+	transient SelectBox variableDate;
+		public SelectBox getVariableDate() {
+			return variableDate;
+		}
+		public void setVariableDate(SelectBox variableDate) {
+			this.variableDate = variableDate;
+		}
+
 	transient String resultExpressionStr;
 		public String getResultExpressionStr() {
 			return resultExpressionStr;
@@ -237,12 +299,17 @@ public class CronExpressionInputter implements Serializable, ContextAware {
 				resultExpression = getCronExpression();
 			}else if( TimerEventActivity.WAITING_TYPE_UNTIL.equals(duration) && this.getMinute() != null){
 				resultExpression = getDateExpression();
+			}else if( TimerEventActivity.WAITING_TYPE_UNTIL_WITH_DATE.equals(duration) && this.getMinute() != null){
+				resultExpression = getDateExpression() + " " + this.getVariableDate();
 			}
 			return resultExpression;
 		}
 		public void setResultExpression(String resultExpression) {
 			this.resultExpression = resultExpression;
 		}
+		
+	@AutowiredFromClient(select="typeof parentEditorId!='undefined' && parentEditorId==autowiredObject.editorId")
+	transient public ProcessVariablePanel processVariablePanel;
 	
 	@ServiceMethod(callByContent=true)
 	public void expression() throws Exception{

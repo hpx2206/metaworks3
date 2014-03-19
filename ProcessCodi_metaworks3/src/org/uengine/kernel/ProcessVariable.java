@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.xml.namespace.QName;
 
@@ -104,7 +105,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		
 	transient String typeInputter;
 		@Order(3)
-		@Range(options={"Text", "Complex"}, values={"java.lang.String", "org.uengine.contexts.ComplexType"})
+		@Range(options={"Text","Date","Complex"}, values={"java.lang.String","java.util.Date","org.uengine.contexts.ComplexType"})
 		public String getTypeInputter() {
 			return typeInputter;
 		}
@@ -465,6 +466,9 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 			ComplexType complexType = new ComplexType();
 			complexType.setDesignerMode(true);
 			this.setDefaultValue(complexType);
+		}else if( "java.util.Date".equals(this.getTypeInputter())){
+			// TODO new Date 를 하면 dwr이 Object를 Date 객체로 인식을 못한다.
+			this.setDefaultValue(new String());
 		}else{
 			if( this.getTypeInputter() == null ){
 				this.setTypeInputter("java.lang.String");

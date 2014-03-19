@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -29,7 +30,11 @@ import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
 import org.uengine.codi.platform.Console;
 import org.uengine.codi.util.CodiStringUtil;
+import org.uengine.kernel.Activity;
+import org.uengine.kernel.EventActivity;
+import org.uengine.kernel.MessageListener;
 import org.uengine.kernel.RoleMapping;
+import org.uengine.kernel.TimerEventActivity;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.processmarket.Market;
@@ -492,11 +497,16 @@ public class ResourceFile implements ContextAware{
 		String name = this.getName();
 
 		ProcessMap processMap = new ProcessMap();
-
+		org.uengine.kernel.ProcessDefinition procDef = null;
+		
+		// 프로세스 케쉬 초기화
+		ProcessManagerBean pmb = (ProcessManagerBean)processManager;
+		CodiProcessDefinitionFactory.getInstance(pmb.getTransactionContext()).removeFromCache(this.getAlias());
+				
 		if(name.endsWith(".process")){
 			name = name.substring(0, name.length() - 8);
 			
-			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
+			procDef = processManager.getProcessDefinition(getAlias());
 			String fullCommandPhrase = procDef.getDescription().getText();
 
 			if(fullCommandPhrase!=null){
@@ -510,7 +520,7 @@ public class ResourceFile implements ContextAware{
 		}else if(name.endsWith(".process2")){
 			name = name.substring(0, name.length() - 9);
 			
-			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
+			procDef = processManager.getProcessDefinition(getAlias());
 			String fullCommandPhrase = procDef.getDescription().getText();
 			
 			if(fullCommandPhrase!=null){
@@ -524,7 +534,7 @@ public class ResourceFile implements ContextAware{
 		}else if(name.endsWith(".wpd")){
 			name = name.substring(0, name.length() - 4);
 			
-			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
+			procDef = processManager.getProcessDefinition(getAlias());
 			String fullCommandPhrase = procDef.getDescription().getText();
 			
 			if(fullCommandPhrase!=null){
@@ -536,12 +546,42 @@ public class ResourceFile implements ContextAware{
 				}
 			}
 		}
+		
 			
 		processMap.setMapId(session.getCompany().getComCode() + "." + this.getAlias());
 		processMap.setDefId(this.getAlias());
 		processMap.setName(name);
 		processMap.setComCode(session.getCompany().getComCode());
 		processMap.processManager = processManager;
+		
+		if( procDef != null ){
+			// 스케쥴로 시작하는 프로세스일 경우, 해당 프로세스를 바로 실행시키고 processMap의 IsScheduled 컬럼이 1로 변경된다.
+			procDef.afterDeserialization();
+			for (Iterator it = procDef.getChildActivities().iterator(); it.hasNext();) {
+				Activity child = (Activity) it.next();
+				if (child.getIncomingTransitions().size() == 0) {
+					if( child instanceof TimerEventActivity ){
+						processMap.session = session;
+						
+						String instId = processMap.initializeProcess();
+						
+						RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+						roleMappingPanel.putRoleMappings(processManager, instId);
+						processManager.executeProcess(instId);
+						processManager.applyChanges();
+						
+						Instance instanceRef = new Instance();
+						instanceRef.setInstId(new Long(instId));
+						// TODO 프로세스 등록을 한 사람이 init 이라는 말도안되는 상황.. 그러나 어찌해야하는건가
+						if( session != null && session.getEmployee() != null ){
+							((Instance)instanceRef).databaseMe().setInitiator(session.user);
+							((Instance)instanceRef).databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
+						}
+						processMap.setIsScheduled(true);
+					}
+				}
+			}
+		}
 		
 		if(!processMap.confirmExist())
 			throw new Exception("$AlreadyAddedApp");

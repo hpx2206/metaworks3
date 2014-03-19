@@ -171,17 +171,37 @@ public class FlowActivity extends ComplexActivity {
 			if( act == null){
 				startActivityRef = super.getInitiatorHumanActivityReference(ptc);
 			}else{
-				startActivityRef.setActivity(act);
-				startActivityRef.setAbsoluteTracingTag(act.getTracingTag());
+				if( act instanceof HumanActivity){
+					startActivityRef.setActivity(act);
+					startActivityRef.setAbsoluteTracingTag(act.getTracingTag());
+				}else{
+					Activity nextActivity = this.findNextHumanActivity(act);
+					if( nextActivity != null ){
+						startActivityRef.setActivity(nextActivity);
+						startActivityRef.setAbsoluteTracingTag(nextActivity.getTracingTag());
+					}
+				}
 			}
 		} catch (UEngineException e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
-
-		
 		
 		return startActivityRef;
 	}
-
+	
+	public Activity findNextHumanActivity(Activity act) {
+		List<Transition> transitionList = act.getOutgoingTransitions();
+		Activity returnActiviy = null;
+		if( transitionList != null ){
+			for(Transition ts : transitionList){
+				if( ts.getTargetActivity() instanceof HumanActivity){
+					return ts.getTargetActivity();
+				}else{
+					returnActiviy = this.findNextHumanActivity(ts.getTargetActivity());
+				}
+			}
+		}
+		return returnActiviy;
+	}
 }

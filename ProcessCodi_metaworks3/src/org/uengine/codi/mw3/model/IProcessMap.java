@@ -41,7 +41,10 @@ public interface IProcessMap extends IDAO {
 	
 	public String getComCode();
 	public void setComCode(String comCode);
-
+	
+	public boolean getIsScheduled();
+	public void setIsScheduled(boolean isScheduled);
+	
 	@NonSavable
 	@NonLoadable
 	public RoleMappingPanel getRoleMappingPanel();

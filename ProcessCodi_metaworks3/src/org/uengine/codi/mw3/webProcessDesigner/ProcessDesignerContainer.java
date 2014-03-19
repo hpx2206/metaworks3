@@ -395,7 +395,7 @@ public class ProcessDesignerContainer {
 			processVariable.setTypeInputter(processVariable.getType().getName());
 		}
 		processVariable.setType(null);
-		if( processVariable.getDefaultValue() != null ){
+		if( processVariable.getDefaultValue() != null && !"".equals(processVariable.getDefaultValue())){
 			processVariable.setTypeInputter(processVariable.getDefaultValue().getClass().getName());
 			if( processVariable.getDefaultValue() instanceof ComplexType ){
 			ComplexType complexType = (ComplexType)processVariable.getDefaultValue();
