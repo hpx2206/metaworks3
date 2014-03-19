@@ -225,7 +225,7 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		}	
 		
 		modalWindow.setTitle(this.getContentName());
-		modalWindow.setWidth(1500);
+		modalWindow.setWidth(1200);
 		modalWindow.setHeight(700);
 		modalWindow.setPanel(publicServiceIntroduceViewPanel);
 		
