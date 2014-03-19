@@ -12,6 +12,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.model.Instance;
 import org.uengine.kernel.designer.inputter.CronExpressionInputter;
 import org.uengine.scheduler.SchedulerUtil;
 
@@ -180,6 +181,11 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 				Employee emp = new Employee();
 				emp.setEmpCode(rm.getEndpoint());
 				globalcom = emp.databaseMe().getGlobalCom();
+			}
+			if( globalcom == null ){
+				Instance instanceRef = new Instance();
+				instanceRef.setInstId(new Long(instance.getInstanceId()));
+				globalcom = instanceRef.databaseMe().getInitComCd();
 			}
 			
 			pstmt = conn.prepareStatement(sql);
