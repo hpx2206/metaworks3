@@ -12035,19 +12035,18 @@ OG.shape.bpmn.E_End_Error.prototype.createShape = function () {
 
 	geom1 = new OG.geometry.Circle([50, 50], 50);
 	geom1.style = new OG.geometry.Style({
-		"stroke-width": 3
+		"stroke-width": 4
 	});
 
 	geom2 = new OG.geometry.Polygon([
 		[20, 75],
-		[40, 40],
+		[40, 30],
 		[60, 60],
 		[80, 20],
-		[67, 80],
-		[44, 57]
+		[60, 75],
+		[40, 50]
 	]);
 	geom2.style = new OG.geometry.Style({
-    //    "stroke-width": 1
 		"fill"        : "black",
         "fill-opacity": 1
 	});
@@ -12382,13 +12381,18 @@ OG.shape.bpmn.E_Intermediate_Error.prototype.createShape = function () {
 		return this.geom;
 	}
 
-	geom1 = new OG.geometry.PolyLine([
+	geom1 = new OG.geometry.Polygon([
 		[20, 75],
-		[40, 40],
+		[40, 30],
 		[60, 60],
-		[80, 20]
+		[80, 20],
+		[60, 75],
+		[40, 50]
 	]);
-
+	geom1.style = new OG.geometry.Style({
+		fill : "none"
+	});
+	
 	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
 	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
 	geomCollection.push(geom1);
@@ -12396,7 +12400,7 @@ OG.shape.bpmn.E_Intermediate_Error.prototype.createShape = function () {
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
 		'label-position': 'bottom',
-		"stroke" : "#969149",
+		//"stroke" : "#969149",
 		"stroke-width" : 1.5,
 		fill : "white",
 		"fill-opacity" : 1
@@ -13008,6 +13012,61 @@ OG.shape.bpmn.E_Start_Link.prototype.createShape = function () {
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
 		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
+/**
+ * BPMN : Error Start Event Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.E_Start_Error = function (label) {
+	OG.shape.bpmn.E_Start_Error.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Error';
+	this.label = label;
+};
+OG.shape.bpmn.E_Start_Error.prototype = new OG.shape.bpmn.Event();
+OG.shape.bpmn.E_Start_Error.superclass = OG.shape.bpmn.Event;
+OG.shape.bpmn.E_Start_Error.prototype.constructor = OG.shape.bpmn.E_Start_Error;
+OG.E_Start_Error = OG.shape.bpmn.E_Start_Error;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Error.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Circle([50, 50], 50);
+
+	geom2 = new OG.geometry.Polygon([
+		[20, 75],
+		[40, 30],
+		[60, 60],
+		[80, 20],
+		[60, 75],
+		[40, 50]
+	]);
+
+	geomCollection.push(geom1);
+	geomCollection.push(geom2);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom',
+		"stroke-width" : 1.5
 	});
 
 	return this.geom;
@@ -19108,7 +19167,7 @@ OG.renderer.RaphaelRenderer.prototype.resize = function (element, offset, exclud
 
 		// resizeShape event fire
 		$(this._PAPER.canvas).trigger('resizeShape', [rElement.node, offset]);
-
+				
 		return rElement.node;
 	} else if (rElement) {
 		bBox = rElement.getBBox();
@@ -19128,8 +19187,39 @@ OG.renderer.RaphaelRenderer.prototype.resize = function (element, offset, exclud
 
 		return rElement.node;
 	}
-
+	
 	return null;
+};
+
+OG.renderer.RaphaelRenderer.prototype.resizePool = function (element) {
+	if(element.shape instanceof OG.shape.HorizontalPoolShape || element.shape instanceof OG.shape.VerticalPoolShape){
+		var i, elements = [], ele;
+		
+		for(i=0; i<element.childNodes.length; i++){
+			ele = element.childNodes[i];
+			if(ele.shape instanceof OG.shape.HorizontalPoolShape
+				|| ele.shape instanceof OG.shape.HorizontalLaneShape
+				|| ele.shape instanceof OG.shape.VerticalPoolShape
+				|| ele.shape instanceof OG.shape.VerticalLaneShape){
+					elements.push(ele);
+			}
+		}
+		for(i=0; i<elements.length; i++){
+			dx = element.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
+			dy = element.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
+			dy2 =(element.shape.geom.boundary._height / elements.length) * i;
+			this.move(elements[i], [dx, dy + dy2]);
+			lower = element.shape.geom.boundary._height - elements[i].shape.geom.boundary._height;
+			right = element.shape.geom.boundary._width - elements[i].shape.geom.boundary._width - 20;
+			this.resize(elements[i], [0, lower, 0, right]);
+			lower = -(elements[i].shape.geom.boundary._height - (element.shape.geom.boundary._height / elements.length));
+			this.resize(elements[i], [0, lower, 0, 0]);
+			
+			if(elements[i].shape instanceof OG.shape.HorizontalPoolShape || elements[i].shape instanceof OG.shape.VerticalPoolShape){
+				//this.resizePool(elements[i]);
+			}
+		}
+	}
 };
 
 /**
@@ -19497,8 +19587,6 @@ OG.handler.EventHandler.prototype = {
 	
 		$(element).bind({
 			mouseover: function (event) {
-				console.log(this);
-				
 				event.stopPropagation();
 				
 				if("element_selected" == $(element).data("status")){
@@ -19512,7 +19600,6 @@ OG.handler.EventHandler.prototype = {
 				*/
 				
 				if (element.shape.isCollapsed === false) {
-					console.log('false');
 					
 					terminalGroup = me._RENDERER.drawTerminal(element,
 						$(root).data("dragged_guide") === "to" ? OG.Constants.TERMINAL_TYPE.IN : OG.Constants.TERMINAL_TYPE.OUT);
@@ -19947,7 +20034,7 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Boolean} isMovable 가능여부
 	 */
 	setMovable: function (element, isMovable) {
-		var me = this, eleArray = [], root = me._RENDERER.getRootGroup();
+		var me = this, parentElement, eleArray = [], root = me._RENDERER.getRootGroup();
 		
 		if (!element) {
 			return;
@@ -19957,6 +20044,15 @@ OG.handler.EventHandler.prototype = {
 			$(element).draggable({
 				start: function (event) {
 					var eventOffset = me._getOffset(event), guide;
+					
+					if($(element).parent().get(0) != root){
+						if(element.shape instanceof OG.shape.HorizontalPoolShape
+							|| element.shape instanceof OG.shape.HorizontalLaneShape
+							|| element.shape instanceof OG.shape.VerticalPoolShape
+							|| element.shape instanceof OG.shape.VerticalLaneShape){
+								parentElement = $(element).parent().get(0);
+						}
+					}
 
 					// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
 					if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
@@ -20094,7 +20190,39 @@ OG.handler.EventHandler.prototype = {
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
 						// grouping
 						//me._RENDERER.addToGroup(groupTarget, eleArray);
-						console.log(element);
+						var i, elements=[];
+						
+						//풀이거나 스윔레인인 경우 자동 리사이징 되게
+						if(element.shape instanceof OG.shape.HorizontalPoolShape
+							|| element.shape instanceof OG.shape.HorizontalLaneShape
+							|| element.shape instanceof OG.shape.VerticalPoolShape
+							|| element.shape instanceof OG.shape.VerticalLaneShape){
+							
+								groupTarget.appendChild(element);
+																													
+								for(i=0; i<groupTarget.childNodes.length; i++){
+									var ele = groupTarget.childNodes[i];
+									if(ele.shape instanceof OG.shape.HorizontalPoolShape
+										|| ele.shape instanceof OG.shape.HorizontalLaneShape
+										|| ele.shape instanceof OG.shape.VerticalPoolShape
+										|| ele.shape instanceof OG.shape.VerticalLaneShape){
+											elements.push(ele);
+									}
+								}
+								
+								for(i=0; i<elements.length; i++){
+									dx = groupTarget.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
+									dy = groupTarget.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
+									dy2 =(groupTarget.shape.geom.boundary._height / elements.length) * i;
+									me._RENDERER.move(elements[i], [dx, dy + dy2]);
+									lower = groupTarget.shape.geom.boundary._height - elements[i].shape.geom.boundary._height;
+									right = groupTarget.shape.geom.boundary._width - elements[i].shape.geom.boundary._width - 20;
+									me._RENDERER.resize(elements[i], [0, lower, 0, right]);
+									lower = -(elements[i].shape.geom.boundary._height - (groupTarget.shape.geom.boundary._height / elements.length));
+									me._RENDERER.resize(elements[i], [0, lower, 0, 0]);
+								}
+						}
+						
 						// guide
 						$.each(eleArray, function (k, item) {
 							me._RENDERER.removeGuide(item);
@@ -20121,6 +20249,31 @@ OG.handler.EventHandler.prototype = {
                         });
 					}
 					
+					if(parentElement){
+						var i, elements=[];
+				
+						for(i=0; i<parentElement.childNodes.length; i++){
+							var ele = parentElement.childNodes[i];
+							if(ele.shape instanceof OG.shape.HorizontalPoolShape
+								|| ele.shape instanceof OG.shape.HorizontalLaneShape
+								|| ele.shape instanceof OG.shape.VerticalPoolShape
+								|| ele.shape instanceof OG.shape.VerticalLaneShape){
+									elements.push(ele);
+							}
+						}
+						
+						for(i=0; i<elements.length; i++){
+							dx = parentElement.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
+							dy = parentElement.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
+							dy2 =(parentElement.shape.geom.boundary._height / elements.length) * i;
+							me._RENDERER.move(elements[i], [dx, dy + dy2]);
+							lower = parentElement.shape.geom.boundary._height - elements[i].shape.geom.boundary._height;
+							right = parentElement.shape.geom.boundary._width - elements[i].shape.geom.boundary._width - 20;
+							me._RENDERER.resize(elements[i], [0, lower, 0, right]);
+							lower = -(elements[i].shape.geom.boundary._height - (parentElement.shape.geom.boundary._height / elements.length));
+							me._RENDERER.resize(elements[i], [0, lower, 0, 0]);
+						}
+					}
 					
 					if(me._getSelectedElement().length > 1){
 						me.selectShapes(me._getSelectedElement());
@@ -20506,6 +20659,7 @@ OG.handler.EventHandler.prototype = {
 								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
+							me._RENDERER.resizePool(element, [0, 0, 0, me._grid(dx)]);
 							//me._RENDERER.removeGuide(element);
 						}
 					}
@@ -21199,6 +21353,147 @@ OG.handler.EventHandler.prototype = {
 						'sep2'     : '---------',
 						'view'     : {
 							name : 'View',
+							items: {
+								'view_actualSize': {
+									name: 'Actual Size', callback: function () {
+										me._RENDERER.setScale(1);
+									}
+								},
+								'sep2_1'         : '---------',
+								'view_fitWindow' : {
+									name: 'Fit Window', callback: function () {
+										me.fitWindow();
+									}
+								},
+								'sep2_2'         : '---------',
+								'view_25'        : {
+									name: '25%', callback: function () {
+										me._RENDERER.setScale(0.25);
+									}
+								},
+								'view_50'        : {
+									name: '50%', callback: function () {
+										me._RENDERER.setScale(0.5);
+									}
+								},
+								'view_75'        : {
+									name: '75%', callback: function () {
+										me._RENDERER.setScale(0.75);
+									}
+								},
+								'view_100'       : {
+									name: '100%', callback: function () {
+										me._RENDERER.setScale(1);
+									}
+								},
+								'view_150'       : {
+									name: '150%', callback: function () {
+										me._RENDERER.setScale(1.5);
+									}
+								},
+								'view_200'       : {
+									name: '200%', callback: function () {
+										me._RENDERER.setScale(2);
+									}
+								},
+								'view_300'       : {
+									name: '300%', callback: function () {
+										me._RENDERER.setScale(3);
+									}
+								},
+								'view_400'       : {
+									name: '400%', callback: function () {
+										me._RENDERER.setScale(4);
+									}
+								},
+								'sep2_3'         : '---------',
+								'view_zoomin'    : {
+									name: 'Zoom In', callback: function () {
+										me.zoomIn();
+									}
+								},
+								'view_zoomout'   : {
+									name: 'Zoom Out', callback: function () {
+										me.zoomOut();
+									}
+								}
+							}
+						}
+					}
+				};
+			}
+		});
+	},
+	
+	/**
+	 * 캔버스에 마우스 우클릭 메뉴를 가능하게 한다.
+	 */
+	enableMappingContextMenu: function () {
+		var me = this;
+
+		$.contextMenu({
+			selector: '#' + me._RENDERER.getRootElement().id,
+			build   : function ($trigger, e) {
+				var root = me._RENDERER.getRootGroup();
+				$(me._RENDERER.getContainer()).focus();
+				return {
+					items: {
+						'Math': {
+							name: 'Math',
+							items: {
+								'Max': {
+									name: 'Max', callback: function () {
+									}
+								},
+								'Min' : {
+									name: 'Min', callback: function () {
+									}
+								},
+								'To Number'        : {
+									name: 'To Number', callback: function () {
+									}
+								},
+								'Sum'        : {
+									name: 'Sum', callback: function () {
+									}
+								},
+								'Floor'        : {
+									name: 'Floor', callback: function () {
+									}
+								},
+								'Round'       : {
+									name: 'Round', callback: function () {
+									}
+								},
+								'Ceil'       : {
+									name: 'Ceil', callback: function () {
+									}
+								},
+								'Abs'       : {
+									name: 'Abs', callback: function () {
+									}
+								}
+							}
+						},
+						'String'    : {
+							name: 'String',
+							items: {
+								'Concat': {
+									name: 'Actual Size', callback: function () {
+									}
+								},
+								'Replace' : {
+									name: 'Replace', callback: function () {
+									}
+								},
+								'NumberFormat'        : {
+									name: 'NumberFormat', callback: function () {
+									}
+								}
+							}
+						},
+						'XML'     : {
+							name : 'XML',
 							items: {
 								'view_actualSize': {
 									name: 'Actual Size', callback: function () {
@@ -22727,7 +23022,7 @@ OG.handler.EventHandler.prototype = {
                 item.shape.LoopType = loopType;
                 me._RENDERER.redrawShape(item);
             }
-            if(item.shape instanceof OG.shapeHorizontalPoolShape){
+            if(item.shape instanceof OG.shape.HorizontalPoolShape){
                 item.shape.LoopType = loopType;
                 me._RENDERER.redrawShape(item);
             }
