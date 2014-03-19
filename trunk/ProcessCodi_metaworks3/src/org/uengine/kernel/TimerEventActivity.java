@@ -11,16 +11,17 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.Employee;
 import org.uengine.kernel.designer.inputter.CronExpressionInputter;
 import org.uengine.scheduler.SchedulerUtil;
-import org.uengine.util.UEngineUtil;
 
 public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
-	public static final String WAITING_TYPE_PERIOD = "WAIT_PERIOD";
-	public static final String WAITING_TYPE_UNTIL = "WAIT_UNTIL";
+	public static final String WAITING_TYPE_PERIOD 				= "WAIT_PERIOD";
+	public static final String WAITING_TYPE_UNTIL 					= "WAIT_UNTIL";
+	public static final String WAITING_TYPE_UNTIL_WITH_DATE 	= "WAIT_UNTIL_WITH_DATE";
 	public static final String STOP_INSTANCE = "STOP_INSTANCE";
 	public static final String PASS_INSTANCE = "PASS_INSTANCE";
 	
@@ -36,8 +37,8 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 	String duration;
 	@Face(displayName="기간설정", 
 			ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", 
-			options={"for the next occurrance set by 'Cron Expression'", "until given 'WaitUntil'"}, 
-			values={WAITING_TYPE_PERIOD, WAITING_TYPE_UNTIL})
+			options={"for the next occurrance set by 'Cron Expression'","until given 'WaitUntil'","until given 'variable date + WaitUntil'"}, 
+			values={WAITING_TYPE_PERIOD, WAITING_TYPE_UNTIL, WAITING_TYPE_UNTIL_WITH_DATE})
 		public String getDuration() {
 			return duration;
 		}
@@ -79,12 +80,14 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 		if( instanceStop == null ){
 			instanceStop = PASS_INSTANCE;
 		}
-		expression.load(duration);
+		expression.setParentEditorId(parentEditorId);
+		expression.setDuration(duration);
 	}
 	
 	@ServiceMethod( callByContent=true ,target=ServiceMethodContext.TARGET_APPEND, eventBinding="change", bindingFor={"duration"})
 	public Object[] changeDuration() throws Exception{
-		expression.load(duration);
+		expression.setPreLoaded(false);
+		expression.setDuration(duration);
 		return new Object[]{new Refresh(expression)};
 	}
 		
@@ -95,10 +98,18 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 		if( WAITING_TYPE_PERIOD.equals(duration)){
 			Calendar modifyCal = SchedulerUtil.getCalendarByCronExpression(resultExpression);
 			this.addSchedule(instance, this.getTracingTag(), modifyCal, resultExpression);
-		}else if( WAITING_TYPE_UNTIL.equals(duration)){
+		}else if( WAITING_TYPE_UNTIL.equals(duration) || WAITING_TYPE_UNTIL_WITH_DATE.equals(duration)){
 			Calendar modifyCal = Calendar.getInstance();
 			
 			String[] exp = resultExpression.split(" ");
+			if( WAITING_TYPE_UNTIL_WITH_DATE.equals(duration) ){
+				// 프로세스 변수
+				String srcVariableName = exp[4];
+				Object val = instance.getBeanProperty(srcVariableName);
+				if( val != null && val instanceof Calendar){
+					modifyCal = (Calendar)val;
+				}
+			}
 			int minutes = Integer.parseInt(exp[0]) ; 
 			int hours = Integer.parseInt(exp[1]) ;
 			int days = 0;
@@ -136,7 +147,7 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 		ResultSet rs = null;
 		String sqlOldSchDelete =  "DELETE FROM SCHEDULE_TABLE WHERE INSTID = ? AND TRCTAG = ? ";
 		String sqlSEQ = "SELECT MAX(SCHE_IDX) FROM SCHEDULE_TABLE";
-		String sql = " INSERT INTO SCHEDULE_TABLE(SCHE_IDX, INSTID, TRCTAG, STARTDATE, expression) VALUES(?, ?, ?, ?, ?, ?) "; 
+		String sql = " INSERT INTO SCHEDULE_TABLE(SCHE_IDX, INSTID, TRCTAG, STARTDATE, expression, newInstance,defId,GLOBALCOM) VALUES(?, ?, ?, ?, ?, ?, ?, ?) "; 
         
 		try {
 			conn = instance.getProcessTransactionContext().getConnection();
@@ -156,18 +167,30 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 			pstmt.executeUpdate();
 			pstmt.close();
 			
-			String newInstance = "0";
+			int newInstance = 0;
 			if( this.getIncomingTransitions().size() == 0 ){
 				// TODO intermidediate 일 경우에는 incomming이 없고, 엑티비티안쪽에서 작용하는 것이라 새로운 인스턴스를 발행하는게 아니라 다른 방식이 필요함 
-				newInstance = "1";
+				newInstance = 1;
 			}
-						
+			String globalcom = null;
+			ActivityReference ref =instance.getProcessDefinition().getInitiatorHumanActivityReference(instance.getProcessTransactionContext());
+			Activity humanActivity = ref.getActivity();
+			if( humanActivity != null ){
+				RoleMapping rm = instance.getRoleMapping(((HumanActivity)humanActivity).getRole().getName());
+				Employee emp = new Employee();
+				emp.setEmpCode(rm.getEndpoint());
+				globalcom = emp.databaseMe().getGlobalCom();
+			}
+			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, max == 0 ? 1 : max + 1);
 			pstmt.setString(2, instance.getInstanceId());
 			pstmt.setString(3, tracingTag);
 			pstmt.setTimestamp(4, new Timestamp(modifyCal.getTimeInMillis()));
 			pstmt.setString(5, expression);
+			pstmt.setInt(6, newInstance);
+			pstmt.setString(7, instance.getProcessDefinition().getId());
+			pstmt.setString(8, globalcom);
 			pstmt.executeUpdate();
 			
 		} catch (Exception e) {

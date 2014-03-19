@@ -8,6 +8,9 @@ public class SchedulerItem {
 	private String tracingTag;
 	private Timestamp startDate;
 	private String expression;
+	private boolean newInstance;
+	private String defId;
+	private String globalCom;
 	
 	public int getIdx() {
 		return idx;
@@ -49,4 +52,26 @@ public class SchedulerItem {
 		this.expression = expression;
 	}
 
+	public boolean isNewInstance() {
+		return newInstance;
+	}
+
+	public void setNewInstance(boolean newInstance) {
+		this.newInstance = newInstance;
+	}
+	
+	public String getDefId() {
+		return defId;
+	}
+
+	public void setDefId(String defId) {
+		this.defId = defId;
+	}
+
+	public String getGlobalCom() {
+		return globalCom;
+	}
+	public void setGlobalCom(String globalCom) {
+		this.globalCom = globalCom;
+	}
 }

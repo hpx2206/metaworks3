@@ -16,6 +16,7 @@ import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.IDAO;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,7 +135,15 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		public void setCmTrgr(String cmTrgr) {
 			this.cmTrgr = cmTrgr;
 		}
-
+		
+	boolean isScheduled;
+		public boolean getIsScheduled() {
+			return isScheduled;
+		}
+		public void setIsScheduled(boolean isScheduled) {
+			this.isScheduled = isScheduled;
+		}
+		
 	public void createRoleDef() throws Exception {
 		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(defId);
 		for(org.uengine.kernel.Role role : definition.getRoles()){
@@ -174,6 +183,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	}
 	
 	public Object[] remove() throws Exception {
+		// 스케쥴 테이블에 데이터가 있는지 확인하여 지움
+		String sql = "DELETE FROM SCHEDULE_TABLE WHERE defId = ?defId AND GLOBALCOM = ?globalcom";
+        IDAO dao = Database.sql(IDAO.class, sql);
+        dao.set("defId"	, this.getDefId());
+        dao.set("globalcom"	, this.getComCode());
+        dao.update();
+        
 		deleteDatabaseMe();
 		
 		ProcessMapList processMapList = new ProcessMapList();

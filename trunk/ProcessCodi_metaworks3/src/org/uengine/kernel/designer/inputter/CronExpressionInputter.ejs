@@ -38,6 +38,13 @@
                     <td><%= fields.dayOfMonth.here() %></td>
                     <td><%= fields.month.here() %></td>
                 </tr>
+                <% if( value.duration == 'WAIT_UNTIL_WITH_DATE' ){ %>
+                    <tr>
+                        <th>프로세스 변수 선택</th>
+                        <td colspan="2"><%= fields.variableDate.here() %></td>
+                        <td></td>
+                    </tr>
+                <% } %>
             </table>
     <% } %>
 <% } %>

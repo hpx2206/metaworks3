@@ -18,11 +18,15 @@ import org.quartz.StatefulJob;
 import org.uengine.codi.CodiProcessManagerBean;
 import org.uengine.codi.MetaworksUEngineSpringConnectionAdapter;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.model.IEmployee;
+import org.uengine.codi.mw3.model.RoleMappingPanel;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ProcessInstance;
+import org.uengine.kernel.RoleMapping;
 import org.uengine.kernel.TimerEventActivity;
 import org.uengine.kernel.WaitActivity;
-import org.uengine.scheduler.SchedulerUtil;
 
 
 public class WaitJob implements StatefulJob {
@@ -34,8 +38,6 @@ public class WaitJob implements StatefulJob {
 		TransactionContext tx = null;
 		
 		try{
-			Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
-			
 			connectionFactory = (SpringConnectionFactory) context.getJobDetail().getJobDataMap().get("connectionFactory");
 			
 			tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing.
@@ -52,9 +54,6 @@ public class WaitJob implements StatefulJob {
 			pm.setAutoCloseConnection(false);
 			pm.setManagedTransaction(true);
 			
-			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(null, null, false);
-			Thread.currentThread().setContextClassLoader(clForSession);
-			
 			Calendar now = Calendar.getInstance();
 			
 			List<SchedulerItem> schedulerItems = this.getAllSchedule();
@@ -63,6 +62,9 @@ public class WaitJob implements StatefulJob {
 				if (!(item.getStartDate().getTime() <= now.getTimeInMillis())) {
 					continue;
 				}
+				
+				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(null, item.getGlobalCom(), false);
+				Thread.currentThread().setContextClassLoader(clForSession);
 	
 				ProcessInstance instance = null;
 				
@@ -119,35 +121,38 @@ public class WaitJob implements StatefulJob {
 						
 						String status = wa.getStatus(instance);
 						if (Activity.STATUS_RUNNING.equals(status) || Activity.STATUS_TIMEOUT.equals(status)) {
-							tx.addTransactionListener(new TransactionListener() {
-
-								public void beforeRollback(TransactionContext tx) throws Exception {
+							
+							boolean isUpdate = false;
+							Calendar modifyCal = null;
+							if( item.getExpression() != null ){
+								modifyCal = SchedulerUtil.getCalendarByCronExpression(item.getExpression());
+								if (modifyCal.getTimeInMillis() >= now.getTimeInMillis()) {
+									// 다음 스케쥴이 존재한다면 지우지 않고, update를 해준다.
+									isUpdate = true;
 								}
-
-								public void beforeCommit(TransactionContext tx) throws Exception {
-									boolean isUpdate = false;
-									Calendar modifyCal = null;
-									if( item.getExpression() != null ){
-										Calendar now = Calendar.getInstance();
-										modifyCal = SchedulerUtil.getCalendarByCronExpression(item.getExpression());
-										if (modifyCal.getTimeInMillis() >= now.getTimeInMillis()) {
-											// 다음 스케쥴이 존재한다면 지우지 않고, update를 해준다.
-											isUpdate = true;
-										}
-									}
-									if( isUpdate ){
-										updateSchedule(item.getIdx(), modifyCal);
-									}else{
-										deleteSchedule(item.getIdx());
-									}
-								}
-
-								public void afterRollback(TransactionContext tx) throws Exception {
-								}
-
-								public void afterCommit(TransactionContext tx) throws Exception {
-								}
-							});
+							}
+							String instId = item.getInstanceId();
+							if(item.isNewInstance() && isUpdate){
+								instId = pm.initializeProcess(instance.getProcessDefinition().getId());
+								RoleMapping rm = instance.getRoleMapping("Initiator");
+								rm.setName("Initiator");
+								pm.putRoleMapping(instId, rm);
+								
+								Session codiSession = new Session();
+								IEmployee emp = new Employee();
+								emp.setEmpCode(rm.getEndpoint());
+								emp.select();
+								codiSession.setUser(emp.getUser());
+								codiSession.setEmployee(emp);
+								
+								RoleMappingPanel roleMappingPanel = new RoleMappingPanel(pm, instance.getProcessDefinition().getId(), codiSession);
+								roleMappingPanel.putRoleMappings(pm, instId);
+								pm.executeProcess(instId);
+							}else if( isUpdate ){
+								updateSchedule(item.getIdx(), modifyCal);
+							}else{
+								deleteSchedule(item.getIdx());
+							}
 							
 							isError = false;
 							
@@ -212,6 +217,8 @@ public class WaitJob implements StatefulJob {
             sql.append("	schedule_table.TRCTAG, "); 
             sql.append("	schedule_table.STARTDATE, "); 
             sql.append("	schedule_table.expression, "); 
+            sql.append("	schedule_table.newInstance, "); 
+            sql.append("	bpm_procinst.INITCOMCD, "); 
             sql.append("	bpm_procinst.STATUS, "); 
             sql.append("	bpm_procinst.ISDELETED "); 
             sql.append("FROM schedule_table JOIN bpm_procinst ON schedule_table.INSTID = bpm_procinst.INSTID "); 
@@ -229,6 +236,8 @@ public class WaitJob implements StatefulJob {
             	item.setTracingTag(rs.getString("TRCTAG"));
             	item.setStartDate(rs.getTimestamp("STARTDATE"));
             	item.setExpression(rs.getString("expression"));
+            	item.setNewInstance(rs.getInt("newInstance") == 1 ? true : false);
+            	item.setGlobalCom(rs.getString("INITCOMCD"));
             	schedulerItems.add(item);
             }
 
