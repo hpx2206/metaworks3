@@ -1,5 +1,42 @@
 <%
 	if(value){
+		var type_icon;
+		
+		if(value.type=='file'){
+			type_icon	= "icon-attachment"		
+		}else if(value.type=='memo'){
+			type_icon	= "icon-newspaper"
+		}else if(value.type=='src'){
+			type_icon	= "icon-code"
+		}else if(value.type=='remoteConference'){
+			type_icon	= "icon-screen"
+		}
+		
+		
+		var status_icon;
+		
+		if(value.status=='COMPLETED'){
+			status_icon	= "icon-checkmark"		
+		}else if(value.status=='SUSPENDED'){
+			status_icon	= "icon-pause2"
+		}else if(value.status=='STOPEED'){
+			status_icon	= "icon-stop2"
+		}else if(value.status=='CANCELLED'){
+			status_icon	= "icon-backward2"
+		}else if(value.status=='DELEGATED'){
+			status_icon	= "icon-loop2"
+		}else if(value.status=='NEW'){
+			status_icon	= "icon-play3"
+		}else if(value.status=='RESERVED'){
+			status_icon	= "icon-checkmark2"
+		}else if(value.status=='REFERENCE'){
+			status_icon	= "icon-arrow-up-right2"
+		}else if(value.status=='DRAFT'){
+			status_icon	= "icon-pen"
+		}else if(value.status=='COMMENTED'){
+			status_icon	= "icon-bubble"
+		}
+		
 		if(value.more){
 %>
 	<div id="moreWorkDiv">
@@ -78,12 +115,12 @@
 <%
 			if('comment' != type){
 %>	
-										<span style="position:relative; height:38px; float:left; margin-right:10px;padding-top:3px;">										
-											<img src="images/waveStyle/wih<%=value.type%>.png">
+										<span style="position:relative; height:38px; float:left; margin-right:10px;">										
+											<span class="<%=type_icon%>" style="color: #7f8c8d; font-size: 20px" ></span>
 <%
-				if('process' == type) {
+				if('process' == type) {					
 %>
-											<span style="position:absolute; top:0px; left:0px;"><img src="images/activity_status/i_status_<%=value.status%>.png" style="margin-top:1px;" title="<%=value.status%>"></span>										
+											<span class="<%=status_icon%>" style="position:absolute; top:0px; left:0px; color: #7f8c8d; font-size: 20px" ></span>										
 <%
 				}
 %>	
