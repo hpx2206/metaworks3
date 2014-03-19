@@ -22,8 +22,8 @@ public class SignUp {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
-	public Object[] goLogin(){
-		return new Object[]{new Login()};
+	public Object goLogin(){
+		return new Login();
 	}
 	
 }
