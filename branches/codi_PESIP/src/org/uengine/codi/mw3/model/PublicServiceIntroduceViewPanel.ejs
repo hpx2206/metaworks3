@@ -1,108 +1,150 @@
+
+
 <% if(value) { %>
 
-    <div class="form_table">
+    <div class="form_table" style="border:solid #000 1px;">
     
-        <table id="detail_<%=objectId%>" border="1" cellspacing="0" summary="">
+        <table id="detail_<%=objectId%>" border="0" cellspacing="0" summary="">
         
             <tbody>
             
                 <tr>
-                    <td>
-                        <B><%=mw3.localize("$businessName")%></B>
-                        <%=fields.itemName.here()%>              
-                        
+                    <td style="width:20%; border-right:solid #000 1px;">
+                        <B>공공서비스 명</B>
                     </td>
-                    
-                    <td width="10%">
-                        <B><%=mw3.localize("$profileNo")%></B>
-                        <%=fields.itemProfileNo.here()%>
+                    <td width="80%">
+                         디지털 예산 회계 시스템 (dBrain)
                     </td>
                 </tr>
                 
                 <tr>
-                    <td>
-                        <B><%=mw3.localize("$businessDescription")%></B>
-                        <% if(value.itemDescription == null) { %>
-                            
-                            &nbsp;
-                            
-                        <% } else { %>
-                       
-                            <%=fields.itemDescription.here()%>
-                        
-                        <% } %>
+                   <td style="width:20%; border-right:solid #000 1px;">
+                        <B>공공서비스 명</B>
                     </td>
-                    
-                    <td>
-                        <B><%=mw3.localize("$businessMotivation")%></B>
-                        <% if(value.itemBusinessMotivation == null) { %>
-                            
-                            &nbsp;
-                            
-                        <% } else { %>
-                       
-                            <%=fields.itemBusinessMotivation.here()%>
-                        
-                        <% } %>
+                    <td width="80%">
+                         디지털 예산 회계 시스템 (dBrain)
                     </td>
-                        
                 </tr>
                 
+               <tr>
+	               <table cellspacing="0" >
+	               		<tr>
+		                   <td style="width:20%; border-right:solid #000 1px;">
+		                        <B>구축기간</B>
+		                    </td>
+		                    <td width="30%">
+		                         디지털 예산 회계 시스템 (dBrain)
+		                    </td>
+		                   <td style="width:20%; border-right:solid #000 1px;border-left:solid #000 1px;">
+		                        <B>예산</B>
+		                    </td>
+		                     <td width="30%">
+		                         디지털 예산 회계 시스템 (dBrain)
+		                    </td>
+	                    </tr>
+	                    <tr>
+		                   <td colspan="2" style="width:10%;">
+		                        <B>서비스 개요</B>
+		                    </td>
+		                   <td style="width:20%; border-right:solid #000 1px;border-left:solid #000 1px;">
+		                        <B>예산</B>
+		                    </td>
+		                     <td width="30%">
+		                         디지털 예산 회계 시스템 (dBrain)
+		                    </td>
+	                    </tr>
+	                    <tr>
+		                   <table cellspacing="0">
+		                   		<tr>
+		                   			<td width="50%" rowspan="6" style="border-right:solid #000 1px;">테스트</td>
+		                   			<td width="10%" rowspan="2" style="border-right:solid #000 1px;">기대효과</td>
+		                   			<td width="10%" style="border-right:solid #000 1px;">공공</td>
+		                   			<td width="30%">국제지식재산원</td>
+		                   		</tr>
+		                   		<tr>
+	                   				<td width="10%" style="border-right:solid #000 1px;">민간</td>
+		                   			<td width="30%">민간중심국제지식재산원</td>
+		                   		</tr>
+		                   		<tr>
+		                   			<td width="10%" rowspan="4" style="border-right:solid #000 1px;">담당자</td>
+		                   			<td width="10%" style="border-right:solid #000 1px;">소속기관</td>
+		                   			<td width="30%">국제지식재산원</td>
+		                   		</tr>
+		                   		<tr>
+		                   			<td width="10%" style="border-right:solid #000 1px;">소속기관</td>
+		                   			<td width="30%">국제지식재산원</td>
+		                   		</tr>
+		                   		<tr>
+		                   			<td width="10%" style="border-right:solid #000 1px;">소속기관</td>
+		                   			<td width="30%">국제지식재산원</td>
+		                   		</tr>
+		                   		<tr>
+		                   			<td width="10%" style="border-right:solid #000 1px;">소속기관</td>
+		                   			<td width="30%">국제지식재산원</td>
+		                   		</tr>
+		                   </table>
+	                    </tr>
+	                </table>
+                </tr>
                 <tr>
-                    <td colspan="2">
-                        <B><%=mw3.localize("$expectedEffect")%></B></p>
-                        
-                        <tr>
-                            <td>
-                                <% if(value.itemGovExpectedEffect == null) { %>
-                                    
-                                    <B> - 정 부</B>&nbsp;
-                                    
-                                <% } else { %>
-                                    <B> - 정 부</B> <%=fields.itemGovExpectedEffect.here()%>
-                                    
-                                <% } %>
-                            </td>
-                            
-                            <td>
-                                <% if(value.itemPriExpectedEffect == null) { %>
-                                    
-                                    <B> - 민 간</B> &nbsp;
-                                    
-                                <% } else { %>
-                                    <B> - 민 간</B> <%=fields.itemPriExpectedEffect.here()%>
-                                    
-                                <% } %>
-                            </td>
-                        </tr>
-                        
-                    </td>                
-                </tr>
-                
-                <tr>
-                    <td colspan="2">
-                        <B> CSF </B></p>
-                        <% if(value.itemCSF == null) { %>
-                            
-                            &nbsp;
-                            
-                        <% } else { %>
-                       
-                            <%=fields.itemCSF.here()%>
-                        
-                        <% } %>
-                        
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td colspan="2">
-                        <B><%=mw3.localize("$modelConcept")%></B></p>
-                        <%=fields.webEditor.here({htmlAttr:{style:'width: 1000px'}})%>
-                    </td>
-                    
-                </tr>
-                
+                	<table cellspacing="0">
+	                	<tr>
+							<td width="20%" rowspan="4" style="border-right:solid #000 1px;">구축이력</td>
+							<td width="5%" style="border-right:solid #000 1px;">번호</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%">비고</td>
+	             	   </tr>
+						<tr>
+							<td width="5%" style="border-right:solid #000 1px;">번호</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%">비고</td>
+						</tr>
+						<tr>
+							<td width="5%" style="border-right:solid #000 1px;">번호</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%">비고</td>			
+						</tr>       
+					</table>
+				</tr>  
+ 				 <tr>
+                	<table cellspacing="0">
+	                	<tr>
+							<td width="20%" rowspan="4" style="border-right:solid #000 1px;">관련서비스</td>
+							<td width="5%" style="border-right:solid #000 1px;">번호</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%" >비고</td>
+	             	   </tr>
+						<tr>
+							<td width="5%" style="border-right:solid #000 1px;">1</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%" >비고</td>
+						</tr>
+						<tr>
+							<td width="5%" style="border-right:solid #000 1px;">2</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%" >비고</td>			
+						</tr>     
+						<tr>
+							<td width="5%" style="border-right:solid #000 1px;">3</td>
+							<td width="25%" style="border-right:solid #000 1px;">사업명</td>
+							<td width="10%" style="border-right:solid #000 1px;">연도</td>
+							<td width="30%" style="border-right:solid #000 1px;">기업명</td>
+							<td width="10%" >비고</td>			
+						</tr> 						  
+					</table>
+				</tr>         				       
             </tbody>
             
         </table>
