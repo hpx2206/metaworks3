@@ -330,7 +330,7 @@ public class CloudIDE extends Application {
 		modalWindow.setPanel(localeManager.getString("$SaveCompleteMessage"));
 		modalWindow.getButtons().put("$Confirm", new Refresh());		
 		*/
-		
+		editor.session = this.session;
 		return new Object[]{ new ToAppend(new Editor(this.getCurrentEditorId()), editor.save()) };
 	}
 
