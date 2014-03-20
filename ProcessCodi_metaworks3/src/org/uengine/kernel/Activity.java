@@ -1562,7 +1562,11 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			Transition ts = (Transition)it.next();
 			Activity beforeActivity = ts.getSourceActivity();
 			if(beforeActivity instanceof EventActivity && beforeActivity instanceof MessageListener ){
-				return true;
+				if( "STOP_ACTIVITY".equals(((EventActivity)beforeActivity).getActivityStop()) ){
+					return false;
+				}else{
+					return true;
+				}
 			}else{
 				check = beforeActivity.checkStartsWithEventActivity();
 			}
