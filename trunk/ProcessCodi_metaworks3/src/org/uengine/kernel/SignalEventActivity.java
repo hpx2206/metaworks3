@@ -25,6 +25,7 @@ public class SignalEventActivity  extends EventActivity implements MessageListen
 		if( this.getName() == null ){
 			setName(this.getClass().getSimpleName());
 		}
+		setActivityStop(PASS_ACTIVITY);
 	}
 
 	@Override

@@ -80,7 +80,7 @@ public class FlowActivity extends ComplexActivity {
 		// for each events:   getProcessDefinition().addMessageListener(instance, eventActivity);
 		for(Activity childActivity: getChildActivities()){
 			if(childActivity instanceof EventActivity && childActivity instanceof MessageListener 
-					&& childActivity.getIncomingTransitions() != null && childActivity.getIncomingTransitions().size() == 0){
+					&& (childActivity.getIncomingTransitions() == null || childActivity.getIncomingTransitions().size() == 0)){
 				getProcessDefinition().addMessageListener(instance, (MessageListener)childActivity);
 			}
 		}
