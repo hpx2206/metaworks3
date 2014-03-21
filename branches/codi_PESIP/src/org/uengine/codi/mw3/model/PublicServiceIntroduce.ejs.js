@@ -18,14 +18,14 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
         options['htmlAttr'] =  {'style': 'cursor: default;' };
         
         if(this.object.sectors.length == 0) 
-            $('#introTable_'+this.objectId+' tr:last').after('<tr><td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td></tr>');
+            $('#introTable_'+this.objectId+' tr:last').after('<tr><th width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</th></tr>');
         
         else {
         
             for(var i = 0; i <= this.object.sectors.length; i++) {
                 
                 if(i == 0) {
-                    $('#introTable_'+this.objectId+' tr:last').after('<tr><td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td></tr>');
+                    $('#introTable_'+this.objectId+' tr:last').after('<tr><th width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</th></tr>');
                     
                 } else {
                 
@@ -33,7 +33,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     // 당연 1이 증가해서 온다. 그런데 object의 배열은 0부터 시작한다.
                     // 그래서 강제로 -1을 하여 그려준다. 문제는 없다.
                     var sector = this.object.sectors[i-1];
-                    $('#introTable_'+this.objectId+' tr:last td:last').after('<td class="item" sector="'+sector.id+'" service="'+appendobject.id+'" width="10%"></td>');
+                    $('#introTable_'+this.objectId+' tr:last th:last').after('<td class="item" sector="'+sector.id+'" service="'+appendobject.id+'" width="10%"></td>');
                     
                 }
             }
@@ -55,7 +55,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
         options['htmlAttr'] =  {'style': 'cursor: default;' };
         
         if(this.object.services.length == 0) {
-            $('#introTable_'+this.objectId+' tr:first td:last').after('<td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td>');
+            $('#introTable_'+this.objectId+' tr:first th:last').after('<th width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</th>');
         }
         
         else {
@@ -63,7 +63,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
             for(var i = 0; i <= this.object.services.length; i++) {
                 
                 if(i == 0) { 
-                    $('#introTable_'+this.objectId+' tr:first td:last').after('<td width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</td>');
+                    $('#introTable_'+this.objectId+' tr:first th:last').after('<th width="10%">'+mw3.locateObject(appendobject, appendobject.__className, null, options)+'</th>');
                
                 } else {
                     
@@ -71,7 +71,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     // 당연 1이 증가해서 온다. 그런데 object의 배열은 0부터 시작한다.
                     // 그래서 강제로 -1을 하여 그려준다. 문제는 없다.
                     var service = this.object.services[i-1];
-                    $('#introTable_'+this.objectId+' tr:eq('+i+') td:last').after('<td class="item" sector="'+appendobject.id+'" service="'+service.id+'" width="10%"></td>');
+                    $('#introTable_'+this.objectId+' tr:eq('+i+') th:last').after('<td class="item" sector="'+appendobject.id+'" service="'+service.id+'" width="10%"></td>');
                 }
                 
             }
@@ -107,7 +107,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                         var options = {};
                         options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer;' };
                     
-                        $('#introTable_'+this.objectId+' tr:eq('+(j+1)+') td:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
+                        $('#introTable_'+this.objectId+' tr:eq('+(j+1)+') th:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
                         
                     }
                     

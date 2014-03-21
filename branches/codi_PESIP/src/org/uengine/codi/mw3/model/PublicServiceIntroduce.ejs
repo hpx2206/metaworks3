@@ -1,9 +1,9 @@
 <% if(value) { %>
     
     <!-- 이 표는 컬럼과 서비스가 무조건 1개 이상이 있다고 가정하고 만들었음 (for문을 -1로 시작하는 이유). 행여나 없는 상태가 있으면 그때 로직생성 -->
-    <div class="form_table">
+    <div>
     
-        <table id="introTable_<%=objectId%>" border="1" cellspacing="0" summary="">
+        <table id="introTable_<%=objectId%>" width="100%" class="tbl_type_brw" border="1" cellspacing="0" summary="">
         
             <tbody>
             
@@ -11,11 +11,11 @@
                 <tr>
                     <% if(i == -1) { %>
                     
-                        <td width="10%"></td>
+                        <th width="10%"></td>
                         
                     <% } else { %>
                     
-                        <td width="10%">
+                        <th width="10%">
                             
                             <% var options = {};
                                options['htmlAttr'] =  {'style': 'cursor: default;' }; %>
@@ -23,7 +23,7 @@
                             <%=mw3.locateObject(value.services[i], value.services[i].__className, null, options)%>
                             <% mw3.addBeanProperty(value.__objectId, '.services[' + i + ']'); %>
                             
-                        </td>
+                        </th>
                         
                     <% } 
                         
@@ -31,7 +31,7 @@
                             
                             if(i == -1) { %>
                             
-                                <td width="10%">
+                                <th width="10%">
                                 
                                 <% var options = {};
                                    options['htmlAttr'] =  {'style': 'cursor: default;' }; %>
@@ -39,7 +39,7 @@
                                     <%=mw3.locateObject(value.sectors[j], value.sectors[j].__className, null, options)%>
                                     <% mw3.addBeanProperty(value.__objectId, '.sectors[' + j + ']'); %>
                                     
-                                </td>
+                                </th>
                                 
                             <% } else { %>
                                 
