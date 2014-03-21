@@ -95,7 +95,14 @@ public class OrderInformation extends Database<IOrderInformation> implements IOr
 		public void setCount(Long count) {
 			this.count = count;
 		}
-	
+		
+	String dueDateTime;
+		public String getDueDateTime() {
+			return dueDateTime;
+		}
+		public void setDueDateTime(String dueDateTime) {
+			this.dueDateTime = dueDateTime;
+		}
 		
 // 한번에 모든 값을 처리하는 것을 알게되면 사용...주석처리
 		
