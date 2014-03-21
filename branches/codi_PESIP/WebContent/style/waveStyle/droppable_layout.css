@@ -2602,6 +2602,52 @@ table td.selected{
     background-color: #96ffff
 }
 
+/* 공공서비스 */
+.tbl_type_brw caption {
+	font-size:14px;
+	font-weight:bold;
+	text-align:left;
+	line-height:30px;
+}
+.tbl_type_brw,
+.tbl_type_brw th,
+.tbl_type_brw td { border:0 }
+.tbl_type_brw{border-left:1px solid #C4BD97;border-right:1px solid #C4BD97}
+
+.tbl_type_brw {
+	width:100%;
+	border-bottom:1px solid #C4BD97;
+	font-family:'돋움', dotum;
+	font-size:12px;
+	table-layout:fixed
+}
+.tbl_type_brw th {
+	padding:8px 0 8px;
+	border-top:1px solid #C4BD97;
+	border-right:1px solid #C4BD97;
+	background:#DDD9C3;
+	color:#666;
+	font-weight:bold;
+	text-align:center;
+	vertical-align:middle
+}
+.tbl_type_brw .sub_th { background:#EEECE1;
+	width:40px
+ }
+.tbl_type_brw td {
+	padding:8px 5px 5px 12px;
+	border-top:1px solid #C4BD97;
+	line-height:16px;
+	vertical-align:top
+}
+.tbl_type_brw .align_center { text-align:center; }
+.tbl_type_brw .td_border-right { border-right:1px solid #C4BD97; }
 
 
-
+/*세계지도*/
+.markerInfo{
+	position:absolute;
+	top:500px;
+	left:10px;
+	
+}
