@@ -224,7 +224,7 @@ input.submitFacebook {
 	left: 0;
 }
 
-#green_and_orange_step_menu { margin:0; padding:20px; display:inline-table; list-style:none; }
+#green_and_orange_step_menu { margin:0; padding:15px; display:inline-table; list-style:none; }
 #green_and_orange_step_menu li{ display:inline; float:left; background:url(../../images/signIn/step_orange_green.gif) no-repeat -50px bottom; height:41px; line-height:41px; font-size:18px; font-weight:bold; color:#8F8F8F;padding:0 40px 0 40px; position:relative; }
 #green_and_orange_step_menu li span{ margin:0px; z-index:2000; background:url(../../images/signIn/step_orange_green.gif) no-repeat left bottom; display:block; position:absolute; height:41px; line-height:41px; width:13px; top:0; left:-10px; padding:0;}
 #green_and_orange_step_menu li.inprogress { background-position:-50px 0px} 
