@@ -41,6 +41,9 @@ public interface IOrderInformation extends IDAO{
 	public Long getCount();
 	public void setCount(Long count);
 	
+	public String getDueDateTime();
+	public void setDueDateTime(String dueDateTime);
+	
 //	public IOrderInformation findOrderInfo() throws Exception;
 	public IOrderInformation findDistinctOrderInfo() throws Exception;
 	public IOrderInformation loadDetailOrderInfo() throws Exception;
