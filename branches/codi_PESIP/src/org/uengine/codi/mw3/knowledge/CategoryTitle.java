@@ -174,7 +174,7 @@ public class CategoryTitle  implements ContextAware{
 						throw new UEngineException("$contentError");
 				}
 					
-				publicServiceIntroduceItem.setContentName(this.getContentName());
+				publicServiceIntroduceItem.setServiceName(this.getContentName());
 				publicServiceIntroduceItem.setSectorId(this.getSectorId());
 				publicServiceIntroduceItem.setServiceId(this.getServiceId());
 				// tab id를 통해 item 불러와야 해서 여기도 getTab에 의존..
