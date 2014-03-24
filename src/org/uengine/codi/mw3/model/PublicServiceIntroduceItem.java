@@ -62,62 +62,123 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		public void setProfileNo(Long profileNo) {
 			this.profileNo = profileNo;
 		}
-
-	String contentName;
-		public String getContentName() {
-			return contentName;
+		
+	String serviceName;
+		public String getServiceName() {
+			return serviceName;
 		}
-		public void setContentName(String contentName) {
-			this.contentName = contentName;
-		}
-
-	String contentDescription;
-		public String getContentDescription() {
-			return contentDescription;
-		}
-		public void setContentDescription(String contentDescription) {
-			this.contentDescription = contentDescription;
+		public void setServiceName(String serviceName) {
+			this.serviceName = serviceName;
 		}
 		
-	String govExpectedEffect;
-		public String getGovExpectedEffect() {
-			return govExpectedEffect;
+		
+	String serviceIntroduce;
+		public String getServiceIntroduce() {
+			return serviceIntroduce;
 		}
-		public void setGovExpectedEffect(String govExpectedEffect) {
-			this.govExpectedEffect = govExpectedEffect;
+		public void setServiceIntroduce(String serviceIntroduce) {
+			this.serviceIntroduce = serviceIntroduce;
+		}
+
+	String constructTerm;
+		public String getConstructTerm() {
+			return constructTerm;
+		}
+		public void setConstructTerm(String constructTerm) {
+			this.constructTerm = constructTerm;
+		}
+
+	String budget;
+		public String getBudget() {
+			return budget;
+		}
+		public void setBudget(String budget) {
+			this.budget = budget;
+		}
+
+	String serviceSummary;
+		public String getServiceSummary() {
+			return serviceSummary;
+		}
+		public void setServiceSummary(String serviceSummary) {
+			this.serviceSummary = serviceSummary;
 		}
 		
-	String priExpectedEffect;
-		public String getPriExpectedEffect() {
-			return priExpectedEffect;
+	String servicePurpose;
+		public String getServicePurpose() {
+			return servicePurpose;
 		}
-		public void setPriExpectedEffect(String priExpectedEffect) {
-			this.priExpectedEffect = priExpectedEffect;
+		public void setServicePurpose(String servicePurpose) {
+			this.servicePurpose = servicePurpose;
 		}
-
-	String businessMotivation;
-		public String getBusinessMotivation() {
-			return businessMotivation;
+		
+	String publicExpectation;
+		public String getPublicExpectation() {
+			return publicExpectation;
 		}
-		public void setBusinessMotivation(String businessMotivation) {
-			this.businessMotivation = businessMotivation;
-		}
-	
-	String modelConcept;
-		public String getModelConcept() {
-			return modelConcept;
-		}
-		public void setModelConcept(String modelConcept) {
-			this.modelConcept = modelConcept;
+		public void setPublicExpectation(String publicExpectation) {
+			this.publicExpectation = publicExpectation;
 		}
 
-	String CSF;
-		public String getCSF() {
-			return CSF;
+	String civilianExpectation;
+		public String getCivilianExpectation() {
+			return civilianExpectation;
 		}
-		public void setCSF(String cSF) {
-			CSF = cSF;
+		public void setCivilianExpectation(String civilianExpectation) {
+			this.civilianExpectation = civilianExpectation;
 		}
+
+	String managerAttachOrganization;
+		public String getManagerAttachOrganization() {
+			return managerAttachOrganization;
+		}
+		public void setManagerAttachOrganization(String managerAttachOrganization) {
+			this.managerAttachOrganization = managerAttachOrganization;
+		}
+
+	String managerName;
+		public String getManagerName() {
+			return managerName;
+		}
+		public void setManagerName(String managerName) {
+			this.managerName = managerName;
+		}
+
+	String managerNumber;
+		public String getManagerNumber() {
+			return managerNumber;
+		}
+		public void setManagerNumber(String managerNumber) {
+			this.managerNumber = managerNumber;
+		}
+
+	String managerEmail;
+		public String getManagerEmail() {
+			return managerEmail;
+		}
+		public void setManagerEmail(String managerEmail) {
+			this.managerEmail = managerEmail;
+		}
+
+	String constructCareer;
+		public String getConstructCareer() {
+			return constructCareer;
+		}
+		public void setConstructCareer(String constructCareer) {
+			this.constructCareer = constructCareer;
+		}
+
+	String relationService;
+		public String getRelationService() {
+			return relationService;
+		}
+		public void setRelationService(String relationService) {
+			this.relationService = relationService;
+		}
+		
+		
+		
+		
 		
 	public IPublicServiceIntroduceItem loadItem(String codeId) throws Exception{
 		StringBuffer sb = new StringBuffer();
@@ -132,20 +193,20 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		return items;
 	}
 	
-	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, String contentName) throws Exception{
+	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, String serviceName) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select *");
 		sb.append(" from public_introduce_item");
 		sb.append(" where tab=?tab");
 		sb.append(" and sectorId=?sectorId");
 		sb.append(" and serviceId=?serviceId");
-		sb.append(" and contentName=?contentName");
+		sb.append(" and serviceName=?serviceName");
 		
 		IPublicServiceIntroduceItem item = (IPublicServiceIntroduceItem) sql(IPublicServiceIntroduceItem.class, sb.toString());
 		item.setTab(codeId);
 		item.setSectorId(sectorId);
 		item.setServiceId(serviceId);
-		item.setContentName(contentName);
+		item.setServiceName(serviceName);
 		item.select();
 		
 		return item;
@@ -164,69 +225,23 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		publicServiceIntroduceViewPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		// viewPanel이 객체 단위가 아니므로 DB에 연결하여 각각의 값을 알아내어 set
 		IPublicServiceIntroduceItem iPublicServiceIntroduceItem = new PublicServiceIntroduceItem();
-		iPublicServiceIntroduceItem = loadSelectedItem(this.getTab(), this.getSectorId(), this.getServiceId(), this.getContentName());
+		iPublicServiceIntroduceItem = loadSelectedItem(this.getTab(), this.getSectorId(), this.getServiceId(), this.getServiceName());
+
+		if(publicServiceIntroduceViewPanel.getPublicServiceIntroduceItem() == null) {
+			publicServiceIntroduceViewPanel.setPublicServiceIntroduceItem(new PublicServiceIntroduceItem());
+		}
 		
 		while(iPublicServiceIntroduceItem.next()) {
-			publicServiceIntroduceViewPanel.setItemId(iPublicServiceIntroduceItem.getItemId());
-			publicServiceIntroduceViewPanel.setItemSectorId(iPublicServiceIntroduceItem.getSectorId());
-			publicServiceIntroduceViewPanel.setItemServiceId(iPublicServiceIntroduceItem.getServiceId());
-			publicServiceIntroduceViewPanel.setItemTabId(iPublicServiceIntroduceItem.getTab());
-			publicServiceIntroduceViewPanel.setItemName(iPublicServiceIntroduceItem.getContentName());
-			publicServiceIntroduceViewPanel.setItemProfileNo(iPublicServiceIntroduceItem.getProfileNo());
-			// null 이면 MetaworksContext edit 이 안먹는다.. "" 주어서 해결하자.
-			if(iPublicServiceIntroduceItem.getContentDescription() == null) { 
-				publicServiceIntroduceViewPanel.setItemDescription("");
-				
-			} else {
-				publicServiceIntroduceViewPanel.setItemDescription(iPublicServiceIntroduceItem.getContentDescription());
-			
-			}
-			// motivation도 마찬가지.
-			if(iPublicServiceIntroduceItem.getBusinessMotivation() == null) {
-				publicServiceIntroduceViewPanel.setItemBusinessMotivation("");
-			
-			} else {
-				publicServiceIntroduceViewPanel.setItemBusinessMotivation(iPublicServiceIntroduceItem.getBusinessMotivation());
-			
-			}
-			// effected도 마찬가지.
-			if(iPublicServiceIntroduceItem.getGovExpectedEffect() == null) {
-				publicServiceIntroduceViewPanel.setItemGovExpectedEffect("");
-			
-			} else {
-				publicServiceIntroduceViewPanel.setItemGovExpectedEffect(iPublicServiceIntroduceItem.getGovExpectedEffect());
-			
-			}
-			
-			if(iPublicServiceIntroduceItem.getPriExpectedEffect() == null) {
-				publicServiceIntroduceViewPanel.setItemPriExpectedEffect("");
-				
-			} else {
-				publicServiceIntroduceViewPanel.setItemPriExpectedEffect(iPublicServiceIntroduceItem.getPriExpectedEffect());
-				
-			}
-			// CSF도 마찬가지.
-			if(iPublicServiceIntroduceItem.getCSF() == null) {
-				publicServiceIntroduceViewPanel.setItemCSF("");
-			
-			} else {
-				publicServiceIntroduceViewPanel.setItemCSF(iPublicServiceIntroduceItem.getCSF());
-			
-			}
-			
-			// concept는 webEditor에다가 set
-			if(iPublicServiceIntroduceItem.getModelConcept() == null) {
-				publicServiceIntroduceViewPanel.setItemModelConcept("");
-				
-			} else {
-				publicServiceIntroduceViewPanel.getWebEditor().setContents(iPublicServiceIntroduceItem.getModelConcept());
-			}
-			
-		}	
+			PublicServiceIntroduceItem item = publicServiceIntroduceViewPanel.getPublicServiceIntroduceItem();
+			item.copyFrom(iPublicServiceIntroduceItem);
+			publicServiceIntroduceViewPanel.setPublicServiceIntroduceItem(item);
+		}
 		
-		modalWindow.setTitle(this.getContentName());
-		modalWindow.setWidth(1200);
-		modalWindow.setHeight(850);
+		publicServiceIntroduceViewPanel.load();
+		
+		modalWindow.setTitle(this.getServiceName());
+		modalWindow.setWidth(600);
+		modalWindow.setHeight(450);
 		modalWindow.setPanel(publicServiceIntroduceViewPanel);
 		
 		return new Object[] { modalWindow };
@@ -269,7 +284,7 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 	
 	public ArrayList<String> findContentName(String codeId, String sectorId, String serviceId) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select contentName");
+		sb.append("select serviceName");
 		sb.append(" from public_introduce_item");
 		sb.append(" where tab=?tab");
 		sb.append(" and sectorId=?sectorId");
@@ -284,7 +299,7 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		ArrayList<String> contentNameList = new ArrayList<String>();
 		
 		while(contentNames.next()) {
-			contentNameList.add(contentNames.getContentName());
+			contentNameList.add(contentNames.getServiceName());
 		}
 		
 		return contentNameList;
