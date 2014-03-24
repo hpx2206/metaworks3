@@ -88,26 +88,27 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
     },
     
     addItem : function(appendobject){
-    
+        
         for(var i = 0; i < this.object.sectors.length; i++) {
             var sector = this.object.sectors[i];
             
             // sector 의 id 값이 appendobject 의 sectorid 와 같을 때 
             // service 를 검사해야 한다. 
+            
             if(appendobject.sectorId == sector.id) {
             
                 for(var j = 0; j < this.object.services.length; j++) {
                     var service = this.object.services[j];
                     
                     // 그리고 service 까지 같으면 div에 붙인다.
-                    // 그런데 빈 tr, td 와 row, column 들 때문에 i 와 j 값은 항상 1이 작다. 설계를 잘못해서
-                    // 어쩔 수가 없다. + 1 을 해줘야 한다.
                     if(appendobject.serviceId == service.id) {
                        
                         var options = {};
                         options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer;' };
-                    
-                        $('#introTable_'+this.objectId+' tr:eq('+(j+1)+') th:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
+                        
+                        var result = $('#introTable_'+this.objectId+'').find('[sector="'+appendobject.sectorId+'"]').eq(j);
+                        console.log(result);
+                        //$('#introTable_'+this.objectId+' tr:eq('+(j+1)+') th:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
                         
                     }
                     

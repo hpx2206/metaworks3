@@ -1,128 +1,147 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToEvent;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
-import org.uengine.kernel.UEngineException;
 
 public class PublicServiceIntroduceViewPanel {
 	
 	public PublicServiceIntroduceViewPanel() {
 		metaworksContext = new MetaworksContext();
 		
-		webEditor = new WebEditor();
-		webEditor.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		serviceSummary = new WebEditor();
+		serviceSummary.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 	}
 	
-	Long itemId;
-		public Long getItemId() {
-			return itemId;
+	PublicServiceIntroduceItem publicServiceIntroduceItem;
+		public PublicServiceIntroduceItem getPublicServiceIntroduceItem() {
+			return publicServiceIntroduceItem;
 		}
-		public void setItemId(Long itemId) {
-			this.itemId = itemId;
+		public void setPublicServiceIntroduceItem(
+				PublicServiceIntroduceItem publicServiceIntroduceItem) {
+			this.publicServiceIntroduceItem = publicServiceIntroduceItem;
+		}
+
+	String serviceName;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"1", "100"})
+		public String getServiceName() {
+			return serviceName;
+		}
+		public void setServiceName(String serviceName) {
+			this.serviceName = serviceName;
+		}
+	
+	String serviceIntroduce;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"1", "100"})
+		public String getServiceIntroduce() {
+			return serviceIntroduce;
+		}
+		public void setServiceIntroduce(String serviceIntroduce) {
+			this.serviceIntroduce = serviceIntroduce;
+		}
+	
+	String constructTerm;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "30"})
+		public String getConstructTerm() {
+			return constructTerm;
+		}
+		public void setConstructTerm(String constructTerm) {
+			this.constructTerm = constructTerm;
+		}
+
+	String budget;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getBudget() {
+			return budget;
+		}
+		public void setBudget(String budget) {
+			this.budget = budget;
+		}
+
+	String servicePurpose;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getServicePurpose() {
+			return servicePurpose;
+		}
+		public void setServicePurpose(String servicePurpose) {
+			this.servicePurpose = servicePurpose;
 		}
 		
-	String itemSectorId;
-		public String getItemSectorId() {
-			return itemSectorId;
+	String publicExpectation;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getPublicExpectation() {
+			return publicExpectation;
 		}
-		public void setItemSectorId(String itemSectorId) {
-			this.itemSectorId = itemSectorId;
-		}
-
-	String itemServiceId;
-		public String getItemServiceId() {
-			return itemServiceId;
-		}
-		public void setItemServiceId(String itemServiceId) {
-			this.itemServiceId = itemServiceId;
+		public void setPublicExpectation(String publicExpectation) {
+			this.publicExpectation = publicExpectation;
 		}
 		
-	String itemTabId;
-		public String getItemTabId() {
-			return itemTabId;
+	String civilianExpectation;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getCivilianExpectation() {
+			return civilianExpectation;
 		}
-		public void setItemTabId(String itemTabId) {
-			this.itemTabId = itemTabId;
+		public void setCivilianExpectation(String civilianExpectation) {
+			this.civilianExpectation = civilianExpectation;
 		}
-
-	String itemName;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"1", "60"})
-		public String getItemName() {
-			return itemName;
+	
+	String managerAttachOrganization;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getManagerAttachOrganization() {
+			return managerAttachOrganization;
 		}
-		public void setItemName(String itemName) {
-			this.itemName = itemName;
-		}
-
-	String itemDescription;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"7", "60"})
-		public String getItemDescription() {
-			return itemDescription;
-		}
-		public void setItemDescription(String itemDescription) {
-			this.itemDescription = itemDescription;
-		}
-
-	Long itemProfileNo;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"1", "20"})
-		public Long getItemProfileNo() {
-			return itemProfileNo;
-		}
-		public void setItemProfileNo(Long itemProfileNo) {
-			this.itemProfileNo = itemProfileNo;
+		public void setManagerAttachOrganization(String managerAttachOrganization) {
+			this.managerAttachOrganization = managerAttachOrganization;
 		}
 		
-	String itemBusinessMotivation;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"7", "60"})
-		public String getItemBusinessMotivation() {
-			return itemBusinessMotivation;
+	String managerName;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getManagerName() {
+			return managerName;
 		}
-		public void setItemBusinessMotivation(String itemBusinessMotivation) {
-			this.itemBusinessMotivation = itemBusinessMotivation;
+		public void setManagerName(String managerName) {
+			this.managerName = managerName;
+		}
+	
+	String managerNumber;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getManagerNumber() {
+			return managerNumber;
+		}
+		public void setManagerNumber(String managerNumber) {
+			this.managerNumber = managerNumber;
+		}
+	
+	String managerEmail;
+	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"3", "22"})
+		public String getManagerEmail() {
+			return managerEmail;
+		}
+		public void setManagerEmail(String managerEmail) {
+			this.managerEmail = managerEmail;
+		}
+	
+	
+	String constructCareer;
+		public String getConstructCareer() {
+			return constructCareer;
+		}
+		public void setConstructCareer(String constructCareer) {
+			this.constructCareer = constructCareer;
 		}
 
-	String itemGovExpectedEffect;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"7", "60"})
-		public String getItemGovExpectedEffect() {
-			return itemGovExpectedEffect;
+	String relationService;
+		public String getRelationService() {
+			return relationService;
 		}
-		public void setItemGovExpectedEffect(String itemGovExpectedEffect) {
-			this.itemGovExpectedEffect = itemGovExpectedEffect;
-		}
-		
-	String itemPriExpectedEffect;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"7", "60"})
-		public String getItemPriExpectedEffect() {
-			return itemPriExpectedEffect;
-		}
-		public void setItemPriExpectedEffect(String itemPriExpectedEffect) {
-			this.itemPriExpectedEffect = itemPriExpectedEffect;
-		}
-
-	String itemCSF;
-	@Face(ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"7", "60"})
-		public String getItemCSF() {
-			return itemCSF;
-		}
-		public void setItemCSF(String itemCSF) {
-			this.itemCSF = itemCSF;
-		}
-		
-	String itemModelConcept;
-		public String getItemModelConcept() {
-			return itemModelConcept;
-		}
-		public void setItemModelConcept(String itemModelConcept) {
-			this.itemModelConcept = itemModelConcept;
+		public void setRelationService(String relationService) {
+			this.relationService = relationService;
 		}
 
 	MetaworksContext metaworksContext;
@@ -133,61 +152,51 @@ public class PublicServiceIntroduceViewPanel {
 			this.metaworksContext = metaworksContext;
 		}
 		
-	WebEditor webEditor;
-		public WebEditor getWebEditor() {
-			return webEditor;
+	WebEditor serviceSummary;
+		public WebEditor getServiceSummary() {
+			return serviceSummary;
 		}
-		public void setWebEditor(WebEditor webEditor) {
-			this.webEditor = webEditor;
+		public void setServiceSummary(WebEditor serviceSummary) {
+			this.serviceSummary = serviceSummary;
 		}
-		
 		
 	// 수정은 MetaworksContext를 view -> edit 로 바꾸는 작업
 	// viewPanel 자체도 수정모드로 변경되어야 하고
 	@ServiceMethod(callByContent=true)
 	public void modify() {
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		this.getWebEditor().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		this.getServiceSummary().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
 	// MetaworksContext가 edit 상태라면 Save를 한다.
 	// 그리고 다시 메타웍스컨텍스트를 view 상태로..
-	@ServiceMethod(callByContent=true) 
+	@ServiceMethod(callByContent=true, needToConfirm=true) 
 	public void save() throws Exception {
-		PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
-		publicServiceIntroduceItem.setItemId(this.getItemId());
-		publicServiceIntroduceItem.setTab(this.getItemTabId());
-		publicServiceIntroduceItem.setSectorId(this.getItemSectorId());
-		publicServiceIntroduceItem.setServiceId(this.getItemServiceId());
-		publicServiceIntroduceItem.setContentName(this.getItemName());
-		publicServiceIntroduceItem.setContentDescription(this.getItemDescription());
-		publicServiceIntroduceItem.setProfileNo(this.getItemProfileNo());
-		// Model Concept webEditor의 내용이기 때문에 webEditor의 내용을 가져와서 itemModelConcept 넣는다.
-		if(webEditor != null) {
-			this.setItemModelConcept(webEditor.getContents());
-			publicServiceIntroduceItem.setModelConcept(this.getItemModelConcept());
-			
-		} else {
-			new UEngineException("WebEditor ERROR!!");
-		}
-		
-		publicServiceIntroduceItem.setBusinessMotivation(this.getItemBusinessMotivation());
-		publicServiceIntroduceItem.setGovExpectedEffect(this.getItemGovExpectedEffect());
-		publicServiceIntroduceItem.setPriExpectedEffect(this.getItemPriExpectedEffect());
-		publicServiceIntroduceItem.setCSF(this.getItemCSF());
-		publicServiceIntroduceItem.save();
+		this.getPublicServiceIntroduceItem().setServiceName(this.getServiceName());
+		this.getPublicServiceIntroduceItem().setServiceIntroduce(this.getServiceIntroduce());
+		this.getPublicServiceIntroduceItem().setConstructTerm(this.getConstructTerm());
+		this.getPublicServiceIntroduceItem().setBudget(this.getBudget());
+		this.getPublicServiceIntroduceItem().setServiceSummary(this.getServiceSummary().getContents());
+		this.getPublicServiceIntroduceItem().setServicePurpose(this.getServicePurpose());
+		this.getPublicServiceIntroduceItem().setCivilianExpectation(this.getCivilianExpectation());
+		this.getPublicServiceIntroduceItem().setPublicExpectation(this.getPublicExpectation());
+		this.getPublicServiceIntroduceItem().setManagerAttachOrganization(this.getManagerAttachOrganization());
+		this.getPublicServiceIntroduceItem().setManagerName(this.getManagerName());
+		this.getPublicServiceIntroduceItem().setManagerNumber(this.getManagerNumber());
+		this.getPublicServiceIntroduceItem().setManagerEmail(this.getManagerEmail());
+		this.getPublicServiceIntroduceItem().syncToDatabaseMe();
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		this.getWebEditor().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		this.getServiceSummary().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND) 
+	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND) 
 	public Object[] apply() throws Exception{
 		// 표의 전체 아이템을 다시 가져와서 뿌려주고 닫는다.
 		PublicServiceIntroduceTabInfo publicServiceIntroduceTabInfo = new PublicServiceIntroduceTabInfo();
 		publicServiceIntroduceTabInfo.load();
 		
-		String thisTabId = this.getItemTabId();
+		String thisTabId = this.getPublicServiceIntroduceItem().getTab();
 		String tempArray[]  = thisTabId.split("_");
 		// tab의 id는 2인데 어레이는 0부터 들어가니 - 1
 		int parseTabId = Integer.parseInt(tempArray[1]) - 1;
@@ -199,20 +208,34 @@ public class PublicServiceIntroduceViewPanel {
 	@ServiceMethod(callByContent=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND) 
 	public Object[] delete() throws Exception{
 		PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
-		publicServiceIntroduceItem.setItemId(this.getItemId());
+		publicServiceIntroduceItem.setItemId(this.getPublicServiceIntroduceItem().getItemId());
 		publicServiceIntroduceItem.delete();
 		
 		// 삭제하고 바로 적용 해야한다.
 		PublicServiceIntroduceTabInfo publicServiceIntroduceTabInfo = new PublicServiceIntroduceTabInfo();
 		publicServiceIntroduceTabInfo.load();
 		
-		String thisTabId = this.getItemTabId();
+		String thisTabId = this.getPublicServiceIntroduceItem().getTab();
 		String tempArray[]  = thisTabId.split("_");
 		// tab의 id는 2인데 어레이는 0부터 들어가니 - 1
 		int parseTabId = Integer.parseInt(tempArray[1]) - 1;
 		
-		
 		return new Object[] {new Remover(new ModalWindow()), new Refresh(publicServiceIntroduceTabInfo.getIntroList().get(parseTabId)) };
 		
+	}
+	
+	public void load() {
+		this.setServiceName(this.getPublicServiceIntroduceItem().getServiceName());
+		this.setServiceIntroduce(this.getPublicServiceIntroduceItem().getServiceIntroduce());
+		this.setConstructTerm(this.getPublicServiceIntroduceItem().getConstructTerm());
+		this.setBudget(this.getPublicServiceIntroduceItem().getBudget());
+		this.getServiceSummary().setContents(this.getPublicServiceIntroduceItem().getServiceSummary());
+		this.setServicePurpose(this.getPublicServiceIntroduceItem().getServicePurpose());
+		this.setCivilianExpectation(this.getPublicServiceIntroduceItem().getCivilianExpectation());
+		this.setPublicExpectation(this.getPublicServiceIntroduceItem().getPublicExpectation());
+		this.setManagerAttachOrganization(this.getPublicServiceIntroduceItem().getManagerAttachOrganization());
+		this.setManagerName(this.getPublicServiceIntroduceItem().getManagerName());
+		this.setManagerNumber(this.getPublicServiceIntroduceItem().getManagerNumber());
+		this.setManagerEmail(this.getPublicServiceIntroduceItem().getManagerEmail());
 	}
 }

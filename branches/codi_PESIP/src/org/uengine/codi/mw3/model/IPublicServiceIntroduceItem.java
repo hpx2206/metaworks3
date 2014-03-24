@@ -12,7 +12,6 @@ import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
 @Table(name="public_introduce_item")
-@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public interface IPublicServiceIntroduceItem extends IDAO{
 	
 	@Hidden
@@ -36,35 +35,63 @@ public interface IPublicServiceIntroduceItem extends IDAO{
 	public Long getProfileNo();
 	public void setProfileNo(Long profileNo);
 	
-	public String getContentName();
-	public void setContentName(String contentName);
+	public String getServiceName();
+	public void setServiceName(String serviceName);
 	
 	@Hidden
-	public String getContentDescription();
-	public void setContentDescription(String contentDescription);
+	public String getServiceIntroduce();
+	public void setServiceIntroduce(String serviceIntroduce);
 	
 	@Hidden
-	public String getGovExpectedEffect();
-	public void setGovExpectedEffect(String govExpectedEffect);
+	public String getConstructTerm();
+	public void setConstructTerm(String constructTerm);
 	
 	@Hidden
-	public String getPriExpectedEffect();
-	public void setPriExpectedEffect(String priExpectedEffect);
+	public String getBudget();
+	public void setBudget(String budget);
 	
 	@Hidden
-	public String getBusinessMotivation();
-	public void setBusinessMotivation(String businessMotivation);
+	public String getServiceSummary();
+	public void setServiceSummary(String serviceSummary);
 	
 	@Hidden
-	public String getModelConcept();
-	public void setModelConcept(String modelConcept);
+	public String getServicePurpose();
+	public void setServicePurpose(String servicePurpose);
 	
 	@Hidden
-	public String getCSF();
-	public void setCSF(String CSF);
+	public String getPublicExpectation();
+	public void setPublicExpectation(String publicExpectation);
+	
+	@Hidden
+	public String getCivilianExpectation();
+	public void setCivilianExpectation(String civilianExpectation);
+	
+	@Hidden
+	public String getManagerAttachOrganization();
+	public void setManagerAttachOrganization(String managerAttachOrganization);
+	
+	@Hidden
+	public String getManagerName();
+	public void setManagerName(String managerName);
+	
+	@Hidden
+	public String getManagerNumber();
+	public void setManagerNumber(String managerNumber);
+	
+	@Hidden
+	public String getManagerEmail();
+	public void setManagerEmail(String managerEmail);
+	
+	@Hidden
+	public String getConstructCareer();
+	public void setConstructCareer(String constructCareer);
+	
+	@Hidden
+	public String getRelationService();
+	public void setRelationService(String relationService);
 	
 	public IPublicServiceIntroduceItem loadItem(String codeId) throws Exception;
-	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, String contentName) throws Exception;
+	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, String serviceName) throws Exception;
 	public ArrayList<String> findContentName(String codeId, String sectorId, String serviceId) throws Exception;
 	public void addContent() throws Exception;
 	
