@@ -1595,4 +1595,11 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		public void setDocumentation(Documentation documentation) {
 			this.documentation = documentation;
 		}
+	transient boolean checked;
+		public boolean isChecked() {
+			return checked;
+		}
+		public void setChecked(boolean checked) {
+			this.checked = checked;
+		}
 }
