@@ -93,12 +93,17 @@ public class GatewayActivity extends DefaultActivity {
 	@Override
 	protected void executeActivity(ProcessInstance instance) throws Exception {
 		//if all of previous activities completed
-		if (isCompletedAllOfPreviousActivities(instance)) { 
-			//since executeActivity in graph model would be called every time the incoming activities are done.
-			fireComplete(instance);
-		}else{
+		// TODO isCompletedAllOfPreviousActivities설정법을 몰라서 일단 complete 시킴 14.3.26 김형국
+//		if (isCompletedAllOfPreviousActivities(instance)) { 
+//			//since executeActivity in graph model would be called every time the incoming activities are done.
 //			fireComplete(instance);
-		}
+//		}else{
+////			fireComplete(instance);
+//		}
+		
+		
+		fireComplete(instance);
+		
 //		else {
 //			//ignore token
 //			int tokenCount = getTokenCount(instance);

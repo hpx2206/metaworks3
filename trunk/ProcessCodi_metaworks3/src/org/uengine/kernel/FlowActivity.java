@@ -198,7 +198,10 @@ public class FlowActivity extends ComplexActivity {
 				if( ts.getTargetActivity() instanceof HumanActivity){
 					return ts.getTargetActivity();
 				}else{
-					returnActiviy = this.findNextHumanActivity(ts.getTargetActivity());
+					act.setChecked(true);
+					if( !ts.getTargetActivity().isChecked() ){
+						returnActiviy = this.findNextHumanActivity(ts.getTargetActivity());
+					}
 				}
 			}
 		}
