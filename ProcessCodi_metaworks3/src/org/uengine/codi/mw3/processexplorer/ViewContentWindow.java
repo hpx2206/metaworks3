@@ -59,7 +59,7 @@ public class ViewContentWindow extends ContentWindow {
 		}
 		
 		
-	public ViewContentWindow(){
+	public ViewContentWindow() throws Exception{
 		processAttributePanel = new ProcessAttributePanel();
 		processViewPanel = new ProcessViewPanel();
 	}

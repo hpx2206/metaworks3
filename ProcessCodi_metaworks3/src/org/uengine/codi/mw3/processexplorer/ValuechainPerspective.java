@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Available;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.DefaultProject;
@@ -49,7 +53,16 @@ public class ValuechainPerspective extends CollapsePerspective  implements Conte
 		setLabel("Valuechain");
 		valueChainTreeList = new ArrayList<Tree>();
 		setLoaded(false);
+		
+		this.setMetaworksContext(new MetaworksContext());
 	}
+	
+	@Override
+	@ServiceMethod(callByContent=true, except="child")
+	public void refresh() throws Exception {
+		this.loadChildren();
+	}
+	
 	@Override
 	public void loadChildren() throws Exception {
 		
@@ -79,8 +92,6 @@ public class ValuechainPerspective extends CollapsePerspective  implements Conte
 			for(int i=0; i < valueChainList.size(); i++){
 				ValueChain valueChain = valueChainList.get(i);
 				if( valueChain.getMajorProcessDefinitionNode() != null ){
-					this.setMetaworksContext(new MetaworksContext());
-					this.getMetaworksContext().setHow("explorer");
 				    MajorProcessDefinitionNode node = valueChain.getMajorProcessDefinitionNode();
 				    node.setMetaworksContext(this.getMetaworksContext());
 				    node.injectionMetaworksContext(this.getMetaworksContext(), node.getChild());

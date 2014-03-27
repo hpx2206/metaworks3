@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.widget.Window;
-import org.uengine.oce.OcePerspectivePanel;
+import org.uengine.kernel.GlobalContext;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs",  
 options={"hideLabels", "minimize", "color", "hideTitleBar"}, 
@@ -15,12 +15,10 @@ public class PerspectiveWindow extends Window {
 	
 	public PerspectiveWindow(Session session) throws Exception {
 		
-		//oce의 경우 ocepersppective 로 이동합니다.
-		if("oce".equals(session.getUx())){
-			setPanel(new OcePerspectivePanel(session));
-		}else{
-			setPanel(new PerspectivePanel(session));
-		}
+		String clsName = GlobalContext.getPropertyString("perspectivepanel.class","org.uengine.codi.mw3.model.PerspectivePanel");
+		PerspectivePanel perspectivePanel = (PerspectivePanel)GlobalContext.loadClass(clsName).newInstance();
+		perspectivePanel.load(session);
+		setPanel(perspectivePanel);
 	}
 
 }
