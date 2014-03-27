@@ -1101,7 +1101,16 @@ END $$
 
 alter table schedule_table add column expression varchar(100);
 alter table schedule_table add column newInstance int(1) DEFAULT '0';
-alter table schedule_table add column mapDefId varchar(100);
+alter table schedule_table add column defId varchar(100);
 alter table schedule_table add column GLOBALCOM varchar(20);
 
 alter table processmap add column isScheduled int(1) DEFAULT '0';
+
+-- value chain use table
+CREATE TABLE ProcessTopicMapping (
+  processName varchar(200) NOT NULL,
+  processPath varchar(200) NOT NULL,
+  topicId varchar(50) NOT NULL,
+  type varchar(20) NOT NULL,
+  PRIMARY KEY (topicId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
