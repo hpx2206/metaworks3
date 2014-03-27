@@ -34,7 +34,7 @@ public class LibraryProcess {
 	}
 	
 	@ServiceMethod(callByContent = true)
-	public Object showProperties() {
+	public Object showProperties() throws Exception {
 		ProcessViewPanel processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(this.getDefId());
 		processViewPanel.setAlias(this.getAlias());

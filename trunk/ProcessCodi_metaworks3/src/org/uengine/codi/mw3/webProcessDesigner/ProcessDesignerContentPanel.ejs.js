@@ -336,6 +336,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 			var rolePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.RolePanel@'+object.alias);
 			rolePanel.showWholeRole();
 		});
+		$('.leftMenuTab_detail_'+objectId).dblclick(function(){
+           var processDetailPanel = mw3.getAutowiredObject('org.uengine.jms.mw3.model.ProcessDetailPanel@'+object.alias);
+		   if( processDetailPanel ){
+	           processDetailPanel.showProcessDetail();
+		   }
+          });
 	},
 	findActivityData : function(tracingTag){
 		var object = mw3.objects[this.objectId];
@@ -570,15 +576,20 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	var object = mw3.objects[this.objectId];
 	var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel@'+object.alias);
 	
-	var container = {
-			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
-			activityList : activityList,
-			transitionList : transitionList,
-			valueChainList : valueChainList,
-			roleList : roleList,
-			graphicList : graphicList,
-			processVariablePanel : processVariablePanel
-	};
+	var container = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer@'+object.alias);
+	container.activityList = activityList;
+	container.transitionList = transitionList;
+	container.valueChainList = valueChainList;
+	container.roleList = roleList;
+	container.graphicList = graphicList;
+	container.processVariablePanel = processVariablePanel;
+	// use jms
+	if( container && container.__className == 'org.uengine.jms.mw3.model.JmsProcessDesignerContainer' ){
+		var processDetailPanel = mw3.getAutowiredObject('org.uengine.jms.mw3.model.ProcessDetailPanel@'+object.alias);
+	    if( processDetailPanel ){
+	        container.processDetailPanel = processDetailPanel;
+	    }
+	}
 	
 	object.processDesignerContainer = container;
 	if( object.processNameView ){

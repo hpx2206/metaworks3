@@ -49,7 +49,7 @@ public class ProcessViewPanel {
 			this.useClassLoader = useClassLoader;
 		}
 		
-	public ProcessViewPanel(){
+	public ProcessViewPanel() throws Exception{
 		processViewer = new ProcessViewer();
 	}
 	public void load(){

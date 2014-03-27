@@ -117,7 +117,7 @@ public class ProcessViewerPanel implements ContextAware {
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public void findDefinitionView(){
+	public void findDefinitionView() throws Exception{
 		this.getMetaworksContext().setHow("find");
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
@@ -129,7 +129,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 	
-	public void findValuechainView(){
+	public void findValuechainView() throws Exception{
 		this.getMetaworksContext().setHow("valueChainFind");
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
@@ -141,7 +141,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 	@ServiceMethod(callByContent=true)
-	public void loadDefinitionView(){
+	public void loadDefinitionView() throws Exception{
 		this.getMetaworksContext().setHow("load");
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
@@ -152,7 +152,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 	
-	public void loadValuechainView(){
+	public void loadValuechainView() throws Exception{
 		this.getMetaworksContext().setHow("valueChainLoad");
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
@@ -208,7 +208,7 @@ public class ProcessViewerPanel implements ContextAware {
 				MinorProcessDefinitionNode node = new MinorProcessDefinitionNode();
 				node.setName(defId);
 				node.setId(targetNode.getId() + File.separatorChar + node.getName());
-				node.setPath(alias);
+				node.setPath(defId);
 				node.setParentNode(targetNode);
 				node.setType(TreeNode.TYPE_FILE_PROCESS);
 				node.setFolder(false);

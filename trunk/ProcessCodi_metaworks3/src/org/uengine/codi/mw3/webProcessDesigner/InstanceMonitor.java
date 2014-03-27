@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -72,7 +73,8 @@ public class InstanceMonitor {
 
 		processViewer = new ProcessViewer();
 		
-		ProcessDesignerContainer processDesignerContainer = new ProcessDesignerContainer();
+		String clsName = GlobalContext.getPropertyString("designerContainer.class","org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer");
+		ProcessDesignerContainer processDesignerContainer = (ProcessDesignerContainer)GlobalContext.loadClass(clsName).newInstance();
 		processDesignerContainer.setViewType("definitionView");
 		processDesignerContainer.setEditorId(instanceId);
 		processDesignerContainer.init();

@@ -93,8 +93,9 @@ public class ProcessViewer {
 		public void setUseClassLoader(boolean useClassLoader) {
 			this.useClassLoader = useClassLoader;
 		}
-	public ProcessViewer(){
-		processDesignerContainer = new ProcessDesignerContainer();
+	public ProcessViewer() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		String clsName = GlobalContext.getPropertyString("designerContainer.class","org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer");
+		processDesignerContainer = (ProcessDesignerContainer)GlobalContext.loadClass(clsName).newInstance();
 	}
 		
 	public void load(){
