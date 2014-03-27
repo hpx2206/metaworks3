@@ -117,6 +117,13 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 			processViewWindow.load();
 			return new Object[] { new Refresh(processViewWindow) };
 			
+		}else if("snsView".equals(this.getMetaworksContext().getHow()) &&  TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.setWidth(700);
+			modalWindow.setHeight(500);
+			modalWindow.setTitle("$ValueChainEdit");
+			
+			return modalWindow;
 		}else if("tree".equals(this.getMetaworksContext().getHow()) &&  TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(this.getName());
@@ -154,7 +161,6 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
 					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
 					node.setMetaworksContext(context);
-					
 					if( node.getChild() != null && node.getChild().size() > 0 ){
 						injectionMetaworksContext(context, node.getChild() );
 					}
@@ -162,10 +168,54 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				} else {
 					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
 					node.setMetaworksContext(context);
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						injectionMetaworksContext(context, node.getChild() );
+					}
 				}
 			}
 		}
 	}
+	
+	public ArrayList<String> findChildProcess(ArrayList<String> processPathList , ArrayList<TreeNode> childNodes){
+		if( childNodes != null ){
+			for(int i=0; i < childNodes.size();i++){
+				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
+					
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						findChildProcess( processPathList , node.getChild() );
+					}
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
+					String processPath = node.getPath();
+					processPathList.add(processPath);
+				}
+			}
+		}
+		return processPathList;
+	}
+	
+	public void makeMinorNodeToFolder(ArrayList<TreeNode> childNodes){
+		if( childNodes != null ){
+			for(int i=0; i < childNodes.size();i++){
+				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
+					
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						makeMinorNodeToFolder( node.getChild() );
+					}
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
+					node.setFolder(true);
+					node.setExpanded(false);
+					node.setLoaded(false);
+				}
+			}
+		}
+	}
+	
 	public void removeNullChild(ArrayList<TreeNode> childNodes){
 		if( childNodes != null ){
 			for(int i=childNodes.size()-1; i >= 0 ;i--){

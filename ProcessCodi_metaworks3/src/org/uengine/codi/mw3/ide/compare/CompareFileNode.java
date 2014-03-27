@@ -86,7 +86,7 @@ public class CompareFileNode extends TreeNode{
 	
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "treeId"}, target=ServiceMethodContext.TARGET_AUTO)
-	public Object[] action(){
+	public Object[] action()  throws Exception{
 		if( CompareOriginFilePanel.FILE_LOCATION.equals(this.getTreeId())){
 			CompareOriginFile compareOriginFile = new CompareOriginFile();
 			compareOriginFile.setSelectedProcessAlias(this.getPath());

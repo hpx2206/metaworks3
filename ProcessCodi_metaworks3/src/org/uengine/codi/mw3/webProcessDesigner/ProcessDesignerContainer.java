@@ -2,10 +2,10 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
@@ -18,7 +18,6 @@ import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.ScopeActivity;
-import org.uengine.kernel.UEngineException;
 import org.uengine.kernel.ValidationContext;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
@@ -123,6 +122,14 @@ public class ProcessDesignerContainer {
 		public void setMaxY(int maxY) {
 			this.maxY = maxY;
 		}
+	transient ProcessDefinition def;
+		@Hidden
+		public ProcessDefinition getDef() {
+			return def;
+		}
+		public void setDef(ProcessDefinition def) {
+			this.def = def;
+		}
 		
 	public Session session;
 		
@@ -152,6 +159,8 @@ public class ProcessDesignerContainer {
 		
 		rolePanel.setEditorId(editorId);
 		processVariablePanel.setEditorId(editorId);
+		
+		this.setDef(def);
 		
 		int tagCnt = 0;
 		for (int l = 0; l < def.getChildActivities().size(); l++) {

@@ -277,10 +277,12 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			// jms 조회 화면
 			if( object != null && object.viewType != null && "definitionView" == object.viewType ){
 				$(element).unbind('dblclick').bind('dblclick' , function(event){
-				});
-				$(element).unbind('click').bind('click' , function(event){
-					object.showActivityDocument();
-				});
+                });
+                $(element).unbind('click').bind('click' , function(event){
+                    object.id = $(this).attr('id');
+                    object.activity = $(this).data('activity');
+                    object.showActivityDocument();
+                });
 			}
 			// 프로세스 비교
 			if( object != null && object.viewType != null && "definitionDiffView" == object.viewType ){

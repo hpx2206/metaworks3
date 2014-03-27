@@ -2,7 +2,6 @@ package org.uengine.oce;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.codi.mw3.model.AppAlfresco;
@@ -14,12 +13,11 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.OrganizationPerspectiveApp;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.PerspectivePanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.oce.dashboard.DashboardWindowLayout;
 
-public class OcePerspectivePanel extends Perspective{
+public class OcePerspectivePanel extends PerspectivePanel{
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -47,10 +45,13 @@ public class OcePerspectivePanel extends Perspective{
 		}
 		
 	public OcePerspectivePanel() throws Exception{
-		this(null);
+		super();
 	}
 
 	public OcePerspectivePanel(Session session) throws Exception{
+		super(session);
+	}
+	public void load(Session session) throws Exception{
 		if(session != null){
 			//앱
 			if("1".equals(Perspective.USE_APP)){

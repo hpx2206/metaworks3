@@ -29,7 +29,9 @@ import org.uengine.util.UEngineUtil;
 public class ProcessDesignerContentPanel implements ContextAware {
 	
 	public ProcessDesignerContentPanel() throws Exception{
-		processDesignerContainer = new ProcessDesignerContainer();
+		
+		String clsName = GlobalContext.getPropertyString("designerContainer.class","org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer");
+		processDesignerContainer = (ProcessDesignerContainer)GlobalContext.loadClass(clsName).newInstance();
 		processNameView = new ProcessNameView();
 		processNameView.setMetaworksContext(new MetaworksContext());
 		processNameView.getMetaworksContext().setHow("nameChange");

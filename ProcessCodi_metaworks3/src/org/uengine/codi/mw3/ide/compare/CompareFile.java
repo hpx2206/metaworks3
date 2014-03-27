@@ -64,7 +64,7 @@ public class CompareFile {
 			this.fileName = fileName;
 		}
 		
-	public CompareFile(){
+	public CompareFile() throws Exception{
 		processViewer = new ProcessViewer();
 	}
 	public void load(){

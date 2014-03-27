@@ -58,12 +58,9 @@ public class ValueChainEditor extends Editor{
 	
 	@Override
 	@ServiceMethod(callByContent=true)
-	public Object save() {
-		try {
-			this.getValueChainDesigner().saveMe(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public Object save()  throws Exception{
+		this.getValueChainDesigner().session = this.session;
+		this.getValueChainDesigner().saveMe(this);
 		return null;
 	}
 	

@@ -47,4 +47,14 @@
            <%
         }
     }
+    if( value && value.processDetailPanel ){
+        %>
+        <%= fields.processDetailPanel.here() %>
+        <%
+    }
+    if( value && value.processSummaryPanel ){
+        %>
+        <%= fields.processSummaryPanel.here() %>
+        <%
+    }
 %>
