@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+import org.uengine.codi.mw3.processexplorer.ValuechainPerspective;
 
 public class PerspectivePanel implements ContextAware {
 	MetaworksContext metaworksContext;
@@ -127,7 +128,14 @@ public class PerspectivePanel implements ContextAware {
 				UpcommingTodoPerspective upcommingTodoPerspective) {
 			this.upcommingTodoPerspective = upcommingTodoPerspective;
 		}
-
+	ValuechainPerspective valuechainPerspective;
+	@Available(condition="valuechainPerspective")
+		public ValuechainPerspective getValuechainPerspective() {
+			return valuechainPerspective;
+		}
+		public void setValuechainPerspective(ValuechainPerspective valuechainPerspective) {
+			this.valuechainPerspective = valuechainPerspective;
+		}
 	@AutowiredFromClient
 	public Session session;
 		
@@ -138,7 +146,9 @@ public class PerspectivePanel implements ContextAware {
 	
 	public PerspectivePanel(Session session) throws Exception {
 		this();
-		
+		this.load(session);
+	}
+	public void load(Session session) throws Exception {
 		if(session != null){
 			//개인별
 			if("1".equals(Perspective.USE_PERSONAL)){
@@ -197,6 +207,11 @@ public class PerspectivePanel implements ContextAware {
 						projectPerspective = new ProjectPerspective();
 						projectPerspective.session = session;
 						projectPerspective.select();
+					}
+					// 벨류체인
+					if("1".equals(Perspective.USE_VALUECHAIN)){
+						valuechainPerspective = new ValuechainPerspective();
+						valuechainPerspective.getMetaworksContext().setHow("snsView");
 					}
 				}//.isApproved() && .isGuest()
 			

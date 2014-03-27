@@ -65,7 +65,7 @@ public class FileImporter{
 	public CompareImportFilePanel compareImportFilePanel;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] upload() throws IOException {
+	public Object[] upload() throws IOException ,Exception {
 		boolean flag = false;
 		String projectId = MetadataBundle.getProjectId();
 		String mainPath = MetadataBundle.getProjectBasePath(projectId);
