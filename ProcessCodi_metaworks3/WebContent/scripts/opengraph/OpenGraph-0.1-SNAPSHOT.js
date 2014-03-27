@@ -10389,6 +10389,7 @@ OG.shape.HorizontalLaneShape.prototype.createShape = function () {
 
     return this.geom;
 };
+
 /**
  * Horizontal Pool Shape
  *
@@ -10403,13 +10404,16 @@ OG.shape.HorizontalPoolShape = function (label) {
 	OG.shape.HorizontalPoolShape.superclass.call(this, label);
 
 	this.SHAPE_ID = 'OG.shape.HorizontalPoolShape';
+	this.label = 'Process';
 	this.CONNECTABLE = true;
 	this.LoopType = 'None';
+	this.GROUP_COLLAPSIBLE = false;
 };
 OG.shape.HorizontalPoolShape.prototype = new OG.shape.GroupShape();
 OG.shape.HorizontalPoolShape.superclass = OG.shape.GroupShape;
 OG.shape.HorizontalPoolShape.prototype.constructor = OG.shape.HorizontalPoolShape;
 OG.HorizontalPoolShape = OG.shape.HorizontalPoolShape;
+
 
 /**
  * 드로잉할 Shape 을 생성하여 반환한다.
@@ -10579,6 +10583,7 @@ OG.shape.VerticalPoolShape = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.VerticalPoolShape';
 	this.CONNECTABLE = true;
+	this.GROUP_COLLAPSIBLE = false;
 };
 OG.shape.VerticalPoolShape.prototype = new OG.shape.GroupShape();
 OG.shape.VerticalPoolShape.superclass = OG.shape.GroupShape;
@@ -10592,6 +10597,42 @@ OG.VerticalPoolShape = OG.shape.VerticalPoolShape;
  * @override
  */
 OG.shape.VerticalPoolShape.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+	
+	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
+	this.geom.style = new OG.geometry.Style({
+		'label-direction': 'horizontal',
+		'vertical-align' : 'top',
+		fill: 'none'
+	});
+
+	return this.geom;
+};
+/**
+ * BPMN : Transformer Shape
+ *
+ * @class
+ * @extends OG.shape.bpmn.A_Task
+ * @requires OG.common.*, OG.geometry.*, OG.shape.bpmn.A_Task
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.Transformer = function (label) {
+    OG.shape.Transformer.superclass.call(this);
+    
+    this.SHAPE_ID = 'OG.shape.Transformer';
+    this.label = label;
+    this.CONNECTABLE = false;
+}
+OG.shape.Transformer.prototype = new OG.shape.GroupShape();
+OG.shape.Transformer.superclass = OG.shape.GroupShape;
+OG.shape.Transformer.prototype.constructor = OG.shape.Transformer;
+OG.Transformer = OG.shape.Transformer;
+
+OG.shape.Transformer.prototype.createShape = function () {
 	if (this.geom) {
 		return this.geom;
 	}
@@ -12302,6 +12343,8 @@ OG.shape.bpmn.E_Intermediate_Compensation = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Compensation';
 	this.label = label;
+	this.selectable = true;
+	this.movable = true;
 };
 OG.shape.bpmn.E_Intermediate_Compensation.prototype = new OG.shape.bpmn.Event();
 OG.shape.bpmn.E_Intermediate_Compensation.superclass = OG.shape.bpmn.Event;
@@ -13546,6 +13589,9 @@ OG.shape.bpmn.M_Text = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.M_Text';
 	this.label = label || 'Text';
+	this.SELECTABLE = false;
+	this.CONNECTABLE = false;
+	this.MOVABLE = false;
 };
 OG.shape.bpmn.M_Text.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.M_Text.superclass = OG.shape.GeomShape;
@@ -15401,7 +15447,7 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 			break;
 		}
 	}
-
+	
 	// text align, font-color, font-size 적용
 	element.attr({
 		x             : x,
@@ -15586,26 +15632,6 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 	}
     
 	
-	$(me.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
-    	if(element.shape instanceof OG.shape.HorizontalPoolShape){
-	        var elements, i, checkPool = false;
-	        elements = me.getElementsByBBox(element.shape.geom.getBoundary());
-	        for(i=0; i<elements.length; i++){
-	            if(element.id != elements[i].id){
-	                /*
-	                if(!$(elements[i]).parent().get(0).shape){
-						//FIXME : remove this
-	                    //element.appendChild(elements[i]);
-	                }
-	                */
-	                if(($(elements[i]).parent().get(0) == $(element).parent().get(0))){
-	                	element.appendChild(elements[i]);
-	                }
-	            }
-	        }
-        }
-    });
-    	
     if($(shape).attr('auto_draw') == 'yes'){
         $(groupNode).attr('auto_draw', 'yes');
     }
@@ -16687,7 +16713,11 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 	group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft()
 		, (boundary.getUpperRight().x - boundary.getUpperLeft().x)
 		, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
-	geom_shadow = this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_SHADOW);
+	if(me._CONFIG.ENABLE_CONTEXTMENU){
+		geom_shadow = this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_SHADOW);
+	}else{
+		geom_shadow = this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_SHADOW_MAPPER);
+	}
 	geom_shadow.style = new OG.geometry.Style({
 		'cursor': "move"
 	});
@@ -16702,12 +16732,15 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 				[boundary.getLowerLeft().x + 20, boundary.getLowerLeft().y]
 			);
 			group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), 20, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
+		
 		} else {
+		
 			titleLine = new OG.geometry.Line(
 				[boundary.getUpperLeft().x, boundary.getUpperLeft().y + 20],
 				[boundary.getUpperRight().x, boundary.getUpperRight().y + 20]
 			);
 			group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), (boundary.getUpperRight().x - boundary.getUpperLeft().x), 20);
+		
 		}
 		this._drawGeometry(group.node, titleLine, _style);
 		this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_HIDDEN);
@@ -16746,7 +16779,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
  */
 OG.renderer.RaphaelRenderer.prototype.drawLabel = function (shapeElement, text, style) {
 	var rElement = this._getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
-		element, labelElement, envelope, _style = {}, position, size, beforeText, beforeEvent,
+		element, labelElement, envelope, _style = {}, size, beforeText, beforeEvent,
 		/**
 		 * 라인(꺽은선)의 중심위치를 반환한다.
 		 *
@@ -16810,6 +16843,7 @@ OG.renderer.RaphaelRenderer.prototype.drawLabel = function (shapeElement, text, 
 				// size = [0, 0];
 			// } else {(
 				// label-position 에 따라 위치 조정
+				
 				switch (element.shape.geom.style.get("label-position")) {
 				case "left":
 					position = [envelope.getCentroid().x - envelope.getWidth(), envelope.getCentroid().y];
@@ -16903,6 +16937,32 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, te
 	return labelElement;
 };
 
+OG.renderer.RaphaelRenderer.prototype.resizeShape = function (element, excludeEdgeId) {
+	if(element.shape instanceof OG.shape.HorizontalPoolShape){
+		var ele, eleArray=[], i, height=0;
+		for(i=0; i<element.childNodes.length; i++){
+			ele = element.childNodes[i];
+			if(ele.shape instanceof OG.shape.HorizontalLaneShape){
+				eleArray.push(ele);
+			}
+		}
+		for(i=0; i<eleArray.length; i++){
+			if((element.shape.geom.boundary._width - 20) != eleArray[i].shape.geom.boundary._width){
+				var right = element.shape.geom.boundary._width - eleArray[i].shape.geom.boundary._width - 20;
+				this.resize(eleArray[i], [0, 0, 0, right]);
+			}
+			if(i != (eleArray.length - 1)){
+				height += eleArray[i].shape.geom.boundary._height;
+			}else{
+				var lower = element.shape.geom.boundary._height - height - eleArray[i].shape.geom.boundary._height;
+				this.resize(eleArray[i], [0, lower, 0, 0]);
+			}
+		}
+		
+	}
+	
+}
+
 /**
  * Element 에 저장된 geom, angle, image, text 정보로 shape 을 redraw 한다.
  *
@@ -16915,27 +16975,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 		redrawChildConnectedEdge;
 
     root = me.getRootGroup();
-    eleArray.push(element);
-    me.addToGroup(root, eleArray);
-	$(me.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
-    	if(element.shape instanceof OG.shape.HorizontalPoolShape){
-	        var elements, i, checkPool = false;
-	        elements = me.getElementsByBBox(element.shape.geom.getBoundary());
-	        for(i=0; i<elements.length; i++){
-	            if(element.id != elements[i].id){
-	                /*
-	                if(!$(elements[i]).parent().get(0).shape){
-						//FIXME : remove this
-	                    //element.appendChild(elements[i]);
-	                }
-	                */
-	                if(($(elements[i]).parent().get(0) == $(element).parent().get(0))){
-	                	element.appendChild(elements[i]);
-	                }
-	            }
-	        }
-        }
-    });
+    
     
 	redrawChildConnectedEdge = function (_collapseRootElement, _element) {
 		var edgeIdArray, fromEdge, toEdge, _childNodes = _element.childNodes, otherShape, i, j, isNeedToRedraw;
@@ -17224,28 +17264,32 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 		//보류
         //pointOfInflection = me._getPointOfInflectionFromEdge(_edgeElem.node.shape.geom);
     }
-
-	// redraw edge
-	if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
-		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
-	}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
-			|| toShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data"  ){
-		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": ". "}), edge.id, isSelf, pointOfInflection);
-	}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation" 
-				|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"){
-		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": ". ", "arrow-end": "none"}), edge.id, isSelf, pointOfInflection);		
-	}else if(fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
-				|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"){
-		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
+    
+	if(me._CONFIG.ENABLE_CONTEXTMENU){
+		// redraw edge
+		if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
+			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
+		}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
+				|| toShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data"  ){
+			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": ". "}), edge.id, isSelf, pointOfInflection);
+		}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation" 
+					|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"){
+			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": ". ", "arrow-end": "none"}), edge.id, isSelf, pointOfInflection);		
+		}else if(fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
+					|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"){
+			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
+		}else{
+			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "", "arrow-end": "classic-wide-long"}), edge.id, isSelf, pointOfInflection);
+		}
 	}else{
 		edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-			OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "", "arrow-end": "classic-wide-long"}), edge.id, isSelf, pointOfInflection);
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "", "arrow-end": "classic-wide-long"}), edge.id, isSelf, pointOfInflection);
 	}
-	
 	// Draw Label
 	this.drawLabel(edge);
 	this.drawEdgeLabel(edge, null, 'FROM');
@@ -17352,11 +17396,12 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 		fromElement = me.getElementById(fromShape.id);
 		toElement = me.getElementById(toShape.id);
 		
-		if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
-			_style["arrow-end"] = "open_block-wide-long";
-			_style["stroke-dasharray"] = "--";
-		}		
-	
+		if(me._CONFIG.ENABLE_CONTEXTMENU){
+			if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
+				_style["arrow-end"] = "open_block-wide-long";
+				_style["stroke-dasharray"] = "--";
+			}		
+		}
 		beforeEvent = jQuery.Event("beforeConnectShape", {edge: edge, fromShape: fromShape, toShape: toShape});
 		$(this._PAPER.canvas).trigger(beforeEvent);
 		if (beforeEvent.isPropagationStopped()) {
@@ -19164,7 +19209,10 @@ OG.renderer.RaphaelRenderer.prototype.resize = function (element, offset, exclud
 		geometry.resize(offset[0], offset[1], offset[2], offset[3]);
 
 		this.redrawShape(rElement.node, excludeEdgeId);
-
+		
+		// resize shpae 
+		this.resizeShape(rElement.node, excludeEdgeId);
+		
 		// resizeShape event fire
 		$(this._PAPER.canvas).trigger('resizeShape', [rElement.node, offset]);
 				
@@ -19189,37 +19237,6 @@ OG.renderer.RaphaelRenderer.prototype.resize = function (element, offset, exclud
 	}
 	
 	return null;
-};
-
-OG.renderer.RaphaelRenderer.prototype.resizePool = function (element) {
-	if(element.shape instanceof OG.shape.HorizontalPoolShape || element.shape instanceof OG.shape.VerticalPoolShape){
-		var i, elements = [], ele;
-		
-		for(i=0; i<element.childNodes.length; i++){
-			ele = element.childNodes[i];
-			if(ele.shape instanceof OG.shape.HorizontalPoolShape
-				|| ele.shape instanceof OG.shape.HorizontalLaneShape
-				|| ele.shape instanceof OG.shape.VerticalPoolShape
-				|| ele.shape instanceof OG.shape.VerticalLaneShape){
-					elements.push(ele);
-			}
-		}
-		for(i=0; i<elements.length; i++){
-			dx = element.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
-			dy = element.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
-			dy2 =(element.shape.geom.boundary._height / elements.length) * i;
-			this.move(elements[i], [dx, dy + dy2]);
-			lower = element.shape.geom.boundary._height - elements[i].shape.geom.boundary._height;
-			right = element.shape.geom.boundary._width - elements[i].shape.geom.boundary._width - 20;
-			this.resize(elements[i], [0, lower, 0, right]);
-			lower = -(elements[i].shape.geom.boundary._height - (element.shape.geom.boundary._height / elements.length));
-			this.resize(elements[i], [0, lower, 0, 0]);
-			
-			if(elements[i].shape instanceof OG.shape.HorizontalPoolShape || elements[i].shape instanceof OG.shape.VerticalPoolShape){
-				//this.resizePool(elements[i]);
-			}
-		}
-	}
 };
 
 /**
@@ -19690,6 +19707,7 @@ OG.handler.EventHandler.prototype = {
 								
 								$(item).draggable({
 									start: function (event) {
+										event.stopPropagation();
 										$(element).data("status", "connect_start");
 										var x = item.terminal.position.x, y = item.terminal.position.y,
 											edge = me._RENDERER.drawShape(null, new OG.EdgeShape([x, y], [x, y]), null,
@@ -20044,16 +20062,8 @@ OG.handler.EventHandler.prototype = {
 			$(element).draggable({
 				start: function (event) {
 					var eventOffset = me._getOffset(event), guide;
+					parentElement = $(element).parent().get(0);
 					
-					if($(element).parent().get(0) != root){
-						if(element.shape instanceof OG.shape.HorizontalPoolShape
-							|| element.shape instanceof OG.shape.HorizontalLaneShape
-							|| element.shape instanceof OG.shape.VerticalPoolShape
-							|| element.shape instanceof OG.shape.VerticalLaneShape){
-								parentElement = $(element).parent().get(0);
-						}
-					}
-
 					// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
 					if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
 						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
@@ -20091,13 +20101,14 @@ OG.handler.EventHandler.prototype = {
 														, elementId);
 
 						delete childElementMap[elementId];
-										
+
 						for(var key_childElementMap in childElementMap){
 							
 							childElement = childElementMap[key_childElementMap];
+							
 							if(childElement instanceof OG.shape.EdgeShape){
 								//no operation
-							}else if($(childElement).parent().get(0)){
+							}else if($(childElement).parent().get(0) != root){
 								//no operation
 							}else{
 								me._RENDERER.removeGuide(childElement);
@@ -20183,44 +20194,88 @@ OG.handler.EventHandler.prototype = {
 						}
 					}
 					
-                    //eleArray.push(element);
-                    //me._RENDERER.addToGroup(root, eleArray);
+                    eleArray.push(element);
+                    me._RENDERER.addToGroup(root, eleArray);
 
 					// group target 이 있는 경우 grouping 처리
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
 						// grouping
 						//me._RENDERER.addToGroup(groupTarget, eleArray);
-						var i, elements=[];
+						var i, elements=[], count=0, totalHeight=0, right=0, lower=0;
 						
-						//풀이거나 스윔레인인 경우 자동 리사이징 되게
-						if(element.shape instanceof OG.shape.HorizontalPoolShape
-							|| element.shape instanceof OG.shape.HorizontalLaneShape
-							|| element.shape instanceof OG.shape.VerticalPoolShape
-							|| element.shape instanceof OG.shape.VerticalLaneShape){
+						//스윔레인인 경우 자동 리사이징 되게
+						if(element.shape instanceof OG.shape.HorizontalLaneShape || element.shape instanceof OG.shape.VerticalLaneShape){
+						
+							groupTarget.appendChild(element);
 							
-								groupTarget.appendChild(element);
-																													
-								for(i=0; i<groupTarget.childNodes.length; i++){
-									var ele = groupTarget.childNodes[i];
-									if(ele.shape instanceof OG.shape.HorizontalPoolShape
-										|| ele.shape instanceof OG.shape.HorizontalLaneShape
-										|| ele.shape instanceof OG.shape.VerticalPoolShape
-										|| ele.shape instanceof OG.shape.VerticalLaneShape){
-											elements.push(ele);
+							for(i=0; i<groupTarget.childNodes.length; i++){
+								var ele = groupTarget.childNodes[i];
+								if(ele.shape instanceof OG.shape.HorizontalLaneShape || ele.shape instanceof OG.shape.VerticalLaneShape){
+									count++;
+									
+									if(ele.id != element.id){
+										totalHeight += ele.shape.geom.boundary._height;
 									}
 								}
-								
-								for(i=0; i<elements.length; i++){
-									dx = groupTarget.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
-									dy = groupTarget.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
-									dy2 =(groupTarget.shape.geom.boundary._height / elements.length) * i;
-									me._RENDERER.move(elements[i], [dx, dy + dy2]);
-									lower = groupTarget.shape.geom.boundary._height - elements[i].shape.geom.boundary._height;
-									right = groupTarget.shape.geom.boundary._width - elements[i].shape.geom.boundary._width - 20;
-									me._RENDERER.resize(elements[i], [0, lower, 0, right]);
-									lower = -(elements[i].shape.geom.boundary._height - (groupTarget.shape.geom.boundary._height / elements.length));
-									me._RENDERER.resize(elements[i], [0, lower, 0, 0]);
+							}
+							
+							if(element.shape.geom.boundary._width > (groupTarget.shape.geom.boundary._width - 20)){
+								if(element.shape.geom.boundary._height > (groupTarget.shape.geom.boundary._height)){
+									//널이 높이 둘 다 스윔레인이 큰 경우
+									if(count == 1){
+										lower = element.shape.geom.boundary._height - groupTarget.shape.geom.boundary._height;
+									}else{
+										lower = element.shape.geom.boundary._height;
+									}
+									right = element.shape.geom.boundary._width - groupTarget.shape.geom.boundary._width + 20;
+									
+									me._RENDERER.resize(groupTarget, [0, lower, 0, right]);
+								}else{
+									//널이는 스윔레인이 높이는 풀이 큰 경우
+									right = element.shape.geom.boundary._width - groupTarget.shape.geom.boundary._width + 20;
+									if(count == 1){
+										lower = groupTarget.shape.geom.boundary._height - element.shape.geom.boundary._height;
+										me._RENDERER.resize(element, [0, lower, 0, 0]);
+										me._RENDERER.resize(groupTarget, [0, 0, 0, right]);
+									}else{
+										lower = element.shape.geom.boundary._height;
+										me._RENDERER.resize(groupTarget, [0, lower, 0, right]);
+									}
 								}
+							}else{
+								if(element.shape.geom.boundary._height > (groupTarget.shape.geom.boundary._height)){
+									//높이는 스윔레인이 넓이는 풀이 큰 경우
+									if(count == 1){
+										lower = element.shape.geom.boundary._height - groupTarget.shape.geom.boundary._height;
+									}else{
+										lower = element.shape.geom.boundary._height;
+									}
+									right = groupTarget.shape.geom.boundary._width - element.shape.geom.boundary._width - 20;
+									
+									me._RENDERER.resize(element, [0, 0, 0, right]);
+									me._RENDERER.resize(groupTarget, [0, lower, 0, 0]);
+								}else{
+									//넓이 높이 둘 다 풀이 큰 경우
+									right = groupTarget.shape.geom.boundary._width - element.shape.geom.boundary._width - 20;
+									if(count == 1){
+										lower = groupTarget.shape.geom.boundary._height - element.shape.geom.boundary._height;
+										me._RENDERER.resize(element, [0, lower, 0, right]);
+									}else{
+										lower = element.shape.geom.boundary._height;
+										me._RENDERER.resize(element, [0, 0, 0, right]);
+										me._RENDERER.resize(groupTarget, [0, lower, 0, 0]);
+									}
+								}
+							}
+							
+							dx = groupTarget.shape.geom.vertices[0].x - element.shape.geom.vertices[0].x + 20;
+							dy = groupTarget.shape.geom.vertices[0].y - element.shape.geom.vertices[0].y;
+							if(count == 1){
+								me._RENDERER.move(element, [dx, dy]);
+							}else{
+								dy2 = totalHeight;			
+								me._RENDERER.move(element, [dx, dy + dy2]);
+							}
 						}
 						
 						// guide
@@ -20249,30 +20304,27 @@ OG.handler.EventHandler.prototype = {
                         });
 					}
 					
-					if(parentElement){
-						var i, elements=[];
-				
+					if((parentElement != root) && !groupTarget){
+						var i, elements=[], totalHeight=0;
+
 						for(i=0; i<parentElement.childNodes.length; i++){
 							var ele = parentElement.childNodes[i];
-							if(ele.shape instanceof OG.shape.HorizontalPoolShape
-								|| ele.shape instanceof OG.shape.HorizontalLaneShape
-								|| ele.shape instanceof OG.shape.VerticalPoolShape
-								|| ele.shape instanceof OG.shape.VerticalLaneShape){
-									elements.push(ele);
+							if(ele.shape instanceof OG.shape.HorizontalLaneShape || ele.shape instanceof OG.shape.VerticalLaneShape){
+								elements.push(ele);
 							}
 						}
-						
-						for(i=0; i<elements.length; i++){
-							dx = parentElement.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
-							dy = parentElement.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
-							dy2 =(parentElement.shape.geom.boundary._height / elements.length) * i;
-							me._RENDERER.move(elements[i], [dx, dy + dy2]);
-							lower = parentElement.shape.geom.boundary._height - elements[i].shape.geom.boundary._height;
-							right = parentElement.shape.geom.boundary._width - elements[i].shape.geom.boundary._width - 20;
-							me._RENDERER.resize(elements[i], [0, lower, 0, right]);
-							lower = -(elements[i].shape.geom.boundary._height - (parentElement.shape.geom.boundary._height / elements.length));
-							me._RENDERER.resize(elements[i], [0, lower, 0, 0]);
-						}
+						if(elements.length != 0){
+							for(i=0; i<elements.length; i++){
+								dx = parentElement.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
+								dy = parentElement.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
+								dy2 = totalHeight;
+								me._RENDERER.move(elements[i], [dx, dy + dy2]);
+								totalHeight += elements[i].shape.geom.boundary._height;
+							}
+							lower = -element.shape.geom.boundary._height;
+							me._RENDERER.resize(parentElement, [0, lower, 0, 0]);
+						}						
+						root.appendChild(element);
 					}
 					
 					if(me._getSelectedElement().length > 1){
@@ -20659,7 +20711,6 @@ OG.handler.EventHandler.prototype = {
 								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
-							me._RENDERER.resizePool(element, [0, 0, 0, me._grid(dx)]);
 							//me._RENDERER.removeGuide(element);
 						}
 					}
@@ -21425,147 +21476,6 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 	
-	/**
-	 * 캔버스에 마우스 우클릭 메뉴를 가능하게 한다.
-	 */
-	enableMappingContextMenu: function () {
-		var me = this;
-
-		$.contextMenu({
-			selector: '#' + me._RENDERER.getRootElement().id,
-			build   : function ($trigger, e) {
-				var root = me._RENDERER.getRootGroup();
-				$(me._RENDERER.getContainer()).focus();
-				return {
-					items: {
-						'Math': {
-							name: 'Math',
-							items: {
-								'Max': {
-									name: 'Max', callback: function () {
-									}
-								},
-								'Min' : {
-									name: 'Min', callback: function () {
-									}
-								},
-								'To Number'        : {
-									name: 'To Number', callback: function () {
-									}
-								},
-								'Sum'        : {
-									name: 'Sum', callback: function () {
-									}
-								},
-								'Floor'        : {
-									name: 'Floor', callback: function () {
-									}
-								},
-								'Round'       : {
-									name: 'Round', callback: function () {
-									}
-								},
-								'Ceil'       : {
-									name: 'Ceil', callback: function () {
-									}
-								},
-								'Abs'       : {
-									name: 'Abs', callback: function () {
-									}
-								}
-							}
-						},
-						'String'    : {
-							name: 'String',
-							items: {
-								'Concat': {
-									name: 'Actual Size', callback: function () {
-									}
-								},
-								'Replace' : {
-									name: 'Replace', callback: function () {
-									}
-								},
-								'NumberFormat'        : {
-									name: 'NumberFormat', callback: function () {
-									}
-								}
-							}
-						},
-						'XML'     : {
-							name : 'XML',
-							items: {
-								'view_actualSize': {
-									name: 'Actual Size', callback: function () {
-										me._RENDERER.setScale(1);
-									}
-								},
-								'sep2_1'         : '---------',
-								'view_fitWindow' : {
-									name: 'Fit Window', callback: function () {
-										me.fitWindow();
-									}
-								},
-								'sep2_2'         : '---------',
-								'view_25'        : {
-									name: '25%', callback: function () {
-										me._RENDERER.setScale(0.25);
-									}
-								},
-								'view_50'        : {
-									name: '50%', callback: function () {
-										me._RENDERER.setScale(0.5);
-									}
-								},
-								'view_75'        : {
-									name: '75%', callback: function () {
-										me._RENDERER.setScale(0.75);
-									}
-								},
-								'view_100'       : {
-									name: '100%', callback: function () {
-										me._RENDERER.setScale(1);
-									}
-								},
-								'view_150'       : {
-									name: '150%', callback: function () {
-										me._RENDERER.setScale(1.5);
-									}
-								},
-								'view_200'       : {
-									name: '200%', callback: function () {
-										me._RENDERER.setScale(2);
-									}
-								},
-								'view_300'       : {
-									name: '300%', callback: function () {
-										me._RENDERER.setScale(3);
-									}
-								},
-								'view_400'       : {
-									name: '400%', callback: function () {
-										me._RENDERER.setScale(4);
-									}
-								},
-								'sep2_3'         : '---------',
-								'view_zoomin'    : {
-									name: 'Zoom In', callback: function () {
-										me.zoomIn();
-									}
-								},
-								'view_zoomout'   : {
-									name: 'Zoom Out', callback: function () {
-										me.zoomOut();
-									}
-								}
-							}
-						}
-					}
-				};
-			}
-		});
-	},
-
 	/**
 	 * Shape 에 마우스 우클릭 메뉴를 가능하게 한다.
 	 */
@@ -24049,7 +23959,8 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0, cursor: "pointer"},
 			GROUP         : { stroke: "black", fill: "none", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 , cursor: "move" },
-			GROUP_SHADOW   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 25, "stroke-opacity": 0, cursor: "pointer"},
+			GROUP_SHADOW  : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 25, "stroke-opacity": 0, cursor: "pointer"},
+			GROUP_SHADOW_MAPPER  : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 0, cursor: "pointer"},
 			GUIDE_BBOX    : { stroke: "#00FF00", fill: "white", "fill-opacity" :0, "stroke-dasharray": "- ", "shape-rendering": "crispEdges" , cursor: "move"},
 			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
 			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
@@ -24194,7 +24105,6 @@ OG.graph.Canvas.prototype = {
 	 * @return {Element} Group DOM Element with geometry
 	 */
 	drawShape: function (position, shape, size, style, id, parentId, gridable) {
-	
 		//강제 그리드 보정
 		gridable = true;
 		
@@ -24248,6 +24158,32 @@ OG.graph.Canvas.prototype = {
 		return element;
 	},
 	
+	drawTransformer: function (position, type, input, output) {
+		var me = this, shape, element, style, envelope, i, toShape, fromShape, toElement, fromElement, textShape, textElement;
+		
+		shape = new OG.shape.Transformer(type);
+		element = me.drawShape(position, shape, [90, 22 + (input * 20)]);
+		envelope = element.shape.geom.getBoundary();
+		
+		for(i=0; i<input; i++){
+			textShape = new OG.shape.bpmn.M_Text('in' + (i + 1));
+			textElement = me.drawShape([envelope.getUpperLeft().x + 25, envelope.getUpperLeft().y + (i * 20) + 30], textShape, [50, 20]);
+			element.appendChild(textElement);
+			toShape = new OG.shape.To();
+			toElement = me.drawShape([envelope.getUpperLeft().x + 10, envelope.getUpperLeft().y + (i * 20) + 30], toShape, [5, 5], {"r":5});
+			element.appendChild(toElement);
+		}
+		
+		for(i=0; i<output; i++){
+			textShape = new OG.shape.bpmn.M_Text('out' + (i + 1));
+			textElement = me.drawShape([envelope.getUpperRight().x - 30, envelope.getUpperRight().y + (i * 20) + 30], textShape, [50, 20]);
+			element.appendChild(textElement);
+			fromShape = new OG.shape.From();
+			fromElement = me.drawShape([envelope.getUpperRight().x - 10, envelope.getUpperRight().y + (i * 20) + 30], fromShape, [5, 5], {"r":5});
+			element.appendChild(fromElement);
+		}
+	},
+	
 	setExceptionType: function (element, exceptionType) {
 		this._HANDLER.setExceptionType(element, exceptionType);
 	},
@@ -24271,8 +24207,8 @@ OG.graph.Canvas.prototype = {
 	 * @return {Element} DOM Element
 	 * @override
 	 */
-	drawLabel: function (shapeElement, text, style) {
-		return this._RENDERER.drawLabel(shapeElement, text, style);
+	drawLabel: function (shapeElement, text, style, position) {
+		return this._RENDERER.drawLabel(shapeElement, text, style, position);
 	},
 
 	/**
