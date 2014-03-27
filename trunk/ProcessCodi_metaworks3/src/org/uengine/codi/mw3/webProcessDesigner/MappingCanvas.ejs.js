@@ -69,7 +69,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
         	        ];
         }else{
         	return [
-        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT)
+        	        new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN)
         	        ];
         }
     };
@@ -88,7 +88,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
     canvas.initConfig({
         selectable      : true,
         dragSelectable  : false,
-        movable         : false,
+        movable         : true,
         resizable       : false,
         connectable     : true,
         connectCloneable: false,
@@ -96,8 +96,11 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
         labelEditable   : false,
         groupDropable   : false,
         collapsible     : false,
-        enableHotKey    : true
+        enableHotKey    : true,
+        enableContextMenu : false
     });
+  
+    this.setContextMenu(canvas);
     
     this.leftTreeLoaded = false;
     this.rightTreeLoaded = false;
@@ -334,7 +337,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					if( linkedInfoStr != null ){
 						var tempStr = linkedInfoStr.split(","); 
 						fromId 	= tempStr[0];
-						toId 		= tempStr[1];
+						toId 	= tempStr[1];
 						if (console && console.log) console.log('fromId = ' +fromId );
 						if (console && console.log) console.log('toId = ' +toId );
 						// argument : 받은 변수정보 => toId
@@ -380,5 +383,153 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 				this.callCount = -1;
 			}
 			return this.object;
+		},
+		
+		setContextMenu : function(canvas) {
+			var me = canvas;
+			$.contextMenu({
+			selector: '#' + me._RENDERER.getRootElement().id,
+			build   : function ($trigger, e) {
+				var root = me._RENDERER.getRootGroup(), shape, newElement, eventOffset = me._HANDLER._getOffset(event);
+				$(me._RENDERER.getContainer()).focus();
+				return {
+					items: {
+						'Math': {
+							name: 'Math',
+							items: {
+								'Max': {
+									name: 'Max', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Max', 2, 1);
+									}
+								},
+								'Min' : {
+									name: 'Min', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Min', 2, 1);
+									}
+								},
+								'To Number'        : {
+									name: 'To Number', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'To Number', 1, 1);
+									}
+								},
+								'Sum'        : {
+									name: 'Sum', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Sum', 5, 1);
+									}
+								},
+								'Floor'        : {
+									name: 'Floor', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Floor', 1, 1);
+									}
+								},
+								'Round'       : {
+									name: 'Round', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Round', 1, 1);
+									}
+								},
+								'Ceil'       : {
+									name: 'Ceil', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Ceil', 1, 1);
+									}
+								},
+								'Abs'       : {
+									name: 'Abs', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Abs', 1, 1);
+									}
+								}
+							}
+						},
+						'String'    : {
+							name: 'String',
+							items: {
+								'Concat': {
+									name: 'Concat', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Concat', 5, 1);
+									}
+								},
+								'Replace' : {
+									name: 'Replace', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'Replace', 1, 1);
+									}
+								},
+								'NumberFormat'        : {
+									name: 'NumberFormat', callback: function () {
+										me.drawTransformer([eventOffset.x, eventOffset.y], 'NumberFormat', 2, 1);
+									}
+								}
+							}
+						},
+						'XML'     : {
+							name : 'XML',
+							items: {
+								'view_actualSize': {
+									name: 'Actual Size', callback: function () {
+										me._RENDERER.setScale(1);
+									}
+								},
+								'sep2_1'         : '---------',
+								'view_fitWindow' : {
+									name: 'Fit Window', callback: function () {
+										me.fitWindow();
+									}
+								},
+								'sep2_2'         : '---------',
+								'view_25'        : {
+									name: '25%', callback: function () {
+										me._RENDERER.setScale(0.25);
+									}
+								},
+								'view_50'        : {
+									name: '50%', callback: function () {
+										me._RENDERER.setScale(0.5);
+									}
+								},
+								'view_75'        : {
+									name: '75%', callback: function () {
+										me._RENDERER.setScale(0.75);
+									}
+								},
+								'view_100'       : {
+									name: '100%', callback: function () {
+										me._RENDERER.setScale(1);
+									}
+								},
+								'view_150'       : {
+									name: '150%', callback: function () {
+										me._RENDERER.setScale(1.5);
+									}
+								},
+								'view_200'       : {
+									name: '200%', callback: function () {
+										me._RENDERER.setScale(2);
+									}
+								},
+								'view_300'       : {
+									name: '300%', callback: function () {
+										me._RENDERER.setScale(3);
+									}
+								},
+								'view_400'       : {
+									name: '400%', callback: function () {
+										me._RENDERER.setScale(4);
+									}
+								},
+								'sep2_3'         : '---------',
+								'view_zoomin'    : {
+									name: 'Zoom In', callback: function () {
+										me.zoomIn();
+									}
+								},
+								'view_zoomout'   : {
+									name: 'Zoom Out', callback: function () {
+										me.zoomOut();
+									}
+								}
+							}
+						}
+					}
+				};
+			}
+		});
 		}
 };
