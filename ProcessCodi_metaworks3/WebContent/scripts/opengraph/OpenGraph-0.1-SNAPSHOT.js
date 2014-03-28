@@ -10430,7 +10430,8 @@ OG.shape.HorizontalPoolShape.prototype.createShape = function () {
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'vertical',
 		'vertical-align' : 'top',
-		'fill' : 'none'
+		'fill' : 'none',
+		'title-size' : 30
 	});
 
     return this.geom;
@@ -16727,20 +16728,33 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 	if (_tempStyle['label-direction'] && _tempStyle['vertical-align'] === 'top') {
 		//boundary = geometry.getBoundary();
 		if (_tempStyle['label-direction'] === 'vertical') {
-			titleLine = new OG.geometry.Line(
-				[boundary.getUpperLeft().x + 20, boundary.getUpperLeft().y],
-				[boundary.getLowerLeft().x + 20, boundary.getLowerLeft().y]
-			);
-			group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), 20, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
-		
+			if(_tempStyle['title-size']){
+				titleLine = new OG.geometry.Line(
+					[boundary.getUpperLeft().x + _tempStyle['title-size'], boundary.getUpperLeft().y],
+					[boundary.getLowerLeft().x + _tempStyle['title-size'], boundary.getLowerLeft().y]
+				);
+				group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), _tempStyle['title-size'], (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
+			}else{
+				titleLine = new OG.geometry.Line(
+					[boundary.getUpperLeft().x + 20, boundary.getUpperLeft().y],
+					[boundary.getLowerLeft().x + 20, boundary.getLowerLeft().y]
+				);
+				group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), 20, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
+			}
 		} else {
-		
-			titleLine = new OG.geometry.Line(
-				[boundary.getUpperLeft().x, boundary.getUpperLeft().y + 20],
-				[boundary.getUpperRight().x, boundary.getUpperRight().y + 20]
-			);
-			group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), (boundary.getUpperRight().x - boundary.getUpperLeft().x), 20);
-		
+			if(_tempStyle['title-size']){
+				titleLine = new OG.geometry.Line(
+					[boundary.getUpperLeft().x, boundary.getUpperLeft().y + _tempStyle['title-size']],
+					[boundary.getUpperRight().x, boundary.getUpperRight().y + _tempStyle['title-size']]
+				);
+				group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), (boundary.getUpperRight().x - boundary.getUpperLeft().x), _tempStyle['title-size']);
+			}else{
+				titleLine = new OG.geometry.Line(
+					[boundary.getUpperLeft().x, boundary.getUpperLeft().y + 20],
+					[boundary.getUpperRight().x, boundary.getUpperRight().y + 20]
+				);
+				group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), (boundary.getUpperRight().x - boundary.getUpperLeft().x), 20);
+			}
 		}
 		this._drawGeometry(group.node, titleLine, _style);
 		this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_HIDDEN);
@@ -16939,7 +16953,11 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, te
 
 OG.renderer.RaphaelRenderer.prototype.resizeShape = function (element, excludeEdgeId) {
 	if(element.shape instanceof OG.shape.HorizontalPoolShape){
-		var ele, eleArray=[], i, height=0;
+		var ele, eleArray=[], i, height=0, titleSize;
+		
+		if(element.shape.geom.style.map['title-size'])
+			titleSize = element.shape.geom.style.map['title-size'];
+			
 		for(i=0; i<element.childNodes.length; i++){
 			ele = element.childNodes[i];
 			if(ele.shape instanceof OG.shape.HorizontalLaneShape){
@@ -16947,8 +16965,8 @@ OG.renderer.RaphaelRenderer.prototype.resizeShape = function (element, excludeEd
 			}
 		}
 		for(i=0; i<eleArray.length; i++){
-			if((element.shape.geom.boundary._width - 20) != eleArray[i].shape.geom.boundary._width){
-				var right = element.shape.geom.boundary._width - eleArray[i].shape.geom.boundary._width - 20;
+			if((element.shape.geom.boundary._width - titleSize) != eleArray[i].shape.geom.boundary._width){
+				var right = element.shape.geom.boundary._width - eleArray[i].shape.geom.boundary._width - titleSize;
 				this.resize(eleArray[i], [0, 0, 0, right]);
 			}
 			if(i != (eleArray.length - 1)){
@@ -17126,7 +17144,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
-	var me = this, edge, fromTerminalId, toTerminalId, fromShape, toShape, fromElement, toElement, fromTerminalNum, toTerminalNum,
+	var me = this, edge, fromTerminalId, toTerminalId, fromShape, toShape, fromElement, toElement, fromParent, toParent, fromTerminalNum, toTerminalNum,
 		fromTerminal, toTerminal, vertices, fromDrct, toDrct, fromXY, toXY,
 		orgFromXY, orgToXY, orgFromDrct, orgToDrct, intersectionInfo, isSelf,
 		collapsedParents, collapsedEnvelope, collapsedUpperLeft, collapsedGeom, collapsedPosition;
@@ -17267,7 +17285,21 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
     
 	if(me._CONFIG.ENABLE_CONTEXTMENU){
 		// redraw edge
-		if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
+		
+		$(me.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
+			if(element.shape instanceof OG.shape.HorizontalPoolShape){
+				var i, elements = me.getElementsByBBox(element.shape.geom.getBoundary());
+				
+				for(i=0;i<elements.length;i++){
+					if(elements[i] == fromElement)
+						fromParent = element;
+					if(elements[i] == toElement)
+						toParent = element;
+				}
+			}
+		});
+		
+		if(fromParent != toParent){
 			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
 				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
 		}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
@@ -17342,7 +17374,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawConnectedEdge = function (element, e
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style, label) {
-	var me = this, _style = {}, fromShape, toShape, fromElement, toElement, intersectionInfo, fromXY, toXY,
+	var me = this, _style = {}, fromShape, toShape, fromElement, toElement, fromParent, toParent, intersectionInfo, fromXY, toXY,
 		orgFromXY, orgToXY, fromDrct, toDrct, orgFromDrct, orgToDrct, isSelf, beforeEvent,
 		addAttrValues = function (element, name, value) {
 			var attrValue = $(element).attr(name),
@@ -17380,26 +17412,37 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 	}
 	
 	if (fromShape && toShape) {
-		if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
-			|| toShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data"  ){
-			_style["stroke-dasharray"] = ". ";
-		}else if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation" 
-				|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"  ){
-			_style["arrow-end"] = "none";
-			_style["stroke-dasharray"] = ". ";
-		}else if( fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
-				|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"  ){
-			_style["arrow-end"] = "open_block-wide-long";
-			_style["stroke-dasharray"] = "--";		
-		}
-
 		fromElement = me.getElementById(fromShape.id);
 		toElement = me.getElementById(toShape.id);
 		
 		if(me._CONFIG.ENABLE_CONTEXTMENU){
-			if($(fromElement).parent().get(0) != $(toElement).parent().get(0)){
+			$(me.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
+				if(element.shape instanceof OG.shape.HorizontalPoolShape){
+					var i, elements = me.getElementsByBBox(element.shape.geom.getBoundary());
+					
+					for(i=0;i<elements.length;i++){
+						if(elements[i] == fromElement)
+							fromParent = element;
+						if(elements[i] == toElement)
+							toParent = element;
+					}
+				}
+			});
+			
+			if(fromParent != toParent){
 				_style["arrow-end"] = "open_block-wide-long";
 				_style["stroke-dasharray"] = "--";
+			}else if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
+				|| toShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data"  ){
+				_style["stroke-dasharray"] = ". ";
+			}else if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation" 
+					|| toShape.attributes._shape_id.value == "OG.shape.bpmn.M_Annotation"  ){
+				_style["arrow-end"] = "none";
+				_style["stroke-dasharray"] = ". ";
+			}else if( fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
+					|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"  ){
+				_style["arrow-end"] = "open_block-wide-long";
+				_style["stroke-dasharray"] = "--";		
 			}		
 		}
 		beforeEvent = jQuery.Event("beforeConnectShape", {edge: edge, fromShape: fromShape, toShape: toShape});
@@ -20201,7 +20244,10 @@ OG.handler.EventHandler.prototype = {
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
 						// grouping
 						//me._RENDERER.addToGroup(groupTarget, eleArray);
-						var i, elements=[], count=0, totalHeight=0, right=0, lower=0;
+						var i, elements=[], count=0, totalHeight=0, right=0, lower=0, titleSize;
+						
+							if(groupTarget.shape.geom.style.map['title-size'])
+								titleSize = groupTarget.shape.geom.style.map['title-size'];
 						
 						//스윔레인인 경우 자동 리사이징 되게
 						if(element.shape instanceof OG.shape.HorizontalLaneShape || element.shape instanceof OG.shape.VerticalLaneShape){
@@ -20219,7 +20265,7 @@ OG.handler.EventHandler.prototype = {
 								}
 							}
 							
-							if(element.shape.geom.boundary._width > (groupTarget.shape.geom.boundary._width - 20)){
+							if(element.shape.geom.boundary._width > (groupTarget.shape.geom.boundary._width - titleSize)){
 								if(element.shape.geom.boundary._height > (groupTarget.shape.geom.boundary._height)){
 									//널이 높이 둘 다 스윔레인이 큰 경우
 									if(count == 1){
@@ -20227,12 +20273,12 @@ OG.handler.EventHandler.prototype = {
 									}else{
 										lower = element.shape.geom.boundary._height;
 									}
-									right = element.shape.geom.boundary._width - groupTarget.shape.geom.boundary._width + 20;
+									right = element.shape.geom.boundary._width - groupTarget.shape.geom.boundary._width + titleSize;
 									
 									me._RENDERER.resize(groupTarget, [0, lower, 0, right]);
 								}else{
 									//널이는 스윔레인이 높이는 풀이 큰 경우
-									right = element.shape.geom.boundary._width - groupTarget.shape.geom.boundary._width + 20;
+									right = element.shape.geom.boundary._width - groupTarget.shape.geom.boundary._width + titleSize;
 									if(count == 1){
 										lower = groupTarget.shape.geom.boundary._height - element.shape.geom.boundary._height;
 										me._RENDERER.resize(element, [0, lower, 0, 0]);
@@ -20250,13 +20296,13 @@ OG.handler.EventHandler.prototype = {
 									}else{
 										lower = element.shape.geom.boundary._height;
 									}
-									right = groupTarget.shape.geom.boundary._width - element.shape.geom.boundary._width - 20;
+									right = groupTarget.shape.geom.boundary._width - element.shape.geom.boundary._width - titleSize;
 									
 									me._RENDERER.resize(element, [0, 0, 0, right]);
 									me._RENDERER.resize(groupTarget, [0, lower, 0, 0]);
 								}else{
 									//넓이 높이 둘 다 풀이 큰 경우
-									right = groupTarget.shape.geom.boundary._width - element.shape.geom.boundary._width - 20;
+									right = groupTarget.shape.geom.boundary._width - element.shape.geom.boundary._width - titleSize;
 									if(count == 1){
 										lower = groupTarget.shape.geom.boundary._height - element.shape.geom.boundary._height;
 										me._RENDERER.resize(element, [0, lower, 0, right]);
@@ -20268,7 +20314,7 @@ OG.handler.EventHandler.prototype = {
 								}
 							}
 							
-							dx = groupTarget.shape.geom.vertices[0].x - element.shape.geom.vertices[0].x + 20;
+							dx = groupTarget.shape.geom.vertices[0].x - element.shape.geom.vertices[0].x + titleSize;
 							dy = groupTarget.shape.geom.vertices[0].y - element.shape.geom.vertices[0].y;
 							if(count == 1){
 								me._RENDERER.move(element, [dx, dy]);
@@ -20305,17 +20351,21 @@ OG.handler.EventHandler.prototype = {
 					}
 					
 					if((parentElement != root) && !groupTarget){
-						var i, elements=[], totalHeight=0;
-
-						for(i=0; i<parentElement.childNodes.length; i++){
-							var ele = parentElement.childNodes[i];
-							if(ele.shape instanceof OG.shape.HorizontalLaneShape || ele.shape instanceof OG.shape.VerticalLaneShape){
-								elements.push(ele);
-							}
-						}
+						var i, elements=[], totalHeight=0, titleSize;
+						
 						if(elements.length != 0){
+							if(parentElement.shape.geom.style.map['title-size'])
+									titleSize = parentElement.shape.geom.style.map['title-size'];
+	
+							for(i=0; i<parentElement.childNodes.length; i++){
+								var ele = parentElement.childNodes[i];
+								if(ele.shape instanceof OG.shape.HorizontalLaneShape || ele.shape instanceof OG.shape.VerticalLaneShape){
+									elements.push(ele);
+								}
+							}
+						
 							for(i=0; i<elements.length; i++){
-								dx = parentElement.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + 20;
+								dx = parentElement.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + titleSize;
 								dy = parentElement.shape.geom.vertices[0].y - elements[i].shape.geom.vertices[0].y;
 								dy2 = totalHeight;
 								me._RENDERER.move(elements[i], [dx, dy + dy2]);
@@ -24158,11 +24208,11 @@ OG.graph.Canvas.prototype = {
 		return element;
 	},
 	
-	drawTransformer: function (position, type, input, output) {
+	drawTransformer: function (position, type, input, output, id) {
 		var me = this, shape, element, style, envelope, i, toShape, fromShape, toElement, fromElement, textShape, textElement;
-		
+		id = 'OG_4779';
 		shape = new OG.shape.Transformer(type);
-		element = me.drawShape(position, shape, [90, 22 + (input * 20)]);
+		element = me.drawShape(position, shape, [90, 22 + (input * 20)], style, id);
 		envelope = element.shape.geom.getBoundary();
 		
 		for(i=0; i<input; i++){
