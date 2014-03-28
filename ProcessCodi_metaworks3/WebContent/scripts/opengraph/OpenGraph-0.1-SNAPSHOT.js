@@ -20353,16 +20353,16 @@ OG.handler.EventHandler.prototype = {
 					if((parentElement != root) && !groupTarget){
 						var i, elements=[], totalHeight=0, titleSize;
 						
+						for(i=0; i<parentElement.childNodes.length; i++){
+							var ele = parentElement.childNodes[i];
+							if(ele.shape instanceof OG.shape.HorizontalLaneShape || ele.shape instanceof OG.shape.VerticalLaneShape){
+								elements.push(ele);
+							}
+						}
+							
 						if(elements.length != 0){
 							if(parentElement.shape.geom.style.map['title-size'])
 									titleSize = parentElement.shape.geom.style.map['title-size'];
-	
-							for(i=0; i<parentElement.childNodes.length; i++){
-								var ele = parentElement.childNodes[i];
-								if(ele.shape instanceof OG.shape.HorizontalLaneShape || ele.shape instanceof OG.shape.VerticalLaneShape){
-									elements.push(ele);
-								}
-							}
 						
 							for(i=0; i<elements.length; i++){
 								dx = parentElement.shape.geom.vertices[0].x - elements[i].shape.geom.vertices[0].x + titleSize;
