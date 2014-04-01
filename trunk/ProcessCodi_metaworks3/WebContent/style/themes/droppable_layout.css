@@ -3650,8 +3650,8 @@ legend {display:none;}
 #moreWorkDiv{ text-align:center; margin:15px;}
 .moreBtn5{display:inline-block; margin:0 20px;; text-align:center;font-weight:bold;}
 .moreBtn6{display:inline-block; margin:0 20px;; text-align:center;font-weight:bold; display:none;}
-.morePointL{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointL.png") no-repeat;}
-.morePointR{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointR.png") no-repeat;}
+.morePointL{display:inline-block;width: 50px; height:1px;  background-color: #bdc3c7; no-repeat;}
+.morePointR{display:inline-block;width: 50px; height:1px;  background-color: #bdc3c7; no-repeat;}
 
 .topic_span{ padding:0 6px 0px 6px;-webkit-border-radius: 3px;     -moz-border-radius: 3px;  border-radius: 3px; background: #7f8c8d; white-space:nowrap; color:#fff; line-height:19px;}
 .workdueDate{ float:left; margin-left:67px; margin-top:4px;}
