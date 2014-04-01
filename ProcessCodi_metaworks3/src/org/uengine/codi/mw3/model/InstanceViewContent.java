@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Face(ejsPath="genericfaces/Window.ejs",
 	  displayName="InstanceViewContent",
-	  options={"hideLabels", "maximize"}, 
-	  values={"true", "true"})
+	  options={"hideLabels", "maximize", "hideTitleBar"}, 
+	  values={"true", "true", "true"})
 public class InstanceViewContent extends ContentWindow {
 	
 	public Session session;
