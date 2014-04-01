@@ -19,6 +19,13 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 	
 		});
 		
+		$('#instanceName_' + this.objectId).bind('keydown', function(event){
+			if(event.keyCode == 13 && !event.shiftKey){
+				event.preventDefault();
+				this.blur();
+			}
+		});
+		
 		var autoSizing = function(){
 			var h=$('#instanceName_' + objectId);
 			
