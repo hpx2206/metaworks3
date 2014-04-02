@@ -19,10 +19,12 @@ import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.ListPanel;
 import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicInfo;
+import org.uengine.codi.mw3.view.InfoContentListPanel;
 import org.uengine.kernel.GlobalContext;
 
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
@@ -190,13 +192,22 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			locale.load();
 			
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getId());
-			
+			TopicInfo topicInfo = new TopicInfo(session, this.getId());
+			/*
 			ListPanel listPanel = new ListPanel(instanceListPanel, new TopicInfo(session, this.getId()));
-
+			
 			String title = locale.getString("$Topic") + " - " + getName();
 			session.setWindowTitle(title);
-
-			return new Object[]{session, listPanel};
+			 */
+			NewInstancePanel newInstancePanel = new NewInstancePanel();
+			newInstancePanel.load(session);
+			
+			InfoContentListPanel infoContentListPanel = new InfoContentListPanel();
+			infoContentListPanel.setContent(instanceListPanel);
+			infoContentListPanel.setPerspectiveInfo(topicInfo);
+			infoContentListPanel.setNewInstancePanel(newInstancePanel);
+			
+			return new Object[]{session, infoContentListPanel};
 		}
 	}
 	
