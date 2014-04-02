@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.admin;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.InstanceSearchBox;
 import org.uengine.codi.mw3.model.NotificationBadge;
 import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.SearchBox;
@@ -41,6 +42,12 @@ public class TopPanel {
 		}
 
 		setCompany(session.getCompany());
+		
+		InstanceSearchBox searchBox = new InstanceSearchBox();
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+		setSearchBox(searchBox);
+
 	}
 	
 	NotificationBadge notificationBadge;
