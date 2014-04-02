@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.view;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Order;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs", options="spacing", values="14")
 public class ContentListPanel {
 	
 	Object content;
