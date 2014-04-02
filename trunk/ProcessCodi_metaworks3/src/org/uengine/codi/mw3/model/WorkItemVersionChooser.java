@@ -70,21 +70,27 @@ public class WorkItemVersionChooser implements ORMappingListener{
 	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] choose() throws Exception{
 		FileWorkItem workItem = null;
+		
+		IWorkItem wi = null;
 		int i=0;
 		for(String value : getVersionSelector().getOptionValues()){
 			if(value.equals(getVersionSelector().getSelected())){
 				workItem = new FileWorkItem();
 				workItem.setTaskId(getTaskIdsPerVersion().get(i));
-				workItem.copyFrom(workItem.databaseMe());
-				workItem.setMetaworksContext(new MetaworksContext());
-				workItem.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
+				wi = workItem.databaseMe();
+				wi.setMetaworksContext(new MetaworksContext());
+				wi.getMetaworksContext().setHow(MetaworksContext.HOW_MINIMISED);
 				
 				break;
 			}
 			i++;
 		}
+		
+		DocumentTool documentTool = new DocumentTool();
+		documentTool.setInstId(instId.toString());
+		documentTool.setWorkitem(wi);
 
-		return new Object[]{new OverlayCommentReloadPanel(WorkItem.findCommentByTaskId(workItem.getTaskId().toString())), new Refresh(workItem)};
+		return new Object[]{new OverlayCommentReloadPanel(WorkItem.findCommentByTaskId(workItem.getTaskId().toString())), new Refresh(documentTool)};
 	}
 
 	@Override
