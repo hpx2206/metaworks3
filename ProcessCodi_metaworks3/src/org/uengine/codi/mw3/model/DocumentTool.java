@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Id;
 import org.uengine.codi.ITool;
 
 public class DocumentTool implements ITool, Serializable{
@@ -12,6 +13,7 @@ public class DocumentTool implements ITool, Serializable{
 	transient public Session session;
 
 	String instId;
+	@Id
 		public String getInstId() {
 			return instId;
 		}
