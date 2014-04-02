@@ -1,37 +1,50 @@
 <%
-	if(mw3.where == 'ssp'){
+	if(mw3.how == 'picker'){
 %>
-
-	<ul class="mp_left_menu cycle-pager external">
-		<li id="mp_menu_list_<%=objectId%>" class="mp_menu_list"><%=value.appName%></li>
-	</ul>
-
-
-<%
-	}else if(mw3.where == 'oce_dashboard'){
-	
-%>
-	
-	<li onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
-		<%=fields.logoFile.here({when:'image'})%>
-		<%=value.appName%>
-		<div class="editicon" onClick="<%=methods.goSelfService.caller()%>">
-		<div class="editicon2" onClick="<%=methods.deleteApp.caller()%>">
-	</li>
-<%
-	}else if(mw3.where == 'oce_perspective'){
-	
-%>
-	<div class="depth1" onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
-		<span class="dashboard_icon"><img class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"></span><span><%=value.appName%></span><div class="clear"></div>
-	</div>
+        <li>
+            <%=fields.logoFile.here({when:'image'})%>
+            <%=value.appName%>
+        </li>
 <%
 	}else{
+%>
+<%
+	   if(mw3.where == 'ssp'){
+%>
+
+        	<ul class="mp_left_menu cycle-pager external">
+        		<li id="mp_menu_list_<%=objectId%>" class="mp_menu_list"><%=value.appName%></li>
+        	</ul>
+
+
+<%
+	   }else if(mw3.where == 'oce_dashboard'){
+	
+%>
+	
+        	<li onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
+        		<%=fields.logoFile.here({when:'image'})%>
+        		<%=value.appName%>
+        		<div class="editicon" onClick="<%=methods.goSelfService.caller()%>">
+        		<div class="editicon2" onClick="<%=methods.deleteApp.caller()%>">
+        	</li>
+<%
+	   }else if(mw3.where == 'oce_perspective'){
+	
+%>
+        	<div class="depth1" onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
+        		<span class="dashboard_icon"><img class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"></span><span><%=value.appName%></span><div class="clear"></div>
+        	</div>
+<%
+	   }else{
 
 %>
-		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/>
-		<a onClick="#"><%=value.appName%></a>
+    		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/>
+    		<a onClick="#"><%=value.appName%></a>
 <%
-	}
+	   }
+%>
+<%
+    }
 %>
 

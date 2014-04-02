@@ -16,7 +16,6 @@ import org.uengine.codi.mw3.ide.compare.CompareOriginFilePanel;
 import org.uengine.codi.mw3.model.ParameterValue;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
-import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.contexts.ComplexType;

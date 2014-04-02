@@ -58,6 +58,8 @@
 
 	<convert converter="metaworks" match="org.uengine.oce.*"/>
 	<convert converter="metaworks" match="org.uengine.oce.dashboard.*"/>
+	
+	<convert converter="metaworks" match="org.uengine.webservice.*"/>
 
 	<convert match="java.lang.Exception" converter="exception">
   		<param name='include' value='message,lineNumber'/>

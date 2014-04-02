@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.marketplace;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -12,6 +13,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.model.IUser;
 
 @Table(name="APPMAPPING")
 @Face(ejsPathMappingByContext={"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"})
@@ -21,7 +23,6 @@ public interface IAppMapping extends IDAO{
 	public int getAppId();
 	public void setAppId(int appId);
 
-	@Id
 	public String getComCode();
 	public void setComCode(String comCode);
 
@@ -84,5 +85,9 @@ public interface IAppMapping extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] deleteApp() throws Exception;
+	
+	@Available(where=IUser.WHERE_PICKERLIST)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK)
+	public Object[] pickUp() throws Exception;
 	
 }

@@ -233,6 +233,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 				var fromTrcingTag = $(fromElement).attr('_tracingTag');
 				var toTrcingTag = $(toElement).attr('_tracingTag');
 				var transitionView;
+				
 				if( fromTrcingTag && toTrcingTag ){
 					// from과 to 가 모두 엑티비티인 경우만 transition 으로 데이터를 넣는다.
 		    		transitionView = {
@@ -424,8 +425,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ca
 		mw3.onLoadFaceHelperScript();
 	
 	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.ActivityNode"){
-		var shapeWidth = "70";
-		var shapeHeight = "50";
+		var shapeWidth = "100";
+		var shapeHeight = "80";
 		var activityclass = clipboardNode.activity.__className;
 		var	viewclass = "org.uengine.kernel.designer.web.HumanActivityView";
 		var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
@@ -478,6 +479,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	var ogArr = ogObj.cell;
 	var activityList = [];
 	var roleList = [];
+	var poolList = [];
 	var transitionList = [];
 	var valueChainList = [];
 	var graphicList = [];
@@ -564,6 +566,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 				valueChainList = this.valueChainSetting($id, cellForDwr, valueChainList);
 				// set Role
 				roleList     = this.roleSetting($id, cellForDwr, roleList);
+				// set Pool
+				poolList     = this.poolSetting($id, cellForDwr, poolList);
 			}
 			if( og['@shapeType'] == 'EDGE'){
 				transitionList = this.transitionSetting($id, cellForDwr, transitionList);
@@ -581,6 +585,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	container.transitionList = transitionList;
 	container.valueChainList = valueChainList;
 	container.roleList = roleList;
+	container.poolList = poolList;
 	container.graphicList = graphicList;
 	container.processVariablePanel = processVariablePanel;
 	// use jms
@@ -660,6 +665,17 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ro
 		var classType = idDiv.attr('_classType');
         if(classType == 'Role'){
             list[list.length] = role;
+        }
+    }
+	return list;
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.poolSetting = function(idDiv, cellForDwr, list){
+	var pool = idDiv.data('pool');
+    if(pool){
+        pool.poolView = cellForDwr;
+		var classType = idDiv.attr('_classType');
+        if(classType == 'Pool'){
+            list[list.length] = pool;
         }
     }
 	return list;

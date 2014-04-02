@@ -1136,5 +1136,12 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 		public void setGraphicInfo(Object graphicInfo) {
 			GraphicInfo = graphicInfo;
 		}
+	Object poolInfo;
+		public Object getPoolInfo() {
+			return poolInfo;
+		}
+		public void setPoolInfo(Object poolInfo) {
+			this.poolInfo = poolInfo;
+		}
 }
 
