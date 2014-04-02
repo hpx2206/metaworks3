@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.view.ContentListPanel;
+import org.uengine.codi.mw3.view.NewInstanceContentListPanel;
 
 public class PersonalPerspective extends Perspective {
 
@@ -14,13 +17,14 @@ public class PersonalPerspective extends Perspective {
 
 		InstanceListPanel instanceListPanel = loadInstanceList(session, Perspective.MODE_PERSONAL, type, session.getLastSelectedItem());
 		
-		ListPanel listPanel = new ListPanel();
-		listPanel.setInstanceListPanel(instanceListPanel);
-		listPanel.setPerspectiveInfo(new PerspectiveInfo(session, type));
-
-//		session.setWindowTitle(null);
+		NewInstancePanel newInstancePanel = new NewInstancePanel();
+		newInstancePanel.load(session);
 		
-		return new Object[]{session, listPanel};
+		NewInstanceContentListPanel contentListPanel = new NewInstanceContentListPanel();
+		contentListPanel.setContent(instanceListPanel);
+		contentListPanel.setNewInstancePanel(newInstancePanel);
+		
+		return new Object[]{session, contentListPanel};
 	}
 	
 	@ServiceMethod
@@ -55,6 +59,15 @@ public class PersonalPerspective extends Perspective {
 	public Object[] calendar() throws Exception{
 		session.setLastSelectedItem(session.getUser().getUserId());
 		
-		return this.load(Perspective.TYPE_CALENDAR);
+		ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+		scheduleCalendar.session = session;
+		scheduleCalendar.load();
+
+		ContentListPanel contentListPanel = new ContentListPanel();
+		contentListPanel.setContent(scheduleCalendar);
+
+//		session.setWindowTitle(null);
+		
+		return new Object[]{session, contentListPanel};
 	}
 }

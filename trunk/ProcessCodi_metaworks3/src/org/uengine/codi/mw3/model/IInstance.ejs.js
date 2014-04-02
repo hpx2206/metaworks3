@@ -10,7 +10,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 
 	this.windowObjectId = this.objDiv.closest('.mw3_window').attr('objectId');
 
-	this.objDiv.parent().css("background","#DFE1E3");
+	//this.objDiv.parent().css("background","#DFE1E3");
 	this.objDiv.addClass('instance_li');
 	this.objDiv.addClass('instance').addClass('mw3_resize');
 	this.objDiv.attr('status' , this.object.status);

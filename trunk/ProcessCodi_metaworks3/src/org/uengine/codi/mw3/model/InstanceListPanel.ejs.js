@@ -12,7 +12,8 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		.css({
 			position: 'relative',
 			height:   '100%',
-			overflow: 'auto'
+			overflow: 'auto',
+			background-color
 		});
 	
 	this.divId = mw3._getObjectDivId(this.objectId);

@@ -197,10 +197,6 @@ public class SNS extends Application{
 		ContentWindow contentWindow = new ContentWindow();
 		contentWindow.setTitle("$New");
 		
-		NewInstancePanel instancePanel = new NewInstancePanel();
-		instancePanel.session = session;
-		instancePanel.load(session);
-		contentWindow.setPanel(instancePanel);
 //		contentWindow.setPanel(instancePanel);
 		
 //		Grid grid = new Grid();
@@ -215,25 +211,11 @@ public class SNS extends Application{
 
 	static public ListWindow createInstanceListWindow(Session session) throws Exception {
 		
-		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PERSONAL, Perspective.TYPE_NEWSFEED, session.getUser().getUserId());
-
-		ListPanel listPanel = new ListPanel();
-		listPanel.setPerspectiveInfo(new PerspectiveInfo(session, Perspective.TYPE_NEWSFEED));
-		listPanel.setInstanceListPanel(instanceListPanel);
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
 		
 		ListWindow listWindow = new ListWindow();
-		listWindow.setPanel(listPanel);
-		
-		/*
-		if("asana".equals(session.getEmployee().getPreferUX())){
-		
-			instanceListPanel = new InstanceListPanel(session);
-			instanceListPanel.session = session;
-			instanceListWindow.setPanel(instanceListPanel);
-			
-		}else{
-		}
-		*/
+		listWindow.setPanel(personalPerspective.loadAllICanSee());
 		
 		return listWindow;
 	}

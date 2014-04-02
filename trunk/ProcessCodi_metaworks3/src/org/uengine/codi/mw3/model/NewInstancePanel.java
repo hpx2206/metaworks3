@@ -59,15 +59,6 @@ public class NewInstancePanel implements ContextAware {
 			this.instanceBackground = instanceBackground;
 		}
 		
-	ProcessMapPanel processMapPanel;
-		public ProcessMapPanel getProcessMapPanel() {
-			return processMapPanel;
-		}
-		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
-			this.processMapPanel = processMapPanel;
-		}
-		
-
 	String topicNodeId;
 		public String getTopicNodeId() {
 			return topicNodeId;
@@ -129,10 +120,6 @@ public class NewInstancePanel implements ContextAware {
 		newInstantiator.session = session;
 		newInstantiator.setWriter(writer);
 	
-		processMapPanel = new ProcessMapPanel();		
-		processMapPanel.setMetaworksContext(this.getMetaworksContext());
-		processMapPanel.load(session);			
-		
 		Choice securityLevel = new Choice(); 
 		securityLevel.add("$Privacy.Normal","0");
 		securityLevel.add("$Privacy.OnlyFollowers","1");
