@@ -2,16 +2,19 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 
-import org.metaworks.MetaworksContext;
+import org.metaworks.EventContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToEvent;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
@@ -250,6 +253,14 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		this.deleteDatabaseMe();
 		
 		return new Object[]{new Remover(this), new Refresh(new OcePerspectivePanel(session))};
+	}
+	
+	@Override
+	public Object[] pickUp() throws Exception {
+		this.getMetaworksContext().setHow(IUser.HOW_PICKER);
+		this.getMetaworksContext().setWhere(WHERE_EVER);
+		
+		return new Object[]{new ToOpener(this), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@AutowiredFromClient

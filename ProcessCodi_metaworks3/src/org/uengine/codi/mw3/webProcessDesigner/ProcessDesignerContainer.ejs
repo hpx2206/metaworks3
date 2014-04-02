@@ -33,6 +33,14 @@
            <%
         }
     }
+    if( value && value.poolList ){
+        for(var i in value.poolList){
+            var pool = value.poolList[i];
+           %>
+           <%=mw3.locateObject(pool.poolView , pool.poolView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
+           <%
+        }
+    }
     if( value && value.graphicList ){
         for(var i in value.graphicList){
            %>

@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContext;
+import org.uengine.kernel.Pool;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
@@ -23,6 +24,7 @@ import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.designer.web.GraphicView;
+import org.uengine.kernel.designer.web.PoolView;
 import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.kernel.designer.web.ValueChainView;
 import org.uengine.kernel.graph.Transition;
@@ -63,6 +65,13 @@ public class ProcessDesignerContainer {
 		}
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
+		}
+	ArrayList<Pool> poolList;
+		public ArrayList<Pool> getPoolList() {
+			return poolList;
+		}
+		public void setPoolList(ArrayList<Pool> poolList) {
+			this.poolList = poolList;
 		}
 	ArrayList<GraphicView> graphicList;
 		public ArrayList<GraphicView> getGraphicList() {
@@ -142,6 +151,7 @@ public class ProcessDesignerContainer {
 		transitionList = new ArrayList<Transition>();
 		valueChainList = new ArrayList<ValueChain>();
 		roleList = new ArrayList<Role>();
+		poolList = new ArrayList<Pool>();
 		graphicList = new ArrayList<GraphicView>();
 		graphicLineList = new ArrayList<GraphicView>();
 		
@@ -221,6 +231,15 @@ public class ProcessDesignerContainer {
 				}else{
 					graphicList.add(list.get(p));
 				}
+			}
+		}
+		if( def.getPoolInfo() != null ){
+			poolList = (ArrayList<Pool>)def.getPoolInfo();
+			for(Pool pool : poolList){
+				PoolView view = pool.getPoolView();
+				view.setViewType(viewType);
+				view.setEditorId(getEditorId());
+				view.setPool(pool);
 			}
 		}
 		
@@ -305,6 +324,10 @@ public class ProcessDesignerContainer {
 		}
 		if( graphicList != null && graphicList.size()>0){
 			def.setGraphicInfo(graphicList);
+		}
+		
+		if( poolList != null && poolList.size()>0){
+			def.setPoolInfo(poolList);
 		}
 		
 		if( processVariablePanel.getVariableList() != null ){

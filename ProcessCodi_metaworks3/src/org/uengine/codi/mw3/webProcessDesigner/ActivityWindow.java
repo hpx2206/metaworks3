@@ -49,42 +49,47 @@ public class ActivityWindow  {
 		Documentation document = activityPanel.getDocument();
 		if( document != null ){
 			MetaworksFile file1 = document.getAttachfile1();
-			if (file1 != null && file1.getFileTransfer() != null
-					&& file1.getFileTransfer().getFilename() != null
-					&& !"".equals(file1.getFileTransfer().getFilename()) ){
-				try {
-					file1.upload();
-				} catch (Exception e) {
-					e.printStackTrace();
+			if (file1 != null){
+				if (file1.getFileTransfer() != null
+						&& file1.getFileTransfer().getFilename() != null
+						&& !"".equals(file1.getFileTransfer().getFilename()) ){
+					try {
+						file1.upload();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					file1.setFileTransfer(null);
 				}
-			}else{
-				file1.setFileTransfer(null);
 			}
 			MetaworksFile file2 = document.getAttachfile2();
-			if (file2 != null && file2.getFileTransfer() != null
-					&& file2.getFileTransfer().getFilename() != null
-					&& !"".equals(file2.getFileTransfer().getFilename()) ){
-				try {
-					file2.upload();
-				} catch (Exception e) {
-					e.printStackTrace();
+			if (file2 != null){
+				if (file2.getFileTransfer() != null
+						&& file2.getFileTransfer().getFilename() != null
+						&& !"".equals(file2.getFileTransfer().getFilename()) ){
+					try {
+						file2.upload();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					file2.setFileTransfer(null);
 				}
-			}else{
-				file2.setFileTransfer(null);
 			}
 			MetaworksFile file3 = document.getAttachfile3();
-			if (file3 != null && file3.getFileTransfer() != null
-					&& file3.getFileTransfer().getFilename() != null
-					&& !"".equals(file3.getFileTransfer().getFilename()) ){
-				try {
-					file3.upload();
-				} catch (Exception e) {
-					e.printStackTrace();
+			if (file3 != null){
+				if (file3.getFileTransfer() != null
+						&& file3.getFileTransfer().getFilename() != null
+						&& !"".equals(file3.getFileTransfer().getFilename()) ){
+					try {
+						file3.upload();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}else{
+					file3.setFileTransfer(null);
 				}
-			}else{
-				file3.setFileTransfer(null);
 			}
-			
 			activity.setDocumentation(document);
 		}
 		ParameterContextPanel parameterContextPanel = activityPanel.getParameterContextPanel();
