@@ -23,16 +23,13 @@ public class CustomsEnterprisePoolPerspective {
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] select() throws Exception {
-		if(customsEnterprisePoolPanel == null) {
-			customsEnterprisePoolPanel = new CustomsEnterprisePoolPanel();
-		}
-		customsEnterprisePoolPanel.load();
+		CustomsEnterprisePoolPanel customsEnterprisePoolPanel = new CustomsEnterprisePoolPanel();
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setWidth(250);
-		modalWindow.setHeight(50);
-		modalWindow.setTitle("서비스 준비중입니다.");
-		//modalWindow.setPanel(customsEnterprisePoolPanel);
+		modalWindow.setWidth(1000);
+		modalWindow.setHeight(600);
+		modalWindow.setTitle("수출기업 네트워크");
+		modalWindow.setPanel(customsEnterprisePoolPanel);
 		
 		return new Object[]{modalWindow};
 	}

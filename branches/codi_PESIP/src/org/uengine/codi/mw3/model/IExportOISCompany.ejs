@@ -1,0 +1,22 @@
+<%
+	if(value){
+	
+%>
+	<%
+		if( mw3.how == 'InternalCompany' ){
+	%>
+	<div>
+			 <table id="detail_<%=objectId%>" width="100%" class="tbl_type_brw" border="1" cellspacing="0">
+						<tr>
+							<td width="10%" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;"><%=value.id%></td>
+							<td width="60%" scope="row" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;"><%=value.comp_name%></td>
+							<td width="15%" scope="row" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;">KOTRA</td>
+							<td width="15%" scope="row" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;">d</td>
+						</tr>
+				</tbody>
+		</table>
+	</div>
+<%
+		}	 
+	}
+%>	

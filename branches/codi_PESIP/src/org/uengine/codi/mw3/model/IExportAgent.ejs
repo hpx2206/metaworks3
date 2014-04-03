@@ -1,0 +1,21 @@
+<%
+	if(value){
+	
+%>
+	<%
+		if( mw3.how == 'ExportAgent' ){
+	%>
+	<div>
+			 <table id="detail_<%=objectId%>" width="100%" class="tbl_type_brw" border="1" cellspacing="0">
+						<tr>
+							<td width="25%" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;"><%=value.id%></td>
+							<td width="50%" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;"><%=value.chairName%></td>
+							<td width="25%" style="border-right:solid 1px #ccc; border-bottom:solid 0px #ccc;">LNKE</td>
+						</tr>
+			</tbody>
+		</table>
+	</div>
+<%
+		}	 
+	}
+%>	

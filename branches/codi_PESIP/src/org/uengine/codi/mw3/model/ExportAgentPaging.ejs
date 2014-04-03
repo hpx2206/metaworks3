@@ -1,0 +1,30 @@
+<%
+	 if(value){ 
+	 	currentPage = value.currentPage;
+			if(currentPage>=2){		
+%>
+		<span onclick="<%=methods.previous.caller()%>">[이전]</span>
+<% 
+		} 
+%>
+<%
+		for (var i=0; i<value.page.length; i++){
+%>
+
+		
+
+		<span id="Exportpage_<%=value.page[i]%>" style="padding:3px;" value="<%=value.page[i]%>">			
+			<%=value.page[i]%> |
+		</span>
+<%
+		
+		}
+		
+		if(value.type != 'ExportAgent'){
+%>
+		<span onclick="<%=methods.next.caller()%>">[다음]</span><span onclick="<%=methods.last.caller()%>">[맨끝]</span>
+<%
+		}
+ 	}
+ %>
+ 
