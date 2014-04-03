@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
@@ -44,26 +43,26 @@ public class PublicServiceIntroduceTab {
 	}
 	
 	// tab 삭제
-	@ServiceMethod(callByContent=true, inContextMenu=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND) 
-	@Face(displayName="$Delete")
-	public Object delete() throws Exception{
-		// tab은 순서대로 지워야한다. 가장 작은 Item -> Code -> Tab 순으로
-		// item도 지워야 한다. tab을 기반으로 item을 삭제하므로
-		PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
-		publicServiceIntroduceItem.deleteByTab(this.getId());
-		
-		// code도 지우고
-		PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
-		publicServiceIntroduceCode.deleteByTab(this.getId());
-		
-		// tab도 지운다.
-		publicServiceIntroduceCode.setId(this.getId());
-		publicServiceIntroduceCode.deleteTab();
-		
-		// viewPanel에 적용(이는 곧 refresh)
-		PublicServiceIntroducePanel publicServiceIntroducePanel = new PublicServiceIntroducePanel();
-		publicServiceIntroducePanel.load();
-		
-		return new Refresh(publicServiceIntroducePanel);
-	}
+//	@ServiceMethod(callByContent=true, inContextMenu=true, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND) 
+//	@Face(displayName="$Delete")
+//	public Object delete() throws Exception{
+//		// tab은 순서대로 지워야한다. 가장 작은 Item -> Code -> Tab 순으로
+//		// item도 지워야 한다. tab을 기반으로 item을 삭제하므로
+//		PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
+//		publicServiceIntroduceItem.deleteByTab(this.getId());
+//		
+//		// code도 지우고
+//		PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
+//		publicServiceIntroduceCode.deleteByTab(this.getId());
+//		
+//		// tab도 지운다.
+//		publicServiceIntroduceCode.setId(this.getId());
+//		publicServiceIntroduceCode.deleteTab();
+//		
+//		// viewPanel에 적용(이는 곧 refresh)
+//		PublicServiceIntroducePanel publicServiceIntroducePanel = new PublicServiceIntroducePanel();
+//		publicServiceIntroducePanel.load();
+//		
+//		return new Refresh(publicServiceIntroducePanel);
+//	}
 }

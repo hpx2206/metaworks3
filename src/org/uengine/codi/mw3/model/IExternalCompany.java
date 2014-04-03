@@ -7,7 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
-@Table(name="b2g")
+@Table(name="pseip_b2g")
 public interface IExternalCompany extends IDAO{
 	
 	@Id

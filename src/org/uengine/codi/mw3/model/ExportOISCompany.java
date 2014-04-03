@@ -156,8 +156,8 @@ public class ExportOISCompany extends Database<IExportOISCompany> implements IEx
 			if(getCurrentPage() == 0){
 				setCurrentPage(1);
 			}
-			sb.append("select * from ( select @rnum := @rnum +1 as rownum, oiscompany.*" +
-					" from (select @rnum := 0) r, oiscompany order by id) result" +
+			sb.append("select * from ( select @rnum := @rnum +1 as rownum, pseip_oiscompany.*" +
+					" from (select @rnum := 0) r, pseip_oiscompany order by id) result" +
 					" where rownum between (1+("+getCurrentPage()+"+-1)*10) and ("+getCurrentPage()+"*10)");
 			IExportOISCompany iExportOISCompany = (IExportOISCompany) sql(IExportOISCompany.class, sb.toString());
 			iExportOISCompany.select();
@@ -167,7 +167,7 @@ public class ExportOISCompany extends Database<IExportOISCompany> implements IEx
 		
 		public IExportOISCompany getRegions() throws Exception{
 			StringBuffer sb = new StringBuffer();
-			sb.append("select distinct(sector) from oiscompany");
+			sb.append("select distinct(sector) from pseip_oiscompany");
 			IExportOISCompany iExportOISCompany = (IExportOISCompany) sql(IExportOISCompany.class, sb.toString());
 			iExportOISCompany.select();
 			
@@ -199,8 +199,8 @@ public class ExportOISCompany extends Database<IExportOISCompany> implements IEx
 			// TODO Auto-generated method stub
 			StringBuffer sb = new StringBuffer();
 			
-			sb.append("select * from ( select @rnum := @rnum +1 as rownum, oiscompany.*" +
-					" from (select @rnum := 0) r, oiscompany order by id) result" +
+			sb.append("select * from ( select @rnum := @rnum +1 as rownum, pseip_oiscompany.*" +
+					" from (select @rnum := 0) r, pseip_oiscompany order by id) result" +
 					" where rownum between (1+("+getCurrentPage()+"+-1)*10) and ("+getCurrentPage()+"*10)");
 			IExportOISCompany iExportOISCompany = (IExportOISCompany) sql(IExportOISCompany.class, sb.toString());
 			iExportOISCompany.select();
@@ -221,7 +221,7 @@ public class ExportOISCompany extends Database<IExportOISCompany> implements IEx
 		public int getTotalPage() throws Exception{
 			int totalPage = 0;
 			StringBuffer sb = new StringBuffer();
-			sb.append("select round(count(*)/10) as num from oiscompany");
+			sb.append("select round(count(*)/10) as num from pseip_oiscompany");
 			IExportOISCompany iExportOISCompany =(IExportOISCompany) sql(IExportOISCompany.class, sb.toString());
 			iExportOISCompany.select();
 			while(iExportOISCompany.next()){

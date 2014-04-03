@@ -31,8 +31,8 @@ public interface IPublicServiceIntroduceCode extends IDAO{
 	public String getTab();
 	public void setTab(String tab);
 	
-	public Long findSectorSeqeunce() throws Exception;
-	public Long findServiceSeqeunce() throws Exception;
+	public Long findSectorCount() throws Exception;
+	public Long findServiceCount() throws Exception;
 	public int findTabs() throws Exception;
 	
 	public Long findSectorsSequenceByTab(String codeId) throws Exception;
@@ -52,9 +52,9 @@ public interface IPublicServiceIntroduceCode extends IDAO{
 	public void addService(String name, String codeId) throws Exception;
 	public void addTab(String name) throws Exception;
 	
-	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true, target=TARGET_POPUP)
-	@Face(displayName="$Delete")
-	public Object[] delete() throws Exception;
+//	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true, target=TARGET_POPUP)
+//	@Face(displayName="$Delete")
+//	public Object[] delete() throws Exception;
 	// tab을 삭제
 	public void deleteTab() throws Exception;
 	//tab을 기반으로 item을 삭제하므로

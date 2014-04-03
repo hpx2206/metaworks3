@@ -78,8 +78,8 @@ public class ExportAgent extends Database<IExportAgent> implements IExportAgent{
 		if(getCurrentPage() == 0){
 			setCurrentPage(1);
 		}
-		sb.append("select * from ( select @rnum := @rnum +1 as rownum, inke_chair.*" +
-				" from (select @rnum := 0) r, inke_chair order by id) result" +
+		sb.append("select * from ( select @rnum := @rnum +1 as rownum, pseip_inke_chair.*" +
+				" from (select @rnum := 0) r, pseip_inke_chair order by id) result" +
 				" where rownum between (1+("+getCurrentPage()+"+-1)*10) and ("+getCurrentPage()+"*10)");
 		IExportAgent iExportAgent = (IExportAgent) sql(IExportAgent.class, sb.toString());
 		iExportAgent.select();
@@ -91,7 +91,7 @@ public class ExportAgent extends Database<IExportAgent> implements IExportAgent{
 	public int getTotalPage() throws Exception{
 		int totalPage = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append("select round(count(*)/10) as num from inke_chair");
+		sb.append("select round(count(*)/10) as num from pseip_inke_chair");
 		IExportAgent iExportAgent =(IExportAgent) sql(IExportAgent.class, sb.toString());
 		iExportAgent.select();
 		while(iExportAgent.next()){

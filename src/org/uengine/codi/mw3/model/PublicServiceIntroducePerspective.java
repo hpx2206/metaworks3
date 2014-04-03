@@ -16,8 +16,8 @@ public class PublicServiceIntroducePerspective {
 		publicServiceIntroducePanel.load();
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setWidth(1000);
-		modalWindow.setHeight(600);
+		modalWindow.setWidth(0);
+		modalWindow.setHeight(0);
 		modalWindow.setTitle("$publicServiceIntroduce");
 		modalWindow.setPanel(publicServiceIntroducePanel);
 		

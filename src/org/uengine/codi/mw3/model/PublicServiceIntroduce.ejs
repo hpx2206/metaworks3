@@ -43,7 +43,7 @@
                                 
                             <% } else { %>
                                 
-                                <td class="item" sector="<%=value.sectors[j].id%>" service="<%=value.services[i].id%>" width="10%">
+                                <td class="item" sector="<%=value.sectors[j].id%>" service="<%=value.services[i].id%>" width="10%" style="border-right: solid 1px #C4BD97;">
                                 
                                 <% if(value.item.length != 0) {
                                 
@@ -52,28 +52,40 @@
                                             if(value.services[i].id == value.item[k].serviceId &&
                                                value.sectors[j].id == value.item[k].sectorId) {
                                                 
+                                                <% var parseName = value.item[k].serviceName;
+                                                
                                                 var options = {};
-                                                options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer;' }; %>
+                                                options['htmlAttr'] =  {'style': 'cursor: pointer; width: 80%; text-decoration: underline;', 'title': parseName };
+                                                
+                                                if(parseName.length > 8) {
+                                                    parseName = parseName.substring(0,7) + "..";
+                                                    value.item[k].cutServiceName = parseName;
+                                                    
+                                                } else {
+                                                    value.item[k].cutServiceName = parseName;
+                                                
+                                                } %>
                                                 
                                                 <%=mw3.locateObject(value.item[k], value.item[k].__className, null, options)%>
                                                 <% mw3.addBeanProperty(value.__objectId, '.item[' + k + ']'); %>
                                                 
+                                                </br>
                                       
-                                           <% } %> <!-- end if -->
+                                           <% } %> 
                                            
-                                        <% } %>  <!-- end for k -->
-                                           
+                                        <% } %>  
+                                        
                                         </td>
                                         
-                                    <% } %> <!-- end if -->
+                                    <% } %> 
                                      
-                              <% } %> <!-- end else -->
+                              <% } %> 
                                   
-                        <% } %> <!-- end for j -->
+                        <% } %> 
                         
                 </tr>
                 
-            <% } %> <!-- end for i -->
+            <% } %> 
             
             </tbody>
             

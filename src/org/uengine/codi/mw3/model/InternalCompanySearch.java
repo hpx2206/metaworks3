@@ -21,7 +21,6 @@ public class InternalCompanySearch{
 		public ArrayList<IExportOISCompany> getBusinessArea() {
 			return businessArea;
 		}
-	
 		public void setBusinessArea(ArrayList<IExportOISCompany> businessArea) {
 			this.businessArea = businessArea;
 		}
@@ -29,7 +28,7 @@ public class InternalCompanySearch{
 	public void getRegions() throws Exception{
 		IExportOISCompany exportOISCompany = new ExportOISCompany();
 
-		exportOISCompany = (IExportOISCompany) Database.sql(IExportOISCompany.class, "select distinct(sector) from oiscompany");
+		exportOISCompany = (IExportOISCompany) Database.sql(IExportOISCompany.class, "select distinct(sector) from pseip_oiscompany");
 		exportOISCompany.select();
 		
 		region = new SelectBox();

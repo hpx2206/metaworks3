@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -13,6 +14,7 @@ public class PublicServiceIntroduce {
 	
 	final static String SECTOR = "sector";
 	final static String SERVICE = "service";
+	final static String CONTENT = "content";
 	
 	final static String TABLE = "table";
 	
@@ -96,4 +98,5 @@ public class PublicServiceIntroduce {
 		
 		return new ModalWindow(categoryTitle , 500, 200,  "$addColumn");
 	}
+	
 }

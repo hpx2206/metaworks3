@@ -7,7 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
-@Table(name="inke_chair")
+@Table(name="pseip_inke_chair")
 public interface IExportAgent extends IDAO{
 
 	@Id

@@ -127,7 +127,6 @@ public class PublicServiceIntroduceViewPanel {
 			this.managerEmail = managerEmail;
 		}
 	
-	
 	String constructCareer;
 		public String getConstructCareer() {
 			return constructCareer;
@@ -158,6 +157,15 @@ public class PublicServiceIntroduceViewPanel {
 		}
 		public void setServiceSummary(WebEditor serviceSummary) {
 			this.serviceSummary = serviceSummary;
+		}
+		
+	PublicServiceIntroduceDetailList publicServiceIntroduceDetailList;
+		public PublicServiceIntroduceDetailList getPublicServiceIntroduceDetailList() {
+			return publicServiceIntroduceDetailList;
+		}
+		public void setPublicServiceIntroduceDetailList(
+				PublicServiceIntroduceDetailList publicServiceIntroduceDetailList) {
+			this.publicServiceIntroduceDetailList = publicServiceIntroduceDetailList;
 		}
 		
 	// 수정은 MetaworksContext를 view -> edit 로 바꾸는 작업
@@ -224,7 +232,7 @@ public class PublicServiceIntroduceViewPanel {
 		
 	}
 	
-	public void load() {
+	public void load(PublicServiceIntroduceDetailList list) {
 		this.setServiceName(this.getPublicServiceIntroduceItem().getServiceName());
 		this.setServiceIntroduce(this.getPublicServiceIntroduceItem().getServiceIntroduce());
 		this.setConstructTerm(this.getPublicServiceIntroduceItem().getConstructTerm());
@@ -237,5 +245,6 @@ public class PublicServiceIntroduceViewPanel {
 		this.setManagerName(this.getPublicServiceIntroduceItem().getManagerName());
 		this.setManagerNumber(this.getPublicServiceIntroduceItem().getManagerNumber());
 		this.setManagerEmail(this.getPublicServiceIntroduceItem().getManagerEmail());
+		this.setPublicServiceIntroduceDetailList(list);
 	}
 }
