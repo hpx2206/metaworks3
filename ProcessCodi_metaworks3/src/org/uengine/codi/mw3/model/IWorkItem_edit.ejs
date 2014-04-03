@@ -53,10 +53,12 @@
 		if(value.type == "comment"){
 %>
 		<tr>
+		<!--
 			<td width="67">
 				<div style="margin-left:12px; width:55px"><%=fields.writer.here({when:'view'})%></div>
-			</td>		
-			<td style=" padding:10px 0;">			
+			</td>
+		-->		
+			<td style=" padding:10px 0 10px 10px;">			
 				<div id="commandDiv_<%=objectId%>"> 
 					<textarea class="wih_comment_input post_<%=objectId%>" class="<%=value.type%>" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 rows="1"><%=value.title ? value.title : ''%></textarea>
 					<div id="commandRecommendDiv_<%=objectId%>"></div>
