@@ -1,5 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-public class RegionMatchingChart {
+public class GraphInformation {
 
 }

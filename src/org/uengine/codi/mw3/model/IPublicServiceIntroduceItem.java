@@ -13,7 +13,7 @@ import org.metaworks.dao.IDAO;
 
 @Table(name="public_introduce_item")
 public interface IPublicServiceIntroduceItem extends IDAO{
-	
+
 	@Hidden
 	@Id
 	public Long getItemId();

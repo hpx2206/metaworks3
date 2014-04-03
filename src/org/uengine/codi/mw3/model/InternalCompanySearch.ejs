@@ -1,0 +1,19 @@
+<% if(value){ %>
+    <div>
+    
+	     <table id="detail_<%=objectId%>" width="100%"  cellspacing="0" style="padding:5px;">
+		    <tbody>
+						<tr>
+							<th width="10%" scope="row" >■ 진출국가 : </th>
+							<td width="15%" scope="row" style="border-right:solid 1px #ccc;">
+								<%=fields.region.here({when:'edit'})%>
+								<a id="wBtn" href="#" onClick="<%=methods.choose.caller()%>"><span><%=mw3.localize("$choose")%></span></a>
+							</td>
+							<th width="25%" scope="row" style="border-right:solid 1px #ccc;">■ 업종 : </th>
+							<th width="50%" scope="row">■ 검색 : </th>
+						</tr>
+					</tbody>
+		</table>
+	</div>
+
+<% } %>
