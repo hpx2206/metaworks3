@@ -608,8 +608,8 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 
 .instance_complated{margin:0 0 0 5px;border-left:1px solid #ccc;border-bottom:none;border-radius:0px;-moz-border-radius:0px;-webkit-border-radius:0px;background:#f2f3f4}
 .instance_normal{margin:0 0 0 5px;border-left:1px solid #ccc;border-bottom:none;border-radius:0px;-moz-border-radius:0px;-webkit-border-radius:0px;background:#fff}
-.instance_li{margin:0 0 11px 5px;border-left:1px solid #ccc;border-bottom:1px solid #ccc;background:#fff}
-.instance_select{margin:0 0 11px 0 !important;border-left:6px solid #f1c40f;border-bottom:2px solid #95a5a6;border-top-left-radius:7px;border-bottom-left-radius:7px;-moz-border-top-left-radius:7px;-moz-border-bottom-left-radius:7px;-webkit-border-top-left-radius:7px;-webkit-border-bottom-left-radius:7px;background:#ecf0f1 50% !important}
+.instance_li{margin:0 0 11px 0px;border:1px solid #ccc;background:#fff}
+.instance_select{margin:0 0 11px 0 !important;border-left:6px solid #f1c40f;background:#ecf0f1 50% !important}
 
 
 /* table */
