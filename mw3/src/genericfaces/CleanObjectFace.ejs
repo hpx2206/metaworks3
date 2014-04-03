@@ -1,5 +1,12 @@
 <%
 	if(value){
+		var spacing = objectMetadata.getOptionValue('spacing', 0);
+		
+		var fieldOption = {};
+		
+		if(spacing)
+			fieldOption['htmlAttr'] = {style: 'margin-bottom:' + spacing + 'px'};
+		
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 	  		var fd = objectMetadata.fieldDescriptors[i];
 	  	
@@ -9,7 +16,7 @@
 			var fieldValue = value[fd.name];
 %>
 
-	<%=fields[fd.name] ? fields[fd.name].here():"XXX"%>
+	<%=fields[fd.name] ? fields[fd.name].here(fieldOption):"XXX"%>
 
 <%
 		}
