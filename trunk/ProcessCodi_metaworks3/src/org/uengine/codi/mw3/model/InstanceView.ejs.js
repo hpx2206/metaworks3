@@ -12,7 +12,9 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 	this.objectDiv
 		.css({
 			position: 'relative',
-			height:   '100%'
+			height:   '100%',
+			'background-color': 'white',
+			border:'1px solid #ccc'
 		});
 	
 	// window 의 title 설정
