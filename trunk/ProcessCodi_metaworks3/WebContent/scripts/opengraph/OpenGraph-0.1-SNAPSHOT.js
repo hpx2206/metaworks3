@@ -4037,7 +4037,7 @@ window.Raphael.svg && function (R) {
             if (type != "none") {
                 var pathId = "raphael-marker-" + type,
                     markerId = "raphael-marker-" + se + type + w + h + p.id;
-                if (!R._g.doc.getElementById(pathId)) {
+                if (!p.canvas.getElementById(pathId)) {
                     p.defs.appendChild($($("path"), {
                         "stroke-linecap": "round",
                         d: markers[type],
@@ -4927,7 +4927,8 @@ window.Raphael.svg && function (R) {
             height: height,
             version: 1.1,
             width: width,
-            xmlns: "http://www.w3.org/2000/svg"
+            xmlns: "http://www.w3.org/2000/svg",
+            "xmlns:xlink": "http://www.w3.org/1999/xlink"
         });
         if (container == 1) {
             cnvs.style.cssText = css + "position:absolute;left:" + x + "px;top:" + y + "px";
@@ -17298,8 +17299,9 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 				}
 			}
 		});
-		
+		$(edge).attr("connect","");
 		if(fromParent != toParent){
+			$(edge).attr("connect","POOL");
 			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
 				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
 		}else if(fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
@@ -17313,7 +17315,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawEdge = function (edgeElement) {
 		}else if(fromShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape" 
 					|| toShape.attributes._shape_id.value == "OG.shape.HorizontalPoolShape"){
 			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
-				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
+				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "--", "arrow-start":"open_oval-wide-long", "arrow-end": "open_block-wide-long"}), edge.id, isSelf, pointOfInflection);
 		}else{
 			edge = this.drawEdge(new OG.Line(fromXY, toXY, pointOfInflection),
 				OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct, "stroke-dasharray": "", "arrow-end": "classic-wide-long"}), edge.id, isSelf, pointOfInflection);
@@ -17430,6 +17432,7 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 			});
 			
 			if(fromParent != toParent){
+				$(edge).attr("connect","POOL");
 				_style["arrow-end"] = "open_block-wide-long";
 				_style["stroke-dasharray"] = "--";
 			}else if( fromShape.attributes._shape_id.value == "OG.shape.bpmn.D_Data" 
