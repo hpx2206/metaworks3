@@ -2,11 +2,9 @@ var org_uengine_codi_mw3_model_PublicServiceIntroduce = function(objectId, class
     this.objectId = objectId;
     this.className = className;
     this.objectDivId = mw3._getObjectDivId(this.objectId);
-    
     this.object = mw3.objects[this.objectId];
     
     var faceHelper = this;
-    
     faceHelper.divClick();
     faceHelper.divDblClick();
 };
@@ -33,7 +31,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     // 당연 1이 증가해서 온다. 그런데 object의 배열은 0부터 시작한다.
                     // 그래서 강제로 -1을 하여 그려준다. 문제는 없다.
                     var sector = this.object.sectors[i-1];
-                    $('#introTable_'+this.objectId+' tr:last th:last').after('<td class="item" sector="'+sector.id+'" service="'+appendobject.id+'" width="10%"></td>');
+                    $('#introTable_'+this.objectId+' tr:last th:last').after('<td class="item" sector="'+sector.id+'" service="'+appendobject.id+'" width="10%" style="border-right: solid 1px #C4BD97;"></td>');
                     
                 }
             }
@@ -71,7 +69,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     // 당연 1이 증가해서 온다. 그런데 object의 배열은 0부터 시작한다.
                     // 그래서 강제로 -1을 하여 그려준다. 문제는 없다.
                     var service = this.object.services[i-1];
-                    $('#introTable_'+this.objectId+' tr:eq('+i+') th:last').after('<td class="item" sector="'+appendobject.id+'" service="'+service.id+'" width="10%"></td>');
+                    $('#introTable_'+this.objectId+' tr:eq('+i+') td:last').after('<td class="item" sector="'+appendobject.id+'" service="'+service.id+'" width="10%" style="border-right: solid 1px #C4BD97;"></td>');
                 }
                 
             }
@@ -102,13 +100,21 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
                     
                     // 그리고 service 까지 같으면 div에 붙인다.
                     if(appendobject.serviceId == service.id) {
-                       
-                        var options = {};
-                        options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer;' };
                         
-                        var result = $('#introTable_'+this.objectId+'').find('[sector="'+appendobject.sectorId+'"]').eq(j);
-                        console.log(result);
-                        //$('#introTable_'+this.objectId+' tr:eq('+(j+1)+') th:eq('+(i+1)+')').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
+                        var parseName = appendobject.serviceName;
+                        
+                        var options = {};
+                        options['htmlAttr'] =  {'style': 'width: 50%; cursor: pointer; text-decoration: underline;', 'title': parseName };
+                        
+                        if(parseName.length > 8) {
+                            parseName = parseName.substring(0,7) + "..";
+                            appendobject.cutServiceName = parseName;
+                            
+                        } else {
+                            appendobject.cutServiceName = parseName;
+                        }
+                        
+                        $('td[sector="'+appendobject.sectorId+'"][service="'+appendobject.serviceId+'"]').append(mw3.locateObject(appendobject, appendobject.__className, null, options));
                         
                     }
                     
@@ -118,7 +124,7 @@ org_uengine_codi_mw3_model_PublicServiceIntroduce.prototype = {
             
         } 
         
-         if(!this.object.item)
+        if(!this.object.item)
             this.object.item = [];
             
         this.object.item.push(appendobject);   

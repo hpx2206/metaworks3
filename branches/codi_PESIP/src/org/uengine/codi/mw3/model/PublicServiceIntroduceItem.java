@@ -21,7 +21,6 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 	
 	final static String CONTENT = "content";
 	
-	
 	Long itemId;
 		@Id
 		public Long getItemId() {
@@ -71,7 +70,14 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 			this.serviceName = serviceName;
 		}
 		
-		
+	String cutServiceName;
+		public String getCutServiceName() {
+			return cutServiceName;
+		}
+		public void setCutServiceName(String cutServiceName) {
+			this.cutServiceName = cutServiceName;
+		}
+
 	String serviceIntroduce;
 		public String getServiceIntroduce() {
 			return serviceIntroduce;
@@ -176,10 +182,6 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 			this.relationService = relationService;
 		}
 		
-		
-		
-		
-		
 	public IPublicServiceIntroduceItem loadItem(String codeId) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select *");
@@ -193,20 +195,20 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 		return items;
 	}
 	
-	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, String serviceName) throws Exception{
+	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, Long itemId) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select *");
 		sb.append(" from public_introduce_item");
 		sb.append(" where tab=?tab");
 		sb.append(" and sectorId=?sectorId");
 		sb.append(" and serviceId=?serviceId");
-		sb.append(" and serviceName=?serviceName");
+		sb.append(" and itemId=?itemId");
 		
 		IPublicServiceIntroduceItem item = (IPublicServiceIntroduceItem) sql(IPublicServiceIntroduceItem.class, sb.toString());
 		item.setTab(codeId);
 		item.setSectorId(sectorId);
 		item.setServiceId(serviceId);
-		item.setServiceName(serviceName);
+		item.setItemId(itemId);
 		item.select();
 		
 		return item;
@@ -219,13 +221,12 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 	@ServiceMethod(callByContent=true, mouseBinding=ServiceMethodContext.MOUSEBINDING_LEFTCLICK, bindingHidden=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Hidden
 	public Object[] showDetail() throws Exception{
-		ModalWindow modalWindow = new ModalWindow();
 		PublicServiceIntroduceViewPanel publicServiceIntroduceViewPanel = new PublicServiceIntroduceViewPanel();
 		// showDetail을 부르자 마자는 우선 view mode
 		publicServiceIntroduceViewPanel.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		// viewPanel이 객체 단위가 아니므로 DB에 연결하여 각각의 값을 알아내어 set
 		IPublicServiceIntroduceItem iPublicServiceIntroduceItem = new PublicServiceIntroduceItem();
-		iPublicServiceIntroduceItem = loadSelectedItem(this.getTab(), this.getSectorId(), this.getServiceId(), this.getServiceName());
+		iPublicServiceIntroduceItem = loadSelectedItem(this.getTab(), this.getSectorId(), this.getServiceId(), this.getItemId());
 
 		if(publicServiceIntroduceViewPanel.getPublicServiceIntroduceItem() == null) {
 			publicServiceIntroduceViewPanel.setPublicServiceIntroduceItem(new PublicServiceIntroduceItem());
@@ -237,11 +238,46 @@ public class PublicServiceIntroduceItem extends Database<IPublicServiceIntroduce
 			publicServiceIntroduceViewPanel.setPublicServiceIntroduceItem(item);
 		}
 		
-		publicServiceIntroduceViewPanel.load();
+		// detail 부분 아래 서비스랑 구축부분 불러오는 부분.
+		PublicServiceIntroduceService publicServiceIntroduceService = new PublicServiceIntroduceService();
+		IPublicServiceIntroduceService iPublicServiceIntroduceService = publicServiceIntroduceService.loadService(this.getItemId());
 		
+	    PublicServiceIntroduceDetailList publicServiceIntroduceDetailList = new PublicServiceIntroduceDetailList();
+		
+		if(iPublicServiceIntroduceService.size() == 0) {
+			publicServiceIntroduceDetailList.setServiceList(new ArrayList<PublicServiceIntroduceService>());
+			publicServiceIntroduceDetailList.getServiceList().add(new PublicServiceIntroduceService());
+			
+		} else {
+			publicServiceIntroduceDetailList.setServiceList(new ArrayList<PublicServiceIntroduceService>());
+			while(iPublicServiceIntroduceService.next()) {
+				PublicServiceIntroduceService service = new PublicServiceIntroduceService();
+				service.copyFrom(iPublicServiceIntroduceService);
+				publicServiceIntroduceDetailList.getServiceList().add(service);
+			}
+		}
+		
+		PublicServiceIntroduceConstruct publicServiceIntroduceConstruct = new PublicServiceIntroduceConstruct();
+		IPublicServiceIntroduceConstruct iPublicServiceIntroduceConstruct = publicServiceIntroduceConstruct.loadConstruct(this.getItemId()); 
+		
+		if(iPublicServiceIntroduceConstruct.size() == 0) {
+			publicServiceIntroduceDetailList.setConstructList(new ArrayList<PublicServiceIntroduceConstruct>());
+			publicServiceIntroduceDetailList.getConstructList().add(new PublicServiceIntroduceConstruct());
+			
+		} else {
+			while(iPublicServiceIntroduceConstruct.next()) {
+				PublicServiceIntroduceConstruct construct = new PublicServiceIntroduceConstruct();
+				construct.copyFrom(iPublicServiceIntroduceConstruct);
+				publicServiceIntroduceDetailList.getConstructList().add(construct);
+			}
+		}
+		
+		publicServiceIntroduceViewPanel.load(publicServiceIntroduceDetailList);
+		
+		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setTitle(this.getServiceName());
-		modalWindow.setWidth(600);
-		modalWindow.setHeight(450);
+		modalWindow.setWidth(0);
+		modalWindow.setHeight(0);
 		modalWindow.setPanel(publicServiceIntroduceViewPanel);
 		
 		return new Object[] { modalWindow };

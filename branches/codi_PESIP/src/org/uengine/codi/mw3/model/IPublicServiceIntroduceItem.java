@@ -2,18 +2,18 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
-import org.metaworks.EventContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.NonLoadable;
+import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
 @Table(name="public_introduce_item")
 public interface IPublicServiceIntroduceItem extends IDAO{
-
+	
 	@Hidden
 	@Id
 	public Long getItemId();
@@ -35,8 +35,14 @@ public interface IPublicServiceIntroduceItem extends IDAO{
 	public Long getProfileNo();
 	public void setProfileNo(Long profileNo);
 	
+	@Hidden
 	public String getServiceName();
 	public void setServiceName(String serviceName);
+	
+	@NonLoadable
+	@NonSavable
+	public String getCutServiceName();
+	public void setCutServiceName(String cutServiceName);
 	
 	@Hidden
 	public String getServiceIntroduce();
@@ -91,7 +97,7 @@ public interface IPublicServiceIntroduceItem extends IDAO{
 	public void setRelationService(String relationService);
 	
 	public IPublicServiceIntroduceItem loadItem(String codeId) throws Exception;
-	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, String serviceName) throws Exception;
+	public IPublicServiceIntroduceItem loadSelectedItem(String codeId, String sectorId, String serviceId, Long itemId) throws Exception;
 	public ArrayList<String> findContentName(String codeId, String sectorId, String serviceId) throws Exception;
 	public void addContent() throws Exception;
 	

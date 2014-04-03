@@ -14,7 +14,7 @@ public class OrderInformationPanel {
 		if( worldMap == null ) {
 			worldMap = new WorldMap();
 		}
-		worldMap.loadMapInfo();
+		worldMap.load();
 		
 	}
 	

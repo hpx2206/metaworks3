@@ -162,9 +162,9 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 	}
 	
-	public Long findSectorSeqeunce() throws Exception {
+	public Long findSectorCount() throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select MAX(sequence) as sequence");
+		sb.append("select COUNT(*) as sequence");
 		sb.append(" from public_introduce_code");
 		sb.append("	where parentId = 'SECTOR'");
 		
@@ -181,9 +181,9 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 	}
 	
-	public Long findServiceSeqeunce() throws Exception {
+	public Long findServiceCount() throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select MAX(sequence) as sequence");
+		sb.append("select COUNT(*) as sequence");
 		sb.append(" from public_introduce_code");
 		sb.append("	where parentId = 'SERVICE'");
 		
@@ -286,12 +286,12 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		String sectorId = null;
 		int count = 0;
 		
-		if(this.findSectorSeqeunce() == null) {
+		if(this.findSectorCount() == null) {
 			++count;
 			sectorId = SEC_ + count;
 			
 		} else {
-			count = (int) (this.findSectorSeqeunce() + 1);
+			count = (int) (this.findSectorCount() + 1);
 			sectorId = SEC_ + count;
 			
 		}
@@ -312,12 +312,12 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		String serviceId = null;
 		int count = 0;
 		
-		if(this.findServiceSeqeunce() == null) {
+		if(this.findServiceCount() == null) {
 			++count;
 			serviceId = SER_ + count;
 			
 		} else {
-			count = (int) (this.findServiceSeqeunce() + 1);
+			count = (int) (this.findServiceCount() + 1);
 			serviceId = SER_ + count;
 			
 		}
@@ -346,49 +346,49 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 		
 	}
 	
-	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true, target=TARGET_POPUP)
-	@Face(displayName="$Delete")
-	public Object[] delete() throws Exception {
-		// sector와 service를 구분하며 지워야 한다.
-		String[] parseId = this.getId().split("_");
-		
-		// sector인 경우
-		if("SEC".equals(parseId[0])) {
-			// item 삭제 후 div 까지 지워야 한다.
-			PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
-			publicServiceIntroduceItem.deleteBySector(this.getId());
-			
-			// item 삭제 후 code 삭제
-			PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
-			publicServiceIntroduceCode.setId(this.getId());
-			publicServiceIntroduceCode.deleteDatabaseMe();
-			
-			// 화면 refresh
-			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
-			publicServiceIntroduce.setId(this.getTab());
-			publicServiceIntroduce.loadChart(this.getTab());
-			
-			return new Object[] { new Refresh(publicServiceIntroduce) };
-					
-		// service 인 경우	
-		} else {
-			// item 삭제 후 div 까지 지워야 한다.
-			PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
-			publicServiceIntroduceItem.deleteByService(this.getId());
-			
-			// item 삭제 후 code 삭제
-			PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
-			publicServiceIntroduceCode.setId(this.getId());
-			publicServiceIntroduceCode.deleteDatabaseMe();
-			
-			// 화면 refresh
-			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
-			publicServiceIntroduce.setId(this.getTab());
-			publicServiceIntroduce.loadChart(this.getTab());
-			
-			return new Object[] { new Refresh(publicServiceIntroduce) };
-		}
-	}
+//	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true, target=TARGET_POPUP)
+//	@Face(displayName="$Delete")
+//	public Object[] delete() throws Exception {
+//		// sector와 service를 구분하며 지워야 한다.
+//		String[] parseId = this.getId().split("_");
+//		
+//		// sector인 경우
+//		if("SEC".equals(parseId[0])) {
+//			// item 삭제 후 div 까지 지워야 한다.
+//			PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
+//			publicServiceIntroduceItem.deleteBySector(this.getId());
+//			
+//			// item 삭제 후 code 삭제
+//			PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
+//			publicServiceIntroduceCode.setId(this.getId());
+//			publicServiceIntroduceCode.deleteDatabaseMe();
+//			
+//			// 화면 refresh
+//			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+//			publicServiceIntroduce.setId(this.getTab());
+//			publicServiceIntroduce.loadChart(this.getTab());
+//			
+//			return new Object[] { new Refresh(publicServiceIntroduce) };
+//					
+//		// service 인 경우	
+//		} else {
+//			// item 삭제 후 div 까지 지워야 한다.
+//			PublicServiceIntroduceItem publicServiceIntroduceItem = new PublicServiceIntroduceItem();
+//			publicServiceIntroduceItem.deleteByService(this.getId());
+//			
+//			// item 삭제 후 code 삭제
+//			PublicServiceIntroduceCode publicServiceIntroduceCode = new PublicServiceIntroduceCode();
+//			publicServiceIntroduceCode.setId(this.getId());
+//			publicServiceIntroduceCode.deleteDatabaseMe();
+//			
+//			// 화면 refresh
+//			PublicServiceIntroduce publicServiceIntroduce = new PublicServiceIntroduce();
+//			publicServiceIntroduce.setId(this.getTab());
+//			publicServiceIntroduce.loadChart(this.getTab());
+//			
+//			return new Object[] { new Refresh(publicServiceIntroduce) };
+//		}
+//	}
 	
 	public void deleteTab() throws Exception {
 		this.deleteDatabaseMe();
@@ -433,5 +433,4 @@ public class PublicServiceIntroduceCode extends Database<IPublicServiceIntroduce
 	public void modifyTab() throws Exception {
 		this.syncToDatabaseMe();
 	}
-	
 }

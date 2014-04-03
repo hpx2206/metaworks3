@@ -83,8 +83,7 @@ public class InternalCompanyPaging {
 			}
 			
 		}
-		result =page.toString();
-		System.out.println(result);
+		result = page.toString();
 		return page;
 	}
 	

@@ -124,8 +124,8 @@ public class ExternalCompany extends  Database<IExternalCompany> implements IExt
 		if(getCurrentPage() == 0){
 			setCurrentPage(1);
 		}
-		sb.append("select * from ( select @rnum := @rnum +1 as rownum, b2g.*" +
-				" from (select @rnum := 0) r, b2g order by id) result" +
+		sb.append("select * from ( select @rnum := @rnum +1 as rownum, pseip_b2g.*" +
+				" from (select @rnum := 0) r, pseip_b2g order by id) result" +
 				" where rownum between (1+("+getCurrentPage()+"+-1)*10) and ("+getCurrentPage()+"*10)");
 		IExternalCompany iExternalCompany = (IExternalCompany) sql(IExternalCompany.class, sb.toString());
 		iExternalCompany.select();
@@ -152,7 +152,7 @@ public class ExternalCompany extends  Database<IExternalCompany> implements IExt
 	public int getTotalPage() throws Exception{
 		int totalPage = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append("select round(count(*)/10) as num from b2g");
+		sb.append("select round(count(*)/10) as num from pseip_b2g");
 		IExternalCompany iExternalCompany =(IExternalCompany) sql(IExternalCompany.class, sb.toString());
 		iExternalCompany.select();
 		while(iExternalCompany.next()){

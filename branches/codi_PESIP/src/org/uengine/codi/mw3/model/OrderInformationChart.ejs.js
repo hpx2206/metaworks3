@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
+var org_uengine_codi_mw3_model_OrderInformationChart = function(objectId, className){
     this.objectId = objectId;
     this.className = className;
     this.divId = mw3._getObjectDivId(this.objectId);
@@ -6,22 +6,24 @@ var org_uengine_codi_mw3_model_WorldMapChart = function(objectId, className){
     
     var object = mw3.objects[this.objectId];
     
-    var item = object.pastOrderInformationList;
-    console.log(item.length);
-    console.log(item);
+    console.log(object);
+    
+    var item = object.countryOrderInfo;
     
     var regionName = new Array();
     var regionNumber = new Array();
     var piedata = new Array();
     var columnData = new Array();
     var colors = new Array();
-    for(var i=0; i<item.length*2; i+=2){
+    for(var i = 0; i < item.length * 2; i+=2){
     	colors[i] = '#'+i+'23456';
     }
+    
+    console.log(item.length);
 
     for(var i = 0; i < item.length; i++){
-    	regionName[i] = item[i].regionName;
-    	regionNumber[i] = item[i].number;
+    	regionName[i] = item[i].koName;
+    	regionNumber[i] = item[i].no;
     	piedata[i] = {
     			name : regionName[i],
         		y: regionNumber[i],
