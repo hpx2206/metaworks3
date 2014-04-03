@@ -3028,10 +3028,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								   enterValueContext = (enterValueContext ? enterValueContext + ", " : "") + fieldDescriptor.displayName + " : " + test.value[fieldDescriptor.name];
 								   
 								   value[fieldDescriptor.name] = test.value[fieldDescriptor.name];								   
-							   }
+							   }else
+							   	   delete value[fieldDescriptor.name];
 							   
 						   }
-						   
 					   }
 							   
 
