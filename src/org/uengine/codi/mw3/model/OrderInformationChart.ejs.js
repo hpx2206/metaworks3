@@ -6,10 +6,9 @@ var org_uengine_codi_mw3_model_OrderInformationChart = function(objectId, classN
     
     var object = mw3.objects[this.objectId];
     
-    console.log(object);
     
     var item = object.countryOrderInfo;
-    
+    console.log(item);
     var regionName = new Array();
     var regionNumber = new Array();
     var piedata = new Array();
@@ -19,7 +18,6 @@ var org_uengine_codi_mw3_model_OrderInformationChart = function(objectId, classN
     	colors[i] = '#'+i+'23456';
     }
     
-    console.log(item.length);
 
     for(var i = 0; i < item.length; i++){
     	regionName[i] = item[i].koName;
@@ -36,10 +34,6 @@ var org_uengine_codi_mw3_model_OrderInformationChart = function(objectId, classN
     	}
     };
     
-    
-    console.log("칼러"+colors);
-    console.log("파이데이타"+regionNumber[0]);
-    console.log("파이데이타"+regionNumber[1]);
     if(object){
     	mw3.importScript('scripts/highchart/highcharts.js');
     	mw3.importScript('scripts/highchart/modules/exporting.js');
