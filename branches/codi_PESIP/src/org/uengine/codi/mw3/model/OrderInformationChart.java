@@ -32,6 +32,8 @@ public class OrderInformationChart {
 		}
 		iPseipBidding = pseipBidding.loadCountryOrderInfo();
 		while(iPseipBidding.next()) {
+			System.out.println(pseipBidding.getCountryCode());
+			System.out.println(pseipBidding.getCount());
 			countryOrderInfo.put(pseipBidding.getCountryCode(), pseipBidding.getCount());
 		}
 		

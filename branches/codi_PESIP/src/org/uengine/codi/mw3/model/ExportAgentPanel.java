@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
+
 public class ExportAgentPanel {
 	public ExportAgentPanel() throws Exception{
 	}
@@ -46,6 +48,8 @@ public class ExportAgentPanel {
 		companyList.load();
 		exportAgentDetail = new ExportAgentDetail();
 		companySearch = new InternalCompanySearch();
+		companySearch.setMetaworksContext(new MetaworksContext());
+		companySearch.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		companySearch.load();
 		companyPaging = new ExportAgentPaging();
 		companyPaging.setStartPage(1);

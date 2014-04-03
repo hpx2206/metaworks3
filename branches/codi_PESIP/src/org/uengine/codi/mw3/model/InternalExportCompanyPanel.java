@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
+
 public class InternalExportCompanyPanel {
 	
 	public InternalExportCompanyPanel() throws Exception{
@@ -50,6 +52,8 @@ public class InternalExportCompanyPanel {
 		companyPaging.setCurrentPage(1);
 		companyPaging.load();
 		companySearch = new InternalCompanySearch();
+		companySearch.setMetaworksContext(new MetaworksContext());
+		companySearch.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		companySearch.load();
 	}
 
