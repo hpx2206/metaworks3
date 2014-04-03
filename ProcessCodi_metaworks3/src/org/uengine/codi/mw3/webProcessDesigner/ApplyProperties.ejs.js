@@ -21,6 +21,10 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel');
 		}
 	}
+	
+	if( canvasObject == null ){
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ValueChainDesignerContentPanel');
+	}
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
