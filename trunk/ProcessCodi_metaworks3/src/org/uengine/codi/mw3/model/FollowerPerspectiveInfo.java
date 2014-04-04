@@ -93,9 +93,13 @@ public class FollowerPerspectiveInfo extends PerspectiveInfo{
 		this.getFollower().delegate(session.getUser());
 		this.load();
 		
-		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, session.getLastPerspecteMode(), session.getLastPerspecteType(), this.getId());
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PERSONAL, Perspective.TYPE_NEWSFEED, session.getEmployee().getEmpCode());
 		
-		return new Object[]{instanceListPanel, this};
+		ListPanel listPanel = new ListPanel();
+		listPanel.setInstanceListPanel(instanceListPanel);
+		listPanel.setPerspectiveInfo(new PerspectiveInfo(session, Perspective.TYPE_NEWSFEED));
+		
+		return new Object[]{listPanel};
 	}
 	
 	@Group(name="menu")
