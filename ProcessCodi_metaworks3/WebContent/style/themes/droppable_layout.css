@@ -397,7 +397,7 @@ height: 40px;
 }
 .toolbar {
 	height: 20px;
-	/*background: url(../../images/waveStyle/bt_bg.gif) repeat-x;*/
+	background: url(../../images/waveStyle/bt_bg.gif) repeat-x;
 	margin: 0px;
 	width: 100%; /* border-top:1px solid #aaaaaa; */
 	border-bottom: 1px solid #AAAAAA;
@@ -3361,7 +3361,7 @@ legend {display:none;}
 .view_box2 {
     margin: 5px;
     margin-top: 15px;
-    margin-bottom:15px;
+    margin-bottom:40px;s
 }
 .view_box2 .guide {
     position: relative;
@@ -3369,8 +3369,8 @@ legend {display:none;}
 }
 
 .view_box2 #wih_button {
-    /*padding: 0 10px;*/
-    margin-left:10px;    
+    padding: 0 10px;
+    margin-left:45px;    
 	position:relative;
 	z-index:99;
 	overflow:hidden
@@ -3379,7 +3379,7 @@ legend {display:none;}
 	margin-top: 5px;
     float: left;
     color: #7f8c8d;
-    /*padding-left: 19px;*/
+    padding-left: 19px;
     text-decoration: none;
     line-height: 20px;
     cursor: pointer;
