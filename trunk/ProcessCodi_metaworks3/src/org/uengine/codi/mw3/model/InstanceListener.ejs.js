@@ -12,29 +12,8 @@ var org_uengine_codi_mw3_model_InstanceListener = function(objectId, className){
 		
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 		var command = this.object.command;
-		if( (session.lastPerspecteType == 'allICanSee' || session.lastPerspecteType == 'all' || session.lastPerspecteType == 'inbox' || session.lastPerspecteType == 'following') && (session.keyword == null || typeof session.keyword == 'undefined' && session.searchKeyword == '')){
+		if((session.lastPerspecteType == 'allICanSee' || session.lastPerspecteType == 'all' || session.lastPerspecteType == 'inbox' || session.lastPerspecteType == 'following' || session.lastPerspecteType == 'request') && (session.keyword == null || typeof session.keyword == 'undefined' && session.searchKeyword == '')){
 			value.instanceViewThreadPanel = null;
-			
-			// 토픽을 보고있는 경우, 해당 토픽에 올라온 글만 보여야 함
- 			if( session.lastPerspecteMode == 'topic' && session.lastSelectedItem != value.topicId ){
- 				return;
- 			}
-   
- 			// 참여중을 보고있는 경우 자신이 follower 된 글만 보여진다.
- 			if( session.lastPerspecteType == 'following' || session.lastPerspecteType == 'inbox' ){
- 				var isFollower = faceHelper.checkFollower(value.followers , session);
-    
- 				if(!isFollower)
- 					return;
-
- 				if(session.lastPerspecteType == 'inbox'){
- 					if(!value.dueDate)
- 						return;
- 
- 					if(value.status == 'Completed' || value.status == 'Stopped'  || value.status == 'Failed')
- 						return;
- 				}
- 			}
 			
 			var preferUx = mw3.fn.getPreferUx();		
 			var instId = value.instId;
