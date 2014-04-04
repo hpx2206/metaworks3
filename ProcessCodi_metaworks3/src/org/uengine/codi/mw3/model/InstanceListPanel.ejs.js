@@ -12,8 +12,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		.css({
 			position: 'relative',
 			height:   '100%',
-			overflow: 'auto',
-			background-color
+			overflow: 'auto'
 		});
 	
 	this.divId = mw3._getObjectDivId(this.objectId);
@@ -35,10 +34,10 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 //	$("#project_Info").click(function(){
 //		if($(this).hasClass('current')){
 //			$('.projectInfo').slideUp(250);
-//			$(this).removeClass('current').text("Project info. ▼");
+//			$(this).removeClass('current').text("Project info. ���");
 //		}else{
 //			$('.projectInfo').slideDown(250);
-//			$(this).addClass('current').text("Project info. ▲");
+//			$(this).addClass('current').text("Project info. ���");
 //		}
 //	})
 	
