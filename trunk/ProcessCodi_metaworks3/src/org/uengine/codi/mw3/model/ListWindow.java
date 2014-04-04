@@ -5,8 +5,8 @@ import org.metaworks.annotation.Face;
 import org.metaworks.widget.Window;
 
 @Face(ejsPath="genericfaces/Window.ejs",  
-      options={"hideLabels", "minimize", "hideTitleBar"}, 
-      values={"true", "true", "true"})
+      options={"hideLabels", "minimize"}, 
+      values={"true", "true"})
 
 public class ListWindow extends Window {
 	

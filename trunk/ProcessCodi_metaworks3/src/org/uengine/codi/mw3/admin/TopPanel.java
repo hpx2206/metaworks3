@@ -43,11 +43,6 @@ public class TopPanel {
 
 		setCompany(session.getCompany());
 		
-		InstanceSearchBox searchBox = new InstanceSearchBox();
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-		setSearchBox(searchBox);
-
 	}
 	
 	NotificationBadge notificationBadge;
@@ -90,15 +85,6 @@ public class TopPanel {
 			this.loginUser = loginUser;
 		}
 		
-	SearchBox searchBox;
-		@Face(options={"keyupSearch"}, values={"true"})
-		public SearchBox getSearchBox() {
-			return searchBox;
-		}
-		public void setSearchBox(SearchBox searchBox) {
-			this.searchBox = searchBox;
-		}
-	
 	String mode;
 		public String getMode() {
 			return mode;

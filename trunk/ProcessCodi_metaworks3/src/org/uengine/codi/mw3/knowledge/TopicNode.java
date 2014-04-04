@@ -192,22 +192,13 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			locale.load();
 			
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_TOPIC, Perspective.TYPE_NEWSFEED, getId());
-			TopicInfo topicInfo = new TopicInfo(session, this.getId());
-			/*
+			
 			ListPanel listPanel = new ListPanel(instanceListPanel, new TopicInfo(session, this.getId()));
 			
 			String title = locale.getString("$Topic") + " - " + getName();
 			session.setWindowTitle(title);
-			 */
-			NewInstancePanel newInstancePanel = new NewInstancePanel();
-			newInstancePanel.load(session);
 			
-			InfoContentListPanel infoContentListPanel = new InfoContentListPanel();
-			infoContentListPanel.setContent(instanceListPanel);
-			infoContentListPanel.setPerspectiveInfo(topicInfo);
-			infoContentListPanel.setNewInstancePanel(newInstancePanel);
-			
-			return new Object[]{session, infoContentListPanel};
+			return new Object[]{session, listPanel};
 		}
 	}
 	

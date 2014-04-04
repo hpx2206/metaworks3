@@ -25,9 +25,18 @@ public class PerspectiveInfo {
 		}
 		public void setTitle(String title) {
 			this.title = title;
-		}		
-	
+		}	
+		
+	PerspectiveTopPanel topPanel;
+		public PerspectiveTopPanel getTopPanel() {
+			return topPanel;
+		}
+		public void setTopPanel(PerspectiveTopPanel topPanel) {
+			this.topPanel = topPanel;
+		}
+		
 	public PerspectiveInfo(){
+		setTopPanel(new PerspectiveTopPanel());
 	}
 	
 	public PerspectiveInfo(Session session, String type){
