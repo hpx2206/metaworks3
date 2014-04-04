@@ -4190,14 +4190,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				options['name'] = this.fieldDescriptor.name;
 				
 				if(context){
+					for(key in context)
+						options[key] = context[key];
+					/*
 					if(context['htmlTag']) options['htmlTag'] = context['htmlTag'];					
 					if(context['htmlAttr']) options['htmlAttr'] = context['htmlAttr'];					
 					if(context['htmlAttrChild']) options['htmlAttrChild'] = context['htmlAttrChild'];
 					if(context['ejsPath']) options['ejsPath'] = context['ejsPath'];
+					*/
 				}
 							
 				var beanPropertyOption = {objectId: this.objectId, name: this.fieldDescriptor.name};
-							
+				
 				if(!designMode){ //means general mode
 					if(when && context && context.when) // && parentWhen && when != parentWhen)
 						options['when'] = when;
