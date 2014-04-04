@@ -36,7 +36,6 @@ import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.view.NewInstanceContentListPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
@@ -1362,15 +1361,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 							new ToNext(new NewInstancePanel(), detail.getInstanceView()),
 				    		 new Remover(new NewInstancePanel())};
 				}else{
+					Object detail = instance.detail();
+					
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
-					Object detail = instance.detail();
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
-											  new Refresh(commentWorkItem),
-			    		 				      new Refresh(detail),
-			    		 				      new Refresh(upcommingTodoPerspective)};
+							  	new Refresh(detail),
+							  	new Refresh(upcommingTodoPerspective)};
 				}
 			}else{
 				// 댓글
