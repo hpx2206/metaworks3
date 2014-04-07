@@ -1,19 +1,30 @@
 package org.uengine.codi.mw3;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.springframework.web.util.CookieGenerator;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IEmployee;
+import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
 
 public class StartCodi {
@@ -23,7 +34,12 @@ public class StartCodi {
 	public final static String USE_DASHBOARD = GlobalContext.getPropertyString("dashboard.use", "0");
 	public final static String USE_MULTITENANCY = GlobalContext.getPropertyString("multitenancy.use", "0");
 	public final static String USE_IAAS = GlobalContext.getPropertyString("iaas.use", "0");
-
+	public final static String USE_CAS = GlobalContext.getPropertyString("cas.use", "0");
+	public final static String CAS_REST_URL = GlobalContext.getPropertyString("cas.rest.url", "http://localhost:8080/cas/v1/tickets");
+	
+	//test code
+	public final static HashMap MANAGED_SESSIONS = new HashMap();
+	
 	String key;
 		@Hidden
 		public String getKey() {
@@ -58,6 +74,14 @@ public class StartCodi {
 		public void setLastVisitValue(String lastVisitValue) {
 			this.lastVisitValue = lastVisitValue;
 		}
+	
+	String ssoService;
+		public String getSsoService() {
+			return ssoService;
+		}
+		public void setSsoService(String ssoService) {
+			this.ssoService = ssoService;
+		}
 		
 	public StartCodi(){
 		this(null);
@@ -72,25 +96,135 @@ public class StartCodi {
 		this.setKey(key);
 	}
 	
-	@ServiceMethod(payload={"key","lastVisitPage", "lastVisitValue"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"key","lastVisitPage", "lastVisitValue", "ssoService"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object load() throws Exception{
-
+		
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
-		String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+		if("1".equals(USE_CAS)){
+			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
+					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
+			
+			if(cookie != null){
+				String ssoSt = (String)httpSession.getAttribute("SSO-ST");
+				if(ssoSt == null){
+					String serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
+							+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
+							+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+					
+					String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL, "utf-8");
+					System.out.println("Service url is : " + encodedServiceURL);
 
-		if(loggedUserId != null)
-			return login();			
+					String myURL = StartCodi.CAS_REST_URL + "/"+ cookie.getValue();
+					URL urlST = new URL(myURL);
+					System.out.println(myURL);
+					
+					HttpURLConnection huc = null;
+					try{
+						huc = (HttpURLConnection) urlST.openConnection();
+						huc.setDoInput(true);
+						huc.setDoOutput(true);
+						huc.setRequestMethod("POST");
+						
+						OutputStreamWriter outST = new OutputStreamWriter(huc.getOutputStream());
+						BufferedWriter bwrST = new BufferedWriter(outST);
+						bwrST.write(encodedServiceURL);
+						bwrST.flush();
+						bwrST.close();
+						outST.close();
+						
+						System.out.println("Response code is:  " + huc.getResponseCode());
+						
+						String line;
+						System.out.println( huc.getResponseCode());
+						if(huc.getResponseCode() == 200){
+							
+							String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+							
+							Employee emp = new Employee();
+							emp.setEmpCode(loggedUserId);
+							IEmployee findEmp = emp.findMe();
+							
+							Session session = new Session();
+							session.setEmployee(findEmp);
+							
+							IUser user = new User();			
+							user.getMetaworksContext().setWhere("local");
+							user.setUserId(session.getEmployee().getEmpCode());
+							user.setName(session.getEmployee().getEmpName());
+							
+							session.setUser(user);
+							BufferedReader isr = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+							while ((line = isr.readLine()) != null) {
+								TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", line);
+								MANAGED_SESSIONS.put(line, session);
+							}
+							isr.close();
+							huc.disconnect();
+							return login();
+						}
+					}catch(Exception e){
+					}finally{
+						huc.disconnect();
+					}
+				}else{
+					return login();
+				}
+			}
+			
+					
+			
+//			
+//			if(cookie != null){
+//				HttpURLConnection huc = null;
+//				
+//				String serviceURL = getSsoService() != null ? getSsoService() : "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
+//						+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
+//						+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+//				
+//				
+//				String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL,"utf-8");
+//				System.out.println("Service url is : " + encodedServiceURL);
+//				
+//				
+//				String myURL = CAS_REST_URL + "/"+ cookie.getValue() ;
+//				URL urlST = new URL(myURL);
+//				System.out.println(myURL);
+//	
+//				huc = (HttpURLConnection) urlST.openConnection();
+//				huc.setDoInput(true);
+//				huc.setDoOutput(true);
+//				huc.setRequestMethod("POST");
+//	
+//				OutputStreamWriter outST = new OutputStreamWriter(huc.getOutputStream());
+//				BufferedWriter bwrST = new BufferedWriter(outST);
+//				bwrST.write(encodedServiceURL);
+//				bwrST.flush();
+//				bwrST.close();
+//				outST.close();
+//				
+//				System.out.println("Response code is:  " + huc.getResponseCode());
+//				
+//				if(huc.getResponseCode() == 200){
+//					return login();
+//				}
+//			}
+		}else{
+			String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+
+			if(loggedUserId != null)
+				return login();	
+		}
+						
 
 		
-		if("login".equals(this.getKey()) || this.getLastVisitPage() != null){
-			
-			Login login = new Login();
-			login.setMetaworksContext(new MetaworksContext());
-			login.getMetaworksContext().setHow("login");
-			login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			
-			return new Refresh(login, false, true);
-			
+		if("login".equals(this.getKey()) || this.getLastVisitPage() != null || ssoService != null){
+			   
+			   Login login = new Login();
+			   if(ssoService != null)
+				   login.setSsoService(ssoService);
+		
+			   return new Refresh(login, false, true);
+			   
 		}else{
 			return new Refresh(new SignUp(), false, true);
 			
@@ -166,6 +300,12 @@ public class StartCodi {
 	public SignUp logout() throws Exception {
 		this.getSession().removeUserInfoFromHttpSession();
 		
+		//test code
+		CookieGenerator cookieGenerator = new CookieGenerator();
+		cookieGenerator.setCookieName("CASTGC");
+		cookieGenerator.removeCookie(TransactionContext.getThreadLocalInstance().getResponse());
+		
+		
 		Login login = new Login();
 		login.getMetaworksContext().setHow("logout");
 		login.fireServerSession(this.getSession());
@@ -175,6 +315,7 @@ public class StartCodi {
 		String ipAddress = httpServletRequest.getRemoteAddr();
 		
         CodiLog  log = new CodiLog();
+        
         log.setId(log.createNewId());
         log.setEmpcode(this.getSession().getEmployee().getEmpCode());
         log.setComCode(this.getSession().getEmployee().getGlobalCom());
