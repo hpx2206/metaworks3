@@ -30,7 +30,7 @@
 		destroy-method="close">
 
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://172.27.100.4:3306/uengine?useUnicode=true&amp;characterEncoding=UTF8&amp;useOldAliasMetadataBehavior=true" />
+		<property name="url" value="jdbc:mysql://localhost:3306/uengine?useUnicode=true&amp;characterEncoding=UTF8&amp;useOldAliasMetadataBehavior=true" />
 		<property name="username" value="{username}" />
 		<property name="password" value="{password}" />
 		<property name="validationQuery" value="SELECT 1" />		
