@@ -66,7 +66,7 @@ import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImplTest;
+import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 
 public class Login implements ContextAware {
@@ -474,7 +474,7 @@ public class Login implements ContextAware {
 		
 	
 		try{
-			(new EMailServerSoapBindingImplTest()).sendMail(from, getEmail(), title, content);
+			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
 		}catch(Exception e){
 			throw new Exception("$FailedToSendInvitationMail");
 		}
@@ -529,7 +529,7 @@ public class Login implements ContextAware {
 		content = this.replaceString(content, signUpBaseUrl, baseUrl);
 		
 		try{
-			(new EMailServerSoapBindingImplTest()).sendMail(from, getEmail(), title, content);
+			(new EMailServerSoapBindingImpl()).sendMail(from, getEmail(), title, content);
 		}catch(Exception e){
 			throw new Exception("$FailedToSendInvitationMail");
 		}
