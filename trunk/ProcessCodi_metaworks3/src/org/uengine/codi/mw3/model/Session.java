@@ -1,8 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContextFactory;
@@ -16,9 +19,11 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
+import org.springframework.web.util.CookieGenerator;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.marketplace.MyVendor;
+import org.uengine.kernel.GlobalContext;
 
 	
 public class Session implements ContextAware{
@@ -218,6 +223,31 @@ public class Session implements ContextAware{
 		
 	@ServiceMethod(callByContent=true)
 	public StartCodi logout() throws Exception {
+		
+		if("1".equals(StartCodi.USE_CAS)){
+			
+			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
+					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
+			if(cookie != null){
+				String urls = StartCodi.CAS_REST_URL + "/" + cookie.getValue();
+				URL url = new URL(urls);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				try{
+
+					conn.setRequestMethod("DELETE");
+					conn.setRequestProperty("Accept", "application/json");
+					if (conn.getResponseCode() != 200) {
+						throw new RuntimeException("Failed : HTTP error code : "
+								+ conn.getResponseCode());
+					}
+				}catch(Exception e){
+
+				}finally{
+					conn.disconnect();
+				}
+			}
+			
+		}
 
         return new StartCodi(this, "logout");
 	}

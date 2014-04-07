@@ -1,19 +1,22 @@
 package org.uengine.codi.mw3;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
+import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -39,6 +43,7 @@ import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.widget.ModalWindow;
+import org.springframework.web.util.CookieGenerator;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
@@ -153,6 +158,15 @@ public class Login implements ContextAware {
 			this.lastVisitValue = lastVisitValue;
 		}
 
+	String ssoService;
+		public String getSsoService() {
+			return ssoService;
+		}
+		public void setSsoService(String ssoService) {
+			this.ssoService = ssoService;
+		}	
+		
+		
 	@AutowiredFromClient
 	public Locale localeManager;
 	
@@ -167,13 +181,131 @@ public class Login implements ContextAware {
 		if(findEmp == null)
 			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");
 		
-		if(!getPassword().equals(findEmp.getPassword()))
-			throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");	
-		
+		if("1".equals(StartCodi.USE_CAS)){
+			if(!loginSso(session))
+				throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");
+		}else{
+			if(!getPassword().equals(findEmp.getPassword()))
+				throw new Exception("<font color=blue>Wrong User or Password! forgot?</font>");	
+		}
+
 		session.setEmployee(findEmp);
 		
 		return session;
 	}
+	
+	
+	
+	public boolean loginSso(Session session){
+
+		String serviceURL = null;
+		boolean bCodi = false;
+//		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession();
+		
+		if(getSsoService() != null){
+			serviceURL = getSsoService();
+		}else{
+			serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
+					+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
+					+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+			bCodi = true;
+		}
+		
+		HttpURLConnection huc = null;
+		OutputStreamWriter out = null;
+		BufferedWriter bwr = null;
+		
+		try
+		{
+			URL urlTGT = new URL(StartCodi.CAS_REST_URL);
+			huc = (HttpURLConnection) urlTGT.openConnection();
+			huc.setDoInput(true);
+			huc.setDoOutput(true);
+			huc.setRequestMethod("POST");
+
+			String s =   URLEncoder.encode("username","UTF-8") + "=" + URLEncoder.encode(getEmail(),"UTF-8");
+			s+="&" +URLEncoder.encode("password","UTF-8") + "=" + URLEncoder.encode(getPassword(),"UTF-8");
+
+			System.out.println(s);
+			out = new OutputStreamWriter(huc.getOutputStream());
+			bwr = new BufferedWriter(out);
+			bwr.write(s);
+			bwr.flush();
+			bwr.close();
+			out.close();
+			
+			String tgt = huc.getHeaderField("location");
+			if(tgt != null && huc.getResponseCode() == 201)
+			{
+				tgt = tgt.substring( tgt.lastIndexOf("/") +1);
+				System.out.println("Tgt is : " + tgt);
+				
+				String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL, "utf-8");
+				System.out.println("Service url is : " + encodedServiceURL);
+
+				String myURL = StartCodi.CAS_REST_URL + "/"+ tgt ;
+				URL urlST = new URL(myURL);
+				System.out.println(myURL);
+
+				huc = (HttpURLConnection) urlST.openConnection();
+				huc.setDoInput(true);
+				huc.setDoOutput(true);
+				huc.setRequestMethod("POST");
+
+				OutputStreamWriter outST = new OutputStreamWriter(huc.getOutputStream());
+				BufferedWriter bwrST = new BufferedWriter(outST);
+				bwrST.write(encodedServiceURL);
+				bwrST.flush();
+				bwrST.close();
+				outST.close();
+
+				System.out.println("Response code is:  " + huc.getResponseCode());
+
+				BufferedReader isr = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+				String line;
+				System.out.println( huc.getResponseCode());
+				
+				// 쿠키저장
+				CookieGenerator cookieGenerator = new CookieGenerator();
+				cookieGenerator.setCookieSecure(false);
+				cookieGenerator.setCookieMaxAge(7889231);
+				cookieGenerator.setCookieName("CASTGC");
+				cookieGenerator.addCookie(TransactionContext.getThreadLocalInstance().getResponse(), tgt);
+				
+				while ((line = isr.readLine()) != null) {
+					System.out.println( line);
+					if(!bCodi)
+						setSsoService(getSsoService()+"?ticket=" + line);
+					else{
+						TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", line);
+//						String loggeduserId = (String)TransactionContext.getThreadLocalInstance().getRequest().getAttribute("loggeduserId");
+//						System.out.println("loggeduserId === " + loggeduserId);
+//						Map map = new HashMap();
+//						map.put("req", TransactionContext.getThreadLocalInstance().getRequest());
+//						map.put("res", TransactionContext.getThreadLocalInstance().getResponse());
+//						map.put("session", session);
+						
+						StartCodi.MANAGED_SESSIONS.put(line, session);
+						
+					}
+				}
+				isr.close();
+				
+				return true;
+			}else{
+				return false;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if(huc != null) huc.disconnect();
+		}
+
+
+		return false;
+	}
+	
 	
 	public static String getSessionIdWithUserId(String userId){
 		return SessionIdForEmployeeMapping.get(userId.toUpperCase());
@@ -723,7 +855,6 @@ public class Login implements ContextAware {
 	}
 	
 	public Object[] login(Session session) throws Exception {
-		
 		session.fillSession();
 		session.fillUserInfoToHttpSession();
 		
@@ -807,6 +938,12 @@ public class Login implements ContextAware {
 		locale.setLanguage(session.getEmployee().getLocale());
 		locale.load();
 
+		
+		System.out.println(getSsoService()+ "   <====================================================  ");
+		
+		if(getSsoService() != null)
+			return new Object[]{new Forward(getSsoService())};
+		
 		return new Object[]{new Refresh(session), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 	
@@ -845,7 +982,7 @@ public class Login implements ContextAware {
 	
 	public void fireServerSession(Session session) {
 		String userId = session.getUser().getUserId().toUpperCase();
-		
+//		String userId = session.getEmployee().getEmpCode().toUpperCase();
 		
 		if(SessionIdForEmployeeMapping.containsKey(userId)){
 			String sessionId = SessionIdForEmployeeMapping.get(userId);
