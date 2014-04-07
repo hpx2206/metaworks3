@@ -22,7 +22,7 @@ import org.uengine.util.UEngineUtil;
 import org.uengine.kernel.GlobalContext;
 
 
-public class EMailServerSoapBindingImplTest implements org.uengine.webservices.emailserver.EMailServer{
+public class EMailServerSoapBindingImpl implements org.uengine.webservices.emailserver.EMailServer{
 
 	static String smtpIP;
 	static String userID;
@@ -127,7 +127,7 @@ public class EMailServerSoapBindingImplTest implements org.uengine.webservices.e
 	}
 	
 	public static void main(String[] args) throws Exception{
-		(new EMailServerSoapBindingImplTest()).sendMail("jinyoungj@gmail.com", null, "jinyoungj@gmail.com", "������", "���� <h1>����</h1>", null, null, "EUC-KR");
+		(new EMailServerSoapBindingImpl()).sendMail("jinyoungj@gmail.com", null, "jinyoungj@gmail.com", "������", "���� <h1>����</h1>", null, null, "EUC-KR");
 	}
 
 }
