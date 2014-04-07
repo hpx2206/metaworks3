@@ -449,11 +449,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 	}
 	
+
 	public InstanceViewContent detail() throws Exception{
 		
 		IInstance instanceRef = databaseMe();
 		
-		if(!checkRelatedUser()){
+		if(!checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instanceRef.getIsDeleted() ){
@@ -1092,7 +1093,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instanceRef = databaseMe();
 		
-		if(!checkRelatedUser()){
+		if(!checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instanceRef.getIsDeleted() ){
@@ -1119,31 +1120,110 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return new ModalWindow(iframe, 1024, 768, "Process Gantt Chart");
 	}
 	
+	public boolean checkAuth() throws Exception{
+		boolean isRelated = false;
+		boolean secuoptTopic = false;
+		boolean secuoptInst = false;
+		boolean topicFollow = false;
+		
+		IInstance instanceRef = databaseMe();
+		secuoptInst = "1".equals(instanceRef.getSecuopt())?true:false;
+
+		TopicNode topic = new TopicNode();
+		topic.setId(instanceRef.getTopicId());
+		try {
+			topic.copyFrom(topic.databaseMe());
+			secuoptTopic = "1".equals(topic.getSecuopt())?true:false;
+		} catch (Exception e) {
+			secuoptTopic = false;
+		}
+		
+		//주제비공개
+		if(secuoptTopic){
+			topicFollow = checkRelatedTopic();
+			//주제팔로우
+			if(topicFollow){
+				//인스턴스비공개
+				if(secuoptInst){
+					isRelated = checkRelatedUser();
+				//인스턴스공개
+				}else{
+					isRelated = true;
+				}
+			//주제팔로우아님	
+			}else{
+				isRelated = checkRelatedUser();
+			}
+			
+		
+		//주제공개	
+		}else{
+			if(secuoptInst){
+				isRelated = checkRelatedUser();
+			}else{
+				isRelated = true;
+			}
+		}
+		return isRelated;
+	}
+	
+	public boolean checkRelatedTopic() throws Exception{
+		
+		boolean isRelated = false;
+		TopicNode topic = new TopicNode();
+		topic.setId(this.databaseMe().getTopicId());
+		try {
+			topic.copyFrom(topic.databaseMe());
+			// 비공개 주제일 경우 본건의 관련자가 아니면 주제참여 막음.
+			if( "1".equals(topic.getSecuopt())){
+				TopicFollower findFollower = new TopicFollower();
+				findFollower.setParentId(this.getTopicId());
+				IFollower follower = findFollower.findFollowers();
+				while(follower.next()){
+					if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+						if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+							isRelated = true;
+							break;
+						}
+					}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+						if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+							isRelated = true;
+							break;
+						}
+					}
+				}
+				
+			}else{
+				isRelated = true;
+			}
+		} catch (Exception e) {
+			isRelated = true;
+		}
+		
+		return isRelated;
+	}
+	
 	public boolean checkRelatedUser() throws Exception{
 		
 		boolean isRelated = false;
 		IInstance instanceRef = databaseMe();
-		// 비공개 글일 경우 본건의 관련자가 아니면 글쓰기를 막음.
-		if( "1".equals(instanceRef.getSecuopt())){
-			InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
-			IFollower follower = findFollower.findFollowers();
-			while(follower.next()){
-				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						isRelated = true;
-						break;
-					}
-				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
-						isRelated = true;
-						break;
-					}
+	
+		InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
+		IFollower follower = findFollower.findFollowers();
+		while(follower.next()){
+			if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+				if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+					isRelated = true;
+					break;
+				}
+			}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+				if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+					isRelated = true;
+					break;
 				}
 			}
-			
-		}else{
-			isRelated = true;
 		}
+		
 		return isRelated;
 		
 	}
@@ -1152,7 +1232,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		IInstance instanceRef = databaseMe();
 				
-		if(!checkRelatedUser()){
+		if(!checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instanceRef.getIsDeleted() ){
@@ -1193,7 +1273,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instanceRef = databaseMe();
 		
-		if(!checkRelatedUser()){
+		if(!checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instanceRef.getIsDeleted() ){
@@ -1245,7 +1325,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 		IInstance instanceRef = databaseMe();
 		
-		if(!checkRelatedUser()){
+		if(!checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instanceRef.getIsDeleted() ){
@@ -1302,7 +1382,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instanceRef = databaseMe();
 		
-		if(!checkRelatedUser()){
+		if(!checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instanceRef.getIsDeleted() ){
@@ -1494,8 +1574,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return new MainPanel(new Main(session, String.valueOf(this.getInstId())));
 	}
 	
+	
 	public Object[] loadTopic() throws Exception{
-		
+		if(!checkAuth()){
+			throw new MetaworksException("$NotPermittedToTopic");
+		}
 		TopicNode topicNode = new TopicNode();
 		topicNode.session = session;
 		topicNode.setType(TopicNode.TOPIC);

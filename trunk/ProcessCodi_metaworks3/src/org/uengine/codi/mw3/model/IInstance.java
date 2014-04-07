@@ -264,6 +264,7 @@ public interface IInstance extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goSns() throws Exception;
 	
+	public boolean checkAuth() throws Exception;
 
 	@ServiceMethod(callByContent=true)
 	public Object[] loadTopic() throws Exception;

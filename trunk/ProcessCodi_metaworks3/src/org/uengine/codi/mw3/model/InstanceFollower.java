@@ -95,7 +95,7 @@ public class InstanceFollower extends Follower {
 		instance.session = this.session;
 		instance.copyFrom(instance.databaseMe());
 		
-		if(!instance.checkRelatedUser()){
+		if(!instance.checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instance.getIsDeleted() ){

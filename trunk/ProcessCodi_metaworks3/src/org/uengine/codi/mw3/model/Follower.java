@@ -155,7 +155,7 @@ public class Follower extends Database<IFollower> implements IFollower {
 			if( instance.getIsDeleted() ){
 				throw new MetaworksException("$alreadyDeletedPost");
 			}
-			if(!instance.checkRelatedUser()){
+			if(!instance.checkAuth()){
 				throw new MetaworksException("$NotPermittedToWork");
 			}
 		}

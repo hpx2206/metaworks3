@@ -60,7 +60,7 @@ public class TrayItem implements ContextAware {
 		instance.session = session;
 		instance.copyFrom(instance.databaseMe());
 		
-		if(!instance.checkRelatedUser()){
+		if(!instance.checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instance.getIsDeleted() ){
@@ -100,7 +100,7 @@ public class TrayItem implements ContextAware {
 		instance.session = session;
 		instance.copyFrom(instance.databaseMe());
 		
-		if(!instance.checkRelatedUser()){
+		if(!instance.checkAuth()){
 			throw new MetaworksException("$NotPermittedToWork");
 		}
 		if( instance.getIsDeleted() ){
