@@ -24,10 +24,14 @@ import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.designer.web.GraphicView;
+import org.uengine.kernel.designer.web.PoolTransitionView;
 import org.uengine.kernel.designer.web.PoolView;
 import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.kernel.designer.web.ValueChainView;
+import org.uengine.kernel.graph.PoolTransition;
 import org.uengine.kernel.graph.Transition;
+import org.uengine.webservice.WebServiceConnector;
+import org.uengine.webservice.WebServiceDefinition;
 
 public class ProcessDesignerContainer {
 	String editorId;
@@ -184,9 +188,16 @@ public class ProcessDesignerContainer {
 		this.setMaxY(maxY);
 		transitionList.addAll(def.getTransitions());
 		for(Transition ts : transitionList){
-			ts.getTransitionView().setViewType(viewType);
-			ts.getTransitionView().setEditorId(getEditorId());
-			ts.getTransitionView().setTransition(ts);
+			if( ts instanceof PoolTransition ){
+				PoolTransitionView view = ((PoolTransition)ts).getPoolTransitionView();
+				view.setViewType(viewType);
+				view.setEditorId(getEditorId());
+				view.setPoolTransition((PoolTransition)ts);
+			}else{
+				ts.getTransitionView().setViewType(viewType);
+				ts.getTransitionView().setEditorId(getEditorId());
+				ts.getTransitionView().setTransition(ts);
+			}
 		}
 		Role[] roles = def.getRoles();
 		if( roles != null && roles.length > 0){
@@ -236,6 +247,11 @@ public class ProcessDesignerContainer {
 		if( def.getPoolInfo() != null ){
 			poolList = (ArrayList<Pool>)def.getPoolInfo();
 			for(Pool pool : poolList){
+				
+				WebServiceConnector webServiceConnector = pool.getPoolResolutionContext().getWebServiceConnector();
+				webServiceConnector.setWebServiceDefinition(new WebServiceDefinition());
+				webServiceConnector.load();
+				
 				PoolView view = pool.getPoolView();
 				view.setViewType(viewType);
 				view.setEditorId(getEditorId());

@@ -17,8 +17,6 @@ public class Transition implements java.io.Serializable {
 
 	private Condition condition;
 	
-//	private transient Activity sourceActivity;
-//	private transient Activity targetActivity;
 	private transient Activity sourceActivity;
 	private transient Activity targetActivity;
 	

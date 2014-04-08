@@ -69,7 +69,8 @@ org_uengine_kernel_designer_web_DynamicDrawGeom.prototype = {
 					activityView.x = firstGeomX;
 					activityView.y = firstGeomY;
 					// 엑티비티에 tracingTag 부여
-					activityView.tracingTag = ++tracingTag;
+					activity.tracingTag = ++tracingTag;
+					activityView.tracingTag = activity.tracingTag;
 					var html = mw3.locateObject(activityView , activityView.____className);
 					canvasDivObj.append(html);
 					mw3.onLoadFaceHelperScript();

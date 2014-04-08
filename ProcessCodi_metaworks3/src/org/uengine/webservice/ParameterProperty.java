@@ -1,10 +1,12 @@
 package org.uengine.webservice;
 
+import java.io.Serializable;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("param")
-public class ParameterProperty {
+public class ParameterProperty implements Serializable {
 	
 	@XStreamAsAttribute
 	String name;

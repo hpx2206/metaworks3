@@ -119,7 +119,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
     var canvasWidth = canvasDivObj.width();
     
     leftTreeObj.bind('loaded', {align : 'left'}, function(event){
-    	leftTreeHeight = $(this).find('div .filemgr-tree').height();
+    	leftTreeHeight = $(this).find('.filemgr-tree').height();
     	if( leftTreeHeight > rightTreeHeight){
     		canvas.setCanvasSize([canvasWidth, leftTreeHeight]);	
     	}

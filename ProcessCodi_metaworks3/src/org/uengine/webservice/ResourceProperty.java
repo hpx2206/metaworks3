@@ -1,12 +1,13 @@
 package org.uengine.webservice;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("resource")
-public class ResourceProperty {
+public class ResourceProperty implements Serializable{
 	
 	@XStreamAsAttribute
 	String path;
@@ -33,16 +34,16 @@ public class ResourceProperty {
 			this.methods = methods;
 		}
 
-	ArrayList<ResourceProperty> child;
-		public ArrayList<ResourceProperty> getChild() {
-			return child;
+	ArrayList<ResourceProperty> childResources;
+		public ArrayList<ResourceProperty> getChildResources() {
+			return childResources;
 		}
-		public void setChild(ArrayList<ResourceProperty> child) {
-			this.child = child;
+		public void setChildResources(ArrayList<ResourceProperty> childResources) {
+			this.childResources = childResources;
 		}
 		
 	public ResourceProperty(){
 		methods 	= new ArrayList<MethodProperty>();
-		child 		= new ArrayList<ResourceProperty>();
+		childResources 		= new ArrayList<ResourceProperty>();
 	}
 }

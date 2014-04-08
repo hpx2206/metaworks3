@@ -3,6 +3,7 @@ package org.uengine.webservice;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.metadata.MetadataBundle;
@@ -29,7 +31,8 @@ import org.uengine.kernel.designer.web.DynamicDrawWebService;
 
 import com.thoughtworks.xstream.XStream;
 
-public class JaxRSWebServiceConnector implements WebServiceConnector {
+@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"linkedId,webServiceName"})
+public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializable {
 
 	public JaxRSWebServiceConnector(){
 		setApiType(WEBSERVICE_API_JAXRS);
@@ -37,8 +40,8 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 	}
 	
 	String linkedId;
+	@Face(displayName="연결된 앱 ID")
 	@Id
-	@Hidden
 		public String getLinkedId() {
 			return linkedId;
 		}
@@ -56,7 +59,7 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 		}
 		
 	String webServiceName;
-	@Hidden
+	@Face(displayName="연결된 앱 이름")
 		public String getWebServiceName() {
 			return webServiceName;
 		}
@@ -64,7 +67,8 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 			this.webServiceName = webServiceName;
 		}
 
-	WebServiceDefinition webServiceDefinition;
+	transient WebServiceDefinition webServiceDefinition;
+	@Hidden
 		public WebServiceDefinition getWebServiceDefinition() {
 			return webServiceDefinition;
 		}
@@ -96,14 +100,13 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 			String key = (String)itr.next();
 			ArrayList<ResourceProperty> rpList = map.get(key);
 			RestWebServiceActivity activity = new RestWebServiceActivity();
-			activity.setName(key);
 			
 			ActivityView activityView = new ActivityView();
-			activityView.setWidth("100");
+			activityView.setWidth("100");	
 			activityView.setHeight("80");
 			activityView.setClassType("Activity");
 			activityView.setShapeType("GEOM");
-			activityView.setShapeId("OG.shape.bpmn.A_Task");
+			activityView.setShapeId("OG.shape.bpmn.A_WebServiceTask");
 			activityView.setActivityClass(activity.getClass().getName());
 			activityView.setActivity(activity);
 			
@@ -114,7 +117,8 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 			for( ResourceProperty resourceProperty : rpList){
 				methodList.addAll(resourceProperty.getMethods());
 			}
-			activity.setMethods(methodList);
+			// TODO 스펙이 변경됨
+//			activity.setMethods(methodList);
 			activityList.add(activity);
 		}
 		
@@ -126,12 +130,8 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 	@Override
 	public void load() throws Exception{
 		
-		// TODO 나중에는 이런 형식으로 호출
 		AppMapping app = new AppMapping();
 		app.setAppId(Integer.parseInt(this.getLinkedId()));
-		
-//		String url = "http://192.168.56.101:8080/hello/";
-		String url = app.databaseMe().getUrl();
 		String appName = app.databaseMe().getAppName();
 		this.setWebServiceName(appName);
 		
@@ -142,10 +142,15 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 		String fullPath = appBasePath + File.separatorChar + webServiceFileName;
 		File webServiceFile = new File(fullPath);
 		if( !webServiceFile.exists()){
+//			String url = "http://192.168.56.101:8080/hello/";
+			String url = app.databaseMe().getUrl();
 			makeWebServiceFile(url, webServiceFile);
 		}
 		// load webService
 		webServiceDefinition = webServiceDefinition.loadWithPath(fullPath);
+		for(ResourceProperty rp : webServiceDefinition.getResourceList()){
+			webServiceDefinition.injectionPathInfo(rp, webServiceDefinition.getBase());
+		}
 	}
 	
 	public void makeWebServiceFile(String url, File webServiceFile) throws Exception{
@@ -207,6 +212,7 @@ public class JaxRSWebServiceConnector implements WebServiceConnector {
 		
 		WebServiceDefinition wsd = new WebServiceDefinition();
 		wsd.setBase(jsonObject.getString("basePath"));
+		wsd.setName(webServiceName);
 		ArrayList<ResourceProperty> resourceArray = new ArrayList<ResourceProperty>();
 		
 		JSONArray apiArray = JSONArray.fromObject(jsonObject.get("apis"));

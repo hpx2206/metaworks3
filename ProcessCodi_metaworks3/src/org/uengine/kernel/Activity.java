@@ -1596,6 +1596,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 			this.documentation = documentation;
 		}
 	transient boolean checked;
+		@Hidden
 		public boolean isChecked() {
 			return checked;
 		}
