@@ -1,14 +1,17 @@
 package org.uengine.webservice;
 
-import org.metaworks.annotation.Hidden;
+import java.io.Serializable;
 
 import net.sf.json.JSONArray;
 
+import org.metaworks.annotation.Hidden;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("method")
-public class MethodProperty {
+public class MethodProperty implements Serializable {
 	
 	@XStreamAsAttribute
 	String name;
@@ -79,5 +82,24 @@ public class MethodProperty {
 		public void setSummary(String summary) {
 			this.summary = summary;
 		}	
-
+		
+	@XStreamOmitField
+	String basePath;
+	@Hidden
+		public String getBasePath() {
+			return basePath;
+		}
+		public void setBasePath(String basePath) {
+			this.basePath = basePath;
+		}
+		
+	@XStreamOmitField
+	String callPath;
+	@Hidden
+		public String getCallPath() {
+			return callPath;
+		}
+		public void setCallPath(String callPath) {
+			this.callPath = callPath;
+		}
 }

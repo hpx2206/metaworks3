@@ -99,6 +99,7 @@ org_uengine_kernel_designer_web_PoolView.prototype = {
                 
             }
         });
-		
+	},
+    validation : function(message){
 	}
 };

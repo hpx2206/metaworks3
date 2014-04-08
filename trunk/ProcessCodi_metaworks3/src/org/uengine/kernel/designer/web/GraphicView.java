@@ -12,4 +12,19 @@ public class GraphicView extends CanvasDTO  implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+		
+	boolean drawByCanvas;
+		public boolean isDrawByCanvas() {
+			return drawByCanvas;
+		}
+		public void setDrawByCanvas(boolean drawByCanvas) {
+			this.drawByCanvas = drawByCanvas;
+		}
+	Object element;
+		public Object getElement() {
+			return element;
+		}
+		public void setElement(Object element) {
+			this.element = element;
+		}
 }

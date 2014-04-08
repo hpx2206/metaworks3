@@ -1,7 +1,5 @@
 package org.uengine.kernel;
 
-import java.util.ArrayList;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
@@ -13,8 +11,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.contexts.TextContext;
-import org.uengine.kernel.designer.web.ActivityView;
-import org.uengine.kernel.designer.web.DynamicDrawGeom;
 import org.uengine.kernel.designer.web.PoolView;
 
 import com.defaultcompany.external.DefaultCompanyPoolResolutionContext;
@@ -84,6 +80,7 @@ public class Pool implements java.io.Serializable, ContextAware{
 		public void setPoolView(PoolView poolView) {
 			this.poolView = poolView;
 		}
+
 	transient String currentEditorId;
 	@Hidden
 		public String getCurrentEditorId() {

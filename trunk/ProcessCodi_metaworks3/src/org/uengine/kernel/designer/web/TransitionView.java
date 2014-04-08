@@ -48,7 +48,7 @@ public class TransitionView extends CanvasDTO{
 			this.element = element;
 		}
 	
-		@AutowiredFromClient(select="typeof editorId!='undefined' && editorId==autowiredObject.editorId")
+	@AutowiredFromClient(select="typeof editorId!='undefined' && editorId==autowiredObject.editorId")
 	transient public RolePanel rolePanel;
 	
 	@AutowiredFromClient(select="typeof editorId!='undefined' && editorId==autowiredObject.editorId")

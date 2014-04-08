@@ -28,9 +28,15 @@
     if( value && value.transitionList ){
         for(var i in value.transitionList){
             var transition = value.transitionList[i];
-           %>
-           <%=mw3.locateObject(transition.transitionView , transition.transitionView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
+            if( transition.__className == 'org.uengine.kernel.graph.PoolTransition'){
+            %>
+                <%=mw3.locateObject(transition.poolTransitionView , transition.poolTransitionView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
            <%
+            }else{
+           %>
+                <%=mw3.locateObject(transition.transitionView , transition.transitionView.__className, null, null, {objectId: objectId, name: '[' + beanPropertyIdx++ + ']'})%>
+           <%
+           }
         }
     }
     if( value && value.poolList ){

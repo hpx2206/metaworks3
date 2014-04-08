@@ -234,23 +234,33 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 				var toTrcingTag = $(toElement).attr('_tracingTag');
 				var transitionView;
 				
-				if( fromTrcingTag && toTrcingTag ){
-					// from과 to 가 모두 엑티비티인 경우만 transition 으로 데이터를 넣는다.
-		    		transitionView = {
-							__className : 'org.uengine.kernel.designer.web.TransitionView',
-							drawByCanvas : true,
-							editorId : object.alias,
-							element : edgeElement
-		    		};
-				}else{
+				if( 'POOL' == $(edgeElement).attr('connect') ){
 					transitionView = {
-                            __className : 'org.uengine.kernel.designer.web.GraphicView',
-                            editorId : object.alias,
-							drawByCanvas : true,
-							shapeType : 'EDGE',
-							element : edgeElement
-                    };
+                                __className : 'org.uengine.kernel.designer.web.PoolTransitionView',
+                                drawByCanvas : true,
+                                editorId : object.alias,
+                                element : edgeElement
+                        };
+				}else{
+					if( fromTrcingTag && toTrcingTag ){
+						// from과 to 가 모두 엑티비티인 경우만 transition 으로 데이터를 넣는다.
+			    		transitionView = {
+								__className : 'org.uengine.kernel.designer.web.TransitionView',
+								drawByCanvas : true,
+								editorId : object.alias,
+								element : edgeElement
+			    		};
+					}else{
+						transitionView = {
+	                            __className : 'org.uengine.kernel.designer.web.GraphicView',
+	                            editorId : object.alias,
+								drawByCanvas : true,
+								shapeType : 'EDGE',
+								element : edgeElement
+	                    };
+					}
 				}
+				
 	    		var html = mw3.locateObject(transitionView , transitionView.____className);
             	canvasDivObj.append(html);
             	
@@ -290,7 +300,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	        	mw3.onLoadFaceHelperScript();
 	    	}
         });
-	    canvas.onRemoveShape(function (event, shapeElement) {
+	    canvas.onRedrawShape(function (event, shapeElement) {
 //			console.log($(shapeElement));
 	    });
 	    canvas.onBeforeRemoveShape(function (event, shapeElement) {
@@ -480,6 +490,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	var activityList = [];
 	var roleList = [];
 	var poolList = [];
+	var poolTransitionList = [];
 	var transitionList = [];
 	var valueChainList = [];
 	var graphicList = [];
@@ -700,8 +711,21 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.tr
             list[list.length] = transition;		
 		}
     }
+	var poolTransition = idDiv.data('poolTransition');
+    if( poolTransition ){
+        poolTransition.poolTransitionView = cellForDwr;
+        list[list.length] = poolTransition;     
+    }
 	return list;
 };
+//org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.poolTransitionSetting = function(idDiv, cellForDwr, list){
+//	var transition = idDiv.data('poolTransition');
+//    if( transition ){
+//        transition.poolTransitionView = cellForDwr;
+//        list[list.length] = transition;		
+//    }
+//	return list;
+//};
 /**
  * 1. 휴먼엑티비티에는 무조건 롤이 포함되어야 한다.
  * 2. 스콥엑티비티에는 inCommingTransition 이 무조건 있어야 한다.

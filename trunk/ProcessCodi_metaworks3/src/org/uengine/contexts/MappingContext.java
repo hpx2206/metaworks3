@@ -3,8 +3,8 @@ package org.uengine.contexts;
 import java.io.Serializable;
 
 import org.metaworks.annotation.Id;
+import org.metaworks.component.Tree;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
-import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ParameterContext;
 
@@ -29,19 +29,19 @@ public class MappingContext implements Serializable{
 		this.id = id;
 	}
 		
-	transient MappingTree mappingTreeLeft;
-		public MappingTree getMappingTreeLeft() {
+	transient Tree mappingTreeLeft;
+		public Tree getMappingTreeLeft() {
 			return mappingTreeLeft;
 		}
-		public void setMappingTreeLeft(MappingTree mappingTreeLeft) {
+		public void setMappingTreeLeft(Tree mappingTreeLeft) {
 			this.mappingTreeLeft = mappingTreeLeft;
 		}
 
-	transient MappingTree mappingTreeRight;
-		public MappingTree getMappingTreeRight() {
+	transient Tree mappingTreeRight;
+		public Tree getMappingTreeRight() {
 			return mappingTreeRight;
 		}
-		public void setMappingTreeRight(MappingTree mappingTreeRight) {
+		public void setMappingTreeRight(Tree mappingTreeRight) {
 			this.mappingTreeRight = mappingTreeRight;
 		}
 
