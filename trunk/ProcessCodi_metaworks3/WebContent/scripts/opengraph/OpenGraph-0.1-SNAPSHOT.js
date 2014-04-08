@@ -11125,6 +11125,31 @@ OG.shape.bpmn.A_ServiceTask.superclass = OG.shape.bpmn.A_Task;
 OG.shape.bpmn.A_ServiceTask.prototype.constructor = OG.shape.bpmn.A_ServiceTask;
 OG.A_ServiceTask = OG.shape.bpmn.A_ServiceTask;
 
+/**
+ * BPMN : WebService(Invokation) Task Shape
+ *
+ * @class
+ * @extends OG.shape.bpmn.A_Task
+ * @requires OG.common.*, OG.geometry.*, OG.shape.bpmn.A_Task
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.A_WebServiceTask = function (label) {
+    OG.shape.bpmn.A_WebServiceTask.superclass.call(this);
+    
+    this.SHAPE_ID = 'OG.shape.bpmn.A_WebServiceTask';
+    this.label = label;
+    this.CONNECTABLE = true;
+    this.GROUP_COLLAPSIBLE = false;
+    this.LoopType = "None";
+    this.TaskType = "WebService";
+}
+OG.shape.bpmn.A_WebServiceTask.prototype = new OG.shape.bpmn.A_Task();
+OG.shape.bpmn.A_WebServiceTask.superclass = OG.shape.bpmn.A_Task;
+OG.shape.bpmn.A_WebServiceTask.prototype.constructor = OG.shape.bpmn.A_WebServiceTask;
+OG.A_WebServiceTask = OG.shape.bpmn.A_WebServiceTask;
+
 
 OG.shape.bpmn.ParallelMultiple = function (label) {
 	OG.shape.bpmn.ParallelMultiple.superclass.call(this);
@@ -18378,6 +18403,9 @@ OG.renderer.RaphaelRenderer.prototype.drawTaskType = function (element) {
         break;
 	case "Mapper":
         _rect1 = this._PAPER.image("images/opengraph/mapper.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+        break;
+    case "WebService":
+        _rect1 = this._PAPER.image("images/opengraph/w_services.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
         break;
         
     }
