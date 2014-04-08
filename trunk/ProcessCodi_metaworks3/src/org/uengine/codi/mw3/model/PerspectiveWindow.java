@@ -5,8 +5,8 @@ import org.metaworks.widget.Window;
 import org.uengine.kernel.GlobalContext;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs",  
-options={"hideLabels", "minimize", "color", "hideTitleBar"}, 
-values={"true", "true", "blue", "true"})
+options={"hideLabels", "minimize", "color", "hideTitleBar", "hideGuideBox"}, 
+values={"true", "true", "blue", "true", "true"})
 public class PerspectiveWindow extends Window {
 	
 	public PerspectiveWindow() throws Exception {

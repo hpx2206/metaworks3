@@ -5,10 +5,10 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Face(ejsPath="genericfaces/Window.ejs",
+@Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs",
 	  displayName="InstanceViewContent",
-	  options={"hideLabels", "maximize"}, 
-	  values={"true", "true"})
+	  options={"hideLabels", "maximize", "hideTitleBar"}, 
+	  values={"true", "true", "true"})
 public class InstanceViewContent extends ContentWindow {
 	
 	public Session session;

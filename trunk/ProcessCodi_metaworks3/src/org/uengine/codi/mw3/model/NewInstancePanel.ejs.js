@@ -5,11 +5,6 @@ var org_uengine_codi_mw3_model_NewInstancePanel = function(objectId, className){
 	this.objectDiv = $('#' + this.divId);
 	this.object = mw3.objects[this.objectId];
 	
-	this.objectDiv.css({
-		'border': '1px solid #ccc',
-		'background-color': 'white'
-	});
-	
 	if(this.object && this.object.title){
 		var title = this.object.title;
 			
