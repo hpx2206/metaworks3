@@ -308,6 +308,11 @@ public interface IWorkItem extends IDAO{
 		@NonLoadable
 		public IFrame getConference();
 		public void setConference(IFrame conference);
+
+		@NonSavable
+		@NonLoadable
+		public RemoteConferenceDate getRemoteConferenceDate();
+		public void setRemoteConferenceDate(RemoteConferenceDate remoteConferenceDate);
 		
 		@NonSavable
 		@NonLoadable

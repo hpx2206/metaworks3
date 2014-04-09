@@ -8,7 +8,10 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,7 +30,9 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
+import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.ProcessInstance;
 
 public class RemoteConferenceWorkItem extends WorkItem{
 	
@@ -51,6 +56,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	   ext5 = confereceStarted;
 	   ext6 = MeetingRunning;
 	   ext7 = participantCount;
+	   ext8 = remoteConferece startTime
 	 * 
 	 */
 	public RemoteConferenceWorkItem() throws Exception {
@@ -60,8 +66,60 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 	@Override
 	public Object[] add() throws Exception {
-	
+		Calendar modifyCal = Calendar.getInstance();
+		Calendar nowCal = Calendar.getInstance();
+		
+		int minutes = Integer.parseInt(this.getRemoteConferenceDate().getMinute().getSelectedText()) ; 
+		int hours = Integer.parseInt(this.getRemoteConferenceDate().getHour().getSelectedText());
+		int days = this.getRemoteConferenceDate().getDate().getDate();
+		int months = this.getRemoteConferenceDate().getDate().getMonth()+1;
+		int year = this.getRemoteConferenceDate().getDate().getYear()+1900;
+		
+		String resultExpression =  year+" "+months+" "+days+" "+hours+" "+minutes;
+		
+		// 입력한 값 세팅.
+		modifyCal.set(Calendar.MONTH, 		 months-1);
+		modifyCal.set(Calendar.DAY_OF_MONTH, days);
+		modifyCal.set(Calendar.HOUR_OF_DAY,  hours);
+		modifyCal.set(Calendar.MINUTE, 		 minutes);
+		modifyCal.set(Calendar.YEAR, 		 year);
+		
+		System.out.println(modifyCal.getTime());
+		System.out.println(nowCal.getTime());
+		if(!modifyCal.after(nowCal)){
+			throw new Exception(localeManager.getString("$ResetMeetingTime"));
+		}
+		
 		Object[] returnData =  super.add();
+		
+		
+		ProcessMap processMap = new ProcessMap();
+		processMap.processManager = processManager;
+		processMap.session = session;
+		processMap.setDefId("remoteConfNoti3.process");
+		
+		String rootInstanceId = this.getInstId().toString();
+		String instId = processMap.initializeProcess();
+		
+		//프로세스 설정.
+		Date date = modifyCal.getTime();
+
+		RemoteConferenceData data = new RemoteConferenceData(); 
+		data.setInstanceId(rootInstanceId);
+		data.setStartDate(date);
+		
+		
+		ProcessInstance instanceObject = processManager.getProcessInstance(instId);
+		
+		EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
+		ejbParentInstance.getProcessInstanceDAO().setRootInstId(new Long(rootInstanceId));
+		
+		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+		roleMappingPanel.putRoleMappings(processManager, rootInstanceId);
+		
+		processManager.getProcessInstance(instId.toString()).setBeanProperty("RemoteConferenceData", data);
+		processManager.executeProcess(instId.toString());
+		processManager.applyChanges();
 		
 		boolean record = true;
 		
@@ -103,10 +161,14 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		}
 		
 		is.close();
+		Instance instance = new Instance();
+		instance.setInstId(rootInstId);
 		
+		instance.databaseMe().setName(this.getTitle());
 		databaseMe().setExt1(meetingID);
 		databaseMe().setExt2(attendeePW);
 		databaseMe().setExt3(moderatorPW);
+		databaseMe().setExt8(resultExpression);
 		
 		return returnData;
 	}
@@ -115,6 +177,21 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND, callByContent=true)
 	public Object[] join() throws Exception{
  		
+		String meetingTime[] = databaseMe().getExt8().split(" ");
+		Calendar nowCal = Calendar.getInstance();
+		Calendar meetingCal = Calendar.getInstance();
+		
+		meetingCal.set(Calendar.YEAR, 		  Integer.parseInt(meetingTime[0]));
+		meetingCal.set(Calendar.MONTH, 		  Integer.parseInt(meetingTime[1])-1);
+		meetingCal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(meetingTime[2]));
+		meetingCal.set(Calendar.HOUR_OF_DAY,  Integer.parseInt(meetingTime[3]));
+		meetingCal.set(Calendar.MINUTE, 	  Integer.parseInt(meetingTime[4]));
+		
+		if(meetingCal.after(nowCal)){
+			SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm ");
+			throw new Exception(format.format(meetingCal.getTime())+localeManager.getString("$JoinNotUntil"));
+		}
+		
 		String meetingID = databaseMe().getExt1();
 		String attendeePW = databaseMe().getExt2();
 		String moderatorPW = databaseMe().getExt3();
@@ -138,7 +215,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		iframe.setWidth("100%");
 		
 		this.databaseMe().setExt7("0");
-		/*
+		
 		this.databaseMe().setExt6(TRUE);
 				
 		HashMap<String, String> pushUserMap = new HashMap<String, String>();
@@ -155,7 +232,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
 				new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
-		*/		
+				
 		return new Object[]{new ModalWindow(iframe, 1000, 550, title)};
 	}
 	
