@@ -89,16 +89,17 @@ public class FileWorkItem extends WorkItem{
 			
 		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
 			
-			// TODO : minor version 에 대한 맥스 값 처리도 되어야함
-			int thisMajorVersion = this.getMajorVer();
-			int nextVersion = this.getMajorVer()+1;
 			WorkItem tempWi = getMaxVersion();
 			if( tempWi != null ){
-				nextVersion = tempWi.getMajorVer() + 1;
+				if("Major".equals(getVersionUpOption())){
+					setMajorVer(tempWi.getMajorVer()+1);
+					setMinorVer(0);
+				}else{
+					setMinorVer(tempWi.getMinorVer()+1);
+				}
 			}
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			this.setMajorVer(nextVersion);
 		}
 
 		if(this.getWorkItemVersionChooser() != null)
