@@ -19,6 +19,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
@@ -41,6 +42,8 @@ import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.RoleMapping;
+import org.uengine.kernel.TimerEventActivity;
+import org.uengine.kernel.designer.inputter.CronExpressionInputter;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -371,6 +374,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		public void setRemoteConf(RemoteConferenceWorkItem remoteConf) {
 			this.remoteConf = remoteConf;
+		}
+		
+	RemoteConferenceDate remoteConferenceDate;
+		public RemoteConferenceDate getRemoteConferenceDate() {
+			return remoteConferenceDate;
+		}
+		public void setRemoteConferenceDate(RemoteConferenceDate remoteConferenceDate) {
+			this.remoteConferenceDate = remoteConferenceDate;
 		}
 
 	String content;
@@ -784,6 +795,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public IWorkItem newRemoteConference() throws Exception {
 		RemoteConferenceWorkItem wi = new RemoteConferenceWorkItem();
 		formatWorkItem(wi);
+		
+		wi.remoteConferenceDate = new RemoteConferenceDate();
+		wi.remoteConferenceDate.load();
 		
 		return wi;
 	}
@@ -1262,19 +1276,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		Iterator<String> iterator = notiUsers.keySet().iterator();
 		while(iterator.hasNext()){
 			String followerUserId = (String)iterator.next();
-			Notification noti = new Notification();
-			INotiSetting notiSetting = new NotiSetting();
-			INotiSetting findResult = notiSetting.findByUserId(followerUserId);
-			if(!findResult.next() || findResult.isWriteInstance()){
-				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-				noti.setUserId(followerUserId);
-				noti.setActorId(session.getUser().getUserId());
-				noti.setConfirm(false);
-				noti.setInputDate(Calendar.getInstance().getTime());
-				noti.setTaskId(getTaskId());
-				noti.setInstId(getInstId());					
-				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-				noti.add(copyOfInstance);
+			if(!session.getEmployee().getEmpCode().equals(followerUserId)){
+				Notification noti = new Notification();
+				INotiSetting notiSetting = new NotiSetting();
+				INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+				if(!findResult.next() || findResult.isWriteInstance()){
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(followerUserId);
+					noti.setActorId(session.getUser().getUserId());
+					noti.setConfirm(false);
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setTaskId(getTaskId());
+					noti.setInstId(getInstId());					
+					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+					noti.add(copyOfInstance);
+				}
 			}
 		}
 		
@@ -1421,6 +1437,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			throw new Exception("$CanNotDelete");
 		}else if( this.getTool() != null && this.getTrcTag() != null && this.getType() == null ){
 			// 프로세스의 workItem 이 닫혀있을 경우 이렇게 들어오는 경우가 있어서 삭제를 막는다.
+			throw new Exception("$CanNotDelete");
+		}else if("remoteConf".equals(this.getType()) && !"Completed".equals(this.getStatus())){
 			throw new Exception("$CanNotDelete");
 		}
 		Instance theInstance = new Instance();
@@ -1637,8 +1655,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return overlayCommentWorkItem; 
 	}
-	
-	public Object moreView() throws Exception {
+	public IWorkItem findMoreView() throws Exception{
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select *");
@@ -1655,24 +1672,51 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		workitem.set("instId", this.getInstId());
 		workitem.set("taskId", this.getTaskId());
 		workitem.set("isDeleted",1);
-		
-		//TODO: this expression should be work later instead of above.
-		//IUser user = new User();
-		//user.setEndpoint(login.getEmpCode());
-		//workitem.setWriter(user);
-		
 		workitem.select();
 		
-		System.out.println("size:" + workitem.size());
-		
 		return workitem;
+	}
+	public IWorkItem attachComment(IWorkItem workItem) throws Exception{
+		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
+		while(workItem.next()){
+			thread.moveToInsertRow();
+			thread.getImplementationObject().copyFrom(workItem);
+		}
+		
+		workItem = WorkItem.findComment(this.getInstId().toString());
+		while(workItem.next()){
+			boolean isProcessComment = false;
+			thread.beforeFirst();
+			while(thread.next()){
+				if(thread.getTaskId().equals(workItem.getPrtTskId()) && "process".equals(thread.getType())){
+					isProcessComment = true;
+					break;
+				}
+			}
+			if( isProcessComment ){
+				continue;
+			}
+			thread.moveToInsertRow();
+			thread.getImplementationObject().copyFrom(workItem);
+		}
+		return thread;
+	}
+	
+	public Object moreView() throws Exception {
+		
+		IWorkItem workItem = findMoreView();
+		IWorkItem thread = attachComment(workItem);
+		thread.getMetaworksContext().setWhere(IWorkItem.WHERE_WORKLIST);
+		return thread;
+
 		
 	}
 
 	public IWorkItem loadMajorVersionFile(String id) throws Exception{
 		StringBuffer sb = new StringBuffer();
-		sb.append(" select * from bpm_worklist where majorver in (select max(majorver) from bpm_worklist where instId=?instId)");
-		sb.append(" and instId=?instId");
+		sb.append(" select * from bpm_worklist ");
+//		sb.append(" where majorver in (select max(majorver) from bpm_worklist where instId=?instId)");
+		sb.append(" where instId=?instId order by majorver desc, minorver desc limit 1");
 		
 		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class,sb.toString());
 		
