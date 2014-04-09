@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -109,6 +110,8 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 				Object val = instance.getBeanProperty(srcVariableName);
 				if( val != null && val instanceof Calendar){
 					modifyCal = (Calendar)val;
+				}else if(val != null && val instanceof Date){
+					modifyCal.setTime((Date)val);
 				}
 			}
 			int minutes = Integer.parseInt(exp[0]) ; 
@@ -181,11 +184,6 @@ public class TimerEventActivity extends EventActivity implements IDrawDesigner {
 				Employee emp = new Employee();
 				emp.setEmpCode(rm.getEndpoint());
 				globalcom = emp.databaseMe().getGlobalCom();
-			}
-			if( globalcom == null ){
-				Instance instanceRef = new Instance();
-				instanceRef.setInstId(new Long(instance.getInstanceId()));
-				globalcom = instanceRef.databaseMe().getInitComCd();
 			}
 			
 			pstmt = conn.prepareStatement(sql);

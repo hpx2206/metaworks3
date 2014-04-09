@@ -2,6 +2,7 @@ package org.uengine.kernel;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 import org.metaworks.component.SelectBox;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -159,8 +160,15 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigner
 				String fieldName = targetFieldName.substring(targetFieldName.lastIndexOf(".") + 1);
 				// 첫글자는 대문자로
 				String output = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1); 
+				Method m = null;
+				if( value instanceof String){
+					m = resourceClass.getMethod("set"+output, new Class[]{String.class});
+				}else if(value instanceof Date) {
+					m = resourceClass.getMethod("set"+output, new Class[]{Date.class});
+				}else{
+					m = resourceClass.getMethod("set"+output, new Class[]{String.class});
+				}
 				
-				Method m = resourceClass.getMethod("set"+output, new Class[]{String.class});
 				m.invoke(object, new Object[]{value});
 			}
 		}
