@@ -10405,7 +10405,7 @@ OG.shape.HorizontalPoolShape = function (label) {
 	OG.shape.HorizontalPoolShape.superclass.call(this, label);
 
 	this.SHAPE_ID = 'OG.shape.HorizontalPoolShape';
-	this.label = 'Process';
+	this.label = label ? label : 'Pool';
 	this.CONNECTABLE = true;
 	this.LoopType = 'None';
 	this.GROUP_COLLAPSIBLE = false;
