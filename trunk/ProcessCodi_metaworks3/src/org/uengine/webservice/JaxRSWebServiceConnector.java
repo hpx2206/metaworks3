@@ -129,27 +129,28 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 		
 	@Override
 	public void load() throws Exception{
-		
-		AppMapping app = new AppMapping();
-		app.setAppId(Integer.parseInt(this.getLinkedId()));
-		String appName = app.databaseMe().getAppName();
-		this.setWebServiceName(appName);
-		
-		// 1. appId에 해당하는 파일이 있는지 확인한다.
-		String appBasePath = MetadataBundle.getProjectBasePath(appName);
-		String webServiceFileName = appName + ".WADL";
-		
-		String fullPath = appBasePath + File.separatorChar + webServiceFileName;
-		File webServiceFile = new File(fullPath);
-		if( !webServiceFile.exists()){
-//			String url = "http://192.168.56.101:8080/hello/";
-			String url = app.databaseMe().getUrl();
-			makeWebServiceFile(url, webServiceFile);
-		}
-		// load webService
-		webServiceDefinition = webServiceDefinition.loadWithPath(fullPath);
-		for(ResourceProperty rp : webServiceDefinition.getResourceList()){
-			webServiceDefinition.injectionPathInfo(rp, webServiceDefinition.getBase());
+		if( this.getLinkedId() != null && !"".equals(this.getLinkedId())){
+			AppMapping app = new AppMapping();
+			app.setAppId(Integer.parseInt(this.getLinkedId())); 
+			String appName = app.databaseMe().getAppName();
+			this.setWebServiceName(appName);
+			
+			// 1. appId에 해당하는 파일이 있는지 확인한다.
+			String appBasePath = MetadataBundle.getProjectBasePath(appName);
+			String webServiceFileName = appName + ".WADL";
+			
+			String fullPath = appBasePath + File.separatorChar + webServiceFileName;
+			File webServiceFile = new File(fullPath);
+			if( !webServiceFile.exists()){
+	//			String url = "http://192.168.56.101:8080/hello/";
+				String url = app.databaseMe().getUrl();
+				makeWebServiceFile(url, webServiceFile);
+			}
+			// load webService
+			webServiceDefinition = webServiceDefinition.loadWithPath(fullPath);
+			for(ResourceProperty rp : webServiceDefinition.getResourceList()){
+				webServiceDefinition.injectionPathInfo(rp, webServiceDefinition.getBase());
+			}
 		}
 	}
 	
@@ -247,10 +248,10 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 							method.setResponseMessages(operationApi.getJSONArray("responseMessages"));
 						}
 						if( operationApi.containsKey("consumes") ){
-							method.setResponseMessages(operationApi.getJSONArray("consumes"));
+							method.setConsumes(operationApi.getJSONArray("consumes"));
 						}
 						if( operationApi.containsKey("produces") ){
-							method.setResponseMessages(operationApi.getJSONArray("produces"));
+							method.setProduces(operationApi.getJSONArray("produces"));
 						}
 						if( operationApi.containsKey("summary") ){
 							method.setSummary(operationApi.getString("summary"));

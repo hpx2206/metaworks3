@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.menu;
 import java.io.File;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
@@ -14,10 +15,11 @@ import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.CloudWindow;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
@@ -27,7 +29,10 @@ import org.uengine.codi.mw3.knowledge.ProjectServers;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.ProcessDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.webservice.ServiceClassGenerator;
 
 public class ResourceContextMenu extends CloudMenu {
 
@@ -103,6 +108,11 @@ public class ResourceContextMenu extends CloudMenu {
 			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 			this.add(new MenuItem("deployee", "$resource.menu.deployee"));
 			this.add(new MenuItem("registerApp", "$resource.menu.registerApp"));
+		}
+		
+		if( this.getResourceNode() != null && this.getResourceNode() instanceof ProcessNode){
+			// 프로세스 노드일때 특별한 작업
+			this.add(new MenuItem("webService", "$resource.menu.webService"));
 		}
 	}
 	
@@ -265,8 +275,36 @@ public class ResourceContextMenu extends CloudMenu {
 		
 		return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
 	}
-	
-	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] webService() throws Exception {
+		
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ProcessNode){
+			ProcessNode node = (ProcessNode)clipboard;		
+			Editor editor = new Editor(node);
+			String definitionString = editor.load();
+			System.out.println(definitionString);
+			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
+			
+			ServiceClassGenerator serviceClassGenerator = new ServiceClassGenerator();
+			if( serviceClassGenerator.isWebServiceConvert(def) ){
+				
+			}else{
+				throw new MetaworksException("웹서비스로 만들 엑티비티가 없습니다.");
+			}
+			
+		}
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(150);
+		modalWindow.setTitle("$webService.complete.title");
+		modalWindow.setPanel("웹서비스등록이 완료 되었습니다.");//$deployee.complete.message		
+		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
+		
+		return new Object[]{modalWindow, new Remover(this)};
+	}
 	
 	
 	@ServiceMethod

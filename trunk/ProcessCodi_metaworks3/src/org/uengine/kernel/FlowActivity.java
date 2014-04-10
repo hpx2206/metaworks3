@@ -54,6 +54,7 @@ public class FlowActivity extends ComplexActivity {
 
 	private Activity getStartActivity() throws UEngineException {
 		Activity child = null;
+		// TODO 프로세스를 퍼블리싱하여 제공할때는 이벤트로 프로세스가 시작이 될수가 있다 이때를 위한 부분을 처리해야함
 		for (Iterator it = getChildActivities().iterator(); it.hasNext();) {
 			child = (Activity) it.next();
 			if( child.getOutgoingTransitions().size() == 0 && child.getIncomingTransitions().size() == 0){
