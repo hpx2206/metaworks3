@@ -1,5 +1,6 @@
 package org.uengine.kernel;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -10,6 +11,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -22,9 +26,14 @@ import org.uengine.codi.mw3.webProcessDesigner.PoolMappingTree;
 import org.uengine.contexts.MappingContext;
 import org.uengine.util.UEngineUtil;
 import org.uengine.webservice.MethodProperty;
+import org.uengine.webservice.ParameterProperty;
 import org.uengine.webservice.WebServiceDefinition;
 
 public class RestWebServiceActivity extends DefaultActivity implements IDrawDesigner{
+	
+	public static final String METHOD_TYPE_GET = "GET";
+	public static final String METHOD_TYPE_POST = "POST";
+	public static final String METHOD_TYPE_DELETE = "DELETE";
 	
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
@@ -72,51 +81,105 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 	public void executeActivity(ProcessInstance instance) throws Exception{
 		
 		MethodProperty method = this.getMethod();
+		String callPath = method.getCallPath();
+		String queryString = null;
+		if( callPath.indexOf("{") > 0 && callPath.indexOf("}") > 0){
+			queryString = callPath.substring(callPath.indexOf("{") + 1, callPath.indexOf("}"));
+			callPath = callPath.substring(0, callPath.indexOf("{"));
+		}
 		
 		Client client = ClientBuilder.newClient();
-		WebTarget myResource = client.target(method.getBasePath());
+		WebTarget baseResource = client.target(method.getBasePath());
 		
-		Form f = new Form();
-		f.param("first", "김");
-		f.param("last", "형국");
+		WebTarget callTarget = baseResource.path(callPath);
 		
-		WebTarget myContext2 = myResource.path("/hello");
-		WebTarget myContext3 = myContext2.path("/user");
+		Object entryObject = null;	// form Type 변수
+		Invocation.Builder invocationBuilder = null;
+		Response response = null;
 		
-		myContext3.request().post(Entity.entity(f, MediaType.APPLICATION_FORM_URLENCODED));
+		HashMap<String, Object> dataMap = requestDataMapping(instance);
 		
+		if( method.getRequest() != null && method.getRequest().length > 0){
+			ParameterProperty[] propertyArray = method.getRequest();
+			for(int j=0; j < propertyArray.length; j++){
+				ParameterProperty pp = propertyArray[j];
+				String paramType = pp.getParamType();
+				if( "path".equals(paramType) ){
+					if( queryString != null && queryString.equals(pp.getName()) ){
+						if( dataMap != null && dataMap.containsKey(pp.getName())){
+							// {message} 형식으로 호출된 path 가 있는 경우 path를 넣어줌
+							String targetPath = dataMap.get(pp.getName()).toString();
+							callTarget = callTarget.path(targetPath.trim()); 
+						}else{
+							callTarget = callTarget.path(pp.getName());
+						}
+					}
+				}else if( "form".equals(paramType) ){
+					if( entryObject == null ){
+						entryObject = new Form();
+					}
+					if( dataMap != null && dataMap.containsKey(pp.getName())){
+						((Form)entryObject).param(pp.getName(), dataMap.get(pp.getName()).toString());
+					}else{
+						((Form)entryObject).param(pp.getName(), "");
+					}
+				}
+			}
+			
+		}
+		// Consumes : 어떤 형식의 데이터를 넘기겠다. 
+		JSONArray consumes = method.getConsumes();
+		if( consumes != null ){
+			String[] argType = new String[consumes.size()];
+			for( int i = 0; i < consumes.size(); i++){
+				argType[i] = consumes.getString(i);
+			}
+			invocationBuilder = callTarget.request(argType);
+			
+		}
+		JSONArray produces = method.getProduces();
+		if( produces != null ){
+			String[] argType = new String[produces.size()];
+			for( int i = 0; i < produces.size(); i++){
+				argType[i] = produces.getString(i);
+			}
+			invocationBuilder = callTarget.request(argType);
+		}
+		if( invocationBuilder == null ){
+			invocationBuilder = callTarget.request();
+		}
 		
+		String methodCallType = method.getName();
+		if( METHOD_TYPE_GET.equalsIgnoreCase(methodCallType) ){
+			response = invocationBuilder.get();
+		}else if( METHOD_TYPE_POST.equalsIgnoreCase(methodCallType) ){
+			if( entryObject instanceof Form ){
+				response = invocationBuilder.post(Entity.entity(entryObject,MediaType.APPLICATION_FORM_URLENCODED ));
+			}else if( entryObject instanceof JSONObject ){
+				response = invocationBuilder.post(Entity.entity(entryObject,MediaType.APPLICATION_JSON ));
+			}
+		}
 		
+		String responseClass = method.getResponseClass();
+		if( responseClass != null && responseClass.equalsIgnoreCase(String.class.getSimpleName())){
+			System.out.println(response.readEntity(String.class));
+		}
 		
+		fireComplete(instance);
 		
+	}
+	
+	public HashMap<String, Object> requestDataMapping(ProcessInstance instance) throws Exception{
 		
-//		WebTarget myResource = client.target("http://192.168.56.101:8080");
-		
-		WebTarget myContext = myContext3.path("가가가가");
-		
-		Invocation.Builder invocationBuilder =	myContext.request(MediaType.TEXT_PLAIN_TYPE);
-		Response response = invocationBuilder.get();
-		
-//		myResource.path(method.getCallPath());
-//		myResource.queryParam("message", "그래요..");
-		
-//		method.getResponseMessages();
-//		Response response = myContext.request(MediaType.APPLICATION_JSON).get();
-//		Response response = myContext.request(MediaType.TEXT_PLAIN).get();
-//		String response = myResource.request(MediaType.TEXT_PLAIN).get(String.class);
-		
-		
-		System.out.println(response.readEntity(String.class));
-		
-		Response response2 = myContext3.request(MediaType.APPLICATION_JSON).get();
-		System.out.println(response2.readEntity(String.class));
-//		System.out.println( "response = " + response);
-		
+		HashMap<String, Object> dataMap = null; 
 		MappingContext mc= getMappingContext();
 		if(mc !=null){
 			ParameterContext[] params = mc.getMappingElements();
 			if( params == null && mc.getMappingCanvas() != null){
 				params = mc.getMappingCanvas().getMappingElements();
+			}
+			if( params.length > 0 ){
+				dataMap = new HashMap<String, Object>();
 			}
 			for (int i = 0; i < params.length; i++) {
 				ParameterContext param = params[i];
@@ -150,13 +213,11 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 							value = instance.getBeanProperty(srcVariableName); // varA
 						}
 					}
-				}			
-				
-//				instance.setBeanProperty(targetFieldName, (Serializable)value); //[instance].instanceId
-	
+				}
+				dataMap.put(targetFieldName, value);
 			}	
 		}
-		
+		return dataMap;
 	}
 	
 	public ValidationContext validate(Map options) {
