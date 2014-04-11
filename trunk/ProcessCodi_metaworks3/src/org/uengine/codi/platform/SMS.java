@@ -25,9 +25,9 @@ public class SMS {
 		
 		String smsServer = GlobalContext.getPropertyString("sms.server", "biz.ppurio.com");
 		String smsPort = GlobalContext.getPropertyString("sms.port", "5000");
-		String smsUser = GlobalContext.getPropertyString("sms.user", "uengine");
-		String smsPwd = GlobalContext.getPropertyString("sms.pwd", "18925ung");
-		//bs.doBegin("biz.ppurio.com", 5000, "uengine", "18925ung");
+		String smsUser = GlobalContext.getPropertyString("sms.user", "test");
+		String smsPwd = GlobalContext.getPropertyString("sms.pwd", "test");
+		
 		bs.doBegin(smsServer, Integer.parseInt(smsPort), smsUser, smsPwd);
 		/* 메시지 정의 */
 		// 다음의 setter 를 사용하여 필요한 정보를 정의
