@@ -1383,6 +1383,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					commentWorkItem.setWriter(session.getUser());
 					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 					
+					instance.getMetaworksContext().setWhere("instancelist");
+					
 					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance),
 							  	new Refresh(detail),
 							  	new Refresh(upcommingTodoPerspective)};
