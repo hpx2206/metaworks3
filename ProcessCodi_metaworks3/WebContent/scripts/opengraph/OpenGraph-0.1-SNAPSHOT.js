@@ -18445,23 +18445,22 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
         _rect1 = this._PAPER.image("images/opengraph/running.png", _upperRight.x - 25, _upperRight.y  + 5, 20, 20);
         break;
     }
-
-	var ani1 = Raphael.animation({
-        fill:'#C9E2FC'
-    },1000);
     
-    var ani2 = Raphael.animation({
-        fill:'white'
-    },1000, startAni);
-	
-	function startAni(){
-		_rect.attr({fill: 'white'}).animate(ani1);
-		_rect.attr({fill: '#C9E2FC'}).animate(ani2.delay(1000));
-	}
-	
-	if(element.shape.status == "Running")
+	if(element.shape.status == "Running"){
+		var ani1 = Raphael.animation({
+	        fill:'#C9E2FC'
+	    },1000);
+	    
+	    var ani2 = Raphael.animation({
+	        fill:'white'
+	    },1000, startAni);
+		
+		function startAni(){
+			_rect.attr({fill: 'white'}).animate(ani1);
+			_rect.attr({fill: '#C9E2FC'}).animate(ani2.delay(1000));
+		}
 		startAni();
-	
+	}
     this._add(_rect1, rElement.id + OG.Constants.STATUS_SUFFIX);
     _rect1.insertAfter(rElement);
     rElement.appendChild(_rect1);
