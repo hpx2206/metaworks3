@@ -22,8 +22,7 @@ public class Marketplace extends Application {
 			this.layout = layout;
 		}
 		
-	@ServiceMethod
-	public void load() throws Exception {
+		public Marketplace(Session session) throws Exception {
 		
 		//top
 //		MarketplaceTopPanel top = new MarketplaceTopPanel(session);
@@ -69,11 +68,13 @@ public class Marketplace extends Application {
 //		session.setLastPerspecteType("topic");
 //		session.setLastSelectedItem("Marketplace");
 		
+	/*
 		InstanceList instList = new InstanceList(session);
 		instList.load();
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.setInstanceList(instList);
+		*/
 		
 //		ContentWindow topicStreamWindow = new ContentWindow();
 //		topicStreamWindow.setPanel(instanceListPanel);
