@@ -82,13 +82,6 @@ org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
 		//자주 찾는 앱 등록
 		this.object.updateFavoriteApp();
 		*/
-		
-		
-		mw3.call(this.objectId, 'openAppBrowser', null, null, function(){
-			var window = mw3.getAutowiredObject('org.uengine.codi.mw3.model.PerspectiveWindow');
-			
-			mw3.getFaceHelper(window.__objectId).minimize();
-		});
 	}
 };
 
