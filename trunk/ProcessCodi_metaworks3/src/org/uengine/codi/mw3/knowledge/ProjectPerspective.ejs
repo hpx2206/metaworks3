@@ -1,14 +1,14 @@
 <%
 	if(value){
 %>
-<div class="depth1">
-	<a onClick="<%=methods.select.caller()%>" href="#"><%=mw3.localize("$Project")%></a>
-</div>
+<div class="depth1" onClick="<%=methods.select.caller() %>"><span><%=fields.label.here()%></span></div>
 
 <%if(value.selected){%>
 
 	<div class="depth2">
-		<%=fields.projectPanel.here() %>
+		<div class="fist_menu">		
+			<%=fields.projectPanel.here() %>
+		</div>
 	</div>
 <%}%>
 
