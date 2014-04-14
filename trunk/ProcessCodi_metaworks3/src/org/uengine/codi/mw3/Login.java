@@ -917,7 +917,7 @@ public class Login implements ContextAware {
 				e.printStackTrace();
 			}
 		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
-			app = new Marketplace();
+			app = new Marketplace(session);
 		}
 		
 		if(app == null)
