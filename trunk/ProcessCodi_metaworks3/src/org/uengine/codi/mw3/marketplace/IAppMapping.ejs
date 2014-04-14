@@ -22,7 +22,7 @@
 	
 %>
 	
-        	<li onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
+        	<li onClick="<%=methods.openAppBrowser.caller()%>">
         		<%=fields.logoFile.here({when:'image'})%>
         		<%=value.appName%>
         		<div class="editicon" onClick="<%=methods.goSelfService.caller()%>">
