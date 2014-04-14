@@ -107,7 +107,7 @@ public class NewInstancePanel implements ContextAware {
 		String title = "새로쓰기";
 
 		if(Perspective.MODE_TOPIC.equals(session.getLastPerspecteMode()) ||
-				   Perspective.MODE_PROJECT.equals(session.getLastPerspecteType())){
+				   Perspective.MODE_PROJECT.equals(session.getLastPerspecteMode())){
 			this.setTopicNodeId(session.getLastSelectedItem());
 			title = "'" + session.getWindowTitle() + "' 에 새로쓰기";
 		}
