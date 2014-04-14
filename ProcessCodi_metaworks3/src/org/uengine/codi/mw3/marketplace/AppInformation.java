@@ -262,8 +262,7 @@ public class AppInformation implements ContextAware, ITool {
 		listing.syncToDatabaseMe();
 		listing.flushDatabaseMe();
 
-		Marketplace goVendorPage = new Marketplace();
-		goVendorPage.session = session;
+		Marketplace goVendorPage = new Marketplace(session);
 
 		return new Refresh(goVendorPage.showMyVendor(), true);
 
