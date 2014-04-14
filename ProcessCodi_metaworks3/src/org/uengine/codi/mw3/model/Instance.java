@@ -76,8 +76,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		   Perspective.MODE_PERSONAL.equals(navigation.getPerspectiveMode())){
 			
 			employee = new Employee();
-			employee.setEmpCode(navigation.getPerspectiveValue());
-			employee.copyFrom(employee.findMe());
+			employee.setEmpCode(navigation.getEmployee().getEmpCode());
+			employee.copyFrom(employee.databaseMe());
 			
 			if(!employee.getGlobalCom().equals(navigation.getEmployee().getGlobalCom()))
 				navigation.setDiffrentCompany(true);
@@ -430,6 +430,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else if(Perspective.MODE_PROCESS.equals(navigation.getPerspectiveMode())){
 			instanceSql.append(" and inst.defverid=?instDefVerId ");
 			criteria.put("instDefVerId", navigation.getPerspectiveValue());
+		}else if(Perspective.MODE_PROJECT.equals(navigation.getPerspectiveMode())){
+			instanceSql.append(" and inst.topicId = ?topicId ");
+			criteria.put("topicId", navigation.getPerspectiveValue());
 		}
 
 	}
