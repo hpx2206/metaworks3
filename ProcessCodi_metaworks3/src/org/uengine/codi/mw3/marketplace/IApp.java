@@ -33,7 +33,7 @@ import org.uengine.codi.mw3.model.ICompany;
 		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
-      values={"categories,attachProject,releaseVersion,appName,subDomain,simpleOverview,fullOverview,logoFile"})
+      values={"categories,attachProject,appName,subDomain,simpleOverview,fullOverview,logoFile"})
 public interface IApp extends IDAO{
 	
 	@Id
@@ -162,11 +162,11 @@ public interface IApp extends IDAO{
 
 	@Hidden
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-	public Object readyPublished() throws Exception;
+	public Object[] readyPublished() throws Exception;
 	
 	@Hidden
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-	public Object readyApproved() throws Exception;
+	public Object[] readyApproved() throws Exception;
 
 	@Hidden
 	@ServiceMethod(callByContent=true)
