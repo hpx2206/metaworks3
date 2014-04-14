@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
@@ -15,6 +16,7 @@ public interface ITopicNode extends IDAO {
 	public String getId();
 	public void setId(String id);
 	
+	@Name
 	public String getName();
 	public void setName(String name);
 	
