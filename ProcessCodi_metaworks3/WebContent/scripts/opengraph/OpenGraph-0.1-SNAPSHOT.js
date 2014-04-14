@@ -15382,18 +15382,9 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	text_anchor = _style["text-anchor"] || 'middle';
 	//_style["text-anchor"] = 'middle';
 
-	//Text Filter for foreignObject
-	if(text){
-		text = text.replace(/\n/g, '<br />');
-	}
-	
 	// Draw text
-	// 옆으로 회전했을때 문제
-	if(_style["label-direction"] === 'vertical'){
-		element = this._PAPER.foreignObject(text, position[0], position[1], height, size[1]);
-	}else{
-		element = this._PAPER.foreignObject(text, position[0], position[1], size[0], size[1]);
-	}
+	element = this._PAPER.text(position[0], position[1], text);
+	element.attr(_style);
 	
 	// real size
 	bBox = element.getBBox();
@@ -18467,7 +18458,9 @@ OG.renderer.RaphaelRenderer.prototype.drawStatus = function (element) {
 		_rect.attr({fill: 'white'}).animate(ani1);
 		_rect.attr({fill: '#C9E2FC'}).animate(ani2.delay(1000));
 	}
-	startAni();
+	
+	if(element.shape.status == "Running")
+		startAni();
 	
     this._add(_rect1, rElement.id + OG.Constants.STATUS_SUFFIX);
     _rect1.insertAfter(rElement);
