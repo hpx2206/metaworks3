@@ -9,11 +9,13 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -40,7 +42,7 @@ import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,projectAlias,topicDescription,logoFile,projectSecuopt,fileType"} ,
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,logoFile"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -58,7 +60,6 @@ public class ProjectTitle implements ContextAware {
 	public PageNavigator pageNavigator; 
 			
 	public ProjectTitle(){
-		setFileType("svn");
 	}
 	String topicId;
 		@Hidden
@@ -186,24 +187,24 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-		this.saveMe();
-		
-		session.setLastPerspecteType("topic");
-		session.setLastSelectedItem(this.getTopicId());
-
-		
-		ProjectNode projectNode = new ProjectNode();
-		projectNode.setId(this.getTopicId());
-		projectNode.setName(this.getTopicTitle());
-		projectNode.setProjectAlias(this.getProjectAlias());
-		projectNode.session = session;
-		
-		this.makeHtml();
-		
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		this.getMetaworksContext().setHow("html");	
-
-		String command = null;
+//		this.saveMe();
+//		
+//		session.setLastPerspecteType("topic");
+//		session.setLastSelectedItem(this.getTopicId());
+//
+//		
+//		ProjectNode projectNode = new ProjectNode();
+//		projectNode.setId(this.getTopicId());
+//		projectNode.setName(this.getTopicTitle());
+//		projectNode.setProjectAlias(this.getProjectAlias());
+//		projectNode.session = session;
+//		
+//		this.makeHtml();
+//		
+//		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//		this.getMetaworksContext().setHow("html");	
+//
+//		String command = null;
 //		
 //		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
 //		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
@@ -274,45 +275,50 @@ public class ProjectTitle implements ContextAware {
 //		}
 		
 		
-		ServerInfo serverInfo = new ServerInfo();
-		serverInfo.setIaasServerType(ServerInfo.SERVER_TYPE_KT);
-		serverInfo.setVmName(this.getTopicTitle());
-		serverInfo.createDatabaseMe();
+//		ServerInfo serverInfo = new ServerInfo();
+//		serverInfo.setIaasServerType(ServerInfo.SERVER_TYPE_KT);
+//		serverInfo.setVmName(this.getTopicTitle());
+//		serverInfo.createDatabaseMe();
+//		
+//		
+//		if(false){
+//			String defId = "serverStart.process";
+//			ProcessMap processMap = new ProcessMap();
+//			processMap.processManager = processManager;
+//			processMap.session = session;
+//			processMap.setDefId(defId);
+//			
+//			String instId = processMap.initializeProcess();
+//					
+//			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+//			roleMappingPanel.putRoleMappings(processManager, instId);
+//	//		ProcessInstance instance  = processManager.getProcessInstance(instId);
+//	//		processManager.getProcessInstance(instId).setBeanProperty("serverName", this.getTopicTitle());
+//	//		instance.setBeanProperty(targetFieldName, (Serializable)value);
+//			
+//			processManager.executeProcess(instId);
+//			processManager.applyChanges();
+//		}
+//		/*
+//		Object[] returnObj = projectNode.loadTopic();
+//		Object[] returnObject = new Object[ returnObj.length + 3];
+//		for (int i = 0; i < returnObj.length; i++) {
+//			if( returnObj[i] instanceof InstanceListPanel){
+//				returnObject[i] = new Refresh(returnObj[i]);
+//			}else{
+//				returnObject[i] = new Refresh(returnObj[i]);
+//			}			
+//		}
+//		returnObject[returnObj.length ] = new ToAppend(new ProjectPanel(), projectNode);
+//		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
+//		
+//		return returnObject;
+//		*/
+//		
+//		return new Object[]{new ToEvent(new ProjectPerspective(), EventContext.EVENT_CHANGE), new Remover(new ModalWindow(), true)};
 		
 		
-		if(false){
-			String defId = "serverStart.process";
-			ProcessMap processMap = new ProcessMap();
-			processMap.processManager = processManager;
-			processMap.session = session;
-			processMap.setDefId(defId);
-			
-			String instId = processMap.initializeProcess();
-					
-			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
-			roleMappingPanel.putRoleMappings(processManager, instId);
-	//		ProcessInstance instance  = processManager.getProcessInstance(instId);
-	//		processManager.getProcessInstance(instId).setBeanProperty("serverName", this.getTopicTitle());
-	//		instance.setBeanProperty(targetFieldName, (Serializable)value);
-			
-			processManager.executeProcess(instId);
-			processManager.applyChanges();
-		}
-		
-		Object[] returnObj = projectNode.loadTopic();
-		Object[] returnObject = new Object[ returnObj.length + 3];
-		for (int i = 0; i < returnObj.length; i++) {
-			if( returnObj[i] instanceof InstanceListPanel){
-				returnObject[i] = new Refresh(returnObj[i]);
-			}else{
-				returnObject[i] = new Refresh(returnObj[i]);
-			}			
-		}
-		returnObject[returnObj.length ] = new ToAppend(new ProjectPanel(), projectNode);
-		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
-		
-		return returnObject;
-		
+		return new Object[]{new Remover(new ModalWindow())};
 	}
 	
 	public void saveMe() throws Exception {
