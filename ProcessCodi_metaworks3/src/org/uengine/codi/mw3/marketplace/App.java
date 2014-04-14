@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -379,7 +380,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 	}
 		
-	public Object readyPublished() throws Exception {
+	public Object[] readyPublished() throws Exception {
 		
 		this.setAppId(getAppId());
 		this.setStatus(STATUS_PUBLISHED);
@@ -387,11 +388,11 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		syncToDatabaseMe();
 		flushDatabaseMe();
 		
-		return this;
+		return new Object[]{this, new Refresh(new MarketplacePanel())};
 		
 	}
 	
-	public Object readyApproved() throws Exception {
+	public Object[] readyApproved() throws Exception {
 		
 		this.setAppId(getAppId());
 		
@@ -399,7 +400,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		syncToDatabaseMe();
 		flushDatabaseMe();
 		
-		return this;
+		return new Object[]{this, new Refresh(new MarketplacePanel())};
 		
 	}
 	
@@ -435,7 +436,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 		this.setCategories(categories);
 		this.setAttachProject(attachProject);
-		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
+		//this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 		this.setLogoFile(new MetaworksFile());
 	}
 	
@@ -445,7 +446,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.copyFrom(this.databaseMe());
 			
 			AppMapping mapping = new AppMapping();
-			mapping.setAppId(this.appId);
+			mapping.setAppId(this.getAppId());
 			mapping.setComCode(session.getEmployee().getGlobalCom());
 			IAppMapping iAppMapping = mapping.findMe();
 			if( iAppMapping != null ){
@@ -528,28 +529,28 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.getLogoFile().upload();
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			WfNode appProject = new WfNode();
-//			project.setId(this.getAttachProject().getSelected());
-//			project.copyFrom(project.databaseMe());
+			WfNode wfnode = new WfNode();
+			wfnode.setId(this.getAttachProject().getSelected());
+			wfnode.copyFrom(wfnode.databaseMe());
 			
-			appProject.setName(this.getAppName());
-			appProject.setProjectAlias(this.getSubDomain());
-			appProject.setType("app");
-			appProject.setIsDistributed(false);
-			appProject.setIsReleased(false);
-			//앱에서 쓰는 글의 경우는 소셜네트워크에서 비공개 처리하기 위함입니다. 차후 수정
-			appProject.setSecuopt("1");
-			appProject.setParentId(session.getCompany().getComCode());	
-			appProject.setAuthorId(session.getUser().getUserId());
-			
-			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
-				appProject.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
-			else
-				appProject.setCompanyId(session.getCompany().getComCode());
-				
-			appProject.setDescription(this.getSimpleOverview());
-			appProject.setStartDate(new Date());
-			appProject.createMe();
+//			appProject.setName(this.getAppName());
+//			appProject.setProjectAlias(this.getSubDomain());
+//			appProject.setType("app");
+//			appProject.setIsDistributed(false);
+//			appProject.setIsReleased(false);
+//			//앱에서 쓰는 글의 경우는 소셜네트워크에서 비공개 처리하기 위함입니다. 차후 수정
+//			appProject.setSecuopt("1");
+//			appProject.setParentId(session.getCompany().getComCode());	
+//			appProject.setAuthorId(session.getUser().getUserId());
+//			
+//			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
+//				appProject.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
+//			else
+//				appProject.setCompanyId(session.getCompany().getComCode());
+//				
+//			appProject.setDescription(this.getSimpleOverview());
+//			appProject.setStartDate(new Date());
+//			appProject.createMe();
 			
 			
 			this.setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
@@ -558,8 +559,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.setComName(session.getCompany().getComName());
 			this.setSubDomain(this.getSubDomain());
 //			this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
-			this.setProject(project);
-			this.setStatus(STATUS_REQUEST);
+			this.setProject(wfnode);
+			this.setStatus(STATUS_APPROVED);
 			this.setCategory(category);
 			this.setLogoFile(logoFile);
 			
@@ -568,24 +569,24 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 
 			
 			// 앱 등록일 경우 프로세스 발행
-			String defId = "AppRegister.process";
-			
-			ProcessMap goProcess = new ProcessMap();
-			goProcess.session = session;
-			goProcess.processManager = processManager;
-			goProcess.instanceView = instanceView;
-			goProcess.setDefId(defId);
-			
-			// 프로세스 발행
-			Long instId = Long.valueOf(goProcess.initializeProcess());
-			
-			// 프로세스 실행
-			ResultPayload rp = new ResultPayload();
-			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
-			
-			// 무조건 compleate
-			processManager.executeProcessByWorkitem(instId.toString(), rp);
-			processManager.applyChanges();
+//			String defId = "AppRegister.process";
+//			
+//			ProcessMap goProcess = new ProcessMap();
+//			goProcess.session = session;
+//			goProcess.processManager = processManager;
+//			goProcess.instanceView = instanceView;
+//			goProcess.setDefId(defId);
+//			
+//			// 프로세스 발행
+//			Long instId = Long.valueOf(goProcess.initializeProcess());
+//			
+//			// 프로세스 실행
+//			ResultPayload rp = new ResultPayload();
+//			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
+//			
+//			// 무조건 compleate
+//			processManager.executeProcessByWorkitem(instId.toString(), rp);
+//			processManager.applyChanges();
 			
 //			TopicMapping tm = new TopicMapping();
 //			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
@@ -620,11 +621,9 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	@ServiceMethod(callByContent=true)
 	public Object[] addApp()throws Exception {
 		
-		
-		
-		App app = new App();
-		app.setAppId(this.getAppId());
-		app.copyFrom(app.databaseMe());
+//		App app = new App();
+//		app.setAppId(this.getAppId());
+//		app.copyFrom(app.databaseMe());
 //		app.setAppName(this.getAppName());
 //		app.setComcode(session.getCompany().getComCode());
 //		app.setInstallCnt(this.getInstallCnt());
@@ -649,50 +648,58 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 ////		setAppInfo.setLogoFile(this.getLogoFile());
 ////		setAppInfo.setCategory(this.getCategory());
 //		
-		String defId = "AppAcquisition.process";
-		
-		ProcessMap goProcess = new ProcessMap();
-		goProcess.session = session;
-		goProcess.processManager = processManager;
-		goProcess.instanceView = instanceView;
-		goProcess.setDefId(defId);
-		
-		
-		// 프로세스 발행
-	    Long instId = Long.valueOf(goProcess.initializeProcess());
+//		String defId = "AppAcquisition.process";
+//		
+//		ProcessMap goProcess = new ProcessMap();
+//		goProcess.session = session;
+//		goProcess.processManager = processManager;
+//		goProcess.instanceView = instanceView;
+//		goProcess.setDefId(defId);
+//		
+//		
+//		// 프로세스 발행
+//	    Long instId = Long.valueOf(goProcess.initializeProcess());
+//	    
+//	    // 프로세스 실행
+//	    ResultPayload rp = new ResultPayload();
+//	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", app));
+//	    
+//	    //무조건 compleate
+//	    processManager.executeProcessByWorkitem(instId.toString(), rp);
+//	    processManager.applyChanges();
 	    
-	    // 프로세스 실행
-	    ResultPayload rp = new ResultPayload();
-	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", app));
-	    
-	    //무조건 compleate
-	    processManager.executeProcessByWorkitem(instId.toString(), rp);
-	    processManager.applyChanges();
-	    
-	    ModalWindow removeWindow = new ModalWindow();
-		removeWindow.setId("subscribe");
+		AppMapping am = new AppMapping();
+		am.setAppId(this.getAppId());
+		am.setAppName(this.getAppName());
+		am.setComCode(this.getComcode());
+		am.setUrl(this.getUrl());
 		
-		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		modalWindow.setWidth(300);
-		modalWindow.setHeight(150);
+		am.createDatabaseMe();
+		am.flushDatabaseMe();
+//		ModalWindow removeWindow = new ModalWindow();
+//		removeWindow.setId("subscribe");
+//		
+//		ModalWindow modalWindow = new ModalWindow();
+//		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//		modalWindow.setWidth(300);
+//		modalWindow.setHeight(150);
+//		
+//		modalWindow.setTitle("앱취득 신청 완료");
+//		
+//		String panelMessage = "";
+//		
+////		ProjectInfo info = new ProjectInfo(String.valueOf(this.getAppId()));
+////		info.load();
+//		
+////		String url = "http://" + session.getCompany().getComName() + "." + info.getDomainName() + ":9090/uengine-web"; 
+//				
+//		panelMessage = "앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.";		
+////		panelMessage += "url: <a href='" + url + "'>" + url + "</a>";
+//		
+//		modalWindow.setPanel(panelMessage);
+//		modalWindow.getButtons().put("$Confirm", this);
 		
-		modalWindow.setTitle("앱취득 신청 완료");
-		
-		String panelMessage = "";
-		
-//		ProjectInfo info = new ProjectInfo(String.valueOf(this.getAppId()));
-//		info.load();
-		
-//		String url = "http://" + session.getCompany().getComName() + "." + info.getDomainName() + ":9090/uengine-web"; 
-				
-		panelMessage = "앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.";		
-//		panelMessage += "url: <a href='" + url + "'>" + url + "</a>";
-		
-		modalWindow.setPanel(panelMessage);
-		modalWindow.getButtons().put("$Confirm", this);
-		
-		return new Object[] {modalWindow};
+		return new Object[]{this.detail()};
 		
 //		return new Object[]{new MainPanel(new OceMain(session, this.getAppId()))};
 	}
