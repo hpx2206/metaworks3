@@ -9,7 +9,8 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.ide.Dashboard;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.knowledge.ProjectPanel;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.marketplace.Marketplace;
@@ -50,6 +51,7 @@ public class AllAppList {
 			app.setComCode(getAppsList.getComCode());
 			app.setIsDeleted(getAppsList.getIsDeleted());
 			app.setLogoFile(getAppsList.getLogoFile());
+			app.setUrl(getAppsList.getUrl());
 			
 			app.setMetaworksContext(new MetaworksContext());
 			app.getMetaworksContext().setWhere(OceMain.WHERE_DASHBOARD);
@@ -69,17 +71,25 @@ public class AllAppList {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] goIDE() throws Exception {
 		
-		Dashboard dashboasd = new Dashboard(session);
+		//CloudIDE cloudIDE = new CloudIDE(session, new DefaultProject());
+		ProjectPanel projectPanel = new ProjectPanel();
+		projectPanel.session = session;
+		projectPanel.setMetaworksContext(new MetaworksContext());
+		projectPanel.getMetaworksContext().setHow("selectproject");
+		projectPanel.load();
 		
-		return new Object[]{new Refresh(dashboasd), new Refresh(dashboasd.loadTopCenterPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setPanel(projectPanel);
+		modalWindow.setTitle("프로젝트 선택");
+		modalWindow.setHeight(300);
+		
+		return new Object[]{modalWindow, new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] goAppStore() throws Exception {
 		
-		Marketplace marketplace = new Marketplace();
-		marketplace.session = session;
-		marketplace.load();
+		Marketplace marketplace = new Marketplace(session);
 		
 		return new Object[]{new Refresh(marketplace), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
