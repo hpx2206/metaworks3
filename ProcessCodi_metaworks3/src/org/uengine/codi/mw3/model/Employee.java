@@ -554,9 +554,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		this.setApproved(true);
 		this.setMailNoti(true);
 		
-		if( localeManager.getLanguage() != null ){
-			this.setLocale(localeManager.getLanguage());
-		}
+//		if( localeManager.getLanguage() != null ){
+//			this.setLocale(localeManager.getLanguage());
+//		}
 		
 		// 한국어 만 지원하므로 강제 셋팅
 		this.setLocale("ko");
