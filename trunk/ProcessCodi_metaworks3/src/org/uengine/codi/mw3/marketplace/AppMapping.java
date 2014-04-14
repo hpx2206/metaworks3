@@ -11,17 +11,17 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.ide.view.IFrameApplication;
+import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.widget.IFrame;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.OcePerspectivePanel;
 import org.uengine.oce.dashboard.DashboardWindow;
 
@@ -132,7 +132,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	public IAppMapping findMyApps(int limitCount) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName, item.* ")
+		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, appmapping.url, bpm_knol.name projectName, item.* ")
 		   .append(" from appmapping, bpm_knol,  ")
 		   .append(" 	(select app.appId, app.logoFileName, app.logoContent, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
 		   .append(" where appmapping.appId = item.appId ")
@@ -204,7 +204,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	public Object[] openAppBrowser() throws Exception {
 /*		OceMain oceMain = new OceMain();
 		oceMain.loadAppSns(session);
-		return new MainPanel(oceMain);*/
+		return new MainPanel(oceMain);
 		session.setUx("oce_app");
 		session.setLastPerspecteType("oce_app");
 		session.setLastSelectedItem(String.valueOf(this.getAppId()));
@@ -228,13 +228,19 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		Layout appPanel = new Layout();
 		appPanel.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__spacing_open:1, east__size:'400'");
-//		appPanel.setCenter(new IFrame(app.url.replace("$tenantId", session.getEmployee().getGlobalCom())));
+		appPanel.setCenter(new IFrame(app.url.replace("$tenantId", session.getEmployee().getGlobalCom())));
 		appPanel.setCenter(new IFrame("http://" + GlobalContext.getPropertyString("vm.manager.ip","localhost") + ":8080/" + app.getSubDomain()));
 		appPanel.setEast(returnObject[1]);
 		
 		appDashboard.setPanel(appPanel);
 		
-		return new Object[]{new Refresh(appDashboard)};
+		return new Object[]{new Refresh(appDashboard)};*/
+		IFrame iframe = new IFrame("http://" + this.getUrl());
+		
+		IFrameApplication application = new IFrameApplication();
+		application.setContent(iframe);
+		
+		return new Object[]{new Refresh(application), new Refresh(application.loadTopCenterPanel(session)), new ToEvent(new Popup(), EventContext.EVENT_CLOSE)};
 	}
 
 	public MainPanel goSelfService() throws Exception{
