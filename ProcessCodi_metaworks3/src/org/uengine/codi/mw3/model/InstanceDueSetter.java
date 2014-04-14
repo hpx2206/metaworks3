@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
-import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs"
@@ -60,6 +58,7 @@ public class InstanceDueSetter implements ContextAware{
 		}
 		
 	boolean onlyInitiatorCanComplete;
+		@Hidden
 		@Face(displayName="$OnlyInitiatorCanComplete")
 		public boolean isOnlyInitiatorCanComplete() {
 			return onlyInitiatorCanComplete;
