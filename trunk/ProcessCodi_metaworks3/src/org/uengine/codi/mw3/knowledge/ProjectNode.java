@@ -9,19 +9,18 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.ide.Project;
-import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.MyProjectPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -80,7 +79,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, getId());
-			return new Object[]{returnObject[1] };
+			return new Object[]{session, returnObject[1] };
 		}
 		
 	}
@@ -95,7 +94,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
 		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
-		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_TOPIC_COUNT));
+		//sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_TOPIC_COUNT));
 		
 		IProjectNode dao = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IProjectNode.class); 
 		dao.set("type", TYPE_PROJECT);
@@ -198,7 +197,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	public Object[] goIDE() throws Exception {
 		CloudIDE ide = new CloudIDE(session, new Project(this)); 
 		
-		return new Object[]{ ide, ide.loadTopCenterPanel(session) };
+		return new Object[]{ ide, ide.loadTopCenterPanel(session), new Remover(new ModalWindow()) };
 	}
 	
 	@Autowired
