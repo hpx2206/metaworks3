@@ -3320,7 +3320,7 @@ legend {display:none;}
 .process_map2 li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1; height:50px;}
 .process_map2 li a:hover{text-decoration:underline}
 .process_map2 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;width:40px;height:40px;}
-.img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;display: none;}
+.img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;}
 .process_map2 li .img_loader{margin: 0px auto;width: 16px;height: 16px;position: relative;top: 45%;padding-top: 20px;display: none;}
 
 .myapp_panel img{width:40px; max-height:40px;}
