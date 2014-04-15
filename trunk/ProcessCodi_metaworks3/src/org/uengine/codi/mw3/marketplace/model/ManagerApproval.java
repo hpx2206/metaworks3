@@ -203,7 +203,7 @@ public class ManagerApproval implements ITool  {
 				 * 					3308 : 앱 생성 및 운영 관련 mysql
 				 * 
 				 */
-				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.createDatabase","/oce/script/mysql/createDB.sh") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				
@@ -234,7 +234,7 @@ public class ManagerApproval implements ITool  {
 				}
 				
 				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + filepathinfo.getSqlPath();
-				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"" + " \"" + sqlFilePath + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_APP_PORT + "\"" + " \"" + projectAlias + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				/*
