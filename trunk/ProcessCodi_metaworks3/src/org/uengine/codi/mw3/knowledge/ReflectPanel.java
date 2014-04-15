@@ -119,7 +119,7 @@ public class ReflectPanel {
 		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
 		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
 		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
-		String command;
+		String command = "";
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
@@ -228,7 +228,7 @@ public class ReflectPanel {
 				 */
 				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + this.getSqlFile().getUploadedPath();
 				
-				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				/*
@@ -415,7 +415,7 @@ public class ReflectPanel {
 				 * 
 				 */
 				String sqlFilePath = GlobalContext.getPropertyString("filesystem.path") + "/" + this.getSqlFile().getUploadedPath();
-				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
+//				command = GlobalContext.getPropertyString("vm.mysql.loadScript","/oce/script/mysql/execSql.sh") + " \"" + ProjectInfo.MYSQL_PROJECT_PORT + "\"" + " \"" + wfNode.getProjectAlias() + "\"" + " \"" + sqlFilePath + "\"";
 				jschServerBehaviour.runCommand(command);
 				
 				/*
