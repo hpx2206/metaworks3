@@ -220,89 +220,90 @@ public class ProjectServer implements ITool, ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)	
 	public ProjectServer confirm(){
 		
-		String type = null;
-		
-		//TODO: KIAT 에서 활성화
-		try {
-			DeltaCloud deltaCloud = new DeltaCloud();
-			
-			// realm case
-			ArrayList<Image> images = deltaCloud.images();
-			
-			for(int i=0;i<images.size();i++){
-				Image image = images.get(i);
-				
-				if(image.getId().equals(this.getVmImageCombo().getSelected())){
-					type = image.getDescription().split("_")[3];
-					type = type.replace('|', ',');
-				}
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.setVmRealmId(this.getVmRealmCombo().getSelected());
-		this.setVmImageId(this.getVmImageCombo().getSelected());
-		this.setVmHardwareProfileId(this.getVmHardwareProfileCombo().getSelected());
-		
-		this.setStatus(SERVER_STATUS_REQUEST);
-		this.setIp("Not Allocated");
-		this.setType(type);
-		this.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-
-		
-		try {
-			// initialize process		
-			String defId = "CreateProject.process";
-			String instId = processManager.initializeProcess(defId);
-
-			RoleMapping rm = RoleMapping.create();
-			if(session.getUser() != null){
-				rm.setName("Initiator");
-				rm.setEndpoint(session.getUser().getUserId());
-				
-				processManager.putRoleMapping(instId, rm);
-			}
-			processManager.setLoggedRoleMapping(rm);
-				
-					
-			ResultPayload rp = new ResultPayload();
-			rp.setProcessVariableChange(new KeyedParameter("ProjectServer", this));
-			
-			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, defId, session);
-			roleMappingPanel.putRoleMappings(processManager, instId);
-			
-			processManager.executeProcessByWorkitem(instId.toString(), rp);
-			processManager.applyChanges();
-			
-			Instance instance = new Instance();
-			instance.setInstId(new Long(instId));
-			
-			IInstance instanceRef = instance.databaseMe();
-			instanceRef.setTopicId(projectInfo.getProjectId());
-			instanceRef.setName(instanceRef.getDefName() + " : " + this.getName());
-			instanceRef.setLastCmnt(instanceRef.getName());
-			instanceRef.setLastCmntUser(session.getUser());
-			
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-/*		// TODO : TEST
-		this.setStatus(SERVER_STATUS_STOPPED);
-		this.getMetaworksContext().setWhen(this.getStatus());
-*/		
-		return this;
+//		String type = null;
+//		
+//		//TODO: KIAT 에서 활성화
+//		try {
+//			DeltaCloud deltaCloud = new DeltaCloud();
+//			
+//			// realm case
+//			ArrayList<Image> images = deltaCloud.images();
+//			
+//			for(int i=0;i<images.size();i++){
+//				Image image = images.get(i);
+//				
+//				if(image.getId().equals(this.getVmImageCombo().getSelected())){
+//					type = image.getDescription().split("_")[3];
+//					type = type.replace('|', ',');
+//				}
+//			}
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		this.setVmRealmId(this.getVmRealmCombo().getSelected());
+//		this.setVmImageId(this.getVmImageCombo().getSelected());
+//		this.setVmHardwareProfileId(this.getVmHardwareProfileCombo().getSelected());
+//		
+//		this.setStatus(SERVER_STATUS_REQUEST);
+//		this.setIp("Not Allocated");
+//		this.setType(type);
+//		this.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
+//		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//
+//		
+//		try {
+//			// initialize process		
+//			String defId = "CreateProject.process";
+//			String instId = processManager.initializeProcess(defId);
+//
+//			RoleMapping rm = RoleMapping.create();
+//			if(session.getUser() != null){
+//				rm.setName("Initiator");
+//				rm.setEndpoint(session.getUser().getUserId());
+//				
+//				processManager.putRoleMapping(instId, rm);
+//			}
+//			processManager.setLoggedRoleMapping(rm);
+//				
+//					
+//			ResultPayload rp = new ResultPayload();
+//			rp.setProcessVariableChange(new KeyedParameter("ProjectServer", this));
+//			
+//			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, defId, session);
+//			roleMappingPanel.putRoleMappings(processManager, instId);
+//			
+//			processManager.executeProcessByWorkitem(instId.toString(), rp);
+//			processManager.applyChanges();
+//			
+//			Instance instance = new Instance();
+//			instance.setInstId(new Long(instId));
+//			
+//			IInstance instanceRef = instance.databaseMe();
+//			instanceRef.setTopicId(projectInfo.getProjectId());
+//			instanceRef.setName(instanceRef.getDefName() + " : " + this.getName());
+//			instanceRef.setLastCmnt(instanceRef.getName());
+//			instanceRef.setLastCmntUser(session.getUser());
+//			
+//		} catch (NumberFormatException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (RemoteException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+///*		// TODO : TEST
+//		this.setStatus(SERVER_STATUS_STOPPED);
+//		this.getMetaworksContext().setWhen(this.getStatus());
+//*/		
+//		return this;
+		return null;
 	}
 	
 	@Available(when={SERVER_STATUS_STOPPED})
@@ -356,90 +357,90 @@ public class ProjectServer implements ITool, ContextAware {
 	}
 	
 	public void deploy(boolean showLog) throws Exception {
-		this.setStatus(SERVER_STATUS_STOPPED);
-		this.getMetaworksContext().setWhen(this.getStatus());	
-		
-		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
-		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
-
-		JschCommand jschServerBehaviour = new JschCommand();
-		jschServerBehaviour.sessionLogin(host, userId, passwd);
-		
-		// create Hudson job
-		String scriptCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh"); 
-		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh");
-		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh");
-		
-		String paramProjectName = "\"" + projectInfo.getProjectName() + "\"";
-		String paramIP = "\"" + this.getIp() + "\"";
-		
-		String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
-		String nextBuilderNumber = null;
-		String builderResult = null;
-		
-		long timeoutTime = 200000;
-		long sleepTime = 5000;
-		long tryTime = 0;
-		
-		
-		jschServerBehaviour.runCommand(scriptCreateJob + " " + paramProjectName);
-		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP + " " + "\"\\/ssw\\/data\\/jboss\\/standalone\\/deployments\"");
-
-		if(showLog){
-			ModalWindow modal = new ModalWindow(new IFrame("http://192.168.212.76:9090/hudson/job/"+ projectInfo.getProjectName()), 0, 0, "배포");
-			modal.setId("deploy");
-		
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{modal});
-		}
-		
-		HudsonJobApi hudsonJobApi = new HudsonJobApi();
-
-		while(nextBuilderNumber == null){
-			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
-			
-			nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
-			try {
-				tryTime += sleepTime;
-				Thread.sleep(sleepTime);
-			} catch (Exception e) {
-			}
-			
-			if(tryTime > timeoutTime)
-				break;
-		}
-		
-		// build hudson
-		jschServerBehaviour.runCommand(scriptHudsonBuild + " " + paramProjectName);
-
-		if(showLog)
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(new IFrame("http://192.168.212.76:9090/hudson/job/" + projectInfo.getProjectName() + "/" + nextBuilderNumber + "/console"))});
-
-		while(builderResult == null){
-			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
-			
-			if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
-				builderResult = "SUCCESS";
-			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
-				builderResult = "UNSUCCESS";
-			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
-				builderResult = "FAILED";
-			
-			try {
-				Thread.sleep(5000);
-			} catch (Exception e) {
-			}
-		}
-		
-		if(showLog){
-			ModalWindow modal = new ModalWindow();
-			modal.setId("deploy");
-			
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Remover(modal)});
-		}
-		
-		if(jschServerBehaviour.getJschSession() != null)
-			jschServerBehaviour.getJschSession().disconnect();
+//		this.setStatus(SERVER_STATUS_STOPPED);
+//		this.getMetaworksContext().setWhen(this.getStatus());	
+//		
+//		String host = GlobalContext.getPropertyString("vm.manager.ip","localhost");
+//		String userId = GlobalContext.getPropertyString("vm.manager.user","root");
+//		String passwd = GlobalContext.getPropertyString("vm.manager.password","root");
+//
+//		JschCommand jschServerBehaviour = new JschCommand();
+//		jschServerBehaviour.sessionLogin(host, userId, passwd);
+//		
+//		// create Hudson job
+//		String scriptCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob","/home/hudson/script/hudsonMakeJob.sh"); 
+//		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting","/home/hudson/script/hudsonSetting.sh");
+//		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build","/home/hudson/script/hudsonBuild.sh");
+//		
+//		String paramProjectName = "\"" + projectInfo.getProjectName() + "\"";
+//		String paramIP = "\"" + this.getIp() + "\"";
+//		
+//		String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url","http://localhost:8080/hudson/");
+//		String nextBuilderNumber = null;
+//		String builderResult = null;
+//		
+//		long timeoutTime = 200000;
+//		long sleepTime = 5000;
+//		long tryTime = 0;
+//		
+//		
+//		jschServerBehaviour.runCommand(scriptCreateJob + " " + paramProjectName);
+//		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP + " " + "\"\\/ssw\\/data\\/jboss\\/standalone\\/deployments\"");
+//
+//		if(showLog){
+//			ModalWindow modal = new ModalWindow(new IFrame("http://192.168.212.76:9090/hudson/job/"+ projectInfo.getProjectName()), 0, 0, "배포");
+//			modal.setId("deploy");
+//		
+//			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{modal});
+//		}
+//		
+//		HudsonJobApi hudsonJobApi = new HudsonJobApi();
+//
+//		while(nextBuilderNumber == null){
+//			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
+//			
+//			nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
+//			try {
+//				tryTime += sleepTime;
+//				Thread.sleep(sleepTime);
+//			} catch (Exception e) {
+//			}
+//			
+//			if(tryTime > timeoutTime)
+//				break;
+//		}
+//		
+//		// build hudson
+//		jschServerBehaviour.runCommand(scriptHudsonBuild + " " + paramProjectName);
+//
+//		if(showLog)
+//			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(new IFrame("http://192.168.212.76:9090/hudson/job/" + projectInfo.getProjectName() + "/" + nextBuilderNumber + "/console"))});
+//
+//		while(builderResult == null){
+//			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
+//			
+//			if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
+//				builderResult = "SUCCESS";
+//			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
+//				builderResult = "UNSUCCESS";
+//			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
+//				builderResult = "FAILED";
+//			
+//			try {
+//				Thread.sleep(5000);
+//			} catch (Exception e) {
+//			}
+//		}
+//		
+//		if(showLog){
+//			ModalWindow modal = new ModalWindow();
+//			modal.setId("deploy");
+//			
+//			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Remover(modal)});
+//		}
+//		
+//		if(jschServerBehaviour.getJschSession() != null)
+//			jschServerBehaviour.getJschSession().disconnect();
 	}
 	
 	//@Available(when={SERVER_STATUS_STARTED, SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING, SERVER_STATUS_STOPPING, SERVER_STATUS_DEPLOYING, SERVER_STATUS_RUNNING})
@@ -454,11 +455,13 @@ public class ProjectServer implements ITool, ContextAware {
 	@Face(displayName="$project.server.refresh")
 	@ServiceMethod(callByContent=true)
 	public Object refresh(){
-		ProjectServers projectServers = new ProjectServers(projectInfo.getProjectId(), this.getGroup());
-		projectServers.processManager = processManager;
-		projectServers.load();		
+//		ProjectServers projectServers = new ProjectServers(projectInfo.getProjectId(), this.getGroup());
+//		projectServers.processManager = processManager;
+//		projectServers.load();		
+//		
+//		return projectServers;
 		
-		return projectServers;
+		return null;
 	}
 	
 	public void status() throws Exception {
