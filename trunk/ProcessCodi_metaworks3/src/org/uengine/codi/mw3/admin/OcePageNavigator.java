@@ -167,9 +167,7 @@ public class OcePageNavigator extends PageNavigator {
 		
 		session.setUx("oce");
 		
-		Marketplace marketplace = new Marketplace();
-		marketplace.session = session;
-		marketplace.load();
+		Marketplace marketplace = new Marketplace(session);
 		
 		return new MainPanel(marketplace);
 	}
