@@ -64,15 +64,28 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 					}
 				});
 				this.objDiv.addClass('instance_select');
+				
+				 var divId = mw3._getObjectDivId(this.objectId);
+				 var offset = $('#' + divId).offset();                    
+                 
+                 if(offset){
+	                    var offsetRight = offset.left + $('#' + divId).width() - 20;                    
+	                    var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
+	                    
+	                    var html;
+	                    html = "<div id='loading_div_" + divId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_box' ><img src='dwr/metaworks/images/circleloading.gif'></div></div>";
+	                    
+	                    $('body').append(html);
+                 }
 			}
 		
-	
 			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 				mw3.getFaceHelper(this.windowObjectId).startLoading();
 		},
 		endLoading : function(){
 			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
 				mw3.getFaceHelper(this.windowObjectId).endLoading();
+			 $('body>#loading_div_' + this.divId).remove();
 		},
 		showStatus : function(message){
 
