@@ -1579,7 +1579,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	
 	public Object[] loadTopic() throws Exception{
-		if(!checkAuth()){
+		if(!checkRelatedTopic()){
 			throw new MetaworksException("$NotPermittedToTopic");
 		}
 		TopicNode topicNode = new TopicNode();
