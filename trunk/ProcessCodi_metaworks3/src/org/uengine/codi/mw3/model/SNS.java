@@ -3,6 +3,8 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
@@ -34,7 +36,7 @@ public class SNS extends Application{
         return false || (userAgent.contains("iPad"));
         
 	}
-
+	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
 	public static boolean isPhone(){
 		
 		HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
