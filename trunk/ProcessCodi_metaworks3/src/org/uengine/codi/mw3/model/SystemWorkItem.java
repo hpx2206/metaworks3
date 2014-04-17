@@ -30,8 +30,10 @@ public class SystemWorkItem extends CommentWorkItem{
 		emp.setEmpName(GlobalContext.getPropertyString("codi.user.name", "CODI"));
 		emp.setGlobalCom(instance.databaseMe().getInitComCd());
 		
+		//코디계정 - 노티워크아이템발행
 		codiSession.setUser(emp.getUser());
-		codiSession.setEmployee(emp);
+		//노티발행을 하게 한 유저
+		codiSession.setEmployee(session.getEmployee());
 		
 		this.setTitle(this.getSystemMessage());
 		this.session = codiSession;
