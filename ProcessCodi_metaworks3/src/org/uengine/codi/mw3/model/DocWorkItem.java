@@ -60,7 +60,7 @@ public class DocWorkItem extends GenericWorkItem {
 		fileWorkItem.setGrpTaskId(this.getTaskId());
 		fileWorkItem.setNotReturn(true);
 		fileWorkItem.add();
-
+		fileWorkItem.setNotReturn(false);
 
 		DocumentTool tool = new DocumentTool();
 		tool.session = session;
