@@ -1132,6 +1132,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						    	for(var i=0; i<methodContext.eventBinding.length; i++){
 						    		var eventBinding = methodContext.eventBinding[i];
 						    		
+						    		eventBinding = eventBinding + '.' + objectId;
+						    		
 			   						for(var j=0; j<methodContext.bindingFor.length; j++){
 			   							var bindingFor = methodContext.bindingFor[j];
 			   							var bindingDivId;
@@ -1146,6 +1148,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   								bindingDivId = '#' + mw3._getObjectDivId(bindingFieldId);
 			   							}
 			   							
+			   							$(bindingDivId).unbind(eventBinding);
 			   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
 			   								eval(event.data.command);
 			   							});
@@ -3773,6 +3776,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				    if(methodContext.eventBinding && methodContext.eventBinding.length > 0){
 				    	for(var i=0; i<methodContext.eventBinding.length; i++){
 				    		var eventBinding = methodContext.eventBinding[i];
+				    		eventBinding = eventBinding + '.' + methodName;
 				    		
 	   						for(var j=0; j<methodContext.bindingFor.length; j++){
 	   							var bindingFor = methodContext.bindingFor[j];
@@ -3788,6 +3792,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   								bindingDivId = '#' + mw3._getObjectDivId(bindingFieldId);
 	   							}
 	   							
+	   							$(bindingDivId).unbind(eventBinding);
 	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
 	   								event.stopPropagation();
 	   								
