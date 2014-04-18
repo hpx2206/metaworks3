@@ -10,11 +10,14 @@ import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.view.IFrameApplication;
 import org.uengine.codi.mw3.knowledge.ProjectPanel;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
+import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.kernel.GlobalContext;
 
 public class AllAppList {
 
@@ -92,6 +95,17 @@ public class AllAppList {
 		Marketplace marketplace = new Marketplace(session);
 		
 		return new Object[]{new Refresh(marketplace), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] goTadPole() throws Exception {
+		
+		IFrame iframe = new IFrame("http://" + GlobalContext.getPropertyString("tadpole.url"));
+		
+		IFrameApplication application = new IFrameApplication();
+		application.setContent(iframe);
+		
+		return new Object[]{new Refresh(application), new Refresh(application.loadTopCenterPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
