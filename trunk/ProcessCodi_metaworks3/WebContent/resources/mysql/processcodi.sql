@@ -1114,3 +1114,10 @@ CREATE TABLE ProcessTopicMapping (
   type varchar(20) NOT NULL,
   PRIMARY KEY (topicId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+UPDATE `uengine`.`category` SET `categoryName`='전체' WHERE `CATEGORYID`='0';
+
+DELETE FROM `uengine`.`category` WHERE `CATEGORYID`='7';
+DELETE FROM `uengine`.`category` WHERE `CATEGORYID`='8';
+DELETE FROM `uengine`.`category` WHERE `CATEGORYID`='9';
