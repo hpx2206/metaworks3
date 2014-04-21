@@ -15,6 +15,9 @@ var org_uengine_codi_mw3_marketplace_category_ICategory = function(objectId, cla
 				$(this).css('cursor','pointer');
 			}, function(){			
 				$(this).css('cursor','auto');
+		})		
+		.bind('click.ICategory', {objectId: this.objectId}, function(event, ui){
+			mw3.getFaceHelper(event.data.objectId).selectCategory();
 		});
 	
 	$('#info_' + this.objectId).remove();
@@ -27,6 +30,12 @@ org_uengine_codi_mw3_marketplace_category_ICategory.prototype = {
 	},
 	endLoading : function(status){
 	},
+	
+	selectCategory: function() {
+		if($('.mp_center_banner').length == 0)
+			this.object.selectCategory();
+	}
+	
 
 };
 
