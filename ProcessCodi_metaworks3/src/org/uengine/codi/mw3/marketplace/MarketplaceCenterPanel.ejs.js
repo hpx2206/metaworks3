@@ -21,11 +21,10 @@ var org_uengine_codi_mw3_marketplace_MarketplaceCenterPanel = function (objectId
 
 org_uengine_codi_mw3_marketplace_MarketplaceCenterPanel.prototype = {
 	destroy : function(){
-		$('.mp_left_menu li').unbind('click');
+		$('.mp_left_menu li').unbind('click.cycle');
 	},
 		
-	selectCategory: function() {
-		
+	selectCategory: function() {	
 		var object = mw3.getObject(this.objectId);
 		
 		var category = object.category[0];
