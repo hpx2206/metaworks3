@@ -3219,16 +3219,22 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(fd.attributes['hidden.when']){
 						if(fd.attributes['hidden.when'] == metaworksContext.when)
 							isHidden = true;
+						if(fd.attributes['hidden.when'][metaworksContext.when] != null)
+							isHidden = true;
 					}
 
 					if(fd.attributes['hidden.where']){
 						if(fd.attributes['hidden.where'] == metaworksContext.where)
 							isHidden = true;
+						if(fd.attributes['hidden.where'][metaworksContext.where] != null)
+                            isHidden = true;
 					}
 
 					if(fd.attributes['hidden.how']){
 						if(fd.attributes['hidden.how'] == metaworksContext.how)
 							 isHidden = true;
+						if(fd.attributes['hidden.how'][metaworksContext.how] != null)
+                             isHidden = true;
 					}
 					
 					// && metaworksContext.when == '___hidden___'
@@ -3250,16 +3256,22 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					
 					if(fd.attributes['available.when']){
+						if(fd.attributes['available.when'] == metaworksContext.how)
+							isHidden = false;
 						if(fd.attributes['available.when'][metaworksContext.when] != null)
 							isHidden = false;
 					} 
 					
 					if(fd.attributes['available.where']){
+						if(fd.attributes['available.where'] == metaworksContext.how)
+                            isHidden = false;
 						if(fd.attributes['available.where'][metaworksContext.where] != null)
 							isHidden = false;
 					} 
 
 					if(fd.attributes['available.how']){
+						if(fd.attributes['available.how'] == metaworksContext.how)
+                            isHidden = false;
 						if(fd.attributes['available.how'][metaworksContext.how] != null)
 							isHidden = false;
 					} 
@@ -3278,6 +3290,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    				isHidden = false;
 						}
 					}					
+					
 				} 
 				
 				return isHidden;
