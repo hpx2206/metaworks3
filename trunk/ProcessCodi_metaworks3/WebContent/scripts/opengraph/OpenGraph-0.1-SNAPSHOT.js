@@ -15382,9 +15382,21 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 	text_anchor = _style["text-anchor"] || 'middle';
 	//_style["text-anchor"] = 'middle';
 
+	//Text Filter for foreignObject
+	if(text){
+		text = text.replace(/\n/g, '<br />');
+	}
+	
 	// Draw text
-	element = this._PAPER.text(position[0], position[1], text);
-	element.attr(_style);
+	if(_style["label-direction"] === 'vertical'){
+		element = this._PAPER.foreignObject(text, position[0], position[1], height, size[1]);
+	}else{
+		element = this._PAPER.foreignObject(text, position[0], position[1], size[0], size[1]);
+	}
+	
+	// Draw text
+	//element = this._PAPER.text(position[0], position[1], text);
+	//element.attr(_style);
 	
 	// real size
 	bBox = element.getBBox();
