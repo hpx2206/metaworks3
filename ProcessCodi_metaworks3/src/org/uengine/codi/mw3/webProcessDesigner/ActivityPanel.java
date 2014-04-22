@@ -6,6 +6,7 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Order;
+import org.uengine.codi.mw3.model.ParameterValue;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContextPanel;
 import org.uengine.kernel.ValidationContext;
@@ -58,6 +59,7 @@ public class ActivityPanel  implements ContextAware{
 
 	ValidationContext validationContext; 
 	@Order(4)
+	@Face(displayName="$validationCheck")
 	@Available(condition="validationContext")
 		public ValidationContext getValidationContext() {
 			return validationContext;
@@ -65,7 +67,16 @@ public class ActivityPanel  implements ContextAware{
 		public void setValidationContext(ValidationContext validationContext) {
 			this.validationContext = validationContext;
 		}
-	
+	ParameterValue[] parameterValues;
+	@Order(5)
+	@Face(displayName="$formView")
+	@Available(condition="parameterValues")
+		public ParameterValue[] getParameterValues() {
+			return parameterValues;
+		}
+		public void setParameterValues(ParameterValue[] parameterValues) {
+			this.parameterValues = parameterValues;
+		}
 	public ActivityPanel(){
 		this.setMetaworksContext(new MetaworksContext());
 	}

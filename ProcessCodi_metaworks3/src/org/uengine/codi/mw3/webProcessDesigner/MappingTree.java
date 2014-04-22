@@ -13,6 +13,9 @@ import org.uengine.kernel.Role;
 
 public class MappingTree extends Tree{
 	
+	public static final String MAPPING_IN = "in";
+	public static final String MAPPING_OUT = "out";
+	
 	boolean preLoaded;
 		@Hidden
 		public boolean isPreLoaded() {

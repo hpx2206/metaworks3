@@ -9,6 +9,7 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
@@ -43,6 +44,7 @@ public class NewValueChain extends Templete {
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			node.setProjectId(targetNode.getProjectId());
+			node.setType(TreeNode.TYPE_FILE_VALUECHAIN);
 			
 			if(CodiFileUtil.exists(node.getPath()))
 				throw new Exception("$file.already.exists");

@@ -17,6 +17,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.PoolMappingTree;
+import org.uengine.contexts.MappingContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.RestWebServiceActivity;
 
@@ -145,6 +146,12 @@ public class WebServiceDefinition implements Cloneable ,Serializable {
 	public Object changeMappingContext() throws Exception{
 		Activity activity = getParentActivity();
 		if( activity instanceof RestWebServiceActivity){
+			if( targetMethod.getResponseClass() != null && !"void".equalsIgnoreCase(targetMethod.getResponseClass())){
+				((RestWebServiceActivity) activity).setMappingContextOut(new MappingContext());
+			}else{
+				((RestWebServiceActivity) activity).setMappingContextOut(null);
+			}
+			
 			((RestWebServiceActivity) activity).setMethod(getTargetMethod());
 			((RestWebServiceActivity) activity).drawInit();
 		}

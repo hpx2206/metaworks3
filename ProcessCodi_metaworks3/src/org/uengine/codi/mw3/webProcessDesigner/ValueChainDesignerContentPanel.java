@@ -55,7 +55,9 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		for(int i = 0; i < list.size(); i++){
 			ValueChain vc = list.get(i);
 			MajorProcessDefinitionNode mpd = vc.getMajorProcessDefinitionNode();
-			mpd.findChildProcess(processPathList, mpd.getChild());
+			if( mpd != null ){
+				mpd.findChildProcess(processPathList, mpd.getChild());
+			}
 		}
 		
 		

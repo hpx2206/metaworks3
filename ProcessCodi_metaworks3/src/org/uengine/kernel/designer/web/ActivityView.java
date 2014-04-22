@@ -134,6 +134,13 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 				parameterContextPanel.load();
 				
 				activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
+				
+				// form 미리보기 설정
+				// 리소스를 건드리는 부분이라.. 디자이너에서는 늦게 열린다. 
+//				ParameterValue[] parameterValue = formDetail();
+//				if( parameterValue.length > 0 ){
+//					activityWindow.getActivityPanel().setParameterValues(parameterValue);
+//				}
 			}
 		}
 		activity.setActivityView(this);
