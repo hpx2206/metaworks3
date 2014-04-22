@@ -42,7 +42,7 @@ import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,logoFile"} ,
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
