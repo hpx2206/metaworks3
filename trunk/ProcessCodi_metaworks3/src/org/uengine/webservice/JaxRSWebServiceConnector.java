@@ -286,6 +286,10 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 				
 			}
 		}
+		JSONArray modelsArray = JSONArray.fromObject(jsonObject.get("models"));
+		if( modelsArray != null ){
+			
+		}
 		// setting webServiceDefinition
 		wsd.setResourceList(resourceArray);
 		

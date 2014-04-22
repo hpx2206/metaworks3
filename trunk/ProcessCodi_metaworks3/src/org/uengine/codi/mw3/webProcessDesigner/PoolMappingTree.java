@@ -17,48 +17,94 @@ public class PoolMappingTree extends MappingTree {
 		public void setActivity(Activity activity) {
 			this.activity = activity;
 		}
-
+		
+	String inOut;
+		public String getInOut() {
+			return inOut;
+		}
+		public void setInOut(String inOut) {
+			this.inOut = inOut;
+		}
+		
 	@Override
-	@ServiceMethod(payload={"id", "align","parentEditorId","activity"} , target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"id", "align","parentEditorId","activity","inOut"} , target=ServiceMethodContext.TARGET_SELF)
 	public void init() throws Exception{
 		RestWebServiceActivity activity = (RestWebServiceActivity)this.getActivity();
 		TreeNode rootnode = new TreeNode();
 		rootnode.setRoot(true);
-		rootnode.setId(activity.getName() + "Root");
-		rootnode.setName(activity.getDescription() != null && activity.getDescription().getText() != null ? activity.getDescription().getText() : activity.getName().getText() );
-		rootnode.setType(TreeNode.TYPE_FOLDER);
-		rootnode.setLoaded(true);
-		rootnode.setFolder(true);
-		rootnode.setExpanded(true);
-		rootnode.setAlign(TreeNode.ALIGN_LEFT);
 		
-		MethodProperty mp = activity.getMethod();
-		if( mp != null && mp.getId() != null ){
-			TreeNode mpNode = new TreeNode();
-			mpNode.setId(mp.getId());
-			mpNode.setName(mp.getId() );
-			mpNode.setLoaded(true);
-			mpNode.setFolder(true);
-			mpNode.setExpanded(true);
-			mpNode.setType(TreeNode.TYPE_FOLDER);
-			mpNode.setAlign(TreeNode.ALIGN_LEFT);
+		if( MappingTree.MAPPING_OUT.equals(inOut)){
 			
-			if( mp.getRequest() != null ){
-				ParameterProperty[] pp = mp.getRequest();
-				for(int i=0; i < pp.length; i++){
-					TreeNode childNode = new TreeNode();
-					childNode.setId(pp[i].getName());
-					childNode.setName(pp[i].getName() );
-					childNode.setLoaded(true);
-					childNode.setExpanded(true);
-					childNode.setType(TreeNode.TYPE_FILE_TEXT);
-					childNode.setAlign(TreeNode.ALIGN_LEFT);
+			rootnode.setId(activity.getName() + "OutRoot");
+			rootnode.setName(activity.getDescription() != null && activity.getDescription().getText() != null ? activity.getDescription().getText() : activity.getName().getText() );
+			rootnode.setType(TreeNode.TYPE_FOLDER);
+			rootnode.setLoaded(true);
+			rootnode.setFolder(true);
+			rootnode.setExpanded(true);
+			rootnode.setAlign(TreeNode.ALIGN_LEFT);
 					
-					mpNode.add(childNode);
+			MethodProperty mp = activity.getMethod();
+			if( mp != null && mp.getId() != null ){
+				TreeNode mpNode = new TreeNode();
+				String nodeName = mp.getId();
+				if( mp.getProduces() != null && mp.getProduces().size()>0){
+					String changeRootNodeName = mp.getProduces().getString(0);
+					if( mp.getProduces().size() > 1){
+						for(int i=1; i < mp.getProduces().size(); i++){
+							changeRootNodeName += "," + mp.getProduces().getString(i);
+						}
+					}
+					rootnode.setName("["+changeRootNodeName+"]");
+					
 				}
+				
+				mpNode.setId(mp.getId() + "Out");
+				mpNode.setName(nodeName);
+				mpNode.setLoaded(true);
+				mpNode.setExpanded(true);
+				mpNode.setType(TreeNode.TYPE_FILE_TEXT);
+				mpNode.setAlign(TreeNode.ALIGN_LEFT);
+				
+				rootnode.add(mpNode);
 			}
+		}else{
 			
-			rootnode.add(mpNode);
+			rootnode.setId(activity.getName() + "Root");
+			rootnode.setName(activity.getDescription() != null && activity.getDescription().getText() != null ? activity.getDescription().getText() : activity.getName().getText() );
+			rootnode.setType(TreeNode.TYPE_FOLDER);
+			rootnode.setLoaded(true);
+			rootnode.setFolder(true);
+			rootnode.setExpanded(true);
+			rootnode.setAlign(TreeNode.ALIGN_RIGHT);
+			
+			MethodProperty mp = activity.getMethod();
+			if( mp != null && mp.getId() != null ){
+				TreeNode mpNode = new TreeNode();
+				mpNode.setId(mp.getId());
+				mpNode.setName(mp.getId() );
+				mpNode.setLoaded(true);
+				mpNode.setFolder(true);
+				mpNode.setExpanded(true);
+				mpNode.setType(TreeNode.TYPE_FOLDER);
+				mpNode.setAlign(TreeNode.ALIGN_RIGHT);
+				
+				if( mp.getRequest() != null ){
+					ParameterProperty[] pp = mp.getRequest();
+					for(int i=0; i < pp.length; i++){
+						TreeNode childNode = new TreeNode();
+						childNode.setId(pp[i].getName());
+						childNode.setName(pp[i].getName() );
+						childNode.setLoaded(true);
+						childNode.setExpanded(true);
+						childNode.setType(TreeNode.TYPE_FILE_TEXT);
+						childNode.setAlign(TreeNode.ALIGN_RIGHT);
+						
+						mpNode.add(childNode);
+					}
+				}
+				
+				rootnode.add(mpNode);
+			}
 		}
 		
 		this.setNode(rootnode);

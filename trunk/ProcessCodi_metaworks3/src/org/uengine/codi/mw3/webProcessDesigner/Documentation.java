@@ -10,7 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.WebEditor;
 
-@Face(displayName="문서정보", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"title,document,reference,url,departManagement,regulation,attachfile1,attachfile2,attachfile3,description"})
+@Face(displayName="문서정보", ejsPath="dwr/metaworks/genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"title,document,reference,url,departManagement,regulation,attachfile1,attachfile2,attachfile3,description"})
 public class Documentation implements Serializable , ContextAware{
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {

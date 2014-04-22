@@ -1,5 +1,7 @@
 package org.uengine.kernel;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import javax.ws.rs.core.Response;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Order;
@@ -76,6 +79,17 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		}
 		public void setMappingContext(MappingContext mappingContext) {
 			this.mappingContext = mappingContext;
+		}
+		
+	MappingContext mappingContextOut;
+	@Order(5)
+	@Face(displayName="결과값 매핑")
+	@Available(condition="mappingContextOut")
+		public MappingContext getMappingContextOut() {
+			return mappingContextOut;
+		}
+		public void setMappingContextOut(MappingContext mappingContextOut) {
+			this.mappingContextOut = mappingContextOut;
 		}
 		
 	public void executeActivity(ProcessInstance instance) throws Exception{
@@ -162,7 +176,8 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		
 		String responseClass = method.getResponseClass();
 		if( responseClass != null && responseClass.equalsIgnoreCase(String.class.getSimpleName())){
-			System.out.println(response.readEntity(String.class));
+//			System.out.println(response.readEntity(String.class));
+			this.responseDataMapping(instance, response.readEntity(String.class));
 		}
 		
 		fireComplete(instance);
@@ -220,6 +235,26 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		return dataMap;
 	}
 	
+	public void responseDataMapping(ProcessInstance instance, Object returnData) throws Exception{
+		
+		MappingContext mc= getMappingContextOut();
+		if(mc !=null){
+			ParameterContext[] params = mc.getMappingElements();
+			for (int i = 0; i < params.length; i++) {
+				ParameterContext param = params[i];
+				
+				// TODO 현재 리턴 데이터는 무조건 하나이기때문에, 바로 셋팅함 
+//				String srcVariableName = null;
+				String targetFieldName = param.getArgument().getText();
+				
+//				srcVariableName = param.getVariable().getName();
+//				
+//				Object value = null;
+				instance.setBeanProperty(targetFieldName, (Serializable)returnData); //[instance].instanceId
+			}
+		}
+	}
+	
 	public ValidationContext validate(Map options) {
 		ValidationContext vc = super.validate(options);
 		if( method == null || (method != null && method.getId() == null )){
@@ -240,6 +275,7 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		
 		rightTree = new PoolMappingTree();
 		((PoolMappingTree) rightTree).setActivity(this);
+		((PoolMappingTree) rightTree).setInOut(MappingTree.MAPPING_IN);
 		rightTree.setId(TreeNode.ALIGN_RIGHT);
 		rightTree.setAlign(TreeNode.ALIGN_RIGHT);
 		
@@ -253,6 +289,31 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		}
 		mappingContext.setMappingTreeLeft(leftTree);
 		mappingContext.setMappingTreeRight(rightTree);
+		
+		if( mappingContextOut != null ){
+			
+			Tree leftTreeOut = new PoolMappingTree();
+			((PoolMappingTree) leftTreeOut).setActivity(this);
+			((PoolMappingTree) leftTreeOut).setInOut(MappingTree.MAPPING_OUT);
+			leftTreeOut.setId(TreeNode.ALIGN_LEFT+"Out");
+			leftTreeOut.setAlign(TreeNode.ALIGN_LEFT);
+			
+			Tree rightTreeOut = new MappingTree();
+			((MappingTree) rightTreeOut).setParentEditorId(this.getParentEditorId());
+			rightTreeOut.setId(TreeNode.ALIGN_RIGHT+"Out");
+			rightTreeOut.setAlign(TreeNode.ALIGN_RIGHT);
+			
+			if( mappingContextOut.getMappingCanvas() == null ){
+				MappingCanvas canvas = new MappingCanvas();
+				canvas.setCanvasId("mappingCanvas"+"Out");
+				canvas.setLeftTreeId(leftTreeOut.getId());
+				canvas.setRightTreeId(rightTreeOut.getId());
+				mappingContextOut.setMappingCanvas(canvas);
+			}
+			mappingContextOut.setMappingTreeLeft(leftTreeOut);
+			mappingContextOut.setMappingTreeRight(rightTreeOut);
+			
+		}
 		
 	}
 

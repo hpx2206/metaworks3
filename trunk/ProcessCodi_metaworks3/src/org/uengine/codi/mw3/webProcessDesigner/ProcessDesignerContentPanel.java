@@ -125,7 +125,7 @@ public class ProcessDesignerContentPanel implements ContextAware {
 		}
 		FileOutputStream fos = null;
 		try{
-			String path = path = processEditor.getResourceNode().getPath();
+			String path = processEditor.getResourceNode().getPath();
 			
 			File file = new File(path);
 			fos = new FileOutputStream(file);

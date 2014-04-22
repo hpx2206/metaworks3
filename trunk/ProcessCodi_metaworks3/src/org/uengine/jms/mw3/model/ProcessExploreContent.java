@@ -107,7 +107,7 @@ public class ProcessExploreContent{
 		if( getProcessDetailPanel().getDocumentation().getMetaworksContext() == null ){
 			getProcessDetailPanel().getDocumentation().setMetaworksContext(new MetaworksContext());
 		}
-		getProcessDetailPanel().getDocumentation().getMetaworksContext().setHow("snsView");
+		getProcessDetailPanel().getDocumentation().getMetaworksContext().setHow("process");
 		getProcessDetailPanel().getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		processSummaryPanel.setDetailList(processDesignerContainer.getActivityList());

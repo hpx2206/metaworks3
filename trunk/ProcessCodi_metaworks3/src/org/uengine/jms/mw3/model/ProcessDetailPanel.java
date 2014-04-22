@@ -40,7 +40,6 @@ public class ProcessDetailPanel implements ContextAware {
 		documentation = new Documentation();
 		documentation.getMetaworksContext().setHow("process");
 		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		documentation.init();
 	}
 	
 	public void load(Documentation doc){
