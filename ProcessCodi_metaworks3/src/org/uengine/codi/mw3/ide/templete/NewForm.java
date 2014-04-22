@@ -62,6 +62,7 @@ public class NewForm extends Templete {
 			node.setParentId(targetNode.getParentId());
 			node.setType(targetNode.getType());
 			node.getMetaworksContext().setWhen("UI");
+			node.session = session;
 			
 			if(CodiFileUtil.exists(node.getPath()))
 				throw new Exception("$file.already.exists");
