@@ -13,13 +13,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.metaworks.EventContext;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.Type;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.inputter.ArrayObjectInput;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
@@ -85,6 +83,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigner
 	      definitionId = l;
 	    }
     transient ProcessSelectPanel processSelectPanel;
+    @Face(displayName="$SubProcessActivityEdit")
 		public ProcessSelectPanel getProcessSelectPanel() {
 			return processSelectPanel;
 		}

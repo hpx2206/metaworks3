@@ -1,18 +1,18 @@
 package org.uengine.codi.mw3.knowledge;
 
+import org.metaworks.ContextAware;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
 
-public class ProjectPanel {
+public class ProjectPanel implements ContextAware {
 	
 	@AutowiredFromClient
 	transient public Session session;

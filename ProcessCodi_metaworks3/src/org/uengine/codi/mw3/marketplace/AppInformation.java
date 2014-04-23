@@ -100,13 +100,12 @@ public class AppInformation implements ContextAware, ITool {
 			this.fullOverview = fullOverview;
 		}
 
-	SelectBox attachProject;
-		@Face(displayName = "프로젝트")
-		public SelectBox getAttachProject() {
-			return attachProject;
+	AppTypePanel appTypePanel;
+		public AppTypePanel getAppTypePanel() {
+			return appTypePanel;
 		}
-		public void setAttachProject(SelectBox attachProject) {
-			this.attachProject = attachProject;
+		public void setAppTypePanel(AppTypePanel appTypePanel) {
+			this.appTypePanel = appTypePanel;
 		}
 
 	String pricing;
@@ -182,9 +181,6 @@ public class AppInformation implements ContextAware, ITool {
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
 
-		WfNode project = new WfNode();
-		project.setId(this.getAttachProject().getSelected());
-
 		App listing = new App();
 
 		listing.setAppId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
@@ -198,13 +194,14 @@ public class AppInformation implements ContextAware, ITool {
 		listing.setStatus(App.STATUS_REQUEST);
 		listing.setIsDeleted(false);
 		listing.setCategory(category);
-		listing.setProject(project);
+		listing.setAppType(this.getAppTypePanel().getSelectedAppType());
+		listing.setProjectId(this.getAppTypePanel().getProjectId());
 		listing.createDatabaseMe();
 		listing.flushDatabaseMe();
 
 		this.setAppId(listing.getAppId());
-		this.setProjectId(this.getAttachProject().getSelected());
-		this.setProjectName(this.getAttachProject().getSelectedText());
+		this.setProjectId(this.getAppTypePanel().getProjectId());
+		this.setProjectName(this.getAppTypePanel().getProjectId());	// TODO
 
 		PageNavigator gomarketHome = new PageNavigator();
 		gomarketHome.session = session;

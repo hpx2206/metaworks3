@@ -9,6 +9,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToEvent;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
@@ -18,6 +19,7 @@ import org.uengine.codi.mw3.model.Application;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.ProcessApp;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.selfservice.SelfService;
@@ -112,9 +114,16 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 			this.url = url;
 		}
 		
+	String appType;
+		public String getAppType() {
+			return appType;
+		}
+		public void setAppType(String appType) {
+			this.appType = appType;
+		}	
 	public IAppMapping findMe() throws Exception {
 
-		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName from appmapping appmapping, app, bpm_knol where appmapping.appId = app.appId and app.projectId = bpm_knol.id and appmapping.appid=?appId and appmapping.comcode=?comCode");
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, appmapping.url, appmapping.appType, bpm_knol.name projectName from appmapping appmapping, app, bpm_knol where appmapping.appId = app.appId and app.projectId = bpm_knol.id and appmapping.appid=?appId and appmapping.comcode=?comCode");
 		
 		findApp.setAppId(this.getAppId());
 		findApp.setComCode(this.getComCode());
@@ -132,7 +141,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	public IAppMapping findMyApps(int limitCount) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, appmapping.url, bpm_knol.name projectName, item.* ")
+		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, appmapping.url, appmapping.appType, bpm_knol.name projectName, item.* ")
 		   .append(" from appmapping, bpm_knol,  ")
 		   .append(" 	(select app.appId, app.logoFileName, app.logoContent, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
 		   .append(" where appmapping.appId = item.appId ")
@@ -150,7 +159,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	public IAppMapping findMyApp() throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName, item.* ")
+		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, appmapping.url, appmapping.appType, bpm_knol.name projectName, item.* ")
 		   .append(" from appmapping, bpm_knol,  ")
 		   .append(" 	(select app.appId, app.logoFileName, app.logoContent, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
 		   .append(" where appmapping.appId = ?appId ")
@@ -235,12 +244,18 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		appDashboard.setPanel(appPanel);
 		
 		return new Object[]{new Refresh(appDashboard)};*/
-		IFrame iframe = new IFrame("http://" + this.getUrl());
 		
-		IFrameApplication application = new IFrameApplication();
-		application.setContent(iframe);
+		Application application = null;
+		if( App.APP_TYPE_PROJECT.equals(appType)){
+			IFrame iframe = new IFrame(this.getUrl());
+			
+			application = new IFrameApplication();
+			((IFrameApplication)application).setContent(iframe);
+		}else if( App.APP_TYPE_PROCESS.equals(appType)){
+			application = new ProcessApp(session, this.getAppName(), this.getUrl() );
+		}
 		
-		return new Object[]{new Refresh(application), new Refresh(application.loadTopCenterPanel(session)), new ToEvent(new Popup(), EventContext.EVENT_CLOSE)};
+		return new Object[]{new Refresh(application), new Refresh(session), new Refresh(application.loadTopCenterPanel(session)), new ToEvent(new Popup(), EventContext.EVENT_CLOSE)};
 	}
 
 	public MainPanel goSelfService() throws Exception{

@@ -254,26 +254,28 @@ public class ResourceContextMenu extends CloudMenu {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object registerApp() throws Exception {
 
-		App app = new App();
-		app.load();
-		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//		App app = new App();
+//		app.load();
+//		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//		
+//		Object clipboard = session.getClipboard();
+//		if(clipboard instanceof ResourceNode){
+//			ResourceNode node = (ResourceNode)clipboard;
+//			
+//			
+//			for(int i = 0; i < app.getAttachProject().getOptionNames().size(); i++) {
+//				
+//				String value = app.getAttachProject().getOptionNames().get(i);
+//				
+//				if(value.equals(node.getProjectId()) == false) {
+//					app.getAttachProject().remove(i);
+//				}				
+//			}			
+//		}		
+//		
+//		return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
 		
-		Object clipboard = session.getClipboard();
-		if(clipboard instanceof ResourceNode){
-			ResourceNode node = (ResourceNode)clipboard;
-			
-			
-			for(int i = 0; i < app.getAttachProject().getOptionNames().size(); i++) {
-				
-				String value = app.getAttachProject().getOptionNames().get(i);
-				
-				if(value.equals(node.getProjectId()) == false) {
-					app.getAttachProject().remove(i);
-				}				
-			}			
-		}		
-		
-		return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
+		return null;
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] webService() throws Exception {

@@ -35,6 +35,7 @@ import org.uengine.codi.mw3.project.oce.AppServerManage;
 import org.uengine.codi.mw3.project.oce.KtProbProjectServers;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessSelectPanel;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -180,7 +181,15 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		public void setUrl(String url) {
 			this.url = url;
 		}
-
+		
+	String appType;
+		public String getAppType() {
+			return appType;
+		}
+		public void setAppType(String appType) {
+			this.appType = appType;
+		}
+		
 	ICategory category;
 		public ICategory getCategory() {
 			return category;
@@ -196,23 +205,22 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		public void setCategories(SelectBox categories) {
 			this.categories = categories;
 		}
-	
-	SelectBox attachProject;
-		public SelectBox getAttachProject() {
-			return attachProject;
+		
+	AppTypePanel appTypePanel;
+		public AppTypePanel getAppTypePanel() {
+			return appTypePanel;
 		}
-		public void setAttachProject(SelectBox attachProject) {
-			this.attachProject = attachProject;
+		public void setAppTypePanel(AppTypePanel appTypePanel) {
+			this.appTypePanel = appTypePanel;
 		}
 		
-	WfNode project;
-		public WfNode getProject() {
-			return project;
+	String projectId;
+		public String getProjectId() {
+			return projectId;
 		}
-		public void setProject(WfNode project) {
-			this.project = project;
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
 		}
-
 	IAppMapping appMapping;
 		public IAppMapping getAppMapping() {
 			return appMapping;
@@ -406,7 +414,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
 	public void load() throws Exception {
 		SelectBox categories = new SelectBox();
-		SelectBox attachProject = new SelectBox();
 		
 		ICategory category = Category.loadRootCategory();
 		if (category.size() > 0) {
@@ -419,25 +426,32 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			}
 		}
 		
-		IProjectNode projectList = ProjectNode.load(session);	
-		FilepathInfo filepathInfo = new FilepathInfo();
-		int j = 0;
-		if(projectList.size() > 0) {
-			while(projectList.next()){
-				String projectId = projectList.getId();
-				String projectName = projectList.getName();
-				if( j == 0 ){
-					filepathInfo.setProjectId(projectList.getId());
-				}
-				attachProject.add(projectName, projectId);
-				j++;
-			}
-		}
+//		IProjectNode projectList = ProjectNode.load(session);	
+//		FilepathInfo filepathInfo = new FilepathInfo();
+//		int j = 0;
+//		if(projectList.size() > 0) {
+//			while(projectList.next()){
+//				if( j == 0 ){
+//					filepathInfo.setProjectId(projectList.getId());
+//				}
+//				j++;
+//			}
+//		}
+//		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 		
 		this.setCategories(categories);
-		this.setAttachProject(attachProject);
-		//this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
-		this.setLogoFile(new MetaworksFile());
+		
+		AppTypePanel appTypePanel = new AppTypePanel();
+		appTypePanel.session = session;
+		appTypePanel.setProjectId(this.getProjectId());
+		appTypePanel.setSelectedAppType(this.getAppType());
+		appTypePanel.setSelectedAppDetail(this.getUrl());
+		appTypePanel.load();
+		this.setAppTypePanel(appTypePanel);
+		
+		if( this.getLogoFile() == null ){
+			this.setLogoFile(new MetaworksFile());
+		}
 	}
 	
 	public Object[] detail() throws Exception {
@@ -486,7 +500,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		this.getMetaworksContext().setWhen("edit");
 		
 		this.getCategories().setSelected(String.valueOf(this.getCategory().getCategoryId()));
-		
+		this.getAppTypePanel().getAppType().setDisabled(true);
 		return new ModalPanel(this);
 	}
 
@@ -495,7 +509,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		AppServerManage AppServerManage = new AppServerManage();
 		AppServerManage.session = session;
 		
-		KtProbProjectServers projectServers = new KtProbProjectServers(this.getProject().getId() , KtProjectServers.SERVER_PROB); // 운영
+		KtProbProjectServers projectServers = new KtProbProjectServers(this.getProjectId() , KtProjectServers.SERVER_PROB); // 운영
 		projectServers.loadOceServer();
 		
 		AppServerManage.setProjectServers(projectServers);
@@ -522,16 +536,39 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public Object save() throws Exception {
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
+		this.setCategory(category);
 		
+		String appType = this.getAppTypePanel().getSelectedAppType();
+		this.setAppType(appType);
+		
+		// 파일이 변경이 되어있지 않다면 변경을 안한다.
 		if(this.getLogoFile().getFileTransfer() != null &&
+				this.getLogoFile().getFileTransfer().getFilename() != null && 
+				!"".equals(this.getLogoFile().getFileTransfer().getFilename()) && 
 				this.getLogoFile().getFilename() != null && 
 				this.getLogoFile().getFilename().length() > 0)			
 			this.getLogoFile().upload();
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			WfNode wfnode = new WfNode();
-			wfnode.setId(this.getAttachProject().getSelected());
-			wfnode.copyFrom(wfnode.databaseMe());
+			WfNode wfNode = new WfNode();
+			
+			if( APP_TYPE_PROCESS.equals(appType) ){
+				String defId = ((ProcessSelectPanel)this.getAppTypePanel().getAppTypeDetail()).getDefinitionId();
+				if( defId == null ){
+					throw new Exception("$App.NoProcess");
+				}
+				wfNode.setName(this.getAppName());
+				wfNode.setType(APP_TYPE_PROCESS);
+				wfNode.setParentId(session.getCompany().getComCode());
+				wfNode.setAuthorId(session.getUser().getUserId());		
+				wfNode.setCompanyId(session.getCompany().getComCode());
+				wfNode.createMe();
+				// defId 가 url 을 대신한다.
+				this.setUrl(defId);
+			}else{
+				wfNode.setId(this.getAppTypePanel().getProjectId());
+				wfNode.copyFrom(wfNode.databaseMe());
+			}
 			
 //			appProject.setName(this.getAppName());
 //			appProject.setProjectAlias(this.getSubDomain());
@@ -559,9 +596,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.setComName(session.getCompany().getComName());
 			this.setSubDomain(this.getSubDomain());
 //			this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
-			this.setProject(wfnode);
+			this.setProjectId(wfNode.getId());
 			this.setStatus(STATUS_APPROVED);
-			this.setCategory(category);
 			this.setLogoFile(logoFile);
 			
 			createDatabaseMe();
@@ -597,6 +633,16 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //			tm.saveMe();
 				
 		}else{
+			
+			if( APP_TYPE_PROCESS.equals(appType) ){
+				// defId 가 url 을 대신한다.
+				this.setUrl(((ProcessSelectPanel)this.getAppTypePanel().getAppTypeDetail()).getDefinitionId());
+			}else{
+				// projectId 가 변경될수 있다.
+				this.setProjectId(this.getAppTypePanel().getProjectId());
+				// TODO url setting
+				this.setUrl(null);
+			}
 			syncToDatabaseMe();
 			flushDatabaseMe();
 		}
@@ -673,6 +719,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		am.setAppName(this.getAppName());
 		am.setComCode(this.getComcode());
 		am.setUrl(this.getUrl());
+		am.setAppType(this.getAppType());
 		
 		am.createDatabaseMe();
 		am.flushDatabaseMe();
@@ -708,7 +755,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //	@ServiceMethod(callByContent = true, eventBinding = "change", bindingFor = "attachProject", bindingHidden = true, target = ServiceMethodContext.TARGET_SELF)
 	public void changeProject() throws Exception{
 		FilepathInfo filepathInfo = new FilepathInfo();
-		filepathInfo.setProjectId(this.getAttachProject().getSelected());
+//		filepathInfo.setProjectId(this.getAttachProject().getSelected());
 		
 //		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 	}

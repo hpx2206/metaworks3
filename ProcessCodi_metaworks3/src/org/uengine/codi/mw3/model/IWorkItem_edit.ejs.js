@@ -394,10 +394,12 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		/////// assists about user names //////
 		if(!this.contacts){
 			var contactPespective = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactPerspective');
-			if(contactPespective.more)
-				this.contacts = contactPespective.child;
-			else
-				this.contacts = contactPespective.loadAllContact();
+			if( contactPespective ){
+				if(contactPespective.more)
+					this.contacts = contactPespective.child;
+				else
+					this.contacts = contactPespective.loadAllContact();
+			}
 		}
 		
 		if(text && text.length>0 && this.contacts){

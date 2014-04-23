@@ -3,11 +3,13 @@ package org.uengine.codi.mw3.ide;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 
+@Face(ejsPath="genericfaces/EmptyEjs.ejs")
 public class Project {
 
 	public final static String METADATA_FILENAME = "uengine.metadata";

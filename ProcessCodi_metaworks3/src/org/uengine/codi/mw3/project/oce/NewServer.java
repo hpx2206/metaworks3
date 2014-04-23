@@ -21,6 +21,7 @@ import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.ProjectTitle;
 import org.uengine.codi.mw3.marketplace.App;
+import org.uengine.codi.mw3.marketplace.IApp;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
@@ -175,7 +176,9 @@ public class NewServer extends Templete{
 		
 		CloudInfo cloudInfo = new CloudInfo();
 		cloudInfo.setId(cloudInfo.createNewId());
-		cloudInfo.setProjectId(app.getAttachProject().getSelected());
+		if( IApp.APP_TYPE_PROJECT.equals(app.getAppType())){
+			cloudInfo.setProjectId(app.getProjectId());
+		}
 		cloudInfo.setServerName(app.getAppName());
 		cloudInfo.setOsTemplete(this.getOsTemplete());
 		cloudInfo.setHwTemplete(this.getHwTemplete());

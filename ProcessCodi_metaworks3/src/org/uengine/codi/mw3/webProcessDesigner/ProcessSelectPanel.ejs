@@ -1,5 +1,5 @@
 <% if( value ){ %>
-    <button type="button" class="btn btn-info btn-xs"  onclick="<%=methods.showDefinitionMonitor.caller()%>"><span class="glyphicon glyphicon-paperclip"></span> <%=mw3.localize('$SubProcessActivityEdit')%></button>
-    <span style="float: left; line-height:1.8em; margin-left:10px; max-width:200px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis;" id="filename_<%=objectId%>"><%= value.definitionId %></span>
+    <span style="float: left; line-height:1.8em; margin-left:10px; margin-right:10px; max-width:200px; overflow:hidden; white-space:nowrap; text-overflow: ellipsis; margin-top:5px;" id="filename_<%=objectId%>"><%= value.definitionId %></span>
+    <button type="button" class="btn btn-info btn-xs"  onclick="<%=methods.showDefinitionMonitor.caller()%>" style="margin-top:5px;"><span class="glyphicon glyphicon-paperclip"></span> <%=mw3.localize('$resource.menu.selectProcess')%></button>
     <div class="clear"></div>
 <% } %>
