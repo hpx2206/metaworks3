@@ -62,7 +62,13 @@ public class ChoiceBox implements ContextAware {
 		public void setSelectedText(String selectedText) {
 			this.selectedText = selectedText;
 		}
-	
+	boolean disabled;
+		public boolean isDisabled() {
+			return disabled;
+		}
+		public void setDisabled(boolean disabled) {
+			this.disabled = disabled;
+		}
 	public void add(String name, String value){
 		getOptionValues().add(value);
 		getOptionNames().add(name);		
