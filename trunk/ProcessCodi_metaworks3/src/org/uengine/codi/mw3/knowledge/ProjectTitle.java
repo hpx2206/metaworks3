@@ -29,9 +29,12 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.ListPanel;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.codi.mw3.project.oce.IServerInfo;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
@@ -187,18 +190,18 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-//		this.saveMe();
-//		
+		this.saveMe();
+		
 //		session.setLastPerspecteType("topic");
 //		session.setLastSelectedItem(this.getTopicId());
-//
-//		
+
+		
 //		ProjectNode projectNode = new ProjectNode();
 //		projectNode.setId(this.getTopicId());
 //		projectNode.setName(this.getTopicTitle());
 //		projectNode.setProjectAlias(this.getProjectAlias());
 //		projectNode.session = session;
-//		
+		
 //		this.makeHtml();
 //		
 //		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -314,11 +317,14 @@ public class ProjectTitle implements ContextAware {
 //		
 //		return returnObject;
 //		*/
-//		
-//		return new Object[]{new ToEvent(new ProjectPerspective(), EventContext.EVENT_CHANGE), new Remover(new ModalWindow(), true)};
+		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, this.getTopicId());
+		
+		ListPanel listPanel = new ListPanel(instanceListPanel, new ProjectInfo(session, this.getTopicId()));
+		
+		return new Object[]{new ToEvent(new ProjectPerspective(), EventContext.EVENT_CHANGE), new Remover(new ModalWindow(), true), new Refresh(session), new Refresh(listPanel)};
 		
 		
-		return new Object[]{new Remover(new ModalWindow())};
+		//return new Object[]{new Remover(new ModalWindow())};
 	}
 	
 	public void saveMe() throws Exception {
