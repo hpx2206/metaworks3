@@ -17,7 +17,6 @@ import org.metaworks.annotation.Table;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.ICompany;
 
@@ -33,8 +32,11 @@ import org.uengine.codi.mw3.model.ICompany;
 		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
-      values={"categories,attachProject,appName,simpleOverview,fullOverview,logoFile"})
+      values={"categories,appTypePanel,appName,subDomain,simpleOverview,fullOverview,logoFile"})
 public interface IApp extends IDAO{
+	
+	public static final String APP_TYPE_PROJECT = "project";
+	public static final String APP_TYPE_PROCESS = "processApp";
 	
 	@Id
 	public int getAppId();
@@ -89,6 +91,9 @@ public interface IApp extends IDAO{
 	public String getUrl();
 	public void setUrl(String url);
 	
+	public String getAppType();
+	public void setAppType(String appType);
+	
 	@Face(displayName="$App.LogoFileAttach")
 	@ORMapping(
 		databaseFields={"logoContent", "logoFileName"}, 
@@ -110,18 +115,14 @@ public interface IApp extends IDAO{
 	public SelectBox getCategories();
 	public void setCategories(SelectBox categories);
 
-	@Face(displayName = "$Project")
+	@Face(displayName="$App.AppType")
 	@NonLoadable
 	@NonSavable
-	public SelectBox getAttachProject();
-	public void setAttachProject(SelectBox attachProject);
-
-	@ORMapping(
-			databaseFields={"projectId"}, 
-			objectFields={"id"}
-	)
-	public WfNode getProject();
-	public void setProject(WfNode project);
+	public AppTypePanel getAppTypePanel();
+	public void setAppTypePanel(AppTypePanel appTypePanel);
+	
+	public String getProjectId();
+	public void setProjectId(String projectId);
 	
 //	@Face(displayName = "$ReleaseVersion")
 //	@NonLoadable

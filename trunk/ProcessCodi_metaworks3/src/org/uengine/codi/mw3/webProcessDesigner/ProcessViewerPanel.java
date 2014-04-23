@@ -3,18 +3,22 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.io.File;
 
 import org.metaworks.ContextAware;
+import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToEvent;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
+import org.uengine.codi.mw3.ide.DefaultProject;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
@@ -106,6 +110,13 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setUseClassLoader(boolean useClassLoader) {
 			this.useClassLoader = useClassLoader;
 		}	
+	String openerPopupId;
+		public String getOpenerPopupId() {
+			return openerPopupId;
+		}
+		public void setOpenerPopupId(String openerPopupId) {
+			this.openerPopupId = openerPopupId;
+		}
 	@AutowiredFromClient
 	public ProcessViewWindow processViewWindow; 
 
@@ -121,6 +132,9 @@ public class ProcessViewerPanel implements ContextAware {
 		this.getMetaworksContext().setHow("find");
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
+		if( project == null ){
+			project = new DefaultProject();
+		}
 		
 		processViewNavigator.load(project);
 		
@@ -168,20 +182,28 @@ public class ProcessViewerPanel implements ContextAware {
 		String defId = processViewPanel.getDefId();
 		String alias = processViewPanel.getAlias();
 		Activity activity = this.getOpenerActivity();
-		if( activity instanceof SubProcessActivity){
-			((SubProcessActivity) activity).setDefinitionId(defId);
-			((SubProcessActivity) activity).setAlias(defId);
-			
-			((SubProcessActivity) activity).setSubProcessContext(null);
-			((SubProcessActivity) activity).drawInit();
-			((SubProcessActivity) activity).getProcessSelectPanel().setDefinitionId(defId);
-			
-		}else if(activity instanceof StartConnectorEventActivity){
-			((StartConnectorEventActivity) activity).setDefinitionId(defId);
-			((StartConnectorEventActivity) activity).setAlias(alias);
+		if( activity != null ){
+			if( activity instanceof SubProcessActivity){
+				((SubProcessActivity) activity).setDefinitionId(defId);
+				((SubProcessActivity) activity).setAlias(defId);
+				
+				((SubProcessActivity) activity).setSubProcessContext(null);
+				((SubProcessActivity) activity).drawInit();
+				((SubProcessActivity) activity).getProcessSelectPanel().setDefinitionId(defId);
+				
+			}else if(activity instanceof StartConnectorEventActivity){
+				((StartConnectorEventActivity) activity).setDefinitionId(defId);
+				((StartConnectorEventActivity) activity).setAlias(alias);
+			}
+			ModalWindow popup = new ModalWindow();
+			popup.setId(this.getOpenerPopupId());
+			return new Object[]{ new Refresh(activity), new Remover(popup , true)};
+		}else{
+			// TARGET_OPENER 에서  ToOpener 를 필히 구현해 주어야함.
+			ModalWindow popup = new ModalWindow();
+			popup.setId(this.getOpenerPopupId());
+			return new Object[]{ new ToOpener(defId), new ToEvent(ServiceMethodContext.TARGET_OPENER, EventContext.EVENT_CHANGE), new Remover(popup , true)};
 		}
-		
-		return new Object[]{ new Refresh(activity), new Remover(new ModalWindow() , true)};
 	}
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)

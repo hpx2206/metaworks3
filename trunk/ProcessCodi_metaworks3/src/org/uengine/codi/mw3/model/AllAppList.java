@@ -55,6 +55,7 @@ public class AllAppList {
 			app.setIsDeleted(getAppsList.getIsDeleted());
 			app.setLogoFile(getAppsList.getLogoFile());
 			app.setUrl(getAppsList.getUrl());
+			app.setAppType(getAppsList.getAppType());
 			
 			app.setMetaworksContext(new MetaworksContext());
 			app.getMetaworksContext().setWhere(OceMain.WHERE_DASHBOARD);

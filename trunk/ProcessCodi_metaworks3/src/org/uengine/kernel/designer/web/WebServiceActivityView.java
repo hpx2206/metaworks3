@@ -44,6 +44,10 @@ public class WebServiceActivityView extends ActivityView {
 		}
 		activity.setActivityView(this);
 		if( activity instanceof RestWebServiceActivity){
+			if( pool == null ){
+				throw new Exception("웹서비스 엑티비티는 풀 안쪽에서 생성이 되어야 합니다."); 
+			}
+			
 			WebServiceDefinition webServiceDefinition = pool.getPoolResolutionContext().getWebServiceConnector().getWebServiceDefinition();
 			webServiceDefinition.setParentActivity(activity);
 			((RestWebServiceActivity) activity).setWebServiceDefinition(webServiceDefinition);

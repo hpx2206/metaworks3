@@ -36,6 +36,9 @@ public interface IAppMapping extends IDAO{
 	public String getUrl();
 	public void setUrl(String url);
 	
+	public String getAppType();
+	public void setAppType(String appType);
+	
 	@NonSavable
 	public String getProjectName();
 	public void setProjectName(String projectName);

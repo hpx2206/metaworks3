@@ -40,7 +40,7 @@ public class AppMapList implements ContextAware {
 			appMap.getMetaworksContext().setWhere("mapList");
 			appMap.setLogoFile(appList.getLogoFile());
 			
-			String projectId = appList.getProject().getId();
+			String projectId = appList.getProjectId();
 			
 			ProjectNode project = new ProjectNode();
 			project.setId(projectId);

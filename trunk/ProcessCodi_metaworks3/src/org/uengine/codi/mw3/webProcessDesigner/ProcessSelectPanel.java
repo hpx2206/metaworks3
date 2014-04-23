@@ -59,8 +59,9 @@ public class ProcessSelectPanel {
 			processViewerPanel.setOpenerActivity(this.getOpenerActivity());
 			processViewerPanel.project = project;
 			processViewerPanel.findDefinitionView();
-			modalWindow.setTitle("$SubProcessActivityEdit");
+			modalWindow.setTitle("$resource.menu.selectProcess");
 		}
+		processViewerPanel.setOpenerPopupId(this.getId());
 		modalWindow.setPanel(processViewerPanel);
 		return modalWindow;  
 	 }

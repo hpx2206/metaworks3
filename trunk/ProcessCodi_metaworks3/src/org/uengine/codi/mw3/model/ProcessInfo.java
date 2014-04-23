@@ -12,10 +12,12 @@ public class ProcessInfo extends PerspectiveInfo{
 		}
 		
 	public ProcessInfo(){
-		
+		setTopPanel(new ProcessTopPanel());
 	}
 	
 	public ProcessInfo(Session session){
+		this();
+		
 		this.session = session;
 		this.setId(session.getLastSelectedItem());
 	}
