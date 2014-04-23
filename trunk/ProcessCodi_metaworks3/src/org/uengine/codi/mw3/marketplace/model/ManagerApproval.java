@@ -98,7 +98,7 @@ public class ManagerApproval implements ITool  {
 		
 		
 		WfNode wfNode = new WfNode();
-		wfNode.setId(app.getProject().getId());
+		wfNode.setId(app.getProjectId());
 		wfNode.copyFrom(wfNode.databaseMe());
 		
 		if(app.STATUS_PUBLISHED.equals(app.databaseMe().getStatus())){
@@ -220,7 +220,7 @@ public class ManagerApproval implements ITool  {
 				 */
 				
 				FilepathInfo filepathinfo = new FilepathInfo();
-				filepathinfo.setProjectId(app.getProject().getId());
+				filepathinfo.setProjectId(app.getProjectId());
 				
 				IFilepathInfo fileInfo = filepathinfo.findReflectforProjectId();
 				
