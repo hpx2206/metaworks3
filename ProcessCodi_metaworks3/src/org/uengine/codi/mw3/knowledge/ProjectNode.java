@@ -17,10 +17,13 @@ import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.ListPanel;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.oce.dashboard.MyProjectPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -78,8 +81,11 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			
 			return new Object[]{new MainPanel(new Main(session, null, this.getId().toString()))};
 		}else {
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, getId());
-			return new Object[]{session, returnObject[1] };
+			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, getId());
+			
+			ListPanel listPanel = new ListPanel(instanceListPanel, new ProjectInfo(session, this.getId()));
+			
+			return new Object[]{session, listPanel };
 		}
 		
 	}
