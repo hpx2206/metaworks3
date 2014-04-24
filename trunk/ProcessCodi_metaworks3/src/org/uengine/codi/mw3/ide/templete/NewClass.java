@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -16,13 +17,11 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.util.CodiFileUtil;
-import org.uengine.codi.util.CodiStringUtil;
 
 @Face(displayName="$templete.class", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
 public class NewClass extends Templete {
@@ -66,7 +65,8 @@ public class NewClass extends Templete {
 		if(this.getPackageName() != null && this.getPackageName().length() > 0){
 			PackageDeclaration packageDeclaration = ast.newPackageDeclaration();
 			unit.setPackage(packageDeclaration);
-			packageDeclaration.setName(ast.newSimpleName(this.getPackageName()));
+			packageDeclaration.setName(ast.newName(this.getPackageName()));
+//			packageDeclaration.setName(ast.newSimpleName(this.getPackageName()));
 		}
 		
 		TypeDeclaration classType = ast.newTypeDeclaration();
@@ -91,6 +91,12 @@ public class NewClass extends Templete {
 			node.setProjectId(targetNode.getProjectId());
 			node.setParentId(targetNode.getParentId());
 			node.setType(targetNode.getType());
+			node.setMetaworksContext(new MetaworksContext());
+			node.getMetaworksContext().setWhen("code");
+			
+			// set package
+			String packageName = ResourceNode.makePackageName(targetNode.getId());
+			this.setPackageName(packageName);
 			
 			if(CodiFileUtil.exists(node.getPath()))
 				throw new Exception("$file.already.exists");
