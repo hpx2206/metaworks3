@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="SSH" basedir="." default="start">
+
+	<target name="stop" >
+        <sshexec host="${host}"
+				 PORT="${port}"
+                 username="${id}"
+                 password="${pw}"
+                 trust="true"
+                 command="${command}; ${bin}/shutdown.sh; rm -rf ${dest}/ROOT; sleep 5"/>
+    </target>
+	
+	<target name="upload-war" depends="stop">
+		<scp file="${war.file}" todir="${id}:${pw}@${host}:${dest}" port="${port}" trust="true"/>
+	</target>
+
+	<target name="deploy-war" depends="upload-war">
+        <sshexec host="${host}"
+				 PORT="${port}"
+                 username="${id}"
+                 password="${pw}"
+                 trust="true"
+                 command="mv ${ori.file} ${dst.file};"/>
+	</target>
+
+	<target name="start" depends="deploy-war">
+        <sshexec host="${host}"
+				 PORT="${port}"
+                 username="${id}"
+                 password="${pw}"
+                 trust="true"
+                 command="${command}; sh -x ${bin}/startup.sh"/>
+    </target>
+</project>

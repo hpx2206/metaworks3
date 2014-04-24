@@ -1,0 +1,19 @@
+<%	if( value) {%>		
+
+	<%	if( mw3.how == 'text' || mw3.how == 'number') {%>		
+			<span style="float:left;"><%=fields.expressionText.here()%></span>
+	<%	} %>		
+	
+	<%	if( mw3.how == 'date' ) {%>
+			<span style="float:left;"><%=fields.expressionDate.here()%></span>
+	<%	} %>		
+	
+	<%	if( mw3.how == 'Yes or No' ) {%>
+			<span style="float:left;"><%=fields.yesNo.here()%></span>
+	<%	} %>		
+	
+	<%	if( mw3.how == 'variable' ) {%>
+			<span style="float:left;"><%=fields.valiableChoice.here()%></span>
+	<%	} %>
+			
+<%	} %>		

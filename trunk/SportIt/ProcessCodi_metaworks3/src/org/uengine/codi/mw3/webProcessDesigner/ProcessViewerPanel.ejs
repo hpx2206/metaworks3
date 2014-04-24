@@ -1,0 +1,53 @@
+<%
+    if( value ){
+        if( mw3.how == 'find' || mw3.how == 'valueChainFind'  ){
+%>
+			<div style=" min-height: 100%; margin: 0 0 -50px 0; ">
+	            <div style="padding: 0 0 50px 0; ">
+	                <div style="float:left;width:180px;margin-right:-200px; margin-bottom:50px;">
+	                    <%= fields.processViewNaivgator.here() %>
+	                </div>
+	                <div style="margin-left:200px">
+	                    <%= fields.processViewPanel.here() %>
+	                </div>
+	                <div class="clear"></div>
+	            </div>
+	        </div>
+            <div style="height:40px; padding-top:10px; border-top:1px solid #ddd;">
+            	<div class="positionRight">
+                <%
+                    if( mw3.how == 'valueChainFind' ){
+                %>
+                        <a id="wBtn" href="#" onClick="<%=methods.saveValueChain.caller()%>"><span><%=mw3.localize("$Save")%></span></a>
+                <%
+                    }else{
+                %>
+                        <a id="wBtn" href="#" onClick="<%=methods.saveLink.caller()%>"><span><%=mw3.localize("$Save")%></span></a>
+                <%
+                    }
+                %>
+                </div>
+            </div>
+<%
+        }else{
+%>
+             <%= fields.processViewPanel.here() %>
+                <div style="position:absolute; right:10px; bottom:10px; z-index:1000;">
+                    <%
+                        if( mw3.how == 'valueChainLoad' ){
+                    %>
+                            <a id="wBtn" href="#" onClick="<%=methods.closeModalPopup.caller()%>"><span><%=mw3.localize("$Close")%></span></a>
+                    <%
+                        }else{
+                    %>
+                            <a id="wBtn" href="#" onClick="<%=methods.findDefinitionView.caller()%>"><span><%=mw3.localize("$ProcessReselect")%></span></a>
+                    <%
+                        }
+                    %>
+                </div>
+<%
+        }
+%>
+<%
+    }
+%>

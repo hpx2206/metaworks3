@@ -1,0 +1,79 @@
+<%
+if(mw3.where == 'ssp'){
+	if(mw3.when == 'show_detail' ) {
+	
+%>
+		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<div class="sp_form_block">
+			<div class="sn_view_box" style="width:auto;">
+				<div class="sn_view_arrow">
+					<img src="images/marketPlace/sp_box_arrow.gif"  />
+				</div>
+				<%=fields.filePreview.here()%>
+			</div>
+		</div>
+		
+		<div class="sp_form_block">
+			<div><a id="wBtn" onClick="<%=methods.modify.caller()%>"><span><%=mw3.localize('$metadata.edit')%></span></a></div>
+		</div>
+		
+<%
+
+	}else {
+
+%>
+	
+	<ul>
+		<li id="sp_accordion_list_<%=objectId%>"><%=value.description%></li>
+	</ul>
+	
+<%
+	}
+%>
+
+<%
+}else if(mw3.where == 'ide'){
+%>
+    <label class="fb_box_desc" id="">이름</label>
+    <div class="">
+        <% if(value.metaworksContext.when == 'edit') { %>            
+                      <%= fields.name.here({when:'view'})%>
+        <% }else{ %>
+                      <%= fields.name.here()%>
+        <% } %>
+    </div>
+    <label class="fb_box_desc" id="">화면출력정보</label>
+    <div class=""><%= fields.description.here()%>
+    </div>
+    <div class="clear"></div>
+    <label class="fb_box_desc" id="">메타데이타 찾아보기</label>
+    <div class=""><%= fields.resourceNode.here()%>
+    </div>
+    <div class="clear"></div>
+    <label class="fb_box_desc" id="">메타데이타 타입변경</label>
+    <div class=""><%= fields.type.here()%>
+    </div>
+    <div class="clear"></div>
+      <div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px; padding-bottom:8px;">
+      <ul>
+          <li>
+                <%
+                        if(value.metaworksContext.when == 'edit') {
+                %>            
+                              <a id="wBtn" href="#" onclick="<%=methods.edit.caller()%>"><span>저장</span></a>
+                <%
+                        }else{
+                %>
+                              <a id="wBtn" href="#" onclick="<%=methods.add.caller()%>"><span>추가</span></a>
+                <%      
+                        }
+                %>   
+          </li>
+      </ul>
+  </div>
+<%
+}
+%>
+
+
+
