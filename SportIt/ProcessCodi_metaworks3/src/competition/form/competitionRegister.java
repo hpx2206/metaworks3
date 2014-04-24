@@ -332,13 +332,9 @@ public class competitionRegister implements Serializable, ContextAware,ITool {
 		pm.setAutoCloseConnection(false);
 		pm.setManagedTransaction(true);
 		
-		WfNode project = new WfNode();
-		project.setId(this.getCompetitionId());
-		project.copyFrom(project.databaseMe());
-
 		app.setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) pm).getTransactionContext()).intValue());
 		app.setCreateDate(Calendar.getInstance().getTime());
-//		app.setProject(project);
+		app.setProjectId(this.getCompetitionId());
 		app.setIsDeleted(false);
 		app.setComcode(this.getComCode());
 		app.setStatus(App.STATUS_PUBLISHED);
@@ -357,7 +353,7 @@ public class competitionRegister implements Serializable, ContextAware,ITool {
 		appMapping.setAppId(app.getAppId());
 		appMapping.setComCode(this.getComCode());
 		appMapping.setAppName(this.getGameName());
-//		appMapping.setUrl("202.68.237.16:8080/gms/?gameId="+this.getGameId());
+//		appMapping.setUrl("202.68.237.16:8080/ict/?gameId="+this.getGameId());
 		appMapping.setUrl("175.207.44.155:9090/ict/?gamesId="+this.getGameId());
 //		appMapping.setUrl("www.naver.com");
 		appMapping.setIsDeleted(false);
