@@ -4,7 +4,11 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.WebFieldDescriptor;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Id;
+import org.metaworks.dao.IDAO;
+import org.metaworks.dwr.MetaworksRemoteService;
 
 public class ChoiceBox implements ContextAware {
 	public ChoiceBox(){
@@ -12,6 +16,26 @@ public class ChoiceBox implements ContextAware {
 		setOptionNames(new ArrayList<String>());
 		
 		setMetaworksContext(new MetaworksContext());
+	}
+	
+	public ChoiceBox(IDAO dao){
+		this();
+		
+		try {
+			WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(dao.getClass().getName());
+			String keyFieldName = webObjectType.getKeyFieldDescriptor().getName();
+			String nameFieldName = webObjectType.getFieldDescriptorByAttribute("nameField").getName();
+			
+			if(nameFieldName == null)
+				throw new Exception("define name annotation");
+			
+			while(dao.next())
+				this.add(dao.get(nameFieldName).toString(), dao.get(keyFieldName).toString());
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	MetaworksContext metaworksContext;
@@ -112,7 +136,7 @@ public class ChoiceBox implements ContextAware {
 	}
 	
 	public int getSize(){
-		return this.getOptionValues().size();
+		return this.getOptionValues() == null ? 0 : this.getOptionValues().size();
 	}
 	
 	public void onLoad() throws Exception {
