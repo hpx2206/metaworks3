@@ -19,34 +19,34 @@ var TreeNodeFace = function(objectId, className){
 		for(var i=0; i<metadata.serviceMethodContexts.length; i++){
 			var servceMethodContext = metadata.serviceMethodContexts[i];
 			
-			if(servceMethodContext.childrenLoader)
-				this.childrenLoaderMethodName = servceMethodContext.methodName;
+			if(servceMethodContext.childrenLoader){
+				if(!mw3.isHiddenMethodContext(servceMethodContext, this.object))
+					this.childrenLoaderMethodName = servceMethodContext.methodName;
+			}
 		}
 	}
 	
-	this.expanded = false;
+	var faceHelper = this;
 	
-	if(this.childFieldName && this.object[this.childFieldName] != null)
-		this.expanded = true;
-	
-	if(this.expanded)
-		this.nodeDiv.addClass('minlast');
-	else
-		this.nodeDiv.addClass('plus');
-	
-	if(this.objectDiv.hasClass('filemgr-tree'))
-		this.nodeDiv.addClass('root');
-	
-	
+	if(this.childrenLoaderMethodName){
+		// calc status
+		var status = '';
+		if(this.object.expanded)
+			status = 'min';
+		else
+			status = 'plus';
+		
+		if(this.object.loaded)
+			status += 'last';
+		
+		this.nodeDiv.addClass(status);
+
+	}
+			
 	// add event mouse click
 	$(this.nodeDiv).bind('click', {objectId : this.objectId}, function(event){
 		mw3.getFaceHelper(event.data.objectId).select();
 	});
-	
-	$(this.nodeDiv).bind('dblclick', {objectId : this.objectId}, function(event){
-		mw3.getFaceHelper(event.data.objectId).action();
-	});
-	
 }
 
 TreeNodeFace.prototype = {
@@ -85,12 +85,6 @@ TreeNodeFace.prototype = {
 	},
 	
 	select : function(){
-		if(event.stopPropagation){
-			event.stopPropagation();
-		}else if(window.event){
-			window.event.cancelBubble = true;
-		}
-
 		var tree = this.getTree();
 		
 		if(!this.nodeDiv.hasClass('selected'))
@@ -139,12 +133,6 @@ TreeNodeFace.prototype = {
 	},
 	
 	action : function(){		
-		if(event.stopPropagation){
-			event.stopPropagation();
-		}else if(window.event){
-			window.event.cancelBubble = true;
-		}
-		
 		this.select();
 		
 		if(this.expanded)

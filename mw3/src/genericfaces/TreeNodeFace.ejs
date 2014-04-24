@@ -19,10 +19,13 @@
 
 <div class="item-fix">
 	<div class="item">
-		<span>x</span>
+		<span>&nbsp;</span
 		<div class="label-content">
-			<label style="display:inline-block; <%=iconField?'background-image: url(images/' + value[objectMetadata.iconFieldDescriptor.name] + '.png)':''%>">
-				<u class="caption"><%=nameField.here()%></u>
+			<label style="display:inline-block;">
+				<u class="caption">
+					<b class="icon-<%=value[objectMetadata.iconFieldDescriptor.name]%> tab_icon" style="color:#0E51A3"></b>
+					<%=value[objectMetadata.nameFieldDescriptor.name]%>
+				</u>
 			</label>
 		</div>
 	</div>		
