@@ -3,6 +3,7 @@ package org.metaworks.component;
 import java.io.Serializable;
 
 import org.metaworks.common.ChoiceBox;
+import org.metaworks.dao.IDAO;
 
 public class SelectBox extends ChoiceBox implements Serializable{
 	int selectSize;
@@ -24,6 +25,10 @@ public class SelectBox extends ChoiceBox implements Serializable{
 		super();
 		setSelectSize(1);
 		setSelectStyle("");
+	}
+	
+	public SelectBox(IDAO dao){		
+		super(dao);
 	}
 	
 	@Override

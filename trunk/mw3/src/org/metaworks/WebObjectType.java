@@ -1479,4 +1479,13 @@ public class WebObjectType{
 		
 		return null;
 	}
+	
+	public WebFieldDescriptor getFieldDescriptorByAttribute(String attributName){
+		for(WebFieldDescriptor fd : this.getFieldDescriptors()){
+			if(fd.getAttribute("namefield") != null && (Boolean)fd.getAttribute("namefield"))
+				return fd;
+		}
+
+		return new WebFieldDescriptor();
+	}
 }
