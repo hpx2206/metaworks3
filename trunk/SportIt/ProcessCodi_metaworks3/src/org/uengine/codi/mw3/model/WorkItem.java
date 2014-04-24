@@ -1098,12 +1098,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.syncToDatabaseMe();
 			
 			//워크아이템 수정시 알림 워크아이템 발행
-			String type=null;
-			WorkItem workItem = new WorkItem();
-			workItem.setTaskId(this.getTaskId());
-			workItem.copyFrom(workItem.findByTaskId(this.getTaskId().toString()));
-			
-			generateNotiWorkItem(workItem.getTitle(), "modify");
+			if(!"comment".equals(this.getType())){
+				WorkItem workItem = new WorkItem();
+				workItem.setTaskId(this.getTaskId());
+				workItem.copyFrom(workItem.findByTaskId(this.getTaskId().toString()));
+				
+				generateNotiWorkItem(workItem.getTitle(), "modify");
+			}
 		}		
 		
 		// 팔로워 추가(추천 및 게시)
@@ -1260,7 +1261,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		HashMap<String, String> notiUsers = new HashMap<String, String>();
 		Notification notification = new Notification();
 		notification.session = session;
-		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+		notiUsers = notification.findInstanceNotiUser(instanceRef.getRootInstId().toString());
 		if(instance.getTopicId() != null && "0".equals(instance.getSecuopt())){
 			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instance.getTopicId());
 			Iterator<String> iterator = topicNotiUsers.keySet().iterator();

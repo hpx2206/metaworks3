@@ -19,6 +19,7 @@ public class Perspective {
 	public final static String MODE_ROLE 		= "role";
 	public final static String MODE_PROCESS 	= "process";
 	public final static String MODE_PROJECT		= "project";
+	public final static String MODE_COMPETITION	= "compete";
 	
 	public final static String TYPE_NEWSFEED 	= "allICanSee";
 	public final static String TYPE_FOLLOWING   = "following"; 
@@ -29,6 +30,7 @@ public class Perspective {
 	public final static String USE_PERSONAL = GlobalContext.getPropertyString("personal.use", "1");
 	public final static String USE_PROJECT = GlobalContext.getPropertyString("project.use", "0");
 	public final static String USE_TOPIC = GlobalContext.getPropertyString("topic.use", "1");
+	public final static String USE_COMPETITION = GlobalContext.getPropertyString("competition.use","0");
 	public final static String USE_ORGANIZATION = GlobalContext.getPropertyString("organization.use", "1");
 	public final static String USE_PROCESS = GlobalContext.getPropertyString("process.use", "1");
 	public final static String USE_ROLE = GlobalContext.getPropertyString("role.use", "1");
