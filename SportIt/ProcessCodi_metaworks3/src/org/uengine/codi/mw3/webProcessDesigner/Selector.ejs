@@ -1,0 +1,23 @@
+<%
+	if(value == null || typeof value == 'undefined')
+		return true;
+	
+	if(mw3.how == 'selector'){
+		var displayName = '';
+		
+		if(typeof value.name != 'undefined' || value.name != null)
+			displayName = value.name;
+%>
+	<input id="text_<%=objectId%>" type="text" readonly value="<%=displayName%>" /><input id="button_<%=objectId%>" type="button" value="..." onClick="javascript:<%=methods.openSelector.caller()%>" />
+<%	
+	}else{
+%>
+
+<div style="position:relative; overflow:auto; height: 300px;">
+	<%=fields.target.here()%>	
+</div>
+
+<%   	   			
+	}			
+%>		
+

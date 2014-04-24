@@ -1,0 +1,24 @@
+
+<div id="navigator" class="oce_navi">
+	<div style="height:15px;"></div>
+	<div class="depth1 selected" onClick="<%=methods.loadOce.caller()%>">
+		<span class="icon-dashboard dashboard_icon"></span><span><%=mw3.localize("$Dashboard")%></span><div class="clear"></div>
+	</div>
+	<div class="depth1" onClick="<%=methods.goSNS.caller()%>">
+		<span class="icon-bubbles3 dashboard_icon"></span><span>소셜네트워크</span><div class="clear"></div>
+	</div>
+	<div class="depth1" onClick="<%=methods.goCalendar.caller()%>">
+		<span class="icon-calendar2 dashboard_icon"></span><span>일정관리</span><div class="clear"></div>
+	</div>
+	<div class="depth1" onClick="<%=methods.goAlfresco.caller()%>">
+		<span class="icon-folder dashboard_icon"></span><span>문서관리</span><div class="clear"></div>
+	</div>
+	<div class="depth1" onClick="<%=methods.goMindMap.caller()%>">
+		<span class="icon-list2 dashboard_icon"></span><span>마인드맵</span><div class="clear"></div>
+	</div>
+	<div class="depth1" onClick="<%=methods.goBBB.caller()%>">
+		<span class="icon-screen dashboard_icon"></span><span>화상회의</span><div class="clear"></div>
+	</div>
+	
+	<%=fields.appPerspective.here() %>
+</div>

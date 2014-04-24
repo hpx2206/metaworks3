@@ -1,0 +1,51 @@
+<% if(value){ %>
+
+<div class="form_table2">
+    <table width="100%" border="1">
+        <tr>                
+            <th style="width:300px;"><input type="radio" name="userContext_<%=objectId%>" value="0" <%= value.userId != null ? "checked=true" : "" %>>the specified user</th>
+            <td><%= fields.userSelector.here() %></td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+
+<div class="form_table2">
+    <table width="100%" border="1">
+        <tr>                
+            <th style="width:300px;"><input type="radio" name="groupContext_<%=objectId%>" value="2"  <%= value.groupId != null ? "checked=true" : "" %>>the specified group</th>
+            <td><%= fields.groupSelector.here() %></td>
+        </tr>
+        <tr>                
+            <th style="width:300px;"><input type="radio" name="groupContext_<%=objectId%>" value="groupAll">All</th>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+
+<div class="form_table2"> 
+<table width="100%" border="1">
+	<tr>						
+		<th><input type="radio" name="roleContext_<%=objectId%>" value="4" <%= value.roleId != null ? "checked=true" : "" %>>the specified role</th>		
+		<td><%= fields.roleSelector.here() %></td>
+	</tr>
+	<tr>                
+        <th style="width:300px;"><input type="radio" name="roleContext_<%=objectId%>" value="roleAll">All</th>
+        <td></td>
+    </tr>
+</table>
+</div>
+
+<div class="form_table2">
+    <table width="100%" border="1">
+        <tr>                
+            <th><%= fields.displayName.here() %></td>
+        </tr>
+        <tr>                        
+            <th><span style="float:right;"><%=methods.select.here()%></span></th>       
+        </tr>
+    </table>
+</div>
+<div style="clear:both"></div>
+<% } %>

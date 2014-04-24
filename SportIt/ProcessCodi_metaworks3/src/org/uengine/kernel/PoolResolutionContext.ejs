@@ -1,0 +1,10 @@
+<% 
+    if(value){
+        var displayName = value.displayName;
+%>
+        <input type="text" id="rrc_<%=objectId%>" readonly value="<%=displayName%>" style="width:400px;"/> <input type="button" value="select" onClick="<%=methods.openPicker.caller()%>" />
+        <div style="clear:both"></div>  
+        <%= fields.webServiceConnector.here() %>
+<%  
+    }
+%>

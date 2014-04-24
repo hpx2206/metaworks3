@@ -1,0 +1,13 @@
+<%
+	if(value){
+%>
+		<div class="top_iconmenu">
+			<span class="icon-bug" style="color: #27ae60;" onClick="<%=methods.popupFeedback.caller()%>" title="Feedback"></span>
+			<span class="icon-settings" style="color: #2980b9;" onClick="<%=methods.showSelfService.caller()%>" title="Self Service"></span>
+			<!--<span class="icon-bubbles3"  onClick="<%=methods.showChat.caller()%>" ></span>-->
+			<span class="glyphicon glyphicon-th" style="color: #8e44ad;" onClick="<%=methods.showApps.caller()%>" title="Apps"></span>
+			
+		</div>
+<%
+	}
+%>

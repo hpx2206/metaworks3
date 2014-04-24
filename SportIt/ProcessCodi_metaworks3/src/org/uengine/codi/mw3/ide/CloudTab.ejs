@@ -1,0 +1,52 @@
+<%
+	var type = value.type;
+	var icontype = '';
+			
+	if('project' == type){
+		icontype = "folder"
+	}else if('folder' == type){
+		icontype = "folder"
+	}else if('html' == type){
+		icontype = "code"
+	}else if('java' == type){
+		icontype = "code"
+	}else if('ejs' == type){
+		icontype = "code"
+	}else if('js' == type){
+		icontype = "code"
+	}else if('form' == type){
+		icontype = "insert-template"
+	}else if('wpd' == type){
+		icontype = "shuffle"
+	}else if('valuechain' == type){
+		icontype = "link"
+	}else if('rule' == type){
+		icontype = "cog2"
+	}else if('css' == type){
+		icontype = "code"
+	}else if('jpeg' == type ||'jpg' == type ||'png' == type ||'gif' == type){
+		icontype = "image2"
+	}else if('metadata' == type){
+		icontype = "cog2"
+	}else if('process' == type){
+		icontype = "shuffle"
+	}else if('navigator' == type){
+		icontype = "menu2"
+	}else if('page_white_text' == type){
+		icontype = "file4"
+	}else{
+		icontype = "file4"
+	}
+
+%>
+
+<div id="navigationTitle" class="tabCurrent">
+    <span style="margin-right:0px;padding-right:0px">
+	    <div title="<%=mw3.localize(value.id)%>">
+	    <div style="margin-right:25px"><b class="icon-<%=icontype%> tab_icon"></b><%=mw3.localize(value.name)%></div>
+	    
+	    </div>
+    </span>
+    <div class="togglebtnx" style="top:5px;" onClick="mw3.getFaceHelper(<%=objectId%>).remove(event);"></div>
+    
+</div>

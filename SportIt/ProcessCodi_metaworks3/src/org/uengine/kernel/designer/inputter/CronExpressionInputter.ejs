@@ -1,0 +1,50 @@
+<% if(value){ %>
+    <% if( value.duration == 'WAIT_PERIOD' ){ %>
+
+        <table style="float:left;">
+            <tr>
+                <th>분</th>
+                <th>시</th>
+                <th>일</th>
+                <th>월</th>
+                <th>요일</th>
+                <th>연도</th>
+            </tr>
+            <tr>
+                <td><%= fields.minute.here() %></td>
+                <td><%= fields.hour.here() %></td>
+                <td><%= fields.dayOfMonth.here() %></td>
+                <td><%= fields.month.here() %></td>
+                <td><%= fields.dayOfWeek.here() %></td>
+                <td><%= fields.year.here() %></td>
+            </tr>
+            <tr>
+                <td colspan="5"><input type="text" id="cci_<%=objectId%>" readonly style="width:100%;" value='<%= value.resultExpressionStr %>'/></td>
+                <td><input type="button" value="expression" onClick="<%= methods.expression.caller() %>" /></td>
+            </tr>
+        </table>
+
+    <% }else{ %>
+            <table style="float:left;">
+                <tr>
+                    <th>분</th>
+                    <th>시</th>
+                    <th>일</th>
+                    <th>월</th>
+                </tr>
+                <tr>
+                    <td><%= fields.minute.here() %></td>
+                    <td><%= fields.hour.here() %></td>
+                    <td><%= fields.dayOfMonth.here() %></td>
+                    <td><%= fields.month.here() %></td>
+                </tr>
+                <% if( value.duration == 'WAIT_UNTIL_WITH_DATE' ){ %>
+                    <tr>
+                        <th>프로세스 변수 선택</th>
+                        <td colspan="2"><%= fields.variableDate.here() %></td>
+                        <td></td>
+                    </tr>
+                <% } %>
+            </table>
+    <% } %>
+<% } %>

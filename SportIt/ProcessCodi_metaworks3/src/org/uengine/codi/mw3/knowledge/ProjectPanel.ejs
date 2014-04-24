@@ -1,0 +1,53 @@
+<%
+	if(value){
+%>
+	<%if(value.projectNode){
+		if(mw3.how == 'perspectivePanel'){%>
+			<ul>
+				<% 
+				
+				for (var i=0; i<value.projectNode.length; i++){
+			
+					if(typeof options == 'undefined') 
+						options = objectMetadata;
+					
+					options['index'] = i;
+					options['htmlTag'] =  'li';
+						
+				%>		
+					
+					<%=mw3.locateObject(value.projectNode[i], value.projectNode[i].__className, null, options, {objectId: value.__objectId, name: 'projectNode[' + i + ']'})%>	
+				<% 
+				}
+				%>
+			</ul>
+			<ul class="fist_menu" style="margin:0 0 0 5px; position:relative; top:-5px;">
+			<li>
+				<a href="#" onclick="<%=methods.addProject.caller()%>"><span class="icon-plus"></span><b>새프로젝트 만들기</b></a>
+				<div class="clear"></div>
+			</li>
+			</ul>
+		<% }else{ %>
+				<ul class="project_items">
+				<% 
+				
+				for (var i=0; i<value.projectNode.length; i++){
+			
+					if(typeof options == 'undefined') 
+						options = objectMetadata;
+					
+					options['index'] = i;
+					options['htmlTag'] =  'li';
+						
+				%>		
+					
+					<%=mw3.locateObject(value.projectNode[i], value.projectNode[i].__className, null, options, {objectId: value.__objectId, name: 'projectNode[' + i + ']'})%>	
+				<% 
+				}
+				%>
+			</ul>
+		<% } %>
+	<% } %>
+<%
+	}
+%>
