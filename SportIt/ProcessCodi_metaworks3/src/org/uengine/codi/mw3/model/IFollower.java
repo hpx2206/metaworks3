@@ -13,12 +13,13 @@ import org.uengine.kernel.Role;
 
 public interface IFollower extends IDAO {
 
-	public final static String WHERE_FOLLOWER = "followers";
+	public final static String WHERE_FOLLOWER 	= "followers";
 	
-	public final static String TYPE_INSTANCE = "instance";
-	public final static String TYPE_TOPIC 	 = "topic";
-	public final static String TYPE_ROLE 	 = "role";
-	public final static String TYPE_DEPT 	 = "dept";
+	public final static String TYPE_INSTANCE 	= "instance";
+	public final static String TYPE_TOPIC 	 	= "topic";
+	public final static String TYPE_COMPETITION = "compete";
+	public final static String TYPE_ROLE 	 	= "role";
+	public final static String TYPE_DEPT 	 	= "dept";
 	
 	//, TYPE_ROLE, TYPE_DEPT
 	@Hidden
