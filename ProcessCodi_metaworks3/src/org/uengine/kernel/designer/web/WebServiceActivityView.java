@@ -7,6 +7,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
+import org.uengine.contexts.MappingContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigner;
 import org.uengine.kernel.Pool;
@@ -44,6 +45,30 @@ public class WebServiceActivityView extends ActivityView {
 			activity.setMetaworksContext(new MetaworksContext());
 			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
+		
+		if( activity instanceof RestWebServiceActivity){
+			WebServiceDefinition webServiceDefinition = pool.getPoolResolutionContext().getWebServiceConnector().getWebServiceDefinition();
+			webServiceDefinition.setParentActivity(activity);
+			if( connectedService != null ){
+				ArrayList<ResourceProperty> rpList = webServiceDefinition.getResourceList();
+				for( ResourceProperty resourceProperty : rpList){
+					ArrayList<MethodProperty> mpList = resourceProperty.getMethods();
+					for( MethodProperty methodProperty : mpList){
+						if( connectedService.equals(methodProperty.getId())){
+							webServiceDefinition.setTargetMethod(methodProperty);
+							((RestWebServiceActivity) activity).setMethod(methodProperty);
+							if( methodProperty.getResponseClass() != null && !"void".equalsIgnoreCase(methodProperty.getResponseClass())){
+								// drawInit 전에 이루어 져야한다.
+								if( ((RestWebServiceActivity) activity).getMappingContextOut() == null ){
+									((RestWebServiceActivity) activity).setMappingContextOut(new MappingContext());
+								}
+							}
+						}
+					}
+				}
+			}
+			((RestWebServiceActivity) activity).setWebServiceDefinition(webServiceDefinition);
+		}
 		if( activity != null ){
 			Class paramClass = activity.getClass();
 			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
@@ -55,24 +80,7 @@ public class WebServiceActivityView extends ActivityView {
 			
 		}
 		activity.setActivityView(this);
-		if( activity instanceof RestWebServiceActivity){
-			
-			WebServiceDefinition webServiceDefinition = pool.getPoolResolutionContext().getWebServiceConnector().getWebServiceDefinition();
-			webServiceDefinition.setParentActivity(activity);
-			if( connectedService != null ){
-				ArrayList<ResourceProperty> rpList = webServiceDefinition.getResourceList();
-				for( ResourceProperty resourceProperty : rpList){
-					ArrayList<MethodProperty> mpList = resourceProperty.getMethods();
-					for( MethodProperty methodProperty : mpList){
-						if( connectedService.equals(methodProperty.getId())){
-							webServiceDefinition.setTargetMethod(methodProperty);
-							((RestWebServiceActivity) activity).setMethod(methodProperty);
-						}
-					}
-				}
-			}
-			((RestWebServiceActivity) activity).setWebServiceDefinition(webServiceDefinition);
-		}
+		
 		activityWindow.setId(this.getId());	// 꼭 필요함
 		activityWindow.getActivityPanel().setActivity(activity);
 		

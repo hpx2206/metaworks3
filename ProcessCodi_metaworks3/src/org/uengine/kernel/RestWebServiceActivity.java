@@ -182,7 +182,7 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 			if( entryObject instanceof Form ){
 				response = invocationBuilder.post(Entity.entity(entryObject,MediaType.APPLICATION_FORM_URLENCODED ));
 			}else if( entryObject instanceof JSONObject ){
-				response = invocationBuilder.post(Entity.entity(entryObject,MediaType.APPLICATION_JSON ));
+				response = invocationBuilder.post(Entity.entity(entryObject.toString(),MediaType.APPLICATION_JSON ));
 			}
 		}else if( METHOD_TYPE_PUT.equalsIgnoreCase(methodCallType) ){
 			if( entryObject instanceof JSONObject ){
@@ -193,8 +193,8 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		
 		String responseClass = method.getResponseClass();
 		if( responseClass != null && responseClass.equalsIgnoreCase(String.class.getSimpleName())){
-//			System.out.println(response.readEntity(String.class));
 			this.responseDataMapping(instance, response.readEntity(String.class));
+//			System.out.println(response.readEntity(String.class));
 		}
 		
 		fireComplete(instance);
