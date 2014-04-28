@@ -221,25 +221,29 @@ public class ResourceContextMenu extends CloudMenu {
 		Object clipboard = session.getClipboard();
 		ResourceNode node = (ResourceNode)clipboard;
 		String codebase = GlobalContext.getPropertyString("codebase");	
-		
-//		String osName = System.getProperty("os.name");
-//		if(osName.toLowerCase().startsWith("window")){}
 		String projectName = node.getName();
 		String ProjectId   = node.getId();
-		
 		String cmd[] = new String[3];
-		cmd[0] = "cmd.exe";
-		cmd[1] = "/C";
+		
+		String osName = System.getProperty("os.name");
+		if(osName.toLowerCase().startsWith("window")){
+			cmd[0] = "cmd.exe";
+			cmd[1] = "/C";
+		}else{
+			cmd[0] = "/bin/sh";
+			cmd[1] = "-c";
+		}
 		cmd[2] = "mvn install" +
-				" -Dprojectdir="+codebase+File.separatorChar+ProjectId;
-
+				" -Dprojectdir="+codebase+File.separatorChar+ProjectId+
+				" -Dbundle.name="+projectName;
+		
 		executeCommand(cmd);
 
 		String resultFilePath = codebase + File.separatorChar + ProjectId + File.separatorChar
-				+ "maven" + File.separatorChar + "Vaadin7OSGi.crm.jar";
+				+ "maven" + File.separatorChar + projectName+".jar";
 		
 		S3PutObject s3putObject = new S3PutObject();
-		s3putObject.putObject(resultFilePath, false);
+		s3putObject.putObject(resultFilePath,projectName,false);
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
