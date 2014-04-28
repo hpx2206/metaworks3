@@ -788,6 +788,9 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 								throw e;
 							}
 						}
+					}else{
+						if(activityAsMessageListener.onMessage(instance, payload))
+							ack = true;
 					}
 				}
 			}
@@ -799,9 +802,8 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 		/*if(!ack){
 			fireMessage(message, instance, payload, payloadIsXML);
 		}*/
-		
-		if(!ack)
-			throw new UEngineException("There is no subscribed listener for the message", "Try again or check your message");
+//		if(!ack)
+//			throw new UEngineException("There is no subscribed listener for the message", "Try again or check your message");
 			
 		//review: if there is a synchronized receiver, it should return a value.
 		return null;

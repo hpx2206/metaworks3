@@ -27,6 +27,7 @@ import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
+import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.MappingContext;
 import org.uengine.contexts.TextContext;
 import org.uengine.persistence.dao.DAOFactory;

@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.marketplace;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -11,17 +12,13 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalPanel;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.knowledge.FilepathInfo;
-import org.uengine.codi.mw3.knowledge.IProjectNode;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
@@ -30,17 +27,18 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.ProcessMap;
+import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.oce.AppServerManage;
 import org.uengine.codi.mw3.project.oce.KtProbProjectServers;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessSelectPanel;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.util.LocalFileSystem;
 
 public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
@@ -500,7 +498,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		this.getMetaworksContext().setWhen("edit");
 		
 		this.getCategories().setSelected(String.valueOf(this.getCategory().getCategoryId()));
-		this.getAppTypePanel().getAppType().setDisabled(true);
+//		this.getAppTypePanel().getAppType().setDisabled(true);
 		return new ModalPanel(this);
 	}
 
@@ -550,25 +548,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.getLogoFile().upload();
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			WfNode wfNode = new WfNode();
 			
-			if( APP_TYPE_PROCESS.equals(appType) ){
-				String defId = ((ProcessSelectPanel)this.getAppTypePanel().getAppTypeDetail()).getDefinitionId();
-				if( defId == null ){
-					throw new Exception("$App.NoProcess");
-				}
-				wfNode.setName(this.getAppName());
-				wfNode.setType(APP_TYPE_PROCESS);
-				wfNode.setParentId(session.getCompany().getComCode());
-				wfNode.setAuthorId(session.getUser().getUserId());		
-				wfNode.setCompanyId(session.getCompany().getComCode());
-				wfNode.createMe();
-				// defId 가 url 을 대신한다.
-				this.setUrl(defId);
-			}else{
-				wfNode.setId(this.getAppTypePanel().getProjectId());
-				wfNode.copyFrom(wfNode.databaseMe());
-			}
+			projectAnalysis(this.getAppTypePanel().getProjectId(), appType);
 			
 //			appProject.setName(this.getAppName());
 //			appProject.setProjectAlias(this.getSubDomain());
@@ -596,8 +577,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.setComName(session.getCompany().getComName());
 			this.setSubDomain(this.getSubDomain());
 //			this.setRunningVersion(Integer.parseInt(this.getReleaseVersion().getSelected()));
-			this.setProjectId(wfNode.getId());
-			this.setStatus(STATUS_APPROVED);
+			this.setProjectId(this.getAppTypePanel().getProjectId());
+			this.setStatus(STATUS_REQUEST);
 			this.setLogoFile(logoFile);
 			
 			createDatabaseMe();
@@ -605,24 +586,28 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 
 			
 			// 앱 등록일 경우 프로세스 발행
-//			String defId = "AppRegister.process";
-//			
-//			ProcessMap goProcess = new ProcessMap();
-//			goProcess.session = session;
-//			goProcess.processManager = processManager;
-//			goProcess.instanceView = instanceView;
-//			goProcess.setDefId(defId);
-//			
-//			// 프로세스 발행
-//			Long instId = Long.valueOf(goProcess.initializeProcess());
-//			
-//			// 프로세스 실행
-//			ResultPayload rp = new ResultPayload();
-//			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
-//			
-//			// 무조건 compleate
-//			processManager.executeProcessByWorkitem(instId.toString(), rp);
-//			processManager.applyChanges();
+			String defId = "app/applications.process";
+			
+			ProcessMap goProcess = new ProcessMap();
+			goProcess.session = session;
+			goProcess.processManager = processManager;
+			goProcess.instanceView = instanceView;
+			goProcess.setDefId(defId);
+			
+			// 프로세스 발행
+			Long instId = Long.valueOf(goProcess.initializeProcess());
+			
+			// 프로세스 실행
+			ResultPayload rp = new ResultPayload();
+			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
+			
+			RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, goProcess.getDefId(), session);
+			roleMappingPanel.putRoleMappings(processManager, instId.toString());
+			
+			// 무조건 compleate
+			processManager.executeProcessByWorkitem(instId.toString(), rp); 
+//			processManager.executeProcess(instId.toString());
+			processManager.applyChanges();
 			
 //			TopicMapping tm = new TopicMapping();
 //			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
@@ -634,15 +619,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 				
 		}else{
 			
-			if( APP_TYPE_PROCESS.equals(appType) ){
-				// defId 가 url 을 대신한다.
-				this.setUrl(((ProcessSelectPanel)this.getAppTypePanel().getAppTypeDetail()).getDefinitionId());
-			}else{
-				// projectId 가 변경될수 있다.
-				this.setProjectId(this.getAppTypePanel().getProjectId());
-				// TODO url setting
-				this.setUrl(null);
-			}
 			syncToDatabaseMe();
 			flushDatabaseMe();
 		}
@@ -760,18 +736,28 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //		this.setReleaseVersion(filepathInfo.findReleaseVersions(filepathInfo.getProjectId()));
 	}
 
+	public void projectAnalysis(String projectId, String appType) throws Exception{
+		WfNode wfNode = new WfNode();
+		wfNode.setId(projectId);
+		wfNode.copyFrom(wfNode.databaseMe());
+		if( App.APP_TYPE_PROCESS.equals(appType)){
+			// 프로젝트의 jar 파일의 위치를 찾는다. projectId / bundle / 프로젝트.jar
+			String jarBasePath = MetadataBundle.getProjectBasePath(projectId, "bundle");
+			String jarFileName = wfNode.getName() + ".jar";
+			File jarFile = new File(jarBasePath + File.separatorChar + jarFileName);
+			if( jarFile.exists() ){
+				// 프로젝트의 jar 파일을 앱의 jar로 옴기고... 해당 경로를 appName / root / extFileName 에 저장을 해 놓는다.
+				// AppMapping 의 openAppBrowser() 에서 활용됨
+				String appFilePath = MetadataBundle.getProjectBasePath(this.getAppName()) +  File.separatorChar  +this.getAppName() + ".jar" ;
+				LocalFileSystem fileUtil = new LocalFileSystem();
+				fileUtil.copyFile(jarFile.getPath(), appFilePath);
+			}
+		}
+		
+	}
+	
 	@Override
 	public void onLoad() throws Exception {
-		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext().getWhen())) {
-			
-			if(this.getLogoFile() == null){
-				this.setLogoFile(new MetaworksFile());
-			}
-			if(this.getLogoFile().getMetaworksContext() == null){
-				this.getLogoFile().setMetaworksContext(new MetaworksContext());
-			}
-			this.getLogoFile().getMetaworksContext().setWhen("image");
-		}
 	}
 	
 	@Override

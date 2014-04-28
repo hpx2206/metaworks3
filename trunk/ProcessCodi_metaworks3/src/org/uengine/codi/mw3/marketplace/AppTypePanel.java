@@ -74,47 +74,69 @@ public class AppTypePanel implements ContextAware{
 	public void load() throws Exception{
 		appType.add(App.APP_TYPE_PROJECT, App.APP_TYPE_PROJECT);
 		appType.add(App.APP_TYPE_PROCESS, App.APP_TYPE_PROCESS);
+//		appType.add(App.APP_TYPE_SERVICE, App.APP_TYPE_SERVICE);
 		if( selectedAppType == null ){
 			appType.setSelected(App.APP_TYPE_PROJECT);
+			setSelectedAppType(App.APP_TYPE_PROJECT);
 		}else{
 			appType.setSelected(selectedAppType);
 		}
 		this.makeAppChoiceChild();
 	}
 	
-	@ServiceMethod( callByContent=true, eventBinding=EventContext.EVENT_CHANGE, bindingFor = "appType")
+//	@ServiceMethod( callByContent=true, eventBinding=EventContext.EVENT_CHANGE, bindingFor = "appType")
 	public void makeAppChoiceChild() throws Exception{
-		String selectedType = appType.getSelected();
-		this.setSelectedAppType(selectedType);
-		if( App.APP_TYPE_PROJECT.equals(selectedType)){
-			appTypeDetail = new SelectBox();
-			
-			IProjectNode projectList = ProjectNode.load(session);	
-			int j = 0;
-			if(projectList.size() > 0) {
-				while(projectList.next()){
-					String projectId = projectList.getId();
-					String projectName = projectList.getName();
-					((SelectBox)appTypeDetail).add(projectName, projectId);
-				}
-			}
-		}else if( App.APP_TYPE_PROCESS.equals(selectedType)){
-			appTypeDetail = new ProcessSelectPanel();
-			((ProcessSelectPanel)appTypeDetail).setId(this.getClass().getSimpleName());
-			if( this.getAppTypeDetail() != null ){
-				((ProcessSelectPanel)appTypeDetail).setDefinitionId(this.getSelectedAppDetail());
+		
+		appTypeDetail = new SelectBox();
+		
+		IProjectNode projectList = ProjectNode.load(session);	
+		int j = 0;
+		if(projectList.size() > 0) {
+			while(projectList.next()){
+				String projectId = projectList.getId();
+				String projectName = projectList.getName();
+				((SelectBox)appTypeDetail).add(projectName, projectId);
 			}
 		}
+		if( projectId == null ){
+			((SelectBox)appTypeDetail).select(0);
+			this.setProjectId(((SelectBox)appTypeDetail).getSelected());
+		}else{
+			((SelectBox)appTypeDetail).setSelected(projectId);
+		}
+		
+//		String selectedType = appType.getSelected();
+//		this.setSelectedAppType(selectedType);
+//		if( App.APP_TYPE_PROJECT.equals(selectedType)){
+//			appTypeDetail = new SelectBox();
+//			
+//			IProjectNode projectList = ProjectNode.load(session);	
+//			int j = 0;
+//			if(projectList.size() > 0) {
+//				while(projectList.next()){
+//					String projectId = projectList.getId();
+//					String projectName = projectList.getName();
+//					((SelectBox)appTypeDetail).add(projectName, projectId);
+//				}
+//			}
+//		}else if( App.APP_TYPE_PROCESS.equals(selectedType)){
+//			appTypeDetail = new ProcessSelectPanel();
+//			((ProcessSelectPanel)appTypeDetail).setId(this.getClass().getSimpleName());
+//			if( this.getAppTypeDetail() != null ){
+//				((ProcessSelectPanel)appTypeDetail).setDefinitionId(this.getSelectedAppDetail());
+//			}
+//		}
 		
 	}
 	
 	@ServiceMethod( callByContent=true, eventBinding=EventContext.EVENT_CHANGE, bindingFor = "appTypeDetail")
 	public void appTypeDetailSelect() throws Exception{
-		String selectedType = appType.getSelected();
-		if( App.APP_TYPE_PROJECT.equals(selectedType)){
 			this.setProjectId(((SelectBox)appTypeDetail).getSelected());
-		}else if( App.APP_TYPE_PROCESS.equals(selectedType)){
-			
-		}
+//		String selectedType = appType.getSelected();
+//		if( App.APP_TYPE_PROJECT.equals(selectedType)){
+//			this.setProjectId(((SelectBox)appTypeDetail).getSelected());
+//		}else if( App.APP_TYPE_PROCESS.equals(selectedType)){
+//			
+//		}
 	}
 }

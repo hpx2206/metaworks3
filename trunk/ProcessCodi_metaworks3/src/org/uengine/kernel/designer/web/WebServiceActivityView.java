@@ -1,5 +1,7 @@
 package org.uengine.kernel.designer.web;
 
+import java.util.ArrayList;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
@@ -9,6 +11,8 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigner;
 import org.uengine.kernel.Pool;
 import org.uengine.kernel.RestWebServiceActivity;
+import org.uengine.webservice.MethodProperty;
+import org.uengine.webservice.ResourceProperty;
 import org.uengine.webservice.WebServiceDefinition;
 
 public class WebServiceActivityView extends ActivityView {
@@ -20,7 +24,15 @@ public class WebServiceActivityView extends ActivityView {
 		public void setPool(Pool pool) {
 			this.pool = pool;
 		}
-
+		
+	String connectedService;
+		public String getConnectedService() {
+			return connectedService;
+		}
+		public void setConnectedService(String connectedService) {
+			this.connectedService = connectedService;
+		}
+		
 	@Override
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
@@ -44,12 +56,21 @@ public class WebServiceActivityView extends ActivityView {
 		}
 		activity.setActivityView(this);
 		if( activity instanceof RestWebServiceActivity){
-			if( pool == null ){
-				throw new Exception("웹서비스 엑티비티는 풀 안쪽에서 생성이 되어야 합니다."); 
-			}
 			
 			WebServiceDefinition webServiceDefinition = pool.getPoolResolutionContext().getWebServiceConnector().getWebServiceDefinition();
 			webServiceDefinition.setParentActivity(activity);
+			if( connectedService != null ){
+				ArrayList<ResourceProperty> rpList = webServiceDefinition.getResourceList();
+				for( ResourceProperty resourceProperty : rpList){
+					ArrayList<MethodProperty> mpList = resourceProperty.getMethods();
+					for( MethodProperty methodProperty : mpList){
+						if( connectedService.equals(methodProperty.getId())){
+							webServiceDefinition.setTargetMethod(methodProperty);
+							((RestWebServiceActivity) activity).setMethod(methodProperty);
+						}
+					}
+				}
+			}
 			((RestWebServiceActivity) activity).setWebServiceDefinition(webServiceDefinition);
 		}
 		activityWindow.setId(this.getId());	// 꼭 필요함

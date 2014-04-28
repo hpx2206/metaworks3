@@ -44,11 +44,11 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 		$('#' + this.object.id).data('pool', contentValue);
 		// 동적으로 엑티비티를 그려주는 메서드 호출이지만, 스펙에서 제외시킴
 //		if( confirm('reload web service with activity?') ){
-//			var poolview = mw3.getAutowiredObject('org.uengine.kernel.designer.web.PoolView@'+this.object.id);
-//			if( poolview ){
-//				poolview.pool = contentValue;
-//				poolview.drawActivitysOnDesigner();
-//			}
+			var poolview = mw3.getAutowiredObject('org.uengine.kernel.designer.web.PoolView@'+this.object.id);
+			if( poolview ){
+				poolview.pool = contentValue;
+				poolview.drawActivitysOnDesigner();
+			}
 //		}
 	}else if(contentValue && contentValue.__className=="org.uengine.kernel.graph.PoolTransition"){
 		canvas.drawLabel(element, contentValue.transitionName);

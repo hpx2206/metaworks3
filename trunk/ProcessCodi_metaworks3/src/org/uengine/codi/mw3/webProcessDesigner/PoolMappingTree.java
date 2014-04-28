@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.util.Iterator;
+
+import net.sf.json.JSONObject;
+
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -57,15 +61,31 @@ public class PoolMappingTree extends MappingTree {
 					rootnode.setName("["+changeRootNodeName+"]");
 					
 				}
-				
-				mpNode.setId(mp.getId() + "Out");
-				mpNode.setName(nodeName);
-				mpNode.setLoaded(true);
-				mpNode.setExpanded(true);
-				mpNode.setType(TreeNode.TYPE_FILE_TEXT);
-				mpNode.setAlign(TreeNode.ALIGN_LEFT);
-				
-				rootnode.add(mpNode);
+				if( mp.getModelProperty() != null && !"".equals(mp.getModelProperty())){
+					JSONObject modelsApi = JSONObject.fromObject(mp.getModelProperty());
+					Iterator iterator = modelsApi.keys();
+					while(iterator.hasNext()){
+						String propName = (String) iterator.next();
+						mpNode = new TreeNode();
+						mpNode.setId(propName);
+						mpNode.setName(propName);
+						mpNode.setLoaded(true);
+						mpNode.setExpanded(true);
+						mpNode.setType(TreeNode.TYPE_FILE_TEXT);
+						mpNode.setAlign(TreeNode.ALIGN_LEFT);
+						
+						rootnode.add(mpNode);
+					}
+				}else{
+					mpNode.setId(mp.getId() + "Out");
+					mpNode.setName(nodeName);
+					mpNode.setLoaded(true);
+					mpNode.setExpanded(true);
+					mpNode.setType(TreeNode.TYPE_FILE_TEXT);
+					mpNode.setAlign(TreeNode.ALIGN_LEFT);
+					
+					rootnode.add(mpNode);
+				}
 			}
 		}else{
 			
@@ -91,15 +111,33 @@ public class PoolMappingTree extends MappingTree {
 				if( mp.getRequest() != null ){
 					ParameterProperty[] pp = mp.getRequest();
 					for(int i=0; i < pp.length; i++){
-						TreeNode childNode = new TreeNode();
-						childNode.setId(pp[i].getName());
-						childNode.setName(pp[i].getName() );
-						childNode.setLoaded(true);
-						childNode.setExpanded(true);
-						childNode.setType(TreeNode.TYPE_FILE_TEXT);
-						childNode.setAlign(TreeNode.ALIGN_RIGHT);
-						
-						mpNode.add(childNode);
+						if( pp[i].getDataType().startsWith("org") ){
+							if( mp.getModelProperty() != null && !"".equals(mp.getModelProperty())){
+								JSONObject modelsApi = JSONObject.fromObject(mp.getModelProperty());
+								Iterator iterator = modelsApi.keys();
+								while(iterator.hasNext()){
+									String propName = (String) iterator.next();
+									TreeNode propNode = new TreeNode();
+									propNode.setId(propName);
+									propNode.setName(propName);
+									propNode.setLoaded(true);
+									propNode.setExpanded(true);
+									propNode.setType(TreeNode.TYPE_FILE_TEXT);
+									propNode.setAlign(TreeNode.ALIGN_RIGHT);
+									
+									mpNode.add(propNode);
+								}
+							}
+						}else{
+							TreeNode childNode = new TreeNode();
+							childNode.setId(pp[i].getName());
+							childNode.setName(pp[i].getName() );
+							childNode.setLoaded(true);
+							childNode.setExpanded(true);
+							childNode.setType(TreeNode.TYPE_FILE_TEXT);
+							childNode.setAlign(TreeNode.ALIGN_RIGHT);
+							mpNode.add(childNode);
+						}
 					}
 				}
 				

@@ -32,11 +32,12 @@ import org.uengine.codi.mw3.model.ICompany;
 		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
-      values={"categories,appTypePanel,appName,subDomain,simpleOverview,fullOverview,logoFile"})
+      values={"categories,appTypePanel,appName,url,subDomain,simpleOverview,fullOverview,logoFile"})
 public interface IApp extends IDAO{
 	
 	public static final String APP_TYPE_PROJECT = "project";
 	public static final String APP_TYPE_PROCESS = "processApp";
+	public static final String APP_TYPE_SERVICE = "service";
 	
 	@Id
 	public int getAppId();

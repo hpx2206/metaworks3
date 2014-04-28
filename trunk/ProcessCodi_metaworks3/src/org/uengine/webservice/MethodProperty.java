@@ -3,6 +3,7 @@ package org.uengine.webservice;
 import java.io.Serializable;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.metaworks.annotation.Hidden;
 
@@ -82,7 +83,13 @@ public class MethodProperty implements Serializable {
 		public void setSummary(String summary) {
 			this.summary = summary;
 		}	
-		
+	String modelProperty;	
+		public String getModelProperty() {
+			return modelProperty;
+		}
+		public void setModelProperty(String modelProperty) {
+			this.modelProperty = modelProperty;
+		}
 	@XStreamOmitField
 	String basePath;
 	@Hidden
