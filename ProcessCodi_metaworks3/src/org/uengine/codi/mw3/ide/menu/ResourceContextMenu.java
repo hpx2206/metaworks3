@@ -1,6 +1,10 @@
 package org.uengine.codi.mw3.ide.menu;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
@@ -11,23 +15,19 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
-import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
+import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.S3PutObject;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
-import org.uengine.codi.mw3.knowledge.ProjectServer;
-import org.uengine.codi.mw3.knowledge.ProjectServers;
-import org.uengine.codi.mw3.marketplace.App;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
@@ -198,53 +198,55 @@ public class ResourceContextMenu extends CloudMenu {
 		return null;
 		//return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
 	}
+	public void executeCommand(String cmd[]) throws IOException, InterruptedException{
 	
+		Runtime runTime = Runtime.getRuntime();
+		Process process = runTime.exec(cmd);
+		
+		InputStream is = process.getInputStream();
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+		
+		String line;
+		while((line = br.readLine()) != null){
+			System.out.println(line);
+		}
+		int execTime = process.waitFor();
+		System.out.println("exe time: " + execTime);
+	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] deployee() throws Exception {
 		
-		String title = "";
-		String message = "";
-			
 		Object clipboard = session.getClipboard();
-		if(clipboard instanceof ResourceNode){
-			ResourceNode node = (ResourceNode)clipboard;			
-			
-			
-			ProjectNode projectNode = new ProjectNode();
-			projectNode.setName(node.getProjectId());
-			projectNode.copyFrom(projectNode.findByNameForProject());
-			
-			// TODO : 작업해야함
-			
-			//ProjectInfo projectInfo = new ProjectInfo(projectNode.getId());
-			//projectInfo.load();
-			
-			ProjectServers devServers = new ProjectServers(projectNode.getId(), "dev"); //prod
-			devServers.processManager = processManager;
-			
-			devServers.load();
-			
-			Popup popup = new Popup(300, 300);
-			popup.setName("배포중");
-			popup.setPanel("배포중.........");
-			
-			for(ProjectServer projectServer : devServers.getServerList()) {
-				
-				if(projectServer.getType().indexOf("WAS") > -1) {
-					projectServer.projectInfo = projectInfo;
-					projectServer.session = session;
-					projectServer.deploy(true);					
-				}
-			}
-		}	
+		ResourceNode node = (ResourceNode)clipboard;
+		String codebase = GlobalContext.getPropertyString("codebase");	
+		
+//		String osName = System.getProperty("os.name");
+//		if(osName.toLowerCase().startsWith("window")){}
+		String projectName = node.getName();
+		String ProjectId   = node.getId();
+		
+		String cmd[] = new String[3];
+		cmd[0] = "cmd.exe";
+		cmd[1] = "/C";
+		cmd[2] = "mvn install" +
+				" -Dprojectdir="+codebase+File.separatorChar+ProjectId;
+
+		executeCommand(cmd);
+
+		String resultFilePath = codebase + File.separatorChar + ProjectId + File.separatorChar
+				+ "maven" + File.separatorChar + "Vaadin7OSGi.crm.jar";
+		
+		S3PutObject s3putObject = new S3PutObject();
+		s3putObject.putObject(resultFilePath);
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		modalWindow.setWidth(300);
 		modalWindow.setHeight(150);
 		modalWindow.setTitle("$deployee.complete.title");
-		modalWindow.setPanel("배포가 완료 되었습니다.");//$deployee.complete.message		
+		modalWindow.setPanel("배포가 완료 되었습니다.");		
 		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
 		
 		return new Object[]{modalWindow, new Remover(this)};

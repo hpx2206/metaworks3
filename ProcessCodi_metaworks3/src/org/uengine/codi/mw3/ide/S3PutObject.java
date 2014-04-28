@@ -3,30 +3,30 @@ package org.uengine.codi.mw3.ide;
 import java.io.File;
 import java.io.IOException;
 
+import org.uengine.kernel.GlobalContext;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 public class S3PutObject {
 
-	String bucketName     = "oce-arvue";
+	String bucketName = Boolean.valueOf(GlobalContext.getPropertyString("app.repo.prod", "0"))?"app-repo-prod":"app-repo-dev";
 	String accessKey     = "AKIAIMSA24T5GYWMH5DQ";
 	String secretKey     = "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";
-	String keyName        = "test.txt";
-	String uploadFileName = "D://test.txt";
+	String keyName        = "Vaadin7OSGi.crm.jar";
 			
-	public void putObject() throws IOException{
+	public void putObject(String uploadFilePath) throws IOException{
 		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         
 		AmazonS3 s3client = new AmazonS3Client(awsCredentials);
         try {
             System.out.println("Uploading a new object to S3 from a file\n");
-            File file = new File(uploadFileName);
+            File file = new File(uploadFilePath);
             s3client.putObject(new PutObjectRequest(bucketName, keyName, file));
 
          } catch (AmazonServiceException ase) {
