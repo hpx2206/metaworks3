@@ -59,7 +59,8 @@ public class FlowActivity extends ComplexActivity {
 			child = (Activity) it.next();
 			if( child.getOutgoingTransitions().size() == 0 && child.getIncomingTransitions().size() == 0){
 				// null 로 리턴될 경우 super 로직을 태움
-				return null;
+				continue;
+//				return null;
 			}else	if (child.getIncomingTransitions().size() == 0) {
 				if( child instanceof EventActivity && child instanceof MessageListener ){
 					continue;
