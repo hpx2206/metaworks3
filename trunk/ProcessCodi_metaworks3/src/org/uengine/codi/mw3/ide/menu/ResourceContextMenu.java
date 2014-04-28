@@ -243,7 +243,7 @@ public class ResourceContextMenu extends CloudMenu {
 				+ "maven" + File.separatorChar + projectName+".jar";
 		
 		S3PutObject s3putObject = new S3PutObject();
-		s3putObject.putObject(resultFilePath,projectName,false);
+		s3putObject.putObject(resultFilePath,projectName+".jar",false);
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
