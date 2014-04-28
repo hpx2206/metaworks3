@@ -61,6 +61,13 @@ public class DefaultCompanyPoolResolutionContext extends PoolResolutionContext i
 		public void setDisplayName(String displayName) {
 			this.displayName = displayName;
 		}
+	String webserviceUrl;
+		public String getWebserviceUrl() {
+			return webserviceUrl;
+		}
+		public void setWebserviceUrl(String webserviceUrl) {
+			this.webserviceUrl = webserviceUrl;
+		}
 
 	WebServiceConnector webServiceConnector;
 		public WebServiceConnector getWebServiceConnector() {
@@ -93,6 +100,7 @@ public class DefaultCompanyPoolResolutionContext extends PoolResolutionContext i
 	@ServiceMethod(callByContent=true)
 	public void refresh() throws Exception{
 		webServiceConnector.setLinkedId(this.getLinkedId());
+		webServiceConnector.setWebserviceUrl(this.getWebserviceUrl());
 		webServiceConnector.load();
 		
 		this.setDisplayName(webServiceConnector.getWebServiceName());

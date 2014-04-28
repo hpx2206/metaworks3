@@ -122,25 +122,75 @@ org_uengine_kernel_designer_web_WebServiceActivityView.prototype = {
                         object['propertiesWindow'] = propertiesWindow;
                         object.id = $(this).attr('id');
 						
-						// 기존 ActivityView 와 다른 점. 자신의 상위에 있는 Pool을 찾아서 들고간다.
-						var poolId = '';
-						var thisEle = this;
-						var poolElement;
-						$(canvas.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
-			                if(element.shape instanceof OG.shape.HorizontalPoolShape){
-			                    var i, elements = canvas.getElementsByBBox(element.shape.geom.getBoundary());
-			                    
-			                    for(i=0;i<elements.length;i++){
-			                        if(elements[i] == thisEle)
-			                            poolElement = element;
-			                    }
+						// 기존 ActivityView 와 다른 점. 자신의 상위에 있는 Pool을 찾아서 들고간다. ( pool 에서 가져오는 스펙은 변경됨 )
+//						var poolId = '';
+//						var thisEle = this;
+//						var poolElement;
+//						$(canvas.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
+//			                if(element.shape instanceof OG.shape.HorizontalPoolShape){
+//			                    var i, elements = canvas.getElementsByBBox(element.shape.geom.getBoundary());
+//			                    
+//			                    for(i=0;i<elements.length;i++){
+//			                        if(elements[i] == thisEle)
+//			                            poolElement = element;
+//			                    }
+//			                }
+//			            });
+//						if( poolElement ){
+//							var poolObject = $('#'+$(poolElement).attr('id')).data('pool');
+//							object.pool = poolObject;
+//						}
+
+						// 기존 ActivityView 와 다른 점. 자신이 연결된 RestMessageEvent 를 찾는다.
+						var getShapeFromTerminal = function (terminal) {
+			                var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
+			                if (terminalId) {
+			                    return canvas.getRenderer().getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
+			                } else {
+			                    return null;
 			                }
-			            });
-						if( poolElement ){
-							var poolObject = $('#'+$(poolElement).attr('id')).data('pool');
-							object.pool = poolObject;
+			            };
+						var toEdge = $(this).attr('_toedge');
+						// toEdge 가 여러개 일수 있다.
+						var toEdgeRef = toEdge.split(",");
+						var toElement = null;
+						if( toEdgeRef && toEdgeRef.length > 1 ){
+							for(var i=0; i < toEdgeRef.length; i++ ){
+								var toTeminal = $('#'+toEdgeRef[i]).attr('_to');
+		                        var toElementRef = getShapeFromTerminal(toTeminal);
+								var acts = $(toElementRef).data('activity');
+								if( acts && acts.__className == 'org.uengine.kernel.ReceiveRestMessageEventActivity' ){
+									toElement = toElementRef;
+								}
+							}
+						}else{
+							var toTeminal = $('#'+toEdge).attr('_to');
+							toElement = getShapeFromTerminal(toTeminal);
 						}
-                        object.showProperties();
+						var poolId = '';
+                        var poolElement;
+                        $(canvas.getRootElement()).find("[_shape=GROUP]").each(function (index, element) {
+                            if(element.shape instanceof OG.shape.HorizontalPoolShape){
+                                var i, elements = canvas.getElementsByBBox(element.shape.geom.getBoundary());
+                                
+                                for(i=0;i<elements.length;i++){
+                                    if(elements[i] == toElement)
+                                        poolElement = element;
+                                }
+                            }
+                        });
+						console.log(poolElement);
+                        if( poolElement ){
+                            var poolObject = $('#'+$(poolElement).attr('id')).data('pool');
+                            object.pool = poolObject;
+							var receiveRestMessageEventActivity = $(toElement).data('activity');
+							if( receiveRestMessageEventActivity ){
+								object.connectedService = receiveRestMessageEventActivity.name.text
+							}
+	                        object.showProperties();
+                        }else{
+							
+						}
                         
                     }
                 });

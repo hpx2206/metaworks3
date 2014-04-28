@@ -17,6 +17,9 @@ public interface WebServiceConnector {
 	public String getWebServiceName();
 	public void setWebServiceName(String webServiceName);
 	
+	public String getWebserviceUrl();
+	public void setWebserviceUrl(String webserviceUrl);
+	
 	public WebServiceDefinition getWebServiceDefinition();
 	public void setWebServiceDefinition(WebServiceDefinition webServiceDefinition);
 	

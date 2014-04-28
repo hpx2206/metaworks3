@@ -63,7 +63,7 @@ org_uengine_kernel_designer_web_DynamicDrawGeom.prototype = {
 					var activityView = activity.activityView;
 					
 					if( i != 0 ){
-						firstGeomX = firstGeomX*1 + activityView.width*1 + 30 // 30을 더해주는 이유는 간격
+						firstGeomX = firstGeomX*1 + activityView.width*1 + 50 // 50을 더해주는 이유는 간격
 					}
 					// x, y 좌표값 셋팅
 					activityView.x = firstGeomX;

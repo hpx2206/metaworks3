@@ -13,6 +13,7 @@ public abstract class PoolResolutionContext implements java.io.Serializable {
 	}
 	
 	abstract public String getLinkedId();
+	abstract public String getWebserviceUrl();
 	abstract public String getDisplayName();
 	
 	WebServiceConnector webServiceConnector;

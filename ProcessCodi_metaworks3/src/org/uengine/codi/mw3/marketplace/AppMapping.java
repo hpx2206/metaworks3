@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.marketplace;
 
+import java.io.File;
 import java.util.Calendar;
 
 import org.metaworks.EventContext;
@@ -11,7 +12,9 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.view.IFrameApplication;
@@ -140,7 +143,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	}
 	
 	public IAppMapping findMyApps(int limitCount) throws Exception {
-		StringBuffer sql = new StringBuffer();
+		StringBuffer sql = new StringBuffer(); 
 		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, appmapping.url, appmapping.appType, bpm_knol.name projectName, item.* ")
 		   .append(" from appmapping, bpm_knol,  ")
 		   .append(" 	(select app.appId, app.logoFileName, app.logoContent, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
@@ -252,6 +255,18 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 			application = new IFrameApplication();
 			((IFrameApplication)application).setContent(iframe);
 		}else if( App.APP_TYPE_PROCESS.equals(appType)){
+			// jar 파일을 읽어들인다. // App 의 projectAnalysis() 메서드에서 정의된 파일 
+			String appFilePath = MetadataBundle.getProjectBasePath(this.getAppName()) +  File.separatorChar  +this.getAppName() + ".jar" ;
+			File appJarFile = new File(appFilePath);
+			if( appJarFile.exists() ){
+				// 해당 jar 파일을 classPath 에 등록함
+				CodiClassLoader prerCl = (CodiClassLoader)Thread.currentThread().getContextClassLoader();
+				prerCl.addSourcePath(appJarFile);
+				Thread.currentThread().setContextClassLoader(prerCl);
+			}
+			if( this.getUrl() == null || "".equals(this.getUrl())){
+				throw new Exception("프로세스를 찾을수 없습니다.");
+			}
 			application = new ProcessApp(session, this.getAppName(), this.getUrl() );
 		}
 		

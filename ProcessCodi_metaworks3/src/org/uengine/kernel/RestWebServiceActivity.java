@@ -3,6 +3,7 @@ package org.uengine.kernel;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -35,6 +36,7 @@ import org.uengine.webservice.WebServiceDefinition;
 public class RestWebServiceActivity extends DefaultActivity implements IDrawDesigner{
 	
 	public static final String METHOD_TYPE_GET = "GET";
+	public static final String METHOD_TYPE_PUT = "PUT";
 	public static final String METHOD_TYPE_POST = "POST";
 	public static final String METHOD_TYPE_DELETE = "DELETE";
 	
@@ -137,7 +139,17 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 					}else{
 						((Form)entryObject).param(pp.getName(), "");
 					}
+				}else if( "body".equals(paramType) ){
+					String modelStr = method.getModelProperty();
+					JSONObject model = JSONObject.fromObject(modelStr);
+					entryObject = new JSONObject();
+					Iterator iterator = model.keys();
+					while(iterator.hasNext()){
+						String propName = (String) iterator.next();
+						((JSONObject)entryObject).put(propName, dataMap.get(propName));
+					}
 				}
+				
 			}
 			
 		}
@@ -172,7 +184,12 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 			}else if( entryObject instanceof JSONObject ){
 				response = invocationBuilder.post(Entity.entity(entryObject,MediaType.APPLICATION_JSON ));
 			}
+		}else if( METHOD_TYPE_PUT.equalsIgnoreCase(methodCallType) ){
+			if( entryObject instanceof JSONObject ){
+				response = invocationBuilder.put(Entity.entity(entryObject.toString() ,MediaType.APPLICATION_JSON ));
+			}
 		}
+		
 		
 		String responseClass = method.getResponseClass();
 		if( responseClass != null && responseClass.equalsIgnoreCase(String.class.getSimpleName())){

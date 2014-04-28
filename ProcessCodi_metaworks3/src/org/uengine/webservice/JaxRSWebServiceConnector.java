@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -23,7 +25,10 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.metadata.MetadataBundle;
 import org.uengine.codi.mw3.marketplace.AppMapping;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.ReceiveRestMessageEventActivity;
 import org.uengine.kernel.RestWebServiceActivity;
 import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.designer.web.DynamicDrawGeom;
@@ -66,7 +71,15 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 		public void setWebServiceName(String webServiceName) {
 			this.webServiceName = webServiceName;
 		}
-
+		
+	String webserviceUrl;
+	@Hidden
+		public String getWebserviceUrl() {
+			return webserviceUrl;
+		}
+		public void setWebserviceUrl(String webserviceUrl) {
+			this.webserviceUrl = webserviceUrl;
+		}
 	transient WebServiceDefinition webServiceDefinition;
 	@Hidden
 		public WebServiceDefinition getWebServiceDefinition() {
@@ -99,26 +112,29 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 		while (itr.hasNext()) {
 			String key = (String)itr.next();
 			ArrayList<ResourceProperty> rpList = map.get(key);
-			RestWebServiceActivity activity = new RestWebServiceActivity();
+			ReceiveRestMessageEventActivity activity = new ReceiveRestMessageEventActivity();
+			activity.setUrl(key);
+			
+			// 이름을 셋팅하는 부분이기때문에 가장 상위에 하나만 가져와서 셋팅함
+			ResourceProperty resourceProperty = rpList.get(0);
+			MethodProperty methodProperty = resourceProperty.getMethods().get(0);
+			
+			TextContext name = new TextContext();
+			name.setText(methodProperty.getId());
+			activity.setName(methodProperty.getId());
+			activity.setDescription(name);
 			
 			ActivityView activityView = new ActivityView();
-			activityView.setWidth("100");	
-			activityView.setHeight("80");
+			activityView.setWidth("30");	
+			activityView.setHeight("30");
 			activityView.setClassType("Activity");
 			activityView.setShapeType("GEOM");
-			activityView.setShapeId("OG.shape.bpmn.A_WebServiceTask");
+			activityView.setShapeId("OG.shape.bpmn.E_Start_Message");
 			activityView.setActivityClass(activity.getClass().getName());
 			activityView.setActivity(activity);
 			
 			activity.setActivityView(activityView);
 			
-			ArrayList<MethodProperty> methodList 	= new ArrayList<MethodProperty>();
-			
-			for( ResourceProperty resourceProperty : rpList){
-				methodList.addAll(resourceProperty.getMethods());
-			}
-			// TODO 스펙이 변경됨
-//			activity.setMethods(methodList);
 			activityList.add(activity);
 		}
 		
@@ -147,6 +163,20 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 				makeWebServiceFile(url, webServiceFile);
 			}
 			// load webService
+			webServiceDefinition = webServiceDefinition.loadWithPath(fullPath);
+			for(ResourceProperty rp : webServiceDefinition.getResourceList()){
+				webServiceDefinition.injectionPathInfo(rp, webServiceDefinition.getBase());
+			}
+		}else if( this.getWebserviceUrl() != null && !"".equals(this.getWebserviceUrl())){
+			
+			// temp 경로에 temp 파일을 생성하고 끝낸다.
+			String webServiceFileName = "temp" + ".WADL";
+			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+			String fullPath = codebase + File.separatorChar+ "temp" + File.separatorChar + webServiceFileName;
+			File webServiceFile = new File(fullPath);
+			
+			makeWebServiceFile(this.getWebserviceUrl(), webServiceFile);
+			
 			webServiceDefinition = webServiceDefinition.loadWithPath(fullPath);
 			for(ResourceProperty rp : webServiceDefinition.getResourceList()){
 				webServiceDefinition.injectionPathInfo(rp, webServiceDefinition.getBase());
@@ -216,6 +246,22 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 		wsd.setName(webServiceName);
 		ArrayList<ResourceProperty> resourceArray = new ArrayList<ResourceProperty>();
 		
+		// 객체에 필요한 모델 정의
+		JSONArray modelsArray = JSONArray.fromObject(jsonObject.get("models"));
+		HashMap<String, JSONObject> modelMap = new HashMap<String, JSONObject>();
+		if( modelsArray != null ){
+			for(int i=0; i < modelsArray.size(); i++){
+				JSONObject modelsApi = JSONObject.fromObject(modelsArray.get(i));
+				Iterator iterator = modelsApi.keys();
+				while(iterator.hasNext()){
+					JSONObject modelDetail = (JSONObject)modelsApi.get(iterator.next());
+					String  id = modelDetail.getString("id");
+					JSONObject  properties = (JSONObject)modelDetail.get("properties");
+					modelMap.put(id, properties);
+				}
+			}
+		}
+		
 		JSONArray apiArray = JSONArray.fromObject(jsonObject.get("apis"));
 		if( apiArray != null ){
 			for(int i=0; i < apiArray.size(); i++){
@@ -242,7 +288,13 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 							method.setId(operationApi.getString("nickname"));
 						}
 						if( operationApi.containsKey("responseClass") ){
-							method.setResponseClass(operationApi.getString("responseClass"));
+							String key = operationApi.getString("responseClass");
+							method.setResponseClass(key);
+							if( modelMap.containsKey(key)){
+								// TODO 이렇게 추가하면 객체가 하나밖에 설정을 못한다.
+								JSONObject obj = (JSONObject)modelMap.get(key);
+								method.setModelProperty(obj.toString());
+							}
 						}
 						if( operationApi.containsKey("responseMessages") ){
 							method.setResponseMessages(operationApi.getJSONArray("responseMessages"));
@@ -269,7 +321,12 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 									parameterProperty.setParamType(parameterApi.getString("paramType"));
 								}
 								if( parameterApi.containsKey("dataType") ){
-									parameterProperty.setDataType(parameterApi.getString("dataType"));
+									String dataType = parameterApi.getString("dataType");
+									parameterProperty.setDataType(dataType);
+									if( modelMap.containsKey(dataType)){
+										JSONObject obj = (JSONObject)modelMap.get(dataType);
+										method.setModelProperty(obj.toString());
+									}
 								}
 								if( parameterApi.containsKey("defaultValue") ){
 									parameterProperty.setDefaultValue(parameterApi.getString("defaultValue"));
@@ -286,10 +343,7 @@ public class JaxRSWebServiceConnector implements WebServiceConnector ,Serializab
 				
 			}
 		}
-		JSONArray modelsArray = JSONArray.fromObject(jsonObject.get("models"));
-		if( modelsArray != null ){
-			
-		}
+		
 		// setting webServiceDefinition
 		wsd.setResourceList(resourceArray);
 		
