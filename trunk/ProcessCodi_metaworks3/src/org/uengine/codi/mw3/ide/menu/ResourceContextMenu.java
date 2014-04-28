@@ -239,7 +239,7 @@ public class ResourceContextMenu extends CloudMenu {
 				+ "maven" + File.separatorChar + "Vaadin7OSGi.crm.jar";
 		
 		S3PutObject s3putObject = new S3PutObject();
-		s3putObject.putObject(resultFilePath);
+		s3putObject.putObject(resultFilePath, false);
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);

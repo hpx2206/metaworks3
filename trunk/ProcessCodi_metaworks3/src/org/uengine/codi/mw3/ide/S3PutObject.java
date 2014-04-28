@@ -15,12 +15,18 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 public class S3PutObject {
 
-	String bucketName = Boolean.valueOf(GlobalContext.getPropertyString("app.repo.prod", "0"))?"app-repo-prod":"app-repo-dev";
+	String bucketName;
 	String accessKey     = "AKIAIMSA24T5GYWMH5DQ";
 	String secretKey     = "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";
 	String keyName        = "Vaadin7OSGi.crm.jar";
 			
-	public void putObject(String uploadFilePath) throws IOException{
+	public void putObject(String uploadFilePath, boolean isProd) throws IOException{
+		if(isProd){
+			bucketName = GlobalContext.getPropertyString("app.repo.prod");
+		}else{
+			bucketName = GlobalContext.getPropertyString("app.repo.dev");
+		}
+		
 		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         
 		AmazonS3 s3client = new AmazonS3Client(awsCredentials);
