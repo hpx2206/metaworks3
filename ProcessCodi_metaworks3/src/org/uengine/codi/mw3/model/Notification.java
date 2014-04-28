@@ -123,99 +123,99 @@ public class Notification extends Database<INotification> implements INotificati
 		}
 		
 
-		/**
-		 * TODO: e-mail nofitication
-		 * 
-		 * 성능 이슈가 야기됨.
-		 * follower마다 Emptable에서 데이터를 읽어 오기 때문에 ...(actorUserInfo.databaseMe()) 차후 수정
-		 * 
-		 */
-		if(userInfo.databaseMe().isMailNoti()){
-			final Employee userInfoDB = new Employee();
-			userInfoDB.copyFrom(userInfoTemp);
-			
-			String realPath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
-			final String path = realPath + GlobalContext.getPropertyString("email.noti", "resources/mail/notiMail.html");
-			
-			final String url = TenantContext.getURL();
-			
-			/*
-			final Employee actorUserInfo = new Employee();
-			actorUserInfo.setEmpCode(getActorId());
-			
-			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
-			*/
-			
-			new Thread(){
-
-				@Override
-				public void run() {
-					try {
-						// facebook
-						/*
-						if(userInfoDB.getEmpCode()==null && userInfoDB.getFacebookId()!=null){
-							//TODO: this case should be chosen by more deterministic option (e.g. User.network=='facebook') 
-							FacebookClient facebookClient = new DefaultFacebookClient();
-							String facebookId = getUserId();
-							String query = "SELECT uid, name, email, locale FROM user WHERE uid=" + facebookId;
-							
-							List<com.restfb.types.User> users = facebookClient.executeQuery(query, com.restfb.types.User.class);
-							if (users.size() == 0) {
-								throw new UEngineException("There's no such user [" + facebookId + "]");
-							} else {
-								com.restfb.types.User user = users.get(0);
-								userInfoDB.setEmail(user.getEmail());
-							}
-						}
-						*/
-						String content = "";
-						
-						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd a h:mm");
-						String date = df.format(getInputDate());
-						
-						FileInputStream is;
-						try {
-							is = new FileInputStream(path);
-							InputStreamReader isr = new InputStreamReader(is,"UTF-8");
-							BufferedReader br = new BufferedReader(isr);
-							
-							int data;
-							while((data = br.read()) != -1){
-								content += (char)data;
-							}
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-						content = this.replaceString(content,"user.name", userInfoDB.getEmpName());
-						content = this.replaceString(content, "notimail.date", date);
-						content = this.replaceString(content, "notimail.image", url + "portrait/" + getActorId() + ".thumnail");
-						
-						content = this.replaceString(content, "notimail.content", getActAbstract());
-						content = this.replaceString(content, "processcodi.url", url);
-						
-						String from = GlobalContext.getPropertyString("codi.mail.noreply", "noreply@processcodi.com");
-						String title = "프로세스 코디의 알림이 도착했습니다.";
-						
-						// TODO 상대방 이메일을 userInfoDB에서 가져오질 못함
-						(new EMailServerSoapBindingImpl()).sendMail(from, userInfoDB.getEmail(), title, content);
-					} catch (RemoteException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
-				public String replaceString(String lineString, String from, String to){
-					String returnValue = "";
-					returnValue = lineString.replaceAll(from, to);
-					return returnValue;
-				}
-			}.start();
-		}
+//		/**
+//		 * TODO: e-mail nofitication
+//		 * 
+//		 * 성능 이슈가 야기됨.
+//		 * follower마다 Emptable에서 데이터를 읽어 오기 때문에 ...(actorUserInfo.databaseMe()) 차후 수정
+//		 * 
+//		 */
+//		if(userInfo.databaseMe().isMailNoti()){
+//			final Employee userInfoDB = new Employee();
+//			userInfoDB.copyFrom(userInfoTemp);
+//			
+//			String realPath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
+//			final String path = realPath + GlobalContext.getPropertyString("email.noti", "resources/mail/notiMail.html");
+//			
+//			final String url = TenantContext.getURL();
+//			
+//			/*
+//			final Employee actorUserInfo = new Employee();
+//			actorUserInfo.setEmpCode(getActorId());
+//			
+//			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
+//			*/
+//			
+//			new Thread(){
+//
+//				@Override
+//				public void run() {
+//					try {
+//						// facebook
+//						/*
+//						if(userInfoDB.getEmpCode()==null && userInfoDB.getFacebookId()!=null){
+//							//TODO: this case should be chosen by more deterministic option (e.g. User.network=='facebook') 
+//							FacebookClient facebookClient = new DefaultFacebookClient();
+//							String facebookId = getUserId();
+//							String query = "SELECT uid, name, email, locale FROM user WHERE uid=" + facebookId;
+//							
+//							List<com.restfb.types.User> users = facebookClient.executeQuery(query, com.restfb.types.User.class);
+//							if (users.size() == 0) {
+//								throw new UEngineException("There's no such user [" + facebookId + "]");
+//							} else {
+//								com.restfb.types.User user = users.get(0);
+//								userInfoDB.setEmail(user.getEmail());
+//							}
+//						}
+//						*/
+//						String content = "";
+//						
+//						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd a h:mm");
+//						String date = df.format(getInputDate());
+//						
+//						FileInputStream is;
+//						try {
+//							is = new FileInputStream(path);
+//							InputStreamReader isr = new InputStreamReader(is,"UTF-8");
+//							BufferedReader br = new BufferedReader(isr);
+//							
+//							int data;
+//							while((data = br.read()) != -1){
+//								content += (char)data;
+//							}
+//						} catch (Exception e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						
+//						content = this.replaceString(content,"user.name", userInfoDB.getEmpName());
+//						content = this.replaceString(content, "notimail.date", date);
+//						content = this.replaceString(content, "notimail.image", url + "portrait/" + getActorId() + ".thumnail");
+//						
+//						content = this.replaceString(content, "notimail.content", getActAbstract());
+//						content = this.replaceString(content, "processcodi.url", url);
+//						
+//						String from = GlobalContext.getPropertyString("codi.mail.noreply", "noreply@processcodi.com");
+//						String title = "프로세스 코디의 알림이 도착했습니다.";
+//						
+//						// TODO 상대방 이메일을 userInfoDB에서 가져오질 못함
+//						(new EMailServerSoapBindingImpl()).sendMail(from, userInfoDB.getEmail(), title, content);
+//					} catch (RemoteException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					} catch (Exception e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				
+//				public String replaceString(String lineString, String from, String to){
+//					String returnValue = "";
+//					returnValue = lineString.replaceAll(from, to);
+//					return returnValue;
+//				}
+//			}.start();
+//		}
 	}
 	
 	public HashMap<String, String> findInstanceNotiUser(String instanceId) throws Exception{
