@@ -284,6 +284,13 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	public void setSourcePath(File[] sourcePath) {
 		this.sourcePath = sourcePath;
 	}
+	
+	public void addSourcePath(File addSourcePath) {
+		File[] ref = new File[this.sourcePath.length+1];
+		System.arraycopy(this.sourcePath, 0, ref, 0, this.sourcePath.length);
+		ref[this.sourcePath.length] = addSourcePath;
+		this.sourcePath = ref;
+	}
 
 	@Override
 	public void setSourceFileCharacterEncoding(String optionalCharacterEncoding) {
