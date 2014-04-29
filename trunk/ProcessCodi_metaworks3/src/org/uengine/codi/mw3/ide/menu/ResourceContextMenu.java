@@ -235,9 +235,11 @@ public class ResourceContextMenu extends CloudMenu {
 			cmd[0] = "/bin/sh";
 			cmd[1] = "-c";
 		}
-		cmd[2] = "mvn install" +
-				" -Dprojectdir="+codebase+File.separatorChar+ProjectId+
-				" -Dbundle.name="+projectName;
+		// sh뒤에는 인자이므로... 공백 필요 
+		cmd[2] = codebase + "/" + "depoly.sh " + codebase +  " " + codebase+File.separatorChar+ProjectId + " " + projectName;
+//		cmd[2] = "mvn install" +
+//				" -Dprojectdir="+codebase+File.separatorChar+ProjectId+
+//				" -Dbundle.name="+projectName;
 		
 		System.out.println("command ==>" + cmd[2]);
 		executeCommand(cmd);
