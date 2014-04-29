@@ -6,6 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.servlet.http.HttpServletRequestWrapper;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Remover;
@@ -20,21 +30,25 @@ import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.CloudWindow;
+import org.uengine.codi.mw3.ide.DockerService;
+import org.uengine.codi.mw3.ide.IStorageService;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.S3PutObject;
+import org.uengine.codi.mw3.ide.AmazonService;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.dbrepo.AppDbRepository;
 import org.uengine.dbrepo.IAppDbRepository;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservice.ServiceClassGenerator;
+import org.metaworks.dao.TransactionContext;
 
 public class ResourceContextMenu extends CloudMenu {
 
@@ -224,29 +238,39 @@ public class ResourceContextMenu extends CloudMenu {
 		ResourceNode node = (ResourceNode)clipboard;
 		String codebase = GlobalContext.getPropertyString("codebase");	
 		String projectName = node.getName();
-		String ProjectId   = node.getId();
+		String projectId   = node.getId();
 		String cmd[] = new String[3];
-		
 		String osName = System.getProperty("os.name");
+		String realPath = new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath("")+"\\resources\\maven\\";
+		String command = null;	
+		
 		if(osName.toLowerCase().startsWith("window")){
+			command = realPath + GlobalContext.getPropertyString("maven.depoly.bat", "depoly.bat");
 			cmd[0] = "cmd.exe";
 			cmd[1] = "/C";
-			cmd[2] = codebase + "/" + "depoly.bat " + codebase +  " " + codebase+File.separatorChar+ProjectId + " " + projectName;
+			cmd[2] = command + " " + realPath +  " " + codebase+File.separatorChar+projectId + " " + projectName;
 
 		}else{
+			command = realPath + GlobalContext.getPropertyString("maven.depoly.sh", "depoly.sh");
 			cmd[0] = "/bin/sh";
 			cmd[1] = "-c";
-			cmd[2] = codebase + "/" + "depoly.sh " + codebase +  " " + codebase+File.separatorChar+ProjectId + " " + projectName;
+			cmd[2] = command + " " + realPath +  " " + codebase+File.separatorChar+projectId + " " + projectName;
 		}
 		//command arg[1]=pom.xml,depoly.sh 파일 위치 arg[2]=해당 프로젝트 경로 arg[3]=프로젝트 이름
 		System.out.println("command ==>" + cmd[2]);
 		executeCommand(cmd);
-
-		String resultFilePath = codebase + File.separatorChar + ProjectId + File.separatorChar
-				+ "maven" + File.separatorChar + projectName+".jar";
 		
-		S3PutObject s3putObject = new S3PutObject();
-		s3putObject.putObject(resultFilePath,projectName+".jar",false);
+		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
+		
+		IStorageService storageService=null;
+		
+		if("amazon".equals(reopsitoryService)){
+			storageService = new AmazonService();
+		}else if("docker".equals(reopsitoryService)){
+			storageService = new DockerService();
+		}
+		storageService.putObject(projectId, projectName,false);
+		
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
