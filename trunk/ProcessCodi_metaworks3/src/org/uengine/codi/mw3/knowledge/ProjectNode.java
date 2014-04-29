@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.util.Calendar;
 
+import javax.servlet.http.HttpSession;
+
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -23,7 +25,6 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.TopicInfo;
 import org.uengine.oce.dashboard.MyProjectPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -83,7 +84,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		}else {
 			InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, getId());
 			
-			ListPanel listPanel = new ListPanel(instanceListPanel, new ProjectInfo(session, this.getId()));
+			ListPanel listPanel = new ListPanel(instanceListPanel, new ProjectInfo(session, this.getId(), this.getName()));
 			
 			return new Object[]{session, listPanel };
 		}

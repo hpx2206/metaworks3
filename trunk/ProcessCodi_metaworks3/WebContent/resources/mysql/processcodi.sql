@@ -1124,3 +1124,5 @@ DELETE FROM `uengine`.`category` WHERE `CATEGORYID`='9';
 
 alter table app add column appType varchar(20) default 'project';
 alter table appmapping add column appType varchar(20);
+
+ALTER TABLE emptable ADD COLUMN roletype VARCHAR(10) NULL;

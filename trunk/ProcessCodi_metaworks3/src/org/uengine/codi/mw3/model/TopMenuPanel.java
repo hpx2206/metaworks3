@@ -24,7 +24,7 @@ public class TopMenuPanel {
 		allAppList.load();
 		
 		Popup popup = new Popup();
-		popup.setPanel(allAppList);
+ 		popup.setPanel(allAppList);
 		
 		return popup;
 	}

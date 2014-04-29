@@ -64,6 +64,7 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PerspectivePanel;
 import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiHttpClient;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
@@ -200,13 +201,13 @@ public class Login implements ContextAware {
 
 		String serviceURL = null;
 		boolean bCodi = false;
-//		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession();
+		HttpSession httpsession = TransactionContext.getThreadLocalInstance().getRequest().getSession();
 		
 		if(getSsoService() != null){
 			serviceURL = getSsoService();
 		}else{
-			serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
-					+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
+			serviceURL = "http://" + TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() 
+					+ ":" + TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
 					+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
 			bCodi = true;
 		}
@@ -217,6 +218,9 @@ public class Login implements ContextAware {
 		
 		try
 		{
+			
+			CodiHttpClient codiHc = new CodiHttpClient();
+			
 			URL urlTGT = new URL(StartCodi.CAS_REST_URL);
 			huc = (HttpURLConnection) urlTGT.openConnection();
 			huc.setDoInput(true);
@@ -274,10 +278,44 @@ public class Login implements ContextAware {
 				
 				while ((line = isr.readLine()) != null) {
 					System.out.println( line);
-					if(!bCodi)
+					if(!bCodi){
 						setSsoService(getSsoService()+"?ticket=" + line);
-					else{
-						TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", line);
+						
+						// codi 로그인이 안되있을수 있으므로...
+						
+//						serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
+//								+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
+//								+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+//						encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL, "utf-8");
+//						System.out.println("Service url is : " + encodedServiceURL);
+//
+//						myURL = StartCodi.CAS_REST_URL + "/"+ tgt ;
+//						urlST = new URL(myURL);
+//						System.out.println(myURL);
+//
+//						huc = (HttpURLConnection) urlST.openConnection();
+//						huc.setDoInput(true);
+//						huc.setDoOutput(true);
+//						huc.setRequestMethod("POST");
+//
+//						outST = new OutputStreamWriter(huc.getOutputStream());
+//						bwrST = new BufferedWriter(outST);
+//						bwrST.write(encodedServiceURL);
+//						bwrST.flush();
+//						bwrST.close();
+//						outST.close();
+//
+//						System.out.println("Response code is:  " + huc.getResponseCode());
+//
+//						isr = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+//						System.out.println( huc.getResponseCode());
+//						while ((line = isr.readLine()) != null) {
+//							httpsession.setAttribute("SSO-ST", line);
+//							StartCodi.MANAGED_SESSIONS.put(line, session);
+//						}
+						
+					}else{
+						httpsession.setAttribute("SSO-ST", line);
 //						String loggeduserId = (String)TransactionContext.getThreadLocalInstance().getRequest().getAttribute("loggeduserId");
 //						System.out.println("loggeduserId === " + loggeduserId);
 //						Map map = new HashMap();
@@ -1113,7 +1151,7 @@ public class Login implements ContextAware {
 		}
 		
 		userIdDeviceMapping.put(userId.toUpperCase(), device); //stores session id to find out with user Id
-		
+		 
 
 	}
 

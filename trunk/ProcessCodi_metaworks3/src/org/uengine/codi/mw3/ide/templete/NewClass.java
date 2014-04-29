@@ -104,11 +104,11 @@ public class NewClass extends Templete {
 			Editor editor = null;
 			try {
 				editor = (Editor)node.beforeAction();
-				editor.setContent(this.make());
+				editor.setContent(this.make()); 
 			} catch (Exception e) {
 			}
 			
-			editor.save();
+			editor.save(); 
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow())};
 		}else{

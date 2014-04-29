@@ -20,6 +20,8 @@ public class S3PutObject {
 	String secretKey     = "GE4SXfIU2MjwQrQtu7P93E3XqAvO7Al0Mj+7/WL+";
 			
 	public void putObject(String uploadFilePath,String keyName, boolean isProd) throws IOException{
+		
+		System.out.println("putObject...");
 		if(isProd){
 			bucketName = GlobalContext.getPropertyString("app.repo.prod");
 		}else{
