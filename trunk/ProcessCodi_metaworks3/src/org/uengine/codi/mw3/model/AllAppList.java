@@ -110,6 +110,17 @@ public class AllAppList {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] goFlamingo() throws Exception {
+		
+		IFrame iframe = new IFrame("http://flamingo.opencloudengine.org/login.do");
+		
+		IFrameApplication application = new IFrameApplication();
+		application.setContent(iframe);
+		
+		return new Object[]{new Refresh(application), new Refresh(application.loadTopCenterPanel(session)), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] goJMS() throws Exception{
 		ProcessExplorer processExplorer = new ProcessExplorer();
 		processExplorer.load(session);
