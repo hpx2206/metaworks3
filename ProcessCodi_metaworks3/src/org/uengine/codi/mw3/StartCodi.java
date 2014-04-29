@@ -101,12 +101,17 @@ public class StartCodi {
 		
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();		
 		if("1".equals(USE_CAS)){
+			String ssoService = getSsoService();
+			
 			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
 					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
 			
 			if(cookie != null){
+				System.out.println("[new code]===>cookie is not null : " + cookie);
 				String ssoSt = (String)httpSession.getAttribute("SSO-ST");
-				if(ssoSt == null){
+				System.out.println("[new code]===>ssoSt value : " + ssoSt);
+				
+				if(ssoSt == null || (ssoService != null && ssoService.endsWith("callbackAuthorize"))){
 					String serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
 							+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
 							+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
@@ -287,6 +292,10 @@ public class StartCodi {
 		login.lastVisitPage = this.getLastVisitPage();
 		login.lastVisitValue = this.getLastVisitValue();
 		
+		System.out.println("ssoService == " + getSsoService());
+		if(ssoService != null && ssoService.endsWith("callbackAuthorize"))
+			   login.setSsoService(ssoService+"?ticket=" + (String)httpSession.getAttribute("SSO-ST") );
+		
 		try{
 			return login.login(session);
 		}catch(Exception e){
@@ -300,7 +309,7 @@ public class StartCodi {
 	public SignUp logout() throws Exception {
 		this.getSession().removeUserInfoFromHttpSession();
 		
-		//test code
+//		//test code
 		CookieGenerator cookieGenerator = new CookieGenerator();
 		cookieGenerator.setCookieName("CASTGC");
 		cookieGenerator.removeCookie(TransactionContext.getThreadLocalInstance().getResponse());

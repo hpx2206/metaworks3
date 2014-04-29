@@ -101,7 +101,7 @@ public class AllAppList {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] goTadPole() throws Exception {
 		
-		IFrame iframe = new IFrame("http://" + GlobalContext.getPropertyString("tadpole.url"));
+		IFrame iframe = new IFrame(GlobalContext.getPropertyString("tadpole.url"));
 		
 		IFrameApplication application = new IFrameApplication();
 		application.setContent(iframe);

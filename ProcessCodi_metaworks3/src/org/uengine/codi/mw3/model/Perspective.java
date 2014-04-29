@@ -27,7 +27,7 @@ public class Perspective {
 	public final static String TYPE_CALENDAR	= "calendar";
 	
 	public final static String USE_PERSONAL = GlobalContext.getPropertyString("personal.use", "1");
-	public final static String USE_PROJECT = GlobalContext.getPropertyString("project.use", "0");
+	public final static String USE_PROJECT = GlobalContext.getPropertyString("project.use", "1");
 	public final static String USE_TOPIC = GlobalContext.getPropertyString("topic.use", "1");
 	public final static String USE_ORGANIZATION = GlobalContext.getPropertyString("organization.use", "1");
 	public final static String USE_PROCESS = GlobalContext.getPropertyString("process.use", "1");

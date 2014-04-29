@@ -29,6 +29,8 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.dbrepo.AppDbRepository;
+import org.uengine.dbrepo.IAppDbRepository;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -237,6 +239,7 @@ public class ResourceContextMenu extends CloudMenu {
 				" -Dprojectdir="+codebase+File.separatorChar+ProjectId+
 				" -Dbundle.name="+projectName;
 		
+		System.out.println("command ==>" + cmd[2]);
 		executeCommand(cmd);
 
 		String resultFilePath = codebase + File.separatorChar + ProjectId + File.separatorChar
@@ -255,11 +258,25 @@ public class ResourceContextMenu extends CloudMenu {
 		
 		return new Object[]{modalWindow, new Remover(this)};
 	}
-	
+	  
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object registerApp() throws Exception {
-
+		 
+		// 앱등록시 DB생성 
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceNode){
+			ResourceNode node = (ResourceNode)clipboard;
+			
+			AppDbRepository adr = new AppDbRepository();
+			IAppDbRepository dao = adr.findDbRepo(1, node.getName());
+			if(dao == null){
+				AppDbRepository.addDbRepository(1, node.getName() , node.getId());
+			}
+		} 
+		
+		
+//		AppDbRepository.addDbRepository(1, wfNode.getName(), wfNode.getId());
 //		App app = new App();
 //		app.load();
 //		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
@@ -281,6 +298,7 @@ public class ResourceContextMenu extends CloudMenu {
 //		
 //		return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
 		
+
 		return null;
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

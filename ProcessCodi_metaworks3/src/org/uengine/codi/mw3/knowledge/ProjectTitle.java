@@ -2,9 +2,10 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +15,6 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.ToEvent;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
@@ -25,23 +25,17 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.ListPanel;
 import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.ProcessMap;
-import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.TopicInfo;
-import org.uengine.codi.mw3.project.oce.IServerInfo;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
-import org.uengine.codi.mw3.project.oce.ServerInfo;
-import org.uengine.codi.vm.JschCommand;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.kernel.ProcessInstance;
+import org.uengine.dbrepo.AppDbRepository;
+import org.uengine.dbrepo.DatabaseManager;
+import org.uengine.dbrepo.MySqlConnector;
+import org.uengine.dbrepo.QueryResult;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -192,6 +186,8 @@ public class ProjectTitle implements ContextAware {
 	public Object[] save() throws Exception{
 		this.saveMe();
 		
+
+		
 //		session.setLastPerspecteType("topic");
 //		session.setLastSelectedItem(this.getTopicId());
 
@@ -319,7 +315,7 @@ public class ProjectTitle implements ContextAware {
 //		*/
 		InstanceListPanel instanceListPanel = Perspective.loadInstanceList(session, Perspective.MODE_PROJECT, Perspective.TYPE_NEWSFEED, this.getTopicId());
 		
-		ListPanel listPanel = new ListPanel(instanceListPanel, new ProjectInfo(session, this.getTopicId()));
+		ListPanel listPanel = new ListPanel(instanceListPanel, new ProjectInfo(session, this.getTopicId(), this.getTopicTitle()));
 		
 		return new Object[]{new ToEvent(new ProjectPerspective(), EventContext.EVENT_CHANGE), new Remover(new ModalWindow(), true), new Refresh(session), new Refresh(listPanel)};
 		
@@ -327,7 +323,7 @@ public class ProjectTitle implements ContextAware {
 		//return new Object[]{new Remover(new ModalWindow())};
 	}
 	
-	public void saveMe() throws Exception {
+	public void saveMe() throws Exception { 
 		WfNode wfNode = new WfNode();
 		
 		if(this.getLogoFile().getFileTransfer() != null &&
@@ -350,9 +346,9 @@ public class ProjectTitle implements ContextAware {
 				wfNode.setUrl(this.getLogoFile().getUploadedPath());
 				wfNode.setThumbnail(this.getLogoFile().getFilename());
 			}
-			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
-				wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
-			else
+			//if(TenantContext.getThreadLocalInstance().getTenantId() != null)
+			//	wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
+			//else
 				wfNode.setCompanyId(session.getCompany().getComCode());
 				
 			wfNode.setDescription(this.getTopicDescription());
@@ -369,6 +365,10 @@ public class ProjectTitle implements ContextAware {
 			tm.saveMe();
 			tm.flushDatabaseMe();
 			
+			// 2014.04.24 AppDb work
+			// 사용자별 데이터베이스 등록 
+			AppDbRepository.addDbRepository(0, wfNode.getName(), wfNode.getId());
+			
 			this.setTopicId(wfNode.getId());
 		}else{
 			wfNode.setId(this.getTopicId());
@@ -384,6 +384,9 @@ public class ProjectTitle implements ContextAware {
 			wfNode.saveMe();
 		}
 	}
+	
+	
+	
 	
 	@Face(displayName="$Close")
 	@Available(how={"html"})
