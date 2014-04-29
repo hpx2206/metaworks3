@@ -231,16 +231,14 @@ public class ResourceContextMenu extends CloudMenu {
 		if(osName.toLowerCase().startsWith("window")){
 			cmd[0] = "cmd.exe";
 			cmd[1] = "/C";
+			cmd[2] = codebase + "/" + "depoly.bat " + codebase +  " " + codebase+File.separatorChar+ProjectId + " " + projectName;
+
 		}else{
 			cmd[0] = "/bin/sh";
 			cmd[1] = "-c";
+			cmd[2] = codebase + "/" + "depoly.sh " + codebase +  " " + codebase+File.separatorChar+ProjectId + " " + projectName;
 		}
-		// sh뒤에는 인자이므로... 공백 필요 
-		cmd[2] = codebase + "/" + "depoly.sh " + codebase +  " " + codebase+File.separatorChar+ProjectId + " " + projectName;
-//		cmd[2] = "mvn install" +
-//				" -Dprojectdir="+codebase+File.separatorChar+ProjectId+
-//				" -Dbundle.name="+projectName;
-		
+		//command arg[1]=pom.xml,depoly.sh 파일 위치 arg[2]=해당 프로젝트 경로 arg[3]=프로젝트 이름
 		System.out.println("command ==>" + cmd[2]);
 		executeCommand(cmd);
 
