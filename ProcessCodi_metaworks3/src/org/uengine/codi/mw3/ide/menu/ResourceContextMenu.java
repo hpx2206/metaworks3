@@ -241,7 +241,8 @@ public class ResourceContextMenu extends CloudMenu {
 		String projectId   = node.getId();
 		String cmd[] = new String[3];
 		String osName = System.getProperty("os.name");
-		String realPath = new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath("")+"\\resources\\maven\\";
+		String realPath = new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest())
+		 				.getRealPath("")+File.separatorChar+"resources"+File.separatorChar+"maven"+File.separatorChar;
 		String command = null;	
 		
 		if(osName.toLowerCase().startsWith("window")){
