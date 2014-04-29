@@ -257,6 +257,9 @@ public class RestWebServiceActivity extends DefaultActivity implements IDrawDesi
 		MappingContext mc= getMappingContextOut();
 		if(mc !=null){
 			ParameterContext[] params = mc.getMappingElements();
+			if( params == null && mc.getMappingCanvas() != null){
+				params = mc.getMappingCanvas().getMappingElements();
+			}
 			for (int i = 0; i < params.length; i++) {
 				ParameterContext param = params[i];
 				

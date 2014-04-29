@@ -61,14 +61,38 @@ public class PoolMappingTree extends MappingTree {
 					rootnode.setName("["+changeRootNodeName+"]");
 					
 				}
-				if( mp.getModelProperty() != null && !"".equals(mp.getModelProperty())){
-					JSONObject modelsApi = JSONObject.fromObject(mp.getModelProperty());
-					Iterator iterator = modelsApi.keys();
-					while(iterator.hasNext()){
-						String propName = (String) iterator.next();
-						mpNode = new TreeNode();
-						mpNode.setId(propName);
-						mpNode.setName(propName);
+				String responseClass = mp.getResponseClass();
+				if( responseClass != null && responseClass.equalsIgnoreCase(String.class.getSimpleName())){
+					
+					mpNode = new TreeNode();
+					mpNode.setId("String");
+					mpNode.setName("String");
+					mpNode.setLoaded(true);
+					mpNode.setExpanded(true);
+					mpNode.setType(TreeNode.TYPE_FILE_TEXT);
+					mpNode.setAlign(TreeNode.ALIGN_LEFT);
+					
+					rootnode.add(mpNode);
+					
+				}else if(responseClass != null && !responseClass.equalsIgnoreCase("void")){
+					if( mp.getModelProperty() != null && !"".equals(mp.getModelProperty())){
+						JSONObject modelsApi = JSONObject.fromObject(mp.getModelProperty());
+						Iterator iterator = modelsApi.keys();
+						while(iterator.hasNext()){
+							String propName = (String) iterator.next();
+							mpNode = new TreeNode();
+							mpNode.setId(propName);
+							mpNode.setName(propName);
+							mpNode.setLoaded(true);
+							mpNode.setExpanded(true);
+							mpNode.setType(TreeNode.TYPE_FILE_TEXT);
+							mpNode.setAlign(TreeNode.ALIGN_LEFT);
+							
+							rootnode.add(mpNode);
+						}
+					}else{
+						mpNode.setId(mp.getId() + "Out");
+						mpNode.setName(nodeName);
 						mpNode.setLoaded(true);
 						mpNode.setExpanded(true);
 						mpNode.setType(TreeNode.TYPE_FILE_TEXT);
@@ -76,16 +100,8 @@ public class PoolMappingTree extends MappingTree {
 						
 						rootnode.add(mpNode);
 					}
-				}else{
-					mpNode.setId(mp.getId() + "Out");
-					mpNode.setName(nodeName);
-					mpNode.setLoaded(true);
-					mpNode.setExpanded(true);
-					mpNode.setType(TreeNode.TYPE_FILE_TEXT);
-					mpNode.setAlign(TreeNode.ALIGN_LEFT);
-					
-					rootnode.add(mpNode);
 				}
+				
 			}
 		}else{
 			
