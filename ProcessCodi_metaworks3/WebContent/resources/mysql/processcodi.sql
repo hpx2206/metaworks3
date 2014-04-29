@@ -1126,3 +1126,16 @@ alter table app add column appType varchar(20) default 'project';
 alter table appmapping add column appType varchar(20);
 
 ALTER TABLE emptable ADD COLUMN roletype VARCHAR(10) NULL;
+
+CREATE TABLE `appdatabase` (
+  `iddatabase` int(11) NOT NULL,
+  `appid` varchar(20) NOT NULL,
+  `dbname` varchar(200) NOT NULL,
+  `user` varchar(36) NOT NULL,
+  `password` varchar(36) DEFAULT NULL,
+  `dbtype` int(1) NOT NULL DEFAULT '0',
+  `role` varchar(45) DEFAULT NULL,
+  `mode` int(1) DEFAULT NULL COMMENT '0 개발  1 운영',
+  `dburl` varchar(200) NOT NULL,
+  PRIMARY KEY (`iddatabase`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app database';
