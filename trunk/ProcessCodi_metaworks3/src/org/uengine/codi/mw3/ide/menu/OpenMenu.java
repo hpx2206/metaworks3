@@ -1,12 +1,16 @@
 package org.uengine.codi.mw3.ide.menu;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.editor.VaadinEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.ProcessDesignerContentPanel;
 
@@ -55,6 +59,7 @@ public class OpenMenu extends CloudMenu{
 		if(ResourceNode.TYPE_FILE_JAVA.equals(this.getResourceNode().getType())){		
 			this.add(new MenuItem("openDesigner","폼 디자이너"));
 			this.add(new MenuItem("openCode","자바 편집기"));
+			this.add(new MenuItem("openVaadin","Vaadin 편집기"));
 		}else if(ResourceNode.TYPE_FILE_PROCESS.equals(this.getResourceNode().getType())){	
 			this.add(new MenuItem("openDesigner","프로세스 디자이너"));
 			this.add(new MenuItem("openCode","XML 편집기"));
@@ -90,6 +95,20 @@ public class OpenMenu extends CloudMenu{
 		}else{
 			return null;
 		}
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object openVaadin() throws Exception{
+		// TEMP 
+		Editor editor  = new VaadinEditor();
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceNode){
+			ResourceNode node = (ResourceNode)clipboard;
+			editor.setId(node.getId());
+			editor.setName(node.getName());
+		}
+		
+		return new Object[]{ new ToAppend(new CloudWindow("editor"), editor) };
+		
 	}
 	
 }
