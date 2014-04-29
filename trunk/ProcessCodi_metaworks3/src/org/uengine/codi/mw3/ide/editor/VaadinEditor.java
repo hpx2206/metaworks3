@@ -27,7 +27,8 @@ public class VaadinEditor extends Editor {
 //		String uri  = GlobalContext.getPropertyString("pole.call.db","/tadpole");
 //		
 //		String url = "http://" + host + ":" + port + uri;
-		String url = "http://demo.vaadin.com/visualdesigner-nightly";
+//		String url = "http://demo.vaadin.com/visualdesigner-nightly";
+		String url = "http://192.168.1.11:7070/vaadin-visualdesigner";
 		
 		IFrame frame = new IFrame();
 		frame.setSrc(url);
