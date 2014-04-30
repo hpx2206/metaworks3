@@ -33,6 +33,7 @@ import org.uengine.codi.mw3.project.oce.AppServerManage;
 import org.uengine.codi.mw3.project.oce.KtProbProjectServers;
 import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.mw3.project.oce.NewServer;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -689,12 +690,15 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 //	    //무조건 compleate
 //	    processManager.executeProcessByWorkitem(instId.toString(), rp);
 //	    processManager.applyChanges();
-	    
+	    WfNode wfNode = new WfNode();
+	    wfNode.setId(this.getProjectId());
+	    String projectName = wfNode.databaseMe().getName();
+		
 		AppMapping am = new AppMapping();
 		am.setAppId(this.getAppId());
 		am.setAppName(this.getAppName());
 		am.setComCode(this.getComcode());
-		am.setUrl(this.getUrl());
+		am.setUrl(GlobalContext.getPropertyString("app.url.prod")+projectName);
 		am.setAppType(this.getAppType());
 		
 		am.createDatabaseMe();
