@@ -6,18 +6,9 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.ide.AmazonService;
 import org.uengine.codi.mw3.ide.DockerService;
 import org.uengine.codi.mw3.ide.IStorageService;
-import org.uengine.codi.mw3.knowledge.ProjectTitle;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.kernel.GlobalContext;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Order;
@@ -108,7 +99,7 @@ public class Approval implements ITool{
 		}else if("docker".equals(reopsitoryService)){
 			storageService = new DockerService();
 		}
-		storageService.putObject(projectId, projectName,false);
+		storageService.putObject(projectId, projectName,true);
 	}
 
 }

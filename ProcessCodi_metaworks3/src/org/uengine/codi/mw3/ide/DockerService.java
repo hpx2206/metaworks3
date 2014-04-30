@@ -20,12 +20,16 @@ public class DockerService implements IStorageService{
 	public void putObject(String projectId, String projectName, boolean isProd)
 			throws IOException {
 		System.out.println("putObject...");
-		String reopsitoryUrl = GlobalContext.getPropertyString("file.repository.url");
+		String reopsitoryUrl = null;
 		String codebase = GlobalContext.getPropertyString("codebase");
 		String uploadFilePath = codebase + File.separatorChar + projectId + File.separatorChar
 				+ "maven" + File.separatorChar + projectName+".jar";
 		
-		reopsitoryUrl = reopsitoryUrl + "UploadFile/"+ projectId + "/maven/";
+		if(isProd){
+			reopsitoryUrl = GlobalContext.getPropertyString("file.repository.url.prod");
+		}else{
+			reopsitoryUrl = GlobalContext.getPropertyString("file.repository.url.dev");
+		}
 		
 		HttpPost httppost = new HttpPost(reopsitoryUrl);
 	    

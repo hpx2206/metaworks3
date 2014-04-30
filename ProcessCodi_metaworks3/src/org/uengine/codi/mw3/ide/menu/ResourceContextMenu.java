@@ -41,6 +41,7 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.dbrepo.AppDbRepository;
 import org.uengine.dbrepo.IAppDbRepository;
@@ -272,13 +273,16 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 		storageService.putObject(projectId, projectName,false);
 		
+		IFrame frame = new IFrame(GlobalContext.getPropertyString("app.url.dev")+projectName);
+		
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		modalWindow.setWidth(300);
-		modalWindow.setHeight(150);
-		modalWindow.setTitle("$deployee.complete.title");
-		modalWindow.setPanel("배포가 완료 되었습니다.");		
+		modalWindow.setWidth(1000);
+		modalWindow.setHeight(600);
+		//modalWindow.setTitle("$deployee.complete.title");
+		modalWindow.setTitle("배포 완료 - 테스트 서버 " + frame.getSrc());
+		modalWindow.setPanel(frame);		
 		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
 		
 		return new Object[]{modalWindow, new Remover(this)};
