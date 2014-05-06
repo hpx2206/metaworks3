@@ -25,6 +25,7 @@ import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
+import org.uengine.codi.util.CodiHttpClient;
 import org.uengine.kernel.GlobalContext;
 
 public class StartCodi {
@@ -107,70 +108,100 @@ public class StartCodi {
 					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
 			
 			if(cookie != null){
-				System.out.println("[new code]===>cookie is not null : " + cookie);
 				String ssoSt = (String)httpSession.getAttribute("SSO-ST");
-				System.out.println("[new code]===>ssoSt value : " + ssoSt);
-				
 				if(ssoSt == null || (ssoService != null && ssoService.endsWith("callbackAuthorize"))){
 					String serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
 							+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
 							+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
-					
-					String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL, "utf-8");
-					System.out.println("Service url is : " + encodedServiceURL);
 
-					String myURL = StartCodi.CAS_REST_URL + "/"+ cookie.getValue();
-					URL urlST = new URL(myURL);
-					System.out.println(myURL);
-					
-					HttpURLConnection huc = null;
-					try{
-						huc = (HttpURLConnection) urlST.openConnection();
-						huc.setDoInput(true);
-						huc.setDoOutput(true);
-						huc.setRequestMethod("POST");
-						
-						OutputStreamWriter outST = new OutputStreamWriter(huc.getOutputStream());
-						BufferedWriter bwrST = new BufferedWriter(outST);
-						bwrST.write(encodedServiceURL);
-						bwrST.flush();
-						bwrST.close();
-						outST.close();
-						
-						System.out.println("Response code is:  " + huc.getResponseCode());
-						
-						String line;
-						System.out.println( huc.getResponseCode());
-						if(huc.getResponseCode() == 200){
-							
-							String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
-							
-							Employee emp = new Employee();
-							emp.setEmpCode(loggedUserId);
-							IEmployee findEmp = emp.findMe();
-							
-							Session session = new Session();
-							session.setEmployee(findEmp);
-							
-							IUser user = new User();			
-							user.getMetaworksContext().setWhere("local");
-							user.setUserId(session.getEmployee().getEmpCode());
-							user.setName(session.getEmployee().getEmpName());
-							
-							session.setUser(user);
-							BufferedReader isr = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-							while ((line = isr.readLine()) != null) {
-								TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", line);
-								MANAGED_SESSIONS.put(line, session);
-							}
-							isr.close();
-							huc.disconnect();
-							return login();
-						}
-					}catch(Exception e){
-					}finally{
-						huc.disconnect();
+					CodiHttpClient codiHc = new CodiHttpClient();
+
+					// st 티켓 발행 
+					HashMap params = new HashMap<String,String>();
+					params.put("service", serviceURL);
+					String myURL = StartCodi.CAS_REST_URL + "/"+ cookie.getValue() ;
+					HashMap mapResult = codiHc.sendMessageToEndPoint(myURL, params, "POST");
+
+					if(mapResult != null){
+						String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+
+						Employee emp = new Employee();
+						emp.setEmpCode(loggedUserId);
+						IEmployee findEmp = emp.findMe();
+
+						Session session = new Session();
+						session.setEmployee(findEmp);
+
+						IUser user = new User();			
+						user.getMetaworksContext().setWhere("local");
+						user.setUserId(session.getEmployee().getEmpCode());
+						user.setName(session.getEmployee().getEmpName());
+
+						session.setUser(user);
+						String strSt = (String)mapResult.get(CodiHttpClient.RESULT_KEY);
+
+						TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", strSt);
+						MANAGED_SESSIONS.put(strSt, session);
+
+						return login();
 					}
+					
+					
+//					String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL, "utf-8");
+//					System.out.println("Service url is : " + encodedServiceURL);
+//
+//					String myURL = StartCodi.CAS_REST_URL + "/"+ cookie.getValue();
+//					URL urlST = new URL(myURL);
+//					System.out.println(myURL);
+//					
+//					HttpURLConnection huc = null;
+//					try{
+//						huc = (HttpURLConnection) urlST.openConnection();
+//						huc.setDoInput(true);
+//						huc.setDoOutput(true);
+//						huc.setRequestMethod("POST");
+//						
+//						OutputStreamWriter outST = new OutputStreamWriter(huc.getOutputStream());
+//						BufferedWriter bwrST = new BufferedWriter(outST);
+//						bwrST.write(encodedServiceURL);
+//						bwrST.flush();
+//						bwrST.close();
+//						outST.close();
+//						
+//						System.out.println("Response code is:  " + huc.getResponseCode());
+//						
+//						String line;
+//						System.out.println( huc.getResponseCode());
+//						if(huc.getResponseCode() == 200){
+//							
+//							String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
+//							
+//							Employee emp = new Employee();
+//							emp.setEmpCode(loggedUserId);
+//							IEmployee findEmp = emp.findMe();
+//							
+//							Session session = new Session();
+//							session.setEmployee(findEmp);
+//							
+//							IUser user = new User();			
+//							user.getMetaworksContext().setWhere("local");
+//							user.setUserId(session.getEmployee().getEmpCode());
+//							user.setName(session.getEmployee().getEmpName());
+//							
+//							session.setUser(user);
+//							BufferedReader isr = new BufferedReader(new InputStreamReader(huc.getInputStream()));
+//							while ((line = isr.readLine()) != null) {
+//								TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", line);
+//								MANAGED_SESSIONS.put(line, session);
+//							}
+//							isr.close();
+//							huc.disconnect();
+//							return login();
+//						}
+//					}catch(Exception e){
+//					}finally{
+//						huc.disconnect();
+//					}
 				}else{
 					return login();
 				}
