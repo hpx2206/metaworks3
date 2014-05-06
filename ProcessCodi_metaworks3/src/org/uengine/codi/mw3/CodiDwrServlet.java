@@ -279,68 +279,6 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 					}
 				}
 			}
-
-//			String serviceURL ="http://" +  request.getLocalAddr().toString() + ":" 
-//					+ request.getLocalPort() 
-//					+ request.getContextPath();
-//			
-////			http://192.168.1.35:8080/cas/validate?ticket=ST-214-gDvjwjjihl1FvSPGusbB-ss6330&service=http%3A%2F%2F192.168.1.35%3A29094%2FWebA%2Fsso%2FProtectedServlet
-//			
-//			String ssoST = (String)session.getAttribute("SSO-ST");
-//			String loggeduserId = (String)session.getAttribute("loggedUserId");
-//
-//
-//			HttpURLConnection huc = null;
-//
-//			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
-//					request, "CASTGC");
-//
-//			if(ssoST != null){
-//				
-//				
-//				String encodedServiceURL = URLEncoder.encode(serviceURL,"utf-8");
-//
-//				StringBuffer buffer = new StringBuffer();
-//				buffer.append("ticket="+ ssoST);
-//				buffer.append("&service="+encodedServiceURL);
-//				
-//				System.out.println("Service url is : " + buffer.toString());
-//
-//
-//				String myURL = "http://192.168.1.35:8080/cas/validate?"+ buffer.toString() ;
-//				URL urlST = new URL(myURL);
-//				System.out.println(myURL);
-//
-//				huc = (HttpURLConnection) urlST.openConnection();
-//				
-//				final BufferedReader in = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-//
-//	            String line;
-//	            final StringBuffer stringBuffer = new StringBuffer(255);
-//
-//	            synchronized (stringBuffer) {
-//	                while ((line = in.readLine()) != null) {
-//	                    stringBuffer.append(line);
-//	                    stringBuffer.append("\n");
-//	                }
-//	            }
-//	            
-//	            String result = stringBuffer.toString();
-//	            System.out.println("result ==> "  + result);
-//				if(loggeduserId != null && huc.getResponseCode() != 200){
-//					Session codiSession = new Session();
-//
-//					Employee emp = new Employee();
-//					emp.setEmpCode(loggeduserId);
-//					try {
-//						codiSession.setEmployee(emp);
-//						MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(loggeduserId), new Object[]{new Refresh( new StartCodi(codiSession, "logout") )});
-//					}catch(Throwable e){
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-			
 		}
 		
 		// TODO Auto-generated method stub
