@@ -215,7 +215,7 @@ public class ResourceContextMenu extends CloudMenu {
 		return null;
 		//return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
 	}
-	public void executeCommand(String cmd[]) throws IOException, InterruptedException{
+	public boolean executeCommand(String cmd[]) throws IOException, InterruptedException{
 	
 		Runtime runTime = Runtime.getRuntime();
 		Process process = runTime.exec(cmd);
@@ -223,13 +223,16 @@ public class ResourceContextMenu extends CloudMenu {
 		InputStream is = process.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
-		
+		boolean successed = false;
 		String line;
 		while((line = br.readLine()) != null){
 			System.out.println(line);
+			if(line.contains("BUILD SUCCESS"))
+				successed = true;
 		}
 		int execTime = process.waitFor();
 		System.out.println("exe time: " + execTime);
+		return successed;
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -260,7 +263,10 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 		//command arg[1]=pom.xml,depoly.sh 파일 위치 arg[2]=해당 프로젝트 경로 arg[3]=프로젝트 이름
 		System.out.println("command ==>" + cmd[2]);
-		executeCommand(cmd);
+		boolean successed = executeCommand(cmd);
+		if(!successed){
+			throw new Exception("해당 프로젝트 빌드에 실패하였습니다.");
+		}
 		
 		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
 		
@@ -271,7 +277,11 @@ public class ResourceContextMenu extends CloudMenu {
 		}else if("docker".equals(reopsitoryService)){
 			storageService = new DockerService();
 		}
-		storageService.putObject(projectId, projectName,false);
+		
+		successed = storageService.putObject(projectId, projectName,false);
+		if(!successed){
+			throw new Exception("해당 프로젝트 배포에 실패하였습니다.");
+		}
 		
 		IFrame frame = new IFrame(GlobalContext.getPropertyString("app.url.dev")+projectName);
 		

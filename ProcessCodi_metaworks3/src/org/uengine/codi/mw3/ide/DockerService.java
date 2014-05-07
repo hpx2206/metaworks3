@@ -17,7 +17,7 @@ import org.uengine.kernel.GlobalContext;
 public class DockerService implements IStorageService{
 
 	@Override
-	public void putObject(String projectId, String projectName, boolean isProd)
+	public boolean putObject(String projectId, String projectName, boolean isProd)
 			throws IOException {
 		System.out.println("putObject...");
 		String reopsitoryUrl = null;
@@ -48,7 +48,7 @@ public class DockerService implements IStorageService{
 	    
 	    // Get the HTTP Status Code
 	    int statusCode = httpResponse.getStatusLine().getStatusCode();
-
+	    boolean successed = false;
 	    // Get the contents of the response
 	    InputStream input = resEntity.getContent();
 	    String responseBody = IOUtils.toString(input);
@@ -57,6 +57,11 @@ public class DockerService implements IStorageService{
 	    // Print the response code and message body
 	    System.out.println("HTTP Status Code: "+statusCode);
 	    System.out.println(responseBody);
+	    
+	    if("200".equals(statusCode)){
+	    	successed = true;
+	    }
+	    return successed;
 	}
 
 }
