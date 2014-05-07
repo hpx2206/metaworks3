@@ -20,7 +20,7 @@ public class AmazonService implements IStorageService{
 	String accessKey     = "AKIAIMSA24T5GYWMH5DQ";
 	String secretKey     = "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";
 			
-	public void putObject(String projectId ,String projectName, boolean isProd) throws IOException{
+	public boolean putObject(String projectId ,String projectName, boolean isProd) throws IOException{
 		
 		System.out.println("putObject...");
 		String codebase = GlobalContext.getPropertyString("codebase");
@@ -33,7 +33,7 @@ public class AmazonService implements IStorageService{
 			bucketName = GlobalContext.getPropertyString("app.repo.dev");
 		}
 		
-		
+		boolean successed = false;
 		AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
         
 		AmazonS3 s3client = new AmazonS3Client(awsCredentials);
@@ -41,7 +41,7 @@ public class AmazonService implements IStorageService{
             System.out.println("Uploading a new object to S3 from a file\n");
             File file = new File(uploadFilePath);
             s3client.putObject(new PutObjectRequest(bucketName, projectName+".jar", file));
-
+            successed = true;
          } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which " +
             		"means your request made it " +
@@ -60,5 +60,7 @@ public class AmazonService implements IStorageService{
                     "such as not being able to access the network.");
             System.out.println("Error Message: " + ace.getMessage());
         }
+        
+        return successed;
 	}
 }
