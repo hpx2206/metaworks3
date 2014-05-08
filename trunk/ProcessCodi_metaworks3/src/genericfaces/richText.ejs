@@ -5,18 +5,33 @@
 	
 	var cols = descriptor.getOptionValue('cols');
 	var rows = descriptor.getOptionValue('rows');
+	var whenMode = descriptor.getOptionValue('whenMode');
 	
 	if(cols==null) cols = 50;
 	if(rows==null) rows = 15;
-	
-	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
-%>
-	<textarea id="<%=mw3.createInputId(objectId)%>" class="form-control" cols=<%=cols%> rows=<%=rows%>><%=value%></textarea>
-<%
-
+	if(whenMode && whenMode!=null){
+	   if(whenMode == mw3.WHEN_EDIT || whenMode == mw3.WHEN_NEW){
+	 %>
+        <textarea id="<%=mw3.createInputId(objectId)%>" class="form-control" cols=<%=cols%> rows=<%=rows%>><%=value%></textarea>
+    <%
+    
+        }else{
+    %>
+         "<%=value%>"
+    <%
+        }
 	}else{
-%>
-	 "<%=value%>"
+    	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
+    %>
+    	<textarea id="<%=mw3.createInputId(objectId)%>" class="form-control" cols=<%=cols%> rows=<%=rows%>><%=value%></textarea>
+    <%
+    
+    	}else{
+    %>
+    	 "<%=value%>"
+    <%
+    	}
+    %> 
 <%
 	}
 %> 
