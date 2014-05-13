@@ -6,6 +6,8 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.ide.AmazonService;
 import org.uengine.codi.mw3.ide.DockerService;
 import org.uengine.codi.mw3.ide.IStorageService;
+import org.uengine.codi.mw3.knowledge.BuildInfo;
+import org.uengine.codi.mw3.knowledge.IBuildInfo;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.kernel.GlobalContext;
@@ -79,27 +81,59 @@ public class Approval implements ITool{
 	public void afterComplete() throws Exception {
 		String projectId = null;
 		String projectName = null;
+		App uploadApp=null;
 		if( "yes".equals(approved)){
-			App uploadApp = new App();
+			uploadApp = new App();
 			
 			uploadApp.setAppId(this.getAppId());
 			uploadApp.databaseMe().setStatus(App.STATUS_APPROVED);
 			projectId = uploadApp.databaseMe().getProjectId();
+			
+			WfNode wfNode = new WfNode();
+			wfNode.setId(projectId);
+			projectName = wfNode.databaseMe().getName();
+			
+			BuildInfo buildInfo = new BuildInfo();
+			buildInfo.setProjectId(projectId);
+			IBuildInfo findBuildInfo = buildInfo.findDevDistributed();
+			String version = null;
+			if(findBuildInfo.next()){
+				buildInfo.setBuildVer(findBuildInfo.getBuildVer());
+				version = findBuildInfo.getMajorVer()+"."+findBuildInfo.getMinorVer()+"."+findBuildInfo.getBuildVer(); 
+			}
+			String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
+			
+			IStorageService storageService=null;
+			
+			boolean successed = false;
+			
+			String url=null;
+			if("amazon".equals(reopsitoryService)){
+				storageService = new AmazonService();
+				url = GlobalContext.getPropertyString("app.url.prod")+projectName;
+			}else if("docker".equals(reopsitoryService)){
+				storageService = new DockerService();
+				url = GlobalContext.getPropertyString("app.url.prod")+projectName+"-"+version;
+			}
+			successed = storageService.putObject(projectId, projectName, version, true);
+			
+			if(!successed){
+				throw new Exception("앱이 등록에 실패하였습니다.");
+			}
+			
+			findBuildInfo = buildInfo.findProdDistributed();
+			if(findBuildInfo.next()){
+				buildInfo.copyFrom(findBuildInfo);
+				buildInfo.databaseMe().setProdDistributed(false);
+			}
+			findBuildInfo = buildInfo.findBybuildVersion();
+			if(findBuildInfo.next()){
+				buildInfo.copyFrom(findBuildInfo);
+				buildInfo.databaseMe().setProdDistributed(true);
+			}
+			uploadApp.databaseMe().setUrl(url);
 		}
-		WfNode wfNode = new WfNode();
-		wfNode.setId(projectId);
-		projectName = wfNode.databaseMe().getName();
 		
-		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
-		
-		IStorageService storageService=null;
-		
-		if("amazon".equals(reopsitoryService)){
-			storageService = new AmazonService();
-		}else if("docker".equals(reopsitoryService)){
-			storageService = new DockerService();
-		}
-		storageService.putObject(projectId, projectName,true);
 	}
 
 }

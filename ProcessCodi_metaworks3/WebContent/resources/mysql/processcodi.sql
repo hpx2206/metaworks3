@@ -1139,3 +1139,23 @@ CREATE TABLE `appdatabase` (
   `dburl` varchar(200) NOT NULL,
   PRIMARY KEY (`iddatabase`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app database';
+
+
+DROP TABLE IF EXISTS `buildInfo`;
+
+create table buildInfo(
+    id varchar(20) NOT NULL,
+	projectId varchar(20) not null,
+    projectName varchar(20) not null,
+    majorVer int(1),
+    minorVer int(1),
+    buildVer int(1),
+    userName varchar(20),
+    userId varchar(20),
+  	`modDate` datetime DEFAULT NULL,
+	devDistributed int(1),
+	prodDistributed int(1),
+    comment varchar(200),
+	primary key(id)
+	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -17,13 +17,15 @@ import org.uengine.kernel.GlobalContext;
 public class DockerService implements IStorageService{
 
 	@Override
-	public boolean putObject(String projectId, String projectName, boolean isProd)
+	public boolean putObject(String projectId, String projectName, String version, boolean isProd)
 			throws IOException {
 		System.out.println("putObject...");
 		String reopsitoryUrl = null;
 		String codebase = GlobalContext.getPropertyString("codebase");
+//		String targetFilePath = codebase + File.separatorChar + projectId + File.separatorChar
+//				+ "maven" + File.separatorChar + projectName + "-" + version + ".jar";
 		String uploadFilePath = codebase + File.separatorChar + projectId + File.separatorChar
-				+ "maven" + File.separatorChar + projectName+".jar";
+				+ "maven" + File.separatorChar + projectName + "-" + version + ".jar";
 		
 		if(isProd){
 			reopsitoryUrl = GlobalContext.getPropertyString("file.repository.url.prod");
@@ -58,7 +60,7 @@ public class DockerService implements IStorageService{
 	    System.out.println("HTTP Status Code: "+statusCode);
 	    System.out.println(responseBody);
 	    
-	    if("200".equals(statusCode)){
+	    if("200".equals(String.valueOf(statusCode))){
 	    	successed = true;
 	    }
 	    return successed;
