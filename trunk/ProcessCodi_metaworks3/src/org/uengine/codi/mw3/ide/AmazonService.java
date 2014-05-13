@@ -20,12 +20,12 @@ public class AmazonService implements IStorageService{
 	String accessKey     = "AKIAIMSA24T5GYWMH5DQ";
 	String secretKey     = "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";
 			
-	public boolean putObject(String projectId ,String projectName, boolean isProd) throws IOException{
+	public boolean putObject(String projectId ,String projectName, String version, boolean isProd) throws IOException{
 		
 		System.out.println("putObject...");
 		String codebase = GlobalContext.getPropertyString("codebase");
 		String uploadFilePath = codebase + File.separatorChar + projectId + File.separatorChar
-				+ "maven" + File.separatorChar + projectName+".jar";
+				+ "maven" + File.separatorChar + projectName+"-"+version+".jar";
 		
 		if(isProd){
 			bucketName = GlobalContext.getPropertyString("app.repo.prod");

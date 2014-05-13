@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequestWrapper;
+
+import net.sf.hibernate.collection.List;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -18,6 +21,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
@@ -25,6 +29,7 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
+import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.omg.SendingContext.RunTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +42,24 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.AmazonService;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.editor.metadata.AppEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
+import org.uengine.codi.mw3.knowledge.BuildInfo;
+import org.uengine.codi.mw3.knowledge.IBuildInfo;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
 import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.dbrepo.AppDbRepository;
 import org.uengine.dbrepo.IAppDbRepository;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.ui.taglibs.input.RichTextArea;
 import org.uengine.webservice.ServiceClassGenerator;
 import org.metaworks.dao.TransactionContext;
 
@@ -123,8 +135,10 @@ public class ResourceContextMenu extends CloudMenu {
 			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));			
 			this.add(new MenuItem("manageMetadata", "$resource.menu.manageMetadata"));
 			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-			this.add(new MenuItem("deployee", "$resource.menu.deployee"));
-			this.add(new MenuItem("registerApp", "$resource.menu.registerApp"));
+			this.add(new MenuItem("popupBuild", "$resource.menu.build"));
+			this.add(new MenuItem("popupDeployee", "$resource.menu.deployee"));
+			//this.add(new MenuItem("registerApp", "$resource.menu.registerApp"));
+			this.add(new MenuItem("excuteApp", "$resource.menu.run"));
 		}
 		
 		if( this.getResourceNode() != null && this.getResourceNode() instanceof ProcessNode){
@@ -147,6 +161,7 @@ public class ResourceContextMenu extends CloudMenu {
 	public Object processMerge() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
+			
 			ResourceNode node = (ResourceNode)clipboard;
 			ProcessMergeEditor processMergeEditor = new ProcessMergeEditor(node);
 			processMergeEditor.setId("$processMergeCompare");
@@ -176,6 +191,39 @@ public class ResourceContextMenu extends CloudMenu {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup popupBuild() throws Exception{
+
+		Object clipboard = session.getClipboard();
+		ResourceNode node = (ResourceNode)clipboard;
+		String projectName = node.getName();
+		String projectId   = node.getId();
+		
+		BuildInfo buildInfo = new BuildInfo();
+		buildInfo.getMetaworksContext().setHow(BuildInfo.BUILD_BEFORE);
+		buildInfo.setProjectId(projectId);
+		IBuildInfo findBuildInfo = buildInfo.findBuildVersion(true);
+		if(!findBuildInfo.next()){
+			buildInfo.setBuildVer(1);
+		}else{
+			buildInfo.setBuildVer(findBuildInfo.getBuildVer()+1);
+		}
+		buildInfo.setMajorVer(1);
+		buildInfo.setMinorVer(0);
+		
+		String nextVer = buildInfo.getMajorVer()+"."+buildInfo.getMinorVer()+"."+buildInfo.getBuildVer();
+		
+		buildInfo.setVersion(nextVer);
+		buildInfo.setProjectName(this.getResourceNode().getName());
+		buildInfo.setProjectName(projectName);
+		buildInfo.setModDate(new Date());
+		buildInfo.setUserName(session.getEmployee().getEmpName());
+		buildInfo.setUserId(session.getEmployee().getEmpCode());
+		Popup popup = new Popup(800,300,buildInfo);
+		popup.setName("빌드");
+		return popup;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove(){
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -215,58 +263,46 @@ public class ResourceContextMenu extends CloudMenu {
 		return null;
 		//return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
 	}
-	public boolean executeCommand(String cmd[]) throws IOException, InterruptedException{
-	
-		Runtime runTime = Runtime.getRuntime();
-		Process process = runTime.exec(cmd);
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup popupDeployee() throws Exception {
+		Object clipboard = session.getClipboard();
+		ResourceNode node = (ResourceNode)clipboard;
+		String projectId   = node.getId();
 		
-		InputStream is = process.getInputStream();
-		InputStreamReader isr = new InputStreamReader(is);
-		BufferedReader br = new BufferedReader(isr);
-		boolean successed = false;
-		String line;
-		while((line = br.readLine()) != null){
-			System.out.println(line);
-			if(line.contains("BUILD SUCCESS"))
-				successed = true;
+		BuildInfo buildInfo = new BuildInfo();
+		buildInfo.getMetaworksContext().setHow(BuildInfo.DEPLOYEE_BEFORE);
+		buildInfo.setProjectId(projectId);
+		IBuildInfo findBuildInfo = buildInfo.findBuildVersion(true);
+		
+		if(!findBuildInfo.next()){
+			throw new Exception("해당 프로젝트가 아직 빌드되지 않았습니다.");
 		}
-		int execTime = process.waitFor();
-		System.out.println("exe time: " + execTime);
-		return successed;
+		String version = findBuildInfo.getMajorVer()+"."+findBuildInfo.getMinorVer()+"."+findBuildInfo.getBuildVer();
+		buildInfo.setVersion(version);
+		buildInfo.setBuildVer(findBuildInfo.getBuildVer());
+		buildInfo.setProjectName(findBuildInfo.getProjectName());
+		buildInfo.setModDate(findBuildInfo.getModDate());
+		buildInfo.setUserName(findBuildInfo.getUserName());
+		buildInfo.setComment(findBuildInfo.getComment());
+		
+		//buildInfo.copyFrom(findBuildInfo);
+		buildInfo.loadSelectVersion();
+		
+		
+		Popup popup = new Popup(800,330,buildInfo);
+		popup.setName("배포");
+		return popup;
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] deployee() throws Exception {
 		
+		boolean successed = false;
 		Object clipboard = session.getClipboard();
 		ResourceNode node = (ResourceNode)clipboard;
-		String codebase = GlobalContext.getPropertyString("codebase");	
 		String projectName = node.getName();
 		String projectId   = node.getId();
-		String cmd[] = new String[3];
-		String osName = System.getProperty("os.name");
-		String realPath = new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest())
-		 				.getRealPath("")+File.separatorChar+"resources"+File.separatorChar+"maven"+File.separatorChar;
-		String command = null;	
-		
-		if(osName.toLowerCase().startsWith("window")){
-			command = realPath + GlobalContext.getPropertyString("maven.depoly.bat", "depoly.bat");
-			cmd[0] = "cmd.exe";
-			cmd[1] = "/C";
-			cmd[2] = command + " " + realPath +  " " + codebase+File.separatorChar+projectId + " " + projectName;
-
-		}else{
-			command = realPath + GlobalContext.getPropertyString("maven.depoly.sh", "depoly.sh");
-			cmd[0] = "/bin/sh";
-			cmd[1] = "-c";
-			cmd[2] = command + " " + realPath +  " " + codebase+File.separatorChar+projectId + " " + projectName;
-		}
-		//command arg[1]=pom.xml,depoly.sh 파일 위치 arg[2]=해당 프로젝트 경로 arg[3]=프로젝트 이름
-		System.out.println("command ==>" + cmd[2]);
-		boolean successed = executeCommand(cmd);
-		if(!successed){
-			throw new Exception("해당 프로젝트 빌드에 실패하였습니다.");
-		}
 		
 		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
 		
@@ -277,8 +313,17 @@ public class ResourceContextMenu extends CloudMenu {
 		}else if("docker".equals(reopsitoryService)){
 			storageService = new DockerService();
 		}
-		
-		successed = storageService.putObject(projectId, projectName,false);
+		String version=null;
+		BuildInfo buildInfo = new BuildInfo();
+		buildInfo.getMetaworksContext().setHow(BuildInfo.DEPLOYEE_BEFORE);
+		buildInfo.setProjectId(projectId);
+		IBuildInfo findBuildInfo = buildInfo.findBuildVersion(true);
+		if(!findBuildInfo.next()){
+			throw new Exception("해당 프로젝트가 아직 빌드되지 않았습니다.");
+		}else{
+			version = findBuildInfo.getMajorVer()+"."+findBuildInfo.getMinorVer()+"."+findBuildInfo.getBuildVer();
+		}
+		successed = storageService.putObject(projectId, projectName, version, false);
 		if(!successed){
 			throw new Exception("해당 프로젝트 배포에 실패하였습니다.");
 		}
@@ -341,6 +386,43 @@ public class ResourceContextMenu extends CloudMenu {
 		return null;
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] excuteApp() throws Exception {
+		Object clipboard = session.getClipboard();
+		ResourceNode node = (ResourceNode)clipboard;
+		String projectId   = node.getId();
+		String projectName = node.getName();
+		
+		BuildInfo buildInfo = new BuildInfo();
+		buildInfo.setProjectId(projectId);
+		IBuildInfo findBuildInfo = buildInfo.findDevDistributed();
+		String version = null;
+		
+		if(!findBuildInfo.next()){
+			throw new Exception("해당 프로젝트가 아직 배포되지 않았습니다.");
+		}
+		
+		version = findBuildInfo.getMajorVer()+"."+findBuildInfo.getMinorVer()+"."+findBuildInfo.getBuildVer(); 
+		
+		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service","app.url.dev");
+		IStorageService storageService=null;
+		String url = null;
+		
+		if("amazon".equals(reopsitoryService)){
+			storageService = new AmazonService();
+			url = GlobalContext.getPropertyString("app.url.dev")+projectName;
+		}else if("docker".equals(reopsitoryService)){
+			storageService = new DockerService();
+			url = GlobalContext.getPropertyString("app.url.dev")+projectName+"-"+version;
+		}
+		
+		AppEditor editor = new AppEditor(node);
+		editor.session = session;
+		editor.setFrame(new IFrame(url));
+		
+		return new Object[]{ new ToAppend(new CloudWindow("editor"), editor) };	
+		
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] webService() throws Exception {
 		
 		Object clipboard = session.getClipboard();
@@ -376,5 +458,5 @@ public class ResourceContextMenu extends CloudMenu {
 	public Object showProperties(){		
 		return null;
 	}
-	
+
 }
