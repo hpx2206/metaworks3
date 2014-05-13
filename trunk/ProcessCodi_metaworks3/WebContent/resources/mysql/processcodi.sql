@@ -1140,7 +1140,7 @@ CREATE TABLE `appdatabase` (
   PRIMARY KEY (`iddatabase`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app database';
 
-
+-- 14.05.13 메이븐 빌드정보 추가
 DROP TABLE IF EXISTS `buildInfo`;
 
 create table buildInfo(
