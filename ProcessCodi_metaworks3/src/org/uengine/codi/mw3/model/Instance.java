@@ -1174,13 +1174,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		boolean isRelated = false;
 		TopicNode topic = new TopicNode();
+		String topicId = this.databaseMe().getTopicId();
 		topic.setId(this.databaseMe().getTopicId());
 		try {
 			topic.copyFrom(topic.databaseMe());
 			// 비공개 주제일 경우 본건의 관련자가 아니면 주제참여 막음.
 			if( "1".equals(topic.getSecuopt())){
 				TopicFollower findFollower = new TopicFollower();
-				findFollower.setParentId(this.getTopicId());
+				findFollower.setParentId(topicId);
 				IFollower follower = findFollower.findFollowers();
 				while(follower.next()){
 					if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
