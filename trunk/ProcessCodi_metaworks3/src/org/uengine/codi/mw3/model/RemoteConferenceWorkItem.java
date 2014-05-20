@@ -65,6 +65,12 @@ public class RemoteConferenceWorkItem extends WorkItem{
 	
 		
 	@Override
+	public void edit() throws Exception {
+		throw new Exception("$CanNotEdit");
+	}
+
+
+	@Override
 	public Object[] add() throws Exception {
 		Calendar modifyCal = Calendar.getInstance();
 		Calendar nowCal = Calendar.getInstance();

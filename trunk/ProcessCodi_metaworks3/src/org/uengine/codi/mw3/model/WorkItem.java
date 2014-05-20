@@ -42,8 +42,6 @@ import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.RoleMapping;
-import org.uengine.kernel.TimerEventActivity;
-import org.uengine.kernel.designer.inputter.CronExpressionInputter;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -1012,6 +1010,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				if(this.getDueDate()!= null)
 					instanceRef.setDueDate(this.getDueDate());
+				
+				
 			}
 
 			instanceRef.setCurrentUser(this.getWriter());//may corrupt when the last actor is assigned from process execution.
@@ -1098,12 +1098,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.syncToDatabaseMe();
 			
 			//워크아이템 수정시 알림 워크아이템 발행
-			String type=null;
-			WorkItem workItem = new WorkItem();
-			workItem.setTaskId(this.getTaskId());
-			workItem.copyFrom(workItem.findByTaskId(this.getTaskId().toString()));
-			
-			generateNotiWorkItem(workItem.getTitle(), "modify");
+			if(!WORKITEM_TYPE_COMMENT.equals(this.getType()) &&
+					!WORKITEM_TYPE_OVRYCMNT.equals(this.getType())){
+				WorkItem workItem = new WorkItem();
+				workItem.setTaskId(this.getTaskId());
+				workItem.copyFrom(workItem.findByTaskId(this.getTaskId().toString()));
+				
+				generateNotiWorkItem(workItem.getTitle(), "modify");
+			}
 		}		
 		
 		// 팔로워 추가(추천 및 게시)
@@ -1185,6 +1187,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		String totalTitle = "\'" + session.getEmployee().getEmpName() + "\' 님이 ";
 		
+		Instance instance = new Instance();
+		instance.setInstId(this.getInstId());
 		
 		if(act != null){
 			String type = " "+localeManager.getString("$notiWorkItem.type."+ this.getType());
@@ -1195,7 +1199,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		totalTitle += title;
 		
-		workItem.setInstId(this.getInstId());
+		workItem.setInstId(instance.databaseMe().getRootInstId());
 		workItem.setTitle(totalTitle);
 		workItem.add();
 		workItem.flushDatabaseMe();
@@ -1257,45 +1261,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		 *  === noti push 부분 ===
 		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
 		 */
-		HashMap<String, String> notiUsers = new HashMap<String, String>();
-		Notification notification = new Notification();
-		notification.session = session;
-		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
-		if(instance.getTopicId() != null && "0".equals(instance.getSecuopt())){
-			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instance.getTopicId());
-			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
-			while(iterator.hasNext()){
-				String followerUserId = (String)iterator.next();
-				notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
-			}
-		}
 		
-		pushUserMap.putAll(notiUsers);
-		
-		// noti 저장
-		Iterator<String> iterator = notiUsers.keySet().iterator();
-		while(iterator.hasNext()){
-			String followerUserId = (String)iterator.next();
-			if(!session.getEmployee().getEmpCode().equals(followerUserId)){
-				Notification noti = new Notification();
-				INotiSetting notiSetting = new NotiSetting();
-				INotiSetting findResult = notiSetting.findByUserId(followerUserId);
-				if(!findResult.next() || findResult.isWriteInstance()){
-					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-					noti.setUserId(followerUserId);
-					noti.setActorId(session.getUser().getUserId());
-					noti.setConfirm(false);
-					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setTaskId(getTaskId());
-					noti.setInstId(getInstId());					
-					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-					noti.add(copyOfInstance);
-				}
-			}
-		}
-		
-		Notification.addPushListener(notiUsers);
-		
+		this.pushNoti("wrote");
+
 		/**
 		 *  === instance push 부분 ===
 		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
@@ -1480,13 +1448,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			deleteDatabaseMe();
 			
-			//워크아이템 삭제시 노티워크아이템 발행
-			String removedTitle = this.getTitle();
-			
-			generateNotiWorkItem(removedTitle, "remove");
-			
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = theInstance;
+
+			//워크아이템 삭제시 노티워크아이템 발행
+			String removedTitle = this.getTitle();
+			if(!WORKITEM_TYPE_COMMENT.equals(this.getType()) &&
+					!WORKITEM_TYPE_OVRYCMNT.equals(this.getType())){
+				generateNotiWorkItem(removedTitle, "remove");
+			}
+			
+			this.pushNoti("removed");
+			
 			// 자기 자신의 인스턴스 리스트를 새로고침
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
 			
@@ -1500,6 +1473,61 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 		throw new Exception("$OnlyTheWriterCanDelete");
 		
+	}
+	
+	public void pushNoti(String mode) throws Exception{
+		
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		IInstance instanceRef = null;
+		Instance theInstance = new Instance();
+		theInstance.setInstId(getInstId());
+		theInstance.copyFrom(theInstance.databaseMe());
+		
+		instanceRef = theInstance.databaseMe();	
+		instanceRef.getMetaworksContext().setWhere(Instance.WHERE_INSTANCELIST);
+		
+		if(WORKITEM_TYPE_COMMENT.equals(this.getType()) 
+				|| WORKITEM_TYPE_OVRYCMNT.equals(this.getType())
+				|| (!WORKITEM_TYPE_COMMENT.equals(this.getType())&&WHEN_NEW.equals(getMetaworksContext().getWhen()))){
+			HashMap<String, String> notiUsers = new HashMap<String, String>();
+			Notification notification = new Notification();
+			notification.session = session;
+			notiUsers = notification.findInstanceNotiUser(instanceRef.getRootInstId().toString());
+			if(theInstance.getTopicId() != null && "0".equals(theInstance.getSecuopt())){
+				HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(theInstance.getTopicId());
+				Iterator<String> iterator = topicNotiUsers.keySet().iterator();
+				while(iterator.hasNext()){
+					String followerUserId = (String)iterator.next();
+					notiUsers.put(followerUserId, topicNotiUsers.get(followerUserId));
+				}
+			}
+			
+			pushUserMap.putAll(notiUsers);
+			
+			// noti 저장
+			Iterator<String> iterator = notiUsers.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				if(!session.getEmployee().getEmpCode().equals(followerUserId)){
+					Notification noti = new Notification();
+					INotiSetting notiSetting = new NotiSetting();
+					INotiSetting findResult = notiSetting.findByUserId(followerUserId);
+					if(!findResult.next() || findResult.isWriteInstance()){
+						noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+						noti.setUserId(followerUserId);
+						noti.setActorId(session.getUser().getUserId());
+						noti.setConfirm(false);
+						noti.setInputDate(Calendar.getInstance().getTime());
+						noti.setTaskId(getTaskId());
+						noti.setInstId(getInstId());					
+						noti.setActAbstract(session.getUser().getName() + " " + mode + " : " + getTitle());
+						noti.add(instanceRef);
+					}
+				}
+			}
+			
+			Notification.addPushListener(notiUsers);
+		}
 	}
 
 	public void edit() throws Exception{
