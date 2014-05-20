@@ -49,7 +49,9 @@ public interface IWorkItem extends IDAO{
 		
 		
 		public final static String WORKITEM_TYPE_GENERIC = "generic";
-		
+
+		public final static String WORKITEM_TYPE_COMMENT	 = "comment";
+		public final static String WORKITEM_TYPE_OVRYCMNT	 = "ovryCmnt";
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
 		public final static String WORKITEM_TYPE_FILE		 = "file";
 		public final static String WORKITEM_TYPE_SRC		 = "src";

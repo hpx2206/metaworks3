@@ -76,7 +76,12 @@ public class FileWorkItem extends WorkItem{
 		if (this.getFile() == null || this.getFile().getFileTransfer() == null
 				|| this.getFile().getFileTransfer().getFilename() == null)
 			throw new MetaworksException("파일을 첨부해주세요.");
-
+		
+		String exTaskId=null;
+		if(this.getTaskId()!=null){
+			exTaskId = this.getTaskId().toString();
+		}
+		
 		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 		
 //		// 추가모드 일때
@@ -98,6 +103,12 @@ public class FileWorkItem extends WorkItem{
 					setMinorVer(tempWi.getMinorVer()+1);
 				}
 			}
+			//파일 워크아이템 수정시 알림 워크아이템 발행
+			WorkItem workItem = new WorkItem();
+			workItem.setTaskId(this.getTaskId());
+			workItem.copyFrom(workItem.findByTaskId(exTaskId));
+				
+			generateNotiWorkItem(workItem.getTitle(), "modify");
 			
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}
