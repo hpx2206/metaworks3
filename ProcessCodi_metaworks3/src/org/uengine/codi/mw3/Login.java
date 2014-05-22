@@ -1,22 +1,17 @@
 package org.uengine.codi.mw3;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +38,6 @@ import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.widget.ModalWindow;
-import org.springframework.web.util.CookieGenerator;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
@@ -64,9 +58,10 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PerspectivePanel;
 import org.uengine.codi.mw3.model.SNS;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.util.CodiHttpClient;
 import org.uengine.codi.util.CodiStringUtil;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.sso.BaseAuthenticate;
+import org.uengine.sso.CasAuthenticate;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 
@@ -214,42 +209,62 @@ public class Login implements ContextAware {
 
 		try
 		{
-			CodiHttpClient codiHc = new CodiHttpClient();
-
-			// tgt 티켓 발행 
-			HashMap<String, String> params = new HashMap<String,String>();
+			HashMap<String,String> params = new HashMap<String, String>();
+			params.put("ssoService", serviceURL);
 			params.put("username", getEmail());
 			params.put("password", getPassword());
-			HashMap mapResult = codiHc.sendMessageToEndPoint(StartCodi.CAS_REST_URL, params, "POST");
-			if(mapResult != null){
-				String strTgt = (String)mapResult.get(codiHc.RESULT_KEY);
-				strTgt = strTgt.substring( strTgt.lastIndexOf("/") +1);
-				System.out.println("Tgt is : " + strTgt);
-
-				// st 티켓 발행 
-				params = new HashMap<String,String>();
-				params.put("service", serviceURL);
-				String myURL = StartCodi.CAS_REST_URL + "/"+ strTgt ;
-				mapResult = codiHc.sendMessageToEndPoint(myURL, params, "POST");
-				String strSt = (String)mapResult.get(codiHc.RESULT_KEY);
+			
+			BaseAuthenticate ssoAuth = new CasAuthenticate();
+			String strTgt = ssoAuth.authorize(params);
+			
+			if(strTgt != null){
 				if(!bCodi){
-					setSsoService(getSsoService()+"?ticket=" + strSt);
+					String ticket = ssoAuth.serviceTicket(strTgt, serviceURL);
+					setSsoService(getSsoService()+"?ticket=" + ticket);
 				}else{
-					httpsession.setAttribute("SSO-ST", strSt);
-					StartCodi.MANAGED_SESSIONS.put(strSt, session);
+					httpsession.setAttribute("SSO-TGT", strTgt);
+					StartCodi.MANAGED_SESSIONS.put(strTgt, session);
 				}
-
-				// 쿠키저장
-				CookieGenerator cookieGenerator = new CookieGenerator();
-				cookieGenerator.setCookieSecure(false);
-				cookieGenerator.setCookieMaxAge(7889231);
-				cookieGenerator.setCookieName("CASTGC");
-				cookieGenerator.addCookie(TransactionContext.getThreadLocalInstance().getResponse(), strTgt);
-
 				return true;
 			}else{
 				return false;
 			}
+			
+			
+//			// tgt 티켓 발행 
+//			HashMap<String, String> params = new HashMap<String,String>();
+//			params.put("username", getEmail());
+//			params.put("password", getPassword());
+//			HashMap mapResult = codiHc.sendMessageToEndPoint(StartCodi.CAS_REST_URL, params, "POST");
+//			if(mapResult != null){
+//				String strTgt = (String)mapResult.get(codiHc.RESULT_KEY);
+//				strTgt = strTgt.substring( strTgt.lastIndexOf("/") +1);
+//				System.out.println("Tgt is : " + strTgt);
+//
+//				// st 티켓 발행 
+//				params = new HashMap<String,String>();
+//				params.put("service", serviceURL);
+//				String myURL = StartCodi.CAS_REST_URL + "/"+ strTgt ;
+//				mapResult = codiHc.sendMessageToEndPoint(myURL, params, "POST");
+//				String strSt = (String)mapResult.get(codiHc.RESULT_KEY);
+//				if(!bCodi){
+//					setSsoService(getSsoService()+"?ticket=" + strSt);
+//				}else{
+//					httpsession.setAttribute("SSO-ST", strSt);
+//					StartCodi.MANAGED_SESSIONS.put(strSt, session);
+//				}
+//
+//				// 쿠키저장
+//				CookieGenerator cookieGenerator = new CookieGenerator();
+//				cookieGenerator.setCookieSecure(false);
+//				cookieGenerator.setCookieMaxAge(7889231);
+//				cookieGenerator.setCookieName("CASTGC");
+//				cookieGenerator.addCookie(TransactionContext.getThreadLocalInstance().getResponse(), strTgt);
+//
+//				return true;
+//			}else{
+//				return false;
+//			}
 
 		}catch(Exception e){
 			e.printStackTrace();
