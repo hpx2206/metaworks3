@@ -27,6 +27,8 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.util.CodiHttpClient;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.sso.BaseAuthenticate;
+import org.uengine.sso.CasAuthenticate;
 
 public class StartCodi {
 
@@ -36,7 +38,6 @@ public class StartCodi {
 	public final static String USE_MULTITENANCY = GlobalContext.getPropertyString("multitenancy.use", "0");
 	public final static String USE_IAAS = GlobalContext.getPropertyString("iaas.use", "0");
 	public final static String USE_CAS = GlobalContext.getPropertyString("cas.use", "0");
-	public final static String CAS_REST_URL = GlobalContext.getPropertyString("cas.rest.url", "http://localhost:8080/cas/v1/tickets");
 	
 	//test code
 	public final static HashMap MANAGED_SESSIONS = new HashMap();
@@ -104,11 +105,10 @@ public class StartCodi {
 		if("1".equals(USE_CAS)){
 			String ssoService = getSsoService();
 			
-			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
-					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
-			
-			if(cookie != null){
-				String ssoSt = (String)httpSession.getAttribute("SSO-ST");
+			BaseAuthenticate ssoAuth = new CasAuthenticate();
+			if(ssoAuth.vaild()){
+				return login();
+				/*String ssoSt = (String)httpSession.getAttribute("SSO-ST");
 				if(ssoSt == null || (ssoService != null && ssoService.endsWith("callbackAuthorize"))){
 					String serviceURL = "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
 							+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
@@ -118,11 +118,9 @@ public class StartCodi {
 
 					// st 티켓 발행 
 					HashMap params = new HashMap<String,String>();
-					params.put("service", serviceURL);
-					String myURL = StartCodi.CAS_REST_URL + "/"+ cookie.getValue() ;
-					HashMap mapResult = codiHc.sendMessageToEndPoint(myURL, params, "POST");
-
-					if(mapResult != null){
+					params.put("ssoService", serviceURL);
+					String strSt = ssoAuth.authorize(params);
+					if(strSt != null){
 						String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
 
 						Employee emp = new Employee();
@@ -138,73 +136,18 @@ public class StartCodi {
 						user.setName(session.getEmployee().getEmpName());
 
 						session.setUser(user);
-						String strSt = (String)mapResult.get(CodiHttpClient.RESULT_KEY);
 
 						TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", strSt);
 						MANAGED_SESSIONS.put(strSt, session);
 
 						return login();
 					}
-					
-					
-//					String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL, "utf-8");
-//					System.out.println("Service url is : " + encodedServiceURL);
-//
-//					String myURL = StartCodi.CAS_REST_URL + "/"+ cookie.getValue();
-//					URL urlST = new URL(myURL);
-//					System.out.println(myURL);
-//					
-//					HttpURLConnection huc = null;
-//					try{
-//						huc = (HttpURLConnection) urlST.openConnection();
-//						huc.setDoInput(true);
-//						huc.setDoOutput(true);
-//						huc.setRequestMethod("POST");
-//						
-//						OutputStreamWriter outST = new OutputStreamWriter(huc.getOutputStream());
-//						BufferedWriter bwrST = new BufferedWriter(outST);
-//						bwrST.write(encodedServiceURL);
-//						bwrST.flush();
-//						bwrST.close();
-//						outST.close();
-//						
-//						System.out.println("Response code is:  " + huc.getResponseCode());
-//						
-//						String line;
-//						System.out.println( huc.getResponseCode());
-//						if(huc.getResponseCode() == 200){
-//							
-//							String loggedUserId = (String)httpSession.getAttribute("loggedUserId");
-//							
-//							Employee emp = new Employee();
-//							emp.setEmpCode(loggedUserId);
-//							IEmployee findEmp = emp.findMe();
-//							
-//							Session session = new Session();
-//							session.setEmployee(findEmp);
-//							
-//							IUser user = new User();			
-//							user.getMetaworksContext().setWhere("local");
-//							user.setUserId(session.getEmployee().getEmpCode());
-//							user.setName(session.getEmployee().getEmpName());
-//							
-//							session.setUser(user);
-//							BufferedReader isr = new BufferedReader(new InputStreamReader(huc.getInputStream()));
-//							while ((line = isr.readLine()) != null) {
-//								TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("SSO-ST", line);
-//								MANAGED_SESSIONS.put(line, session);
-//							}
-//							isr.close();
-//							huc.disconnect();
-//							return login();
-//						}
-//					}catch(Exception e){
-//					}finally{
-//						huc.disconnect();
-//					}
 				}else{
 					return login();
-				}
+				}*/
+				
+				
+				
 			}
 			
 					
@@ -215,7 +158,7 @@ public class StartCodi {
 //				
 //				String serviceURL = getSsoService() != null ? getSsoService() : "http://" +  TransactionContext.getThreadLocalInstance().getRequest().getLocalAddr().toString() + ":" 
 //						+ TransactionContext.getThreadLocalInstance().getRequest().getLocalPort() 
-//						+ TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+//						+ TransactionContext.getThrReadLocalInstance().getRequest().getContextPath();
 //				
 //				
 //				String encodedServiceURL = URLEncoder.encode("service","utf-8") +"=" + URLEncoder.encode(serviceURL,"utf-8");
@@ -341,9 +284,9 @@ public class StartCodi {
 		this.getSession().removeUserInfoFromHttpSession();
 		
 //		//test code
-		CookieGenerator cookieGenerator = new CookieGenerator();
-		cookieGenerator.setCookieName("CASTGC");
-		cookieGenerator.removeCookie(TransactionContext.getThreadLocalInstance().getResponse());
+//		CookieGenerator cookieGenerator = new CookieGenerator();
+//		cookieGenerator.setCookieName("CASTGC");
+//		cookieGenerator.removeCookie(TransactionContext.getThreadLocalInstance().getResponse());
 		
 		
 		Login login = new Login();

@@ -16,6 +16,7 @@ public class WebServiceApplication extends Application{
         // register root resource
 //        classes.add(JaxRsProcessWebService.class);
         classes.add(JaxRsDbrepoWebService.class);
+        classes.add(JaxRsSSOWebService.class);
         return classes;
     }
 }

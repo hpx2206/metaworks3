@@ -17,13 +17,14 @@ import javax.ws.rs.core.Context;
 
 import net.sf.json.JSONObject;
 
+import org.metaworks.dao.TransactionContext;
 import org.uengine.kernel.GlobalContext;
 
 @Path("dbrepo")
 public class JaxRsDbrepoWebService {
 
 	@GET
-	@Path("/getDbrepo/{mode}/{projectName}")
+	@Path("getDbrepo/{mode}/{projectName}")
 	@Produces("application/json")
 	public String _sendMessage(@Context HttpServletRequest req 
 			, @Context HttpServletResponse res
@@ -36,7 +37,7 @@ public class JaxRsDbrepoWebService {
 			String url = GlobalContext.getPropertyString("jdbc.url", "jdbc:mysql://localhost:3306/uengine?useUnicode=true&amp;characterEncoding=UTF8");
 			String user = GlobalContext.getPropertyString("jdbc.username", "root");
 			String passwd = GlobalContext.getPropertyString("jdbc.password", "u1234");
-
+			TransactionContext.getThreadLocalInstance().getRequest().getSession();
 			
 			Class.forName(className);
 			Connection con = null;
@@ -58,7 +59,7 @@ public class JaxRsDbrepoWebService {
 					}
 				}
 			}catch(Exception e){
-				
+				e.printStackTrace();
 			}finally{
 				if (null != stmt) {
 					try {

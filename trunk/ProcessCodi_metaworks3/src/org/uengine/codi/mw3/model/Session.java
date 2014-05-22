@@ -21,6 +21,8 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.StartCodi;
 import org.uengine.codi.mw3.marketplace.MyVendor;
 import org.uengine.codi.util.CodiHttpClient;
+import org.uengine.sso.BaseAuthenticate;
+import org.uengine.sso.CasAuthenticate;
 
 	
 public class Session implements ContextAware{
@@ -222,35 +224,39 @@ public class Session implements ContextAware{
 	public StartCodi logout() throws Exception {
 		
 		if("1".equals(StartCodi.USE_CAS)){
+			String strTgt = TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("SSO-TGT").toString();
 			
-			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
-					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
-			if(cookie != null){
-				CodiHttpClient codiHc = new CodiHttpClient();
-				String urls = StartCodi.CAS_REST_URL + "/" + cookie.getValue();
-				HashMap mapResult = codiHc.sendMessageToEndPoint(urls, null, "DELETE");
-				if(mapResult == null){
-					throw new Exception("Sso Logout fail.");
-				}
-				
-				
+			BaseAuthenticate baseAuth = new CasAuthenticate();
+			baseAuth.destorytoken(strTgt);
+			
+//			final javax.servlet.http.Cookie cookie = org.springframework.web.util.WebUtils.getCookie(
+//					TransactionContext.getThreadLocalInstance().getRequest(), "CASTGC");
+//			if(cookie != null){
+//				CodiHttpClient codiHc = new CodiHttpClient();
 //				String urls = StartCodi.CAS_REST_URL + "/" + cookie.getValue();
-//				URL url = new URL(urls);
-//				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//				try{
-//
-//					conn.setRequestMethod("DELETE");
-//					conn.setRequestProperty("Accept", "application/json");
-//					if (conn.getResponseCode() != 200) {
-//						throw new RuntimeException("Failed : HTTP error code : "
-//								+ conn.getResponseCode());
-//					}
-//				}catch(Exception e){
-//
-//				}finally{
-//					conn.disconnect();
+//				HashMap mapResult = codiHc.sendMessageToEndPoint(urls, null, "DELETE");
+//				if(mapResult == null){
+//					throw new Exception("Sso Logout fail.");
 //				}
-			}
+//				
+//				
+////				String urls = StartCodi.CAS_REST_URL + "/" + cookie.getValue();
+////				URL url = new URL(urls);
+////				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+////				try{
+////
+////					conn.setRequestMethod("DELETE");
+////					conn.setRequestProperty("Accept", "application/json");
+////					if (conn.getResponseCode() != 200) {
+////						throw new RuntimeException("Failed : HTTP error code : "
+////								+ conn.getResponseCode());
+////					}
+////				}catch(Exception e){
+////
+////				}finally{
+////					conn.disconnect();
+////				}
+//			}
 			
 		}
 
