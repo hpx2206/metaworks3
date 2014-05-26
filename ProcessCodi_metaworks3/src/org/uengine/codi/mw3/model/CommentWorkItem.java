@@ -14,7 +14,7 @@ import org.uengine.codi.mw3.admin.WebEditor;
 public class CommentWorkItem extends WorkItem{
 	
 	public CommentWorkItem(){
-		setType("comment");
+		setType(WORKITEM_TYPE_COMMENT);
 	}
 	
 	@Hidden(on=false)
