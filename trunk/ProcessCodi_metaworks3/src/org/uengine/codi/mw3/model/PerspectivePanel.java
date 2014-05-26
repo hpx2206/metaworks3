@@ -110,6 +110,16 @@ public class PerspectivePanel implements ContextAware {
 			this.topicPerspective = topicPerspective;
 		}
 		
+	CompetitionPerspective	competitionPerspective;
+	@Available(condition="competitionPerspective")
+			public CompetitionPerspective getCompetitionPerspective() {
+				return competitionPerspective;
+			}
+			public void setCompetitionPerspective(
+					CompetitionPerspective competitionPerspective) {
+				this.competitionPerspective = competitionPerspective;
+			}
+			
 	ContactPerspective contactPerspective;
 	@Available(condition="contactPerspective")
 		public ContactPerspective getContactPerspective() {
@@ -161,6 +171,11 @@ public class PerspectivePanel implements ContextAware {
 				topicPerspective = new TopicPerspective();
 			}
 				
+			//대회별
+			if("1".equals(Perspective.USE_COMPETITION)){
+				competitionPerspective = new CompetitionPerspective();
+			}
+			
 			if(!SNS.isPhone()){
 				if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 					//조직도
