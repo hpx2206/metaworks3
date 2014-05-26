@@ -698,7 +698,14 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		am.setAppId(this.getAppId());
 		am.setAppName(this.getAppName());
 		am.setComCode(this.getComcode());
-		am.setUrl(GlobalContext.getPropertyString("app.url.prod")+projectName);
+		String url=null;
+		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
+		if("amazon".equals(reopsitoryService)){
+			url = GlobalContext.getPropertyString("app.url.prod")+projectName;
+		}else if("docker".equals(reopsitoryService)){
+			url = GlobalContext.getPropertyString("app.url.prod")+projectName+"-"+version;
+		}
+		am.setUrl(url);
 		am.setAppType(this.getAppType());
 		
 		am.createDatabaseMe();
