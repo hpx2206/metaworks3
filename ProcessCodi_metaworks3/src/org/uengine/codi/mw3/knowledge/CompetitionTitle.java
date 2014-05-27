@@ -39,9 +39,9 @@ import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.TopicInfo;
+import org.uengine.codi.mw3.model.CompetitionRegister;
 import org.uengine.kernel.GlobalContext;
 
-import competition.form.competitionRegister;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", 
 options={"fieldOrder"}, 
@@ -215,7 +215,7 @@ public class CompetitionTitle extends TopicTitle{
 		String startForm = dateFormat.format(startDate);
 		String endForm = dateFormat.format(endDate);
 		
-		competitionRegister data = new competitionRegister(); 
+		CompetitionRegister data = new CompetitionRegister(); 
 		data.setCompetitionId(this.getTopicId());
 		data.setGameName(this.getTopicTitle());
 		data.setUserId(user.getEmpCode());
