@@ -403,17 +403,16 @@ public class ResourceContextMenu extends CloudMenu {
 		
 		version = findBuildInfo.getMajorVer()+"."+findBuildInfo.getMinorVer()+"."+findBuildInfo.getBuildVer(); 
 		
-		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service","app.url.dev");
+		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service","docker");
 		IStorageService storageService=null;
 		String url = null;
 		
 		if("amazon".equals(reopsitoryService)){
 			storageService = new AmazonService();
-			url = GlobalContext.getPropertyString("app.url.dev")+projectName;
 		}else if("docker".equals(reopsitoryService)){
 			storageService = new DockerService();
-			url = GlobalContext.getPropertyString("app.url.dev")+projectName+"-"+version;
 		}
+		url = GlobalContext.getPropertyString("app.url.dev")+projectName;
 		
 		AppEditor editor = new AppEditor(node);
 		editor.session = session;
