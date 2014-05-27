@@ -700,11 +700,8 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		am.setComCode(this.getComcode());
 		String url=null;
 		String reopsitoryService = GlobalContext.getPropertyString("file.repository.service");
-		if("amazon".equals(reopsitoryService)){
-			url = GlobalContext.getPropertyString("app.url.prod")+projectName;
-		}else if("docker".equals(reopsitoryService)){
-			url = GlobalContext.getPropertyString("app.url.prod")+projectName+"-"+version;
-		}
+		url = GlobalContext.getPropertyString("app.url.prod")+projectName;
+		
 		am.setUrl(url);
 		am.setAppType(this.getAppType());
 		
