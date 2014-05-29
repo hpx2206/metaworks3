@@ -96,6 +96,14 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 		public void setEditorInstanceId(String editorInstanceId) {
 			this.editorInstanceId = editorInstanceId;
 		}
+	
+	String artifactId;
+		public String getArtifactId() {
+			return artifactId;
+		}
+		public void setArtifactId(String artifactId) {
+			this.artifactId = artifactId;
+		}
 		
 	public ResourceNode(){
 		setMetaworksContext(new MetaworksContext());
@@ -106,20 +114,14 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 		this.setName(project.getName());
 		this.setType(TYPE_PROJECT);
 		this.setFolder(true);
-
+		this.setArtifactId(project.getProjectAlias());
 		this.setPath(project.getPath());
 		this.setProjectId(project.getId());
 
-		File file = new File(this.getPath());
+		String relativePath = this.getArtifactId().replace('.', File.separatorChar);
+		File file = new File(this.getPath() + File.separatorChar + relativePath);
 		if(!file.exists()){
-			System.out.println("not exists project codebase :" +file.getAbsolutePath());
-			
 			file.mkdirs();
-			
-			File srcFolder = new File(this.getPath() + File.separatorChar + this.getName());
-			if(!srcFolder.exists())
-				srcFolder.mkdirs();
-			
 			System.out.println("mkdirs");
 		}
 		

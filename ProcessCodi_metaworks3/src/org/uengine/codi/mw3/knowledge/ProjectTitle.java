@@ -21,6 +21,9 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -150,7 +153,11 @@ public class ProjectTitle implements ContextAware {
 		}
 	
 	String projectAlias;
-		@Face(displayName="$Alias", options={"size"}, values={"51"})
+		@Face(displayName="$ArtifactId", options={"size"}, values={"51"})
+		@ValidatorSet({
+			@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="artifactId를 입력하세요."),
+			@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, options={"/^[a-z]/"}, message="소문자만")
+		})
 		public String getProjectAlias() {
 			return projectAlias;
 		}
