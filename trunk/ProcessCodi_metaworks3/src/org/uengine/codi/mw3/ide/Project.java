@@ -39,6 +39,14 @@ public class Project {
 			this.path = path;
 		}
 	
+	String projectAlias;
+		public String getProjectAlias() {
+			return projectAlias;
+		}
+		public void setProjectAlias(String projectAlias) {
+			this.projectAlias = projectAlias;
+		}
+
 	boolean useDefault;
 		public boolean isUseDefault() {
 			return useDefault;
@@ -55,7 +63,7 @@ public class Project {
 		this.setId(node.getId());
 		this.setName(node.getName());
 		this.setUseDefault(true);
-		
+		this.setProjectAlias(node.getProjectAlias());
 		this.load();
 	}
 	

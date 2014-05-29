@@ -110,11 +110,10 @@ public class Approval implements ITool{
 			String url=null;
 			if("amazon".equals(reopsitoryService)){
 				storageService = new AmazonService();
-				url = GlobalContext.getPropertyString("app.url.prod")+projectName;
 			}else if("docker".equals(reopsitoryService)){
 				storageService = new DockerService();
-				url = GlobalContext.getPropertyString("app.url.prod")+projectName+"-"+version;
 			}
+			url = GlobalContext.getPropertyString("app.url.prod")+projectName;
 			successed = storageService.putObject(projectId, projectName, version, true);
 			
 			if(!successed){

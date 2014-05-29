@@ -386,7 +386,7 @@ public class ResourceContextMenu extends CloudMenu {
 		return null;
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object[] excuteApp() throws Exception {
+	public ModalWindow excuteApp() throws Exception {
 		Object clipboard = session.getClipboard();
 		ResourceNode node = (ResourceNode)clipboard;
 		String projectId   = node.getId();
@@ -414,11 +414,13 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 		url = GlobalContext.getPropertyString("app.url.dev")+projectName;
 		
-		AppEditor editor = new AppEditor(node);
+		/*AppEditor editor = new AppEditor(node);
 		editor.session = session;
 		editor.setFrame(new IFrame(url));
 		
-		return new Object[]{ new ToAppend(new CloudWindow("editor"), editor) };	
+		return new Object[]{ new ToAppend(new CloudWindow("editor"), editor) };	*/
+		ModalWindow modal = new ModalWindow(new IFrame(url), 1000, 800, url);
+		return modal;
 		
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

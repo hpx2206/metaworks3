@@ -25,7 +25,7 @@ public class DockerService implements IStorageService{
 //		String targetFilePath = codebase + File.separatorChar + projectId + File.separatorChar
 //				+ "maven" + File.separatorChar + projectName + "-" + version + ".jar";
 		String uploadFilePath = codebase + File.separatorChar + projectId + File.separatorChar
-				+ "maven" + File.separatorChar + projectName + "-" + version + ".jar";
+				+ "maven" + File.separatorChar + projectName + ".jar";
 		
 		if(isProd){
 			reopsitoryUrl = GlobalContext.getPropertyString("file.repository.url.prod");
@@ -36,6 +36,7 @@ public class DockerService implements IStorageService{
 		HttpPost httppost = new HttpPost(reopsitoryUrl);
 	    
 		File fileToUse = new File(uploadFilePath);
+
 		FileBody data = new FileBody(fileToUse);
 		
 		
@@ -64,6 +65,10 @@ public class DockerService implements IStorageService{
 	    	successed = true;
 	    }
 	    return successed;
+	}
+	
+	public void copyFile(){
+		
 	}
 
 }

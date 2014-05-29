@@ -116,6 +116,10 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 			
 			file.mkdirs();
 			
+			File srcFolder = new File(this.getPath() + File.separatorChar + this.getName());
+			if(!srcFolder.exists())
+				srcFolder.mkdirs();
+			
 			System.out.println("mkdirs");
 		}
 		
@@ -127,6 +131,7 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 
 		System.out.println(this.getPath());
 		File file = new File(this.getPath());
+		
 		String[] childFilePaths = file.list();
 
 		// folder

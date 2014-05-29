@@ -44,13 +44,14 @@ public class ProjectPanel implements ContextAware {
 		projectTitle.session = session;
 		projectTitle.setLogoFile(new MetaworksFile());
 		
-		return new ModalWindow(projectTitle , 360, 150, "$CreateProject");
+		return new ModalWindow(projectTitle , 360, 200, "$CreateProject");
 	}
 	
 	@ServiceMethod(callByContent=true, eventBinding=EventContext.EVENT_CHANGE)
 	public void load() throws Exception {
 				
 		IProjectNode projectNode = ProjectNode.load(session);
+
 		projectNode.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		setProjectNode(projectNode);
 	}
