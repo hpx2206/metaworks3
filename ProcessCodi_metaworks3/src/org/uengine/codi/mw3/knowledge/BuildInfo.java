@@ -384,11 +384,10 @@ public class BuildInfo extends Database<IBuildInfo> implements IBuildInfo, Conte
 		
 		if("amazon".equals(reopsitoryService)){
 			storageService = new AmazonService();
-			url = GlobalContext.getPropertyString("app.url.dev")+projectName;
 		}else if("docker".equals(reopsitoryService)){
 			storageService = new DockerService();
-			url = GlobalContext.getPropertyString("app.url.dev")+projectName+"-"+this.getVersion();
 		}
+		url = GlobalContext.getPropertyString("app.url.dev")+projectName;
 		
 		successed = storageService.putObject(this.getProjectId(), this.getProjectName(), this.getVersion(), false);
 		if(!successed){

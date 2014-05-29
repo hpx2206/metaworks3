@@ -39,7 +39,7 @@ import org.uengine.dbrepo.QueryResult;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle"} ,
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,projectAlias"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -341,7 +341,7 @@ public class ProjectTitle implements ContextAware {
 			wfNode.setSecuopt(projectSecuopt ? "1" : "0");
 			wfNode.setParentId(session.getCompany().getComCode());	
 			wfNode.setAuthorId(session.getUser().getUserId());
-			
+			wfNode.setProjectAlias(this.getProjectAlias());
 			if(this.getLogoFile().getUploadedPath() != null && this.getLogoFile().getFilename() != null){
 				wfNode.setUrl(this.getLogoFile().getUploadedPath());
 				wfNode.setThumbnail(this.getLogoFile().getFilename());
