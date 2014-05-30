@@ -114,16 +114,27 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 		this.setName(project.getName());
 		this.setType(TYPE_PROJECT);
 		this.setFolder(true);
-		this.setArtifactId(project.getProjectAlias());
+//		this.setArtifactId(project.getProjectAlias());
 		this.setPath(project.getPath());
 		this.setProjectId(project.getId());
 
-		String relativePath = this.getArtifactId().replace('.', File.separatorChar);
-		File file = new File(this.getPath() + File.separatorChar + relativePath);
+//		String relativePath = this.getArtifactId().replace('.', File.separatorChar);
+//		File file = new File(this.getPath() + File.separatorChar + relativePath);
+		File file = new File(this.getPath());
 		if(!file.exists()){
 			file.mkdirs();
 			System.out.println("mkdirs");
+			
+//			NewClass activator = new NewClass();
+			
 		}
+//		File activatorFile = new File(file.getPath() + File.separatorChar + "Activator.java");
+//		try {
+//			activatorFile.createNewFile();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		setMetaworksContext(new MetaworksContext());
 	}
@@ -150,6 +161,7 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setMetaworksContext(getMetaworksContext());
 				node.setFolder(true);
+//				node.setArtifactId(this.getArtifactId());
 
 				child.add(node);
 			}
@@ -237,6 +249,7 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 				if("code".equals(this.getMetaworksContext().getWhen())){
 					editor = new JavaCodeEditor(this);
 				}else{
+					//editor = new JavaCodeEditor(this);
 					editor = new FormEditor(this);
 				}
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
@@ -271,6 +284,7 @@ public class ResourceNode extends TreeNode implements ContextAware, Cloneable {
 			//픽업되는 순간  xml에 저장하고 load 해서 미리보기 
 			this.getMetaworksContext().setHow("resourcePicker");
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			//this.getMetaworksContext().setWhen("code");
 			
 			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
 		}else{
