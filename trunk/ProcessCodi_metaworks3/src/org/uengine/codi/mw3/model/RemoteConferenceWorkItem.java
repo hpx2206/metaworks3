@@ -102,10 +102,11 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;
 		processMap.session = session;
-		processMap.setDefId("remoteConfNoti3.process");
+		processMap.setDefId("remoteConf/process/remoteConfNoti.process");
 		
 		String rootInstanceId = this.getInstId().toString();
 		String instId = processMap.initializeProcess();
+		
 		
 		//프로세스 설정.
 		Date date = modifyCal.getTime();

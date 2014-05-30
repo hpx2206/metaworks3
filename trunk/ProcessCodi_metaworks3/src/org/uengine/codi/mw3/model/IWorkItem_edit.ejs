@@ -24,9 +24,9 @@
 %>
 					<!-- 메모 -->			
 					<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span class="icon-newspaper"></span><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%><div class="comment_select"></div></span></a>
-        			<!-- 회상회의
+        			<!-- 회상회의-->
         			<a class="<%= value.type=='remoteConf'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newRemoteConference.caller()%>"><span class="icon-screen"></span><span id="method_<%=objectId%>_newRemoteConference"><%=mw3.localize("$RemoteConference")%><div class="comment_select"></div></span></a>
-        			-->
+        			
 <%
 					}
 %>
