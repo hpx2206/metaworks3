@@ -1560,28 +1560,31 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if( instanceRef.getIsDeleted() ){
 			throw new MetaworksException("$alreadyDeletedPost");
 		}
-		if( "1".equals(instanceRef.getSecuopt())){
-			// 비공개 글일 경우 본건의 관련자가 아니면 글쓰기를 막음.
-			InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
-			IFollower follower = findFollower.findFollowers();
-			boolean isExist = false;
-			while(follower.next()){
-				if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						isExist = true;
-						break;
-					}
-				}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
-					if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
-						isExist = true;
-						break;
+		if(!GlobalContext.getPropertyString("codi.user.id", "0").equals(this.session.getEmployee().getEmpCode())){
+			if( "1".equals(instanceRef.getSecuopt())){
+				// 비공개 글일 경우 본건의 관련자가 아니면 글쓰기를 막음.
+				InstanceFollower findFollower = new InstanceFollower(instanceRef.getInstId().toString());
+				IFollower follower = findFollower.findFollowers();
+				boolean isExist = false;
+				while(follower.next()){
+					if(Role.ASSIGNTYPE_USER == follower.getAssigntype()){
+						if(follower.getEndpoint().equals(session.getEmployee().getEmpCode())){
+							isExist = true;
+							break;
+						}
+					}else if(Role.ASSIGNTYPE_DEPT == follower.getAssigntype()){
+						if(follower.getEndpoint().equals(session.getEmployee().getPartCode())){
+							isExist = true;
+							break;
+						}
 					}
 				}
+				if( !isExist ){
+					throw new MetaworksException("$NotPermittedToWork");
+				}
 			}
-			if( !isExist ){
-				throw new MetaworksException("$NotPermittedToWork");
-			}
-		}
+			
+		}//시스템 노티 CODI
 	}
 
 	protected void afterInstantiation(IInstance instanceRef) throws Exception {
