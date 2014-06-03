@@ -28,9 +28,9 @@ public class AmazonService implements IStorageService{
 				+ "maven" + File.separatorChar + projectName+"-"+version+".jar";
 		
 		if(isProd){
-			bucketName = GlobalContext.getPropertyString("app.repo.prod");
+			bucketName = GlobalContext.getPropertyString("app.repo.prod", "app-repo-prod");
 		}else{
-			bucketName = GlobalContext.getPropertyString("app.repo.dev");
+			bucketName = GlobalContext.getPropertyString("app.repo.dev", "app-repo-dev");
 		}
 		
 		boolean successed = false;
