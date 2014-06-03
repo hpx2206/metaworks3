@@ -44,7 +44,7 @@ public class TenantContext{
 	
 	public static String getURL(String tenantId) throws MalformedURLException {
 
-		HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
+		/*HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
 		String url = request.getRequestURL().toString();
 		String codebase = url.substring( 0, url.lastIndexOf( "/" ) );
 		URL urlURL = new java.net.URL(codebase);
@@ -69,8 +69,9 @@ public class TenantContext{
 		if(contextOnly.length()>0 && !contextOnly.equals("/dwr")) 
 			serverPath.append(contextOnly);
 		
-		System.out.println(CodiStringUtil.lastLastFileSeparatorChar(serverPath.toString()));
-				
+		System.out.println(CodiStringUtil.lastLastFileSeparatorChar(serverPath.toString()));*/
+		String serverPath = GlobalContext.getPropertyString("domain","http://192.168.50.3:8080/uengine-web/");		
+		
 		return CodiStringUtil.lastLastFileSeparatorChar(serverPath.toString());
 	}
 	
