@@ -1691,14 +1691,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public IWorkItem findMoreView() throws Exception{
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("select *");
+		sql.append("select * from (select *");
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and taskId<=?taskId");
 		sql.append("   and (type  not in ('ovryCmnt' , 'replyCmnt') or type is null)");
 		sql.append("   and isdeleted!=?isDeleted");
 		
-		sql.append(" order by taskId");
+		sql.append(" order by taskId desc limit 6) a order by taskId");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
@@ -1709,40 +1709,29 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return workitem;
 	}
-	public IWorkItem attachComment(IWorkItem workItem) throws Exception{
-		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
-		while(workItem.next()){
-			thread.moveToInsertRow();
-			thread.getImplementationObject().copyFrom(workItem);
-		}
-		
-		workItem = WorkItem.findComment(this.getInstId().toString());
-		while(workItem.next()){
-			boolean isProcessComment = false;
-			thread.beforeFirst();
-			while(thread.next()){
-				if(thread.getTaskId().equals(workItem.getPrtTskId()) && "process".equals(thread.getType())){
-					isProcessComment = true;
-					break;
-				}
-			}
-			if( isProcessComment ){
-				continue;
-			}
-			thread.moveToInsertRow();
-			thread.getImplementationObject().copyFrom(workItem);
-		}
-		return thread;
-	}
 	
 	public Object moreView() throws Exception {
 		
 		IWorkItem workItem = findMoreView();
-		IWorkItem thread = attachComment(workItem);
-		thread.getMetaworksContext().setWhere(IWorkItem.WHERE_WORKLIST);
-		return thread;
-
+		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
+		boolean more = workItem.size() > 5;
 		
+		while(workItem.next()){
+			thread.moveToInsertRow();
+			
+			if(more){
+				thread.setTaskId(workItem.getTaskId());
+				thread.setInstId(workItem.getInstId());
+				thread.setMore(true);
+				more = false;
+			}else{
+				thread.getImplementationObject().copyFrom(workItem);
+			}
+		}
+		
+		thread.getMetaworksContext().setWhere(IWorkItem.WHERE_WORKLIST);
+		
+		return thread;
 	}
 
 	public IWorkItem loadMajorVersionFile(String id) throws Exception{
