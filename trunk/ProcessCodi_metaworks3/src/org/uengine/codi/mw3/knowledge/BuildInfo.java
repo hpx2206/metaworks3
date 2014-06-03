@@ -220,14 +220,14 @@ public class BuildInfo extends Database<IBuildInfo> implements IBuildInfo, Conte
 
 		boolean successed = false;
 		String line;
-		this.setLog("");
+		this.setLog("<pre>");
 		while((line = br.readLine()) != null){
 			this.setLog(this.getLog()+line + "\n");
 			System.out.println(line);
 			if(line.contains("BUILD SUCCESS"))
 				successed = true;
 		}
-		
+		this.setLog(this.getLog()+"</pre>");
 		
 		
 		int execTime = process.waitFor();
