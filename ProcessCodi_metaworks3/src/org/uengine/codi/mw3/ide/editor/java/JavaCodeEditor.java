@@ -219,7 +219,9 @@ public class JavaCodeEditor extends Editor {
 									|| clsName.startsWith("org.springframework.web.portlet.bind.annotation")
 									|| clsName.startsWith("org.springframework.web.servlet.config.annotation")
 									|| clsName.startsWith("org.springframework.stereotype")
-									|| clsName.startsWith("java.lang.annotation"))) continue;
+									|| clsName.startsWith("java.lang.annotation")
+									|| clsName.startsWith("javax.ws.rs")
+									|| clsName.startsWith("javax.ws.rs.core"))) continue;
 
 							if(clsName.endsWith(".class")) {
 								Class cls = Thread.currentThread().getContextClassLoader().loadClass(clsName.substring(0, clsName.length() - 6));
@@ -373,7 +375,8 @@ public class JavaCodeEditor extends Editor {
 		ArrayList<String> classInfo = new ArrayList<String>();
 
 		try{
-			Class theClass = Thread.currentThread().getContextClassLoader().loadClass(expression);					
+			Class theClass = Thread.currentThread().getContextClassLoader().loadClass(expression);
+			classInfo.add("class" + "/" + expression + "/field/");
 			for(Field field : theClass.getFields()) {
 				classInfo.add(field.getName() + "/" + expression + "/field/");
 			}
@@ -653,6 +656,9 @@ public class JavaCodeEditor extends Editor {
 			if(command.endsWith(".")){
 				String expression = command.substring(0, command.length() - 1);
 
+				if(expression.length() == 0)
+					return codeAssist;
+				
 				System.out.println("expression : " + expression);
 				System.out.println("isImport : " + isImport);
 
@@ -673,6 +679,8 @@ public class JavaCodeEditor extends Editor {
 						ArrayList<String> thisClassInfo = findThisClass();
 						for(int i=0; i<thisClassInfo.size();i++)
 							clsNames.add(thisClassInfo.get(i));
+					}else if("class".equals(expression)){
+						
 					}else{
 
 						String classDefine = findClassDefine(expression);
@@ -1143,7 +1151,7 @@ public class JavaCodeEditor extends Editor {
 		}	
 		 */	
 
-		return codeAssist;
+		return codeAssist.getAssistances().size()>0?codeAssist:null;
 	}
 
 	@Override
@@ -1181,7 +1189,9 @@ public class JavaCodeEditor extends Editor {
 		ArrayList<JavaCodeError> errorList = new ArrayList<JavaCodeError>();
 
 		try {
-			CompilationChecker compCheck = new CompilationChecker(Thread.currentThread().getContextClassLoader());
+			CodiClassLoader cl = CodiClassLoader.createClassLoader(this.getResourceNode().getProjectId(), session.getEmployee().getGlobalCom(), false);
+			
+			CompilationChecker compCheck = new CompilationChecker(cl);
 			ICompilationUnit unit = compCheck.generateCompilationUnit(this.getContent());
 	
 			IProblem[] problems = compCheck.getErrors(unit);
@@ -1189,17 +1199,18 @@ public class JavaCodeEditor extends Editor {
 			for (IProblem problem : problems) {
 				JavaCodeError error = new JavaCodeError();
 	
-				error.setMessage(problem.getMessage());
-				error.setLineNumber(problem.getSourceLineNumber());
-	
-				if(problem.isError())
-					error.setType(JavaCodeError.TYPE_ERROR);
-				else
-					error.setType(JavaCodeError.TYPE_WARNING);
-				
-				errorList.add(error); 
+				if(problem.getMessage().indexOf("HelloWorld") == -1){
+					error.setMessage(problem.getMessage());
+					error.setLineNumber(problem.getSourceLineNumber());
+		
+					if(problem.isError())
+						error.setType(JavaCodeError.TYPE_ERROR);
+					else
+						error.setType(JavaCodeError.TYPE_WARNING);
+					
+					errorList.add(error); 
+				}
 			}
-
 		}catch(Exception e){
 			e.printStackTrace();
 		}
