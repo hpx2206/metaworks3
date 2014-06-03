@@ -336,7 +336,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		if(Perspective.TYPE_NEWSFEED.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType())
-		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
 			instanceSql
@@ -388,14 +387,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 					.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))");
 					
 			}			
-		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())){
+		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())
+				||Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())){
 			instanceSql.append(" and inst.initep=?instInitep ");
 			criteria.put("instInitep", navigation.getPerspectiveValue());
 			
 			if( !navigation.getEmployee().getEmpCode().equals(navigation.getPerspectiveValue())){
 				// 아래경우는 다른사람의 담벼락을 보는 경우이다. 
-				instanceSql.append(" and	exists ( ")
-							.append("			select 1 from bpm_rolemapping rm	 ")
+				instanceSql.append(" and	exists ( ");
+				if(!navigation.isDiffrentCompany){
+					instanceSql
+					.append("			select 1 from bpm_procinst	 ")
+					.append("			where inst.instid = instid	 ")
+					.append("			and secuopt = 0	and topicId is null and inst.initcomcd = ?initComCd ")
+					.append("			union all	 ");		
+				}
+				
+				instanceSql.append("			select 1 from bpm_rolemapping rm	 ")
 							.append("			where inst.instid = rm.rootinstid	 ")
 							.append("			and inst.secuopt <= 1	 ")
 							.append("			and ( 	( assigntype = 0 and rm.endpoint = ?self_endpoint ) 	 ")
@@ -410,7 +418,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType()) 
 		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())
-		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())) {
+		) {
 			instanceSql.append(" and wl.instid=inst.instid");
 			
 			taskSql
