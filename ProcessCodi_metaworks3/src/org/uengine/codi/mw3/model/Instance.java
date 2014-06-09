@@ -160,7 +160,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		criteria.put("self_endpoint", employee.getEmpCode());
 		criteria.put("self_partcode", employee.getPartCode());
 		criteria.put("initComCd", employee.getGlobalCom());
-		criteria.put("endpoint", employee.getEmpCode());
+		criteria.put("endpoint", navigation.getPerspectiveValue());
 		criteria.put("partcode", employee.getPartCode());
 
 		if(navigation.isDiffrentCompany){
@@ -336,6 +336,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		if(Perspective.TYPE_NEWSFEED.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType())
+		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
 			instanceSql
@@ -387,8 +388,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 					.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))");
 					
 			}			
-		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())
-				||Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())){
+		}else if(Perspective.TYPE_STARTEDBYME.equals(navigation.getPerspectiveType())){
 			instanceSql.append(" and inst.initep=?instInitep ");
 			criteria.put("instInitep", navigation.getPerspectiveValue());
 			
@@ -418,7 +418,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		|| Perspective.TYPE_FOLLOWING.equals(navigation.getPerspectiveType()) 
 		|| Perspective.TYPE_INBOX.equals(navigation.getPerspectiveType())
 		|| Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())
-		) {
+		|| Perspective.TYPE_CALENDAR.equals(navigation.getPerspectiveType())) {
 			instanceSql.append(" and wl.instid=inst.instid");
 			
 			taskSql
