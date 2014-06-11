@@ -37,8 +37,10 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 		}
 	}else{
 		if(this.object.taskId==null){
-			this.object.overlayCommentOption.x = (mw3.mouseX - div.offset().left -22) / (div.width()/100);
-			this.object.overlayCommentOption.y = (mw3.mouseY - div.offset().top -34) / (div.height()/100);
+			var faceHelper = parentWorkItem.getFaceHelper();
+			this.object.overlayCommentOption.x = (faceHelper.mouseX - div.offset().left -10) / (div.width()/100);
+			this.object.overlayCommentOption.y = (faceHelper.mouseY - div.offset().top ) / (div.height()/100);
+
 		}		
 
 		var title = (this.object.metaworksContext.when == mw3.WHEN_EDIT) ? this.object.title :'';
