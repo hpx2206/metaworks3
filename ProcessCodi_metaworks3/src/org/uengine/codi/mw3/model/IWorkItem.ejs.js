@@ -80,6 +80,18 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		if(!this.object.more)
 			this.objectDiv.trigger('loaded.workitem_' + workItem.taskId);
 	}	
+
+	console.log('#' + this.objectDivId);
+	$('#' + this.objectDivId).bind('contextmenu', 
+			{objectId: this.objectId}, 
+			function(event, ui){
+				var faceHelper = mw3.getFaceHelper(event.data.objectId);
+				faceHelper.mouseX = event.pageX;
+				faceHelper.mouseY = event.pageY;
+			
+			}
+	);
+
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
