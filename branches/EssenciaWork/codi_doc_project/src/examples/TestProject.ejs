@@ -1,0 +1,20 @@
+<div class="top" style="overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px; bottom: 30px">
+	<%=fields.content.here()%>
+</div>
+
+<div class="bottom" style="overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px; height: 30px">
+	<div style="float: left">
+		<%=fields.admin.here({when: 'view'})%>
+	</div>
+	<div style="float: left">
+		<%=fields.userId.here()%>
+	</div>
+	<div style="float: left">
+		<%=fields.projectId.here()%>
+	</div>
+	<div style="float: left">
+		<%=methods.run.here()%>
+	</div>
+	<div style="clear: both">
+	</div>
+</div>

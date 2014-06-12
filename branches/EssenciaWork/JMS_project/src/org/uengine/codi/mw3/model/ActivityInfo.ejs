@@ -1,0 +1,27 @@
+
+<%
+if(value){
+%>
+    <%=fields.followers.here()%>
+    <div id="searchbox" style="border-bottom:1px solid #9EBFC4"> 
+        <!--ui object -->
+        <ul>
+            <li style="height:199px; position:relative; overflow:auto; border-bottom:1px solid #9EBFC4;">
+                <div>
+                    <%=fields.processViewer.here()%>
+                </div>
+            </li>
+        </ul>
+        <div id="searchbox" style="border-bottom:none">
+            <div class="positionRight" style="padding:5px 0">
+                <%=methods.action.here()%>
+                <%=methods.showActivityDocument.here()%>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>  
+
+
+<%
+}
+%>

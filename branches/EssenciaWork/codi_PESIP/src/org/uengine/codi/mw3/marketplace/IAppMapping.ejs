@@ -1,0 +1,39 @@
+<%
+	if(mw3.where == 'ssp'){
+%>
+
+	<ul class="mp_left_menu cycle-pager external">
+		<li id="mp_menu_list_<%=objectId%>" class="mp_menu_list"><%=value.appName%></li>
+	</ul>
+
+
+<%
+	}else if(mw3.where == 'oce_dashboard'){
+	
+%>
+	
+	<li onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
+		<%=fields.logoFile.here({when:'image'})%>
+		<%=value.appName%>
+		<div class="editicon" onClick="<%=methods.goSelfService.caller()%>">
+	</li>
+<%
+	}else if(mw3.where == 'oce_perspective'){
+	
+%>
+	<div class="depth1" onClick="mw3.getFaceHelper(<%=objectId%>).openAppBrowser();">
+		<%=value.appName%>
+	</div>
+<%
+	}else{
+
+%>
+	<div class="depth1" >
+		<a onClick="<%=methods.openAppBrowser.caller()%>">
+			<%=value.appName%>
+		</a>
+	</div>
+<%
+	}
+%>
+

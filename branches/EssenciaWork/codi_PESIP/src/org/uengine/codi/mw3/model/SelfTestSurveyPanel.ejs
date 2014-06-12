@@ -1,0 +1,106 @@
+<% if(value) { %>
+
+    <!-- 처음 시작이냐 이미 설문을 한 적이 있는가 -->
+
+    <% if(mw3.when == 'init' && mw3.how == 'however') { %>
+       
+        <ul>
+            <li><em><H>셀프테스트를 진행한 적이 없습니다. 다음을 누르면 셀프테스트가 진행됩니다.</H></em></li>
+        </ul>
+        
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.surveyStandBy.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+            </ul>
+        </div>
+    
+    <% } 
+    
+    <% if(mw3.when == 'progressive' && mw3.how == 'however') { %>
+        
+        <ul>
+            <li><em><H>셀프테스트를 진행하신 적이 있습니다. 다음을 누르면 계속 진행됩니다.</H></em></li>
+        </ul>
+        
+        <div id="btnline">
+            <ul>    
+                <li><a id="wBtn" href="#" onClick="<%=methods.surveyStandBy.caller()%>"><span><%=mw3.localize("$Next")%></span></a></li>
+            </ul>
+        </div>
+    
+    <% } %>
+    
+    
+    <!-- 설문 1 ~ 9까지 mw3.when = init 이고 mw3.how 1 ~ 9 까지-->
+    
+    <% if(mw3.how == '1' || mw3.how == '2' || mw3.how == '3' || mw3.how == '4' || mw3.how == '5' || mw3.how == '6' || mw3.how == '7' || mw3.how == '8' || mw3.how == '9') { %>
+        
+        <br>
+        
+        <div>
+            <B><%=value.surveyForm[mw3.how]%><B>  
+        </div>        
+     
+        <% for(var i = 0; i < value.surveyContent.length; i++) {
+            var content = value.surveyContent[i]; %>
+            
+            <br>
+            
+            <%=content.itemContent%>
+            
+            <div>
+            
+                <input type="radio" id="radio_1" name="preferred_color<%=i%>" value=5 /> 5
+                <input type="radio" id="radio_2" name="preferred_color<%=i%>" value=4 /> 4 
+                <input type="radio" id="radio_3" name="preferred_color<%=i%>" value=3 /> 3 
+                <input type="radio" id="radio_4" name="preferred_color<%=i%>" value=2 /> 2 
+                <input type="radio" id="radio_5" name="preferred_color<%=i%>" value=1 checked/> 1 
+                
+            </div>
+            
+        <% } %>
+        
+        <% if(mw3.how == '9') { %>
+            <div id="btnline">
+                <ul>    
+                    <li><a id="wBtn" href="#" onClick="<%=methods.showResult.caller()%>"><span><%=mw3.localize("$Finish")%></span></a></li>
+                </ul>
+            </div>
+            
+        <% } else { %>
+            <div id="btnline">
+                <ul>    
+                    <li><a id="wBtn" href="#"><span id = "radio_save"><%=mw3.localize("$Next")%></span></a></li>
+                </ul>
+            </div>
+            
+        <% } %>
+            
+    <% } if(mw3.when == 'init' && mw3.how == 'complete') { %>
+        
+        <ul>
+            <li><em><H>셀프테스트를 완료하였습니다. 다음은 테스트 결과입니다.</H></em></li>
+        </ul>
+        
+        <br>
+        
+        <%=fields.selfTestChart.here()%>
+        
+    <% } %>
+    
+    <% if(mw3.when == 'progressive' && mw3.how == 'complete') { %>
+        
+        <ul>
+            <li><em><H>셀프테스트를 완료하였습니다. 다음은 테스트 결과입니다.</H></em></li>
+            <li><em><H>테스트를 다시 진행하시겠습니까? </H></em></li> <a id="wBtn" href="#" onClick="<%=methods.restartSurvey.caller()%>"><span><%=mw3.localize("$restart")%></span></a>
+            
+        </ul>
+        
+        <br>
+        
+        <%=fields.selfTestChart.here()%>
+        
+    <% } %>
+    
+    
+<% } %>

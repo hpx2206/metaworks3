@@ -1,0 +1,84 @@
+<% if(value) { %>
+    
+        <div class="form_table">
+            <table border="1" cellspacing="0" summary="">
+                <tbody>
+                <tr>
+                    <th scope="row">이름</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.enterpriseName.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">대표자</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.representative.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                
+                <tr>
+                    <th scope="row">사업분야</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.businessPart.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">주소</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.address.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">회사설립년도</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.foundation.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">전화번호</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.number.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                
+                <tr>
+                    <th scope="row">해당부문 종사기간</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.carryOn.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">FAX</th>
+                    <td>
+                        <div class="item">
+                            <%=fields.fax.here({when:'new'}) %>
+                        </div>
+                    </td>
+                </tr>
+                
+                </tbody>
+            </table>
+        </div>
+        
+<% } %>

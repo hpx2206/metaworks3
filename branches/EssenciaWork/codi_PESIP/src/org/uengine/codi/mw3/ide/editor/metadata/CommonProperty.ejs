@@ -1,0 +1,30 @@
+<%
+if(value){
+
+%>
+
+<div style="font-size:25px;"><%=value.projectName%></div> 
+
+<div class="inLineSpan">
+	<ul>
+		<li>
+			<span><%=mw3.localize("$metadata.path.process")%></span>
+			<span><%=fields.processPath.here()%></span>
+			<span><a id="wBtn" href="#" onClick=""><span><%=mw3.localize("$Apply")%></span></a></span>
+		</li>
+		<li>
+			<span><%=mw3.localize("$metadata.path.image")%>	 </span>
+			<span><%=fields.imagePath.here()%>	 </span>
+			<span><a id="wBtn" href="#" onClick=""><span><%=mw3.localize("$Apply")%></span></a></span>
+		</li>
+		<li>
+			<span><%=mw3.localize("$metadata.path.file")%>	 </span>
+			<span><%=fields.filePath.here()%>	 </span>
+			<span><a id="wBtn" href="#" onClick=""><span><%=mw3.localize("$Apply")%></span></a></span>
+		</li>
+	</ul>
+</div>
+<%
+
+}
+%>

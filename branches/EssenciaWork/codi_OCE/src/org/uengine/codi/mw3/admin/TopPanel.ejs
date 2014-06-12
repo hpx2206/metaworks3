@@ -1,0 +1,21 @@
+<%
+	if(value){
+%>
+	<div class="logo"><img src="images/waveStyle/logo.gif"></div>
+	
+	<%=fields.mainMenu.here()%>
+	
+	<%=fields.windowPanel.here()%>
+		
+    <div class="info" style="top:3px;">
+    
+        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/ %>
+        	<%=fields.session.here({when:'view'})%>
+        <%}else{%>
+        	session here.
+        <%}%>	
+		<div style="color:#aaaabb; font-size:8pt;float:left; margin-top:-10px;">PaaS for Business Expert (Chrome Optimized)</div>
+	</div>				
+<%
+	}
+%>

@@ -1,0 +1,46 @@
+<%
+    if(value == null || typeof value == 'undefined')
+        return true;
+%>
+
+    <div id="tabs_<%=objectId%>" class="ui-layout-center tabs-min">
+        
+        <ul>
+            
+            <% for(var i = 0; i < value.publicServiceIntroduceTab.length; i++) {
+                
+                var tab = value.publicServiceIntroduceTab; %>
+                
+                <li>
+                    <a<%if(tab[i].name != 'null'){%> id="tabIcon_<%=tab[i].name%>" <%}%>  style="cursor: pointer" href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"> <%=mw3.locateObject(tab[i], tab[i].__className)%> </a>
+                </li>
+            
+            <% } %>
+       
+        <!-- 
+        <li>
+            <button id="title_<%=objectId%>_<%=i+2%>" style="cursor: pointer" onClick="<%=methods.addTab.caller()%>"><B> + </B></button>
+        </li>
+        -->
+        
+        </ul>
+        
+        
+        <div class="ui-layout-content">
+
+            <% var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
+        
+            for (var i = 0; i < value.introList.length; i++){ %>
+               
+                <div id="tab_<%=objectId%>_<%=i+1%>" style="height: 100%">
+                    
+                    <%=mw3.locateObject(value.introList[i], value.introList[i].__className)%>
+                
+                </div>
+        
+            <% } %>
+            
+        </div>
+        
+    </div>
+        

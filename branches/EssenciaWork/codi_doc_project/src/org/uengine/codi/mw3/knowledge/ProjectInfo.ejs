@@ -1,0 +1,43 @@
+<div style="border-bottom:1px solid #aaaaaa;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="projectInfoTable">
+		<colgroup>
+	    	<col width="95" height:23px; align="right"/>
+	    	<col />
+	    </colgroup>
+		<tr height="22">
+			<th align="right"><b><%=mw3.localize("$ProjectName")%> :</b></th>
+			<td><%= fields.projectName.here() %></td>
+		</tr>
+		<tr height="50">
+			<th align="right"><b><%=mw3.localize("$ProjectDescription")%> :</b></th>
+			<td><%= fields.description.here() %></td>
+		</tr>
+		<tr height="22">
+			<th align="right"><b><%=mw3.localize("$TemplateName")%> :</b></th>
+			<td><%= fields.templateName.here() %></td>
+		</tr>
+		<tr height="22">
+			<th align="right"><b><%=mw3.localize("$Ip")%> :</b></th>
+			<td><%= fields.ip.here() %></td>
+		</tr>
+		<tr height="22">
+			<th align="right"><b><%=mw3.localize("$Svn")%> :</b></th>
+			<td><%= fields.svn.here() %></td>
+		</tr>
+		<tr height="22">
+			<th align="right"><b><%=mw3.localize("$Hudson")%> :</b></th>
+			<td><%= fields.hudson.here() %></td>
+		</tr>
+		<tr height="22">
+			<th></th>
+			<td align="right">
+				<div class="positionRight">
+					<%=methods.eclipseDownload.here()%>
+					<%=methods.devSendbox.here()%>
+					  <a id="wBtn" href="#" onClick="window.open('https://www.virtualbox.org/wiki/Downloads')"><span><%=mw3.localize("$VMDown")%></span></a>
+					<%=methods.insert.here()%>
+				</div>
+			</td>
+		</tr>
+	</table>	
+</div>

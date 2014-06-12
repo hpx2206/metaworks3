@@ -1,0 +1,37 @@
+<%
+
+if(mw3.when == 'show_detail' ) {
+	if(value.type =='string') {
+%>
+		<span class="form_tit"><br /><br /><%=value.name%></span>
+		<div class="sp_form_block">
+			<div>
+				<div style="width:80px;float:left;"><%=mw3.localize('$Value')%></div>
+				<div style="width:900px; height:30px; float:left; background:#f0f2f4; border:1px solid #d3d6da;-webkit-border-radius:3px;-moz-border-radius:3px;"><%=fields.value.here()%></div>
+				<div id="sp_editBtn_<%=objectId%>" class="sp_form_block" onClick="<%=methods.edit.caller()%>"><%=mw3.localize('$Edit')%></div>
+			</div>
+			<div>
+				<div style="width:80px; float:left;"><%=mw3.localize('$Description')%></div>
+				<div style="width:900px; height:30px; float:left; background:#f0f2f4; border:1px solid #d3d6da;-webkit-border-radius:3px;-moz-border-radius:3px;"><%=fields.description.here()%></div>
+				<div id="sp_editBtn_<%=objectId%>" class="sp_form_block" onClick="<%=methods.edit.caller()%>"><%=mw3.localize('$Edit')%></div>
+			</div>
+		</div>
+	
+	<% }else { %>
+	   
+		<span class="form_tit"><br /><br /><%=value.name%></span>
+		<div class="sp_form_block">
+			<span><%=fields.file.here()%></span>
+		</div>
+		<div class="sp_form_block">
+			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.file.here({when:'image'})%></div>
+			<div id="sp_editBtn_<%=objectId%>" class="sp_position_right" onClick="<%=methods.edit.caller()%>"><%=mw3.localize('$Edit')%></div>
+		</div>
+
+		
+<%
+	 }
+	
+}
+
+%>

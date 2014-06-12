@@ -1,0 +1,104 @@
+
+<%
+
+if(mw3.where == 'ssp'){
+	if(mw3.when == 'show_detail' ) {
+	%>
+		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<div class="sp_form_block">
+			<span><%=fields.file.here()%></span>
+		</div>
+		
+		<div class="sp_form_block">
+			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.file.here({when: (value.file.mimeType!=null && value.file.mimeType.indexOf('image')==0)?'image':'view' })%></div>
+			<div id="sp_editBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.edit.caller()%>"><span><%=mw3.localize('$Edit')%></span></a></div>
+		</div>
+	<%
+	}else if(mw3.when == 'edit') {
+	%>
+		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<div class="sp_form_block">
+			<span id="sp_checkFile_<%=objectId%>" style="width=30px;"><%=fields.checkFile.here()%></span><span><%=fields.file.here({when:'edit'})%></span>
+			<span id="sp_checkResource_<%=objectId%>" style="width=30px;"><%=fields.checkResource.here()%></span><span><%=fields.resourceNode.here()%></span>
+		</div>
+		<div class="sp_form_block">
+			<div id="sp_saveBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize('$Save')%></span></a></div>
+		</div>
+		
+	<%
+	}else {
+	%>
+		<ul>
+			<li id="sp_accordion_list_<%=objectId%>"><%=value.description%></li>
+		</ul>
+	
+	<%
+	}
+%>
+
+<%
+}else if(mw3.where == 'ide'){
+%>
+    <label class="fb_box_desc" id="">이름</label>
+    <div class="">
+        <% if(value.metaworksContext.when == 'edit') { %>            
+                      <%= fields.name.here({when:'view'})%>
+        <% }else{ %>
+                      <%= fields.name.here()%>
+        <% } %>
+    </div>
+    <label class="fb_box_desc" id="">화면출력정보</label>
+    <div class=""><%= fields.description.here()%>
+    </div>
+    <div class="clear"></div>
+    <label class="fb_box_desc" id="">파일첨부</label>
+    <div class=""><%= fields.file.here()%>
+    </div>
+    <div class="clear"></div>
+    <label class="fb_box_desc" id="">메타데이타 찾아보기</label>
+    <div class=""><%= fields.resourceNode.here()%>
+    </div>
+    <div class="clear"></div>
+    <label class="fb_box_desc" id="">메타데이타 타입변경</label>
+    <div class=""><%= fields.type.here()%>
+    </div>
+    <div class="clear"></div>
+      <div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px; padding-bottom:8px;">
+      <ul>
+          <li>
+              <a id="wBtn" href="#" onclick="<%=methods.add.caller()%>"><span>추가</span></a>
+          </li>
+      </ul>
+  </div>
+ <%
+}else{
+%>
+     <div class="fb_form_box">
+            <div class="hover_div">
+                 <span>
+                    <img src="images/waveStyle/copy.png" />
+                    <img src="images/waveStyle/delete.png" onclick="<%=methods.remove.caller()%>" />
+                 </span>
+            </div>
+            <div style="margin: 0px 10px 0px 0px; float:left">
+                <img class="ide_icon" src="images/<%=value.type%>.png"/>
+            </div>
+            
+            <div style="float:left">
+                <span><%=mw3.localize("$Name")%>: </span>
+                <span style="margin: 0px 0px 0px 3px;"><%=value.name%></span>
+                <div>
+                    <li style="margin-top: 10px"><%=value.description%></li>
+                </div>
+                <% 
+                    if(value.file != null && value.file.mimeType != null && value.file.mimeType=='image'){ 
+                    %>
+                        <div style="float:left;margin: 0px 5px 0px 0px;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view'})%></div>
+                <% } %>
+            
+            </div>
+            <div class="clear"></div>
+        </div>
+  <%
+    }
+%>
