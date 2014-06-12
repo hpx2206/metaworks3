@@ -57,6 +57,10 @@ public class ContactUs implements ContextAware{
 	@ServiceMethod(callByContent=true)
 	@Face(displayName="$sendContactUs")
 	public Object sendFeedback() throws Exception{
+		String smtpUse= GlobalContext.getPropertyString("smtp.use", "0");
+		if("0".equals(smtpUse)){
+			throw new Exception("메일서버 설정이 필요합니다.");
+		}
 		String contents = this.getContents().getContents();
 		String adminEmail = GlobalContext.getPropertyString("contactUs.feedbackMail","help@uengine.org");  //help@uengine.org
 		

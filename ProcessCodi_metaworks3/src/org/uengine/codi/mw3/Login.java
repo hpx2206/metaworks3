@@ -511,60 +511,94 @@ public class Login implements ContextAware {
 	@ServiceMethod(callByContent=true, payload={"email"}, validate=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object signUp() throws Exception {
 
+		String authKey = UUID.randomUUID().toString();
+
 		Employee employee = new Employee();
 		employee.setEmail(this.getEmail());
 		IEmployee employeeRef = employee.findByEmail();
 
-		// already sign up or invite user
-		if(employeeRef != null){
-			if(employeeRef.isApproved()){
-				throw new Exception("$AlreadyExistingUser");	
-			}else{
-				sendMailForSignUp("activate.html?key=" + employeeRef.getAuthKey());
-
-				this.setEmail(employeeRef.getEmail());
-				this.getMetaworksContext().setHow("aftersignup");
-
+		String smtpUse= GlobalContext.getPropertyString("smtp.use", "0");
+		if("0".equals(smtpUse)){
+			if(employeeRef != null){
+				if(employeeRef.isApproved()){
+					throw new Exception("$AlreadyExistingUser");
+				}else{
+					employee.copyFrom(employeeRef);
+					return employee.activate();
+				}
 			}
-
-			this.getMetaworksContext().setWhere("popup");
-
-			return this;
-		}
-
-		String authKey = UUID.randomUUID().toString();
-
-		employee.setAuthKey(authKey);
-
-		String empName = employee.getEmail().substring(0, employee.getEmail().indexOf("@"));
-
-		employee.setEmpName(empName);	
-		employee.setAuthKey(authKey);
-		employee.setIsDeleted("0");
-		employee.setEmpCode(employee.createNewId());
-		employee.setLocale(localeManager.getLanguage());
-
-		try {
-			employee.createDatabaseMe();
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			throw new MetaworksException(e.getMessage());
-		}
-
-		sendMailForSignUp("activate.html?key=" + authKey);
-
-		this.getMetaworksContext().setHow("aftersignup");
-		/*
+			
+			employee.setAuthKey(authKey);
+			
+			String empName = employee.getEmail().substring(0, employee.getEmail().indexOf("@"));
+			
+			employee.setEmpName(empName);	
+			employee.setAuthKey(authKey);
+			employee.setIsDeleted("0");
+			employee.setEmpCode(employee.createNewId());
+			employee.setLocale(localeManager.getLanguage());
+			
+			try {
+				employee.createDatabaseMe();
+				employee.flushDatabaseMe();
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new MetaworksException(e.getMessage());
+			}
+			employee.setAuthKey(authKey);
+			return employee.activate();
+		}else{
+			// already sign up or invite user
+			if(employeeRef != null){
+				if(employeeRef.isApproved()){
+					throw new Exception("$AlreadyExistingUser");	
+				}else{
+					sendMailForSignUp("activate.html?key=" + employeeRef.getAuthKey());
+					
+					this.setEmail(employeeRef.getEmail());
+					this.getMetaworksContext().setHow("aftersignup");
+					
+				}
+				
+				this.getMetaworksContext().setWhere("popup");
+				
+				return this;
+			}
+			
+			
+			employee.setAuthKey(authKey);
+			
+			String empName = employee.getEmail().substring(0, employee.getEmail().indexOf("@"));
+			
+			employee.setEmpName(empName);	
+			employee.setAuthKey(authKey);
+			employee.setIsDeleted("0");
+			employee.setEmpCode(employee.createNewId());
+			employee.setLocale(localeManager.getLanguage());
+			
+			try {
+				employee.createDatabaseMe();
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				throw new MetaworksException(e.getMessage());
+			}
+			
+			sendMailForSignUp("activate.html?key=" + authKey);
+			
+			this.getMetaworksContext().setHow("aftersignup");
+			/*
 		SignUpConfirm confirm = new SignUpConfirm();
 		confirm.setEmail(this.getEmail());
 		confirm.setUrl(activateURL);
 		return confirm;
-		 */
+			 */
+			
+			this.getMetaworksContext().setWhere("popup");
+			
+			return this;
+		}
 
-		this.getMetaworksContext().setWhere("popup");
-
-		return this;
 
 	}
 
@@ -921,8 +955,8 @@ public class Login implements ContextAware {
 		this.getMetaworksContext().setHow("forgotpassword");
 	}
 
-	@ServiceMethod(callByContent=true, payload={"email"} , validate=true)
-	public void forgotPassword() throws Exception{
+	@ServiceMethod(callByContent=true, payload={"email"} , validate=true, target=ServiceMethodContext.TARGET_SELF)
+	public Object forgotPassword() throws Exception{
 
 		Employee employee = new Employee();
 		employee.setEmail(this.getEmail());
@@ -940,12 +974,19 @@ public class Login implements ContextAware {
 		employee.setEmpCode(employeeRef.getEmpCode());
 		employee.databaseMe().setAuthKey(authKey);
 		this.setEmail(employeeRef.getEmail());
-
-		// send mail
-		this.sendMailForForgotPassword("findpw.html?key=" + authKey);
-
-		this.getMetaworksContext().setHow("afterforgotpassword");
-		return;
+		
+		String smtpUse= GlobalContext.getPropertyString("smtp.use", "0");
+		if("0".equals(smtpUse)){
+			employee.copyFrom(employeeRef);
+			return employee.forgotPassword();
+		}else{
+			// send mail
+			this.sendMailForForgotPassword("findpw.html?key=" + authKey);
+			
+			this.getMetaworksContext().setHow("afterforgotpassword");
+			
+			return this;
+		}
 	}
 
 	public void fireServerSession(Session session) {
