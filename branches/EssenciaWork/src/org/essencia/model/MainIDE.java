@@ -5,6 +5,10 @@ import org.metaworks.widget.layout.Layout;
 
 
 public class MainIDE {
+	
+	final String NAVIGATOR = "navigator";
+	final String EDITOR = "editor";
+	
 	Layout layout;
 		public Layout getLayout() {
 			return layout;
@@ -24,8 +28,8 @@ public class MainIDE {
 		
 	@ServiceMethod(callByContent=true)
 	public MainPanel load(){
-		MainWindow navigatorWindow = new MainWindow(null,"네비게이터");
-		MainWindow editorWindow = new MainWindow(null,"에디터");
+		MainWindow navigatorWindow = new MainWindow(null,NAVIGATOR);
+		MainWindow editorWindow = new MainWindow(null,EDITOR);
 		
 		Layout layout = new Layout();
 		layout.setId("main");
