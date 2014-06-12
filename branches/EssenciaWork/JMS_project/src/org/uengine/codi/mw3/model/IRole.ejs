@@ -1,0 +1,68 @@
+<%
+	if(value){
+%>
+		<%
+		if(mw3.how == 'manager'){
+		%>
+			<div class="form_table2"> 
+				<table border="1" cellspacing="0" >	
+					<tbody>
+						<tr>
+							<th width=100>회사명</th>
+							<td><%=fields.comCode.here({when:'view'})%></td>
+						</tr>
+						<tr>
+							<th>역할코드</th>
+							<td><%=fields.roleCode.here({when:'view'})%></td>
+						</tr>	
+						<tr>
+							<th>역할정보</th>
+							<td><%=fields.descr.here({when:'edit'})%></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		<%}else{ %>
+		<%
+				if(mw3.where == 'navigator'){
+		%>	
+			<a onClick="<%=methods.loadRole.caller() %>" class="idept"><%=fields.roleCode.here() %>--loadRole</a>
+			
+		<%
+					if(value.selected) {
+		%>
+			<ul>
+				<li style="padding-left:15px;">	
+					<%=fields.employeeList.here()%>
+				</li>
+			</ul>
+		<%
+					}
+				}else{
+					if(mw3.when == 'new' || mw3.when == 'edit') {
+		%>
+				
+				<div class="lst_type2" style="height:190px; padding-top:20px">
+					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleName")%> :</span><span><%=fields.roleCode.here((mw3.when=='edit'?{when:'view'}:{})) %></span></div>		
+					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleDesc")%> :</span><span><%=fields.descr.here()%></span></div>
+					<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$LogoFile")%> :</span><%=fields.logoFile.here({when:'edit'})%></div>	
+				</div>
+				
+				
+				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+					<ul>	
+						<li><a id="wBtn" href="#" onClick="<%=methods.saveMe.caller()%>"><span><%=mw3.localize("$Save")%></span></a></li>	
+						
+					</ul>
+				</div>
+			
+				
+		
+		<%			
+					}
+		%>
+<%		
+			}
+		}
+	}
+%>			

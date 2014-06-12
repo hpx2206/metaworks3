@@ -1,0 +1,31 @@
+<%
+	if(value){
+		if( mw3.when == "edit" ){
+%>
+		<table>
+			<tr height="30">
+				<td width=100><span style="float:left;">ProcessVariable</span></td>
+				<td><span style="float:left;"><%=fields.valiableChoice.here()%></span></td>
+			</tr>
+			<tr height="30">
+				<td><span style="float:left;">Operation</span></td>
+				<td><span style="float:left;"><%=fields.signChoice.here()%></span></td>
+			</tr>
+			<tr height="30">
+				<td><span style="float:left;">Value</span></td>
+				<td><span style="float:left;"><%=fields.expressionChoice.here()%></span></td>
+			</tr>
+			<tr height="30">
+				<td></td>
+				<td>
+					<span style="float:left;"><%=fields.conditionInput.here()%></span>
+				</td>
+			</tr>
+		</table>
+		<div>
+			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.saveCondition.caller()%>"><span>컨디션 저장</span></a></div>
+		</div>
+<%
+		}
+	}
+%>

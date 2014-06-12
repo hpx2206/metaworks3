@@ -1,0 +1,185 @@
+
+<%
+if( mw3.how == 'valuechain'){
+%>
+<div style="_display:inline-block;width:100%; height:100%;">
+	<div class="leftMenuPanel_ide">
+		<dd>
+			<dt class="leftMenuTab_ide">기본</dt>
+			<dl class="leftMenuTabInner_ide">
+				<img src="images/opengraph/valuechain.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.Value_Chain" _classname="org.uengine.kernel.ValueChain" _viewclass="org.uengine.kernel.designer.web.ValueChainView" _classType="ValueChain" _width="230" _height="100" title="valuechain"/>
+			</dl>
+			<dt class="leftMenuTab_ide leftMenuTab_variable_<%=objectId%>">변수정의</dt>
+    		<dl class="leftMenuTabInner_ide leftMenuTabInner_variable_<%=objectId%>">
+                 <div class="depth2">
+                 <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.processVariablePanel.here() %></li>
+                </ul>
+                </div>
+             </dl>
+             
+            <dt class="leftMenuTab_ide leftMenuTab_role_<%=objectId%>">참여자정의</dt>
+            <dl class="leftMenuTabInner_ide leftMenuTabInner_role_<%=objectId%>">
+                 <div class="depth2">
+                 <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.rolePanel.here() %></li>
+                </ul>
+                </div>
+             </dl>
+		</dd>
+	</div>
+	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">
+        <div class="windowSubTitle">
+        	<span class="ProcessNameView">
+        		<%= fields.processNameView.here() %>
+        	</span>
+        </div>
+        <div id="canvas_<%=objectId%>" style=" cursor: default; overflow:auto;  background:#F1FCF1; ">
+			<%= fields.processDesignerContainer.here() %>
+		</div>
+    </div>
+	
+</div>
+<%
+}else{
+%>
+<div style="_display:inline-block;width:100%; height:100%;">
+	<div class="leftMenuPanel_ide">
+		<dd>
+			<dt class="leftMenuTab_ide">기본</dt>
+			<dl class="leftMenuTabInner_ide">
+			    <img src="images/opengraph/event_start.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _classType="Activity" _classname="org.uengine.kernel.StartActivity" _shape_id="OG.shape.bpmn.E_Start" _width="30" _height="30" title="Start"/>
+				<!--
+	            <img src="images/opengraph/event_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate" _width="30" _height="30"/>	            
+	            -->
+                <img src="images/opengraph/event_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End" _classType="Activity" _classname="org.uengine.kernel.EndActivity" _width="30" _height="30" title="End"/>
+        
+
+	            <!-- swimlane -->
+	            <img src="images/opengraph/horizontal_lane.png" _classType="Role" _classname="org.uengine.kernel.Role" class="icon_shape icon_shape_<%=objectId%>" _classname="org.uengine.kernel.Role" _viewclass="org.uengine.kernel.designer.web.RoleView" _shape_type="GROUP" _shape_id="OG.shape.HorizontalLaneShape" _width="300" _height="100" title="horizontal_lane"/>
+	            <img src="images/opengraph/vertical_lane.png" _classType="Role" _classname="org.uengine.kernel.Role" class="icon_shape icon_shape_<%=objectId%>" _classname="org.uengine.kernel.Role" _viewclass="org.uengine.kernel.designer.web.RoleView" _shape_type="GROUP" _shape_id="OG.shape.VerticalLaneShape" _width="100" _height="200" title="vertical_lane"/>				
+	            
+	            <!-- HumanActivity -->
+	            <img src="images/opengraph/task.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.HumanActivity" _viewclass="org.uengine.kernel.designer.web.HumanActivityView" _shape_type="GEOM" _shape_id="OG.shape.bpmn.A_Task" _width="70" _height="50" title="HumanActivity"/>
+	            
+				<!-- 
+	            <img src="images/opengraph/link_start.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Link" _width="30" _height="30"/>
+	            <img src="images/opengraph/link_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Link" _width="30" _height="30"/>
+	            <img src="images/opengraph/link_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Link" _width="30" _height="30"/>
+	            <img src="images/opengraph/multiple_start.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Multiple" _width="30" _height="30"/>
+	            <img src="images/opengraph/multiple_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Multiple" _width="30" _height="30"/>
+	            <img src="images/opengraph/multiple_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Multiple" _width="30" _height="30"/><br/>
+	            
+	            <img src="images/opengraph/timer_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Timer" _width="30" _height="30"/>
+	            <img src="images/opengraph/rule_start.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Rule" _width="30" _height="30"/>
+	            <img src="images/opengraph/rule_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Rule" _width="30" _height="30"/>
+	            <img src="images/opengraph/compensation_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Compensation" _width="30" _height="30"/>
+	            <img src="images/opengraph/compensation_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Compensation" _width="30" _height="30"/><br/>
+	            <img src="images/opengraph/error_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Error" _width="30" _height="30"/>
+	            <img src="images/opengraph/error_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Error" _width="30" _height="30"/>
+	            <img src="images/opengraph/cancel_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Cancel" _width="30" _height="30"/>
+	            <img src="images/opengraph/event_terminate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Terminate" _width="30" _height="30"/>
+	            -->
+	            
+	            
+	            <img src="images/opengraph/connector_sequence.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Sequence" _width="200" _height="150"/>
+	            <img src="images/opengraph/connector_message.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Message" _width="200" _height="150"/>
+	            <img src="images/opengraph/connector_conditional.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Conditional" _width="200" _height="150"/>
+	            <img src="images/opengraph/connector_dataassociation.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_DataAssociation" _width="200" _height="150"/>
+	            <img src="images/opengraph/connector_association.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Association" _width="200" _height="150"/><br/>
+
+	            <!--
+	            <img src="images/opengraph/text.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Text" _width="50" _height="30"/>
+	            -->
+			</dl>
+			
+			<!--
+			-->
+			<dt class="leftMenuTab_ide">확장</dt>
+			<dl class="leftMenuTabInner_ide">
+				
+				<!-- SubProcessActivity -->
+	            <img src="images/opengraph/subprocess.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.SubProcessActivity" _viewclass="org.uengine.kernel.designer.web.SubProcessActivityView" _shape_type="GROUP" _shape_id="OG.shape.bpmn.A_Subprocess" _width="70" _height="70" alt="SubProcess"/>
+
+	            <img src="images/opengraph/data_object.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.ScopeActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Data" _width="30" _height="30"/>
+				
+				<!-- EventActivity -->
+	            <img src="images/opengraph/connector_start.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.StartConnectorEventActivity" _viewclass="org.uengine.kernel.designer.web.EventActivityView" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Connector" _width="30" _height="30" title="StartConnectorEventActivity"/>
+                <img src="images/opengraph/connector_end.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.EndConnectorEventActivity" _viewclass="org.uengine.kernel.designer.web.EventActivityView" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Connector" _width="30" _height="30" title="EndConnectorEventActivity"/>
+	         	
+	         	<img src="images/opengraph/message_start.png"  _classType="Activity" _classname="org.uengine.kernel.LocalEMailActivity" class="icon_shape icon_shape_<%=objectId%>"_shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Message" _width="30" _height="30"/>
+	         	<img src="images/opengraph/timer_start.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Timer" _width="30" _height="30"/>
+	         	
+	         </dl>
+			<dt class="leftMenuTab_ide">제어</dt>
+			<dl class="leftMenuTabInner_ide">
+				<!-- SwitchActivity -->
+	            <img src="images/opengraph/gateway.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.SwitchActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Gateway" _width="40" _height="40"/>
+	            <img src="images/opengraph/gateway_exclusive.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Exclusive" _width="40" _height="40"/>
+	            <img src="images/opengraph/gateway_parallel.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Parallel" _width="40" _height="40"/>
+	            <img src="images/opengraph/gateway_complex.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Complex" _width="40" _height="40"/>
+	            <img src="images/opengraph/gateway_inclusive.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Inclusive" _width="40" _height="40"/>
+	            <img src="images/opengraph/annotation.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Annotation" _width="70" _height="30"/>
+	            
+	            <!-- MappingActivity -->
+	            <img src="images/opengraph/data_store.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.MappingActivity" _viewclass="org.uengine.kernel.designer.web.MappingActivityView" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Store" _width="50" _height="50" title="MappingActivity"/>
+	         </dl>
+	        <!--
+			<dt class="leftMenuTab_ide">메시징</dt>			
+			<dl class="leftMenuTabInner_ide">
+			-->
+				<!-- LocalEMailActivity -->            
+			
+	            
+	        
+	         <!--   
+	            <img src="images/opengraph/message_intermediate.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Message" _width="30" _height="30"/>
+	            <img src="images/opengraph/message_end.png" class="icon_shape icon_shape_<%=objectId%>" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Message" _width="30" _height="30"/><br/>
+	            
+	         </dl>
+	         -->
+	         
+	        <dt class="leftMenuTab_ide">시스템연동</dt>
+			<dl class="leftMenuTabInner_ide">
+				<!-- MappingActivity -->
+				<!--
+	            <img src="images/opengraph/data_store.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.MappingActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Store" _width="50" _height="50" title="MappingActivity"/>
+	            -->
+	            <!-- InvocationActivity -->
+	            <img src="images/opengraph/group.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.InvocationActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group" _width="50" _height="50" title="InvocationActivity"/>	            
+	         </dl>
+	         
+	        <dt class="leftMenuTab_ide leftMenuTab_variable_<%=objectId%>">변수정의</dt>
+			<dl class="leftMenuTabInner_ide leftMenuTabInner_variable_<%=objectId%>">
+			     <div class="depth2">
+			     <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.processVariablePanel.here() %></li>
+                </ul>
+                </div>
+	         </dl>
+	         
+	        <dt class="leftMenuTab_ide leftMenuTab_role_<%=objectId%>">참여자정의</dt>
+			<dl class="leftMenuTabInner_ide leftMenuTabInner_role_<%=objectId%>">
+			     <div class="depth2">
+			     <ul class="fist_menu">
+                    <li style="padding:0px; position:relative;"><%= fields.rolePanel.here() %></li>
+                </ul>
+                </div>
+	         </dl>
+	         <dt class="leftMenuTab_detail_<%=objectId%>" style="padding:3px 8px; border:1px solid #B4B3B5; border-left:none; border-right:none; cursor: pointer">프로세스<br/>상세내용</dt>
+		</dd>
+	</div>
+	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">
+        <div class="windowSubTitle">
+            <span class="ProcessNameView">
+                <%= fields.processNameView.here() %>
+            </span>
+        </div>
+        <div id="canvas_<%=objectId%>" style=" cursor: default; overflow:auto;  background:#F1FCF1; ">
+            <%= fields.processDesignerContainer.here() %>
+        </div>
+    </div>
+</div>
+<%
+}
+%>

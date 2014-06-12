@@ -1,0 +1,22 @@
+<% if(value) { %>
+
+    <div>
+        <%=fields.orderInformationDetailPanel.here()%>
+    </div>
+    
+    <div>
+        <% if(value.id == 'view') { %>
+            <div id="btnline">
+                <ul>    
+                    <li><a id="wBtn" href="#" onClick="<%=methods.showRegionInfo.caller()%>"><span><%=mw3.localize('$RegionInfo')%></span></a></li>
+                </ul>
+            </div>
+            
+            <div id="btnline">
+                <ul>    
+                    <li><a id="wBtn" href="#" onClick="<%=methods.showGoogleMap.caller()%>"><span><%=mw3.localize('$GoogleMap')%></span></a></li>
+                </ul>
+            </div>
+        <% } %>
+    </div>
+<% } %>

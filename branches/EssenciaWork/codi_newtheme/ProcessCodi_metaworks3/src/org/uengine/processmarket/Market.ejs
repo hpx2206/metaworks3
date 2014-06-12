@@ -1,0 +1,16 @@
+<%
+	if(value!=null){
+	
+%>
+	<%=fields.pageNavigator.here()%>
+	<div id="container" class="ui-layout-container" style="overflow: hidden; ">
+		<%=fields.layout.here()%>
+	</div>	
+
+<%
+}else{
+%>
+
+LOADING...
+
+<%}%>

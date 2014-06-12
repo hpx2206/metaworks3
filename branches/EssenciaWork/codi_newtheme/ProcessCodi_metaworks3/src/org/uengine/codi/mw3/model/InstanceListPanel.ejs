@@ -1,0 +1,110 @@
+<%
+	if(value == null && typeof value == 'undefined')
+		return;
+
+	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	var isTopic = (mw3.how == "topic");
+	var isProject = (mw3.how == "project");
+	var isDept = (mw3.how == "organization.group");
+	var isDashboard = (mw3.how == "dashboard");
+	var isPrcess = (mw3.how == "process");
+	var isRole = (mw3.how == "role");
+	var isApp = (mw3.how == "app");
+	var height = 0;
+	if(value.perspectiveInfo){
+		if(isProject){
+			height = 251;
+		}else{
+			height = 300;
+		}
+	}else if(isDashboard){
+		height = 38;
+	}else{
+		height = 68;
+	}
+
+%>
+
+<% if(isDashboard){%>
+	<div class="oce_h1">
+		<%=mw3.localize("$MyNews")%>
+	</div>	
+		
+	<span class="oce_more"><button type="button" class="btn btn-default btn-xs" onClick="<%=methods.goSns.caller()%>"><span class="glyphicon glyphicon-list-alt"></span> <%=mw3.localize("$MyNews.more")%></button></span>
+	
+	<div class="clear"></div>
+	
+	<div class="bottom" style="top: <%=height%>px; position: static; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+
+
+				<%=value.instanceList ? fields.instanceList.here() : ""%>
+				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
+				<%=value.knowledge ? fields.knowledge.here() : ""%>
+
+	</div>
+<% }else{%>
+<div class="top" style="height: <%=height%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+
+
+	<%=value.perspectiveInfo?fields.perspectiveInfo.here():''%>
+	
+	<%=isApp?fields.topicFollowers.here():''%>
+	<%=isApp?fields.appInformation.here():''%>
+	
+	
+	
+		            <div id="searchbox">
+		                <div class="searchboxline">
+		                	<div class="searchboxline2">
+			                        <div class="newprocessbtn">
+				                        <a href="#" onclick="<%=methods.newInstance.caller()%>">
+				                        	<span id="method_<%=objectId%>_newInstance">
+				                        		<div id="startBtn">
+							                        <% if(mw3.how == "topic"){ 
+								                        	var title = session.windowTitle;
+															if( title != null && title != '' && title.length > 13){
+																title = title.substring(0,13) + '...';
+															}%>
+														"<%= title %>"에
+													<%}%> 
+														<%=mw3.localize("$New")%>
+												</div>
+											</span>
+										</a>
+									</div>
+		                        <div class="searchboxarea" id="method_<%=objectId%>_newInstance">
+		                        	<%=fields.searchBox.here()%>
+		                        </div>
+		                        <div style="clear:both;"></div>
+		                    </div>
+		                </div>
+		                <div style="clear:both;"></div>
+		            </div>    
+		          
+		          	<!-- codi에 영향 미칩니다 . 주석처리하지 마세요. -->
+		            <% if(!value.perspectiveInfo){ %>
+		               
+			            <div class="toolbar">
+		                    <ul>
+		                        <li onclick="<%=methods.switchToInstanceList.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span class="toolbarIcon icon-feed"></span><span><%=mw3.localize("$ComingUp")%></span></li>
+		                        <li onclick="<%=methods.switchToInstanceListFollowing.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span class="toolbarIcon icon-users"></span><span ><%=mw3.localize("$Following")%></span></li>               
+		                        <li onclick="<%=methods.switchToInstanceListMyToDo.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span class="toolbarIcon icon-drawer2"></span><span><%=mw3.localize("$MyToDo")%></span></li>               
+		                        <% if(value.useKnowledge){ %>
+		                        <li onclick="<%=methods.switchToKnowledge.caller()%>" <%=value.knowledge ? "class='toolbar_current'" : ""%>><span class="toolbarIcon icon-envelope"></span><span id="method_<%=objectId%>_switchToKnowledge"><%=mw3.localize("$Strategic")%></span></li>               
+		                     	<% } %>
+		                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span class="toolbarIcon icon-calendar"></span><span><%=mw3.localize("$Calendar")%></span></li>
+		                    </ul>
+	                	</div>
+					<% }%>
+					
+                	
+</div>
+<div class="bottom" style="top: <%=height%>px; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px; overflow:auto">
+
+
+				<%=value.instanceList ? fields.instanceList.here() : ""%>
+				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
+				<%=value.knowledge ? fields.knowledge.here() : ""%>
+
+</div>
+<% }%>

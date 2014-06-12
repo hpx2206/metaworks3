@@ -1,0 +1,32 @@
+<%
+	if(value){
+%>	
+
+
+	<div id="navigator">
+		<div class="depth2">
+			<ul class="fist_menu">			
+				<li>				
+					<%=fields.resourceFile.here()%>
+				<li>
+			</ul>		
+		</div>
+		<div class="depth2">
+			<ul class="fist_menu">			
+				<li>				
+					<%=fields.webResourceFile.here()%>
+				<li>
+			</ul>		
+		</div>
+		<div class="depth2">
+			<ul class="fist_menu">			
+				<li>				
+					<%=fields.libraryFile.here()%>
+				<li>
+			</ul>		
+		</div>
+	</div>
+
+<%
+	}
+%>	

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="uengine-web" basedir="." default="build-war">
+    <property name="src.dir" value="src"/>
+    <property name="web.dir" value="WebContent"/>
+    <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
+	
+    <path id="master-classpath">
+        <fileset dir="${web.dir}/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+    </path>
+	
+    <target name="build" description="Compile source tree java files" >
+        <mkdir dir="${build.dir}"/>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy> 
+	   <javac srcdir="${src.dir}" destdir="${build.dir}" source="1.6" target="1.6" debug="true" deprecation="false" optimize="false" failonerror="true" encoding="UTF-8">
+		  <classpath refid="master-classpath"/>
+	   </javac>
+    </target>
+	
+	<target name="clean" description="Clean output directories">
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+    </target>	
+	
+	<target name="build-war" depends="build">
+        <mkdir dir="${build.dir}"></mkdir>
+         <jar compress="false" destfile="${war.dir}/uengine-web.war"> 
+			<zipfileset dir="${web.dir}">
+				<include name="**/*.*"/>
+					<exclude name="**/*.war"/>
+			</zipfileset>
+		</jar>	
+	</target>
+	
+</project>

@@ -1,0 +1,89 @@
+<% if(value) { %>
+
+    <div>
+    
+	     <table id="detail_<%=objectId%>" width="100%" class="tbl_type_brw" border="1" cellspacing="0">
+		    <colgroup>
+		    <col width="250">
+		    <col>
+		    <col width="80">
+		    <col>
+		    </colgroup>
+		    <tbody>
+		        <tr>
+		            <th width="150" scope="row">서비스 이름</th>
+		            <td colspan="5"><%=fields.serviceName.here()%></td>
+		        </tr>
+		        <tr>
+		            <th scope="row">소개</th>
+		            <td colspan="5"><%=fields.serviceIntroduce.here()%></td>
+		        </tr>
+		        <tr>
+		            <th scope="row">구축기간</th>
+		            <td colspan="2"><%=fields.constructTerm.here()%></td>
+		            
+		            <th colspan="2" scope="row">예산</th>
+		            <td width="32%"><%=fields.budget.here()%></td>
+		        </tr>
+		        <tr>
+		            <th colspan="3" scope="row">서비스 개요</th>
+		            <th colspan="2" scope="row">서비스 목적</th>
+		            <td><%=fields.servicePurpose.here()%></td>
+		        </tr>
+		        <tr>
+		            <td colspan="3" rowspan="7" scope="row"><p><%=fields.serviceSummary.here()%></td>
+		            <th width="5%" rowspan="2" scope="row">기대효과</th>
+		            <th width="6%" class="sub_th" scope="row">공공</th>
+		            <td><%=fields.publicExpectation.here()%></td>         
+		        </tr>
+		        <tr>
+                    <th class="sub_th" scope="row">민간</th>
+                    <td><%=fields.civilianExpectation.here()%></td>
+                </tr>
+		        <tr>
+		            <th rowspan="5" scope="row">담당자</th>
+		        </tr>
+		        <tr>
+		            <th class="sub_th" scope="row">소속기관</th>
+		            <td><%=fields.managerAttachOrganization.here()%></td>
+		        </tr>
+		        <tr>
+		            <th class="sub_th" scope="row">성명</th>
+		            <td><%=fields.managerName.here()%></td>
+		        </tr>
+		        <tr>
+		            <th class="sub_th" scope="row">연락처</th>
+		            <td><%=fields.managerNumber.here()%></td>
+		        </tr>
+		        <tr>
+		            <th class="sub_th" scope="row">이메일</th>
+		            <td><%=fields.managerEmail.here()%></td>
+		        </tr>
+		        
+		        <%=fields.publicServiceIntroduceDetailList.here()%>
+		       
+		    </tbody>
+			    
+		</table>
+        
+    </div>
+    
+    <div id="btnline">
+    
+        <ul>
+            <% if(mw3.when == 'view') { %>  
+              
+                <li><a id="wBtn" href="#" onClick="<%=methods.modify.caller()%>"><span><B><%=mw3.localize("$Modify")%></B></span></a></li>
+                <li><a id="wBtn" href="#" onClick="<%=methods.apply.caller()%>"><span><B><%=mw3.localize("$Apply")%></B></span></a></li>
+                <li><a id="wBtn" href="#" onClick="<%=methods.delete.caller()%>"><span><B><%=mw3.localize("$Delete")%></B></span></a></li>
+                
+            <% } else { %>
+            
+                <li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><B><%=mw3.localize("$Save")%></B></span></a></li>
+                
+            <% } %>
+        </ul>
+        
+    </div>  
+
+<% } %>

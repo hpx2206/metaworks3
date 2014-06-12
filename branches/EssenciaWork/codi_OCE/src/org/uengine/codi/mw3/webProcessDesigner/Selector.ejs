@@ -1,0 +1,36 @@
+<%
+	if(value == null || typeof value == 'undefined')
+		return true;
+	
+	if(mw3.how == 'selector'){
+		var displayName = '';
+		
+		if(typeof value.value != 'undefined' || value.value != null)
+			displayName = value.name;
+%>
+	<input type="text" readonly value="<%=displayName%>" /><input type="button" value="..." onClick="javascript:<%=methods.openSelector.caller()%>" />
+<%	
+	}else{
+%>
+
+<div style="position:relative; overflow:auto; height: 200px;">
+	<%=fields.target.here()%>	
+</div>
+
+<%
+		if(objectMetadata.serviceMethodContexts){
+			var first = true;
+			
+			for(var i=0; i<objectMetadata.serviceMethodContexts.length; i++){
+   	   			var serviceMethod = objectMetadata.serviceMethodContexts[i];
+   	   			
+   	   			if(mw3.isHiddenMethodContext(serviceMethod))
+   	   				continue;
+%>		
+	<input type="button" value="<%=serviceMethod.displayName%>" onClick="<%=methods[serviceMethod.methodName].caller()%>" />
+<%   	   			
+			}
+		}
+	}			
+%>		
+

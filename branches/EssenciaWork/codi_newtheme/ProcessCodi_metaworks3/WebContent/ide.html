@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#" xml:lang="en" lang="en">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+		<!-- jquery -->
+		<script type="text/javascript" src="scripts/jquery/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.23.custom.min.js"></script> 
+		<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.center.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.msg.js"></script>
+		<script type='text/javascript' src='scripts/jquery/jquery.textPlaceholder.js'></script>
+		
+		
+		<!-- jquery css -->
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" />
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery.msg.css" media="screen" />
+
+
+		<!-- metaowkrs for json2 (ie7) -->
+ 		<script type="text/javascript" src="scripts/json/json2.js"></script>
+
+		<!-- metaworks for keyboard mapping -->
+		<script type="text/javascript" src="scripts/shortcut.js"></script>
+		
+		<!-- metaworks for context menu, import YUI -->
+		<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/container.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/sam/menu.css">
+		<script type="text/javascript" src="scripts/yui/build/utilities/utilities.js"></script>
+		<script type="text/javascript" src="scripts/yui/build/container/container.js"></script>
+		<script type="text/javascript" src="scripts/yui/build/menu/menu.js"></script>
+	 	
+		
+		<!-- metaworks for ejs engine -->
+		<script type="text/javascript" src="scripts/ejs/ejs.js"></script>
+		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
+		<script type="text/javascript" src="scripts/ejs/view.js"></script>
+	
+	
+		<!-- substitue for ejs engine (jQote2) -->		
+		<script type="text/javascript" src="scripts/jquery/jquery.jqote2.js"></script>
+	
+		<!-- metaworks engine -->
+	  	<script type='text/javascript' src='dwr/engine.js'></script> 
+	  	<script type='text/javascript' src='dwr/util.js'></script>	  
+	  	<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
+	  	<script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
+
+		<!-- OpenGraph -->				
+		<script type="text/javascript" src="scripts/jquery/jquery.contextMenu.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/jquery/jquery.contextMenu.css" />
+		
+		<script type="text/javascript" src="scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js"></script>
+		<link rel="stylesheet" type="text/css" href="dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css" />
+
+
+		<!-- user scripts -->
+		<script type='text/javascript' src='scripts/common.js'></script>				
+		<script type='text/javascript' src='scripts/jquery/timeago/jquery.timeago.js'></script>				
+		 
+		<!-- user css -->
+		<link rel="stylesheet" type="text/css" href="style/waveStyle/droppable_layout.css" />
+		<link rel="stylesheet" type="text/css" href="style/waveStyle/signIn.css" />
+
+		<!-- for ckeditor -->
+		<script type='text/javascript' src='scripts/ckeditor_3.6.3/ckeditor/ckeditor.js'></script>
+
+		
+		 
+		<!-- for check date -->
+		<script type='text/javascript' src='scripts/datejs/date_kr.js'></script>
+
+		<!-- mw3 component -->
+		<link rel="stylesheet" type="text/css" href="style/loading.css">
+		<link rel="stylesheet" type="text/css" href="style/uclipse.css" />
+		<link rel="stylesheet" type="text/css" href="style/assist.css" />
+		 		 
+		<!-- popup -->
+ 		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
+		
+		<!-- for source code editor-->
+		<script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+						
+ 		<script type="text/javascript">
+			mw3.usingTemplateEngine = 'jQote';
+			//mw3.optimizeObjectMemory = true;
+			
+			$(document).ready(function() {
+		 		mw3.setWhen(mw3.WHEN_VIEW);
+		 		mw3.template_error = function(e, actualFace) {
+					if(e.lineNumber){
+						if(e.lineText)
+							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.lineText+": "+e.message;
+						else
+							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.message;
+					}else
+						var message = "["+actualFace+"] "+e.message;
+				
+					var logger = mw3.getAutowiredObject('org.uengine.codi.platform.Console');
+					if(logger) logger.__getFaceHelper().addLog( message );
+					else
+						alert(message);
+					
+		 		};
+		 		
+		 		Metaworks3.prototype.startLoading = function(objId){
+                    var divId = mw3._getObjectDivId(objId);
+                    var offset = $('#' + divId).offset();                    
+                    
+                    var offsetRight = offset.left + $('#' + divId).width() - 20;                    
+                    var offsetMiddle = offset.top + ($('#' + divId).height()/2- 8);
+                    
+                    var html;
+                    html = "<div id='info_div' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><img src='dwr/metaworks/images/circleloading.gif'></div>";
+                    
+                    $('body').append(html);
+                };
+                        
+                Metaworks3.prototype.endLoading = function(objId){
+                     $('body>#info_div').remove();
+                };
+                
+		 		mw3.showError = function(objId, message, methodName){
+					if( this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading)
+						this.getFaceHelper(objId).endLoading();	
+					else
+						mw3.endLoading(objId);
+					
+					try{mw3.endLoading(objId);}catch(x){}
+					
+					$.msg({
+							bgPath : mw3.base + '/images/',
+						    content : "<b>" + mw3.localize(message) + "</b>"
+					});
+		 		}
+		 		
+		 		mw3.alert = function(message){
+					$.msg({
+							bgPath : mw3.base + '/images/',
+						    content : "<b>" + mw3.localize(message) + "</b>"
+					});
+		 		}
+		 		
+		 		mw3.getMessage = function(key, defaultValue){
+		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
+		 			
+		 			if(localeHandler!=null && localeHandler.resourceBundle != null){		 				
+		 				var message = localeHandler.resourceBundle[key];		 				
+		 				if(message)
+		 					return message;
+		 			}
+		 			
+		 			if(defaultValue)
+		 				return defaultValue;
+		 			
+		 			return key;		
+		 		}
+				
+ 				var locatePage = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.model.Locale",
+                    language : 'ko'
+                }, 'body').load();
+ 				
+ 				mw3.metadataBundle = function(key, defaultValue){
+                    var metadataHandler = mw3.getAutowiredObject("org.metaworks.metadata.MetadataBundle");
+                    if(metadataHandler!=null && metadataHandler.projectBundle != null){                        
+                        var message = metadataHandler.projectBundle[key];                        
+                        if(message)
+                            return message;
+                    }
+                    
+                    if(defaultValue)
+                        return defaultValue;
+                    
+                    return key;     
+                }
+ 				var metadataPage = new MetaworksObject({
+                    __className : "org.metaworks.metadata.MetadataBundle"
+                }, 'body').loadProperty();
+					
+			    var object = {
+				    __className : "examples.TestProject",
+				    //__className : "examples.TestMonitor",
+				    metaworksContext : {when: 'edit'}
+			    }
+ 				
+ 				var mainPage = new MetaworksObject(object, 'body');
+			    mainPage.load(true, function(){$('#loadingide').remove()});
+			    
+				mw3.onLoadFaceHelperScript();
+				
+				
+				
+				
+				/* var keyIsDown = {};
+
+				var overrideKeyboardEvent = function(e){
+				  disabledEventPropagation(e);
+				  e.preventDefault();
+				  
+				  return false;
+				};
+				
+				var disabledEventPropagation = function(e){
+				  if(e){
+				    if(e.stopPropagation){
+				      e.stopPropagation();
+				    }else if(window.event){
+				      window.event.cancelBubble = true;
+				    }
+				  }
+				};
+				
+				document.onkeydown = overrideKeyboardEvent;
+				document.onkeyup = overrideKeyboardEvent; */
+				
+				
+			});
+			
+		</script>
+	</head>
+	
+	<body onload="dwr.engine.setActiveReverseAjax(true);">
+		<div id="loadingide">
+		    <div class="header"></div>
+		    <div class="loading-progress">
+		        <div id="progress-msg">Preparing your workspace <span id="dots">..</span>
+		        </div>
+		        <div class="loading-seperator"></div>
+		        <div class="loading-msg">Turning you to the dark side--we have cookies</div>
+		    </div>
+		</div>		
+	</body>
+</html>
