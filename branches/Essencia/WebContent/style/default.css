@@ -1,0 +1,19 @@
+@charset "utf-8";
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	overflow: hidden; /* when page gets too small for container min-width/height */
+}
+.mw3_layout {
+	min-height: 10px;
+	min-width: 10px;
+	position: absolute;
+	top: 0px;	/* margins in pixels */
+	bottom: 0px;	/* could also use a percent */
+	left: 0px;
+	right: 0px;
+}
