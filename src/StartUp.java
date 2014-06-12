@@ -1,6 +1,7 @@
+import org.essencia.model.MainIDE;
+import org.essencia.model.MainPanel;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.layout.Layout;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class StartUp {
@@ -16,12 +17,12 @@ public class StartUp {
 		this.content = content;
 	}
 
-	@ServiceMethod
-	public void load(){
-		Layout layout = new Layout();
-		layout.setWest("West");
-		layout.setCenter("Center");
+	@ServiceMethod(callByContent=true)
+	public MainPanel load(){
+		MainIDE mainIDE = new MainIDE();
+		mainIDE.load();
 		
-		this.setContent(layout);
+		return new MainPanel(mainIDE);
+		
 	}
 }
