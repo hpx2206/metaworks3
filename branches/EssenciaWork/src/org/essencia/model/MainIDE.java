@@ -1,4 +1,5 @@
 package org.essencia.model;
+import org.essencia.ide.Navigator;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.Workspace;
 import org.metaworks.widget.layout.Layout;
@@ -28,7 +29,13 @@ public class MainIDE {
 		
 	@ServiceMethod(callByContent=true)
 	public MainPanel load(){
+		
+		
+		Navigator navigator = new Navigator();		
+		navigator.load("CodeBase", "EssenciaWork");
+		
 		MainWindow navigatorWindow = new MainWindow(null,NAVIGATOR);
+		navigatorWindow.setPanel(navigator);
 		MainWindow editorWindow = new MainWindow(null,EDITOR);
 		
 		Layout layout = new Layout();
