@@ -130,6 +130,11 @@ public class Notification extends Database<INotification> implements INotificati
 		 * follower마다 Emptable에서 데이터를 읽어 오기 때문에 ...(actorUserInfo.databaseMe()) 차후 수정
 		 * 
 		 */
+		
+		String smtpUse= GlobalContext.getPropertyString("smtp.use", "0");
+		if("0".equals(smtpUse)){
+			return;
+		}
 		if(userInfo.databaseMe().isMailNoti()){
 			final Employee userInfoDB = new Employee();
 			userInfoDB.copyFrom(userInfoTemp);

@@ -102,6 +102,11 @@ public class Invitation implements ContextAware{
 	@Face(displayName="$Invite")
 	public Object[] invite() throws Exception{
 		
+		String smtpUse= GlobalContext.getPropertyString("smtp.use", "0");
+		if("0".equals(smtpUse)){
+			throw new Exception("메일서버 설정이 필요합니다.");
+		}
+		
 		String authKey = UUID.randomUUID().toString();
 		String[] emilList = null;
 		emilList = this.getEmail().split(",");
