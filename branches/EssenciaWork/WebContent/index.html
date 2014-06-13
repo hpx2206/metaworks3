@@ -72,8 +72,13 @@
 			 		mw3.showInfo = function(objId, message){
 			 		}
 			 		
-			 		var loader = mw3.locateObject({__className: 'StartUp'}, null, 'body');
-			 		loader.load();
+			 		var object = {
+			 				__className : "StartUp"
+			 		}
+			 		var mainPage = new MetaworksObject(object, 'body');
+			 		mainPage.load();
+			 		
+			 		
 			 		
 			 		mw3.onLoadFaceHelperScript();
 				});
@@ -81,7 +86,6 @@
 		</script>
 	</head>
 	
-	<body style="display: block; min-width: 1px; min-height: 1px; max-width: 10000px; max-height: 10000px;">
-	</body>
-
+   <body onload="dwr.engine.setActiveReverseAjax(true);">
+    </body>
 </html>
