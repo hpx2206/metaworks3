@@ -223,8 +223,8 @@ public class Notification extends Database<INotification> implements INotificati
 		}
 	}
 	
-	public HashMap<String, String> findInstanceNotiUser(String instanceId) throws Exception{
-		HashMap<String, String> notiUsers = new HashMap<String, String>();
+	public HashMap<String, ClientSessions> findInstanceNotiUser(String instanceId) throws Exception{
+		HashMap<String, ClientSessions> notiUsers = new HashMap<String, ClientSessions>();
 		
 		InstanceFollower findFollower = new InstanceFollower(instanceId);
 		findFollower.session = session;
@@ -264,8 +264,8 @@ public class Notification extends Database<INotification> implements INotificati
 		return notiUsers;
 	}
 	
-	public HashMap<String, String> findTopicNotiUser(String topicId) throws Exception{
-		HashMap<String, String> notiUsers = new HashMap<String, String>();
+	public HashMap<String, ClientSessions> findTopicNotiUser(String topicId) throws Exception{
+		HashMap<String, ClientSessions> notiUsers = new HashMap<String, ClientSessions>();
 		
 		TopicFollower topicFollower = new TopicFollower();
 		topicFollower.setParentId(topicId);
@@ -341,7 +341,7 @@ public class Notification extends Database<INotification> implements INotificati
 		
 	}
 	
-	public static void addPushListener(final HashMap<String, String> notiUsers){
+	public static void addPushListener(final HashMap<String, ClientSessions> notiUsers){
 
 		/*
 		 * event 순서 문제 해결
@@ -372,9 +372,11 @@ public class Notification extends Database<INotification> implements INotificati
 		tx.addTransactionListener(flusher);
 	}
 
-	public static void push(HashMap<String, String> notiUsers) throws Exception {
+	public static void push(HashMap<String, ClientSessions> notiUsers) throws Exception {
 
-		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
+		HashMap<String, String> pushUsers = new HashMap<String, String>();
+		
+		MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(pushUsers),
 				"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
 				new Object[]{});
 
