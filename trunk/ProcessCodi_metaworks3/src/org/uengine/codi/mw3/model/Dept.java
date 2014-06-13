@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
@@ -568,7 +570,7 @@ public class Dept extends Database<IDept> implements IDept {
 					
 					noti.add(instance);
 				
-					String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+					String followerSessionId = Login.getSessionId();
 					
 					try{
 						//NEW WAY IS GOOD

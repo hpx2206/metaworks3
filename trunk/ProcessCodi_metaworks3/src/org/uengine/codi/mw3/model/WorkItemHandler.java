@@ -27,6 +27,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
@@ -488,9 +489,11 @@ public class WorkItemHandler implements ContextAware{
 		HashMap<String, String> notiUsers = new HashMap<String, String>();
 		Notification notification = new Notification();
 		notification.session = session;
-		notiUsers = notification.findInstanceNotiUser(inst.getInstId().toString());
+		HashMap<String, ClientSessions> companyUsers = notification.findInstanceNotiUser(inst.getInstId().toString());
+		notiUsers = SessionUtil.toSessionIdMap(companyUsers);
 		if(inst.getTopicId() != null){
-			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(inst.getTopicId());
+			companyUsers = notification.findTopicNotiUser(inst.getTopicId());
+			HashMap<String, String> topicNotiUsers = SessionUtil.toSessionIdMap(companyUsers);
 			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
 			while(iterator.hasNext()){
 				String followerUserId = (String)iterator.next();
@@ -528,7 +531,7 @@ public class WorkItemHandler implements ContextAware{
 		TodoBadge todoBadge = new TodoBadge();
 		todoBadge.loader = true;
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge, true)});
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new Refresh(todoBadge, true)});
 		// follower 될 사용자의 todo count 를 refresh
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new OtherSessionFilter(notiUsers , session.getUser().getUserId()),
@@ -537,12 +540,13 @@ public class WorkItemHandler implements ContextAware{
 		/**
 		 *  === instance push 부분 ===
 		 */
-		notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
+		companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+		notiUsers.putAll(SessionUtil.toSessionIdMap(companyUsers));	
 		
 		inst.getMetaworksContext().setWhere(Instance.WHERE_INSTANCELIST);
 		
 		// 본인의 instanceList 에 push
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new InstanceListener(inst)});
 		
 		// 본인 이외에 다른 사용자에게 push			
 		// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 하고 2.완료시킨 워크아이템은 리프레쉬를 시킨다

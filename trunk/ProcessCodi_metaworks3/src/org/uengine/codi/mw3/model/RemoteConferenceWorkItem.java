@@ -28,6 +28,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.kernel.EJBProcessInstance;
@@ -228,12 +229,13 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		HashMap<String, String> pushUserMap = new HashMap<String, String>();
 		Notification notification = new Notification();
 		notification.session = session;
-		pushUserMap = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+		HashMap<String, ClientSessions> companyUsers = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+		pushUserMap = SessionUtil.toSessionIdMap(companyUsers);
 		String currentUserId = session.getUser().getUserId();
 	
 		final IWorkItem copyOfThis = this;
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
 		
 		// 본인 이외에 다른 사용자에게 push
 		MetaworksRemoteService.pushClientObjectsFiltered(
@@ -251,12 +253,13 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		HashMap<String, String> pushUserMap = new HashMap<String, String>();
 		Notification notification = new Notification();
 		notification.session = session;
-		pushUserMap = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+		HashMap<String, ClientSessions> companyUsers = notification.findTopicNotiUser(String.valueOf(this.getTaskId()));
+		pushUserMap = SessionUtil.toSessionIdMap(companyUsers);
 		String currentUserId = session.getUser().getUserId();
 	
 		final IWorkItem copyOfThis = this;
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});
 		
 		// 본인 이외에 다른 사용자에게 push
 		MetaworksRemoteService.pushClientObjectsFiltered(

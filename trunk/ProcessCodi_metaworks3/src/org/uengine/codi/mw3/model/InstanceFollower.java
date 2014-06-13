@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksException;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
@@ -154,7 +156,7 @@ public class InstanceFollower extends Follower {
 			
 			// noti 저장
 			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
-				notiUsers.put(user.getUserId(), Login.getSessionIdWithUserId(user.getUserId()));
+				notiUsers.put(user.getUserId(), Login.getSessionId());
 			}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
 				Dept deptRef = new Dept();
 				deptRef.copyFrom(dept);
@@ -168,7 +170,7 @@ public class InstanceFollower extends Follower {
 						if( session.getUser().getUserId().equals(followerUserId)){	// 자기 자신은 제외
 							continue;
 						}
-						notiUsers.put(followerUserId, Login.getSessionIdWithUserId(followerUserId));
+						notiUsers.put(followerUserId, Login.getSessionId());
 					}
 				}
 			}

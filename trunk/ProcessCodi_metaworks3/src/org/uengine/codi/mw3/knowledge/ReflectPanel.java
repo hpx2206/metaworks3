@@ -473,7 +473,7 @@ public class ReflectPanel {
 				jschServerBehaviour.runCommand(command);
 				
 				//hudson build monitering popup
-				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.ProjectInfo')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.ProjectInfo').__getFaceHelper().callHudsonConsole",
 						new Object[]{});
 				

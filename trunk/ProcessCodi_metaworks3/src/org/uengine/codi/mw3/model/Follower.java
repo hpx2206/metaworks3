@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.HashMap;
+
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -11,6 +15,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.TransactionListener;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.kernel.Role;
@@ -245,17 +250,21 @@ public class Follower extends Database<IFollower> implements IFollower {
 	public void push() throws Exception {
 		
 		if(this.isEnablePush()){
+			HashMap<String, ClientSessions> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+			HashMap<String, String> notiUsers = new HashMap<String, String>();
+			
+			notiUsers.putAll(SessionUtil.toSessionIdMap(companyUsers));
 			
 			// TODO 타 회사의 사용자도 리프레쉬가 되어야 한다.
 			// 본인 이외에 다른 사용자에게 push
 			MetaworksRemoteService.pushClientObjectsFiltered(
-					new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+					new AllSessionFilter(notiUsers),
 					new Object[]{new ToEvent(new Followers(this), EventContext.EVENT_CHANGE , true)});
 
 			final Object[] returnObject = new Object[]{new ToEvent(new TodoBadge(), EventContext.EVENT_CHANGE)};
 			
  			if(this.getAssigntype() == Role.ASSIGNTYPE_USER)
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(this.getEndpoint()), returnObject);
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), returnObject);
 			else
 				MetaworksRemoteService.pushClientObjectsFiltered(new AllSessionFilter(Login.getSessionIdWithDept(this.getEndpoint())), returnObject);
 			

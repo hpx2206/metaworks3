@@ -283,7 +283,7 @@ public class TopicTitle  implements ContextAware{
 					
 					noti.add(instance);
 				
-					String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+					String followerSessionId = Login.getSessionId();
 					
 					try{
 						//NEW WAY IS GOOD

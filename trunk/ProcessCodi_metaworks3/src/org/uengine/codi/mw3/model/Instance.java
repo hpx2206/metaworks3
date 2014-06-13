@@ -25,6 +25,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.ErrorPage;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
@@ -226,7 +227,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 	}
 	public Object[] addTrayBar() throws Exception{
-		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
+		Browser.withSession(Login.getSessionId(), new Runnable(){
 			InstanceView instanceView = ((InstanceViewContent)detail()).getInstanceView();
 			public void run() {
 				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{instanceView.getInstanceName(), getInstId()+""});
@@ -1310,12 +1311,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		/* push 부분 */
 		// 자기자신의 todoBadge 와 다가오는 일정을 refresh 시킨다.
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});			
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});			
 		
 		// 자기자신의 달력화면이 열려있다면 달력의 글을 제거한다.
 		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
 		scEvent.setId(instanceRef.getInstId().toString());
-		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+		MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
 				new Object[]{scEvent});
 		
@@ -1433,9 +1434,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		instance.getMetaworksContext().setWhere("instancelist");
 		
+
+		HashMap<String, ClientSessions> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		pushUserMap.putAll(SessionUtil.toSessionIdMap(companyUsers));
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		MetaworksRemoteService.pushClientObjectsFiltered(
-				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new AllSessionFilter(pushUserMap),
 				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		
 		// workItem.add(); 에서 비슷한 일을 하는것처럼 보이나, 완료시점에만 동작하기 위해서 workItem에 구현하는건 비용이 높아보인다.
@@ -1453,7 +1458,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
 			
-			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+			MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 					new Object[]{scEvent});
 		}
@@ -1465,10 +1470,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 		UpcommingTodoPerspective upcommingTodoPerspective = new UpcommingTodoPerspective();
 
 		//본인에게 알림 워크아이템 발행
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(),
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem), new Refresh(upcommingTodoPerspective)});			
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});	
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new Refresh(todoBadge), new Refresh(upcommingTodoPerspective)});	
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
 		int businessValue = instanceRef.getBenefit() + instanceRef.getPenalty();
