@@ -1,7 +1,4 @@
 package org.essencia.model;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.example.ide.Workspace;
-import org.metaworks.widget.layout.Layout;
 
 
 public class MainPanel {

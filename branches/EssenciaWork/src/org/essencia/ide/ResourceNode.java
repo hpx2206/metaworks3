@@ -5,12 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
-import org.metaworks.ToOpener;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -111,7 +106,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 
-		File file = new File("D:/codi/codebase/\\codi\\uengine.org");
+		File file = new File("C:/Users/uengine13/Desktop");
 		String[] childFilePaths = file.list();
 
 		// folder
@@ -137,7 +132,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 
-			// µð·ºÅä¸®°¡ ¾Æ´Ñ ÆÄÀÏÀÌÁö¸¸ ÇÁ·Î¼¼½º Å¸ÀÔÀÌ¸é ÇÁ·Î¼¼½º ³ëµå¸¦ ¸¸µé¾î¼­ ºÙ¿©¾ß ÇÑ´Ù.
+			// ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
 			if(!childFile.isDirectory()){
 				String type = ResourceNode.findNodeType(childFile.getAbsolutePath());
 				
@@ -271,7 +266,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 //		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
 //			metadataProperty.setResourceNode(this);
 //
-//			//ÇÈ¾÷µÇ´Â ¼ø°£  xml¿¡ ÀúÀåÇÏ°í load ÇØ¼­ ¹Ì¸®º¸±â 
+//			//ï¿½È¾ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½  xmlï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ load ï¿½Ø¼ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ 
 //			this.getMetaworksContext().setHow("resourcePicker");
 //			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 //			
@@ -330,6 +325,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				nodeType = TreeNode.TYPE_FILE_IMAGE;
 			}else if(".metadata".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_METADATA;
+			}else if(".ppmt".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_TEXT;
 			}
 		}
 

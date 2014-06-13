@@ -1,4 +1,4 @@
-var org.essencia.model.MainWindow = function(objectId, className){
+var org_essencia_model_MainWindow = function(objectId, className){
     this.objectId = objectId;
     this.className = className;
     this.objectDivId = mw3._getObjectDivId(this.objectId);
@@ -26,7 +26,7 @@ var org.essencia.model.MainWindow = function(objectId, className){
     this.lastIndex = this.object.tabs.length;
 };
 
-org.essencia.model.MainWindow.prototype = {
+org_essencia_model_MainWindow.prototype = {
     loaded : function(){
         this.bind();
         

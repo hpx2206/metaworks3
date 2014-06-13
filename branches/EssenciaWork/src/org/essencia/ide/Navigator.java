@@ -1,11 +1,8 @@
 package org.essencia.ide;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 
 public class Navigator {
 

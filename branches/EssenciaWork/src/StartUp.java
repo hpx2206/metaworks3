@@ -1,6 +1,5 @@
 import org.essencia.model.MainIDE;
 import org.essencia.model.MainPanel;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
