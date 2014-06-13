@@ -49,6 +49,8 @@ import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Application;
+import org.uengine.codi.mw3.model.ClientSessionInfo;
+import org.uengine.codi.mw3.model.ClientSessions;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.ICompany;
@@ -67,9 +69,9 @@ import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 public class Login implements ContextAware {
 
-	protected static Hashtable<String, HashMap<String, String>> SessionIdForCompanyMapping = new Hashtable<String, HashMap<String, String>>();
+	protected static Hashtable<String, HashMap<String, ClientSessions>> SessionIdForCompanyMapping = new Hashtable<String, HashMap<String, ClientSessions>>();
 	protected static Hashtable<String, HashMap<String, String>> SessionIdForDeptMapping = new Hashtable<String, HashMap<String, String>>();
-	protected static Hashtable<String, String> SessionIdForEmployeeMapping = new Hashtable<String, String>();
+	protected static Hashtable<String, ClientSessions> SessionIdForEmployeeMapping = new Hashtable<String, ClientSessions>();
 
 	protected static Hashtable<String, String> userIdDeviceMapping = new Hashtable<String, String>();	
 
@@ -275,7 +277,13 @@ public class Login implements ContextAware {
 	}
 
 
-	public static String getSessionIdWithUserId(String userId){
+	public static String getSessionId(){
+		WebContext wctx = WebContextFactory.get();
+		
+		return wctx.getScriptSession().getId();
+	}
+	
+	public static ClientSessions getSessionIdWithUserId(String userId){
 		return SessionIdForEmployeeMapping.get(userId.toUpperCase());
 	}
 
@@ -293,15 +301,15 @@ public class Login implements ContextAware {
 		}
 	}
 
-	public static HashMap<String, String> getSessionIdWithCompany(String companyId){
+	public static HashMap<String, ClientSessions> getSessionIdWithCompany(String companyId){
 		companyId = companyId.toUpperCase();
 		if(SessionIdForCompanyMapping.containsKey(companyId)){
-			HashMap<String, String> mapping = SessionIdForCompanyMapping.get(companyId);
+			HashMap<String, ClientSessions> mapping = SessionIdForCompanyMapping.get(companyId);
 			//System.out.println(.);
 
 			Iterator<String> iterator = mapping.keySet().iterator();
 
-			return (HashMap<String, String>)mapping.clone();
+			return (HashMap<String, ClientSessions>)mapping.clone();
 		}else{
 			return null;
 		}
@@ -994,7 +1002,7 @@ public class Login implements ContextAware {
 		//		String userId = session.getEmployee().getEmpCode().toUpperCase();
 
 		if(SessionIdForEmployeeMapping.containsKey(userId)){
-			String sessionId = SessionIdForEmployeeMapping.get(userId);
+			ClientSessions sessionId = SessionIdForEmployeeMapping.get(userId);
 
 			WebContext wctx = WebContextFactory.get();
 
@@ -1018,7 +1026,7 @@ public class Login implements ContextAware {
 
 					if(globalCom != null && globalCom.length() > 0){
 						globalCom = globalCom.toUpperCase();
-						HashMap<String, String> mapping = null;
+						HashMap<String, ClientSessions> mapping = null;
 
 						if(SessionIdForCompanyMapping.containsKey(globalCom)){
 							mapping = SessionIdForCompanyMapping.get(globalCom);
@@ -1077,8 +1085,17 @@ public class Login implements ContextAware {
 		// manager sessionId
 		WebContext wctx = WebContextFactory.get();
 		String sessionId = wctx.getScriptSession().getId();
+		ClientSessions cs = null;
+		ClientSessionInfo csi = new ClientSessionInfo();
 
-		SessionIdForEmployeeMapping.put(userId, sessionId); //stores session id to find out with user Id
+		if(SessionIdForEmployeeMapping.containsKey(userId))
+			cs = SessionIdForEmployeeMapping.get(userId);
+		else
+			cs = new ClientSessions();
+		
+		csi.setLastUpdateTime(new Date());
+		cs.getClientSessionInfo().put(sessionId, csi);
+		SessionIdForEmployeeMapping.put(userId, cs); //stores session id to find out with user Id
 
 		if(session.getEmployee() != null && session.getEmployee().isApproved()){
 			String partCode = session.getEmployee().getPartCode();
@@ -1100,17 +1117,24 @@ public class Login implements ContextAware {
 
 			if(globalCom != null && globalCom.length() > 0){
 				globalCom = globalCom.toUpperCase();
-				HashMap<String, String> mapping = null;
+				HashMap<String, ClientSessions> mapping = null;
 
 				if(SessionIdForCompanyMapping.containsKey(globalCom))
 					mapping = SessionIdForCompanyMapping.get(globalCom);
 				else
-					mapping = new HashMap<String, String>();
+					mapping = new HashMap<String, ClientSessions>();
 
+				if(mapping.containsKey(userId))
+					cs = mapping.get(userId);
+				else
+					cs = new ClientSessions();
+				
+				csi.setLastUpdateTime(new Date());
+				
+				cs.getClientSessionInfo().put(sessionId, csi);
 				//System.out.println("LOGIN : " + sessionId);
-				mapping.put(userId, sessionId);
+				mapping.put(userId, cs);
 				SessionIdForCompanyMapping.put(globalCom, mapping);
-
 			}
 		}
 
