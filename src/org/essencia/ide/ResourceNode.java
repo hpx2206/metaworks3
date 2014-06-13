@@ -5,7 +5,12 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.ToOpener;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -30,7 +35,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 //
 //	@AutowiredFromClient
 //	public MetadataProperty metadataProperty;
-
 
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -106,7 +110,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 
-		File file = new File("C:/Users/uengine13/Desktop");
+		File file = new File("D:/codi/codebase/\\codi\\uengine.org");
 		String[] childFilePaths = file.list();
 
 		// folder
@@ -118,7 +122,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				node.setProjectId(this.getProjectId());
 				node.setId(this.getId() + File.separatorChar + childFile.getName());				
 				node.setName(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+				node.setPath(file.getAbsolutePath() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setMetaworksContext(getMetaworksContext());
@@ -132,7 +136,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 
-			// ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½Î¼ï¿½ï¿½ï¿½ ï¿½ï¿½å¸¦ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½Ù¿ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½.
+			// µð·ºÅä¸®°¡ ¾Æ´Ñ ÆÄÀÏÀÌÁö¸¸ ÇÁ·Î¼¼½º Å¸ÀÔÀÌ¸é ÇÁ·Î¼¼½º ³ëµå¸¦ ¸¸µé¾î¼­ ºÙ¿©¾ß ÇÑ´Ù.
 			if(!childFile.isDirectory()){
 				String type = ResourceNode.findNodeType(childFile.getAbsolutePath());
 				
@@ -142,7 +146,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 					processNode.setProjectId(this.getProjectId());
 					processNode.setId(this.getId() + File.separatorChar + childFile.getName());
 					processNode.setName(childFile.getName());
-					processNode.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					processNode.setPath(file.getAbsolutePath()+ File.separatorChar + childFile.getName());
 					processNode.setParentId(this.getId());
 					processNode.setType(TreeNode.TYPE_FILE_PROCESS);
 					processNode.setMetaworksContext(getMetaworksContext());
@@ -155,7 +159,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 					node.setProjectId(this.getProjectId());
 					node.setId(this.getId() + File.separatorChar + childFile.getName());
 					node.setName(childFile.getName());
-					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setPath(file.getAbsolutePath() + File.separatorChar + childFile.getName());
 					node.setParentId(this.getId());
 					node.setType(findNodeType(node.getName()));
 					node.setMetaworksContext(getMetaworksContext());
@@ -266,7 +270,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 //		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
 //			metadataProperty.setResourceNode(this);
 //
-//			//ï¿½È¾ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½  xmlï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ load ï¿½Ø¼ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ 
+//			//ÇÈ¾÷µÇ´Â ¼ø°£  xml¿¡ ÀúÀåÇÏ°í load ÇØ¼­ ¹Ì¸®º¸±â 
 //			this.getMetaworksContext().setHow("resourcePicker");
 //			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 //			
@@ -288,13 +292,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 //		}
 //	}
 //
-//	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
-//	public Object[] showContextMenu() {
-//		session.setClipboard(this);
-//		this.changeProject();
-//		
-//		return new Object[]{new ResourceContextMenu(this, session) , new Refresh(session)};
-//	}
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] showContextMenu() {
+		
+		return new Object[]{new ResourceContextMenu(this)};
+	}
 
 	public static String findNodeType(String name){
 		String nodeType = TreeNode.TYPE_FILE_TEXT;
