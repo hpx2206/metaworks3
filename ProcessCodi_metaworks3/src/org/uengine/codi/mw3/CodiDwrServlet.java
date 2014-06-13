@@ -1,19 +1,11 @@
 package org.uengine.codi.mw3;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,21 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
-import org.metaworks.metadata.MetadataBundle;
-import org.springframework.web.util.CookieGenerator;
-import org.uengine.codi.mw3.model.Employee;
-import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.platform.Console;
 import org.uengine.codi.platform.SecurityContext;
 import org.uengine.kernel.GlobalContext;
-
-import com.sun.star.ucb.Cookie;
 
 public class CodiDwrServlet extends TransactionalDwrServlet{
 
@@ -271,7 +255,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 //					emp.setEmpCode(loggeduserId);
 					try {
 //						codiSession.setEmployee(emp);
-						MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(codiSession.getUser().getUserId()), new Object[]{new Refresh( new StartCodi(codiSession, "logout") )});
+						MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new Refresh( new StartCodi(codiSession, "logout") )});
 					}catch(Throwable e){
 						throw new RuntimeException(e);
 					}finally{

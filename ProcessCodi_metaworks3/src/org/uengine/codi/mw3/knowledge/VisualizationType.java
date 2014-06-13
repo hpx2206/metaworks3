@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.HashMap;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -9,8 +11,10 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
+import org.uengine.codi.mw3.model.ClientSessions;
 import org.uengine.codi.mw3.model.Session;
 
 public class VisualizationType implements ContextAware{
@@ -59,9 +63,13 @@ public class VisualizationType implements ContextAware{
 		theNode.setId(getNodeId());
 		theNode.databaseMe().setVisType(getVisType());
 		
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		HashMap<String, ClientSessions> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+		pushUserMap.putAll(SessionUtil.toSessionIdMap(companyUsers));
+		
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(theNode.databaseMe())});
 		MetaworksRemoteService.pushClientObjectsFiltered(
-				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new AllSessionFilter(pushUserMap),
 				new Object[]{new Refresh(theNode.databaseMe())});
 	}
 	

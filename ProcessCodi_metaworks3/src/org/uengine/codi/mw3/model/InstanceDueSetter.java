@@ -211,7 +211,7 @@ public class InstanceDueSetter implements ContextAware{
 			workItem.copyFrom(workItem.generateNotiWorkItem(title));
 
 			MetaworksRemoteService.pushTargetClientObjects(
-					Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					Login.getSessionId(),
 					new Object[]{new ToAppend(new InstanceViewThreadPanel(), workItem)});
 			
 			
@@ -237,7 +237,7 @@ public class InstanceDueSetter implements ContextAware{
 				scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 				scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
 				
-				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 						new Object[]{scEvent});
 			}else{
@@ -246,7 +246,7 @@ public class InstanceDueSetter implements ContextAware{
 				scEvent.setTitle(instanceRef.getName());
 				scEvent.setId(instanceRef.getInstId().toString());
 				
-				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
 						new Object[]{scEvent});
 			}

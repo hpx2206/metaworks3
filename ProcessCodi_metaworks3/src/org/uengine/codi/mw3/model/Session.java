@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 import javax.servlet.http.HttpSession;
 
+import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -283,7 +284,7 @@ public class Session implements ContextAware{
 	}
 	
 	public static void pushMessage(String userId, Object message){
-		String sessionId = Login.getSessionIdWithUserId(userId);
+		String sessionId = Login.getSessionId();
 		
 		if(sessionId==null) return;
 		

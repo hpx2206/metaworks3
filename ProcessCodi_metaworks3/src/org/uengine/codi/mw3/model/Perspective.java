@@ -111,7 +111,7 @@ public class Perspective {
 		todoBadge.session = session;
 		todoBadge.refresh();
 
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge, true)});			
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new Refresh(todoBadge, true)});			
 	}
 	
 	public static InstanceListPanel loadInstanceList(Session session, String perspectiveMode, String perspectiveType) throws Exception {

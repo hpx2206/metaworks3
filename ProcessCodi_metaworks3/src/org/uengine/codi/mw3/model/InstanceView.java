@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.sql.RowSet;
@@ -20,6 +21,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
@@ -470,7 +472,7 @@ public class InstanceView {
 			todoBadge.session = session;
 			todoBadge.refresh();
 
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(),
 					new Object[]{new Refresh(todoBadge)});			
 		}
 		
@@ -525,9 +527,13 @@ public class InstanceView {
 		this.load(instance);
 		this.setStatus(tobe);
 
+		HashMap<String, ClientSessions> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		pushUserMap.putAll(SessionUtil.toSessionIdMap(companyUsers));
+		
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		MetaworksRemoteService.pushClientObjectsFiltered(
-				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new AllSessionFilter(pushUserMap),
 				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance.databaseMe())});
 
 		/* 내가 할일 카운트 다시 계산 */
@@ -536,7 +542,7 @@ public class InstanceView {
 			todoBadge.session = session;
 			todoBadge.refresh();
 
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(),
 					new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem)});			
 		}
 		

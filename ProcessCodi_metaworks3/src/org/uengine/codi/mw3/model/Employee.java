@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.EventContext;
 import org.metaworks.Forward;
 import org.metaworks.MetaworksContext;
@@ -706,7 +708,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 					
 					noti.add(instance);
 				
-					String followerSessionId = Login.getSessionIdWithUserId(employee.getEmpCode());
+					String followerSessionId = Login.getSessionId();
 					
 					try{
 						//NEW WAY IS GOOD
@@ -747,7 +749,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				
 				noti.add(instance);
 			
-				String followerSessionId = Login.getSessionIdWithUserId(this.getEmpCode());
+				String followerSessionId = Login.getSessionId();
 				
 				try{
 					//NEW WAY IS GOOD

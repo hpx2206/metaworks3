@@ -85,7 +85,7 @@ public class TopicFollower extends Follower {
 		if(this.isEnablePush()){
 			if(Role.ASSIGNTYPE_USER == this.getAssigntype()){
 				MetaworksRemoteService.pushTargetClientObjects(
-						Login.getSessionIdWithUserId(user.getUserId()),
+						Login.getSessionId(),
 						new Object[]{new ToEvent(new TopicPerspective(), EventContext.EVENT_CHANGE)});
 			}else if(Role.ASSIGNTYPE_DEPT == this.getAssigntype()){
 				MetaworksRemoteService.pushClientObjectsFiltered(

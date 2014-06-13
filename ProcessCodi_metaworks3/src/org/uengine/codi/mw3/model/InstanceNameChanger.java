@@ -76,7 +76,7 @@ public class InstanceNameChanger implements ContextAware{
 			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
 			
-			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+			MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 					new Object[]{scEvent});
 			

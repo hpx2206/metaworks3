@@ -106,7 +106,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		instanceView.load(instance);
 	
 		if(getFriend() != null && getFriend().getUserId() != null){
-			Browser.withSession(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), new Runnable(){
+			Browser.withSession(Login.getSessionId(), new Runnable(){
 				@Override
 				public void run() {
 					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{getFriend().getName(), instId});
@@ -114,7 +114,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 				
 			});
 		
-			Browser.withSession(Login.getSessionIdWithUserId(getFriend().getUserId()), new Runnable(){
+			Browser.withSession(Login.getSessionId(), new Runnable(){
 				@Override
 				public void run() {
 					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instId, true});

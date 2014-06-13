@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
@@ -29,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
@@ -1220,6 +1223,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		boolean securityPush = false;
 		HashMap<String, String> pushUserMap = new HashMap<String, String>();
 		String currentUserId = session.getUser().getUserId();
+		HashMap<String, ClientSessions> companyUsers = new HashMap<String, ClientSessions>();
 		
 		if(instance.getTopicId() != null){
 			TopicNode topic = new TopicNode();
@@ -1234,7 +1238,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				// 주제 알림 사용자 목록
 				Notification notification = new Notification();
 				notification.session = session;
-				pushUserMap = notification.findTopicNotiUser(topic.getId());
+				companyUsers = notification.findTopicNotiUser(topic.getId());
+				pushUserMap.putAll(SessionUtil.toSessionIdMap(companyUsers));
 
 				// 비공개 알림 설정
 				if("1".equals(topic.getSecuopt())){
@@ -1269,8 +1274,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		 *  위쪽에서 topic notiuser를 구하였지만 noti를 보내는 사람을 구하는 로직은 다를수 있으니 다시한번 구한다.
 		 */
 		if( !securityPush ){
-			HashMap<String, String> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
-			pushUserMap.putAll(companyUsers);	// 다른 테넌트의 follower 가 있을수도 있으니 추가를 해줌
+			companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+			
+			pushUserMap.putAll(SessionUtil.toSessionIdMap(companyUsers));
 		}
 		
 		if(prevInstId == null){
@@ -1291,39 +1297,38 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
 				scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
 				
-				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(currentUserId),
+				MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
 						new Object[]{scEvent});
 				
 				TodoBadge todoBadge = new TodoBadge();
 				todoBadge.loader = true;
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new Refresh(todoBadge, true)});
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new Refresh(todoBadge, true)});
 			}
 			// 새 글일 경우에는 다른사람에게만 push를 하여준다.
 			// 본인 이외에 다른 사용자에게 push
 			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+					new OtherSessionFilter(pushUserMap, Login.getSessionId()),
 					new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});	
-			
 		}else{
 			if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 				// 덧글은 append 로 붙어야 하고,
 				// 자기 자신의 인스턴스 리스트를 새로고침
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND, copyOfInstance)});
 				
 				// 본인 이외에 다른 사용자에게 push
 				MetaworksRemoteService.pushClientObjectsFiltered(
-						new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+						new OtherSessionFilter(pushUserMap, Login.getSessionId()),
 						new Object[]{new InstanceListener(InstanceListener.COMMAND_APPEND,copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_APPEND , copyOfThis)});	
 				
 			}else if(WHEN_EDIT.equals(getMetaworksContext().getWhen())){
 				// edit는 refresh 로 붙어야함
 				// 자기 자신의 인스턴스 리스트를 새로고침
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(currentUserId), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
 				
 				// 본인 이외에 다른 사용자에게 push
 				MetaworksRemoteService.pushClientObjectsFiltered(
-						new OtherSessionFilter(pushUserMap, currentUserId.toUpperCase()),
+						new OtherSessionFilter(pushUserMap, Login.getSessionId()),
 						new Object[]{new InstanceListener(WorkItemListener.COMMAND_REFRESH, copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REFRESH , copyOfThis)});	
 				
 			}
@@ -1461,12 +1466,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.pushNoti("removed");
 			
 			// 자기 자신의 인스턴스 리스트를 새로고침
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance)});
 			
 			// 본인 이외에 다른 사용자에게 push
-			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REMOVE , copyOfThis)});	
+			Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+//			MetaworksRemoteService.pushClientObjectsFiltered(
+//					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), sessionId),
+//					new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, copyOfInstance), new WorkItemListener(WorkItemListener.COMMAND_REMOVE , copyOfThis)});	
 			
 			return new Remover(this);
 		}
@@ -1477,7 +1483,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public void pushNoti(String mode) throws Exception{
 		
-		HashMap<String, String> pushUserMap = new HashMap<String, String>();
+		HashMap<String, ClientSessions> pushUserMap = new HashMap<String, ClientSessions>();
 		IInstance instanceRef = null;
 		Instance theInstance = new Instance();
 		theInstance.setInstId(getInstId());
@@ -1489,12 +1495,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(WORKITEM_TYPE_COMMENT.equals(this.getType()) 
 				|| WORKITEM_TYPE_OVRYCMNT.equals(this.getType())
 				|| (!WORKITEM_TYPE_COMMENT.equals(this.getType())&&WHEN_NEW.equals(getMetaworksContext().getWhen()))){
-			HashMap<String, String> notiUsers = new HashMap<String, String>();
+			HashMap<String, ClientSessions> notiUsers = new HashMap<String, ClientSessions>();
 			Notification notification = new Notification();
 			notification.session = session;
 			notiUsers = notification.findInstanceNotiUser(instanceRef.getRootInstId().toString());
 			if(theInstance.getTopicId() != null && "0".equals(theInstance.getSecuopt())){
-				HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(theInstance.getTopicId());
+				HashMap<String, ClientSessions> topicNotiUsers = notification.findTopicNotiUser(theInstance.getTopicId());
 				Iterator<String> iterator = topicNotiUsers.keySet().iterator();
 				while(iterator.hasNext()){
 					String followerUserId = (String)iterator.next();

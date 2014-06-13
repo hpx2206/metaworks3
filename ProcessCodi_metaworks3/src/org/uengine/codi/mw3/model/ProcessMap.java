@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.EventContext;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
@@ -22,6 +24,7 @@ import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.CodiProcessDefinitionFactory;
+import org.uengine.codi.common.SessionUtil;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
@@ -453,9 +456,11 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 					copyOfInstance.setTopicName(topic.getName());
 				}
 				HashMap<String, String> notiUsers = this.processNoti(parentInstance);
-				notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
+				HashMap<String, ClientSessions> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
 				
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(parentInstance)});
+				notiUsers.putAll(SessionUtil.toSessionIdMap(companyUsers));
+				
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new InstanceListener(parentInstance)});
 				
 				// 본인 이외에 다른 사용자에게 push			
 				// 새로 추가되는 workItem이 있는 경우 - 1. 새로추가된 workItem은 append를 한다
@@ -573,12 +578,14 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			}
 			
 			HashMap<String, String> notiUsers = this.processNoti(copyOfInstance);
-			notiUsers.putAll(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()));	
+			HashMap<String, ClientSessions> companyUsers = Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom());
+			
+			notiUsers.putAll(SessionUtil.toSessionIdMap(companyUsers));
 			
 			TodoBadge todoBadge = new TodoBadge();
 			todoBadge.loader = true;
 			// 자기자신의 인스턴스를 변경하고, todo count 를 refresh
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new Refresh(todoBadge, true)});
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionId(), new Object[]{new InstanceListener(copyOfInstance), new Refresh(todoBadge, true)});
 			
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(notiUsers , session.getUser().getUserId()),
@@ -586,7 +593,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			
 			Notification notification = new Notification();
 			notification.session = session;
-			notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+			companyUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+			notiUsers.putAll(SessionUtil.toSessionIdMap(companyUsers));
 			
 			// follower 될 사용자의 todo count 를 refresh
 			MetaworksRemoteService.pushClientObjectsFiltered(
@@ -602,11 +610,15 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		 *  === noti push 부분 ===
 		 */
 		HashMap<String, String> notiUsers = new HashMap<String, String>();
+		HashMap<String, ClientSessions> companyUsers = new HashMap<String, ClientSessions>();
+		
 		Notification notification = new Notification();
 		notification.session = session;
-		notiUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+		companyUsers = notification.findInstanceNotiUser(instanceRef.getInstId().toString());
+		notiUsers.putAll(SessionUtil.toSessionIdMap(companyUsers));
 		if(instanceRef.getTopicId() != null){
-			HashMap<String, String> topicNotiUsers = notification.findTopicNotiUser(instanceRef.getTopicId());
+			companyUsers = notification.findTopicNotiUser(instanceRef.getTopicId());
+			HashMap<String, String> topicNotiUsers = SessionUtil.toSessionIdMap(companyUsers);
 			Iterator<String> iterator = topicNotiUsers.keySet().iterator();
 			while(iterator.hasNext()){
 				String followerUserId = (String)iterator.next();
