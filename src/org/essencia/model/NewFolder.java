@@ -43,12 +43,15 @@ public class NewFolder extends Templete{
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] create() throws Exception{
-		
+		String resourceBase =  "D:/codi/essencia" + "/";
+//
+//		
+//		File file = new File(resourceBase + "/" + getParentFolderDefId() + "/" + getFolderName());
 		
 		ResourceNode node = new ResourceNode();
 		node.setName(this.getFolderName());
 		node.setId("id"+node.getName());
-		node.setPath("D:/codi/codebase/\\codi\\uengine.org"+ File.separatorChar + node.getName());
+		node.setPath(resourceBase+ File.separatorChar + node.getName());
 		node.setType(TreeNode.TYPE_FOLDER);
 		node.setFolder(true);
 		

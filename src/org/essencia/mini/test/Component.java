@@ -3,9 +3,10 @@ package org.essencia.mini.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.component.TreeNode;
-
-public class Component {
+@Face(displayName="Component", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
+public class Component implements TreeNodable{
 	
 	public Component(){
 		setChildComponents(new ArrayList<Component>());
@@ -25,7 +26,14 @@ public class Component {
 		public void setName(String name) {
 			this.name = name;
 		}
-	
+	protected String type;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+
 	protected String concern;
 		public String getConcern() {
 			return concern;
@@ -55,6 +63,19 @@ public class Component {
 		}
 		public void setParentComponentId(String parentComponentId) {
 			this.parentComponentId = parentComponentId;
-		} 
+		}
+		
+		@Override
+		public String getParentId() {
+			
+			return getParentComponentId();
+		}
+		@Override
+		
+		public List<Component> getChildList() {
+			// TODO Auto-generated method stub
+			return childComponents;
+		}
+		
 
 }
