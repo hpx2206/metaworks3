@@ -3,6 +3,7 @@ package org.essencia.mini.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.essencia.ide.ResourceContextMenu;
 import org.essencia.model.EditorWindow;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -10,8 +11,16 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+
 @Face(ejsPath = "dwr/metaworks/org/metaworks/component/TreeNode.ejs")
 public class ComponentTreeNode extends TreeNode{
+	Practice practice;
+		public Practice getPractice() {
+			return practice;
+		}
+		public void setPractice(Practice practice) {
+			this.practice = practice;
+		}
 	
 	
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
@@ -70,8 +79,14 @@ public class ComponentTreeNode extends TreeNode{
 	
 	}
 	
-	
-	Practice practice;
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] showContextMenu() {
+		
+		return new Object[]{new ResourceContextMenu(this)};
+	}
+
+
+
 	public ComponentTreeNode(){
 		practice = new Practice();
 		practice.setId("p1");
