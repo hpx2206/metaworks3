@@ -92,14 +92,14 @@ public class Practice {
 		ComponentTreeNode node = new ComponentTreeNode();
 		node.setName(this.getName());
 		node.setId(this.getId());
-		node.setPath("D:/codi/essencia/"+ File.separatorChar + node.getName());
+//		node.setPath("D:/codi/essencia/"+ File.separatorChar + node.getName());
 //		node.setType(TreeNode.TYPE_FOLDER);
 		node.setFolder(false);
 		
-		File file = new File(node.getPath());
+//		File file = new File(node.getPath());
 		
-		if(!file.exists())
-			file.mkdirs();
+//		if(!file.exists())
+//			file.mkdirs();
 		
 		return new Object[]{new Remover(new ModalWindow()), new ToAppend(this,node), new Refresh(node)};
 	}
