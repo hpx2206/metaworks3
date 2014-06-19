@@ -1,8 +1,15 @@
 package org.essencia.mini.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.metaworks.component.TreeNode;
+
 public class Component {
+	
+	public Component(){
+		setChildComponents(new ArrayList<Component>());
+	}
 
 	protected String id;
 		public String getId() {
@@ -42,12 +49,12 @@ public class Component {
 		public void setChildComponents(List<Component> childComponents) {
 			this.childComponents = childComponents;
 		}
-	protected Component parentCompenent;
-		public Component getParentCompenent() {
-			return parentCompenent;
+	protected String parentComponentId;
+		public String getParentComponentId() {
+			return parentComponentId;
 		}
-		public void setParentCompenent(Component parentCompenent) {
-			this.parentCompenent = parentCompenent;
+		public void setParentComponentId(String parentComponentId) {
+			this.parentComponentId = parentComponentId;
 		} 
 
 }
