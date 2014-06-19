@@ -1,8 +1,9 @@
 package org.essencia.ide;
 
+import org.essencia.mini.test.ComponentTreeNode;
+import org.essencia.mini.test.Practice;
 import org.essencia.model.NewFolder;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.metaworks.widget.ModalWindow;
@@ -15,7 +16,7 @@ public class ResourceContextMenu extends CloudMenu{
 		
 	}
 	
-	public ResourceContextMenu(ResourceNode resourceNode){
+	public ResourceContextMenu(ComponentTreeNode componentTreeNode){
 		this.setResourceNode(resourceNode);
 		
 		this.setId("ResourceContext");
@@ -36,8 +37,9 @@ public class ResourceContextMenu extends CloudMenu{
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object[] newPractice(){
-		return null;
+	public ModalWindow newPractice(){
+		Practice practice = new Practice();
+		return new ModalWindow(practice, 300, 350, "practice");
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
