@@ -17,7 +17,7 @@ public class ResourceContextMenu extends CloudMenu{
 	}
 	
 	public ResourceContextMenu(ComponentTreeNode componentTreeNode){
-		this.setResourceNode(resourceNode);
+		this.setComponentTreeNode(componentTreeNode);
 		
 		this.setId("ResourceContext");
 		this.setName("ResourceContext");

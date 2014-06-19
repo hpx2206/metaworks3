@@ -1,15 +1,31 @@
 package org.essencia.mini.test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.essencia.ide.ResourceNode;
+import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
+import org.metaworks.widget.ModalWindow;
+
+@Face(displayName="Practice", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"id,name,description"})
 public class Practice {
 	
-	public Practice(){
-		setAlphas(new ArrayList<Component>());
-		setActivities(new ArrayList<Component>());
-		setCompetencies(new ArrayList<Component>());
-	}
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
 	private String id;
 		public String getId() {
@@ -58,5 +74,38 @@ public class Practice {
 		public void setCompetencies(List<Component> competencies) {
 			this.competencies = competencies;
 		}
-
+	
+	public Practice(){
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");
+		alphas = new ArrayList<Component>();
+		competencies = new ArrayList<Component>();
+		activities = new ArrayList<Component>();
+		
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] create() throws Exception{
+		
+		
+		
+		ComponentTreeNode node = new ComponentTreeNode();
+		node.setName(this.getName());
+		node.setId(this.getId());
+		node.setPath("D:/codi/essencia/"+ File.separatorChar + node.getName());
+//		node.setType(TreeNode.TYPE_FOLDER);
+		node.setFolder(false);
+		
+		File file = new File(node.getPath());
+		
+		if(!file.exists())
+			file.mkdirs();
+		
+		return new Object[]{new Remover(new ModalWindow()), new ToAppend(this,node), new Refresh(node)};
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Remover cancel(){
+		return new Remover(new ModalWindow());		
+	}
 }

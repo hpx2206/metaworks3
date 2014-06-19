@@ -1,5 +1,6 @@
 package org.essencia.mini.test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,48 +22,104 @@ public class ComponentTreeNode extends TreeNode{
 		public void setPractice(Practice practice) {
 			this.practice = practice;
 		}
+	String type;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+	String id;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
 	
+	String name;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
 	
+	String path;
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
+		
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object expand() throws Exception { 
-		List<TreeNode> rtn = null;
-		if("".equals(getId())){
-			rtn = logic(practice);
-		}else{
-			rtn = getChild();
+		ArrayList<TreeNode> rtn = null;
+		
+		File file =  new File("D:/codi/essencia/");
+		
+		String[] childFilePaths = file.list();
+		
+		for(int i = 0; i < childFilePaths.length; i++){
+			rtn = new ArrayList<TreeNode>();
+			TreeNode componentTree = new ComponentTreeNode();
+			componentTree.setId(practice.getId());
+			componentTree.setName(practice.getName());
+			TreeNode a = transfer(practice.getAlphas().get(0));
+			TreeNode b = transfer(practice.getAlphas().get(1));
+			componentTree.getChild().add(a);
+			componentTree.getChild().add(b);
+			rtn.add(componentTree);
 		}
+		
+//		if("".equals(getId())){
+//			rtn = new ArrayList<TreeNode>();
+//			TreeNode componentTree = new ComponentTreeNode();
+//			componentTree.setId(practice.getId());
+//			componentTree.setName(practice.getName());
+//			TreeNode a = transfer(practice.getAlphas().get(0));
+//			TreeNode b = transfer(practice.getAlphas().get(1));
+//			componentTree.getChild().add(a);
+//			componentTree.getChild().add(b);
+//			rtn.add(componentTree);
+//		}else{
+//			rtn = getChild();
+//		}
 		return rtn;
 	}
 
 	
 	@ServiceMethod(payload={"id", "name", "folder"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] action() throws Exception {
-		Component c = new Alpha();
-		c.setId("11111111111111111");
-		c.setName("mynameiscomponent");
-		c.setDescription("thisisdescription");
-		
 		EditorWindow editorWindow = new EditorWindow();
-		editorWindow.setPanel(c);
+//		if("Practice".equals(this.getType())){
+			Component c = new Alpha();
+			c.setId("11111111111111111");
+			c.setName("mynameiscomponent");
+			c.setDescription("thisisdescription");
+			
+			editorWindow.setPanel(c);
+//		}
 		return new Object[]{new ToAppend(editorWindow,true), new Refresh(editorWindow)};
 	}	
-	public TreeNode transfer(Component component){
-		TreeNode t = new ComponentTreeNode();
-		t.setId(component.getId());
-		t.setName(component.getName());
-		t.setParentId(component.getParentComponentId());
-		if(component.getChildComponents().size()>0){
-			t.setFolder(true);
-		}
-		ArrayList<TreeNode> childNode = null;
-		if(component.getChildComponents().size()!=0){
-			childNode = new ArrayList<TreeNode>();
-			for(Component c : component.getChildComponents()){
+	public TreeNode transfer(TreeNodable treeNodableObj){
+		TreeNode treeNode = new ComponentTreeNode();
+		treeNode.setId(treeNodableObj.getId());
+		treeNode.setName(treeNodableObj.getName());
+		treeNode.setParentId(treeNodableObj.getParentId());
+		
+		if(treeNodableObj.getChildList() != null ){
+			treeNode.setFolder(true);
+			ArrayList<TreeNode> childNode = null;
+			for(TreeNodable c : treeNodableObj.getChildList()){
+				childNode = new ArrayList<TreeNode>();
 				childNode.add(transfer(c));
+				treeNode.setChild(childNode);
 			}
-			t.setChild(childNode);
 		}
-		return t;
+		
+		return treeNode;
 	}
 	
 	public List<TreeNode> logic(Practice practice){
@@ -96,6 +153,7 @@ public class ComponentTreeNode extends TreeNode{
 		Component alpha3 = new Alpha();
 		alpha3.setId("alpha3");
 		alpha3.setName("Opportunity3");
+		alpha3.setType("Practice");
 		alpha3.setDescription("describe about Opportunity3");
 		
 		Component alpha1 = new Alpha();
