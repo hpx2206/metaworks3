@@ -37,7 +37,7 @@ public class MainIDE {
 		
 		MainWindow navigatorWindow = new MainWindow(null,NAVIGATOR);
 		navigatorWindow.setPanel(navigator);
-		MainWindow editorWindow = new MainWindow(null,EDITOR);
+		EditorWindow editorWindow = new EditorWindow(null,EDITOR);
 		PropertiesWindow propertiesWindow = new PropertiesWindow();
 		
 		Layout layout = new Layout();

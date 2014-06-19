@@ -1,8 +1,15 @@
 package org.essencia.mini.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Practice {
+	
+	public Practice(){
+		setAlphas(new ArrayList<Component>());
+		setActivities(new ArrayList<Component>());
+		setCompetencies(new ArrayList<Component>());
+	}
 	
 	private String id;
 		public String getId() {
