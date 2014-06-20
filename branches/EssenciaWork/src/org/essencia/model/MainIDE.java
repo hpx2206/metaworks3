@@ -9,7 +9,7 @@ public class MainIDE {
 	
 	final static String NAVIGATOR = "NavigatorWindow";
 	final static String EDITOR = "EditorWindow";
-	final static String PROPERTIES = "PropertiesWindow";
+//	final static String PROPERTIES = "PropertiesWindow";
 	
 	Layout layout;
 		public Layout getLayout() {
@@ -33,12 +33,12 @@ public class MainIDE {
 		
 		
 		Navigator navigator = new Navigator();		
-		navigator.load("CodeBase", "EssenciaWork");
+		navigator.load("CodeBase", "PRACTICES");
 		
 		MainWindow navigatorWindow = new MainWindow(null,NAVIGATOR);
 		navigatorWindow.setPanel(navigator);
 		EditorWindow editorWindow = new EditorWindow(null,EDITOR);
-		PropertiesWindow propertiesWindow = new PropertiesWindow();
+//		PropertiesWindow propertiesWindow = new PropertiesWindow();
 		
 		Layout layout = new Layout();
 		layout.setId("main");
@@ -51,7 +51,7 @@ public class MainIDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setId("outer");
 		outerLayout.setCenter(layout);
-		outerLayout.setEast(propertiesWindow);
+//		outerLayout.setEast(propertiesWindow);
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, east__size:350");
 		
 		this.setLayout(outerLayout);

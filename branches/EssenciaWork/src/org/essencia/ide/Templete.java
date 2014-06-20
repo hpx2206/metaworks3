@@ -1,5 +1,6 @@
 package org.essencia.ide;
 
+import org.essencia.mini.view.TreeNodeView;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
@@ -18,13 +19,13 @@ public class Templete implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 		
-	ResourceNode resourceNode;
+	TreeNodeView componentTreeNode;
 		@Hidden
-		public ResourceNode getResourceNode() {
-			return resourceNode;
+		public TreeNodeView getComponentTreeNode() {
+			return componentTreeNode;
 		}
-		public void setResourceNode(ResourceNode resourceNode) {
-			this.resourceNode = resourceNode;
+		public void setComponentTreeNode(TreeNodeView componentTreeNode) {
+			this.componentTreeNode = componentTreeNode;
 		}
 		
 	public Templete(){

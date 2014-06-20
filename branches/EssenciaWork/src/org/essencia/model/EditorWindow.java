@@ -1,6 +1,5 @@
 package org.essencia.model;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.widget.Window;
 
 @Face(ejsPath="genericfaces/Window.ejs",
