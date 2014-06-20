@@ -1,0 +1,91 @@
+<org.essencia.mini.kernel.Practice>
+  <metaworksContext>
+    <when>edit</when>
+  </metaworksContext>
+  <id>practice1</id>
+  <name>Architecture Practice</name>
+  <description>describe about Architecture Practice</description>
+  <alphas>
+    <org.essencia.mini.kernel.Alpha>
+      <id>1_alphas</id>
+      <name>Alphas</name>
+      <description>describe about Alphas</description>
+      <childComponents>
+        <org.essencia.mini.kernel.Alpha>
+          <id>alpha1</id>
+          <name>Opportunity</name>
+          <description>describe about Opportunity</description>
+          <childComponents/>
+          <parentComponentId>1_alphas</parentComponentId>
+        </org.essencia.mini.kernel.Alpha>
+        <org.essencia.mini.kernel.Alpha>
+          <id>alpha2</id>
+          <name>Requirements</name>
+          <description>describe about Requirements</description>
+          <childComponents>
+            <org.essencia.mini.kernel.Alpha>
+              <id>alpha3</id>
+              <name>Change</name>
+              <description>describe about Change</description>
+              <childComponents/>
+              <parentComponentId>alpha2</parentComponentId>
+            </org.essencia.mini.kernel.Alpha>
+          </childComponents>
+          <parentComponentId>1_alphas</parentComponentId>
+        </org.essencia.mini.kernel.Alpha>
+      </childComponents>
+    </org.essencia.mini.kernel.Alpha>
+  </alphas>
+  <activities>
+    <org.essencia.mini.kernel.Activity>
+      <id>1_activities</id>
+      <name>Activities</name>
+      <description>describe about Activities</description>
+      <childComponents>
+        <org.essencia.mini.kernel.Activity>
+          <id>activity1</id>
+          <name>SpecficyTheSystem</name>
+          <description>describe about SpecficyTheSystem</description>
+          <childComponents>
+            <org.essencia.mini.kernel.Activity>
+              <id>activity3</id>
+              <name>IdentifyArchitectureRequirements</name>
+              <description>describe about IdentifyArchitectureRequirements</description>
+              <childComponents/>
+              <parentComponentId>activity1</parentComponentId>
+            </org.essencia.mini.kernel.Activity>
+          </childComponents>
+          <parentComponentId>1_activities</parentComponentId>
+        </org.essencia.mini.kernel.Activity>
+        <org.essencia.mini.kernel.Activity>
+          <id>activity2</id>
+          <name>ShapeTheSystem</name>
+          <description>describe about ShapeTheSystem</description>
+          <childComponents/>
+          <parentComponentId>1_activities</parentComponentId>
+        </org.essencia.mini.kernel.Activity>
+      </childComponents>
+    </org.essencia.mini.kernel.Activity>
+  </activities>
+  <competencies>
+    <org.essencia.mini.kernel.Competency>
+      <id>1_competencies</id>
+      <name>Competencies</name>
+      <description>describe about Competencies</description>
+      <childComponents>
+        <org.essencia.mini.kernel.Competency>
+          <id>competency1</id>
+          <name>Analyst</name>
+          <childComponents/>
+          <parentComponentId>1_competencies</parentComponentId>
+        </org.essencia.mini.kernel.Competency>
+        <org.essencia.mini.kernel.Competency>
+          <id>competency2</id>
+          <name>Tester</name>
+          <childComponents/>
+          <parentComponentId>1_competencies</parentComponentId>
+        </org.essencia.mini.kernel.Competency>
+      </childComponents>
+    </org.essencia.mini.kernel.Competency>
+  </competencies>
+</org.essencia.mini.kernel.Practice>
