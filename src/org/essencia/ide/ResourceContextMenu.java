@@ -1,7 +1,7 @@
 package org.essencia.ide;
 
-import org.essencia.mini.test.ComponentTreeNode;
-import org.essencia.mini.test.Practice;
+import org.essencia.mini.kernel.Practice;
+import org.essencia.mini.view.TreeNodeView;
 import org.essencia.model.NewFolder;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
@@ -16,7 +16,7 @@ public class ResourceContextMenu extends CloudMenu{
 		
 	}
 	
-	public ResourceContextMenu(ComponentTreeNode componentTreeNode){
+	public ResourceContextMenu(TreeNodeView componentTreeNode){
 		this.setComponentTreeNode(componentTreeNode);
 		
 		this.setId("ResourceContext");

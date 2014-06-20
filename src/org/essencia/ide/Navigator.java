@@ -1,6 +1,6 @@
 package org.essencia.ide;
 
-import org.essencia.mini.test.ComponentTreeNode;
+import org.essencia.mini.view.TreeNodeView;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -54,11 +54,11 @@ public class Navigator {
 	
 	
 	public void load(String sourceCodeBase, String projectName){
-		TreeNode projectNode = new ComponentTreeNode();
+		TreeNode projectNode = new TreeNodeView();
 //		ResourceNode projectNode = new ResourceNode();
 		projectNode.setRoot(true);
 		projectNode.setFolder(true);
-		projectNode.setType(ResourceNode.TYPE_FOLDER);
+		projectNode.setType(TreeNodeView.TYPE_FOLDER);
 		projectNode.setId("");
 		projectNode.setName(projectName);
 		

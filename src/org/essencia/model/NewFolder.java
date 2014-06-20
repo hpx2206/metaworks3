@@ -2,8 +2,8 @@ package org.essencia.model;
 
 import java.io.File;
 
-import org.essencia.ide.ResourceNode;
 import org.essencia.ide.Templete;
+import org.essencia.mini.view.TreeNodeView;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -48,7 +48,7 @@ public class NewFolder extends Templete{
 //		
 //		File file = new File(resourceBase + "/" + getParentFolderDefId() + "/" + getFolderName());
 		
-		ResourceNode node = new ResourceNode();
+		TreeNodeView node = new TreeNodeView();
 		node.setName(this.getFolderName());
 		node.setId("id"+node.getName());
 		node.setPath(resourceBase+ File.separatorChar + node.getName());

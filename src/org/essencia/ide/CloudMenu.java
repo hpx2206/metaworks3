@@ -1,6 +1,6 @@
 package org.essencia.ide;
 
-import org.essencia.mini.test.ComponentTreeNode;
+import org.essencia.mini.view.TreeNodeView;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.component.Menu;
@@ -8,14 +8,14 @@ import org.metaworks.component.Menu;
 public class CloudMenu extends Menu {
 		
 	
-	ComponentTreeNode componentTreeNode;
+	TreeNodeView componentTreeNode;
 		@Hidden
 		@AutowiredToClient
-		public ComponentTreeNode getComponentTreeNode() {
+		public TreeNodeView getComponentTreeNode() {
 			return componentTreeNode;
 		}
 	
-		public void setComponentTreeNode(ComponentTreeNode componentTreeNode) {
+		public void setComponentTreeNode(TreeNodeView componentTreeNode) {
 			this.componentTreeNode = componentTreeNode;
 		}
 	
