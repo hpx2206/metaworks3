@@ -1,0 +1,106 @@
+<org.essencia.mini.kernel.Practice>
+  <metaworksContext>
+    <when>edit</when>
+  </metaworksContext>
+  <id>practice2</id>
+  <name>Team Practice</name>
+  <description>describe about Team Practice</description>
+  <alphas>
+    <org.essencia.mini.kernel.Alpha>
+      <id>2_alphas</id>
+      <name>Alphas</name>
+      <description>describe about Alphas</description>
+      <childComponents>
+        <org.essencia.mini.kernel.Alpha>
+          <id>alpha1</id>
+          <name>Team</name>
+          <description>describe about Team</description>
+          <childComponents>
+            <org.essencia.mini.kernel.Alpha>
+              <id>alpha3</id>
+              <name>TeamMember</name>
+              <description>describe about TeamMember</description>
+              <childComponents/>
+              <parentComponentId>alpha1</parentComponentId>
+            </org.essencia.mini.kernel.Alpha>
+            <org.essencia.mini.kernel.Alpha>
+              <id>alpha4</id>
+              <name>TeamCharter</name>
+              <description>describe about TeamCharter</description>
+              <childComponents/>
+              <parentComponentId>alpha1</parentComponentId>
+            </org.essencia.mini.kernel.Alpha>
+          </childComponents>
+          <parentComponentId>2_alphas</parentComponentId>
+        </org.essencia.mini.kernel.Alpha>
+        <org.essencia.mini.kernel.Alpha>
+          <id>alpha2</id>
+          <name>WayOfWorking</name>
+          <description>describe about WayOfWorking</description>
+          <childComponents/>
+          <parentComponentId>2_alphas</parentComponentId>
+        </org.essencia.mini.kernel.Alpha>
+      </childComponents>
+    </org.essencia.mini.kernel.Alpha>
+  </alphas>
+  <activities>
+    <org.essencia.mini.kernel.Activity>
+      <id>2_activities</id>
+      <name>Activities</name>
+      <description>describe about Activities</description>
+      <childComponents>
+        <org.essencia.mini.kernel.Activity>
+          <id>activity1</id>
+          <name>EstablishProject</name>
+          <description>describe about EstablishProject</description>
+          <childComponents>
+            <org.essencia.mini.kernel.Activity>
+              <id>activity3</id>
+              <name>LaunchProject</name>
+              <description>describe about LaunchProject</description>
+              <childComponents/>
+              <parentComponentId>activity1</parentComponentId>
+            </org.essencia.mini.kernel.Activity>
+          </childComponents>
+          <parentComponentId>2_activities</parentComponentId>
+        </org.essencia.mini.kernel.Activity>
+        <org.essencia.mini.kernel.Activity>
+          <id>activity2</id>
+          <name>SupportTeam</name>
+          <description>describe about SupportTeam</description>
+          <childComponents>
+            <org.essencia.mini.kernel.Activity>
+              <id>activity4</id>
+              <name>GuideTeam</name>
+              <description>describe about GuideTeam</description>
+              <childComponents/>
+              <parentComponentId>activity2</parentComponentId>
+            </org.essencia.mini.kernel.Activity>
+          </childComponents>
+          <parentComponentId>2_activities</parentComponentId>
+        </org.essencia.mini.kernel.Activity>
+      </childComponents>
+    </org.essencia.mini.kernel.Activity>
+  </activities>
+  <competencies>
+    <org.essencia.mini.kernel.Competency>
+      <id>2_competencies</id>
+      <name>Competencies</name>
+      <description>describe about Competencies</description>
+      <childComponents>
+        <org.essencia.mini.kernel.Competency>
+          <id>competency1</id>
+          <name>CustomerRepresentative</name>
+          <childComponents/>
+          <parentComponentId>2_competencies</parentComponentId>
+        </org.essencia.mini.kernel.Competency>
+        <org.essencia.mini.kernel.Competency>
+          <id>competency2</id>
+          <name>LeaderShip</name>
+          <childComponents/>
+          <parentComponentId>2_competencies</parentComponentId>
+        </org.essencia.mini.kernel.Competency>
+      </childComponents>
+    </org.essencia.mini.kernel.Competency>
+  </competencies>
+</org.essencia.mini.kernel.Practice>
