@@ -512,7 +512,7 @@ public class ProcessDesignerContainer {
 		}
 		if(valCtx!=null && valCtx.size()>0){
 			if( isSave ){
-				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				MetaworksRemoteService.pushTargetScript(Login.getSessionId(),
 						"if(mw3.getAutowiredObject('"+viewClass +"@" + viewId +"')!=null) mw3.getAutowiredObject('"+viewClass +"@" + viewId +"').__getFaceHelper().validation",
 						new Object[]{new String()});
 			}else{
