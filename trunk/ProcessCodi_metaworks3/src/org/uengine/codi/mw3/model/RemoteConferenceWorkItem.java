@@ -171,8 +171,8 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		is.close();
 		Instance instance = new Instance();
 		instance.setInstId(rootInstId);
-		
-		instance.databaseMe().setName(this.getTitle());
+		if(this.newInstancePanel != null)
+			instance.databaseMe().setName(this.getTitle());
 		databaseMe().setExt1(meetingID);
 		databaseMe().setExt2(attendeePW);
 		databaseMe().setExt3(moderatorPW);
