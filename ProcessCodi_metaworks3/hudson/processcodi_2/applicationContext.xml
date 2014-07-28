@@ -114,10 +114,6 @@
 <!-- 		<property name="startDelay" value="60000"/> -->
 <!-- 		<property name="repeatInterval" value="120000"/> -->
 <!-- 	</bean> -->
-	<bean id="scheduleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-   		 <property name="jobDetail" ref="scheduleReader"/>
-    	 <property name="cronExpression" value="0 0 8 * * ?"/>
-	</bean>
 	<bean id="waitJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="org.uengine.scheduler.WaitJob" />
 		<property name="jobDataAsMap">
@@ -138,7 +134,6 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="scheduleTrigger"/>
 				<ref bean="waitTrigger"/>
 			</list>
 		</property>
