@@ -64,8 +64,10 @@ public class InstanceNameChanger implements ContextAware{
 		instance.setInstId(new Long(instanceId));
 		
 		IInstance instanceRef = instance.databaseMe();
-		if( getInstanceName() != null && !getInstanceName().equals(instanceRef.getName()) ){
-			instanceRef.setName(getInstanceName());
+		String oldName = instanceRef.getName();
+		String newName = getInstanceName();
+		if( newName != null && !newName.equals(oldName) ){
+			instanceRef.setName(newName);
 			
 			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
 			scEvent.setTitle(instanceRef.getName());
@@ -85,7 +87,7 @@ public class InstanceNameChanger implements ContextAware{
 			comment.session = session;
 			comment.setInstId(instanceRef.getInstId());
 			comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			comment.setSystemMessage(session.getUser().getName() + "님이 제목을 [" + getInstanceName() + "] 으로 변경하였습니다.");
+			comment.setSystemMessage(session.getUser().getName() + "님이 제목을 [" + oldName + "]에서 [" + newName + "]으로 변경하였습니다.");
 			
 			
 			comment.add();
