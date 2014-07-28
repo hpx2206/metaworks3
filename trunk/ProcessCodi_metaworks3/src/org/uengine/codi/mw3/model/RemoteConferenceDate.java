@@ -56,6 +56,10 @@ public class RemoteConferenceDate implements ContextAware{
 		
 		this.loadHour();
 		this.loadMinute();
+		
+		hour.setSelectedValue(String.valueOf(date.getHours()));
+		minute.setSelectedValue(String.valueOf(date.getMinutes()+5));
+		
 	}
 	
 	public void loadMinute(){
