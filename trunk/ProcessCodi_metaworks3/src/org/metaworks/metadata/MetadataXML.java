@@ -187,17 +187,17 @@ public class MetadataXML implements ContextAware {
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
 		
 		// TODO: 작업해야함
-		
-//		if( metadata == null ){
-//			// 메타데이터 파일 생성
-//			metadata = new MetadataXML();
-//			metadata.setProperties(new ArrayList<MetadataProperty>());
-//		}
-//		metadata.setFilePath(resourceNode.getPath());
-//		metadata.setProjectId(resourceNode.getProjectId());
+		if( metadata == null ){
+			// 메타데이터 파일 생성
+			metadata = new MetadataXML();
+			metadata.setProperties(new ArrayList<MetadataProperty>());
+		}
+		metadata.setFilePath(resourceNode.getPath());
+		metadata.setProjectId(resourceNode.getProjectId());
 //		
-//		if( metadata.getProperties() != null ){
-//			for(MetadataProperty metadataProperty : metadata.getProperties()){
+		if( metadata.getProperties() != null ){
+			for(MetadataProperty metadataProperty : metadata.getProperties()){
+				// post processing for file or image property:  TODO: implement again for the new file system
 //				if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
 //					String projectSourcePath = CodiClassLoader.mySourceCodeBase(resourceNode.getProjectId());
 //					MetadataFile file = new MetadataFile();
@@ -218,12 +218,12 @@ public class MetadataXML implements ContextAware {
 //					metadataProperty.setFile(file);
 //					metadataProperty.setFilePreview(previewFile);
 //				}
-//				metadataProperty.setProjectId(resourceNode.getProjectId());
-//				metadataProperty.selectType();
-//				
-//			}
-//		}
-//		metadata.init();
+				metadataProperty.setProjectId(resourceNode.getProjectId());
+				metadataProperty.selectType();
+				
+			}
+		}
+		metadata.init();
 		
 		return metadata;
 	}

@@ -399,7 +399,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 				&& this.getFile().getFileTransfer().getSize() > 0)
 			isFile = true;
 
-		if (this.getResourceNode().getId() != null
+		if (this.getResourceNode() != null && this.getResourceNode().getId() != null
 				&& this.getResourceNode().getPath() != null)
 			isResource = true;
 			

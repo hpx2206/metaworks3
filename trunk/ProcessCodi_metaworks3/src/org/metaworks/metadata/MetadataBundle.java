@@ -18,6 +18,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.Project;
+import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.kernel.GlobalContext;
 
 import com.thoughtworks.xstream.XStream;
@@ -60,11 +62,9 @@ public class MetadataBundle {
 	@ServiceMethod
 	public void loadProperty() throws Exception{
 		
-//		Thread.currentThread().getContextClassLoader().getResourceAsStream("image/logo.jpg");
-//		Thread.currentThread().getContextClassLoader().getResourceAsStream("process/test.wpd");
-//		Thread.currentThread().getContextClassLoader().loadClass("form.TestForm");
-//		Thread.currentThread().getContextClassLoader().getResourceAsStream("uengine.metadata");
-		
+		/**
+		 * 앱 이름을 projectId 에 넣고 loadProperty() 를 호출하면 앱에 대한 데이터가 나온다
+		 */
 		
 		String projectId = getProjectId();
 		String sourceCodeBase = CodiClassLoader.getMyClassLoader().getCodebase();
@@ -132,6 +132,26 @@ public class MetadataBundle {
 				props.put(key, value);
 			}
 		}
+	}
+	
+	public String projectResourceToApp(int appId, String tenantId ) throws Exception{
+		App app = new App();
+		app.setAppId(appId);
+		
+		String appProjectId = app.databaseMe().getProjectId();
+		String appComcode = app.databaseMe().getComcode();
+		String appName = app.databaseMe().getAppName();
+		String appBasePath = MetadataBundle.getProjectBasePath(appName, tenantId);
+		
+		String metadataFilePath = appBasePath + File.separatorChar + Project.METADATA_FILENAME;
+		File metadataFile = new File(metadataFilePath);	// 앱에 저장될 메타데이타 파일
+		
+		if( !metadataFile.getParentFile().exists() ){
+			metadataFile.getParentFile().mkdirs();
+		}
+		metadataFile = getPropertyRemote(appProjectId, appComcode ,metadataFile);
+			
+		return metadataFile.getPath();
 	}
 	/**
 	 * 앱에서 메인서버의 프로젝트로 메타데이터 파일 및 리소스를 요청

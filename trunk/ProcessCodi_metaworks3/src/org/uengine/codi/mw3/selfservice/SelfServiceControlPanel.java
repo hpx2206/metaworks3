@@ -15,14 +15,17 @@ import org.metaworks.metadata.FormProperty;
 import org.metaworks.metadata.FormPropertyPanel;
 import org.metaworks.metadata.ImageProperty;
 import org.metaworks.metadata.ImagePropertyPanel;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.metaworks.metadata.ProcessProperty;
 import org.metaworks.metadata.ProcessPropertyPanel;
 import org.metaworks.metadata.StringProperty;
 import org.metaworks.metadata.StringPropertyPanel;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.model.Session;
@@ -202,21 +205,46 @@ public class SelfServiceControlPanel {
 		appMapping.setAppId(this.getAppId());
 		appMapping.setComCode(session.getCompany().getComCode());
 		
-		Project project = this.getWorkspace().findProject(appMapping.findMe().getProjectName());
+		String tenantId = session.getCompany().getComCode();
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}
+		
+		Project project = new Project();
+		project.setId(appMapping.findMe().getProjectName());
 				
+		String appName = appMapping.databaseMe().getAppName();
+		String appBasePath = MetadataBundle.getProjectBasePath(appName, tenantId);
+		
 		MetadataXML metadataXML = new MetadataXML();
 		try {
-			metadataXML = metadataXML.loadWithInputstream(Thread.currentThread().getContextClassLoader().getResourceAsStream(Project.METADATA_FILENAME));
+			metadataXML = metadataXML.loadWithPath(appBasePath + File.separatorChar + Project.METADATA_FILENAME);
+			metadataXML.setFilePath(appBasePath + File.separatorChar + Project.METADATA_FILENAME);
+//			metadataXML = metadataXML.loadWithInputstream(Thread.currentThread().getContextClassLoader().getResourceAsStream(Project.METADATA_FILENAME));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if( metadataXML == null ){
-			throw new MetaworksException("메타데이타 파일이 없습니다.");
+			// 메타데이터 파일이 없을경우 
+			// 1. 앱이 코디에서 만들어진 프로젝트일 경우 : 프로젝트에 해당하는 정보를 모두 가져온다.
+			App app = new App();
+			app.setAppId(this.getAppId());
+			
+			// 앱 타입 가져오기
+			if( app.databaseMe().getAppType() != null && App.APP_TYPE_PROJECT.equals(app.databaseMe().getAppType()) ){
+				MetadataBundle metadataBundle = new MetadataBundle();
+				String metadataFilePath = metadataBundle.projectResourceToApp(this.getAppId(), tenantId);
+				MetadataXML metadataXMLTemp = new MetadataXML();
+				metadataXML = metadataXMLTemp.loadWithPath(metadataFilePath);
+				metadataXML.setFilePath(metadataFilePath);
+			}
+			
+			if( metadataXML == null ){
+				throw new MetaworksException("메타데이타 파일이 없습니다.");
+			}
 		}
 
-		metadataXML.setFilePath(project.getPath() + File.separatorChar + Project.METADATA_FILENAME);
-		
 		this.metadataProperties = new ArrayList<MetadataProperty>();	
 		
 		ArrayList<FileProperty> fileProperties = new ArrayList<FileProperty>();
