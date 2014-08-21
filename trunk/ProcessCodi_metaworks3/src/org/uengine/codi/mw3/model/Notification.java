@@ -139,7 +139,8 @@ public class Notification extends Database<INotification> implements INotificati
 			final Employee userInfoDB = new Employee();
 			userInfoDB.copyFrom(userInfoTemp);
 			
-			String realPath = System.getenv("CODI_HOME");
+			//String realPath = System.getenv("CODI_HOME");
+			String realPath = CodiStringUtil.lastLastFileSeparatorChar(new HttpServletRequestWrapper(TransactionContext.getThreadLocalInstance().getRequest()).getRealPath(""));
 			final String path = realPath + GlobalContext.getPropertyString("email.noti", "resources/mail/notiMail.html");
 			
 			final String url = TenantContext.getURL();
