@@ -164,7 +164,6 @@ public interface IEmployee extends IDAO {
 	public boolean isGuest();
 	public void setGuest(boolean guest);
 	
-	@Hidden
 	public boolean isMailNoti();
 	public void setMailNoti(boolean mailNoti);
 	
