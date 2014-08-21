@@ -554,7 +554,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			}
 		}
 		this.setApproved(true);
-		this.setMailNoti(true);
+		this.setMailNoti(this.isMailNoti());
 		
 //		if( localeManager.getLanguage() != null ){
 //			this.setLocale(localeManager.getLanguage());

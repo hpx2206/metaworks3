@@ -615,7 +615,7 @@ public class User extends Database<IUser> implements IUser {
 		employee.setEmpCode(this.getUserId());
 		employee.copyFrom(employee.findMe());
 		
-		return new Object[]{new ModalWindow(employee.editEmployeeInfo(), 657, 403, "$EditProfile"), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
+		return new Object[]{new ModalWindow(employee.editEmployeeInfo(), 657, 430, "$EditProfile"), new ToEvent(ServiceMethodContext.TARGET_SELF, EventContext.EVENT_CLOSE)};
 	}
 	
 	public Object[] popupConfigNoti() throws Exception {
