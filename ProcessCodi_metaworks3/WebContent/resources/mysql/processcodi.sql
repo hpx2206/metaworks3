@@ -942,7 +942,7 @@ alter table bpm_worklist change content content mediumtext;
 alter table comtable add column alias varchar(30);
 alter table emptable add column authkey varchar(100);
 
--- 2013.11.07
+-- 2013.11.07 코디 로그인시 정보 저장 (천연식)
 create table logtable(
 id int(11) not null primary key,
 type varchar(20) not null,
@@ -1140,7 +1140,7 @@ CREATE TABLE `appdatabase` (
   PRIMARY KEY (`iddatabase`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app database';
 
--- 14.05.13 메이븐 빌드정보 추가
+-- 14.05.13 메이븐 빌드정보 추가(천연식)
 DROP TABLE IF EXISTS `buildInfo`;
 
 create table buildInfo(
