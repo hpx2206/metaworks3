@@ -1,0 +1,7 @@
+Concurrent multi-tiered application architecture promotes separation of concerns on Client-side issues and Server-side issues. However, during the process of separation, the metadata on the domain-object is splited, duplicated and managed along all the tiers - e.g. Database DDL, java annotations, java object types, DAO classes, JSON mapping class, JavaScript mapping class - has same purposed and same information on the domain class.
+
+Metaworks3 stands for fixing this 'duplicated management of domain object's metadata'. Differences between metaworks3 and metaworks2 (which is hosed on sf.net) is metaworks3 is totally aiming the rich internet user experiences. That means metaworks3 hides the complexity in javascript-java object mapping like JSON, AJAX, jQuery etc.
+
+Simply put, Metaworks3 is just like a CORBA for Rich Web Applications. Included examples are Facebook application shows how easily create metaworks3-based application can be developed and object management is very intuitive and buggy code due to the ajax and creating html in client-side(javascript) has been changed to very high level programming manner.
+
+Internally Metaworks3 is built on DWR (Direct Web Remoting), Spring and EJS template engine.
